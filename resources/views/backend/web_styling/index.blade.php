@@ -14,38 +14,6 @@
 </div>
 <form id="favicon-form" method="post" enctype="multipart/form-data">
 <div class="row">
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Cart Toggle</h4>
-                <div class="mb-0">
-                    <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Age Restriction</h4>
-                <div class="mb-3">
-                    <input type="checkbox" id="age_restriction" data-plugin="switchery" name="age_restriction" class="chk_box1" data-color="#43bee1" {{$client_preferences->age_restriction == 1 ? 'checked' : ''}}>
-                </div>
-                <h5 class="header-title mb-2">Title</h5>
-                <input type="text" class="form-control" id="age_restriction_title" name="age_restriction_title" value="{{ old('age_restriction_title', $client_preferences->age_restriction_title ?? '')}}">
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Rating Toggle</h4>
-                <div class="mb-0">
-                    <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="col-lg-2">
         <div class="card">
             <div class="card-body">
@@ -74,6 +42,63 @@
             </div>
         </div>
     </div>
+    <div class="col-md-4 col-xl-3">
+        <div class="card">
+            <div class="card-body">
+               <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h4 class="header-title mb-0">Age Restriction</h4>
+                    <div class="mb-0">
+                        <input type="checkbox" id="age_restriction" data-plugin="switchery" name="age_restriction" class="chk_box1" data-color="#43bee1" {{$client_preferences->age_restriction == 1 ? 'checked' : ''}}>
+                    </div>
+               </div>
+                <h5 class="header-title mb-2">Title</h5>
+                <input type="text" class="form-control" id="age_restriction_title" name="age_restriction_title" value="{{ old('age_restriction_title', $client_preferences->age_restriction_title ?? '')}}">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xl-2">
+        <div class="card">
+            <div class="card-body">
+                <ul class="pl-0 mb-0">
+                    <li class="d-flex align-items-center justify-content-between">
+                        <h4 class="header-title mb-2">Cart Toggle</h4>
+                        <div class="mb-0">
+                            <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-between mt-2">
+                        <h4 class="header-title mb-2">Rating Toggle</h4>
+                        <div class="mb-0">
+                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+   
+    
+   
+    <!-- <div class="col-md-4 col-xl-2">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title mb-2">Cart Toggle</h4>
+                <div class="mb-0">
+                    <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xl-2">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title mb-2">Rating Toggle</h4>
+                <div class="mb-0">
+                    <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                </div>
+            </div>
+        </div>
+    </div>     -->
 </div>
 </form>
 
