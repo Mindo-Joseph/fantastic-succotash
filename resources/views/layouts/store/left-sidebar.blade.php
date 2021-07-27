@@ -54,23 +54,23 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
                                 <input class="form-control border-0 typeahead" type="search" placeholder="{{__('Search')}}" id="main_search_box">
                             </div>
-                            <div class="list-box" style="display:none;" id="search_box_main_div"></div>
+                            <div class="list-box" style="display:none;" id="search_box_main_div">
+                            </div>
                         </div>
                             
                         
                         <script type="text/template" id="search_box_main_div_template">
-                            <div class="mb-4">
+                            <div class="mb-3">
                                <div class="table-responsive style-4">
                                   <div class="row flex-nowrap mx-0 mb-2">
                                     <% _.each(results, function(result, k){ %>
-                                     <a href="<%= result.redirect_url %>">
-                                         <div class="col-4 text-center list-items">
-                                            <img src="<%= result.image_url%>" alt="">
-                                            <span><%= result.name %></span>
-                                         </div>
+                                     <a class="col-4 text-center list-items" href="<%= result.redirect_url %>">
+                                        <img src="<%= result.image_url%>" alt="">
+                                        <span><%= result.name %></span>
                                      </a>
                                     <% }); %>
                                   </div>
+                                <p class="text-center my-3">No result found. Please try a new search</p>
                                </div>
                             </div>
                         </script>
