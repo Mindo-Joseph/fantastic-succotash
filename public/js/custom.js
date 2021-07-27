@@ -4,9 +4,22 @@ $(document).ready(function() {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         }
     });
-
-  
-
+    $("#main_search_box").keyup(function(){
+        let keyword = $(this).val();
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            url: autocomplete_url,
+            data: { keyword: keyword },
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $('#search_box_main_div').html('');
+                    let search_box_category_template = _.template($('#search_box_main_div_template').html());
+                    $("#search_box_main_div").append(search_box_category_template({results: response.data})).show();
+                }
+            }
+        });
+    });
     // Cabbooking Js Code 
         $('.add-more-location').click(function(){
             $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");

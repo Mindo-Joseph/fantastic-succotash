@@ -42,7 +42,7 @@ Route::group(['middleware' => ['domain']], function () {
 		'as' => 'customer.resetPassword',
 		'uses' => 'Front\CustomerAuthController@resetPasswordForm'
 	]);
-	Route::get('/search','Front\SearchController@search');
+	Route::get('/autocomplete-search','Front\SearchController@postAutocompleteSearch')->name('autocomplete');
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
 	Route::get('page/{slug}','Front\UserhomeController@getExtraPage')->name('extrapage');
 	Route::post('/homePageData','Front\UserhomeController@postHomePageData')->name('homePageData');
