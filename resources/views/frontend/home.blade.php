@@ -37,7 +37,7 @@
             <div class="product-detail">
             @if($client_preference_detail)
                 {{--@if($client_preference_detail->rating_check == 1)
-                    <div class="rating">
+                    <div class="custom_rating">
                         <i class="fa fa-star"></i>
                         <i class="fa fa-star"></i> 
                         <i class="fa fa-star"></i> 
@@ -82,7 +82,7 @@
                         </h4>
                         @if($client_preference_detail)
                             @if($client_preference_detail->rating_check == 1)
-                                <div class="rating">
+                                <div class="custom_rating">
                                     <% if(product.averageRating > 0) { %>
                                         <% _.each([1,2,3,4,5], function(value, k){ %>
                                             <i class="fa fa-star<%= (k+1 <= product.averageRating) ? ' filled' : '' %>"></i>

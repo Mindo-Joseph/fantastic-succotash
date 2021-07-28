@@ -159,7 +159,7 @@ class VendorController extends FrontController
             $products = $products->where('is_live', 1)->where('vendor_id', $vid)->paginate($pagiNate);
             if(!empty($products)){
                 foreach ($products as $key => $value) {
-                    $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $new->sku;
+                    $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
                     $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
                     // foreach ($value->variant as $k => $v) {

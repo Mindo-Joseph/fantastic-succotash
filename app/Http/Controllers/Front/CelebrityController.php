@@ -47,6 +47,11 @@ class CelebrityController extends FrontController
             }
         }
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
+        foreach($np as $new){
+            $new->translation_title = (!empty($new->translation->first())) ? $new->translation->first()->title : $new->sku;
+            $new->variant_multiplier = (!empty($new->variant->first())) ? $new->variant->first()->multiplier : 1;
+            $new->variant_price = (!empty($new->variant->first())) ? $new->variant->first()->price : 0;
+        }
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $celebrity = Celebrity::with(['products.product.variant', 'products.product' => function($query) use($vendorIds){
             $query->whereIn('products.vendor_id', $vendorIds)->paginate();
@@ -57,10 +62,15 @@ class CelebrityController extends FrontController
             foreach ($celebrity->products as $key => $value) {
                 if(!empty($value->product)){
                     $celebrity->products[$key] = $value->product;
-                    foreach ($value->product->variant as $k => $v) {
-                        $value->product->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
-                        $celebrity->products[$key]->variant[$k] = $value->product->variant[$k];
-                    }
+
+                    $celebrity->products[$key]->translation_title = (!empty($value->product->translation->first())) ? $value->product->translation->first()->title : $value->product->sku;
+                    $celebrity->products[$key]->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                    $celebrity->products[$key]->variant_price = (!empty($value->product->variant->first())) ? $value->product->variant->first()->price : 0;
+
+                    // foreach ($value->product->variant as $k => $v) {
+                    //     $value->product->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                    //     $celebrity->products[$key]->variant[$k] = $value->product->variant[$k];
+                    // }
                 }else{
                     unset($celebrity->products[$key]);
                 }
