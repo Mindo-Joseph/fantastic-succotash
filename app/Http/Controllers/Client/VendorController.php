@@ -373,7 +373,6 @@ class VendorController extends BaseController
         $vendor = Vendor::findOrFail($id);
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $categories = Category::with('primary')->select('id', 'slug')
-
                         ->where('id', '>', '1')->where('status', '!=', '2')->where('type_id', '1')
                         ->where('can_add_products', 1)->orderBy('parent_id', 'asc')->where('status', 1)->orderBy('position', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand','variant' => function($v){
@@ -402,8 +401,8 @@ class VendorController extends BaseController
                 $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
             })->orderBy('position', 'asc')
             ->orderBy('id', 'asc')
+            ->where('status', 1)
             ->orderBy('parent_id', 'asc')->get();
-
         $csvProducts = CsvProductImport::where('vendor_id', $id)->orderBy('id','DESC')->get();
         $csvVendors = CsvVendorImport::all();
         /*    get active category list also with parent     */
@@ -422,7 +421,6 @@ class VendorController extends BaseController
         $product_categories = VendorCategory::with('category')->where('status', 1)->where('vendor_id', $id)->get();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
         $client_preferences = ClientPreference::first();
-    //    dd($products->toArray());
         return view('backend.vendor.vendorCatalog')->with(['new_products' => $new_products, 'featured_products' => $featured_products, 'last_mile_delivery' => $last_mile_delivery, 'published_products' => $published_products, 'product_count' => $product_count, 'client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories, 'builds' => $build]);
     }
 
@@ -481,6 +479,9 @@ class VendorController extends BaseController
             }
         }
         $product_categories = VendorCategory::with('category')->where('status', 1)->where('vendor_id', $request->vendor_id)->get();
+        foreach ($product_categories as $product_category) {
+            $product_category->category->title = $product_category->category ? $product_category->category->translation_one->name : '';
+        }
         return $this->successResponse($product_categories, 'Category setting saved successfully.');
     }
 
