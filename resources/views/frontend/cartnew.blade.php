@@ -249,6 +249,34 @@
                 </div>
             </td>
         </tr>
+        <tr class="border_0">
+            <td colspan="3"></td>
+            <td colspan="4" class="pt-0 pr-0">
+                <div class="row d-flex align-items-center no-gutters" id="dateredio">
+                    <div class="col-md-5 pr-2">
+                        <div class="login-form">
+                            <ul class="list-inline">
+                                <li class="d-inline-block mr-1">
+                                    <input type="radio" class="custom-control-input check" id="tasknow"
+                                    name="task_type" value="now" checked>
+                                    <label class="custom-control-label" for="tasknow">Now</label>
+                                </li>
+                                <li class="d-inline-block">
+                                    <input type="radio" class="custom-control-input check" id="taskschedule"
+                                    name="task_type" value="schedule" >
+                                    <label class="custom-control-label" for="taskschedule">Schedule</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-7 datenow d-flex align-items-center justify-content-between">
+                        <input type="text" id="datetime-datepicker" name="schedule_time"
+                            class="form-control upside" placeholder="Date Time">
+                        <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </td>
+        </tr>
     </tfoot>
 </script>
 <script type="text/template" id="promo_code_template">
@@ -413,6 +441,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4">
                     <a class="btn btn-solid" href="{{ url('/') }}">{{__('Continue Shopping')}}</a>

@@ -372,7 +372,7 @@
                 <h4 class="modal-title">Edit Table</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <form action="{{ route('vendor.addTable', $vendor->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('vendor.updateTable', $vendor->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body mt-0" id="editCardBox">
                     <div class="row">
@@ -394,6 +394,7 @@
                             </select>
                         </div>
                         <input type="hidden" name="vendor_id" value="{{ $vendor->id }}" />
+                        <input type="hidden" name="table_id" id="table_id" />
                     </div>
                     <div class="row">
                         @foreach($languages as $langs)
@@ -405,9 +406,9 @@
                                         <div class="form-group" id="{{ ($langs->langId == 1) ? 'nameInput' : 'nameotherInput' }}">
                                             {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
                                             @if($langs->is_primary == 1)
-                                            {!! Form::text('name[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
+                                            {!! Form::text('name[]', null, ['class' => 'form-control', 'id' => 'vendor_dinein_table_language_name'.$langs->langId,  'required' => 'required']) !!}
                                             @else
-                                            {!! Form::text('name[]', null, ['class' => 'form-control']) !!}
+                                            {!! Form::text('name[]', null, ['class' => 'form-control', 'id' => 'vendor_dinein_table_language_name'.$langs->langId ]) !!}
                                             @endif
                                             <span class="invalid-feedback" role="alert">
                                                 <strong></strong>
@@ -418,19 +419,19 @@
                                     <div class="col-md-6">
                                         <div class="form-group" id="meta_titleInput">
                                             {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!}
-                                            {!! Form::text('meta_title[]', null, ['class' => 'form-control']) !!}
+                                            {!! Form::text('meta_title[]', null, ['class' => 'form-control', 'id' => 'vendor_dinein_table_language_meta_title'.$langs->langId ]) !!}
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!}
-                                            {!! Form::textarea('meta_description[]', null, ['class'=>'form-control', 'rows' => '3']) !!}
+                                            {!! Form::textarea('meta_description[]', null, ['class'=>'form-control', 'id' => 'vendor_dinein_table_language_meta_description'.$langs->langId, 'rows' => '3']) !!}
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             {!! Form::label('title', 'Meta Keywords',['class' => 'control-label']) !!}
-                                            {!! Form::textarea('meta_keywords[]', null, ['class' => 'form-control', 'rows' => '3']) !!}
+                                            {!! Form::textarea('meta_keywords[]', null, ['class' => 'form-control', 'id' => 'vendor_dinein_table_language_meta_keyword'.$langs->langId, 'rows' => '3']) !!}
                                         </div>
                                     </div>
                                 </div>
