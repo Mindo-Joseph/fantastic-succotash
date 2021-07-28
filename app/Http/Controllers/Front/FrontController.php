@@ -55,7 +55,6 @@ class FrontController extends Controller
             ->where('cts.language_id', $lang_id)
             ->whereNull('categories.vendor_id')
             ->orderBy('categories.position', 'asc')
-            ->orderBy('categories.id', 'asc')
             ->orderBy('categories.parent_id', 'asc')->get();
         if ($categories) {
             $categories = $this->buildTree($categories->toArray());
