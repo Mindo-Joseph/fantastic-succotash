@@ -4,6 +4,12 @@ $(document).ready(function() {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         }
     });
+    $("#main_search_box").blur(function(e) {
+        setTimeout(function(){
+           $('#search_box_main_div').html('').hide();
+          }, 
+        500);
+      });
     $("#main_search_box").keyup(function(){
         let keyword = $(this).val();
         $.ajax({
@@ -14,8 +20,12 @@ $(document).ready(function() {
             success: function(response) {
                 if(response.status == 'Success'){
                     $('#search_box_main_div').html('');
-                    let search_box_category_template = _.template($('#search_box_main_div_template').html());
-                    $("#search_box_main_div").append(search_box_category_template({results: response.data})).show();
+                    if(response.data.length != 0){
+                        let search_box_category_template = _.template($('#search_box_main_div_template').html());
+                        $("#search_box_main_div").append(search_box_category_template({results: response.data})).show();
+                    }else{
+                        $("#search_box_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                    }
                 }
             }
         });

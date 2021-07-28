@@ -64,6 +64,11 @@ class VendorController extends FrontController
         $navCategories = $this->categoryNav($langId);
         $vendorIds[] = $vendor->id;
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
+        foreach($np as $new){
+            $new->translation_title = (!empty($new->translation->first())) ? $new->translation->first()->title : $new->sku;
+            $new->variant_multiplier = (!empty($new->variant->first())) ? $new->variant->first()->multiplier : 1;
+            $new->variant_price = (!empty($new->variant->first())) ? $new->variant->first()->price : 0;
+        }
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $listData = $this->listData($langId, $vendor->id, $vendor->vendor_templete_id);
         $range_products = Product::join('product_variants', 'product_variants.product_id', '=', 'products.id')->orderBy('product_variants.price', 'desc')->select('*')->where('is_live', 1)->where('vendor_id', $vendor->id)->get();
@@ -154,9 +159,12 @@ class VendorController extends FrontController
             $products = $products->where('is_live', 1)->where('vendor_id', $vid)->paginate($pagiNate);
             if(!empty($products)){
                 foreach ($products as $key => $value) {
-                    foreach ($value->variant as $k => $v) {
-                        $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
-                    }
+                    $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $new->sku;
+                    $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                    $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
+                    // foreach ($value->variant as $k => $v) {
+                    //     $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                    // }
                 }
             }
             $listData = $products;

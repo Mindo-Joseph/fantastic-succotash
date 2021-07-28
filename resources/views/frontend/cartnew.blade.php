@@ -486,6 +486,10 @@
     <% _.each(payment_options, function(payment_option, k){%>
         <div class="tab-pane fade <%= payment_option.slug == 'cash_on_delivery' ? 'active show': ''%>" id="v-pills-<%= payment_option.slug %>" role="tabpanel" aria-labelledby="v-pills-<%= payment_option.slug %>-tab">
             <form method="POST" id="<%= payment_option.slug %>-payment-form">
+                <div class="form-group">
+                    <label>Scheduled Date & Time</label>
+                    <input class="form-control" type="text">
+                </div>
             @csrf
             @method('POST')
                 <div class="payment_response mb-3">
@@ -508,6 +512,7 @@
                         <div class="col-md-12 text-md-right">
                             <button type="button" class="btn btn-solid" data-dismiss="modal">{{ __('Cancel') }}</button>
                             <button type="button" class="btn btn-solid ml-1 proceed_to_pay">{{__('Place Order')}}</button>
+                            <button type="button" class="btn btn-solid ml-1 proceed_to_pay">Scheduled Now</button>
                         </div>
                     </div>
                 </div>
@@ -525,10 +530,12 @@
                     </div>
                     <div class="col-8">
                         <div class="tab-content-box pl-3">
-                            <h5 class="modal-title pt-4" id="pay-billLabel">{{__('Total Amount')}}: <span id="total_amt"></span></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
+                            <div class="d-flex align-items-center justify-content-between pt-3">
+                                <h5 class="modal-title" id="pay-billLabel">{{__('Total Amount')}}: <span id="total_amt"></span></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
                             <div class="tab-content h-100" id="v_pills_tabContent">
                             </div>
                         </div>

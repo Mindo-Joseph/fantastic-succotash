@@ -8,10 +8,7 @@
       pointer-events: none;
       cursor: default;
     }
-    input[type="email"]:disabled {
-      background: #dddddd;
-    }
-    input[type="text"]:disabled {
+    input[type="email"]:disabled,input[type="text"]:disabled,input[type="tel"]:disabled {
       background: #dddddd;
     }
 </style>

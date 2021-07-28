@@ -70,7 +70,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                      </a>
                                     <% }); %>
                                   </div>
-                                <p class="text-center my-3">No result found. Please try a new search</p>
                                </div>
                             </div>
                         </script>
