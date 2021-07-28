@@ -312,7 +312,7 @@ class AuthController extends BaseController{
                 $user->phone_token = $otp;
                 $user->phone_token_valid_till = $newDateTime;
                 $provider = $data->sms_provider;
-                $to = '+917520822618';
+                $to = '+'.$request->dial_code.$request->phone_number;
                 $body = "Dear ".ucwords($user->name).", Please enter OTP ".$otp." to verify your account.";
                 if(!empty($data->sms_key) && !empty($data->sms_secret) && !empty($data->sms_from)){
                     $send = $this->sendSms($provider, $data->sms_key, $data->sms_secret, $data->sms_from, $to, $body);
