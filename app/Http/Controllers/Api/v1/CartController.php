@@ -542,7 +542,7 @@ class CartController extends BaseController{
         $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2);
         return $cart;
     }
-    
+
     public function getDeliveryFeeDispatcher($vendor_id){
         try {
                 $dispatch_domain = $this->checkIfLastMileOn();
