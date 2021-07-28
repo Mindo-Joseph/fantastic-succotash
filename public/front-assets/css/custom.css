@@ -1942,7 +1942,7 @@ div#test {
     padding: 0;
 }
 .rating i.fa.fa-star.filled {
-    color: gold;
+    color: #ffa200 !important;
 }
 
 .logo-block {
