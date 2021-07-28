@@ -197,15 +197,22 @@
                         <div class="col-sm-8 check_inventory">
                             <div class="row">
                                 @if($product->has_variant == 0)
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     {!! Form::label('title', 'Quantity',['class' => 'control-label']) !!}
                                     {!! Form::number('quantity', $product->variant[0]->quantity, ['class'=>'form-control', 'id' => 'quantity', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                 </div>
                                 @endif
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     {!! Form::label('title', 'Sell When Out Of Stock',['class' => 'control-label']) !!} <br />
                                     <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#43bee1" @if($product->sell_when_out_of_stock == 1) checked @endif>
                                 </div>
+                                @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 2)
+                                <div class="col-sm-4">
+                                    {!! Form::label('title', 'Need Price From Dispatcher',['class' => 'control-label']) !!} <br />
+                                    <input type="checkbox" bid="" id="need_price_from_dispatcher" data-plugin="switchery" name="need_price_from_dispatcher" class="chk_box" data-color="#43bee1" @if($product->need_price_from_dispatcher == 1) checked @endif>
+                                </div>
+                                @endif
+                                
                             </div>
                         </div>
                     </div>
@@ -356,6 +363,19 @@
                                 <select class="selectize-select1 form-control"  name="tags" required>
                                     @if($agent_dispatcher_tags != null && count($agent_dispatcher_tags))
                                     @foreach($agent_dispatcher_tags as $key => $tags)
+                                            <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
+                                    @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        @endif
+                            
+                        @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 2)
+                            <div class="col-md-6 d-flex justify-content-between mb-2">
+                                {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
+                                <select class="selectize-select1 form-control"  name="tags" required>
+                                    @if($agent_dispatcher_on_demand_tags != null && count($agent_dispatcher_on_demand_tags))
+                                    @foreach($agent_dispatcher_on_demand_tags as $key => $tags)
                                             <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
                                     @endforeach
                                     @endif
