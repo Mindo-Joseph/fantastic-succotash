@@ -2862,15 +2862,14 @@ form input.form-control[placeholder="Address"] {
     font-size: 14px;
 }
 
-
 .footer-logo img {
     width: 90px;
-    filter: grayscale(100%);
 }
 
+/* 
 .footer-logo a {
     filter: grayscale(100%);
-}
+} */
 
  
 .toggle-icon input[type=checkbox] {
@@ -3487,6 +3486,50 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     background-position: center right 10px;
 }
 
+.login-form label {
+    padding: 8px 10px;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #f8ecec;
+    color: #000000;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-align: center;
+    border: 1px solid transparent;
+    min-width: 70px;
+}
+
+.login-form .blank-label {
+    display: none;
+}
+
+.login-form input[type="radio"]:checked+label {
+    border-color: #6658dd;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.login-form input {
+    display: none;
+}
+
+.dataTables_filter label {
+    float: right !important;
+}
+
+.login-form .custom-control-label::before {
+    display: none;
+}
+
+.datenow .form-control {
+    width: calc(100% - 55px);
+}
+
+.datenow .btn-solid{
+    padding: 6.7px 14px;
+}
+
 
 /* Arabic Mood Css */
 body[dir="rtl"] {
@@ -3616,21 +3659,41 @@ body[dir="rtl"] .verify_id .input-group-text {
 
 body[dir="rtl"] .small-slider{
     overflow: hidden;
-
-
-
-
 }
 
+body[dir="rtl"] .theme-card .offer-slider .media .media-body a h6{
+    margin: 0;
+}
 
+body[dir="rtl"] .collection-filter .theme-card .offer-slider img{
+    padding: 15px 0 15px 15px;
+}
 
+body[dir="rtl"] .footer-social li, .social-white li{
+    padding: 0 0 0 25px;
+}
 
+body[dir="rtl"] .footer-theme .sub-title .contact_link li {
+    padding: 0 30px 13px 0;
+}
 
+body[dir="rtl"] .contact_link i {
+    left: auto;
+    right: 0;
+    margin: 0 !important;
+    width: 20px;
+    text-align: center;
+}
 
+[dir=rtl] .slick-prev {
+    left: 40px;
+    right: auto;
+}
 
-
-
-
+[dir=rtl] .slick-next {
+    left: 10px;
+    right: auto;
+}
 
 
 

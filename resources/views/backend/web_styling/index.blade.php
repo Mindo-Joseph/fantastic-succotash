@@ -14,34 +14,36 @@
 </div>
 <form id="favicon-form" method="post" enctype="multipart/form-data">
 <div class="row">
-    <div class="col-md-4 col-xl-2">
+    <div class="col-md-4 col-xl-4">
         <div class="card">
             <div class="card-body">
-                <h4 class="header-title">Favicon</h4>
-                <div class="mb-0">
-                    <label>Upload Favicon</label>
-                    <input type="file" accept="image/*" data-default-file="{{$client_preferences->favicon ? $client_preferences->favicon['proxy_url'].'600/400'.$client_preferences->favicon['image_path'] : ''}}" data-plugins="dropify" name="favicon" class="dropify" id="image"/>
-                    <label class="logo-size d-block text-right mt-1">Icon Size 32x32</label>                    
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title">Color</h4>
-                <div class="mb-0">
-                    <div class="form-group mb-0">
-                        <label for="primary_color">Primary Color</label>
-                        <input type="text" id="primary_color_option" name="primary_color" class="form-control" value="{{ old('primary_color', $client_preferences->web_color ?? 'cccccc')}}">
+                <div class="row">
+                    <div class="col-6">
+                        <h4 class="header-title">Favicon</h4>
+                        <div class="mb-0">
+                            <label>Upload Favicon</label>
+                            <input type="file" accept="image/*" data-default-file="{{$client_preferences->favicon ? $client_preferences->favicon['proxy_url'].'600/400'.$client_preferences->favicon['image_path'] : ''}}" data-plugins="dropify" name="favicon" class="dropify" id="image"/>
+                            <label class="logo-size d-block text-right mt-1">Icon Size 32x32</label>                    
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="header-title">Color</h4>
+                        <div class="mb-0">
+                            <div class="form-group mb-0">
+                                <label for="primary_color">Primary Color</label>
+                                <input type="text" id="primary_color_option" name="primary_color" class="form-control" value="{{ old('primary_color', $client_preferences->web_color ?? 'cccccc')}}">
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
+   
     <div class="col-md-4 col-xl-3">
         <div class="card">
             <div class="card-body">
@@ -56,7 +58,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-xl-2">
+    <div class="col-md-4 col-xl-3">
         <div class="card">
             <div class="card-body">
                 <ul class="pl-0 mb-0">
@@ -74,6 +76,69 @@
                     </li>
                     <li class="d-flex align-items-center justify-content-between mt-2">
                         <h4 class="header-title mb-2">Show Contact Us</h4>
+                        <div class="mb-0">
+                            <input type="checkbox" id="show_contact_us" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_contact_us == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-between mt-2">
+                        <h4 class="header-title mb-2">Show icons in navigation</h4>
+                        <div class="mb-0">
+                            <input type="checkbox" id="show_contact_us" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_contact_us == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+
+            <div class="custom-dd-empty dd" id="nestable_list_1">
+                <ol class="dd-list">
+                    <li class="dd-item dd3-item" data-id="1">
+                        <div class="dd-handle dd3-handle">
+                            Choose a smartwatch
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <ul class="pl-0 mb-0">
+                    <li class="d-flex align-items-center justify-content-between">
+                        <h4 class="header-title mb-2">Featured Vendors</h4>
+                        <div class="mb-0">
+                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-between">
+                        <h4 class="header-title mb-2">Vendors</h4>
+                        <div class="mb-0">
+                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-between mt-2">
+                        <h4 class="header-title mb-2">New Products</h4>
+                        <div class="mb-0">
+                            <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-between mt-2">
+                        <h4 class="header-title mb-2">Feature Product</h4>
+                        <div class="mb-0">
+                            <input type="checkbox" id="show_contact_us" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_contact_us == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-between mt-2">
+                        <h4 class="header-title mb-2">Best Seller</h4>
+                        <div class="mb-0">
+                            <input type="checkbox" id="show_contact_us" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_contact_us == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-between mt-2">
+                        <h4 class="header-title mb-2">On Sale</h4>
                         <div class="mb-0">
                             <input type="checkbox" id="show_contact_us" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_contact_us == 1 ? 'checked' : ''}}>
                         </div>
