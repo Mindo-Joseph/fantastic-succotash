@@ -24,4 +24,9 @@ class VendorDineinTable extends Model
       
       return $values;
     }
+
+    public function translations(){
+      $langData = $this->hasMany('App\Models\VendorDineinTableTranslation');
+      return $langData;
+    }
 }

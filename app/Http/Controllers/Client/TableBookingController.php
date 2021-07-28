@@ -91,8 +91,44 @@ class TableBookingController extends BaseController
 
     public function editTable(Request $request)
     {
-        $table_data = VendorDineinTable::where('id', $request->table_id)->first();
+        $table_data = VendorDineinTable::where('id', $request->table_id)->with('translations')->first();
         return $this->successResponse($table_data, '');
+    }
+
+    public function updateTable(Request $request)
+    {
+        // dd($request->all());
+        $rules = array(
+            'name.0' => 'required|string|max:60',
+            'table_number' => 'required|string|max:30|unique:vendor_dinein_tables,table_number,'.$request->table_id,
+        );
+        $validation  = Validator::make($request->all(), $rules)->validate();
+        $table = VendorDineinTable::where('id', $request->table_id)->first();
+        if($table){
+            $table->table_number = $request->table_number;
+            if($request->has('image')){
+                $table->image = Storage::disk('s3')->put('image', $request->image, 'public');
+            }
+            $table->vendor_id = $request->vendor_id;
+            $table->vendor_dinein_category_id = $request->vendor_dinein_category_id;
+            $table->save();
+        if($table->id > 0){
+            foreach ($request->language_id as $key => $value) {
+                $table_translation = VendorDineinTableTranslation::where('language_id', $request->language_id[$key])->where('vendor_dinein_table_id', $table->id)->first();
+                if(!$table_translation){
+                    $table_translation = new VendorDineinTableTranslation();
+                }
+                $table_translation->name = $request->name[$key];
+                $table_translation->meta_title = $request->meta_title[$key];
+                $table_translation->meta_description = $request->meta_description[$key];
+                $table_translation->meta_keywords = $request->meta_keywords[$key];
+                $table_translation->vendor_dinein_table_id = $table->id;
+                $table_translation->language_id = $request->language_id[$key];
+                $table_translation->save();
+            }
+        }
+            return redirect()->back()->with('success', 'Table Updated Successfully!');
+        }
     }
 
 }
