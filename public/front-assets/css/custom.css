@@ -3498,6 +3498,36 @@ body[dir="rtl"] .sm,body[dir="rtl"] .sm ul,body[dir="rtl"] .sm li{
     text-align: right;
 }
 
+body[dir="rtl"] .pixelstrap > li > ul {
+    left: auto !important;
+    right: 0;
+}
+
+body[dir="rtl"] .pixelstrap > li > ul {
+    left: auto !important;
+    right: 0;
+}
+
+body[dir="rtl"] .pixelstrap > li > ul > li ul {
+    left: -259px !important;
+    right: auto !important;
+    margin: -30px 0 0!important;
+}
+
+body[dir="rtl"] .pixelstrap > li > ul span.sub-arrow {
+    left: 0;
+    transform: translateY(-50%) rotateY(180deg);
+}
+
+body[dir="rtl"] .pixelstrap > li span.sub-arrow {
+    left: 0;
+    right: auto !important;
+}
+
+body[dir="rtl"] .pixelstrap > li > a {
+    padding: 0 0 0 40px;
+}
+
 body[dir="rtl"] .pixelstrap ul a,body[dir="rtl"] .pixelstrap ul a:hover,body[dir="rtl"] .pixelstrap ul a:focus,
 body[dir="rtl"] .pixelstrap ul a:active,body[dir="rtl"] .pixelstrap ul a.highlighted,
 body[dir="rtl"] .top-header .header-dropdown .onhover-dropdown .onhover-show-div li a,body[dir="rtl"]  .category-list li a{

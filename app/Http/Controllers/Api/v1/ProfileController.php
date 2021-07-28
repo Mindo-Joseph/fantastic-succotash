@@ -46,7 +46,7 @@ class ProfileController extends BaseController{
                                     'code' => $refferal_code,
                                     'logo' => $client->logo['original'],
                                     'customer_name' => "Link from ".$user->name,
-                                    'code_text' => 'Register yourself using this refferal code below to get bonus offer',
+                                    'code_text' => 'Register yourself using this referral code below to get bonus offer',
                                     'link' => "http://local.myorder.com/user/register?refferal_code=".$refferal_code,
                                 ],
                                 function ($message) use ($sendto, $client_name, $mail_from) {

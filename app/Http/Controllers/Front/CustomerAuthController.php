@@ -151,7 +151,7 @@ class CustomerAuthController extends FrontController
                                 $wallet_user_reffered_by->depositFloat($refferal_amounts->reffered_by_amount, ['Referral code used by <b>' . $req->name . '</b>']);
                                 $wallet_user_reffered_by->balance;
                                 //user reffered to amount
-                                $wallet->depositFloat($refferal_amounts->reffered_to_amount, ['You used refferal code of <b>' . $user_refferd_by->name . '</b>']);
+                                $wallet->depositFloat($refferal_amounts->reffered_to_amount, ['You used referral code of <b>' . $user_refferd_by->name . '</b>']);
                                 $wallet->balance;
                             }
                         }
