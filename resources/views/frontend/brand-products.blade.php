@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => isset($brand->translation[0]->title) ? $brand->translation[0]->title : '' ])
+@extends('layouts.store', ['title' => $brand->translation_title ])
 
 @section('css')
 <style type="text/css">
@@ -119,20 +119,27 @@
                                         <div class="media">
                                             <a href="{{route('productDetail', $new['sku'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                             <div class="media-body align-self-center">
-                                            @if($client_preference_detail)
-                                                @if($client_preference_detail->rating_check == 1)
-                                                <div class="rating">
-                                                    @for($i = 1; $i < 6; $i++)
-                                                        <i class="fa fa-star"></i>
-                                                    @endfor
+                                                <div class="inner_spacing">
+                                                    <a href="{{route('productDetail', $new['url_slug'])}}">
+                                                        <h3>{{ $new['translation_title'] }}</h3>
+                                                    </a>
+                                                    @if($new['inquiry_only'] == 0)
+                                                    <h4 class="mt-1">
+                                                        <?php $multiply = $new['variant_multiplier']; ?>
+                                                        {{ Session::get('currencySymbol').' '.(number_format($new['variant_price'] * $multiply,2))}} </h4>
+                                                    @endif
+                                                    @if($client_preference_detail)
+                                                        @if($client_preference_detail->rating_check == 1)  
+                                                        <div class="custom_rating">
+                                                            @if($new['averageRating'] > 0)
+                                                                @for($i = 1; $i < 6; $i++)
+                                                                    <i class="fa fa-star{{ ($i <= $new['averageRating']) ? ' filled ' : '' }}"></i>
+                                                                @endfor
+                                                            @endif
+                                                        </div>
+                                                        @endif
+                                                    @endif
                                                 </div>
-                                                @endif
-                                            @endif
-                                                <a href="{{route('productDetail', $new['sku'])}}">
-                                                    <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
-                                                </a>
-                                                <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                                    {{ Session::get('currencySymbol').' '.(number_format($new['variant'][0]['price'] * $multiply,2))}} </h4>
                                             </div>
                                         </div>
                                     @endforeach
@@ -151,7 +158,7 @@
                                      <div class="common-banner"><img alt="" src="{{$brand->image['image_fit'] . '1000/200' . $brand->image['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
                                     <div class="top-banner-content small-section">
-                                        <h4>{{ isset($brand->translation[0]->title) ? $brand->translation[0]->title : '' }}</h4>
+                                        <h4>{{ $brand->translation_title }}</h4>
                                     </div>
                                 </div>
                                 <div class="collection-product-wrapper">
@@ -222,20 +229,22 @@
                                                             </div>
                                                         </div>
                                                         <div class="product-detail">
-                                                            <div>
+                                                            <div class="inner_spacing">
+                                                                <a href="{{route('productDetail', $data->sku)}}">
+                                                                    <h3>{{ $data->translation_title }}</h3>
+                                                                </a>
+                                                                <h4 class="mt-1">{{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}</h4>
                                                                 @if($client_preference_detail)
                                                                     @if($client_preference_detail->rating_check == 1)  
-                                                                    <div class="rating">
-                                                                        @for($i = 1; $i < 6; $i++)
-                                                                            <i class="fa fa-star"></i>
-                                                                        @endfor
+                                                                    <div class="custom_rating mt-0">
+                                                                        @if($data->averageRating > 0)
+                                                                            @for($i = 1; $i < 6; $i++)
+                                                                                <i class="fa fa-star{{ ($i <= $data->averageRating) ? ' filled ' : '' }}"></i>
+                                                                            @endfor
+                                                                        @endif
                                                                     </div>
                                                                     @endif
                                                                 @endif
-                                                            <a href="{{route('productDetail', $data->sku)}}">
-                                                                <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
-                                                            </a>
-                                                            <h4>{{Session::get('currencySymbol').($data->variant[0]->price * $data->variant[0]->multiplier)}}</h4>
                                                             </div>
                                                         </div>
                                                     </div>

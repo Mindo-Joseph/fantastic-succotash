@@ -143,7 +143,7 @@
                                                 @endif
                                                 @if($client_preference_detail)
                                                     @if($client_preference_detail->rating_check == 1)
-                                                    <div class="rating">
+                                                    <div class="custom_rating">
                                                         @if($new['averageRating'] > 0)
                                                             @for($i = 1; $i < 6; $i++)
                                                                 <i class="fa fa-star{{ ($i <= $new['averageRating']) ? ' filled ' : '' }}"></i>
@@ -282,7 +282,7 @@
                                                                         @endif
                                                                         @if($client_preference_detail)
                                                                             @if($client_preference_detail->rating_check == 1)  
-                                                                            <div class="rating mt-0">
+                                                                            <div class="custom_rating mt-0">
                                                                                 @if($data->averageRating > 0)
                                                                                     @for($i = 1; $i < 6; $i++)
                                                                                         <i class="fa fa-star{{ ($i <= $data->averageRating) ? ' filled ' : '' }}"></i>

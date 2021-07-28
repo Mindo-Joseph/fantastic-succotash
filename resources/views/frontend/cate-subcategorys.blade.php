@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug])
+@extends('layouts.store', ['title' => $category->translation_name])
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -36,22 +36,27 @@
                                         <div class="media">
                                             <a href="{{route('productDetail', $new['url_slug'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                             <div class="media-body align-self-center">
-                                                @if($client_preference_detail)
-                                                    @if($client_preference_detail->rating_check == 1)  
-                                                    <div class="rating">
-                                                        @for($i = 1; $i < 6; $i++)
-                                                            <i class="fa fa-star"></i>
-                                                        @endfor
-                                                    </div>
+                                                <div class="inner_spacing">
+                                                    <a href="{{route('productDetail', $new['url_slug'])}}">
+                                                        <h3>{{ $new['translation_title'] }}</h3>
+                                                    </a>
+                                                    @if($new['inquiry_only'] == 0)
+                                                    <h4 class="mt-1">
+                                                        <?php $multiply = $new['variant_multiplier']; ?>
+                                                        {{ Session::get('currencySymbol').' '.(number_format($new['variant_price'] * $multiply,2))}} </h4>
                                                     @endif
-                                                @endif
-                                                <a href="{{route('productDetail', $new['url_slug'])}}">
-                                                    <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
-                                                </a>
-                                                @if($new['inquiry_only'] == 0)
-                                                <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                                    {{ Session::get('currencySymbol').' '.(number_format($new['variant'][0]['price'] * $multiply,2))}} </h4>
-                                                @endif
+                                                    @if($client_preference_detail)
+                                                        @if($client_preference_detail->rating_check == 1)  
+                                                        <div class="custom_rating">
+                                                            @if($new['averageRating'] > 0)
+                                                                @for($i = 1; $i < 6; $i++)
+                                                                    <i class="fa fa-star{{ ($i <= $new['averageRating']) ? ' filled ' : '' }}"></i>
+                                                                @endfor
+                                                            @endif
+                                                        </div>
+                                                        @endif
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
@@ -70,7 +75,7 @@
                                         <div class="common-banner"><img alt="" src="{{$category->image['proxy_url'] . '1000/200' . $category->image['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
                                     <div class="top-banner-content small-section">
-                                        <h4>{{ (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug }}</h4>
+                                        <h4>{{ $category->translation_name }}</h4>
                                         {{--@if(!empty($category->childs) && count($category->childs) > 0)
                                             <div class="row">
                                                 <div class="col-12">
@@ -82,7 +87,7 @@
                                                             </a>
                                                             <div class="category-details">
                                                                 <a href="{{route('categoryDetail', $cate['slug'])}}">
-                                                                    <h5>{{$cate['translation'][0]['name']}}</h5>
+                                                                    <h5>{{$cate['translation_name']}}</h5>
                                                                 </a>
                                                             </div>
                                                         </div>
@@ -146,9 +151,11 @@
                                                                 <div class="category-image text-center"><img width="100%" alt="" src="{{$cate['icon']['proxy_url'] . '150/150' . $cate['icon']['image_path']}}" ></div>
                                                             </a>
                                                             <div class="category-details">
-                                                                <a href="{{route('categoryDetail', $cate['slug'])}}">
-                                                                    <h5 class="text-center">{{$cate['translation'][0]['name']}}</h5>
-                                                                </a>
+                                                                <div class="inner_spacing">
+                                                                    <a href="{{route('categoryDetail', $cate['slug'])}}">
+                                                                        <h5 class="text-center">{{$cate['translation_name']}}</h5>
+                                                                    </a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
