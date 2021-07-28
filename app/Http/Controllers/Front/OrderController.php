@@ -144,6 +144,8 @@ class OrderController extends FrontController
             $total_subscription_discount = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $delivery_fee = 0;
+                $deliver_charge = $delivery_fee_charges = 0.00;
+                $delivery_count = 0;
                 $vendor_payable_amount = 0;
                 $vendor_discount_amount = 0;
                 $product_taxable_amount = 0;
@@ -177,7 +179,17 @@ class OrderController extends FrontController
                         }
                     }
                     if (!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1) {
+                       // $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
+
                         $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
+                        if(!empty($delivery_fee) && $delivery_count == 0)
+                        {
+                            $delivery_count = 1;
+                            $vendor_cart_product->delivery_fee = number_format($delivery_fee, 2);
+                            $payable_amount = $payable_amount + $delivery_fee;
+                            $delivery_fee_charges = $delivery_fee;
+                        }
+
                     }
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
@@ -197,6 +209,7 @@ class OrderController extends FrontController
                     $order_product->created_by = $vendor_cart_product->created_by;
                     $order_product->variant_id = $vendor_cart_product->variant_id;
                     $order_product->product_name = $vendor_cart_product->product->sku;
+                    $order_product->product_dispatcher_tag = $vendor_cart_product->product->tags;
                     if ($vendor_cart_product->product->pimage) {
                         $order_product->image = $vendor_cart_product->product->pimage->first() ? $vendor_cart_product->product->pimage->first()->path : '';
                     }
@@ -253,7 +266,6 @@ class OrderController extends FrontController
                 $OrderVendor->taxable_amount   = $vendor_taxable_amount;
                 $OrderVendor->payment_option_id = $request->payment_option_id;
                 $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
-                $OrderVendor->delivery_fee = $this->getDeliveryFeeDispatcher($vendor_id, $user->id);
                 $vendor_info = Vendor::where('id', $vendor_id)->first();
                 if ($vendor_info) {
                     if (($vendor_info->commission_percent) != null && $vendor_payable_amount > 0) {

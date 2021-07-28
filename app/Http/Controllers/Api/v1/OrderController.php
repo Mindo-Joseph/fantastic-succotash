@@ -110,6 +110,8 @@ class OrderController extends Controller {
                     $total_delivery_fee = 0;
                     foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                         $delivery_fee = 0;
+                        $deliver_charge = $delivery_fee_charges = 0.00;
+                        $delivery_count = 0;
                         $vendor_payable_amount = 0;
                         $vendor_discount_amount = 0;
                         $order_vendor = new OrderVendor;
@@ -141,7 +143,14 @@ class OrderController extends Controller {
                                 }
                             }
                             if (!empty($vendor_cart_product->product->Requires_last_mile) && $vendor_cart_product->product->Requires_last_mile == 1) {
-                                $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id);
+                                $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
+                                if(!empty($delivery_fee) && $delivery_count == 0)
+                                {
+                                    $delivery_count = 1;
+                                    $vendor_cart_product->delivery_fee = number_format($delivery_fee, 2);
+                                    $payable_amount = $payable_amount + $delivery_fee;
+                                    $delivery_fee_charges = $delivery_fee;
+                                }
                             }
                             $vendor_taxable_amount += $taxable_amount;
                             $total_amount += $variant->price;
@@ -155,6 +164,7 @@ class OrderController extends Controller {
                             $order_product->created_by = $vendor_cart_product->created_by;
                             $order_product->variant_id = $vendor_cart_product->variant_id;
                             $order_product->product_name = $vendor_cart_product->product->sku;
+                            $order_product->product_dispatcher_tag = $vendor_cart_product->product->tags;
                             if($vendor_cart_product->product->pimage){
                                 $order_product->image = $vendor_cart_product->product->pimage->first() ? $vendor_cart_product->product->pimage->first()->path : '';
                             }
