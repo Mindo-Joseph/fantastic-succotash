@@ -40,6 +40,11 @@ class CategoryController extends FrontController
         }])
         ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
         ->where('slug', $slug)->firstOrFail();
+        $category->translation_name = ($category->translation->first()) ? $category->translation->first()->name : $category->slug;
+        foreach($category->childs as $key => $child){
+            $child->translation_name = ($child->translation->first()) ? $child->translation->first()->name : $child->slug;
+        }
+
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) && (isset($category->type_id)) && ($category->type_id != 4) && ($category->type_id != 5) ){
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
@@ -109,6 +114,11 @@ class CategoryController extends FrontController
         $listData = $this->listData($langId, $category->id, $redirect_to);
         $page = (strtolower($redirect_to) != '') ? strtolower($redirect_to) : 'product';
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
+        foreach($np as $new){
+            $new->translation_title = (!empty($new->translation->first())) ? $new->translation->first()->title : $new->sku;
+            $new->variant_multiplier = (!empty($new->variant->first())) ? $new->variant->first()->multiplier : 1;
+            $new->variant_price = (!empty($new->variant->first())) ? $new->variant->first()->price : 0;
+        }
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         if(view()->exists('frontend/cate-'.$page.'s')){
             return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
@@ -162,9 +172,12 @@ class CategoryController extends FrontController
 
             if(!empty($products)){
                 foreach ($products as $key => $value) {
-                    foreach ($value->variant as $k => $v) {
-                        $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
-                    }
+                    $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $new->sku;
+                    $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                    $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
+                    // foreach ($value->variant as $k => $v) {
+                    //     $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                    // }
                 }
             }
             $listData = $products;

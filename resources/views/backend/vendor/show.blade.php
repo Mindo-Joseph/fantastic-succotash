@@ -657,17 +657,22 @@
             success: function(response) {
                 console.log(response);
                 if (response.status = 'Success') {
-                    $("#edit_table_image").attr("data-default-file", response.data.image.image_fit +"100/100" + response.data.image.image_path);
-                    $('.dropify').dropify();
+                    var image = response.data.image.image_fit + "100/100" + response.data.image.image_path;
+                    $("#edit_table_form .dropify-preview .dropify-render").html("<img src='" + image + "'/>").show();
+                    $("#edit_table_form .dropify-preview").css('display', 'block');
+                    $('#edit_table_image').dropify({
+                        defaultFile: response.data.image.image_fit + "100/100" + response.data.image.image_path
+                    });
                     $("#edit_table_form #edit_table_number").val(response.data.table_number).change();
-                    $("#assignTo").val(response.data.vendor_dinein_category_id);
+                    $("#edit_table_form  #assignTo").val(response.data.vendor_dinein_category_id);
+                    $("#edit_table_form  #table_id").val(response.data.id);
+                    $.each(response.data.translations, function(index, value) {
+                        $('#edit_table_form #vendor_dinein_table_language_name' + value.language_id).val(value.name);
+                        $('#edit_table_form #vendor_dinein_table_language_meta_title' + value.language_id).val(value.meta_title);
+                        $('#edit_table_form #vendor_dinein_table_language_meta_keyword' + value.language_id).val(value.meta_keywords);
+                        $('#edit_table_form #vendor_dinein_table_language_meta_description' + value.language_id).val(value.meta_description);
+                    });
                     $('#edit_table_form').modal('show');
-                    // $("#edit_table_category #table_category_id").val(response.data.id).change();
-                    //       $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val(response.data.id);
-                    //       $('#add_vendor_registration_document_modal #standard-modalLabel').html('Update Vendor Registration Document');
-                    //       $.each(response.data.translations, function( index, value ) {
-                    //         $('#add_vendor_registration_document_modal #vendor_registration_document_name_'+value.language_id).val(value.name);
-                    //       });
                 }
             },
             error: function() {
@@ -705,7 +710,9 @@
 </script>
 <script type="text/javascript">
     var all_coordinates = "{{json_encode($all_coordinates)}}";
-    var areajson_json = {all_coordinates};
+    var areajson_json = {
+        all_coordinates
+    };
 
     /*function gm_authFailure() {
 
@@ -769,7 +776,9 @@
     var lat_longs = new Array();
     var markers = new Array();
     var drawingManager;
-    var no_parking_geofences_json = {all_coordinates};
+    var no_parking_geofences_json = {
+        all_coordinates
+    };
     var newlocation = '<?php echo json_encode($co_ordinates); ?>';
     var first_location = JSON.parse(newlocation);
     var lat = parseFloat(first_location.lat);
