@@ -127,13 +127,13 @@
                                                         </td>
                                                         <td>
                                                             <div class="product-title pl-1">
-                                                                <h4 class="m-0">{{ ((isset($wish['product']['translation'][0])) && (!empty($wish['product']['translation'][0]))) ? $wish['product']['translation'][0]['title'] : '' }}</h4>
+                                                                <h4 class="m-0">{{ $wish['product']['translation_title'] }}</h4>
                                                             </div>
                                                         </td>
-                                                        <td>${{$wish['product']['variant'][0]['price']}}</td>
+                                                        <td>{{ Session::get('currencySymbol') . $wish['product']['variant_price'] }}</td>
                                                         <td>{{date('M d, Y', strtotime($wish['added_on']))}}</td>
                                                         <td>
-                                                            @if($wish['product']['variant'][0]['quantity'] > 0)
+                                                            @if($wish['product']['variant_quantity'] > 0)
                                                                 <i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>
                                                                 <span>{{__('In Stock')}}</span>
                                                             @else
