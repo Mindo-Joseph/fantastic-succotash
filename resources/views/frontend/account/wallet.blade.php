@@ -81,8 +81,7 @@ $timezone = Auth::user()->timezone;
         </div>
         <div class="row mb-3">
             <div class="col-12">
-                <a href="{{route('user.profile')}}"><i class="fa fa-arrow-left mr-2" aria-hidden="true"></i>{{__('Back To
-                    Profile')}}</a>
+                <a href="{{route('user.profile')}}"><i class="fa fa-arrow-left mr-2" aria-hidden="true"></i>{{__('Back To Profile')}}</a>
             </div>
         </div>
         <div class="row">
@@ -219,8 +218,10 @@ $timezone = Auth::user()->timezone;
         </div>
         <div class="modal-footer d-block text-center">
             <div class="row">
-                <div class="col-sm-6 pl-sm-0 pr-sm-1"><button type="button" class="btn btn-block btn-solid mt-2 topup_wallet_confirm">{{__('Topup Wallet')}}</button></div>
-                <div class="col-sm-6 pr-sm-0 pl-sm-1"><button type="button" class="btn btn-block btn-solid mt-2" data-dismiss="modal">{{__('Cancel')}}</button></div>
+                <div class="col-sm-12 p-0 d-flex justify-space-around">
+                    <button type="button" class="btn btn-block btn-solid mr-1 mt-2 topup_wallet_confirm">{{__('Topup Wallet')}}</button>
+                    <button type="button" class="btn btn-block btn-solid ml-1 mt-2" data-dismiss="modal">{{__('Cancel')}}</button>
+                </div>
             </div>
         </div>
       </form>
@@ -229,7 +230,7 @@ $timezone = Auth::user()->timezone;
 </div>
 <script type="text/template" id="payment_method_template">
     <% if(payment_options == '') { %>
-        <h6>{{__('Payment Methods Not Avaialable')}}</h6>
+        <h6>{{__('Payment Options Not Avaialable')}}</h6>
     <% }else{ %>
         <% _.each(payment_options, function(payment_option, k){%>
             <% if( (payment_option.slug != 'cash_on_delivery') && (payment_option.slug != 'loyalty_points') ) { %>
@@ -260,7 +261,7 @@ $timezone = Auth::user()->timezone;
     var credit_wallet_url = "{{route('user.creditWallet')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
     var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
-    var payment_option_list_url = "{{route('payment.option.list')}}";
+    var wallet_payment_options_url = "{{route('wallet.payment.option.list')}}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
     $('.verifyEmail').click(function() {
         verifyUser('email');
