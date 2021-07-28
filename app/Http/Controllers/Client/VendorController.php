@@ -364,8 +364,7 @@ class VendorController extends BaseController
     }
 
     /**   show vendor page - catalog tab      */
-    public function vendorCatalog($domain = '', $id)
-    {
+    public function vendorCatalog($domain = '', $id){
         $product_categories = [];
         $active = array();
         $type = Type::all();
@@ -397,6 +396,7 @@ class VendorController extends BaseController
             ->where('vendor_id', $id)->get();
         $categories = Category::with('translation_one')->select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
             ->where('id', '>', '1')
+            ->where('is_core', 1)
             ->where(function ($q) use ($id) {
                 $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
             })->orderBy('position', 'asc')
