@@ -36,20 +36,28 @@
                                         <div class="media">
                                             <a href="{{route('productDetail', $new['sku'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                             <div class="media-body align-self-center">
-                                                @if($client_preference_detail)
-                                                    @if($client_preference_detail->rating_check == 1)  
-                                                    <div class="rating">
-                                                        @for($i = 1; $i < 6; $i++)
-                                                            <i class="fa fa-star"></i>
-                                                        @endfor
-                                                    </div>
-                                                    @endif
-                                                @endif
-                                                <a href="{{route('productDetail', $new['sku'])}}">
-                                                    <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
-                                                </a>
-                                                <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                                    {{ Session::get('currencySymbol').' '.(number_format($new['variant'][0]['price'] * $multiply,2))}} </h4>
+                                                <div class="inner_spacing">
+                                                    <a href="{{route('productDetail', $new['url_slug'])}}">
+                                                        <h3>{{ $new['translation_title'] }}</h3>
+                                                        @if($new['inquiry_only'] == 0)
+                                                            <h4 class="mt-1">
+                                                                <?php $multiply = $new['variant_multiplier']; ?>
+                                                                {{ Session::get('currencySymbol').' '.(number_format($new['variant_price'] * $multiply,2))}}
+                                                            </h4>
+                                                        @endif
+                                                        @if($client_preference_detail)
+                                                            @if($client_preference_detail->rating_check == 1)
+                                                            <div class="custom_rating">
+                                                                @if($new['averageRating'] > 0)
+                                                                    @for($i = 1; $i < 6; $i++)
+                                                                        <i class="fa fa-star{{ ($i <= $new['averageRating']) ? ' filled ' : '' }}"></i>
+                                                                    @endfor
+                                                                @endif
+                                                            </div>
+                                                            @endif
+                                                        @endif
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
@@ -130,7 +138,7 @@
                                                         </div>
                                                         <div class="product-detail">
                                                             <a href="{{ route('vendorCategoryProducts', [$vendor->slug, $cate['slug']]) }}">
-                                                                <h5>{{$cate['translation'][0]['name']}}</h5>
+                                                                <h5>{{$cate['translation_name']}}</h5>
                                                             </a>
                                                         </div>
                                                     </div>
