@@ -15,6 +15,7 @@ class TableBookingController extends BaseController
 
     public function storeCategory(Request $request)
     {
+        dd($request->all());
         $rules = array(
             'title' => 'required|string|max:150|unique:vendor_dinein_categories',
         );
