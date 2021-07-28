@@ -416,7 +416,7 @@ $('#add_user_permission_vendor').submit(function(e) {
             data: {vendor_id:vendor_id, assignTo:assignTo},
             success: function(response) {
                 if (response.status == 'Success') {
-
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
                 }
             }
         });
