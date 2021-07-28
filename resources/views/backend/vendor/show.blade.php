@@ -557,7 +557,7 @@
 </div>
 
 <div id="add_category_form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h4 class="modal-title">Add Table Category</h4>
@@ -572,6 +572,31 @@
                             {!! Form::text('title', '',['class' => 'form-control', 'placeholder' => 'Category Name', 'required'=>'required']) !!}
                         </div>
                         <input type="hidden" name="vendor_id" value="{{ $vendor->id }}" />
+                    </div>
+                    <div class="row">
+                        @foreach($languages as $langs)
+                        <div class="col-lg-6">
+                            <div class="outer_box px-3 py-2 mb-3">
+                                <div class="row rowYK">
+                                    <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="{{ ($langs->langId == 1) ? 'nameInput' : 'nameotherInput' }}">
+                                            {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
+                                            @if($langs->is_primary == 1)
+                                            {!! Form::text('name[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
+                                            @else
+                                            {!! Form::text('name[]', null, ['class' => 'form-control']) !!}
+                                            @endif
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong></strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {!! Form::hidden('language_id[]', $langs->langId) !!}
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="modal-footer">
