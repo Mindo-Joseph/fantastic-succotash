@@ -717,14 +717,12 @@
             success: function(response) {
                 if (response.status = 'Success') {
                     console.log(response);
-                    $('#edit_table_category').modal('show');
                     $("#edit_table_category #edit_category_name").val(response.data.title).change();
                     $("#edit_table_category #table_category_id").val(response.data.id).change();
-                    //       $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val(response.data.id);
-                    //       $('#add_vendor_registration_document_modal #standard-modalLabel').html('Update Vendor Registration Document');
-                    //       $.each(response.data.translations, function( index, value ) {
-                    //         $('#add_vendor_registration_document_modal #vendor_registration_document_name_'+value.language_id).val(value.name);
-                    //       });
+                    $.each(response.data.translations, function(index, value) {
+                        $('#edit_table_category #vendor_dinein_category_language_name' + value.language_id).val(value.title);;
+                    });
+                    $('#edit_table_category').modal('show');
                 }
             },
             error: function() {
