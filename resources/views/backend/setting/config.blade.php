@@ -109,8 +109,8 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
-                        <label for="delivery_service_key_url">Royo Dispatcher URL</label>
-                        <input type="text" name="delivery_service_key_url" id="delivery_service_key_url" placeholder="" class="form-control" value="{{ old('delivery_service_key_url', $preference->delivery_service_key_url ?? '')}}">
+                        <label for="delivery_service_key_url">Royo Dispatcher URL * ( https://www.abc.com )</label>
+                        <input type="text" name="delivery_service_key_url" id="delivery_service_key_url" placeholder="https://www.abc.com" class="form-control" value="{{ old('delivery_service_key_url', $preference->delivery_service_key_url ?? '')}}">
                         @if($errors->has('delivery_service_key_url'))
                         <span class="text-danger" role="alert">
                            <strong>{{ $errors->first('delivery_service_key_url') }}</strong>
@@ -156,8 +156,8 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
-                        <label for="pickup_delivery_service_key_url">Royo Dispatcher URL</label>
-                        <input type="text" name="pickup_delivery_service_key_url" id="pickup_delivery_service_key_url" placeholder="" class="form-control" value="{{ old('pickup_delivery_service_key_url', $preference->pickup_delivery_service_key_url ?? '')}}">
+                        <label for="pickup_delivery_service_key_url">Royo Dispatcher URL* ( https://www.abc.com )</label>
+                        <input type="text" name="pickup_delivery_service_key_url" id="pickup_delivery_service_key_url" placeholder="https://www.abc.com" class="form-control" value="{{ old('pickup_delivery_service_key_url', $preference->pickup_delivery_service_key_url ?? '')}}">
                         @if($errors->has('pickup_delivery_service_key_url'))
                         <span class="text-danger" role="alert">
                            <strong>{{ $errors->first('pickup_delivery_service_key_url') }}</strong>
@@ -206,8 +206,8 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 home_other_dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_home_other_service == '1')) ? '' : 'display:none;'}}">
-                        <label for="dispacher_home_other_service_key_url">{{ __('Royo Dispatcher URL') }}</label>
-                        <input type="text" name="dispacher_home_other_service_key_url" id="dispacher_home_other_service_key_url" placeholder="" class="form-control" value="{{ old('dispacher_home_other_service_key_url', $preference->dispacher_home_other_service_key_url ?? '')}}">
+                        <label for="dispacher_home_other_service_key_url">{{ __('Royo Dispatcher URL') }} *(https://www.abc.com)</label>
+                        <input type="text" name="dispacher_home_other_service_key_url" id="dispacher_home_other_service_key_url" placeholder="https://www.abc.com" class="form-control" value="{{ old('dispacher_home_other_service_key_url', $preference->dispacher_home_other_service_key_url ?? '')}}">
                         @if($errors->has('dispacher_home_other_service_key_url'))
                         <span class="text-danger" role="alert">
                            <strong>{{ $errors->first('dispacher_home_other_service_key_url') }}</strong>
