@@ -19,7 +19,6 @@ use App\Models\{Client, Category, Product, ClientPreference, Wallet, UserLoyalty
 class BaseController extends Controller{
     private $field_status = 2;
 	protected function sendSms($provider, $sms_key, $sms_secret, $sms_from, $to, $body){
-        $to = "+918950473361";
         try{
             $client = new TwilioClient($sms_key, $sms_secret);
             $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
