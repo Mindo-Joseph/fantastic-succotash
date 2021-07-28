@@ -41,7 +41,7 @@ class SubscriptionPlansUserController extends BaseController
      */
     public function getSubscriptionPlans(Request $request, $domain = '')
     {
-        $sub_plans = SubscriptionPlansUser::with(['features.feature'])->orderBy('sort_order', 'asc')->get();
+        $sub_plans = SubscriptionPlansUser::with(['features.feature'])->orderBy('id', 'asc')->get();
         $featuresList = SubscriptionFeaturesListUser::where('status', 1)->get();
         $user_subscriptions = SubscriptionInvoicesUser::groupBy('user_id')->get();
         $subscribed_users_count = $user_subscriptions->count();
@@ -79,7 +79,7 @@ class SubscriptionPlansUserController extends BaseController
             'features' => 'required',
             'price' => 'required',
             // 'period' => 'required',
-            'sort_order' => 'required'
+            // 'sort_order' => 'required'
         );
         if(!empty($slug)){
             $plan = SubscriptionPlansUser::where('slug', $slug)->firstOrFail();
@@ -101,7 +101,7 @@ class SubscriptionPlansUserController extends BaseController
         $plan->price = $request->price;
         // $plan->period = $request->period;
         $plan->frequency = $request->frequency;
-        $plan->sort_order = $request->sort_order;
+        // $plan->sort_order = $request->sort_order;
         $plan->status = ($request->has('status') && $request->status == 'on') ? '1' : '0';
         if ($request->hasFile('image')) {
             $file = $request->file('image');
