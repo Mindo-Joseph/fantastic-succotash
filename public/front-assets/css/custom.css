@@ -3416,7 +3416,7 @@ form .location-box .form-control::-webkit-input-placeholder,form .location-box .
 .list-box {
     box-shadow: 0 16px 32px 0 rgb(0 0 0 / 5%) !important;
     border-radius: 0 0 16px 16px !important;
-    padding: 20px;
+    padding: 20px 0;
     background: #fff;
     position: absolute;
     top: 100%;
@@ -3428,6 +3428,7 @@ form .location-box .form-control::-webkit-input-placeholder,form .location-box .
 
 .list-items img {
     height: 80px;
+    border-radius: 12px;
 }
 
 .list-box h4, .list-box span {
@@ -3694,7 +3695,6 @@ body[dir="rtl"] .contact_link i {
     left: 10px;
     right: auto;
 }
-
 
 
 

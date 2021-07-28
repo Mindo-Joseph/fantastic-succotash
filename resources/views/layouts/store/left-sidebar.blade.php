@@ -54,23 +54,19 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
                                 <input class="form-control border-0 typeahead" type="search" placeholder="{{__('Search')}}" id="main_search_box">
                             </div>
-                            <div class="list-box" style="display:none;" id="search_box_main_div">
+                            <div class="list-box style-4" style="display:none;" id="search_box_main_div">
                             </div>
                         </div>
                             
                         
                         <script type="text/template" id="search_box_main_div_template">
-                            <div class="mb-3">
-                               <div class="table-responsive style-4">
-                                  <div class="row flex-nowrap mx-0 mb-2">
-                                    <% _.each(results, function(result, k){ %>
-                                     <a class="col-4 text-center list-items" href="<%= result.redirect_url %>">
-                                        <img src="<%= result.image_url%>" alt="">
-                                        <span><%= result.name %></span>
-                                     </a>
-                                    <% }); %>
-                                  </div>
-                               </div>
+                            <div class="row mx-0">
+                                <% _.each(results, function(result, k){ %>
+                                    <a class="col-md-4 text-center list-items mb-2" href="<%= result.redirect_url %>">
+                                    <img src="<%= result.image_url%>" alt="">
+                                    <span><%= result.name %></span>
+                                    </a>
+                                <% }); %>
                             </div>
                         </script>
                         <div class="icon-nav">
