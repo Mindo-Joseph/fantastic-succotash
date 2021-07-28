@@ -392,6 +392,7 @@ class AuthController extends BaseController{
                 $user->is_phone_verified = 1;
                 $user->phone_token_valid_till = NULL;
                 $user->save();
+                return $this->successResponse(getUserDetailViaApi($user) , $message);
             }elseif ($request->type == 'email') {
                 if($user->email_token != $request->otp){
                     return $this->errorResponse(__('OTP is not valid'), 404);
@@ -403,7 +404,7 @@ class AuthController extends BaseController{
                 $user->is_email_verified = 1;
                 $user->email_token_valid_till = NULL;
                 $user->save();
-                return $this->successResponse([], $message);
+                return $this->successResponse(getUserDetailViaApi($user), $message);
             }  
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode()); 
