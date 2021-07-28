@@ -251,7 +251,7 @@
         </tr>
         <tr class="border_0">
             <td colspan="3"></td>
-            <td colspan="4" class="pt-0 pr-0">
+            <!-- <td colspan="4" class="pt-0 pr-0">
                 <div class="row d-flex align-items-center no-gutters" id="dateredio">
                     <div class="col-md-5 pr-2">
                         <div class="login-form">
@@ -275,7 +275,7 @@
                         <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button>
                     </div>
                 </div>
-            </td>
+            </td> -->
         </tr>
     </tfoot>
 </script>
@@ -515,10 +515,6 @@
     <% _.each(payment_options, function(payment_option, k){%>
         <div class="tab-pane fade <%= payment_option.slug == 'cash_on_delivery' ? 'active show': ''%>" id="v-pills-<%= payment_option.slug %>" role="tabpanel" aria-labelledby="v-pills-<%= payment_option.slug %>-tab">
             <form method="POST" id="<%= payment_option.slug %>-payment-form">
-                <div class="form-group">
-                    <label>Scheduled Date & Time</label>
-                    <input class="form-control" type="text">
-                </div>
             @csrf
             @method('POST')
                 <div class="payment_response mb-3">
@@ -541,7 +537,7 @@
                         <div class="col-md-12 text-md-right">
                             <button type="button" class="btn btn-solid" data-dismiss="modal">{{ __('Cancel') }}</button>
                             <button type="button" class="btn btn-solid ml-1 proceed_to_pay">{{__('Place Order')}}</button>
-                            <button type="button" class="btn btn-solid ml-1 proceed_to_pay">Scheduled Now</button>
+                            <!-- <button type="button" class="btn btn-solid ml-1 proceed_to_pay">Scheduled Now</button> -->
                         </div>
                     </div>
                 </div>

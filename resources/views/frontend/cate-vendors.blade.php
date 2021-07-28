@@ -86,7 +86,7 @@
                                     <div class="top-banner-content small-section">
                                         <h4>{{ $category->translation_name }}</h4>
 
-                                        @if(!empty($category->childs) && count($category->childs) > 0)
+                                        <!-- @if(!empty($category->childs) && count($category->childs) > 0)
                                             <div class="row">
                                                 <div class="col-12">
                                                     
@@ -106,8 +106,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endif
+                                        @endif -->
                                     </div>
+
                                 </div>
                                 <div class="collection-product-wrapper">
                                     <div class="product-top-filter">
