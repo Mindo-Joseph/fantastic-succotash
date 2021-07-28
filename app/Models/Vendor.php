@@ -23,6 +23,10 @@ class Vendor extends Model{
       $current_time = $mytime->toTimeString();
       return $this->hasMany('App\Models\VendorSlot', 'vendor_id', 'id')->has('day')->where('start_time', '<', $current_time)->where('end_time', '>', $current_time);
     }
+
+    public function avgRating(){
+      return $this->hasMany('App\Models\Product', 'vendor_id', 'id')->avg('averageRating'); 
+    }
     
     public function getLogoAttribute($value){
       $values = array();
@@ -69,4 +73,5 @@ class Vendor extends Model{
     public function product(){
       return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
     }
+
 }

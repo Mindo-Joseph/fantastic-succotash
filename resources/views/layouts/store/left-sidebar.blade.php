@@ -26,7 +26,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             @endif
                         @endif
                         @if($mod_count > 1)
-                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mt-3 mt-md-0" id="top-tab" role="tablist">
+                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mt-3 mt-md-0 vendor_mods" id="top-tab" role="tablist">
                                 @if($client_preference_detail->delivery_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
                                     <a class="nav-link {{$mod_count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
@@ -50,11 +50,26 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="col-lg-5 col-10 order-lg-2 order-1">                
                     <div class="search_bar menu-right d-flex align-items-center justify-content-between w-100 ">
                         <div class="radius-bar">
-                            <form class="search_form d-flex align-items-center justify-content-between" action="">
+                            <div class="search_form d-flex align-items-center justify-content-between">
                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                <input class="form-control border-0" type="text" placeholder="{{__('Search')}}">
-                            </form>
+                                <input class="form-control border-0 typeahead" type="search" placeholder="{{__('Search')}}" id="main_search_box">
+                            </div>
+                            <div class="list-box style-4" style="display:none;" id="search_box_main_div">
+                                
+                            </div>
                         </div>
+                            
+                        
+                        <script type="text/template" id="search_box_main_div_template">
+                            <div class="row mx-0">
+                                <% _.each(results, function(result, k){ %>
+                                    <a class="col-md-4 text-center list-items mb-2" href="<%= result.redirect_url %>">
+                                    <img src="<%= result.image_url%>" alt="">
+                                    <span><%= result.name %></span>
+                                    </a>
+                                <% }); %>
+                            </div>
+                        </script>
                         <div class="icon-nav">
                             <form name="filterData" id="filterData" action="{{route('changePrimaryData')}}">
                                 @csrf
@@ -94,7 +109,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         <% }); %>
                                         <% }); %>
                                         <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
-                                        <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('Viewcart')}}</a>
+                                        <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('View Cart')}}</a>
                                     </script>
                                     <ul class="show-div shopping-cart" id="header_cart_main_ul"></ul>
                                 </li>
@@ -104,7 +119,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div>
             </div>
         </div>
-
     @if(count($navCategories) > 0)
         <div class="menu-navigation">
             <div class="container">

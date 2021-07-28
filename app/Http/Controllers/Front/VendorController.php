@@ -64,6 +64,11 @@ class VendorController extends FrontController
         $navCategories = $this->categoryNav($langId);
         $vendorIds[] = $vendor->id;
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
+        foreach($np as $new){
+            $new->translation_title = (!empty($new->translation->first())) ? $new->translation->first()->title : $new->sku;
+            $new->variant_multiplier = (!empty($new->variant->first())) ? $new->variant->first()->multiplier : 1;
+            $new->variant_price = (!empty($new->variant->first())) ? $new->variant->first()->price : 0;
+        }
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         $listData = $this->listData($langId, $vendor->id, $vendor->vendor_templete_id);
         $range_products = Product::join('product_variants', 'product_variants.product_id', '=', 'products.id')->orderBy('product_variants.price', 'desc')->select('*')->where('is_live', 1)->where('vendor_id', $vendor->id)->get();
@@ -110,16 +115,22 @@ class VendorController extends FrontController
                     $qry->select('id')->from('products')
                     ->where('vendor_id', $vendor->id);
                 })->groupBy('product_variant_sets.variant_type_id')->get();
-                $navCategories = $this->categoryNav($langId);
-                $vendorIds[] = $vendor->id;
-                $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
-                $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-                if(!empty($slug2)){
-                    $vendor->vendor_templete_id = '';
-                }
-                $listData = $this->listData($langId, $vendor->id, $vendor->vendor_templete_id, $slug2);
+        $navCategories = $this->categoryNav($langId);
+        $vendorIds[] = $vendor->id;
+        $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
+        foreach($np as $new){
+            $new->translation_title = (!empty($new->translation->first())) ? $new->translation->first()->title : $new->sku;
+            $new->variant_multiplier = (!empty($new->variant->first())) ? $new->variant->first()->multiplier : 1;
+            $new->variant_price = (!empty($new->variant->first())) ? $new->variant->first()->price : 0;
+        }
+        $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
+        if(!empty($slug2)){
+            $vendor->vendor_templete_id = '';
+        }
+        $listData = $this->listData($langId, $vendor->id, $vendor->vendor_templete_id, $slug2);
         $page = ($vendor->vendor_templete_id == 2) ? 'categories' : 'products';
-        return view('frontend/vendor-'.$page)->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
+        $range_products = Product::join('product_variants', 'product_variants.product_id', '=', 'products.id')->orderBy('product_variants.price', 'desc')->select('*')->where('is_live', 1)->where('vendor_id', $vendor->id)->get();
+        return view('frontend/vendor-'.$page)->with(['vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands, 'range_products' => $range_products]);
     }
 
     public function listData($langId, $vid, $type = '', $categorySlug = ''){
@@ -134,6 +145,9 @@ class VendorController extends FrontController
             $categoryData = Category::select('id', 'icon', 'slug', 'type_id', 'image')
                             ->whereIn('id', $vendor_categories);
             $categoryData = $categoryData->paginate($pagiNate);
+            foreach ($categoryData as $key => $value) {
+                $value->translation_name = ($value->translation->first()) ? $value->translation->first()->name : 'NA';
+            }
             return $categoryData;
         }else{
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
@@ -153,9 +167,12 @@ class VendorController extends FrontController
             $products = $products->where('is_live', 1)->where('vendor_id', $vid)->paginate($pagiNate);
             if(!empty($products)){
                 foreach ($products as $key => $value) {
-                    foreach ($value->variant as $k => $v) {
-                        $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
-                    }
+                    $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
+                    $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                    $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
+                    // foreach ($value->variant as $k => $v) {
+                    //     $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                    // }
                 }
             }
             $listData = $products;

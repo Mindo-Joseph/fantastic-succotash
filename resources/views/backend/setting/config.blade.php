@@ -29,7 +29,7 @@
    <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
       @csrf
       <div class="row">
-         <div class="col-lg-3 col-md-6 mb-3">
+         <div class="col-lg-4 col-md-6 mb-3">
             <div class="row h-100">
                <div class="col-12">
                   <div class="card-box h-100">
@@ -92,7 +92,7 @@
                </div>
             </div>
          </div>
-         <div class="col-lg-3 col-md-6 mb-3">
+         <div class="col-lg-4 col-md-6 mb-3">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
                   <h4 class="header-title mb-0">Last Mile Delivery</h4>
@@ -139,7 +139,7 @@
                </div>
             </div>
          </div>
-         <div class="col-lg-3 col-md-6 mb-3">
+         <div class="col-lg-4 col-md-6 mb-3">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
                   <h4 class="header-title mb-0">Pickup & Delivery</h4>
@@ -189,7 +189,7 @@
                </div>
             </div>
          </div>
-         <div class="col-lg-3 col-md-6 mb-3">
+         <!-- <div class="col-lg-3 col-md-6 mb-3">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
                   <h4 class="header-title mb-0">{{ __('On Demand Services') }}</h4>
@@ -238,7 +238,7 @@
                   </div>
                </div>
             </div>
-         </div>
+         </div> -->
       </div>
    </form>
    <div class="row">

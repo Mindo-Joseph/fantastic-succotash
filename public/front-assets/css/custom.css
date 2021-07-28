@@ -1756,7 +1756,7 @@ label{
     background-color: #EEEEEE;
     /* border-radius: 50px; */
     padding: 0 10px;
-    overflow: hidden;
+    position: relative;
 }
 .search_form, .search_form input.form-control, .search_form button.btn.btn-solid {
     height: 100%;
@@ -1937,9 +1937,13 @@ div#test {
     background-color: #ffffff;
 }
 
-.rating i.fa.fa-star {
+.custom_rating i.fa.fa-star {
     font-size: 10px;
     padding: 0;
+    color: #dddddd;
+}
+.custom_rating i.fa.fa-star.filled {
+    color: #ffa200 !important;
 }
 
 .logo-block {
@@ -2859,15 +2863,14 @@ form input.form-control[placeholder="Address"] {
     font-size: 14px;
 }
 
-
 .footer-logo img {
     width: 90px;
-    filter: grayscale(100%);
 }
 
+/* 
 .footer-logo a {
     filter: grayscale(100%);
-}
+} */
 
  
 .toggle-icon input[type=checkbox] {
@@ -3287,7 +3290,7 @@ header .homepage-address h2 {
 }
 
 .location-inputs li::before {
-    height: 100%;
+    height: calc(100% + 8px);
     background: transparent;
     border-left: 2px dashed #fff;
     position: absolute;
@@ -3296,7 +3299,11 @@ header .homepage-address h2 {
     content: "";
     width: 2px;
     left: -20px;
-    top: 21px;
+    top: 26px;
+}
+
+.location-inputs li:last-child::before {
+    height: calc(100% - 2px);
 }
 
 .dots::after {
@@ -3313,17 +3320,18 @@ header .homepage-address h2 {
     border-radius: 50px;
 }
 
-.location-inputs .dots::after{
-    top: 5px;
+.location-inputs .dots::after {
+    top: 50%;
     left: -24px;
+    transform: translateY(-50%);
 }
 
 .location-inputs .dots.map-icon::after {
     font-family: FontAwesome;
+    top: calc(50% - 8px);
     content: "\f041";
     color: #fff;
     border: 0;
-    top: -1px;
 }
 
 .add-more-location{
@@ -3408,17 +3416,35 @@ form .location-box .form-control::-webkit-input-placeholder,form .location-box .
 /* Search Bar Css */
 .list-box {
     box-shadow: 0 16px 32px 0 rgb(0 0 0 / 5%) !important;
-    border-radius: 0 0 16px 16px !important;
-    padding: 20px;
+    border-radius: 0 0 10px 10px !important;
+    padding: 20px 0;
     background: #fff;
+    position: absolute;
+    top: 100%;
+    z-index: 9999999999;
+    left: 0;
+    width: 100%;
+    display: block;
+    height: 330px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .list-items img {
     height: 80px;
+    border-radius: 12px;
 }
 
-.list-box h4,.list-box span {
+.list-box h4, .list-box span {
     font-weight: 600;
+    font-size: 12px;
+    display: block;
+    margin-top: 4px;
+}
+
+.list-items {
+    line-height: 16px;
+    display: block;
 }
 
 /*
@@ -3465,6 +3491,50 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     background-position: center right 10px;
 }
 
+.login-form label {
+    padding: 8px 10px;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #f8ecec;
+    color: #000000;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-align: center;
+    border: 1px solid transparent;
+    min-width: 70px;
+}
+
+.login-form .blank-label {
+    display: none;
+}
+
+.login-form input[type="radio"]:checked+label {
+    border-color: #6658dd;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.login-form input {
+    display: none;
+}
+
+.dataTables_filter label {
+    float: right !important;
+}
+
+.login-form .custom-control-label::before {
+    display: none;
+}
+
+.datenow .form-control {
+    width: calc(100% - 55px);
+}
+
+.datenow .btn-solid{
+    padding: 6.7px 14px;
+}
+
 
 /* Arabic Mood Css */
 body[dir="rtl"] {
@@ -3474,6 +3544,36 @@ body[dir="rtl"] {
 
 body[dir="rtl"] .sm,body[dir="rtl"] .sm ul,body[dir="rtl"] .sm li{
     text-align: right;
+}
+
+body[dir="rtl"] .pixelstrap > li > ul {
+    left: auto !important;
+    right: 0;
+}
+
+body[dir="rtl"] .pixelstrap > li > ul {
+    left: auto !important;
+    right: 0;
+}
+
+body[dir="rtl"] .pixelstrap > li > ul > li ul {
+    left: -259px !important;
+    right: auto !important;
+    margin: -30px 0 0!important;
+}
+
+body[dir="rtl"] .pixelstrap > li > ul span.sub-arrow {
+    left: 0;
+    transform: translateY(-50%) rotateY(180deg);
+}
+
+body[dir="rtl"] .pixelstrap > li span.sub-arrow {
+    left: 0;
+    right: auto !important;
+}
+
+body[dir="rtl"] .pixelstrap > li > a {
+    padding: 0 0 0 40px;
 }
 
 body[dir="rtl"] .pixelstrap ul a,body[dir="rtl"] .pixelstrap ul a:hover,body[dir="rtl"] .pixelstrap ul a:focus,
@@ -3564,22 +3664,41 @@ body[dir="rtl"] .verify_id .input-group-text {
 
 body[dir="rtl"] .small-slider{
     overflow: hidden;
-
-
-
-    
 }
 
+body[dir="rtl"] .theme-card .offer-slider .media .media-body a h6{
+    margin: 0;
+}
 
+body[dir="rtl"] .collection-filter .theme-card .offer-slider img{
+    padding: 15px 0 15px 15px;
+}
 
+body[dir="rtl"] .footer-social li, .social-white li{
+    padding: 0 0 0 25px;
+}
 
+body[dir="rtl"] .footer-theme .sub-title .contact_link li {
+    padding: 0 30px 13px 0;
+}
 
+body[dir="rtl"] .contact_link i {
+    left: auto;
+    right: 0;
+    margin: 0 !important;
+    width: 20px;
+    text-align: center;
+}
 
+[dir=rtl] .slick-prev {
+    left: 40px;
+    right: auto;
+}
 
-
-
-
-
+[dir=rtl] .slick-next {
+    left: 10px;
+    right: auto;
+}
 
 
 

@@ -27,7 +27,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('coupons/{id?}', 'Api\v1\CouponController@list');
         Route::post('cart/remove', 'Api\v1\CartController@removeItem');
         Route::get('cart/totalItems', 'Api\v1\CartController@getItemCount');
-        
         Route::post('cart/updateQuantity', 'Api\v1\CartController@updateQuantity');
         Route::post('promo-code/list', 'Api\v1\PromoCodeController@postPromoCodeList');
         Route::post('promo-code/verify', 'Api\v1\PromoCodeController@postVerifyPromoCode');

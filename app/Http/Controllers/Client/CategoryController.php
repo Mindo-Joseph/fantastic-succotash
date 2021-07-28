@@ -21,7 +21,7 @@ class CategoryController extends BaseController{
     public function index(){
         $brands = Brand::with( 'bc.cate.primary')->where('status', '!=', 2)->orderBy('position', 'asc')->get();
         $variants = Variant::with('option', 'varcategory.cate.primary')->where('status', '!=', 2)->orderBy('position', 'asc')->get();
-        $categories = Category::with('translation_one')->where('id', '>', '1')->where('is_core', 1)->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->where('deleted_at', NULL)->get();
+        $categories = Category::with('translation_one')->where('id', '>', '1')->where('is_core', 1)->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->where('deleted_at', NULL)->where('status', 1)->get();
         if($categories){
             $build = $this->buildTree($categories->toArray());
             $tree = $this->printTree($build);
@@ -194,7 +194,7 @@ class CategoryController extends BaseController{
         $cate->display_mode = $request->display_mode;
         $cate->warning_page_id = $request->warning_page_id;
         $cate->template_type_id = $request->template_type_id;
-        $cate->warning_page_design = $request->warning_page_design;
+        $cate->warning_page_design = $request->has('warning_page_design') ? $request->warning_page_design : 0;
         $cate->is_visible = ($request->has('is_visible') && $request->is_visible == 'on') ? 1 : 0;
         $cate->show_wishlist = ($request->has('show_wishlist') && $request->show_wishlist == 'on') ? 1 : 0;
         $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on' && ($request->type_id == 1 || $request->type_id == 3)) ? 1 : 0;

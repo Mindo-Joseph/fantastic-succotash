@@ -249,6 +249,34 @@
                 </div>
             </td>
         </tr>
+        <tr class="border_0">
+            <td colspan="3"></td>
+            <!-- <td colspan="4" class="pt-0 pr-0">
+                <div class="row d-flex align-items-center no-gutters" id="dateredio">
+                    <div class="col-md-5 pr-2">
+                        <div class="login-form">
+                            <ul class="list-inline">
+                                <li class="d-inline-block mr-1">
+                                    <input type="radio" class="custom-control-input check" id="tasknow"
+                                    name="task_type" value="now" checked>
+                                    <label class="custom-control-label" for="tasknow">Now</label>
+                                </li>
+                                <li class="d-inline-block">
+                                    <input type="radio" class="custom-control-input check" id="taskschedule"
+                                    name="task_type" value="schedule" >
+                                    <label class="custom-control-label" for="taskschedule">Schedule</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-7 datenow d-flex align-items-center justify-content-between">
+                        <input type="text" id="datetime-datepicker" name="schedule_time"
+                            class="form-control upside" placeholder="Date Time">
+                        <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </td> -->
+        </tr>
     </tfoot>
 </script>
 <script type="text/template" id="promo_code_template">
@@ -413,6 +441,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4">
                     <a class="btn btn-solid" href="{{ url('/') }}">{{__('Continue Shopping')}}</a>
@@ -508,6 +537,7 @@
                         <div class="col-md-12 text-md-right">
                             <button type="button" class="btn btn-solid" data-dismiss="modal">{{ __('Cancel') }}</button>
                             <button type="button" class="btn btn-solid ml-1 proceed_to_pay">{{__('Place Order')}}</button>
+                            <!-- <button type="button" class="btn btn-solid ml-1 proceed_to_pay">Scheduled Now</button> -->
                         </div>
                     </div>
                 </div>
@@ -525,10 +555,12 @@
                     </div>
                     <div class="col-8">
                         <div class="tab-content-box pl-3">
-                            <h5 class="modal-title pt-4" id="pay-billLabel">{{__('Total Amount')}}: <span id="total_amt"></span></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
+                            <div class="d-flex align-items-center justify-content-between pt-3">
+                                <h5 class="modal-title" id="pay-billLabel">{{__('Total Amount')}}: <span id="total_amt"></span></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
                             <div class="tab-content h-100" id="v_pills_tabContent">
                             </div>
                         </div>

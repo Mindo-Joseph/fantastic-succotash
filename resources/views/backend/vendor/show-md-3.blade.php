@@ -416,7 +416,7 @@ $('#add_user_permission_vendor').submit(function(e) {
             data: {vendor_id:vendor_id, assignTo:assignTo},
             success: function(response) {
                 if (response.status == 'Success') {
-
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
                 }
             }
         });
@@ -438,7 +438,7 @@ $('#add_user_permission_vendor').submit(function(e) {
                    $('#category_list').selectize()[0].selectize.destroy();
                    $.each(response.data, function (key, value) {
                         if(value.category.type_id == 1){
-                           $('#category_list').append('<option value='+value.category_id+'>'+value.category.slug+'</option>');
+                           $('#category_list').append('<option value='+value.category_id+'>'+value.category.title+'</option>');
                         }
                    });
                 }

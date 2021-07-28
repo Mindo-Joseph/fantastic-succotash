@@ -398,7 +398,7 @@
                                                                 <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$dinein_category->title}}</a>
                                                             </td>
                                                             <td>
-                                                                <button type="button" class="btn btn-primary-outline action-icon editAreaBtn" area_id="{{$dinein_category->id}}"><i class="mdi mdi-square-edit-outline"></i></button>
+                                                                <button type="button" class="btn btn-primary-outline action-icon editCategorybtn" data-id="{{$dinein_category->id}}"><i class="mdi mdi-square-edit-outline"></i></button>
 
                                                                 <form action="{{route('vendor.category.delete', $vendor->id)}}" method="POST" class="action-icon">
                                                                     @csrf
@@ -430,7 +430,7 @@
                                                                 <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$vendor_table->table_number}}</a>
                                                             </td>
                                                             <td>
-                                                                <button type="button" class="btn btn-primary-outline action-icon editAreaBtn" area_id="{{$vendor_table->id}}"><i class="mdi mdi-square-edit-outline"></i></button>
+                                                                <button type="button" class="btn btn-primary-outline action-icon editTablebtn" data-id="{{$vendor_table->id}}"><i class="mdi mdi-square-edit-outline"></i></button>
 
                                                                 <form action="{{route('vendor.table.delete', $vendor->id)}}" method="POST" class="action-icon">
                                                                     @csrf
@@ -485,7 +485,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <label>Upload Category image</label>
-                            <input type="file" accept="image/*" data-default-file="" data-plugins="dropify" name="image" class="dropify" id="image"/>
+                            <input type="file" accept="image/*" data-default-file="" data-plugins="dropify" name="image" class="dropify" id="image" />
                             <label class="logo-size d-block text-right mt-1">Image Size 1026x200</label>
                         </div>
                         <div class="col-sm-5 mb-2">
@@ -557,7 +557,7 @@
 </div>
 
 <div id="add_category_form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h4 class="modal-title">Add Table Category</h4>
@@ -572,6 +572,31 @@
                             {!! Form::text('title', '',['class' => 'form-control', 'placeholder' => 'Category Name', 'required'=>'required']) !!}
                         </div>
                         <input type="hidden" name="vendor_id" value="{{ $vendor->id }}" />
+                    </div>
+                    <div class="row">
+                        @foreach($languages as $langs)
+                        <div class="col-lg-6">
+                            <div class="outer_box px-3 py-2 mb-3">
+                                <div class="row rowYK">
+                                    <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="{{ ($langs->langId == 1) ? 'nameInput' : 'nameotherInput' }}">
+                                            {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
+                                            @if($langs->is_primary == 1)
+                                            {!! Form::text('name[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
+                                            @else
+                                            {!! Form::text('name[]', null, ['class' => 'form-control']) !!}
+                                            @endif
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong></strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {!! Form::hidden('language_id[]', $langs->langId) !!}
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -643,19 +668,82 @@
 
 <script src="{{asset('assets/libs/moment/moment.min.js')}}"></script>
 
-<!-- Page js-->
 <script src="{{asset('assets/js/calender_main.js')}}"></script>
 <script src="{{ asset('assets/js/pages/jquery.cookie.js') }}"></script>
+<script>
+    $(document).on("click", ".editTablebtn", function() {
+        let table_id = $(this).data('id');
+        $.ajax({
+            method: 'GET',
+            data: {
+                table_id: table_id
+            },
+            url: "{{ route('vendor_table_edit') }}",
+            success: function(response) {
+                console.log(response);
+                if (response.status = 'Success') {
+                    var image = response.data.image.image_fit + "100/100" + response.data.image.image_path;
+                    $("#edit_table_form .dropify-preview .dropify-render").html("<img src='" + image + "'/>").show();
+                    $("#edit_table_form .dropify-preview").css('display', 'block');
+                    $('#edit_table_image').dropify({
+                        defaultFile: response.data.image.image_fit + "100/100" + response.data.image.image_path
+                    });
+                    $("#edit_table_form #edit_table_number").val(response.data.table_number).change();
+                    $("#edit_table_form  #assignTo").val(response.data.vendor_dinein_category_id);
+                    $("#edit_table_form  #table_id").val(response.data.id);
+                    $.each(response.data.translations, function(index, value) {
+                        $('#edit_table_form #vendor_dinein_table_language_name' + value.language_id).val(value.name);
+                        $('#edit_table_form #vendor_dinein_table_language_meta_title' + value.language_id).val(value.meta_title);
+                        $('#edit_table_form #vendor_dinein_table_language_meta_keyword' + value.language_id).val(value.meta_keywords);
+                        $('#edit_table_form #vendor_dinein_table_language_meta_description' + value.language_id).val(value.meta_description);
+                    });
+                    $('#edit_table_form').modal('show');
+                }
+            },
+            error: function() {
 
+            }
+        });
+    });
+
+    $(document).on("click", ".editCategorybtn", function() {
+        let table_category_id = $(this).data('id');
+        $.ajax({
+            method: 'GET',
+            data: {
+                table_category_id: table_category_id
+            },
+            url: "{{ route('vendor_table_category_edit') }}",
+            success: function(response) {
+                if (response.status = 'Success') {
+                    console.log(response);
+                    $("#edit_table_category #edit_category_name").val(response.data.title).change();
+                    $("#edit_table_category #table_category_id").val(response.data.id).change();
+                    $.each(response.data.translations, function(index, value) {
+                        $('#edit_table_category #vendor_dinein_category_language_name' + value.language_id).val(value.title);;
+                    });
+                    $('#edit_table_category').modal('show');
+                }
+            },
+            error: function() {
+
+            }
+        });
+    });
+</script>
 <script type="text/javascript">
     var all_coordinates = "{{json_encode($all_coordinates)}}";
-    var areajson_json = {all_coordinates};
+    var areajson_json = {
+        all_coordinates
+    };
 
     /*function gm_authFailure() {
 
         $('.excetion_keys').append('<span><i class="mdi mdi-block-helper mr-2"></i> <strong>Google Map</strong> key is not valid</span><br/>');
         $('.displaySettingsError').show();
     }*/
+
+
 
     function initialize_show() {
 
@@ -711,7 +799,9 @@
     var lat_longs = new Array();
     var markers = new Array();
     var drawingManager;
-    var no_parking_geofences_json = {all_coordinates};
+    var no_parking_geofences_json = {
+        all_coordinates
+    };
     var newlocation = '<?php echo json_encode($co_ordinates); ?>';
     var first_location = JSON.parse(newlocation);
     var lat = parseFloat(first_location.lat);

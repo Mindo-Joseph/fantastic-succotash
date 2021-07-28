@@ -98,16 +98,15 @@
                                         {{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}
                                     </h2>
                                     @if($client_preference_detail)
-                                    @if($client_preference_detail->rating_check == 1)
-                                    <div class="rating">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <a href="#"></a>
-                                    </div>
-                                    @endif
+                                        @if($client_preference_detail->rating_check == 1)  
+                                        <div class="custom_rating">
+                                            @if($product->averageRating > 0)
+                                                @for($i = 1; $i < 6; $i++)
+                                                    <i class="fa fa-star{{ ($i <= $product->averageRating) ? ' filled ' : '' }}"></i>
+                                                @endfor
+                                            @endif
+                                        </div>
+                                        @endif
                                     @endif
                                     <div class="description_txt my-3">
                                         <p>It is a long established fact that a reader will be distracted by the

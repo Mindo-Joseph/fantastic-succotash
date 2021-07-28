@@ -44,7 +44,7 @@ class SubscriptionPlansVendorController extends BaseController
      */
     public function getSubscriptionPlans(Request $request, $domain = '')
     {
-        $sub_plans = SubscriptionPlansVendor::with(['features.feature'])->orderBy('sort_order', 'asc')->get();
+        $sub_plans = SubscriptionPlansVendor::with(['features.feature'])->orderBy('id', 'asc')->get();
         $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
         $vendor_subscriptions = SubscriptionInvoicesVendor::where('status_id', 2)->groupBy('vendor_id')->get();
         $awaiting_approval_subscriptions_count = SubscriptionInvoicesVendor::where('status_id', 1)->count();
@@ -85,7 +85,7 @@ class SubscriptionPlansVendorController extends BaseController
             'features' => 'required',
             'price' => 'required',
             // 'period' => 'required',
-            'sort_order' => 'required'
+            // 'sort_order' => 'required'
         );
         if(!empty($slug)){
             $plan = SubscriptionPlansVendor::where('slug', $slug)->firstOrFail();
@@ -107,7 +107,7 @@ class SubscriptionPlansVendorController extends BaseController
         $plan->price = $request->price;
         // $plan->period = $request->period;
         $plan->frequency = $request->frequency;
-        $plan->sort_order = $request->sort_order;
+        // $plan->sort_order = $request->sort_order;
         $plan->status = ($request->has('status') && $request->status == 'on') ? '1' : '0';
         $plan->on_request = ($request->has('on_request') && $request->on_request == 'on') ? 1 : 0;
         if ($request->hasFile('image')) {

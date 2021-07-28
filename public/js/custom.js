@@ -4,7 +4,34 @@ $(document).ready(function() {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         }
     });
-
+    $("#main_search_box").blur(function(e) {
+        setTimeout(function(){
+           $('#search_box_main_div').html('').hide();
+          }, 
+        500);
+      });
+    $("#main_search_box").keyup(function(){
+        let keyword = $(this).val();
+        if(keyword.length == 3){
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: autocomplete_url,
+                data: { keyword: keyword },
+                success: function(response) {
+                    if(response.status == 'Success'){
+                        $('#search_box_main_div').html('');
+                        if(response.data.length != 0){
+                            let search_box_category_template = _.template($('#search_box_main_div_template').html());
+                            $("#search_box_main_div").append(search_box_category_template({results: response.data})).show();
+                        }else{
+                            $("#search_box_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                        }
+                    }
+                }
+            });
+        }
+    });
     // Cabbooking Js Code 
         $('.add-more-location').click(function(){
             $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");
@@ -29,9 +56,15 @@ $(document).ready(function() {
     $(".navigation-tab-item").click(function() {
         $(".navigation-tab-item").removeClass("active");
         $(this).addClass("active");
-        $(".navigation-tab-overlay").css({
-            left: $(this).prevAll().length * 100 + "px"
-        });
+        if($('body').attr('dir') == 'rtl'){
+            $(".navigation-tab-overlay").css({
+                right: $(this).prevAll().length * 130 + "px"
+            });
+        }else{
+            $(".navigation-tab-overlay").css({
+                left: $(this).prevAll().length * 100 + "px"
+            });
+        }
     });
   
     if($('#cart_main_page').length > 0){

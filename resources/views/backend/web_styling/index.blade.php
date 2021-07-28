@@ -14,87 +14,270 @@
 </div>
 <form id="favicon-form" method="post" enctype="multipart/form-data">
 <div class="row">
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Cart Toggle</h4>
-                <div class="mb-0">
-                    <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
+    <div class="col-md-4 col-xl-3">
+        <div class="card card-box">
+            <div class="row">
+                <div class="col-5">
+                    <h4 class="header-title">Favicon</h4>
+                    <div class="mb-0">
+                        <label>Upload Favicon</label>
+                        <input type="file" accept="image/*" data-default-file="{{$client_preferences->favicon ? $client_preferences->favicon['proxy_url'].'600/400'.$client_preferences->favicon['image_path'] : ''}}" data-plugins="dropify" name="favicon" class="dropify" id="image"/>
+                        <label class="logo-size d-block text-right mt-1">Icon Size 32x32</label>                    
+                        <span class="invalid-feedback" role="alert">
+                            <strong></strong>
+                        </span>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Age Restriction</h4>
-                <div class="mb-3">
-                    <input type="checkbox" id="age_restriction" data-plugin="switchery" name="age_restriction" class="chk_box1" data-color="#43bee1" {{$client_preferences->age_restriction == 1 ? 'checked' : ''}}>
-                </div>
-                <h5 class="header-title mb-2">Title</h5>
-                <input type="text" class="form-control" id="age_restriction_title" name="age_restriction_title" value="{{ old('age_restriction_title', $client_preferences->age_restriction_title ?? '')}}">
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Rating Toggle</h4>
-                <div class="mb-0">
-                    <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title">Favicon</h4>
-                <div class="mb-0">
-                    <label>Upload Favicon</label>
-                    <input type="file" accept="image/*" data-default-file="{{$client_preferences->favicon ? $client_preferences->favicon['proxy_url'].'600/400'.$client_preferences->favicon['image_path'] : ''}}" data-plugins="dropify" name="favicon" class="dropify" id="image"/>
-                    <label class="logo-size d-block text-right mt-1">Icon Size 32x32</label>                    
-                    <span class="invalid-feedback" role="alert">
-                        <strong></strong>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title">Color</h4>
-                <div class="mb-0">
-                    <div class="form-group mb-0">
-                        <label for="primary_color">Primary Color</label>
-                        <input type="text" id="primary_color_option" name="primary_color" class="form-control" value="{{ old('primary_color', $client_preferences->web_color ?? 'cccccc')}}">
+                <div class="col-7">
+                    <h4 class="header-title">Color</h4>
+                    <div class="mb-0">
+                        <div class="form-group mb-0">
+                            <label for="primary_color">Primary Color</label>
+                            <input type="text" id="primary_color_option" name="primary_color" class="form-control" value="{{ old('primary_color', $client_preferences->web_color ?? 'cccccc')}}">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Cart Toggle</h4>
+   
+    <div class="col-md-4 col-xl-3">
+        <div class="card card-box">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h4 class="header-title mb-0">Age Restriction Popup</h4>
                 <div class="mb-0">
-                    <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
+                    <input type="checkbox" id="age_restriction" data-plugin="switchery" name="age_restriction" class="chk_box1" data-color="#43bee1" {{$client_preferences->age_restriction == 1 ? 'checked' : ''}}>
                 </div>
+            </div>
+            <label for="">Title</label>
+            <input type="text" class="form-control" id="age_restriction_title" name="age_restriction_title" value="{{ old('age_restriction_title', $client_preferences->age_restriction_title ?? '')}}">
+        </div>
+    </div>
+
+    <div class="col-md-4 col-xl-3">
+        <div class="card card-box">
+            <ul class="pl-0 mb-0">
+                <li class="d-flex align-items-center justify-content-between">
+                    <h4 class="header-title mb-2">Show Ratings</h4>
+                    <div class="mb-0">
+                        <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                    </div>
+                </li>
+                <li class="d-flex align-items-center justify-content-between mt-2">
+                    <h4 class="header-title mb-2">Show Cart Icon</h4>
+                    <div class="mb-0">
+                        <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
+                    </div>
+                </li>
+                <!-- <li class="d-flex align-items-center justify-content-between mt-2">
+                    <h4 class="header-title mb-2">Show Contact Us</h4>
+                    <div class="mb-0">
+                        <input type="checkbox" id="show_contact_us" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_contact_us == 1 ? 'checked' : ''}}>
+                    </div>
+                </li>
+                <li class="d-flex align-items-center justify-content-between mt-2">
+                    <h4 class="header-title mb-2">Show icons in navigation</h4>
+                    <div class="mb-0">
+                        <input type="checkbox" id="show_contact_us" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_contact_us == 1 ? 'checked' : ''}}>
+                    </div>
+                </li> -->
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- <div class="row">
+    <div class="col-xl-8">
+        <div class="card-box home-options-list">
+            <div class="row mb-2">
+                <div class="col-sm-8">
+                    <h4 class="page-title mt-0">Home Page</h4>
+                    <p class="sub-header">
+                        Drag & drop to edit different sections.
+                    </p>
+                </div>
+                <div class="col-sm-4 text-right">
+                    <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal"
+                        dataid="0" is_vendor="0">Save
+                    </button>
+                </div>
+            </div>
+
+            <div class="custom-dd-empty dd" id="nestable_list_1">
+                <ol class="dd-list p-0">
+                    <li class="dd-item dd3-item d-flex align-items-center" data-id="1">
+                        <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                            Featured Vendors
+                        </a>   
+                        <div class="language-inputs style-4">
+                            <div class="row no-gutters flex-nowrap align-items-center my-2">
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                            </div>   
+                        </div>                        
+                        <div class="mb-0 ml-3">
+                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="dd-item dd3-item d-flex align-items-center" data-id="1">
+                        <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                            Vendors
+                        </a>   
+                        <div class="language-inputs style-4">
+                            <div class="row no-gutters flex-nowrap align-items-center my-2">
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                            </div>   
+                        </div>                        
+                        <div class="mb-0 ml-3">
+                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="dd-item dd3-item d-flex align-items-center" data-id="1">
+                        <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                            New Products
+                        </a>   
+                        <div class="language-inputs style-4">
+                            <div class="row no-gutters flex-nowrap align-items-center my-2">
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                            </div>   
+                        </div>                        
+                        <div class="mb-0 ml-3">
+                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="dd-item dd3-item d-flex align-items-center" data-id="1">
+                        <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                            Feature Product
+                        </a>   
+                        <div class="language-inputs style-4">
+                            <div class="row no-gutters flex-nowrap align-items-center my-2">
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                            </div>   
+                        </div>                        
+                        <div class="mb-0 ml-3">
+                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="dd-item dd3-item d-flex align-items-center" data-id="1">
+                        <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                            Best Seller
+                        </a>   
+                        <div class="language-inputs style-4">
+                            <div class="row no-gutters flex-nowrap align-items-center my-2">
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                            </div>   
+                        </div>                        
+                        <div class="mb-0 ml-3">
+                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="dd-item dd3-item d-flex align-items-center" data-id="1">
+                        <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                            On Sale
+                        </a>   
+                        <div class="language-inputs style-4">
+                            <div class="row no-gutters flex-nowrap align-items-center my-2">
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                            </div>   
+                        </div>                        
+                        <div class="mb-0 ml-3">
+                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                    <li class="dd-item dd3-item d-flex align-items-center" data-id="1">
+                        <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                            Brands
+                        </a>   
+                        <div class="language-inputs style-4">
+                            <div class="row no-gutters flex-nowrap align-items-center my-2">
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Arabic">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                                <div class="col-3 pl-1">
+                                    <input class="form-control" type="text" placeholder="Spanish">
+                                </div>
+                            </div>   
+                        </div>                        
+                        <div class="mb-0 ml-3">
+                            <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
+                        </div>
+                    </li>
+                </ol>
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-xl-2">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title mb-2">Rating Toggle</h4>
-                <div class="mb-0">
-                    <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
-                </div>
-            </div>
-        </div>
-    </div>    
-</div>
+    
+</div> -->
 </form>
 
 @endsection
@@ -112,7 +295,9 @@
     $("#primary_color_option").change(function() {
         submitData();
     });
-
+    $("#show_contact_us").change(function() {
+        submitData();
+    });
     $("#cart_enable").change(function() {
         submitData();
     });

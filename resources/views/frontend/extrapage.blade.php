@@ -22,44 +22,44 @@
                         <div class="alert alert-success" role="alert" id="success_msg" style="display:none;"></div>
                         <div class="row">
                             <div class="col-12">
-                                <h2>Personal Details.</h2>
+                                <h2>{{__('Personal Details.')}}</h2>
                             </div>    
                         </div>
                         <div class="needs-validation vendor-signup">
                             <input type="hidden" name="user_id" value="{{$user ? $user->id : ''}}">
                             <div class="form-row">
                                 <div class="col-md-4 mb-3" id="full_nameInput">
-                                    <label for="fullname">Full Name</label>
+                                    <label for="fullname">{{__('Full Name')}}</label>
                                     <input type="text" class="form-control" name="full_name" value="{{$user ? $user->name : ''}}" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="full_name_error"><strong></strong></div>
                                 </div>
                                 <div class="col-md-4 mb-3" id="phone_numberInput">
-                                    <label for="validationCustom02">Phone No.</label>
+                                    <label for="validationCustom02">{{__('Phone No.')}}</label>
                                     <input type="tel" class="form-control" name="phone_number" value="{{$user ? '+'.$user->dial_code.''.$user->phone_number : ''}}" id="phone" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
                                     <input type="hidden" id="countryData" name="countryData" value="us">
                                     <input type="hidden" id="dialCode" name="dialCode" value="{{$user ? $user->dial_code : ''}}">
                                 </div>
                                 <div class="col-md-4 mb-3" id="full_nameInput">
-                                    <label for="fullname">Title</label>
+                                    <label for="fullname">{{__('Title')}}</label>
                                     <input type="text" class="form-control" name="title" value="{{$user ? $user->title : ''}}">
                                     <div class="invalid-feedback" id="full_name_error"><strong></strong></div>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="col-md-4 mb-3" id="emailInput">
-                                    <label for="email">Email</label>
+                                    <label for="email">{{__('Email')}}</label>
                                     <input type="text" class="form-control" name="email" value="{{$user ? $user->email :''}}" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="email_error"><strong></strong></div>
                                 </div>
                                 @if(!$user)
                                     <div class="col-md-4 mb-3" id="passwordInput">
-                                        <label for="password">Password</label>
+                                        <label for="password">{{__('Password')}}</label>
                                         <input type="password" class="form-control" name="password" value="" required="">
                                         <div class="invalid-feedback" id="password_error"><strong></strong></div>
                                     </div>
                                      <div class="col-md-4 mb-3" id="confirm_passwordInput">
-                                        <label for="confirm_password">Confirm Password</label>
+                                        <label for="confirm_password">{{__('Confirm Password')}}</label>
                                         <input type="password" class="form-control" name="confirm_password" value="" required="">
                                         <div class="invalid-feedback" id="confirm_password_error"><strong></strong></div>
                                     </div>
@@ -67,12 +67,12 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <h2>Store Details.</h2>
+                                    <h2>{{__('Store Details.')}}</h2>
                                 </div>    
                             </div>
                             <div class="form-row">
                                 <div class="col-md-4 mb-3">
-                                    <label for="">Upload Logo</label>
+                                    <label for="">{{__('Upload Logo')}}</label>
                                     <div class="file file--upload">
                                         <label for="input_file_logo">
                                             <span class="update_pic">
@@ -86,7 +86,7 @@
                                     </div>
                                 </div>      
                                 <div class="col-md-8 mb-3">
-                                    <label for="">Upload Banner</label>
+                                    <label for="">{{__('Upload Banner')}}</label>
                                     <div class="file file--upload">
                                         <label for="input_file_banner">
                                             <span class="update_pic">
@@ -100,19 +100,19 @@
                             </div>
                             <div class="form-row">
                                 <div class="col-md-12 mb-3" id="nameInput">
-                                    <label for="validationCustom01">Vendor Name</label>
+                                    <label for="validationCustom01">{{__('Vendor Name')}}</label>
                                     <input type="text" class="form-control" name="name" value="">
                                     <div class="invalid-feedback" id="name_error"><strong></strong></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label for="validationCustom02">Description</label>
+                                    <label for="validationCustom02">{{__('Description')}}</label>
                                     <textarea class="form-control" name="vendor_description" cols="30" rows="3"></textarea>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="col-md-6 mb-3" id="addressInput">
-                                    <label for="validationCustom01">Address</label>
+                                    <label for="validationCustom01">{{__('Address')}}</label>
                                     <input type="text" class="form-control" name="address" value="" id="address">
                                     <input type="hidden" class="form-control" name="longitude" value="" id="longitude">
                                     <input type="hidden" class="form-control" name="latitude" value="" id="latitude">
@@ -123,7 +123,7 @@
                                     <div class="invalid-feedback" id="address_error"><strong></strong></div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="validationCustom02">Website</label>
+                                    <label for="validationCustom02">{{__('Website')}}</label>
                                     <input type="text" class="form-control" name="website" value="">
                                     <div class="valid-feedback"></div>
                                 </div>
@@ -184,12 +184,12 @@
                             <div class="form-row">
                                 <div class="col-12 checkbox-input">
                                     <input type="checkbox" id="html">
-                                    <label for="html">I accept the <a href="{{url('page/terms-conditions')}}" target="_blank">Terms And Conditions</a> and and have read the <a href="{{url('page/privacy-policy')}}" target="_blank"> Privacy Policy.</a></label>
+                                    <label for="html">{{__('I accept the')}} <a href="{{url('page/terms-conditions')}}" target="_blank">{{__('Terms And Conditions')}}</a> {{__('and have read the')}} <a href="{{url('page/privacy-policy')}}" target="_blank"> {{__('Privacy Policy.')}}</a></label>
                                 </div>
                             </div>
                             <button class="btn btn-solid mt-3 w-100" dir="ltr" data-style="expand-right" id="register_btn" type="button">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="register_btn_loader" style="display:none !important;"></span>
-                                <span class="ladda-label">Submit</span>
+                                <span class="ladda-label">{{__('Submit')}}</span>
                             </button>
                         </div>
                     </div>
