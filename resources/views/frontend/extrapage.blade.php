@@ -48,7 +48,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="col-md-4 mb-3" id="emailInput">
-                                    <label for="email">{{__(Email)}}</label>
+                                    <label for="email">{{__('Email')}}</label>
                                     <input type="text" class="form-control" name="email" value="{{$user ? $user->email :''}}" {{$user ? 'disabled' : ''}}>
                                     <div class="invalid-feedback" id="email_error"><strong></strong></div>
                                 </div>
