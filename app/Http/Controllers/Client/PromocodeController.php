@@ -16,7 +16,16 @@ class PromocodeController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $promocodes = Promocode::with('type', 'restriction')->get();
+        $promocodes = Promocode::with('type', 'restriction');
+        
+        if (Auth::user()->is_superadmin == 0) {
+            $promocodes = $promocodes->where('added_by', Auth::user()->id);
+           
+        }
+        $promocodes = $promocodes->get();
+        
+        
+        
         return view('backend/promocode/index')->with(['promocodes' => $promocodes]);
     }
 

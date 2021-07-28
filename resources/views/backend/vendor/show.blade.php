@@ -557,7 +557,7 @@
 </div>
 
 <div id="add_category_form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h4 class="modal-title">Add Table Category</h4>
@@ -572,6 +572,31 @@
                             {!! Form::text('title', '',['class' => 'form-control', 'placeholder' => 'Category Name', 'required'=>'required']) !!}
                         </div>
                         <input type="hidden" name="vendor_id" value="{{ $vendor->id }}" />
+                    </div>
+                    <div class="row">
+                        @foreach($languages as $langs)
+                        <div class="col-lg-6">
+                            <div class="outer_box px-3 py-2 mb-3">
+                                <div class="row rowYK">
+                                    <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="{{ ($langs->langId == 1) ? 'nameInput' : 'nameotherInput' }}">
+                                            {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
+                                            @if($langs->is_primary == 1)
+                                            {!! Form::text('name[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
+                                            @else
+                                            {!! Form::text('name[]', null, ['class' => 'form-control']) !!}
+                                            @endif
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong></strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {!! Form::hidden('language_id[]', $langs->langId) !!}
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -692,14 +717,12 @@
             success: function(response) {
                 if (response.status = 'Success') {
                     console.log(response);
-                    $('#edit_table_category').modal('show');
                     $("#edit_table_category #edit_category_name").val(response.data.title).change();
                     $("#edit_table_category #table_category_id").val(response.data.id).change();
-                    //       $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val(response.data.id);
-                    //       $('#add_vendor_registration_document_modal #standard-modalLabel').html('Update Vendor Registration Document');
-                    //       $.each(response.data.translations, function( index, value ) {
-                    //         $('#add_vendor_registration_document_modal #vendor_registration_document_name_'+value.language_id).val(value.name);
-                    //       });
+                    $.each(response.data.translations, function(index, value) {
+                        $('#edit_table_category #vendor_dinein_category_language_name' + value.language_id).val(value.title);;
+                    });
+                    $('#edit_table_category').modal('show');
                 }
             },
             error: function() {

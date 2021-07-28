@@ -1937,11 +1937,12 @@ div#test {
     background-color: #ffffff;
 }
 
-.rating i.fa.fa-star {
+.custom_rating i.fa.fa-star {
     font-size: 10px;
     padding: 0;
+    color: #dddddd;
 }
-.rating i.fa.fa-star.filled {
+.custom_rating i.fa.fa-star.filled {
     color: #ffa200 !important;
 }
 

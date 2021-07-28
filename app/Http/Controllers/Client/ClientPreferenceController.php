@@ -104,7 +104,7 @@ class ClientPreferenceController extends BaseController{
             $preference->is_hyperlocal = ($request->has('is_hyperlocal') && $request->is_hyperlocal == 'on') ? 1 : 0;
             $preference->need_delivery_service = ($request->has('need_delivery_service') && $request->need_delivery_service == 'on') ? 1 : 0;
             $preference->need_dispacher_ride = ($request->has('need_dispacher_ride') && $request->need_dispacher_ride == 'on') ? 1 : 0;
-
+          
             if($request->has('is_hyperlocal') && $request->is_hyperlocal == 'on'){
                 $preference->Default_location_name = $request->Default_location_name;
                 $preference->Default_latitude = $request->Default_latitude;
@@ -116,7 +116,18 @@ class ClientPreferenceController extends BaseController{
             if($request->has('need_dispacher_ride') && $request->need_dispacher_ride == 'on'){
                 $preference->dispatcher_key = $request->dispatcher_key;
             }
+           
+            
         }
+        
+         if($request->has('need_dispacher_home_other_service') && $request->need_dispacher_home_other_service == 'on'){
+            $preference->need_dispacher_home_other_service = $request->need_dispacher_home_other_service;
+            $preference->dispacher_home_other_service_key = $request->dispacher_home_other_service_key;
+            $preference->dispacher_home_other_service_key_url = $request->dispacher_home_other_service_key_url;
+            $preference->dispacher_home_other_service_key_code = $request->dispacher_home_other_service_key_code;
+        }
+        $preference->need_dispacher_home_other_service = ($request->has('need_dispacher_home_other_service') && $request->need_dispacher_home_other_service == 'on') ? 1 : 0;
+      
         /* social login update */        
         if($request->has('social_login') && $request->social_login == '1'){
             $preference->fb_login = ($request->has('fb_login') && $request->fb_login == 'on') ? 1 : 0; 

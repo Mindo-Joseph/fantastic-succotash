@@ -83,6 +83,7 @@ class VendorController extends BaseController
         })->make(true);
     }
     public function index(){
+        $user = Auth::user();
         $csvVendors = CsvVendorImport::all();
         $vendor_docs = collect(new VendorDocs);
         $client_preferences = ClientPreference::first();
@@ -109,7 +110,7 @@ class VendorController extends BaseController
             }
         }
         $total_vendor_count = $vendors->count();
-        if(count($vendors) == 1){
+        if(count($vendors) == 1 && $user->is_superadmin == 0){
             return Redirect::route('vendor.catalogs', $vendors->first()->id);
         }else{
             return view('backend/vendor/index')->with([
