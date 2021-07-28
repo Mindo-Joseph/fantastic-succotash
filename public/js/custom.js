@@ -12,23 +12,25 @@ $(document).ready(function() {
       });
     $("#main_search_box").keyup(function(){
         let keyword = $(this).val();
-        $.ajax({
-            type: "GET",
-            dataType: 'json',
-            url: autocomplete_url,
-            data: { keyword: keyword },
-            success: function(response) {
-                if(response.status == 'Success'){
-                    $('#search_box_main_div').html('');
-                    if(response.data.length != 0){
-                        let search_box_category_template = _.template($('#search_box_main_div_template').html());
-                        $("#search_box_main_div").append(search_box_category_template({results: response.data})).show();
-                    }else{
-                        $("#search_box_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+        if(keyword.length == 3){
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: autocomplete_url,
+                data: { keyword: keyword },
+                success: function(response) {
+                    if(response.status == 'Success'){
+                        $('#search_box_main_div').html('');
+                        if(response.data.length != 0){
+                            let search_box_category_template = _.template($('#search_box_main_div_template').html());
+                            $("#search_box_main_div").append(search_box_category_template({results: response.data})).show();
+                        }else{
+                            $("#search_box_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     });
     // Cabbooking Js Code 
         $('.add-more-location').click(function(){
