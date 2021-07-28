@@ -52,14 +52,14 @@
                             </span>
                             @endif
                         </div>
-                        <div class="col-12 d-flex align-items-center justify-content-between mt-2">
+                        <!-- <div class="col-12 d-flex align-items-center justify-content-between mt-2">
                             <label class="cursor" for="ios_app">iOS App Link</label>
                             <input type="checkbox" id="ios_app" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1">
                         </div>
                         <div class="col-12 d-flex align-items-center justify-content-between mt-2">
                             <label class="cursor" for="android_app">android App Link</label>
                             <input type="checkbox" id="android_app" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1">
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </form>

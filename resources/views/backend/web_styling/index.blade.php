@@ -69,7 +69,7 @@
                         <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
                     </div>
                 </li>
-                <li class="d-flex align-items-center justify-content-between mt-2">
+                <!-- <li class="d-flex align-items-center justify-content-between mt-2">
                     <h4 class="header-title mb-2">Show Contact Us</h4>
                     <div class="mb-0">
                         <input type="checkbox" id="show_contact_us" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_contact_us == 1 ? 'checked' : ''}}>
@@ -80,7 +80,7 @@
                     <div class="mb-0">
                         <input type="checkbox" id="show_contact_us" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_contact_us == 1 ? 'checked' : ''}}>
                     </div>
-                </li>
+                </li> -->
             </ul>
         </div>
     </div>
