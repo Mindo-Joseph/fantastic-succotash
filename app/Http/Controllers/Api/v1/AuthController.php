@@ -214,7 +214,7 @@ class AuthController extends BaseController{
                             $wallet_user_reffered_by->deposit($refferal_amounts->reffered_by_amount, ['Referral code used by <b>' . $signReq->name . '</b>']);
                             $wallet_user_reffered_by->balance;
                             //user reffered to amount
-                            $wallet->deposit($refferal_amounts->reffered_to_amount, ['You used refferal code of <b>' . $user_refferd_by->name . '</b>']);
+                            $wallet->deposit($refferal_amounts->reffered_to_amount, ['You used referal code of <b>' . $user_refferd_by->name . '</b>']);
                             $wallet->balance;
                         }
                     }
@@ -311,7 +311,7 @@ class AuthController extends BaseController{
             $user->phone_token = $otp;
             $user->phone_token_valid_till = $newDateTime;
             $provider = $data->sms_provider;
-            $to = $user->phone_number;
+            $to = '+'.$request->dial_code.$request->phone_number;
             $body = "Dear ".ucwords($user->name).", Please enter OTP ".$otp." to verify your account.";
             if(!empty($data->sms_key) && !empty($data->sms_secret) && !empty($data->sms_from)){
                 $send = $this->sendSms($provider, $data->sms_key, $data->sms_secret, $data->sms_from, $to, $body);
@@ -327,7 +327,6 @@ class AuthController extends BaseController{
             if(!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)){
 
                 $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
-
                 $client_name = $client->name;
                 $mail_from = $data->mail_from;
                 $sendto = $user->email;

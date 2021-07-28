@@ -50,7 +50,6 @@ class UserController extends FrontController{
      * @return \Illuminate\Http\Response
      */
     public function sendToken(Request $request, $domain = '', $uid = 0){
-
         $notified = 0;
         $user = User::where('id', Auth::user()->id)->first();
         if (!$user) {
@@ -86,9 +85,9 @@ class UserController extends FrontController{
                 $user->email_token_valid_till = $newDateTime;
                 if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
                     $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+                    $sendto = $request->email;
                     $client_name = $client->name;
                     $mail_from = $data->mail_from;
-                    $sendto = $request->email;
                     try {
                         $email_template_content = '';
                         $email_template = EmailTemplate::where('id', 2)->first();
