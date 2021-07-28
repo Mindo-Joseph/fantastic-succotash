@@ -6795,12 +6795,12 @@ header {
   position: relative;
   font-size: 14px; }
   .onhover-dropdown .onhover-show-div {
-    top: calc(100% - 5px);
+    top: calc(100% - 7px);
     position: absolute;
-    z-index: 10;
+    z-index: 99999;
     background-color: #ffffff;
-    -webkit-transition: all linear 0.4s;
-    transition: all linear 0.4s;
+    -webkit-transition: all linear 0.5s;
+    transition: all linear 0.5s;
     min-width: 160px;
     text-align: left;
     -webkit-box-shadow: 0px 1px 2px 0px #cacaca;
@@ -6828,7 +6828,7 @@ header {
   .onhover-div i {
     cursor: pointer; }
   .onhover-div .show-div {
-    top: calc(100% + 10px);
+    top: calc(100% + 3px);
     position: absolute;
     z-index: 9;
     background-color: #ffffff;
@@ -6836,8 +6836,8 @@ header {
     transition: all linear 0.3s;
     min-width: 236px;
     text-align: left;
-    -webkit-transform: translateY(30px);
-            transform: translateY(30px);
+    -webkit-transform: translateY(100px);
+            transform: translateY(100px);
     opacity: 0;
     visibility: hidden;
     right: 0;
