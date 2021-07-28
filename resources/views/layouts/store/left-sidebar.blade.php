@@ -112,7 +112,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         <% }); %>
                                         <% }); %>
                                         <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
-                                        <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('Viewcart')}}</a>
+                                        <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('View Cart')}}</a>
                                     </script>
                                     <ul class="show-div shopping-cart" id="header_cart_main_ul"></ul>
                                 </li>
