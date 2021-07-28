@@ -86,7 +86,7 @@
                                     </div>
                                 </div>      
                                 <div class="col-md-8 mb-3">
-                                    <label for="">Upload Banner</label>
+                                    <label for="">{{__('Upload Banner')}}</label>
                                     <div class="file file--upload">
                                         <label for="input_file_banner">
                                             <span class="update_pic">
@@ -105,7 +105,7 @@
                                     <div class="invalid-feedback" id="name_error"><strong></strong></div>
                                 </div>
                                 <div class="col-md-12 mb-3">
-                                    <label for="validationCustom02">{{__(Description)}}</label>
+                                    <label for="validationCustom02">{{__('Description')}}</label>
                                     <textarea class="form-control" name="vendor_description" cols="30" rows="3"></textarea>
                                     <div class="invalid-feedback"></div>
                                 </div>
@@ -123,7 +123,7 @@
                                     <div class="invalid-feedback" id="address_error"><strong></strong></div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="validationCustom02">Website</label>
+                                    <label for="validationCustom02">{{__('Website')}}</label>
                                     <input type="text" class="form-control" name="website" value="">
                                     <div class="valid-feedback"></div>
                                 </div>
