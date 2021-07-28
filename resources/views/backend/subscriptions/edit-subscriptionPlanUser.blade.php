@@ -23,7 +23,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group" id="nameInput">
                             {!! Form::label('title', 'Title',['class' => 'control-label']) !!} 
                             {!! Form::text('title', $plan->title, ['class'=>'form-control', 'required'=>'required']) !!}
@@ -48,31 +48,22 @@
                             <input class="form-control" type="number" name="price" min="0" value="{{ $plan->price }}" required="required">
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <?php /* ?><div class="col-md-6">
-                        <div class="form-group">
-                            <label for="">Validity (In days)</label>
-                            <input class="form-control" type="number" name="period" min="0" value="{{ $plan->period }}" required="required">
-                        </div>
-                    </div><?php */ ?>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="">Frequency</label>
                             <select class="form-control" name="frequency" value="{{ $plan->frequency }}" required="required">
-                                <option value="">Choose...</option>
                                 <option value="weekly" {{ $plan->frequency == 'weekly' ? 'selected' : '' }}>Weekly</option>
                                 <option value="monthly" {{ $plan->frequency == 'monthly' ? 'selected' : '' }}>Monthly</option>
                                 <option value="yearly" {{ $plan->frequency == 'yearly' ? 'selected' : '' }}>Yearly</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <?php /* ?><div class="col-md-6">
                         <div class="form-group">
                             <label for="">Sort Order</label>
                             <input class="form-control" type="number" name="sort_order" min="1" value="{{ $plan->sort_order }}" required="required">
                         </div>
-                    </div>
+                    </div><?php */ ?>
                     <div class="col-md-12">
                         <div class="form-group">
                             {!! Form::label('title', 'Description',['class' => 'control-label']) !!} 
