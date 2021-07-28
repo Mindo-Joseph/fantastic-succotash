@@ -196,6 +196,7 @@ class ProductController extends BaseController
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
         
         $agent_dispatcher_tags = [];
+        $agent_dispatcher_on_demand_tags = [];
         if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 7) # if type is pickup delivery then get dispatcher tags
         {   
             $vendor_id = $product->vendor_id;
