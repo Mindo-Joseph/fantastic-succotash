@@ -33,11 +33,12 @@ class StripeGatewayController extends FrontController{
     public function postPaymentViaStripe(request $request)
     {
         try{
+            $amount = $this->getDollarCompareAmount($request->amount);
             $token = $request->input('stripe_token');
             $response = $this->gateway->purchase([
                 'currency' => 'INR', //$this->currency,
                 'token' => $token,
-                'amount' => $request->input('amount'),
+                'amount' => $amount,
                 'metadata' => ['order_id' => "11"],
                 'description' => 'This is a test purchase transaction.',
             ])->send();
@@ -83,8 +84,10 @@ class StripeGatewayController extends FrontController{
             //     "customerReference" => $customer_id,
             //     'plan' => 'Basic Plan',
             // ))->send();
+
+            $amount = $this->getDollarCompareAmount($request->amount);
             $authorizeResponse = $this->gateway->authorize([
-                'amount' => $request->amount,
+                'amount' => $amount,
                 'currency' => 'INR', //$this->currency,
                 'description' => 'This is a subscription purchase transaction.',
                 'customerReference' => $customer_id
@@ -92,7 +95,7 @@ class StripeGatewayController extends FrontController{
             if ($authorizeResponse->isSuccessful()) {
                 $purchaseResponse = $this->gateway->purchase([
                     'currency' => 'INR',
-                    'amount' => $request->amount,
+                    'amount' => $amount,
                     'metadata' => ['user_id' => $user->id, 'plan_id' => $plan->id],
                     'description' => 'This is a subscription purchase transaction.',
                     'customerReference' => $customer_id

@@ -9,10 +9,10 @@ use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
 use App\Models\{PaymentOption, Client, ClientPreference, ClientCurrency};
 use App\Http\Traits\ApiResponser;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Front\FrontController;
 use Illuminate\Support\Facades\Validator;
 
-class PaypalGatewayController extends Controller
+class PaypalGatewayController extends FrontController
 {
     use ApiResponser;
     public $gateway;
@@ -37,13 +37,14 @@ class PaypalGatewayController extends Controller
 
     public function paypalPurchase(Request $request){
         try{
-            $returnUrlParams = '?amount='.$request->amount;
+            $amount = $this->getDollarCompareAmount($request->amount);
+            $returnUrlParams = '?amount='.$amount;
             if($request->has('tip')){
                 $returnUrlParams = $returnUrlParams.'&tip='.$request->tip;
             }
             $response = $this->gateway->purchase([
                 'currency' => 'USD', //$this->currency,
-                'amount' => $request->amount,
+                'amount' => $amount,
                 'cancelUrl' => url($request->cancelUrl),
                 'returnUrl' => url($request->returnUrl . $returnUrlParams),
             ])->send();
@@ -64,8 +65,9 @@ class PaypalGatewayController extends Controller
     {
         // Once the transaction has been approved, we need to complete it.
         if($request->has(['token', 'PayerID'])){
+            $amount = $this->getDollarCompareAmount($request->amount);
             $transaction = $this->gateway->completePurchase(array(
-                'amount'                => $request->amount,
+                'amount'                => $amount,
                 'payer_id'              => $request->PayerID,
                 'transactionReference'  => $request->token
             ));

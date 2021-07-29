@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category, Product, ClientPreference, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser};
+use App\Models\{Client, Category, Product, ClientPreference, ClientCurrency, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser};
 
 class FrontController extends Controller
 {
@@ -291,5 +291,16 @@ class FrontController extends Controller
             }
         }
         return $vendor_rating;
+    }
+
+    /* doller compare amount */
+    public function getDollarCompareAmount($amount, $customerCurrency=''){
+        if(empty($customerCurrency)){
+            $customerCurrency = Session::get('customerCurrency');
+        }
+        $clientCurrency = ClientCurrency::where('currency_id', $customerCurrency)->first();
+        $divider = (empty($clientCurrency->doller_compare) || $clientCurrency->doller_compare < 0) ? 1 : $clientCurrency->doller_compare;
+        $amount = number_format(($amount / $divider), 2);
+        return $amount;
     }
 }
