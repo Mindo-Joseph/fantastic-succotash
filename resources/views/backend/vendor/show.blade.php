@@ -435,8 +435,7 @@
                                                                 <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$vendor_table->category->title}}</a>
                                                             </td>
                                                             <td class="table-user">
-                                                            {!! QrCode::size(100)->generate('ItSolutionStuff.com'); !!}
-                                                                <!-- <a href="javascript:void(0);" class="text-body font-weight-semibold"><span class="base_url"></span>/vendor/{{$vendor->slug}}/?table={{$vendor_table->id}}</a> -->
+                                                            {{ QrCode::size(100)->generate($vendor_table->qr_url); }}
                                                             </td>
                                                             <td>
                                                                 <button type="button" class="btn btn-primary-outline action-icon editTablebtn" data-id="{{$vendor_table->id}}"><i class="mdi mdi-square-edit-outline"></i></button>

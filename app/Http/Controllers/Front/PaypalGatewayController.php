@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Front;
 
 use Auth;
+use Session;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
-use App\Models\{PaymentOption};
+use App\Models\{PaymentOption, Client, ClientPreference, ClientCurrency};
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -15,6 +16,7 @@ class PaypalGatewayController extends Controller
 {
     use ApiResponser;
     public $gateway;
+    public $currency;
 
     public function __construct()
     {
@@ -28,6 +30,9 @@ class PaypalGatewayController extends Controller
         $this->gateway->setPassword($password);
         $this->gateway->setSignature($signature);
         $this->gateway->setTestMode(true); //set it to 'false' when go live
+        
+        $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
+        $this->currency = (isset($primaryCurrency->currency->iso_code)) ? $primaryCurrency->currency->iso_code : 'USD';
     }
 
     public function paypalPurchase(Request $request){
@@ -37,7 +42,7 @@ class PaypalGatewayController extends Controller
                 $returnUrlParams = $returnUrlParams.'&tip='.$request->tip;
             }
             $response = $this->gateway->purchase([
-                'currency' => 'USD',
+                'currency' => 'USD', //$this->currency,
                 'amount' => $request->amount,
                 'cancelUrl' => url($request->cancelUrl),
                 'returnUrl' => url($request->returnUrl . $returnUrlParams),
