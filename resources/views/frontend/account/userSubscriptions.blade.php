@@ -271,8 +271,10 @@
         </div>
         <div class="modal-footer d-block text-center">
             <div class="row">
-                <div class="col-sm-6 pl-sm-0 pr-sm-1"><button type="button" class="btn btn-block btn-solid mt-2 subscription_confirm_btn">{{ __('Pay') }}</button></div>
-                <div class="col-sm-6 pr-sm-0 pl-sm-1"><button type="button" class="btn btn-block btn-solid mt-2" data-dismiss="modal">{{ __('Cancel') }}</button></div>
+                <div class="col-sm-12 p-0 d-flex justify-space-around">
+                    <button type="button" class="btn btn-block btn-solid mr-1 mt-2 subscription_confirm_btn">{{ __('Pay') }}</button>
+                    <button type="button" class="btn btn-block btn-solid ml-1 mt-2" data-dismiss="modal">{{ __('Cancel') }}</button>
+                </div>
             </div>
         </div>
       </form>
@@ -282,7 +284,7 @@
 
 <script type="text/template" id="payment_method_template">
     <% if(payment_options == '') { %>
-        <h6>{{ __('Payment Methods Not Avaialable') }}</h6>
+        <h6>{{ __('Payment Options Not Avaialable') }}</h6>
     <% }else{ %>
         <% _.each(payment_options, function(payment_option, k){%>
             <% if( (payment_option.slug != 'cash_on_delivery') && (payment_option.slug != 'loyalty_points') ) { %>

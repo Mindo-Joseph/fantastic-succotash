@@ -55,6 +55,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <input class="form-control border-0 typeahead" type="search" placeholder="{{__('Search')}}" id="main_search_box">
                             </div>
                             <div class="list-box style-4" style="display:none;" id="search_box_main_div">
+                                
                             </div>
                         </div>
                             

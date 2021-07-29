@@ -333,7 +333,8 @@ class CartController extends BaseController{
         if($cartData){
             $tax_details = [];
             foreach ($cartData as $ven_key => $vendorData) {
-                $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
+                $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
+                $delivery_count = 0;
                 $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';$deliver_charge = 0;
                 $delivery_fee_charges = 0.00;
                 $couponData = $couponProducts = array();
@@ -370,8 +371,7 @@ class CartController extends BaseController{
                         }
                     }
                 }
-                $delivery_count = 0;
-                foreach ($vendorData->vendorProducts as $pkey => $prod) {
+                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
                     $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0; 
                     $variantsData = $taxData = $vendorAddons = array();
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
@@ -396,7 +396,7 @@ class CartController extends BaseController{
                         $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
                         if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
                             $pro_disc = $discount_amount;
-                            if($minimum_spend < $quantity_price){
+                            if($minimum_spend <= $quantity_price){
                                 if($is_percent == 1){
                                     $pro_disc = ($quantity_price * $discount_percent)/ 100;
                                 }
@@ -406,7 +406,6 @@ class CartController extends BaseController{
                                     $quantity_price = 0;
                                 }
                                 $codeApplied = 1;
-                                
                             }else{
                                 $variantsData['coupon_msg'] = "Spend minimun ".$minimum_spend." to apply this coupon";
                                 $variantsData['coupon_not_appiled'] = 1;
@@ -436,7 +435,8 @@ class CartController extends BaseController{
                             }
                         }
                         $prod->taxdata = $taxData;
-                        if(!empty($prod->product->Requires_last_mile) && $prod->product->Requires_last_mile == 1){   
+                        if(!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1))
+                        {   
                             $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                             if(!empty($deliver_charge) && $delivery_count == 0)
                             {
@@ -445,7 +445,6 @@ class CartController extends BaseController{
                                 $payable_amount = $payable_amount + $deliver_charge;
                                 $delivery_fee_charges = $deliver_charge;
                             }
-                            
                         }
                         if(!empty($prod->addon)){
                             foreach ($prod->addon as $ck => $addons) {
@@ -481,7 +480,6 @@ class CartController extends BaseController{
                     }
                     $prod->variants = $variantsData;
                     $prod->variant_options = $variant_options;
-                    $prod->deliver_charge = $deliver_charge;
                     $payable_amount = $payable_amount;
                     $prod->product_addons = $vendorAddons;
                 }
@@ -543,6 +541,7 @@ class CartController extends BaseController{
         $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2);
         return $cart;
     }
+    
     public function getDeliveryFeeDispatcher($vendor_id){
         try {
                 $dispatch_domain = $this->checkIfLastMileOn();

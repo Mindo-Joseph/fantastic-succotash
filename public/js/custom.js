@@ -315,13 +315,17 @@ $(document).ready(function() {
             type: "POST",
             async: false,
             dataType: 'json',
-            url: payment_option_list_url,
+            url: wallet_payment_options_url,
             success: function(response) {
                 if (response.status == "Success") {
                     $('#wallet_payment_methods').html('');
                     let payment_method_template = _.template($('#payment_method_template').html());
                     $("#wallet_payment_methods").append(payment_method_template({payment_options: response.data}));
-                    stripeInitialize();
+                    if(response.data == ''){
+                        $("#topup_wallet .topup_wallet_confirm").hide();
+                    }else{
+                        stripeInitialize();
+                    }
                 }
             },error: function(error){
                 var response = $.parseJSON(error.responseText);

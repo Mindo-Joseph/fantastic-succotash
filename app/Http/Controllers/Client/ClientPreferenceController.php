@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency, Nomenclature, ReferAndEarn,SocialMedia, VendorRegistrationDocument};
-
+use GuzzleHttp\Client as GCLIENT;
 class ClientPreferenceController extends BaseController{
 
     public function index(){
@@ -87,6 +87,81 @@ class ClientPreferenceController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $code){
+
+
+        if(isset($request->need_delivery_service) && !empty($request->need_delivery_service))
+        {   
+            try {
+            // $checkn = substr($request->delivery_service_key_url, -1);
+            // if($checkn == '/')
+            // $request->delivery_service_key_url = substr_replace($request->delivery_service_key_url, "", -1);
+
+            $client = new GClient(['headers' => ['personaltoken' => $request->delivery_service_key,
+                                                        'shortcode' => $request->delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);
+            $url = $request->delivery_service_key_url;                                                   
+            $res = $client->post($url.'/api/check-dispatcher-keys');
+            $response = json_decode($res->getBody(), true);
+            if($response && $response['status'] == 400){
+                return redirect()->route('configure.index')->with('error', 'Last Mile Delivery Keys incorrect !'); 
+            }
+            }
+            catch(\Exception $e){
+                return redirect()->route('configure.index')->with('error', 'Invalid Last Mile Delivery Royo Dispatcher URL !'); 
+            }                                                
+        }
+
+        if(isset($request->need_dispacher_ride) && !empty($request->need_dispacher_ride))
+        {
+            try {
+                // $checkp = substr($request->pickup_delivery_service_key_url, -1);
+                // if($checkp == '/')
+                // $request->pickup_delivery_service_key_url = substr_replace($request->pickup_delivery_service_key_url, "", -1);
+
+                $client = new GClient(['headers' => ['personaltoken' => $request->pickup_delivery_service_key,
+                                                            'shortcode' => $request->pickup_delivery_service_key_code,
+                                                            'content-type' => 'application/json']
+                                                                ]);
+                $url = $request->pickup_delivery_service_key_url;                                                   
+                $res = $client->post($url.'/api/check-dispatcher-keys');
+                $response = json_decode($res->getBody(), true);
+                if($response && $response['status'] == 400){
+                    return redirect()->route('configure.index')->with('error', 'Pickup & Delivery Keys incorrect !'); 
+                }
+                }
+                catch(\Exception $e){
+                    return redirect()->route('configure.index')->with('error', 'Invalid Pickup & Delivery Royo Dispatcher URL !'); 
+                } 
+                
+        }
+
+        if(isset($request->need_dispacher_home_other_service) && !empty($request->need_dispacher_home_other_service))
+        {
+            try {
+                // $checkd = substr($request->dispacher_home_other_service_key_url, -1);
+                // if($checkd == '/')
+                // $request->dispacher_home_other_service_key_url = substr_replace($request->dispacher_home_other_service_key_url, "", -1);
+
+                $client = new GClient(['headers' => ['personaltoken' => $request->dispacher_home_other_service_key,
+                                                            'shortcode' => $request->dispacher_home_other_service_key_code,
+                                                            'content-type' => 'application/json']
+                                                                ]);
+                $url = $request->dispacher_home_other_service_key_url;                                                   
+                $res = $client->post($url.'/api/check-dispatcher-keys');
+                $response = json_decode($res->getBody(), true);
+                if($response && $response['status'] == 400){
+                    return redirect()->route('configure.index')->with('error', 'On Demand Services Keys incorrect !'); 
+                }
+                }
+                catch(\Exception $e){
+                    return redirect()->route('configure.index')->with('error', 'Invalid On Demand Services Royo Dispatcher URL !'); 
+                } 
+            
+        }
+        
+     
+
         $cp = new ClientPreference();
         $preference = ClientPreference::where('client_code', Auth::user()->code)->first();
         if(!$preference){

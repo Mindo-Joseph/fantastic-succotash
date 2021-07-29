@@ -55,7 +55,6 @@ class FrontController extends Controller
             ->where('cts.language_id', $lang_id)
             ->whereNull('categories.vendor_id')
             ->orderBy('categories.position', 'asc')
-            ->orderBy('categories.id', 'asc')
             ->orderBy('categories.parent_id', 'asc')->get();
         if ($categories) {
             $categories = $this->buildTree($categories->toArray());
@@ -269,5 +268,26 @@ class FrontController extends Controller
                 }
             }
         }
+    }
+
+    /* Get vendor rating from its products rating */
+    public function vendorRating($vendorProducts)
+    {
+        $vendor_rating = 0;
+        if($vendorProducts->isNotEmpty()){
+            $product_rating = 0;
+            $product_count = 0;
+            foreach($vendorProducts as $product){
+                if($product->averageRating > 0){
+                    $product_rating = $product_rating + $product->averageRating;
+                    $product_count++;
+                }
+            }
+            if($product_count > 0){
+                $vendor_rating = $product_rating / $product_count;
+                $vendor_rating = number_format($vendor_rating, 2);
+            }
+        }
+        return $vendor_rating;
     }
 }
