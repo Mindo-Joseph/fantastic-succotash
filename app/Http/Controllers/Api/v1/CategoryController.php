@@ -81,19 +81,34 @@ class CategoryController extends BaseController
             }
             return $vendorData;
         }elseif($type == 'vendor' && $can_add_product == 1){
-            $vendor_ids = [];
-            $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
-            foreach ($vendor_categories as $vendor_category) {
-               if(!in_array($vendor_category->vendor_id, $vendor_ids)){
-                    $vendor_ids[] = $vendor_category->vendor_id;
-               }
+            $vendor_ids = Vendor::where('status', 1)->pluck('id')->toArray();
+            $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
+            $products = Product::has('vendor')->with(['category.categoryDetail','inwishlist' => function($qry) use($userid){
+                        $qry->where('user_id', $userid);
+                    },
+                    'media.image', 'translation' => function($q) use($langId){
+                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                    },
+                    'variant' => function($q) use($langId){
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                    },
+                    ])->select('products.category_id','products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
+                    ->where('products.category_id', $category_id)->where('products.is_live', 1)->whereIn('products.vendor_id', $vendor_ids)->paginate($limit);
+            if(!empty($products)){
+                foreach ($products as $key => $product) {
+                    $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+                    if($product->variant->count() > 0){
+                        foreach ($product->variant as $k => $v) {
+                            $product->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                        }
+                    }else{
+                        $product->variant =  $product;
+                    }
+                }
             }
-            $vendorData = Vendor::select('id', 'name', 'banner', 'show_slot', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereIn('id', $vendor_ids)->with('slot')->withAvg('product', 'averageRating')->paginate($limit);
-            foreach ($vendorData as $vendor) {
-                unset($vendor->products);
-                $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
-            }
-            return $vendorData;
+            $listData = $products;
+            return $listData;
         }elseif($type == 'Pickup/Delivery' || $type == 'pickup/delivery'){
             $vendor_ids = [];
             $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
