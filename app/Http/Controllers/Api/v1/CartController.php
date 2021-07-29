@@ -202,7 +202,7 @@ class CartController extends BaseController{
     }
 
     /**        
-        update quantity in cart       
+    *    update quantity in cart       
     **/
     public function updateQuantity(Request $request){
         $user = Auth::user();
@@ -541,7 +541,7 @@ class CartController extends BaseController{
         $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2);
         return $cart;
     }
-    
+
     public function getDeliveryFeeDispatcher($vendor_id){
         try {
                 $dispatch_domain = $this->checkIfLastMileOn();
