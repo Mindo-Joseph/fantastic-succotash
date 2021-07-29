@@ -18,7 +18,10 @@ class VendorController extends FrontController
     public function viewAll(){
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
-        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where('status', 1)->get();
+        $vendors = Vendor::with('products')->select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where('status', 1)->get();
+        foreach ($vendors as $key => $value) {
+            $value->vendorRating = $this->vendorRating($value->products);
+        }
         return view('frontend/vendor-all')->with(['navCategories' => $navCategories,'vendors' => $vendors]);
     }
     /**

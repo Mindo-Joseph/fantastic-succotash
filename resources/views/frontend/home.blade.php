@@ -30,25 +30,25 @@
             <div class="img-wrapper">
                 <div class="front">
                     <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
-                        <img class="img-fluid blur-up lazyload bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
+                        <img class="img-fluid blur-up lazyload m-auto bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
                     </a>
                 </div>
             </div>
             <div class="product-detail">
-            @if($client_preference_detail)
-                {{--@if($client_preference_detail->rating_check == 1)
-                    <div class="custom_rating">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i> 
-                        <i class="fa fa-star"></i> 
-                        <i class="fa fa-star"></i> 
-                        <i class="fa fa-star"></i>
-                    </div>
-                @endif--}}
-            @endif
                 <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                     <h6><%= vendor.name %></h6>
                 </a>
+                @if($client_preference_detail)
+                    @if($client_preference_detail->rating_check == 1)
+                        <div class="custom_rating">
+                            <% if(vendor.vendorRating > 0) { %>
+                                <% _.each([1,2,3,4,5], function(value, k){ %>
+                                    <i class="fa fa-star<%= (k+1 <= vendor.vendorRating) ? ' filled' : '' %>"></i>
+                                <% }); %>
+                            <% } %>
+                        </div>
+                    @endif
+                @endif
             </div>
         </div>
     <% }); %>

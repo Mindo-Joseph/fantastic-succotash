@@ -172,18 +172,22 @@
                                                                 </div>
                                                             </div>
                                                             <div class="product-detail">
-                                                                {{--@if($client_preference_detail)
-                                                                    @if($client_preference_detail->rating_check == 1)  
-                                                                    <div class="custom_rating">
-                                                                        @for($i = 1; $i < 6; $i++)
-                                                                            <i class="fa fa-star"></i>
-                                                                        @endfor
-                                                                    </div>
+                                                                <div class="inner_spacing">
+                                                                    <a href="{{route('vendorDetail', $data->slug)}}">
+                                                                        <h3>{{$data->name}}</h3>
+                                                                    </a>
+                                                                    @if($client_preference_detail)
+                                                                        @if($client_preference_detail->rating_check == 1)
+                                                                            <div class="custom_rating">
+                                                                                @if($data->vendorRating > 0)
+                                                                                    @for($i = 1; $i < 6; $i++)
+                                                                                        <i class="fa fa-star{{ ($i <= $data->vendorRating) ? ' filled' : '' }}"></i>
+                                                                                    @endfor
+                                                                                @endif
+                                                                            </div>
+                                                                        @endif
                                                                     @endif
-                                                                @endif--}}
-                                                                <a href="{{route('vendorDetail', $data->slug)}}">
-                                                                    <h6>{{$data->name}}</h6>
-                                                                </a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
