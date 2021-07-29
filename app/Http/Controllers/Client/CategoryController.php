@@ -45,7 +45,7 @@ class CategoryController extends BaseController{
         $category = new Category();
         $preference = ClientPreference::first();
         $type = Type::where('title','!=', 'Pickup/Parent')->orderBY('sequence', 'ASC')->get();
-        $parCategory = Category::with('translation_one')->select('id', 'slug')->where('deleted_at', NULL)->whereIn('type_id', ['1', '3', '6'])->where('is_core', 1)->get();
+        $parCategory = Category::with('translation_one')->select('id', 'slug')->where('deleted_at', NULL)->whereIn('type_id', ['1', '3', '6'])->where('is_core', 1)->where('status', 1)->get();
         $vendor_list = Vendor::select('id', 'name')->where('status', '!=', $this->blocking)->get();
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
