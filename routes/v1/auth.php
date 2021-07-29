@@ -62,5 +62,13 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('promo-code/remove', 'Api\v1\PickupDeliveryController@postRemovePromoCode');
             
         });
+
+        // user subscription 
+        Route::group(['prefix' => 'user/subscription'], function () {
+            Route::get('plans', 'Api\v1\UserSubscriptionController@getSubscriptionPlans');
+            Route::get('selectPlan/{slug}', 'Api\v1\UserSubscriptionController@selectSubscriptionPlan');
+            // Route::get('getActivePlan', 'Api\v1\UserSubscriptionController@getActiveSubscriptionPlan');
+            Route::get('checkActivePlan/{slug}', 'Api\v1\UserSubscriptionController@checkActiveSubscriptionPlan');
+        });
     });
 });
