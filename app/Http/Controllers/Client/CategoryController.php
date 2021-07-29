@@ -264,22 +264,30 @@ class CategoryController extends BaseController{
      */
     public function destroy($domain = '', $id){
         $user = Auth::user();
-        $category = Category::where('id', $id)->first();
-        if($category){
-            $category->childs()->delete();
-            $category->delete();
-            CategoryHistory::insert([
-                'category_id' => $id,
-                'action' => 'deleted',
-                'update_id' =>$user->id,
-                'updater_role' =>'Admin',
-                'client_code' => $user->code,
-            ]);
-        }
+        $parent = Category::where('id', $id)->first();
+        $array_of_ids = $this->getChildren($parent);
+        array_push($array_of_ids, $id);
+        Category::destroy($array_of_ids);
+        CategoryHistory::insert([
+            'category_id' => $id,
+            'action' => 'deleted',
+            'update_id' =>$user->id,
+            'updater_role' =>'Admin',
+            'client_code' => $user->code,
+        ]);
         return redirect()->back()->with('success', 'Category deleted successfully!');
     }
 
-
+    private function getChildren($category){
+        $ids = [];
+        if($category->childs){
+            foreach ($category->childs as $cat) {
+                $ids[] = $cat->id;
+                $ids = array_merge($ids, $this->getChildren($cat));
+            }
+        }
+        return $ids;
+    }
 
 
 
