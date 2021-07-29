@@ -66,7 +66,7 @@ class CategoryController extends BaseController
     }
 
     public function listData($langId, $category_id, $type = '', $limit = 12, $userid, $can_add_product){
-        if($type == 'vendor' && $can_add_product == 0){
+        if($type == 'vendor'){
             $vendor_ids = [];
             $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
             foreach ($vendor_categories as $vendor_category) {
