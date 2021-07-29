@@ -31,7 +31,7 @@ class CategoryController extends BaseController{
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-        return view('backend.catalog.index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands]);
+        return view('backend.catalog.index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands, 'build' => $build]);
     }
 
     /**
@@ -264,14 +264,18 @@ class CategoryController extends BaseController{
      */
     public function destroy($domain = '', $id){
         $user = Auth::user();
-        Category::where('id', $id)->delete();
-        CategoryHistory::insert([
-            'category_id' => $id,
-            'action' => 'deleted',
-            'update_id' =>$user->id,
-            'updater_role' =>'Admin',
-            'client_code' => $user->code,
-        ]);
+        $category = Category::where('id', $id)->first();
+        if($category){
+            $category->childs()->delete();
+            $category->delete();
+            CategoryHistory::insert([
+                'category_id' => $id,
+                'action' => 'deleted',
+                'update_id' =>$user->id,
+                'updater_role' =>'Admin',
+                'client_code' => $user->code,
+            ]);
+        }
         return redirect()->back()->with('success', 'Category deleted successfully!');
     }
 
@@ -313,5 +317,4 @@ class CategoryController extends BaseController{
         else
             return false;
     }
-
 }
