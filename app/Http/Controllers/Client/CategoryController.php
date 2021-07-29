@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag, Vendor, DispatcherWarningPage, DispatcherTemplateTypeOption};
+use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag, Vendor, DispatcherWarningPage, DispatcherTemplateTypeOption, Product};
 use GuzzleHttp\Client as GCLIENT;
 class CategoryController extends BaseController{
     private $blocking = '2';
@@ -268,6 +268,7 @@ class CategoryController extends BaseController{
         $array_of_ids = $this->getChildren($parent);
         array_push($array_of_ids, $id);
         Category::destroy($array_of_ids);
+        Product::whereIn('category_id', $array_of_ids)->delete();
         CategoryHistory::insert([
             'category_id' => $id,
             'action' => 'deleted',
