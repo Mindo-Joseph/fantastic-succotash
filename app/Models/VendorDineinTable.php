@@ -29,4 +29,8 @@ class VendorDineinTable extends Model
       $langData = $this->hasMany('App\Models\VendorDineinTableTranslation');
       return $langData;
     }
+    public function category(){
+      $langData = $this->hasOne('App\Models\VendorDineinCategory', 'id', 'vendor_dinein_category_id');
+      return $langData;
+    }
 }

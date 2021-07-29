@@ -406,7 +406,7 @@
                             <input type="file" accept="image/*" data-default-file="" data-plugins="dropify" name="image" class="dropify" id="edit_table_image"/>
                             <label class="logo-size d-block text-right mt-1">Image Size 1026x200</label>
                         </div>
-                        <div class="col-sm-5 mb-2">
+                        <div class="col-sm-3 mb-2">
                             {!! Form::label('title', 'Table Number',['class' => 'control-label']) !!}
                             {!! Form::text('table_number', '',['class' => 'form-control', 'id' => 'edit_table_number', 'placeholder' => 'Table Number', 'required'=>'required']) !!}
                         </div>
@@ -417,6 +417,10 @@
                                 <option value="{{$dinein_category->id}}">{{$dinein_category->title}}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-sm-2 mb-2">
+                            {!! Form::label('title', 'Seating Number',['class' => 'control-label']) !!}
+                            {!! Form::number('seating_number', '1',['class' => 'form-control',  'id' => 'edit_seating_number', 'min' => '1', 'onkeypress' => 'return isNumberKey(event)', 'placeholder' => 'Seating Number', 'required'=>'required']) !!}
                         </div>
                         <input type="hidden" name="vendor_id" value="{{ $vendor->id }}" />
                         <input type="hidden" name="table_id" id="table_id" />
