@@ -202,7 +202,7 @@ class CartController extends BaseController{
     }
 
     /**        
-        update quantity in cart       
+    *    update quantity in cart       
     **/
     public function updateQuantity(Request $request){
         $user = Auth::user();
