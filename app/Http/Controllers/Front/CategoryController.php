@@ -123,8 +123,8 @@ class CategoryController extends FrontController
         if(view()->exists('frontend/cate-'.$page.'s')){
             return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
         }else{
-            // abort(404);
-            return response()->view('errors_custom', [], 404);
+            abort(404);
+            // return response()->view('errors_custom', [], 404);
         }
     }
 

@@ -249,7 +249,7 @@
                 <div>
                     <input type="hidden" name="cart_tip_amount" id="cart_tip_amount" value="0">
                     <input type="hidden" name="cart_total_payable_amount" value="<%= cart_details.total_payable_amount %>">
-                    <input type="hidden" name="cart_payable_amount_original" id="cart_payable_amount_original" value="<%= cart_details.total_payable_amount %>">
+                    <input type="hidden" name="cart_payable_amount_original" id="cart_payable_amount_original" data-curr="{{Session::get('currencySymbol')}}" value="<%= cart_details.total_payable_amount %>">
                 </div>
             </td>
         </tr>

@@ -13,7 +13,11 @@
                     {!! Form::label('title', 'Select Category',['class' => 'control-label']) !!}
                     <select class="form-control selectize-select" id="cateSelectBox" name="cate_id">
                         @foreach($categories as $cate)
-                            <option value="{{$cate->id}}" @if($brand->bc->category_id == $cate->id) selected @endif>{{$cate->translation_one['name']}}</option>
+                            @if($brand->bc)
+                                <option value="{{$cate->id}}" @if($brand->bc->category_id == $cate->id) selected @endif>{{$cate->translation_one['name']}}</option>
+                            @else
+                                <option value="{{$cate->id}}">{{$cate->translation_one['name']}}</option>
+                            @endif
                         @endforeach
                     </select>
                     <span class="invalid-feedback" role="alert">
@@ -35,10 +39,7 @@
                     </tr>
                     <tr>
                         @foreach($languages as $langs)
-                        
-
                             <td>
-
                                 {!! Form::hidden('language_id[]', $langs->language_id) !!}
                                 <input type="text" name="title[]" value="{{(isset($langs->brand_trans) && !empty($langs->brand_trans->title)) ? $langs->brand_trans->title : ''}}" class="form-control" @if($langs->is_primary == 1) required @endif>
                             </td>

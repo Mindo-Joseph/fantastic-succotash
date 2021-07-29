@@ -842,31 +842,32 @@ $(document).ready(function() {
     $(document).on('click', '.tip_radio_controls .tip_radio', function(){
         var tip = $(this).val();
         var amount_payable = $("#cart_payable_amount_original").val();
+        var currency = $("#cart_payable_amount_original").attr('data-curr');
         // if this was previously checked
         if ($(this).hasClass("active")){
             $(this).prop('checked', false);
             $(this).removeClass('active');
-            setTipAmount(0, amount_payable);
+            setTipAmount(0, amount_payable, currency);
         }else{
             $('.tip_radio_controls .tip_radio').removeClass("active");
             $(this).addClass('active');
-            setTipAmount(tip, amount_payable);
+            setTipAmount(tip, amount_payable, currency);
         }
         
     });
-    function setTipAmount(tip, amount_payable){
+    function setTipAmount(tip, amount_payable, currency){
         if(tip != 'custom'){
             if( (tip == '') || (isNaN(tip)) ){
                 tip = 0;
             }
             amount_payable = parseFloat(amount_payable) + parseFloat(tip);
             $("#cart_tip_amount").val(parseFloat(tip).toFixed(2));
-            $("#cart_total_payable_amount").html('$' + parseFloat(amount_payable).toFixed(2));
+            $("#cart_total_payable_amount").html(currency + parseFloat(amount_payable).toFixed(2));
             $(".custom_tip").addClass("d-none");
             $("#custom_tip_amount").val('');
         }
         else{
-            $("#cart_total_payable_amount").text('$'+ parseFloat(amount_payable).toFixed(2));
+            $("#cart_total_payable_amount").text(currency + parseFloat(amount_payable).toFixed(2));
             $("#cart_tip_amount").val(0);
             $(".custom_tip").removeClass("d-none");
             $("#custom_tip_amount").focus();
@@ -879,10 +880,11 @@ $(document).ready(function() {
             tip = 0;
         }
         var amount_elem = $("#cart_payable_amount_original");
+        var currency = amount_elem.attr('data-curr');
         var amount_payable = amount_elem.val();
         amount_payable = parseFloat(amount_payable) + parseFloat(tip);
         $("#cart_tip_amount").val(parseFloat(tip).toFixed(2));
-        $("#cart_total_payable_amount").html('$' + parseFloat(amount_payable).toFixed(2));
+        $("#cart_total_payable_amount").html(currency + parseFloat(amount_payable).toFixed(2));
         $("input[name='cart_total_payable_amount']").val(parseFloat(amount_payable).toFixed(2));
     });
     $(document).on('click', '.qty-minus', function() {

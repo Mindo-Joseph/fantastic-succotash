@@ -50,6 +50,8 @@ class FrontController extends Controller
             }
         }
         $categories = $categories->where('categories.id', '>', '1')
+            ->whereNotNull('categories.type_id')
+            ->whereNotIn('categories.type_id', [7])
             ->where('categories.is_visible', 1)
             ->where('categories.status', '!=', $status)
             ->where('cts.language_id', $lang_id)

@@ -57,7 +57,7 @@ class CategoryController extends BaseController
             }
             $response['category'] = $category;
             $response['filterData'] = $variantSets;
-            $response['listData'] = $this->listData($langId, $cid, strtolower($category->type->redirect_to), $paginate, $userid, $category->can_add_product);
+            $response['listData'] = $this->listData($langId, $cid, strtolower($category->type->redirect_to), $paginate, $userid, $category->can_add_products);
             return $this->successResponse($response);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
@@ -67,6 +67,20 @@ class CategoryController extends BaseController
 
     public function listData($langId, $category_id, $type = '', $limit = 12, $userid, $can_add_product){
         if($type == 'vendor' && $can_add_product == 0){
+            $vendor_ids = [];
+            $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
+            foreach ($vendor_categories as $vendor_category) {
+               if(!in_array($vendor_category->vendor_id, $vendor_ids)){
+                    $vendor_ids[] = $vendor_category->vendor_id;
+               }
+            }
+            $vendorData = Vendor::select('id', 'name', 'banner', 'show_slot', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereIn('id', $vendor_ids)->with('slot')->withAvg('product', 'averageRating')->paginate($limit);
+            foreach ($vendorData as $vendor) {
+                unset($vendor->products);
+                $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
+            }
+            return $vendorData;
+        }else if($type == 'vendor' && $can_add_product == 1){
             $vendor_ids = [];
             $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
             foreach ($vendor_categories as $vendor_category) {
