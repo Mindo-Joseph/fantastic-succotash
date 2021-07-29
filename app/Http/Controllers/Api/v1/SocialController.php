@@ -93,7 +93,7 @@ class SocialController extends BaseController{
         }
         $customer->status = 1;
         $customer->is_email_verified = 1;
-        $customer->is_phone_verified = 1;
+        $customer->is_phone_verified = 0;
         $customer->save();
         $user_cart = Cart::where('user_id', $customer->id)->first();
         if($user_cart){
@@ -127,7 +127,6 @@ class SocialController extends BaseController{
         $token1->setClaim('user_id', $customer->id);
         $customer->auth_token = $token;
         $customer->save();
-
         if($customer->id > 0){
             $checkSystemUser = $this->checkCookies($customer->id);
             $user_device = UserDevice::where('user_id', $customer->id)->where('device_type', '!=', 'web')->first();
@@ -149,15 +148,15 @@ class SocialController extends BaseController{
             $verified['is_phone_verified'] = 1;
             $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
                         'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
+            $preferData['map_key'] = $prefer->map_key;
             $preferData['theme_admin'] = $prefer->theme_admin;
-            $preferData['distance_unit'] = $prefer->distance_unit;
-            $preferData['map_provider'] = $prefer->map_provider;
             $preferData['date_format'] = $prefer->date_format;
             $preferData['time_format'] = $prefer->time_format;
-            $preferData['map_key'] = $prefer->map_key;
+            $preferData['map_provider'] = $prefer->map_provider;
             $preferData['sms_provider'] = $prefer->sms_provider;
             $preferData['verify_email'] = $prefer->verify_email;
             $preferData['verify_phone'] = $prefer->verify_phone;
+            $preferData['distance_unit'] = $prefer->distance_unit;
             $preferData['app_template_id'] = $prefer->app_template_id;
             $preferData['web_template_id'] = $prefer->web_template_id;
             $response['client_preference'] = $preferData;
