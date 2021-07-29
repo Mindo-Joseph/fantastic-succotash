@@ -26,7 +26,7 @@ class CategoryController extends BaseController
             $userid = Auth::user()->id;
             $langId = Auth::user()->language;
             $category = Category::with(['tags','type'  => function($q){
-                            $q->select('id', 'title as redirect_to','can_add_product');
+                            $q->select('id', 'title as redirect_to');
                         },
                         'childs.translation'  => function($q) use($langId){
                             $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
@@ -57,7 +57,7 @@ class CategoryController extends BaseController
             }
             $response['category'] = $category;
             $response['filterData'] = $variantSets;
-            $response['listData'] = $this->listData($langId, $cid, strtolower($category->type->redirect_to), $paginate, $userid, $category->can_add_product);
+            $response['listData'] = $this->listData($langId, $cid, strtolower($category->type->redirect_to), $paginate, $userid, $category->can_add_products);
             return $this->successResponse($response);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
