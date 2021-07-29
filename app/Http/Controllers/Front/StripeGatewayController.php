@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Front;
 
 use Auth;
+use Session;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
-use App\Models\{PaymentOption, Client, ClientCurrency, SubscriptionPlansUser};
+use App\Models\{PaymentOption, Client, ClientPreference, ClientCurrency, SubscriptionPlansUser};
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Front\FrontController;
 use Illuminate\Support\Facades\Validator;
@@ -14,6 +15,7 @@ class StripeGatewayController extends FrontController{
 
     use ApiResponser;
     public $gateway;
+    public $currency;
 
     public function __construct()
     {
@@ -23,6 +25,9 @@ class StripeGatewayController extends FrontController{
         $this->gateway = Omnipay::create('Stripe');
         $this->gateway->setApiKey($api_key);
         $this->gateway->setTestMode(true); //set it to 'false' when go live
+
+        $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
+        $this->currency = (isset($primaryCurrency->currency->iso_code)) ? $primaryCurrency->currency->iso_code : 'USD';
     }
 
     public function postPaymentViaStripe(request $request)
@@ -30,7 +35,7 @@ class StripeGatewayController extends FrontController{
         try{
             $token = $request->input('stripe_token');
             $response = $this->gateway->purchase([
-                'currency' => 'INR',
+                'currency' => 'INR', //$this->currency,
                 'token' => $token,
                 'amount' => $request->input('amount'),
                 'metadata' => ['order_id' => "11"],
@@ -80,7 +85,7 @@ class StripeGatewayController extends FrontController{
             // ))->send();
             $authorizeResponse = $this->gateway->authorize([
                 'amount' => $request->amount,
-                'currency' => 'INR',
+                'currency' => 'INR', //$this->currency,
                 'description' => 'This is a subscription purchase transaction.',
                 'customerReference' => $customer_id
             ])->send();
