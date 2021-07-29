@@ -396,7 +396,7 @@ class CartController extends BaseController{
                         $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
                         if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
                             $pro_disc = $discount_amount;
-                            if($minimum_spend =< $quantity_price){
+                            if($minimum_spend <= $quantity_price){
                                 if($is_percent == 1){
                                     $pro_disc = ($quantity_price * $discount_percent)/ 100;
                                 }
