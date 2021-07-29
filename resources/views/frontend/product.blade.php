@@ -108,10 +108,10 @@
                                         </div>
                                         @endif
                                     @endif
-                                    <div class="description_txt my-3">
+                                    <!-- <div class="description_txt my-3">
                                         <p>It is a long established fact that a reader will be distracted by the
                                             readable content of a page when looking at its layout.</p>
-                                    </div>
+                                    </div> -->
                                     <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
                                     @if($product->inquiry_only == 0)
                                     <h3 id="productPriceValue" class="mb-md-3">

@@ -3,6 +3,9 @@
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css" />
+
 @endsection
 
 @section('content')
@@ -13,7 +16,8 @@
         font-weight: 400;
         margin-bottom: 28px;
     }
-    .discard_price{
+
+    .discard_price {
         text-decoration: line-through;
         color: #6c757d;
     }
@@ -251,7 +255,7 @@
         </tr>
         <tr class="border_0">
             <td colspan="3"></td>
-            <!-- <td colspan="4" class="pt-0 pr-0">
+            <td colspan="4" class="pt-0 pr-0">
                 <div class="row d-flex align-items-center no-gutters" id="dateredio">
                     <div class="col-md-5 pr-2">
                         <div class="login-form">
@@ -270,12 +274,14 @@
                         </div>
                     </div>
                     <div class="col-md-7 datenow d-flex align-items-center justify-content-between">
-                        <input type="text" id="datetime-datepicker" name="schedule_time"
-                            class="form-control upside" placeholder="Date Time">
+                            <input type="text" id="inline-datepicker" class="form-control flatpickr-input" placeholder="Inline calendar">
+                        <!-- <input type="text" id="datetime-datepicker" name="schedule_time"
+                            class="form-control upside" placeholder="Date Time"> -->
                         <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button>
+                        
                     </div>
                 </div>
-            </td> -->
+            </td>
         </tr>
     </tfoot>
 </script>
@@ -324,9 +330,9 @@
                             <div class="delivery_box px-0">
                                 <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}}
                                     @if($address->is_primary)
-                                        <input type="radio" name="address_id" value="{{$address->id}}" checked="checked">
+                                    <input type="radio" name="address_id" value="{{$address->id}}" checked="checked">
                                     @else
-                                        <input type="radio" name="address_id" value="{{$address->id}}" {{$k == 0? 'checked="checked""' : '' }}>
+                                    <input type="radio" name="address_id" value="{{$address->id}}" {{$k == 0? 'checked="checked""' : '' }}>
                                     @endif
                                     <span class="checkround"></span>
                                 </label>
@@ -433,7 +439,7 @@
                                     <div class="spinner-box">
                                         <div class="circle-border">
                                             <div class="circle-core"></div>
-                                        </div>  
+                                        </div>
                                     </div>
                                 </td>
                             </tbody>
@@ -441,7 +447,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4">
                     <a class="btn btn-solid" href="{{ url('/') }}">{{__('Continue Shopping')}}</a>
@@ -585,7 +591,7 @@
                         <div class="col-sm-6" id="imageInput">
                             <input type="hidden" id="vendor_idd" name="vendor_idd" value="" />
                             <input type="hidden" id="product_id" name="product_id" value="" />
-                            <input data-default-file="" accept="image/*" type="file" data-plugins="dropify" name="prescriptions[]" class="dropify" multiple/>
+                            <input data-default-file="" accept="image/*" type="file" data-plugins="dropify" name="prescriptions[]" class="dropify" multiple />
                             <p class="text-muted text-center mt-2 mb-0">{{__('Upload Prescription')}}</p>
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
