@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\v1;
 
 use DB;
+use Client;
 use Validation;
 use Carbon\Carbon;
-use Client;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +26,7 @@ class CategoryController extends BaseController
             $userid = Auth::user()->id;
             $langId = Auth::user()->language;
             $category = Category::with(['tags','type'  => function($q){
-                            $q->select('id', 'title as redirect_to');
+                            $q->select('id', 'title as redirect_to','can_add_product');
                         },
                         'childs.translation'  => function($q) use($langId){
                             $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
@@ -80,6 +80,20 @@ class CategoryController extends BaseController
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
             }
             return $vendorData;
+        }elseif($type == 'vendor' && $can_add_product == 1){
+            $vendor_ids = [];
+            $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
+            foreach ($vendor_categories as $vendor_category) {
+               if(!in_array($vendor_category->vendor_id, $vendor_ids)){
+                    $vendor_ids[] = $vendor_category->vendor_id;
+               }
+            }
+            $vendorData = Vendor::select('id', 'name', 'banner', 'show_slot', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('status', '!=', $this->field_status)->whereIn('id', $vendor_ids)->with('slot')->withAvg('product', 'averageRating')->paginate($limit);
+            foreach ($vendorData as $vendor) {
+                unset($vendor->products);
+                $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
+            }
+            return $vendorData;
         }elseif($type == 'Pickup/Delivery' || $type == 'pickup/delivery'){
             $vendor_ids = [];
             $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
@@ -118,8 +132,7 @@ class CategoryController extends BaseController
                 );
             }
             return $category_details;
-        }
-        elseif($type == 'product' || $type == 'Product'){
+        }elseif($type == 'product' || $type == 'Product'){
             $vendor_ids = Vendor::where('status', 1)->pluck('id')->toArray();
             $clientCurrency = ClientCurrency::where('currency_id', Auth::user()->currency)->first();
             $products = Product::has('vendor')->with(['category.categoryDetail','inwishlist' => function($qry) use($userid){

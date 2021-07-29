@@ -18,16 +18,8 @@ class BrandController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function create(){
-        $categories = Category::with('english')
-                        ->select('id', 'slug')
-                        ->where('id', '>', '1')
-                        ->where('status', '!=', '2')
-                        ->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')
-                        ->whereIn('type_id', ['1', '3', '6'])->get();
-        $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
-                    ->where('is_active', 1)
-                    ->orderBy('is_primary', 'desc')->get();
+        $categories = Category::with('english')->select('id', 'slug')->where('id', '>', '1')->where('status', '!=', '2')->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->whereIn('type_id', ['1', '3', '6'])->get();
+        $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
         $returnHTML = view('backend.catalog.add-brand')->with(['categories' => $categories,  'languages' => $langs])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }

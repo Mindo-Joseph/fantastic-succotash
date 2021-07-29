@@ -374,7 +374,7 @@ class AuthController extends BaseController{
         try {
             $user = User::where('id', Auth::user()->id)->first();
             if(!$user || !$request->has('type')){
-                return response()->json(['error' => 'User not found.'], 404);
+                return $this->errorResponse(__('User not found.'), 404);
             }
             $currentTime = Carbon::now()->toDateTimeString();
             $message = 'Account verified successfully.';
@@ -382,11 +382,16 @@ class AuthController extends BaseController{
                 $message = 'OTP matched successfully.';
             }
             if($request->type == 'phone'){
+                $phone_number = str_ireplace(' ', '', $request->phone_number);
+                $user_detail_exist = User::where('phone_number', $request->phone_number)->whereNotIn('id', [$user->id])->first();
+                if($user_detail_exist){
+                    return response()->json(['error' => __('phone number in use!')], 404);
+                }
                 if($user->phone_token != $request->otp){
-                    return response()->json(['error' => 'OTP is not valid'], 404);
+                    return $this->errorResponse(__('OTP is not valid'), 404);
                 }
                 if($currentTime > $user->phone_token_valid_till){
-                    return response()->json(['error' => 'OTP has been expired.'], 404);
+                    return $this->errorResponse(__('OTP has been expired.'), 404);
                 }
                 $user->phone_token = NULL;
                 $user->is_phone_verified = 1;
@@ -394,6 +399,10 @@ class AuthController extends BaseController{
                 $user->save();
                 return $this->successResponse(getUserDetailViaApi($user) , $message);
             }elseif ($request->type == 'email') {
+                $user_detail_exist = User::where('email', $request->email)->where('id','!=',$user->id)->first();
+                if($user_detail_exist){
+                    return $this->errorResponse( __('Email already in use!'), 404);
+                }
                 if($user->email_token != $request->otp){
                     return $this->errorResponse(__('OTP is not valid'), 404);
                 }
