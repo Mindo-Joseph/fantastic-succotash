@@ -96,6 +96,7 @@ class TableBookingController extends BaseController
         $table->table_number = $request->table_number;
         $table->image = Storage::disk('s3')->put('image', $request->image, 'public');
         $table->vendor_id = $request->vendor_id;
+        $table->seating_number = $request->seating_number;
         $table->vendor_dinein_category_id = $request->vendor_dinein_category_id;
         $table->save();
 
@@ -123,7 +124,6 @@ class TableBookingController extends BaseController
 
     public function updateTable(Request $request)
     {
-        // dd($request->all());
         $rules = array(
             'name.0' => 'required|string|max:60',
             'table_number' => 'required|string|max:30|unique:vendor_dinein_tables,table_number,' . $request->table_id,
@@ -136,6 +136,7 @@ class TableBookingController extends BaseController
                 $table->image = Storage::disk('s3')->put('image', $request->image, 'public');
             }
             $table->vendor_id = $request->vendor_id;
+            $table->seating_number = $request->seating_number;
             $table->vendor_dinein_category_id = $request->vendor_dinein_category_id;
             $table->save();
             if ($table->id > 0) {

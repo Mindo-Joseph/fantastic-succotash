@@ -239,7 +239,7 @@ class VendorController extends BaseController
         $vendor = Vendor::findOrFail($id);
         $client_preferences = ClientPreference::first();
         $dinein_categories = VendorDineinCategory::where('vendor_id', $id)->get();
-        $vendor_tables = VendorDineinTable::where('vendor_id', $id)->get();
+        $vendor_tables = VendorDineinTable::where('vendor_id', $id)->with('category')->get();
         $co_ordinates = $all_coordinates = array();
         $areas = ServiceArea::where('vendor_id', $id)->orderBy('created_at', 'DESC')->get();
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();

@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.4.0|^8.0",
+        "php": "^7.4.0",
         "99designs/phumbor": "^1.2",
         "akibtanjim/currency-converter": "^1.0",
         "algolia/algoliasearch-client-php": "^3.0",
@@ -45,6 +45,7 @@
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "rivalex/laravel-intl": "^1.1",
         "sentry/sentry-laravel": "^2.7",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "socialiteproviders/apple": "^5.0",
         "spatie/db-dumper": "^2.21.1",
         "spatie/geocoder": "^3.10",
