@@ -44,6 +44,7 @@ class UserSubscriptionController extends BaseController
                     unset($sub->features);
                 }
                 $sub->features = $subFeaturesList;
+                $sub->price = $sub->price * $clientCurrency->doller_compare;
             }
         }
         return response()->json(["status"=>"Success", 'subscription_plans'=>$sub_plans, 'subscription'=>$active_subscription, "clientCurrency"=>$clientCurrency]);
@@ -59,21 +60,25 @@ class UserSubscriptionController extends BaseController
         $user = Auth::user();
         $currency_id = $user->currency;
         $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
-        $sub_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
+        $sub_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->first();
         if($sub_plan){
-            $subFeaturesList = '<ul>';
-            if($sub_plan->features->isNotEmpty()){
-                foreach($sub_plan->features as $feature){
-                    $subFeaturesList = $subFeaturesList.'<li><i class="fa fa-check"></i><span class="ml-1">'.$feature->feature->title.'</span></li>';
+            if($sub_plan->status == '1'){
+                $subFeaturesList = array();
+                if($sub_plan->features->isNotEmpty()){
+                    foreach($sub_plan->features as $feature){
+                        $subFeaturesList[] = $feature->feature->title;
+                    }
+                    unset($sub_plan->features);
                 }
-                unset($sub_plan->features);
+                $sub_plan->features = $subFeaturesList;
+                $sub_plan->price = $sub_plan->price * $clientCurrency->doller_compare;
             }
-            $subFeaturesList = $subFeaturesList.'<ul>';
-            $sub_plan->features = $subFeaturesList;
-            $sub_plan->price = $sub_plan->price * $clientCurrency->doller_compare;
+            else{
+                return response()->json(["status"=>"Error", "message" => __("Subscription plan not active")]);
+            }
         }
         else{
-            return response()->json(["status"=>"Error", "message" => __("Subscription plan not active")]);
+            return response()->json(["status"=>"Error", "message" => __("Invalid Data")]);
         }
         $code = array('stripe');
         $ex_codes = array('cod');
