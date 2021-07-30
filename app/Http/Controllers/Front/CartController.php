@@ -378,7 +378,7 @@ class CartController extends FrontController
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
                     $prod->pvariant->price_in_cart = $prod->pvariant->price;
                     $prod->pvariant->price = $price_in_currency;
-                    $prod->pvariant->media_one = $prod->pvariant->media->first() ? $prod->pvariant->media->first() : $prod->product->media->first();
+                    $prod->pvariant->media_one = $prod->pvariant->media->first() ? $prod->pvariant->media->first() : [];
                     $prod->pvariant->multiplier = $clientCurrency->doller_compare;
                     $prod->pvariant->quantity_price = number_format($quantity_price, 2);
                     $payable_amount = $payable_amount + $quantity_price;
@@ -395,9 +395,9 @@ class CartController extends FrontController
                             $taxable_amount = $taxable_amount + $product_tax;
                             $payable_amount = $payable_amount + $product_tax;
                         }
+                        unset($prod->product->taxCategory);
                     }
                     $prod->taxdata = $taxData;
-                    unset($prod->product->taxCategory);
                     foreach ($prod->addon as $ck => $addons) {
                         $opt_price_in_currency = $addons->option->price / $divider;
                         $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
@@ -408,24 +408,20 @@ class CartController extends FrontController
                         $addons->option->quantity_price = $opt_quantity_price;
                         $payable_amount = $payable_amount + $opt_quantity_price;
                     }
-
                     if(isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)){
                         $prod->cartImg = $prod->pvariant->image->imagedata;
                     }else{
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
-                    if(!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1))
-                    {   
+                    if(!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1)){   
                         $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
-                        if(!empty($deliver_charge) && $delivery_count == 0)
-                        {
+                        if(!empty($deliver_charge) && $delivery_count == 0){
                             $delivery_count = 1;
                             $prod->deliver_charge = number_format($deliver_charge, 2);
                             $payable_amount = $payable_amount + $deliver_charge;
                             $delivery_fee_charges = $deliver_charge;
                         }
                     }
-                    
                 }
                 if($vendorData->coupon){
                     if($vendorData->coupon->promo->promo_type_id == 2){
@@ -463,7 +459,6 @@ class CartController extends FrontController
                         if($coupon->promo->promo_type_id == 1){
                             $is_percent = 1;
                             $total_discount_percent = $total_discount_percent + round($coupon->promo->amount);
-                        }else{
                         }
                     }
                 }

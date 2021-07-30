@@ -273,12 +273,9 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-7 datenow d-flex align-items-center justify-content-between">
-                            <input type="text" id="inline-datepicker" class="form-control flatpickr-input" placeholder="Inline calendar">
-                        <!-- <input type="text" id="datetime-datepicker" name="schedule_time"
-                            class="form-control upside" placeholder="Date Time"> -->
+                    <div class="col-md-7 datenow align-items-center justify-content-between" id="schedule_div" style="display:none!important">
+                            <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar">
                         <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button>
-                        
                     </div>
                 </div>
             </td> -->

@@ -1074,4 +1074,10 @@ $(document).ready(function() {
 
     });
 
+    $(document).on('click', '#tasknow', function() {
+        $('#schedule_div').attr("style", "display: none !important");
+    });
+    $(document).on('click', '#taskschedule', function() {
+        $('#schedule_div').attr("style", "display: flex !important");
+    });
 });
