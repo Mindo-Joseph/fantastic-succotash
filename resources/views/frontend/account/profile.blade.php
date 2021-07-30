@@ -278,7 +278,7 @@
             return true;
         });
     });
-    $('.iti__country').click(function() {
+    $(document).delegate('.iti__country', 'click', function() {
         var code = $(this).attr('data-country-code');
         $('#countryData').val(code);
         var dial_code = $(this).attr('data-dial-code');

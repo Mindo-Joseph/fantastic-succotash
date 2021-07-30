@@ -74,7 +74,7 @@
                 <tr class="padding-bottom vendor_products_tr" id="tr_vendor_products_<%= vendor_product.id %>">
                     <td style="width:100px" <%= vendor_product.length > 0 ? 'rowspan=2' : '' %>>
                         <div class="product-img pb-2">
-                           <% if(vendor_product.pvariant.media_one.length == 1) { %>
+                           <% if(vendor_product.pvariant.media_one) { %>
                                 <img src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>100/70<%= vendor_product.pvariant.media_one.image.path.image_path %>" alt="">
                             <% }else{ %>
                                 <img class='mr-2' src="<%= vendor_product.pvariant.media_second.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_second.image.path.image_path %>">
