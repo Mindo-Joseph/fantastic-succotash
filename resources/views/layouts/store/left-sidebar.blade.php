@@ -90,8 +90,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         <% _.each(product.vendor_products, function(vendor_product, vp){%>
                                             <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
                                                 <a class='media' href='#'>
-                                                    <% if(vendor_product.pvariant.media_one) { %>
+                                                    <% if(vendor_product.pvariant.media_one.length ==1) { %>
                                                         <img class='mr-2' src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.image.path.image_path %>">
+                                                    <% }else{ %>
+                                                        <img class='mr-2' src="<%= vendor_product.pvariant.media_second.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_second.image.path.image_path %>">
                                                     <% } %>
                                                     <div class='media-body'>                                                                
                                                         <h4><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>

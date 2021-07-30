@@ -84,11 +84,11 @@ class CartController extends FrontController
                 if($checkCartLuxuryOption){
                     CartProduct::where('cart_id', $cart_detail->id)->delete();
                 }
-                if($luxury_option->id == 2 || $luxury_option->id == 3){
-                    $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $request->vendor_id)->first();
-                    if($checkVendorId){
-                        CartProduct::where('cart_id', $cart_detail->id)->delete();
-                    }
+            }
+            if($luxury_option->id == 2 || $luxury_option->id == 3){
+                $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $request->vendor_id)->first();
+                if($checkVendorId){
+                    CartProduct::where('cart_id', $cart_detail->id)->delete();
                 }
             }
             $checkIfExist = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cart_detail->id)->first();
@@ -107,7 +107,7 @@ class CartController extends FrontController
                     'product_id' => $request->product_id,
                     'variant_id'  => $request->variant_id,
                     'currency_id' => $client_currency->currency_id,
-                    'luxury_option_id' => ($luxury_option) ? $luxury_option->id : 0,
+                    'luxury_option_id' => $luxury_option->id,
                 ];
                 $cart_product = CartProduct::updateOrCreate(['cart_id' =>  $cart_detail->id, 'product_id' => $request->product_id], $cart_product_detail);
                 $create_cart_addons = [];
@@ -378,7 +378,8 @@ class CartController extends FrontController
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
                     $prod->pvariant->price_in_cart = $prod->pvariant->price;
                     $prod->pvariant->price = $price_in_currency;
-                    $prod->pvariant->media_one = $prod->pvariant->media->first() ? $prod->pvariant->media->first() : $prod->pvariant->media->first();
+                    $prod->pvariant->media_one = $prod->pvariant->media->first() ? $prod->pvariant->media->first() : [];
+                    $prod->pvariant->media_second = $prod->product->media->first() ? $prod->product->media->first() : [];
                     $prod->pvariant->multiplier = $clientCurrency->doller_compare;
                     $prod->pvariant->quantity_price = number_format($quantity_price, 2);
                     $payable_amount = $payable_amount + $quantity_price;
