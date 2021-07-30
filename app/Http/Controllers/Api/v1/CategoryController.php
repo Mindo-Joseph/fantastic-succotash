@@ -232,8 +232,7 @@ class CategoryController extends BaseController
                 }
             }
             $order_type = $request->has('order_type') ? $request->order_type : '';
-            $products = Product::join('product_categories as pc', 'pc.product_id', 'products.id')
-                        ->with(['category.categoryDetail','media.image',
+            $products = Product::with(['category.categoryDetail','media.image',
                             'translation' => function($q) use($langId){
                             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                             },
@@ -251,7 +250,7 @@ class CategoryController extends BaseController
                                 $q->groupBy('product_id');
                             },
                         ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
-                        ->where('pc.category_id', $cid)
+                        ->where('category_id', $cid)
                         ->where('products.is_live', 1)
                         ->whereIn('id', function($qr) use($startRange, $endRange){ 
                             $qr->select('product_id')->from('product_variants')
