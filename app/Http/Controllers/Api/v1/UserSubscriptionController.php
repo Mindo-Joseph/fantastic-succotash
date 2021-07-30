@@ -63,6 +63,10 @@ class UserSubscriptionController extends BaseController
             $user = Auth::user();
             $currency_id = $user->currency;
             $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
+            $previousSubscriptionActive = $this->checkActiveSubscriptionPlan($slug)->getOriginalContent();
+            if( $previousSubscriptionActive['status'] == 'Error' ){
+                return $this->errorResponse($previousSubscriptionActive['message'], 400);
+            }
             $sub_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->first();
             if($sub_plan){
                 if($sub_plan->status == '1'){
@@ -109,7 +113,7 @@ class UserSubscriptionController extends BaseController
      * 
      * @return \Illuminate\Http\Response
      */
-    public function checkActiveSubscriptionPlan(Request $request, $slug = '')
+    public function checkActiveSubscriptionPlan($slug = '')
     {
         try{
             $user = Auth::user();
@@ -140,13 +144,24 @@ class UserSubscriptionController extends BaseController
     public function purchaseSubscriptionPlan(Request $request, $slug = '')
     {
         try{
+            $validator = Validator::make($request->all(), [
+                'amount'            => 'required|not_in:0',
+                'transaction_id'    => 'required',
+                'payment_option_id' => 'required',
+            ]);
+            if($validator->fails()){
+                foreach($validator->errors()->toArray() as $error_key => $error_value){
+                    return $this->errorResponse($error_value[0], 400);
+                }
+            }
+            DB::beginTransaction();
             $user = Auth::user();
             $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
-            $last_subscription = SubscriptionInvoicesUser::with(['plan', 'features.feature'])
-                ->where('user_id', $user->id)
-                ->where('subscription_id', $subscription_plan->id)
-                ->orderBy('end_date', 'desc')->first();
             if( ($user) && ($subscription_plan) ){
+                $last_subscription = SubscriptionInvoicesUser::with(['plan', 'features.feature'])
+                    ->where('user_id', $user->id)
+                    ->where('subscription_id', $subscription_plan->id)
+                    ->orderBy('end_date', 'desc')->first();
                 $subscription_invoice = new SubscriptionInvoicesUser;
                 $subscription_invoice->user_id = $user->id;
                 $subscription_invoice->subscription_id = $subscription_plan->id;
@@ -202,10 +217,12 @@ class UserSubscriptionController extends BaseController
                     if(!empty($subscription_invoice_features)){
                         SubscriptionInvoiceFeaturesUser::insert($subscription_invoice_features);
                     }
-                    $message = __('Your subscription has been activated successfully.');
+                    $message = 'Your subscription has been activated successfully.';
+                    DB::commit();
                     return $this->successResponse('', $message);
                 }
                 else{
+                    DB::rollback();
                     return $this->errorResponse('Error in purchasing subscription.', 400);
                 }
             }
@@ -214,6 +231,7 @@ class UserSubscriptionController extends BaseController
             }
         }
         catch(\Exception $ex){
+            DB::rollback();
             return $this->errorResponse($ex->getMessage(), 400);
         }
     }
@@ -225,9 +243,10 @@ class UserSubscriptionController extends BaseController
      * 
      * @return \Illuminate\Http\Response
      */
-    public function cancelSubscriptionPlan(Request $request, $slug = '')
+    public function cancelSubscriptionPlan($slug = '')
     {
         try{
+            DB::beginTransaction();
             $active_subscription = SubscriptionInvoicesUser::with('plan')
                                 ->where('slug', $slug)
                                 ->where('user_id', Auth::user()->id)
@@ -236,6 +255,7 @@ class UserSubscriptionController extends BaseController
                 $active_subscription->cancelled_at = $active_subscription->end_date;
                 $active_subscription->updated_at = Carbon::now()->toDateTimeString();
                 $active_subscription->save();
+                DB::commit();
                 return $this->successResponse('', 'Your '.$active_subscription->plan->title.' subscription has been cancelled successfully');
             }
             else{
@@ -243,6 +263,7 @@ class UserSubscriptionController extends BaseController
             }
         }
         catch(\Exception $ex){
+            DB::rollback();
             return $this->errorResponse($ex->getMessage(), 400);
         }
     }
