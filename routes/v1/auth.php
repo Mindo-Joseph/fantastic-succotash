@@ -64,6 +64,13 @@ Route::group(['prefix' => 'v1'], function () {
         });
 
         // user subscription 
+        Route::group(['prefix' => 'subscription'], function () {
+            Route::get('plans/user', 'Api\v1\SubscriptionPlansUserController@getSubscriptionPlans');
+            Route::post('plan/save/user/{slug?}', 'Api\v1\SubscriptionPlansUserController@saveSubscriptionPlan');
+            Route::get('plan/edit/user/{slug}', 'Api\v1\SubscriptionPlansUserController@editSubscriptionPlan');
+            Route::get('plan/delete/user/{slug}', 'Api\v1\SubscriptionPlansUserController@deleteSubscriptionPlan');
+            Route::post('plan/updateStatus/user/{slug}', 'Api\v1\SubscriptionPlansUserController@updateSubscriptionPlanStatus');
+        });
         Route::group(['prefix' => 'user/subscription'], function () {
             Route::get('plans', 'Api\v1\UserSubscriptionController@getSubscriptionPlans');
             Route::get('selectPlan/{slug}', 'Api\v1\UserSubscriptionController@selectSubscriptionPlan');
@@ -81,6 +88,14 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('checkActive/{id}/{slug}', 'Api\v1\VendorSubscriptionController@checkActiveSubscriptionPlan');
             Route::any('filterData', 'Api\v1\VendorSubscriptionController@getSubscriptionsFilterData');
             Route::post('status/update/{slug}', 'Api\v1\VendorSubscriptionController@updateSubscriptionStatus');
+        }); 
+        Route::group(['prefix' => 'subscription'], function () {
+            Route::get('plans/vendor', 'Api\v1\SubscriptionPlansVendorController@getSubscriptionPlans');
+            Route::post('plan/save/vendor/{slug?}', 'Api\v1\SubscriptionPlansVendorController@saveSubscriptionPlan');
+            Route::get('plan/edit/vendor/{slug}', 'Api\v1\SubscriptionPlansVendorController@editSubscriptionPlan');
+            Route::get('plan/delete/vendor/{slug}', 'Api\v1\SubscriptionPlansVendorController@deleteSubscriptionPlan');
+            Route::post('plan/updateStatus/vendor/{slug}', 'Api\v1\SubscriptionPlansVendorController@updateSubscriptionPlanStatus');
+            Route::post('plan/updateOnRequest/vendor/{slug}', 'Api\v1\SubscriptionPlansVendorController@updateSubscriptionPlanOnRequest');
         });
     });
 });
