@@ -26,11 +26,11 @@ class OrderController extends Controller {
                     if($cus_address){
                         $tasks = array();
                         $vendor_details = Vendor::find($vendor_id);
-                            $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
-                                                'longitude' => $vendor_details->longitude??76.80350870
+                            $location[] = array('latitude' => $vendor_details->latitude??'',
+                                                'longitude' => $vendor_details->longitude??''
                                                 );
-                            $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
-                                              'longitude' => $cus_address->longitude??76.803508700000
+                            $location[] = array('latitude' => $cus_address->latitude??'',
+                                              'longitude' => $cus_address->longitude??''
                                             );
                             $postdata =  ['locations' => $location];
                             $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
@@ -211,11 +211,13 @@ class OrderController extends Controller {
                                 $vendor_discount_amount +=$final_coupon_discount_amount; 
                             }   
                         }
+                        $total_delivery_fee += $delivery_fee;
                         $order_vendor->coupon_id = $coupon_id;
                         $order_vendor->coupon_code = $coupon_name;
                         $order_vendor->order_status_option_id = 1;
+                        $OrderVendor->delivery_fee = $delivery_fee;
                         $order_vendor->subtotal_amount = $actual_amount;
-                        $order_vendor->payable_amount = $vendor_payable_amount;
+                        $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
                         $order_vendor->taxable_amount = $vendor_taxable_amount;
                         $order_vendor->discount_amount= $vendor_discount_amount;
                         $order_vendor->payment_option_id = $request->payment_option_id;
@@ -256,7 +258,7 @@ class OrderController extends Controller {
                     $order->loyalty_amount_saved = $loyalty_amount_saved;
                     $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
                     $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
-                    $order->payable_amount = $delivery_fee + $payable_amount + $tip_amount - $total_discount - $loyalty_amount_saved;
+                    $order->payable_amount = $total_delivery_fee + $payable_amount + $tip_amount - $total_discount - $loyalty_amount_saved;
                     $order->save();
                     CartCoupon::where('cart_id', $cart->id)->delete();
                     CartProduct::where('cart_id', $cart->id)->delete();
