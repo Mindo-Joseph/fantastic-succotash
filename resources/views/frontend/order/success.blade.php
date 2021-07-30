@@ -38,7 +38,7 @@
 	                        <div class="col-3 order_detail">
 	                            <div>
 	                                <h4>{{__('Product Name')}}</h4>
-	                                <h5>{{$product->product_name}}</h5>
+	                                <h5>{{$product->pvariant->translation_one->title}}</h5>
                                     @foreach($product->pvariant->vset as $vset)
                                         <label><span>{{$vset->optionData->trans->title}}:</span>{{$vset->variantDetail->trans->title}}</label>
                                     @endforeach
@@ -61,11 +61,20 @@
                     <div class="total-sec">
                         <ul>
                             <li>{{__('Subtotal')}}<span>{{Session::get('currencySymbol')}}@money($order->total_amount * $clientCurrency->doller_compare)</span></li>
-                            <li>{{__('Tax')}} <span>{{Session::get('currencySymbol')}}@money($order->taxable_amount)</span></li>
+                            <li>{{__('Tax')}} <span>{{Session::get('currencySymbol')}}@money($order->taxable_amount * $clientCurrency->doller_compare)</span></li>
+                            @if($order->tip_amount > 0)
+                                <li>{{__('Tip Amount')}} <span>{{Session::get('currencySymbol')}}@money($order->tip_amount * $clientCurrency->doller_compare)</span></li>
+                            @endif
+                            @if($order->subscription_discount > 0)
+                                <li>{{__('Subscription Discount')}} <span>{{Session::get('currencySymbol')}}@money($order->subscription_discount * $clientCurrency->doller_compare)</span></li>
+                            @endif
+                            @if($order->loyalty_amount_saved > 0)
+                                <li>{{__('Loyalty Amount')}} <span>{{Session::get('currencySymbol')}}@money($order->loyalty_amount_saved * $clientCurrency->doller_compare)</span></li>
+                            @endif
                         </ul>
                     </div>
                     <div class="final-total">
-                        <h3>{{__('Total')}} <span>{{Session::get('currencySymbol')}}@money($order->payable_amount)</span></h3>
+                        <h3>{{__('Total')}} <span>{{Session::get('currencySymbol')}}@money($order->payable_amount * $clientCurrency->doller_compare)</span></h3>
                     </div>
                 </div>
             </div>
@@ -76,7 +85,7 @@
                         <ul class="order-detail">
                             <li>{{__('Order ID')}}: {{$order->order_number}}</li>
                             <li>{{__('Order Date')}}: {{ date('F d, Y', strtotime($order->created_at)) }}</li>
-                            <li>{{__('Order Total')}}: ${{$order->payable_amount}}</li>
+                            <li>{{__('Order Total')}}: {{Session::get('currencySymbol')}}@money($order->payable_amount * $clientCurrency->doller_compare)</li>
                         </ul>
                     </div>
                     <div class="col-sm-6">

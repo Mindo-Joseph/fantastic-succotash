@@ -36,6 +36,9 @@ class ProductVariant extends Model
 	public function translation($langId = 0){
         return $this->hasMany('App\Models\ProductTranslation', 'product_id', 'product_id');
     }
+	public function translation_one($langId = 0){
+        return $this->hasOne('App\Models\ProductTranslation', 'product_id', 'product_id'); 
+    }
     public function optionData() {
 	    return $this->belongsTo('App\Models\VariantOption', 'variant_option_id', 'id');
 	}
