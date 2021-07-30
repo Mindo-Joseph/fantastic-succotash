@@ -270,7 +270,7 @@
         </tr>
         <tr class="border_0">
             <td colspan="3"></td>
-            <!-- <td colspan="4" class="pt-0 pr-0">
+            <td colspan="4" class="pt-0 pr-0">
                 <div class="row d-flex align-items-center no-gutters" id="dateredio">
                     <div class="col-md-5 pr-2">
                         <div class="login-form">
@@ -293,7 +293,7 @@
                         <!-- <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button> -->
                     </div>
                 </div>
-            </td> -->
+            </td>
         </tr>
     </tfoot>
 </script>
