@@ -133,7 +133,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             @foreach($navCategories as $cate)
                                 @if($cate['name'])
                                 <li>                                    
-                                    <a href="{{route('categoryDetail', $cate['slug'])}}"><img src="{{$cate['icon']['image_fit']}}200/200{{$cate['icon']['image_path']}}" alt=""> {{$cate['name']}}</a>
+                                    <a href="{{route('categoryDetail', $cate['slug'])}}">
+                                        @if($client_preference_detail->show_icons == 1)
+                                        <img src="{{$cate['icon']['image_fit']}}200/200{{$cate['icon']['image_path']}}" alt="">
+                                        @endif
+                                        {{$cate['name']}}</a>
                                     @if(!empty($cate['children']))
                                         
                                         <ul>
