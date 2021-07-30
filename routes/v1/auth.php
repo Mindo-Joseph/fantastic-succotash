@@ -67,8 +67,20 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'user/subscription'], function () {
             Route::get('plans', 'Api\v1\UserSubscriptionController@getSubscriptionPlans');
             Route::get('selectPlan/{slug}', 'Api\v1\UserSubscriptionController@selectSubscriptionPlan');
-            // Route::get('getActivePlan', 'Api\v1\UserSubscriptionController@getActiveSubscriptionPlan');
+            Route::post('purchase/{slug}', 'Api\v1\UserSubscriptionController@purchaseSubscriptionPlan');
+	        Route::post('cancel/{slug}', 'Api\v1\UserSubscriptionController@cancelSubscriptionPlan');
             Route::get('checkActivePlan/{slug}', 'Api\v1\UserSubscriptionController@checkActiveSubscriptionPlan');
+        });
+
+        // vendor subscription 
+        Route::group(['prefix' => 'vendor/subscription'], function () {
+            Route::get('plans/{id}', 'Api\v1\VendorController@getSubscriptionPlans');
+            Route::get('select/{slug}', 'Api\v1\VendorSubscriptionController@selectSubscriptionPlan');
+            Route::post('purchase/{id}/{slug}', 'Api\v1\VendorSubscriptionController@purchaseSubscriptionPlan');
+            Route::post('cancel/{id}/{slug}', 'Api\v1\VendorSubscriptionController@cancelSubscriptionPlan');
+            Route::get('checkActive/{id}/{slug}', 'Api\v1\VendorSubscriptionController@checkActiveSubscriptionPlan');
+            Route::any('filterData', 'Api\v1\VendorSubscriptionController@getSubscriptionsFilterData');
+            Route::post('status/update/{slug}', 'Api\v1\VendorSubscriptionController@updateSubscriptionStatus');
         });
     });
 });
