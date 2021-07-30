@@ -93,7 +93,7 @@ class ProfileController extends FrontController
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|min:3|max:80',
-            'phone_number' => 'required|numeric'
+            'phone_number' => 'required'
         ]);
         $messages = array(
             'name.required' => __('The name field is required'),
@@ -115,7 +115,7 @@ class ProfileController extends FrontController
             $user->timezone = $request->timezone;
             $user->dial_code = $request->dialCode;
             $user->description = $request->description;
-            $user->phone_number = $request->phone_number;
+            $user->phone_number = str_replace('-', '', $request->phone_number);
             $user->save();
             return redirect()->back()->with('success', 'Profile has been updated');
         }
