@@ -528,14 +528,19 @@ class CartController extends BaseController{
         $cart->total_discount_amount = $total_disc_amount;
         if($cart->user_id > 0){
             $cart->loyalty_amount = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
-            if($total_paying > $cart->loyalty_amount){
-               $cart->loyalty_amount = 0.00; 
-            }
+            // if($total_paying > $cart->loyalty_amount){
+            //    $cart->loyalty_amount = 0.00; 
+            // }
             // $cart->wallet = $this->getWallet($cart->user_id, $clientCurrency->doller_compare, $currency);
         }
         $cart->products = $cartData;
         $cart->item_count = $item_count;
-        $cart->total_payable_amount = $total_paying + $total_delivery_amount + $total_tax - $total_disc_amount - $cart->loyalty_amount;
+        $temp_total_paying = $total_paying + $total_delivery_amount + $total_tax - $total_disc_amount;
+        if($temp_total_paying >= $cart->loyalty_amount){
+           $cart->total_payable_amount = 0.00;
+        }else{
+            $cart->total_payable_amount = $total_paying + $total_delivery_amount + $total_tax - $total_disc_amount - $cart->loyalty_amount;
+        }
         $cart->tip_5_percent = number_format((0.05 * $total_payable_amount), 2);
         $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2);
         $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2);
