@@ -7,6 +7,7 @@ use Password;
 use JWT\Token;
 use Validation;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
