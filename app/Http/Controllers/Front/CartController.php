@@ -371,6 +371,7 @@ class CartController extends FrontController
                 $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
+                    pr($prod->toArray());die;
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
                     $price_in_currency = $prod->pvariant->price / $divider;
