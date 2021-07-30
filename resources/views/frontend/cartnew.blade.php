@@ -255,7 +255,7 @@
         </tr>
         <tr class="border_0">
             <td colspan="3"></td>
-           <!--  <td colspan="4" class="pt-0 pr-0">
+            <td colspan="4" class="pt-0 pr-0">
                 <div class="row d-flex align-items-center no-gutters" id="dateredio">
                     <div class="col-md-5 pr-2">
                         <div class="login-form">
@@ -273,12 +273,12 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-7 datenow align-items-center justify-content-between" id="schedule_div" style="display:none!important">
-                            <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar">
-                        <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    <div class="col-md-7 datenow align-items-center justify-content-between" id="schedule_div" style="display:flex!important">
+                            <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value=" ">
+                        <!-- <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button> -->
                     </div>
                 </div>
-            </td> -->
+            </td>
         </tr>
     </tfoot>
 </script>
