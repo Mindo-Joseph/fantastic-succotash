@@ -21,18 +21,23 @@ class HomePageLabelSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');   
         $home_page = HomePageLabel::insertGetId([
             'title' => 'Featured Vendors',
+            'slug' => 'featured_vendors',
         ]);
         $home_page = HomePageLabel::insertGetId([
             'title' => 'Vendors',
+            'slug' => 'vendors',
         ]);
         $home_page = HomePageLabel::insertGetId([
             'title' => 'New Products',
+            'slug' => 'new_products',
         ]);
         $home_page = HomePageLabel::insertGetId([
             'title' => 'On Sale',
+            'slug' => 'on_sale',
         ]);
         $home_page = HomePageLabel::insertGetId([
             'title' => 'Brands',
+            'slug' => 'brands',
         ]);
     }
 }

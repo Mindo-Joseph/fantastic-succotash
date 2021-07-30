@@ -92,49 +92,45 @@
         </div>
     </div>
     <div class="row">
-        <form action="">
-            <div class="col-xl-8">
-                <div class="card-box home-options-list">
-                    <div class="row mb-2">
-                        <div class="col-sm-8">
-                            <h4 class="page-title mt-0">Home Page</h4>
-                            <p class="sub-header">
-                                Drag & drop to edit different sections.
-                            </p>
-                        </div>
-                        <div class="col-sm-4 text-right">
-                            <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal" dataid="0" is_vendor="0">Save
-                            </button>
-                        </div>
+        <div class="col-xl-8">
+            <div class="card-box home-options-list">
+                <div class="row mb-2">
+                    <div class="col-sm-8">
+                        <h4 class="page-title mt-0">Home Page</h4>
+                        <p class="sub-header">
+                            Drag & drop to edit different sections.
+                        </p>
                     </div>
-
-                    <div class="custom-dd-empty dd" id="nestable_list_1">
-                        <ol class="dd-list p-0">
-                            @foreach($home_page_labels as $home_page_label)
-                            <li class="dd-item dd3-item d-flex align-items-center" data-id="1">
-                                <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
-                                    {{$home_page_label->title}}
-                                </a>
-                                <div class="language-inputs style-4">
-                                    <div class="row no-gutters flex-nowrap align-items-center my-2">
-                                        @foreach($langs as $lang)
-                                        <div class="col-3 pl-1">
-                                            <input class="form-control" type="text" placeholder="{{ $lang->langName }}">
-                                        </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                <div class="mb-0 ml-3">
-                                    <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
-                                </div>
-                            </li>
-                            @endforeach
-                        </ol>
+                    <div class="col-sm-4 text-right">
+                        <button class="btn btn-info waves-effect waves-light text-sm-right" id="save_home_page">Save</button>
                     </div>
                 </div>
-        </form>
-    </div>
 
+                <div class="custom-dd-empty dd" id="nestable_list_1">
+                    <ol class="dd-list p-0">
+                        @foreach($home_page_labels as $home_page_label)
+                        <li class="dd-item dd3-item d-flex align-items-center" data-id="1">
+                            <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                                {{$home_page_label->title}}
+                            </a>
+                            <div class="language-inputs style-4">
+                                <div class="row no-gutters flex-nowrap align-items-center my-2">
+                                    @foreach($langs as $lang)
+                                    <div class="col-3 pl-1">
+                                        <input class="form-control" type="text" placeholder="{{ $lang->langName }}">
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="mb-0 ml-3">
+                                <input type="checkbox" id="{{$home_page_label->slug}}" data-plugin="switchery" name="{{$home_page_label->slug}}" class="chk_box2" data-color="#43bee1">
+                            </div>
+                        </li>
+                        @endforeach
+                    </ol>
+                </div>
+            </div>
+        </div>
     </div>
 </form>
 
@@ -160,6 +156,10 @@
         submitData();
     });
     $("#show_wishlist").change(function() {
+        submitData();
+    });
+    $("#save_home_page").click(function(event) {
+        event.preventDefault();
         submitData();
     });
     $("#cart_enable").change(function() {
