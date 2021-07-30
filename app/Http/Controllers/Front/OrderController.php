@@ -308,6 +308,10 @@ class OrderController extends FrontController
                 if ($payable_amount < $loyalty_amount_saved) {
                     $loyalty_amount_saved =  $payable_amount;
                     $loyalty_points_used = $payable_amount * $redeem_points_per_primary_currency;
+                    if($customerCurrency->is_primary != 1){
+                        $divider = (empty($customerCurrency->doller_compare) || $customerCurrency->doller_compare < 0) ? 1 : $customerCurrency->doller_compare;
+                        $loyalty_points_used = ($loyalty_points_used / $divider) * $clientCurrency->doller_compare;
+                    }
                 }
             }
             $tip_amount = 0;

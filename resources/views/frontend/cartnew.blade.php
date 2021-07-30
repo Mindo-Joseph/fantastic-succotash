@@ -206,6 +206,19 @@
                 </td>
             </tr>
         <% } %>
+        <% if(cart_details.loyalty_amount > 0) { %>
+        <tr class="border_0">
+            <td colspan="3"></td>
+            <td class="pr-0 pb-0">
+                <p class="mb-1"></p>{{__('Loyalty Amount')}} 
+                <hr class="mt-2 mb-0">
+            </td>
+            <td class="text-right pl-0 pb-0" colspan="3">
+                <p class="mb-1"></p> {{Session::get('currencySymbol')}}<%= cart_details.loyalty_amount %>
+                <hr class="mt-2 mb-0">
+            </td>
+        </tr>
+        <% } %>
         <tr class="border_0">
             <td colspan="3"></td>
             <td colspan="4" class="pr-0 pb-0">
