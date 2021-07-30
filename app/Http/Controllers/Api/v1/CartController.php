@@ -536,7 +536,7 @@ class CartController extends BaseController{
         $cart->products = $cartData;
         $cart->item_count = $item_count;
         $temp_total_paying = $total_paying + $total_delivery_amount + $total_tax - $total_disc_amount;
-        if($temp_total_paying >= $cart->loyalty_amount){
+        if($cart->loyalty_amount  >= $temp_total_paying){
            $cart->total_payable_amount = 0.00;
         }else{
             $cart->total_payable_amount = $total_paying + $total_delivery_amount + $total_tax - $total_disc_amount - $cart->loyalty_amount;
