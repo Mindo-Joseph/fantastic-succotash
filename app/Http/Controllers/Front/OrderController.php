@@ -305,8 +305,8 @@ class OrderController extends FrontController
             $order->total_discount = $total_discount;
             $order->taxable_amount = $taxable_amount;
             if ($loyalty_amount_saved > 0) {
-                if ($payable_amount < $loyalty_amount_saved) {
-                    $loyalty_amount_saved =  $payable_amount;
+                if ($loyalty_amount_saved > $payable_amount) {
+                    $loyalty_amount_saved = $payable_amount;
                     $loyalty_points_used = $payable_amount * $redeem_points_per_primary_currency;
                 }
             }

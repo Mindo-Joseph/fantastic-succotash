@@ -36,7 +36,6 @@ class WebStylingController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function updateWebStyles(Request $request){
-        dd($request->all());
         $client_preferences = ClientPreference::first();
         if($client_preferences){
             if($request->has('favicon')){
@@ -53,7 +52,6 @@ class WebStylingController extends BaseController{
             $client_preferences->save();
         }
 
-        if($request->has(''))
         return response()->json([
             'status' => 'success',
             'message' => 'Web Styling Updated Successfully!'
