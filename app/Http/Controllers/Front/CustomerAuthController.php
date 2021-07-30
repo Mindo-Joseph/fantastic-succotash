@@ -101,10 +101,7 @@ class CustomerAuthController extends FrontController
         if ($checkEmail) {
             return redirect()->back()->with('err_password', __('Password not matched. Please enter correct password.'));
         }
-        $checkPass = User::where('password', $req->password)->first();
-        if(!$checkPass){
-            return redirect()->back()->with('err_email', __('Email not exist. Please enter correct email.'));
-        }
+        return redirect()->back()->with('err_email', __('Email not exist. Please enter correct email.'));
     }
 
 

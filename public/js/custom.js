@@ -1080,5 +1080,5 @@ $(document).ready(function() {
     $(document).on('click', '#taskschedule', function() {
         $('#schedule_div').attr("style", "display: flex !important");
     });
-    var x = document.getElementById("schedule_div").autofocus;
+    // var x = document.getElementById("schedule_div").autofocus;
 });

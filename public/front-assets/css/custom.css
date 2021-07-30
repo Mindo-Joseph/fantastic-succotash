@@ -3554,6 +3554,15 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     padding: 6.7px 14px;
 }
 
+.pixelstrap > li > a > .sub-arrow{
+    display: none;
+}
+
+.pixelstrap li a img {
+    display: block;
+    width: 40px;
+    margin: auto;
+}
 
 /* Arabic Mood Css */
 body[dir="rtl"] {
