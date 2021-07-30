@@ -155,7 +155,7 @@ class OrderController extends FrontController
             $total_delivery_fee = 0;
             $total_subscription_discount = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
-                $delivery_fee = 0;
+                $delivery_fee = 0; 
                 $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
                 $vendor_payable_amount = 0;
