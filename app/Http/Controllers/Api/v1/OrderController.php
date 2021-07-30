@@ -215,9 +215,9 @@ class OrderController extends Controller {
                         $order_vendor->coupon_id = $coupon_id;
                         $order_vendor->coupon_code = $coupon_name;
                         $order_vendor->order_status_option_id = 1;
-                        $OrderVendor->delivery_fee = $delivery_fee;
+                        $order_vendor->delivery_fee = $delivery_fee;
                         $order_vendor->subtotal_amount = $actual_amount;
-                        $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
+                        $order_vendor->payable_amount = $vendor_payable_amount + $delivery_fee;
                         $order_vendor->taxable_amount = $vendor_taxable_amount;
                         $order_vendor->discount_amount= $vendor_discount_amount;
                         $order_vendor->payment_option_id = $request->payment_option_id;
