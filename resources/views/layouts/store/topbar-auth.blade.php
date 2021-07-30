@@ -8,6 +8,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <div class="container">
         <div class="row">
             <div class="col-lg-7">
+            @if($client_preference_detail->show_contact_us == 1)
                 <div class="header-contact">
                     <ul>
                         <li>{{session('client_config')->company_name}}</li>
@@ -16,9 +17,17 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </li>
                     </ul>
                 </div>
+            @endif
             </div>
             <div class="col-lg-5 text-right">
                 <ul class="header-dropdown">
+                @if($client_preference_detail->show_wishlist == 1)
+                    <li>
+                        <a href="javascript:void(0)">{{session()->get('locale')}} 
+                            <img src="{{asset('front-assets/images/icon/wishlist.png')}}" class="img-fluid">
+                        </a>
+                    </li>
+                @endif
                     <li class="onhover-dropdown change-language slected-language">
                         <a href="javascript:void(0)">{{session()->get('locale')}} 
                             <img src="{{asset('front-assets/images/icon/translation.png')}}" class="img-fluid">

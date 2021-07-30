@@ -75,7 +75,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                                     <td><a class="openPromoModal text-capitalize" userId="{{$promo->id}}" href="#"> {{$promo->name}}</a></td>
                                     <td style="width:100px"><p class="ellips">{{$promo->title}}</p></td>
                                     <td style="width:100px"><p class="ellips">{{$promo->short_desc}}</p></td>
-                                    <td>{{$promo->type->title}}</td>
+                                    <td>{{$promo->type ? $promo->type->title : ''}}</td>
                                     <td>{{$promo->amount}}</td>
                                     <td>{{convertDateTimeInTimeZone($promo->expiry_date, $timezone, 'M d Y, H:i A')}}</td>
                                     <td>
