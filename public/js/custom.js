@@ -543,8 +543,9 @@ $(document).ready(function() {
         $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
         let address_id = $("input:radio[name='address_id']:checked").val();
         let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
+        let tip = $("#cart_tip_amount").val();
         if(payment_option_id == 1){
-            placeOrder(address_id, payment_option_id, '');
+            placeOrder(address_id, payment_option_id, '', tip);
         }else if (payment_option_id == 4){
             stripe.createToken(card).then(function(result) {
                 if (result.error) {

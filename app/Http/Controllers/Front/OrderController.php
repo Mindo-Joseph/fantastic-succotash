@@ -116,7 +116,8 @@ class OrderController extends FrontController
                     $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
                 }
             }
-            $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
+            $customerCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
+            $clientCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
             $order = new Order;
             $order->user_id = $user->id;
             $order->order_number = generateOrderNo();
@@ -312,7 +313,8 @@ class OrderController extends FrontController
             $tip_amount = 0;
             if ( (isset($request->tip)) && ($request->tip != '') && ($request->tip > 0) ) {
                 $tip_amount = $request->tip;
-                $order->tip_amount = $tip_amount;
+                $tip_amount = ($tip_amount / $customerCurrency->doller_compare) * $clientCurrency->doller_compare;
+                $order->tip_amount = number_format($tip_amount, 2);
             }
             $order->total_delivery_fee = $total_delivery_fee;
             $order->loyalty_points_used = $loyalty_points_used;
