@@ -3549,9 +3549,6 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     display: none;
 }
 
-.datenow .form-control {
-    width: calc(100% - 55px);
-}
 
 .datenow .btn-solid{
     padding: 6.7px 14px;
