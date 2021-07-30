@@ -47,7 +47,10 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id', 'id')->select('id', 'slug', 'parent_id', 'icon');
     }
-
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id', 'id');
+    }
     public function type(){
       return $this->belongsTo('App\Models\Type')->select('id', 'title'); 
     }
