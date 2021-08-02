@@ -116,14 +116,28 @@
                             <div class="language-inputs style-4">
                                 <div class="row no-gutters flex-nowrap align-items-center my-2">
                                     @foreach($langs as $lang)
+                                    @php
+                                        $exist = 0;
+                                        $value = '';
+                                    @endphp
                                     <div class="col-3 pl-1">
-                                        <input class="form-control" type="text" placeholder="{{ $lang->langName }}">
+                                        <input class="form-control" type="hidden" value="{{$home_page_label->id}}" name="home_labels[]">
+                                        <input class="form-control" type="hidden" value="{{$lang->langId}}" name="languages[]">
+                                        @foreach($home_page_label->translations as $translation)
+                                            @if($translation->language_id == $lang->langId)
+                                                @php
+                                                    $exist = 1;
+                                                    $value = $translation->title;
+                                                @endphp
+                                            @endif
+                                        @endforeach
+                                        <input class="form-control" value="{{$exist == 1 ? $value : '' }}" type="text" name="names[]" placeholder="{{ $lang->langName }}">
                                     </div>
                                     @endforeach
                                 </div>
                             </div>
                             <div class="mb-0 ml-3">
-                                <input type="checkbox" id="{{$home_page_label->slug}}" data-plugin="switchery" name="{{$home_page_label->slug}}" class="chk_box2" data-color="#43bee1">
+                                <input type="checkbox" {{$home_page_label->is_active == 1 ? 'checked' : ''}} id="{{$home_page_label->slug}}" data-plugin="switchery" name="{{$home_page_label->slug}}" class="chk_box2" data-color="#43bee1">
                             </div>
                         </li>
                         @endforeach
