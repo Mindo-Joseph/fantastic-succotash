@@ -81,12 +81,15 @@ $timezone = Auth::user()->timezone;
                                         @php
                                         if($dispatcher_status_option->vendorOrderDispatcherStatus && $dispatcher_status_option->id == $dispatcher_status_option->vendorOrderDispatcherStatus->dispatcher_status_option_id??'')
                                         $class = 'disabled';
-                                        else {
-                                            $class = 'completed';
-                                        }
+                                        
+                                        if($dispatcher_status_option->id == $order->vendors->first()->dispatcher_status_option)
+                                        $glow = '';
+                                        else
+                                        $glow = 'completed';
+
                                         $date = isset($dispatcher_status_option->vendorOrderDispatcherStatus) ? $dispatcher_status_option->vendorOrderDispatcherStatus->created_at : '';
                                         @endphp
-                                            <li class="{{$class}}" data-status_option_id="{{$dispatcher_status_option->id}}">
+                                            <li class="{{$class}} {{$glow}}" data-status_option_id="{{$dispatcher_status_option->id}}">
                                                 <h5 class="mt-0 mb-1">{{$dispatcher_status_option->title}}</h5>
                                                 <p class="text-muted" id="dispatch_text_muted_{{$dispatcher_status_option->id}}">
                                                     @if($date)
