@@ -420,6 +420,8 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Name</th>
+                                                            <th>Category Name</th>
+                                                            <th>QR Code</th>
                                                             <th style="width: 85px;">Action</th>
                                                         </tr>
                                                     </thead>
@@ -428,6 +430,12 @@
                                                         <tr>
                                                             <td class="table-user">
                                                                 <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$vendor_table->table_number}}</a>
+                                                            </td>
+                                                            <td class="table-user">
+                                                                <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$vendor_table->category->title}}</a>
+                                                            </td>
+                                                            <td class="table-user">
+                                                            {{ QrCode::size(100)->generate($vendor_table->qr_url); }}
                                                             </td>
                                                             <td>
                                                                 <button type="button" class="btn btn-primary-outline action-icon editTablebtn" data-id="{{$vendor_table->id}}"><i class="mdi mdi-square-edit-outline"></i></button>
@@ -488,7 +496,7 @@
                             <input type="file" accept="image/*" data-default-file="" data-plugins="dropify" name="image" class="dropify" id="image" />
                             <label class="logo-size d-block text-right mt-1">Image Size 1026x200</label>
                         </div>
-                        <div class="col-sm-5 mb-2">
+                        <div class="col-sm-3 mb-2">
                             {!! Form::label('title', 'Table Number',['class' => 'control-label']) !!}
                             {!! Form::text('table_number', '',['class' => 'form-control', 'placeholder' => 'Table Number', 'required'=>'required']) !!}
                         </div>
@@ -499,6 +507,10 @@
                                 <option value="{{$dinein_category->id}}">{{$dinein_category->title}}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-sm-2 mb-2">
+                            {!! Form::label('title', 'Seating Number',['class' => 'control-label']) !!}
+                            {!! Form::number('seating_number', '1',['class' => 'form-control', 'min' => '1', 'onkeypress' => 'return isNumberKey(event)', 'placeholder' => 'Seating Number', 'required'=>'required']) !!}
                         </div>
                         <input type="hidden" name="vendor_id" value="{{ $vendor->id }}" />
                     </div>
@@ -671,6 +683,9 @@
 <script src="{{asset('assets/js/calender_main.js')}}"></script>
 <script src="{{ asset('assets/js/pages/jquery.cookie.js') }}"></script>
 <script>
+    $( document ).ready(function() {
+        $(".base_url").html(base_url);
+    }); 
     $(document).on("click", ".editTablebtn", function() {
         let table_id = $(this).data('id');
         $.ajax({
@@ -691,6 +706,10 @@
                     $("#edit_table_form #edit_table_number").val(response.data.table_number).change();
                     $("#edit_table_form  #assignTo").val(response.data.vendor_dinein_category_id);
                     $("#edit_table_form  #table_id").val(response.data.id);
+                    if(response.data.seating_number){
+                        $("#edit_table_form  #edit_seating_number").val(response.data.seating_number);}
+                    else{
+                        $("#edit_table_form  #edit_seating_number").val(1);}
                     $.each(response.data.translations, function(index, value) {
                         $('#edit_table_form #vendor_dinein_table_language_name' + value.language_id).val(value.name);
                         $('#edit_table_form #vendor_dinein_table_language_meta_title' + value.language_id).val(value.meta_title);

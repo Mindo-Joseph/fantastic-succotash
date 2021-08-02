@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor,CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser};
-use Illuminate\Http\Request;
-use Session;
+use DB;
 use Auth;
+use Session;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet,Country,UserAddress,ClientPreference,Vendor,CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, Order, LoyaltyCard};
+
 class CartController extends FrontController
 { 
     private function randomString()
@@ -326,7 +328,7 @@ class CartController extends FrontController
         $curId = Session::get('customerCurrency');
         $pharmacy = ClientPreference::first();
         $cart->pharmacy_check = $pharmacy->pharmacy_check;
-        $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
+        $customerCurrency = ClientCurrency::where('currency_id', $curId)->first();
         $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cart_id){
                             $qry->where('cart_id', $cart_id);
                     },'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
@@ -351,8 +353,24 @@ class CartController extends FrontController
                     }, 'vendorProducts.product.taxCategory.taxRate', 
                     ])->select('vendor_id', 'luxury_option_id')->where('status', [0,1])->where('cart_id', $cart_id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $user = Auth::user();
+        $loyalty_amount_saved = 0;
+        $redeem_points_per_primary_currency = '';
+        $loyalty_card = LoyaltyCard::where('status', '0')->first();
+        if ($loyalty_card) {
+            $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
+        }
         $subscription_features = array();
         if($user){
+            $order_loyalty_points_earned_detail = Order::where('user_id', $user->id)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
+            if ($order_loyalty_points_earned_detail) {
+                $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
+                if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
+                    $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
+                    if($customerCurrency->is_primary != 1){
+                        $loyalty_amount_saved = $loyalty_amount_saved * $customerCurrency->doller_compare;
+                    }
+                }
+            }
             $now = Carbon::now()->toDateTimeString();
             $user_subscription = SubscriptionInvoicesUser::with('features')
                 ->select('id', 'user_id', 'subscription_id')
@@ -374,12 +392,13 @@ class CartController extends FrontController
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
                     $price_in_currency = $prod->pvariant->price / $divider;
-                    $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
+                    $price_in_doller_compare = $price_in_currency * $customerCurrency->doller_compare;
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
                     $prod->pvariant->price_in_cart = $prod->pvariant->price;
                     $prod->pvariant->price = $price_in_currency;
-                    $prod->pvariant->media_one = $prod->pvariant->media->first() ? $prod->pvariant->media->first() : $prod->product->media->first();
-                    $prod->pvariant->multiplier = $clientCurrency->doller_compare;
+                    $prod->pvariant->media_one = $prod->pvariant->media ? $prod->pvariant->media->first() : [];
+                    $prod->pvariant->media_second = $prod->product->media ? $prod->product->media->first() : [];
+                    $prod->pvariant->multiplier = $customerCurrency->doller_compare;
                     $prod->pvariant->quantity_price = number_format($quantity_price, 2);
                     $payable_amount = $payable_amount + $quantity_price;
                     $taxData = array();
@@ -395,38 +414,34 @@ class CartController extends FrontController
                             $taxable_amount = $taxable_amount + $product_tax;
                             $payable_amount = $payable_amount + $product_tax;
                         }
+                        unset($prod->product->taxCategory);
                     }
                     $prod->taxdata = $taxData;
-                    unset($prod->product->taxCategory);
                     foreach ($prod->addon as $ck => $addons) {
                         $opt_price_in_currency = $addons->option->price / $divider;
-                        $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
+                        $opt_price_in_doller_compare = $opt_price_in_currency * $customerCurrency->doller_compare;
                         $opt_quantity_price = number_format($opt_price_in_doller_compare * $prod->quantity, 2);
                         $addons->option->price_in_cart = $addons->option->price;
                         $addons->option->price = $opt_price_in_currency;
-                        $addons->option->multiplier = $clientCurrency->doller_compare;
+                        $addons->option->multiplier = $customerCurrency->doller_compare;
                         $addons->option->quantity_price = $opt_quantity_price;
                         $payable_amount = $payable_amount + $opt_quantity_price;
                     }
-
                     if(isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)){
                         $prod->cartImg = $prod->pvariant->image->imagedata;
                     }else{
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
-                    if(!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1))
-                    {   
+                    if(!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1)){   
                         $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
-                        if(!empty($deliver_charge) && $delivery_count == 0)
-                        {
+                        if(!empty($deliver_charge) && $delivery_count == 0){
                             $delivery_count = 1;
                             $prod->deliver_charge = number_format($deliver_charge, 2);
                             $payable_amount = $payable_amount + $deliver_charge;
                             $delivery_fee_charges = $deliver_charge;
                         }
                     }
-                    
-                }
+                } 
                 if($vendorData->coupon){
                     if($vendorData->coupon->promo->promo_type_id == 2){
                         $total_discount_percent = $vendorData->coupon->promo->amount;
@@ -463,7 +478,6 @@ class CartController extends FrontController
                         if($coupon->promo->promo_type_id == 1){
                             $is_percent = 1;
                             $total_discount_percent = $total_discount_percent + round($coupon->promo->amount);
-                        }else{
                         }
                     }
                 }
@@ -473,7 +487,7 @@ class CartController extends FrontController
                 $total_discount_amount = $total_discount_amount + ($total_payable_amount * $total_discount_percent) / 100;
             }
             if($amount_value > 0){
-                $amount_value = $amount_value * $clientCurrency->doller_compare;
+                $amount_value = $amount_value * $customerCurrency->doller_compare;
                 $total_discount_amount = $total_discount_amount + $amount_value;
             }
             if(!empty($subscription_features)){
@@ -481,7 +495,14 @@ class CartController extends FrontController
                 $cart->total_subscription_discount = number_format($total_subscription_discount, 2);
             }
             $total_payable_amount = $total_payable_amount - $total_discount_amount;
-            $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount - $total_taxable_amount), 2);
+            if ($loyalty_amount_saved > 0) {
+                if ($loyalty_amount_saved > $total_payable_amount) {
+                    $loyalty_amount_saved =  $total_payable_amount;
+                }
+                $total_payable_amount = $total_payable_amount - $loyalty_amount_saved;
+            }
+            $cart->loyalty_amount = number_format($loyalty_amount_saved, 2);
+            $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount + $loyalty_amount_saved - $total_taxable_amount), 2);
             $cart->new_gross_amount = number_format(($total_payable_amount + $total_discount_amount), 2);
             $cart->total_payable_amount = number_format($total_payable_amount, 2);
             $cart->total_discount_amount = number_format($total_discount_amount, 2);

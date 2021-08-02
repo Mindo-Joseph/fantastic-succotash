@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category, Product, ClientPreference, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser};
+use App\Models\{Client, Category, Product, ClientPreference, ClientCurrency, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser};
 
 class FrontController extends Controller
 {
@@ -50,6 +50,8 @@ class FrontController extends Controller
             }
         }
         $categories = $categories->where('categories.id', '>', '1')
+            ->whereNotNull('categories.type_id')
+            ->whereNotIn('categories.type_id', [7])
             ->where('categories.is_visible', 1)
             ->where('categories.status', '!=', $status)
             ->where('cts.language_id', $lang_id)
@@ -268,5 +270,42 @@ class FrontController extends Controller
                 }
             }
         }
+    }
+
+    /* Get vendor rating from its products rating */
+    public function vendorRating($vendorProducts)
+    {
+        $vendor_rating = 0;
+        if($vendorProducts->isNotEmpty()){
+            $product_rating = 0;
+            $product_count = 0;
+            foreach($vendorProducts as $product){
+                if($product->averageRating > 0){
+                    $product_rating = $product_rating + $product->averageRating;
+                    $product_count++;
+                }
+            }
+            if($product_count > 0){
+                $vendor_rating = $product_rating / $product_count;
+                $vendor_rating = number_format($vendor_rating, 2);
+            }
+        }
+        return $vendor_rating;
+    }
+
+    /* doller compare amount */
+    public function getDollarCompareAmount($amount, $customerCurrency='')
+    {
+        $customerCurrency = Session::has('customerCurrency') ? Session::get('customerCurrency') : ( (!empty($customerCurrency)) ? $customerCurrency : '' );
+        $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
+        if(empty($customerCurrency)){
+            $clientCurrency = $primaryCurrency;
+        }else{
+            $clientCurrency = ClientCurrency::where('currency_id', $customerCurrency)->first();
+        }
+        $divider = (empty($clientCurrency->doller_compare) || $clientCurrency->doller_compare < 0) ? 1 : $clientCurrency->doller_compare;
+        $amount = ($amount / $divider) * $primaryCurrency->doller_compare;
+        $amount = number_format($amount, 2);
+        return $amount;
     }
 }

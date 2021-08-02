@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag, Vendor, DispatcherWarningPage, DispatcherTemplateTypeOption};
+use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag, Vendor, DispatcherWarningPage, DispatcherTemplateTypeOption, Product};
 use GuzzleHttp\Client as GCLIENT;
 class CategoryController extends BaseController{
     private $blocking = '2';
@@ -31,7 +31,7 @@ class CategoryController extends BaseController{
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-        return view('backend.catalog.index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands]);
+        return view('backend.catalog.index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands, 'build' => $build]);
     }
 
     /**
@@ -45,7 +45,7 @@ class CategoryController extends BaseController{
         $category = new Category();
         $preference = ClientPreference::first();
         $type = Type::where('title','!=', 'Pickup/Parent')->orderBY('sequence', 'ASC')->get();
-        $parCategory = Category::with('translation_one')->select('id', 'slug')->where('deleted_at', NULL)->whereIn('type_id', ['1', '3', '6'])->get();
+        $parCategory = Category::with('translation_one')->select('id', 'slug')->where('deleted_at', NULL)->whereIn('type_id', ['1', '3', '6'])->where('is_core', 1)->where('status', 1)->get();
         $vendor_list = Vendor::select('id', 'name')->where('status', '!=', $this->blocking)->get();
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
@@ -86,7 +86,6 @@ class CategoryController extends BaseController{
                 $category_translation->language_id = $request->language_id[$key];
                 $category_translation->save();
             }
-            die;
             $hs = new CategoryHistory();
             $hs->category_id = $save;
             $hs->action = 'Add';
@@ -187,55 +186,59 @@ class CategoryController extends BaseController{
      * @param  \App\Banner  $banner
      * @return \Illuminate\Http\Response
      */
-    public function save(Request $request, Category $cate, $update = 'false')
-    {
-        $cate->slug = $request->slug;
-        $cate->type_id = $request->type_id;
-        $cate->display_mode = $request->display_mode;
-        $cate->warning_page_id = $request->warning_page_id;
-        $cate->template_type_id = $request->template_type_id;
-        $cate->warning_page_design = $request->has('warning_page_design') ? $request->warning_page_design : 0;
-        $cate->is_visible = ($request->has('is_visible') && $request->is_visible == 'on') ? 1 : 0;
-        $cate->show_wishlist = ($request->has('show_wishlist') && $request->show_wishlist == 'on') ? 1 : 0;
-        $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on' && ($request->type_id == 1 || $request->type_id == 3)) ? 1 : 0;
-        if($request->has('parent_cate') && $request->parent_cate > 0){
-            $cate->parent_id = $request->parent_cate;
-        }else{
-            $cate->parent_id = 1;
-        }
-        if($update == 'false'){
-            if($request->has('vendor_id')){
-                $cate->is_core = 0;
-                $cate->vendor_id = $request->vendor_id;
+    public function save(Request $request, Category $cate, $update = 'false'){
+        try {
+            $cate->slug = $request->slug;
+            $cate->type_id = $request->type_id;
+            $cate->display_mode = $request->display_mode;
+            $cate->warning_page_id = $request->warning_page_id;
+            $cate->template_type_id = $request->template_type_id;
+            $cate->warning_page_design = $request->has('warning_page_design') ? $request->warning_page_design : 0;
+            $cate->is_visible = ($request->has('is_visible') && $request->is_visible == 'on') ? 1 : 0;
+            $cate->show_wishlist = ($request->has('show_wishlist') && $request->show_wishlist == 'on') ? 1 : 0;
+            $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on' && ($request->type_id == 1 || $request->type_id == 3)) ? 1 : 0;
+            if($request->has('parent_cate') && $request->parent_cate > 0){
+                $cate->parent_id = $request->parent_cate;
             }else{
-                $cate->is_core = 1;
+                $cate->parent_id = 1;
             }
-            $cate->status = 1;
-            $cate->position = 1;
-            $cate->client_code = (!empty(Auth::user()->code)) ? Auth::user()->code : '';
-        }
-        if ($request->hasFile('icon')) {
-            $file = $request->file('icon');
-            $cate->icon = Storage::disk('s3')->put($this->folderName, $file,'public');
-        }
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $cate->image = Storage::disk('s3')->put('/category/image', $file,'public');
-        }
-        $cate->save();
-        $tagDelete = CategoryTag::where('category_id', $cate->id)->delete();
-        if($request->has('tags') && !empty($request->tags)){
-            $tagArray = array();
-            $tags = explode(',', $request->tags);
-            foreach ($tags as $k => $v) {
-                $tagArray[] = [
-                    'category_id' => $cate->id,
-                    'tag' => $v
-                ];
+            if($update == 'false'){
+                if($request->has('vendor_id')){
+                    $cate->is_core = 0;
+                    $cate->vendor_id = $request->vendor_id;
+                }else{
+                    $cate->is_core = 1;
+                }
+                $cate->status = 1;
+                $cate->position = 1;
+                $cate->client_code = (!empty(Auth::user()->code)) ? Auth::user()->code : '';
             }
-            CategoryTag::insert($tagArray);
+            if ($request->hasFile('icon')) {
+                $file = $request->file('icon');
+                $cate->icon = Storage::disk('s3')->put($this->folderName, $file,'public');
+            }
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $cate->image = Storage::disk('s3')->put('/category/image', $file,'public');
+            }
+            $cate->save();
+            $tagDelete = CategoryTag::where('category_id', $cate->id)->delete();
+            if($request->has('tags') && !empty($request->tags)){
+                $tagArray = array();
+                $tags = explode(',', $request->tags);
+                foreach ($tags as $k => $v) {
+                    $tagArray[] = [
+                        'category_id' => $cate->id,
+                        'tag' => $v
+                    ];
+                }
+                CategoryTag::insert($tagArray);
+            }
+            return $cate->id;
+        } catch (Exception $e) {
+            pr($e->getMessage());die;
         }
-        return $cate->id;
+        
     }
 
     /**
@@ -261,7 +264,11 @@ class CategoryController extends BaseController{
      */
     public function destroy($domain = '', $id){
         $user = Auth::user();
-        Category::where('id', $id)->delete();
+        $parent = Category::where('id', $id)->first();
+        $array_of_ids = $this->getChildren($parent);
+        array_push($array_of_ids, $id);
+        Category::destroy($array_of_ids);
+        Product::whereIn('category_id', $array_of_ids)->delete();
         CategoryHistory::insert([
             'category_id' => $id,
             'action' => 'deleted',
@@ -272,7 +279,16 @@ class CategoryController extends BaseController{
         return redirect()->back()->with('success', 'Category deleted successfully!');
     }
 
-
+    private function getChildren($category){
+        $ids = [];
+        if($category->childs){
+            foreach ($category->childs as $cat) {
+                $ids[] = $cat->id;
+                $ids = array_merge($ids, $this->getChildren($cat));
+            }
+        }
+        return $ids;
+    }
 
 
 
@@ -310,5 +326,4 @@ class CategoryController extends BaseController{
         else
             return false;
     }
-
 }

@@ -71,7 +71,7 @@ class CustomerAuthController extends FrontController
 
     /**     * Display login Form     */
     public function login(LoginRequest $req, $domain = ''){
-        if (Auth::attempt(['email' => $req->email, 'password' => $req->password])) {
+        if (Auth::attempt(['email' => $req->email, 'password' => $req->password, 'status' => 1])) {
             $userid = Auth::id();
             $this->checkCookies($userid);
             $user_cart = Cart::where('user_id', $userid)->first();

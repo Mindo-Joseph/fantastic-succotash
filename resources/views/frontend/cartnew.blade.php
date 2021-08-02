@@ -3,6 +3,9 @@
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css" />
+
 @endsection
 
 @section('content')
@@ -13,7 +16,8 @@
         font-weight: 400;
         margin-bottom: 28px;
     }
-    .discard_price{
+
+    .discard_price {
         text-decoration: line-through;
         color: #6c757d;
     }
@@ -72,6 +76,8 @@
                         <div class="product-img pb-2">
                            <% if(vendor_product.pvariant.media_one) { %>
                                 <img src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>100/70<%= vendor_product.pvariant.media_one.image.path.image_path %>" alt="">
+                            <% }else{ %>
+                                <img class='mr-2' src="<%= vendor_product.pvariant.media_second.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_second.image.path.image_path %>">
                             <% } %>
                         </div>
                     </td>
@@ -200,6 +206,19 @@
                 </td>
             </tr>
         <% } %>
+        <% if(cart_details.loyalty_amount > 0) { %>
+        <tr class="border_0">
+            <td colspan="3"></td>
+            <td class="pr-0 pb-0">
+                <p class="mb-1"></p>{{__('Loyalty Amount')}} 
+                <hr class="mt-2 mb-0">
+            </td>
+            <td class="text-right pl-0 pb-0" colspan="3">
+                <p class="mb-1"></p> {{Session::get('currencySymbol')}}<%= cart_details.loyalty_amount %>
+                <hr class="mt-2 mb-0">
+            </td>
+        </tr>
+        <% } %>
         <tr class="border_0">
             <td colspan="3"></td>
             <td colspan="4" class="pr-0 pb-0">
@@ -245,13 +264,13 @@
                 <div>
                     <input type="hidden" name="cart_tip_amount" id="cart_tip_amount" value="0">
                     <input type="hidden" name="cart_total_payable_amount" value="<%= cart_details.total_payable_amount %>">
-                    <input type="hidden" name="cart_payable_amount_original" id="cart_payable_amount_original" value="<%= cart_details.total_payable_amount %>">
+                    <input type="hidden" name="cart_payable_amount_original" id="cart_payable_amount_original" data-curr="{{Session::get('currencySymbol')}}" value="<%= cart_details.total_payable_amount %>">
                 </div>
             </td>
         </tr>
         <tr class="border_0">
             <td colspan="3"></td>
-            <!-- <td colspan="4" class="pt-0 pr-0">
+            <td colspan="4" class="pt-0 pr-0">
                 <div class="row d-flex align-items-center no-gutters" id="dateredio">
                     <div class="col-md-5 pr-2">
                         <div class="login-form">
@@ -269,13 +288,12 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-7 datenow d-flex align-items-center justify-content-between">
-                        <input type="text" id="datetime-datepicker" name="schedule_time"
-                            class="form-control upside" placeholder="Date Time">
-                        <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    <div class="col-md-7 datenow align-items-center justify-content-between" id="schedule_div" style="display:flex!important">
+                            <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value=" ">
+                        <!-- <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button> -->
                     </div>
                 </div>
-            </td> -->
+            </td>
         </tr>
     </tfoot>
 </script>
@@ -324,9 +342,9 @@
                             <div class="delivery_box px-0">
                                 <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}}
                                     @if($address->is_primary)
-                                        <input type="radio" name="address_id" value="{{$address->id}}" checked="checked">
+                                    <input type="radio" name="address_id" value="{{$address->id}}" checked="checked">
                                     @else
-                                        <input type="radio" name="address_id" value="{{$address->id}}" {{$k == 0? 'checked="checked""' : '' }}>
+                                    <input type="radio" name="address_id" value="{{$address->id}}" {{$k == 0? 'checked="checked""' : '' }}>
                                     @endif
                                     <span class="checkround"></span>
                                 </label>
@@ -433,7 +451,7 @@
                                     <div class="spinner-box">
                                         <div class="circle-border">
                                             <div class="circle-core"></div>
-                                        </div>  
+                                        </div>
                                     </div>
                                 </td>
                             </tbody>
@@ -441,7 +459,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4">
                     <a class="btn btn-solid" href="{{ url('/') }}">{{__('Continue Shopping')}}</a>
@@ -585,7 +603,7 @@
                         <div class="col-sm-6" id="imageInput">
                             <input type="hidden" id="vendor_idd" name="vendor_idd" value="" />
                             <input type="hidden" id="product_id" name="product_id" value="" />
-                            <input data-default-file="" accept="image/*" type="file" data-plugins="dropify" name="prescriptions[]" class="dropify" multiple/>
+                            <input data-default-file="" accept="image/*" type="file" data-plugins="dropify" name="prescriptions[]" class="dropify" multiple />
                             <p class="text-muted text-center mt-2 mb-0">{{__('Upload Prescription')}}</p>
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>

@@ -47,7 +47,11 @@ $timezone = Auth::user()->timezone;
                                 <ul class="list-unstyled" id="order_statuses">
                                     @foreach($order_status_options as $order_status_option)
                                     @php
-                                        $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'completed disabled': '';
+                                        $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'disabled': '';
+                                        if (in_array($order_status_option->id, $vendor_order_status_option_ids))
+                                        $glow = '';
+                                        else
+                                        $glow = 'completed';
                                         $date = isset($vendor_order_status_created_dates[$order_status_option->id]) ? $vendor_order_status_created_dates[$order_status_option->id] : '';
                                     @endphp
                                         @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 2)
@@ -56,7 +60,7 @@ $timezone = Auth::user()->timezone;
                                         @if (in_array(2, $vendor_order_status_option_ids) && $order_status_option->id == 3)
                                             @continue
                                         @endif
-                                        <li class="{{$class}}" data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
+                                        <li class="{{$class}} {{$glow}}" data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
                                             <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
                                             <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
                                                 @if($date)
@@ -76,9 +80,9 @@ $timezone = Auth::user()->timezone;
                                         @foreach($dispatcher_status_options as $dispatcher_status_option)
                                         @php
                                         if($dispatcher_status_option->vendorOrderDispatcherStatus && $dispatcher_status_option->id == $dispatcher_status_option->vendorOrderDispatcherStatus->dispatcher_status_option_id??'')
-                                        $class = 'completed disabled';
+                                        $class = 'disabled';
                                         else {
-                                            $class = '';
+                                            $class = 'completed';
                                         }
                                         $date = isset($dispatcher_status_option->vendorOrderDispatcherStatus) ? $dispatcher_status_option->vendorOrderDispatcherStatus->created_at : '';
                                         @endphp
@@ -175,7 +179,10 @@ $timezone = Auth::user()->timezone;
                 </div>
             </div>
         </div>
+        
+       
         <div class="row">
+            @if($order->address)
             <div class="col-lg-6 mb-3">
                 <div class="card mb-0 h-100">
                     <div class="card-body">
@@ -186,7 +193,20 @@ $timezone = Auth::user()->timezone;
                     </div>
                 </div>
             </div>
+            @endif
+
+            <div class="col-lg-6 mb-3">
+                <div class="card mb-0 h-100">
+                    <div class="card-body">
+                        <h4 class="header-title mb-3">{{ __('Payment Information') }}</h4>
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __('Payment By') }} :</span> {{ $order->paymentOption  ? $order->paymentOption->title : ''}}</p>
+                    </div>
+                </div>
+            </div>
         </div>
+       
+      
+
     </div>
 </div>
 <div id="delivery_info_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">

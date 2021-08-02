@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{User, Transaction, ClientCurrency};
+use App\Models\{User, Transaction, ClientCurrency, PaymentOption};
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use Session;
@@ -75,5 +75,25 @@ class WalletController extends FrontController
         }else{
             return $this->errorResponse('Invalid User', 402);
         }
+    }
+
+    /**
+     * wallet payment options
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function paymentOptions(Request $request, $domain = ''){
+        $ex_codes = ['cod'];
+        $payment_options = PaymentOption::select('id', 'code', 'title', 'credentials')->whereNotIn('code', $ex_codes)->where('status', 1)->get();
+        foreach ($payment_options as $k => $payment_option) {
+            if( (!empty($payment_option->credentials)) ){
+                $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
+                unset($payment_option->credentials);
+            }
+            else{
+                unset($payment_options[$k]);
+            }
+        }
+        return $this->successResponse($payment_options);
     }
 }

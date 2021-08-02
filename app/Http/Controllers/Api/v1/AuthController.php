@@ -7,6 +7,7 @@ use Password;
 use JWT\Token;
 use Validation;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
@@ -374,7 +375,7 @@ class AuthController extends BaseController{
         try {
             $user = User::where('id', Auth::user()->id)->first();
             if(!$user || !$request->has('type')){
-                return response()->json(['error' => 'User not found.'], 404);
+                return $this->errorResponse(__('User not found.'), 404);
             }
             $currentTime = Carbon::now()->toDateTimeString();
             $message = 'Account verified successfully.';
@@ -382,11 +383,16 @@ class AuthController extends BaseController{
                 $message = 'OTP matched successfully.';
             }
             if($request->type == 'phone'){
+                $phone_number = str_ireplace(' ', '', $request->phone_number);
+                $user_detail_exist = User::where('phone_number', $phone_number)->whereNotIn('id', [$user->id])->first();
+                if($user_detail_exist){
+                    return response()->json(['error' => __('phone number in use!')], 404);
+                }
                 if($user->phone_token != $request->otp){
-                    return response()->json(['error' => 'OTP is not valid'], 404);
+                    return $this->errorResponse(__('OTP is not valid'), 404);
                 }
                 if($currentTime > $user->phone_token_valid_till){
-                    return response()->json(['error' => 'OTP has been expired.'], 404);
+                    return $this->errorResponse(__('OTP has been expired.'), 404);
                 }
                 $user->phone_token = NULL;
                 $user->is_phone_verified = 1;
@@ -394,6 +400,10 @@ class AuthController extends BaseController{
                 $user->save();
                 return $this->successResponse(getUserDetailViaApi($user) , $message);
             }elseif ($request->type == 'email') {
+                $user_detail_exist = User::where('email', $request->email)->where('id','!=',$user->id)->first();
+                if($user_detail_exist){
+                    return $this->errorResponse( __('Email already in use!'), 404);
+                }
                 if($user->email_token != $request->otp){
                     return $this->errorResponse(__('OTP is not valid'), 404);
                 }
@@ -437,44 +447,72 @@ class AuthController extends BaseController{
                 return response()->json($errors, 422);
             }
         }
-        $user = User::where('email', $request->email)->first();
-        if(!$user){
-            return response()->json(['error' => 'Invalid email'], 404);
-        }
-        $notified = 1;
         $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
         $data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
-        $newDateTime = Carbon::now()->addMinutes(10)->toDateTimeString();
-        $otp = mt_rand(100000, 999999);
-        $user->email_token = $otp;
-        $user->email_token_valid_till = $newDateTime;
-        if(!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)){
+        if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
             $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+            $token = Str::random(60);
             $client_name = $client->name;
             $mail_from = $data->mail_from;
-            $sendto = $user->email;
-            try{
-                Mail::send('email.verify',[
-                        'customer_name' => ucwords($user->name),
-                        'code_text' => 'We have gotton a forget password request from your account. Please enter below otp of verify that it is you.',
-                        'code' => $otp,
-                        'logo' => $client->logo['original'],
-                        'link'=>"link"
-                    ],
-                    function ($message) use($sendto, $client_name, $mail_from) {
-                    $message->from($mail_from, $client_name);
-                    $message->to($sendto)->subject('OTP to verify account');
-                });
-                $notified = 1;
+            DB::table('password_resets')->insert(['email' => $request->email, 'token' => $token, 'created_at' => Carbon::now()]);
+            $email_template_content = '';
+            $email_template = EmailTemplate::where('id', 3)->first();
+            if($email_template){
+                $email_template_content = $email_template->content;
+                $email_template_content = str_ireplace("{reset_link}", url('/reset-password/'.$token), $email_template_content);
             }
-            catch(\Exception $e){
-                $user->save();
-            }
+            $data = [
+                'token' => $token,
+                'mail_from' => $mail_from,
+                'email' => $request->email,
+                'client_name' => $client_name,
+                'logo' => $client->logo['original'],
+                'subject' => $email_template->subject,
+                'email_template_content' => $email_template_content,
+            ];
+            dispatch(new \App\Jobs\sendForgotPasswordEmail($data))->onQueue('forgot_password_email');
         }
-        $user->save();
-        if($notified == 1){
-            return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 200);
-        } 
+        return response()->json(['success' => __('We have e-mailed your password reset link!')], 200);
+    
+        
+        // $user = User::where('email', $request->email)->first();
+        // if(!$user){
+        //     return response()->json(['error' => 'Invalid email'], 404);
+        // }
+        // $notified = 1;
+        // $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
+        // $data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
+        // $newDateTime = Carbon::now()->addMinutes(10)->toDateTimeString();
+        // $otp = mt_rand(100000, 999999);
+        // $user->email_token = $otp;
+        // $user->email_token_valid_till = $newDateTime;
+        // if(!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)){
+        //     $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+        //     $client_name = $client->name;
+        //     $mail_from = $data->mail_from;
+        //     $sendto = $user->email;
+        //     try{
+        //         Mail::send('email.verify',[
+        //                 'customer_name' => ucwords($user->name),
+        //                 'code_text' => 'We have gotton a forget password request from your account. Please enter below otp of verify that it is you.',
+        //                 'code' => $otp,
+        //                 'logo' => $client->logo['original'],
+        //                 'link'=>"link"
+        //             ],
+        //             function ($message) use($sendto, $client_name, $mail_from) {
+        //             $message->from($mail_from, $client_name);
+        //             $message->to($sendto)->subject('OTP to verify account');
+        //         });
+        //         $notified = 1;
+        //     }
+        //     catch(\Exception $e){
+        //         $user->save();
+        //     }
+        // }
+        // $user->save();
+        // if($notified == 1){
+        //     return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 200);
+        // } 
     }
 
     /**

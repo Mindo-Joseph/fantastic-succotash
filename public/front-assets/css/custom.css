@@ -920,6 +920,28 @@ form .btn{
 }
 
 /* Spinner Start */
+.spinner-overlay{
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: .5;
+    z-index: 999;
+}
+.spinner-overlay .spinner-box .circle-border{
+    margin:auto;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    position:fixed;
+}
+.spinner-overlay .spinner-box .circle-core{
+    background: black;
+}
 .spinner-box {
     width: 100%;
     height: auto;
@@ -3527,14 +3549,20 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     display: none;
 }
 
-.datenow .form-control {
-    width: calc(100% - 55px);
-}
 
 .datenow .btn-solid{
     padding: 6.7px 14px;
 }
 
+.pixelstrap > li > a > .sub-arrow{
+    display: none;
+}
+
+.pixelstrap li a img {
+    display: block;
+    width: 40px;
+    margin: auto;
+}
 
 /* Arabic Mood Css */
 body[dir="rtl"] {
@@ -3544,6 +3572,7 @@ body[dir="rtl"] {
 
 body[dir="rtl"] .sm,body[dir="rtl"] .sm ul,body[dir="rtl"] .sm li{
     text-align: right;
+    direction: rtl;
 }
 
 body[dir="rtl"] .pixelstrap > li > ul {
@@ -3557,7 +3586,7 @@ body[dir="rtl"] .pixelstrap > li > ul {
 }
 
 body[dir="rtl"] .pixelstrap > li > ul > li ul {
-    left: -259px !important;
+    left: -256px !important;
     right: auto !important;
     margin: -30px 0 0!important;
 }
@@ -3568,12 +3597,12 @@ body[dir="rtl"] .pixelstrap > li > ul span.sub-arrow {
 }
 
 body[dir="rtl"] .pixelstrap > li span.sub-arrow {
-    left: 0;
+    left: 5px;
     right: auto !important;
 }
 
 body[dir="rtl"] .pixelstrap > li > a {
-    padding: 0 0 0 40px;
+    padding: 15px 0 15px 30px;
 }
 
 body[dir="rtl"] .pixelstrap ul a,body[dir="rtl"] .pixelstrap ul a:hover,body[dir="rtl"] .pixelstrap ul a:focus,
@@ -3691,12 +3720,12 @@ body[dir="rtl"] .contact_link i {
 }
 
 [dir=rtl] .slick-prev {
-    left: 40px;
+    left: 0;
     right: auto;
 }
 
 [dir=rtl] .slick-next {
-    left: 10px;
+    left: 20px;
     right: auto;
 }
 

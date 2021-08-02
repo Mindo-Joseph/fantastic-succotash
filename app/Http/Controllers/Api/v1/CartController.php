@@ -396,7 +396,7 @@ class CartController extends BaseController{
                         $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
                         if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
                             $pro_disc = $discount_amount;
-                            if($minimum_spend < $quantity_price){
+                            if($minimum_spend <= $quantity_price){
                                 if($is_percent == 1){
                                     $pro_disc = ($quantity_price * $discount_percent)/ 100;
                                 }
@@ -406,7 +406,6 @@ class CartController extends BaseController{
                                     $quantity_price = 0;
                                 }
                                 $codeApplied = 1;
-                                
                             }else{
                                 $variantsData['coupon_msg'] = "Spend minimun ".$minimum_spend." to apply this coupon";
                                 $variantsData['coupon_not_appiled'] = 1;
@@ -513,7 +512,7 @@ class CartController extends BaseController{
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
-                $vendorData->payable_amount = $payable_amount - $discount_amount + $deliver_charge;
+                $vendorData->payable_amount = $payable_amount - $discount_amount;
                 $total_paying = $total_paying + $payable_amount;
                 $total_tax = $total_tax + $taxable_amount;
                 $total_disc_amount = $total_disc_amount + $discount_amount;
@@ -529,14 +528,19 @@ class CartController extends BaseController{
         $cart->total_discount_amount = $total_disc_amount;
         if($cart->user_id > 0){
             $cart->loyalty_amount = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
-            if($total_paying > $cart->loyalty_amount){
-               $cart->loyalty_amount = 0.00; 
-            }
+            // if($total_paying > $cart->loyalty_amount){
+            //    $cart->loyalty_amount = 0.00; 
+            // }
             // $cart->wallet = $this->getWallet($cart->user_id, $clientCurrency->doller_compare, $currency);
         }
         $cart->products = $cartData;
         $cart->item_count = $item_count;
-        $cart->total_payable_amount = $total_paying + $total_delivery_amount + $total_tax - $total_disc_amount - $cart->loyalty_amount;
+        $temp_total_paying = $total_paying  + $total_tax - $total_disc_amount;
+        if($cart->loyalty_amount  >= $temp_total_paying){
+           $cart->total_payable_amount = 0.00;
+        }else{
+            $cart->total_payable_amount = $total_paying  + $total_tax - $total_disc_amount - $cart->loyalty_amount;
+        }
         $cart->tip_5_percent = number_format((0.05 * $total_payable_amount), 2);
         $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2);
         $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2);

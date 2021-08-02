@@ -71,9 +71,16 @@ class PaymentController extends FrontController{
                 return $this->errorResponse($vendor_min_amount_errors, 402);
             }
         }
-        $payment_options = PaymentOption::select('id', 'code', 'title')->where('status', 1)->get();
-        foreach ($payment_options as $payment_option) {
-           $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
+        $ex_codes = ['cod'];
+        $payment_options = PaymentOption::select('id', 'code', 'title', 'credentials')->where('status', 1)->get();
+        foreach ($payment_options as $k => $payment_option) {
+            if( (in_array($payment_option->code, $ex_codes)) || (!empty($payment_option->credentials)) ){
+                $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
+                unset($payment_option->credentials);
+            }
+            else{
+                unset($payment_options[$k]);
+            }
         }
         return $this->successResponse($payment_options);
     }

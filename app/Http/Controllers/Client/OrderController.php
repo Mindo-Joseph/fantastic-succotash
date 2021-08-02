@@ -98,13 +98,13 @@ class OrderController extends BaseController{
                 break;
                 case 'active_orders':
                     $order_status_options = [2,4,5];
-                    $orders = $orders->with('vendors', function ($query) use($order_status_options){
+                    $orders = $orders->whereHas('vendors', function ($query) use($order_status_options){
                         $query->whereIn('order_status_option_id', $order_status_options);
                     });
                 break;
                 case 'orders_history':
                     $order_status_options = [6,3];
-                    $orders = $orders->with('vendors', function ($query) use($order_status_options){
+                    $orders = $orders->whereHas('vendors', function ($query) use($order_status_options){
                         $query->whereIn('order_status_option_id', $order_status_options);
                     });
                 break;

@@ -75,9 +75,17 @@ class VendorSubscriptionController extends BaseController
         else{
             return response()->json(["status"=>"Error", "message" => "Subscription plan not active"]);
         }
-        $payment_options = PaymentOption::select('id', 'code', 'title')->whereIn('code', $code)->where('status', 1)->get();
-        foreach ($payment_options as $payment_option) {
-           $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
+        $code = array('stripe');
+        $ex_codes = array('cod');
+        $payment_options = PaymentOption::select('id', 'code', 'title', 'credentials')->whereIn('code', $code)->where('status', 1)->get();
+        foreach ($payment_options as $k => $payment_option) {
+            if( (in_array($payment_option->code, $ex_codes)) || (!empty($payment_option->credentials)) ){
+                $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
+                unset($payment_option->credentials);
+            }
+            else{
+                unset($payment_options[$k]);
+            }
         }
         return response()->json(["status"=>"Success", "sub_plan" => $sub_plan, "payment_options" => $payment_options]);
     }
