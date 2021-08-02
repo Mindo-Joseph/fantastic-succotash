@@ -39,7 +39,7 @@ $(document).ready(function () {
             dots: !1,
             infinite: !0,
             speed: 300,
-            slidesToShow: 6,
+            slidesToShow: 5,
             slidesToScroll: 6,
             responsive: [
                 { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
@@ -66,10 +66,11 @@ $(document).ready(function () {
             speed: 300,
             arrows: false,
             dots: false,
-            slidesToShow: 6,
+            slidesToShow: 4,
             slidesToScroll: 1,
             autoplay: true,
             autoplaySpeed: 5000,
+            rtl: false,
             responsive: [{
                 breakpoint: 1200,
                 settings: {
@@ -118,6 +119,7 @@ $(document).ready(function () {
             dataType: 'json',
             url: home_page_data_url,
             success: function (response) {
+                console.log(response.data);
                 if (response.status == "Success") {
                     $("#main-menu").html('');
                     let nav_categories_template = _.template($('#nav_categories_template').html());
@@ -143,10 +145,10 @@ $(document).ready(function () {
                         let products_template = _.template($('#products_template').html());
                         $("#brand_main_div").append(banner_template({ brands: response.data.brands }));
                         $("#vendor_main_div").append(vendors_template({ vendors: response.data.vendors }));
-                        $("#new_product_main_div").append(products_template({ products: response.data.new_products }));
-                        $("#best_seller_main_div").append(products_template({ products: response.data.new_products }));
-                        $("#feature_product_main_div").append(products_template({ products: response.data.feature_products }));
-                        $("#on_sale_product_main_div").append(products_template({ products: response.data.on_sale_products }));
+                        $("#new_product_main_div").append(products_template({ products: response.data.new_products, type: "New" }));
+                        $("#best_seller_main_div").append(products_template({ products: response.data.new_products , type: "Best Seller" }));
+                        $("#feature_product_main_div").append(products_template({ products: response.data.feature_products, type: "Featured"  }));
+                        $("#on_sale_product_main_div").append(products_template({ products: response.data.on_sale_products, type: "Sale"  }));
                         if (response.data.new_products.length > 0) {
                             $('#new_products_wrapper, #bestseller_products_wrapper').removeClass('d-none');
                         } else {

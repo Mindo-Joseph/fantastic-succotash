@@ -68,12 +68,13 @@
     <% _.each(products, function(product, k){ %>
         <div>
             <a class="card scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
+                <label class="product-tag"><%= type %></label>
                 <div class="product-image">
                     <img src="<%= product.image_url %>" alt="">
                 </div>    
                 <div class="media-body align-self-center px-3">
                     <div class="inner_spacing">
-                        <h3><%= product.title %></h3>
+                        <h3 class="d-flex align-items-center justify-content-between"><label class="mb-0"><%= product.title %></label> <span class="rating">4.2</span></h3>
                         <p><%= product.vendor_name %></p>
                         <h4>
                             <% if(product.inquiry_only == 0) { %>
@@ -101,7 +102,7 @@
 <section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
     <div class="container">
         <div class="row">
-            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
+            <div class="col-12 text-center d-none align-items-center justify-content-between mb-4">
                 <div class="title1">
                     <h2 class="title-inner1 mb-0">{{getNomenclatureName('vendors', true)}}</h2>
                 </div>
@@ -115,10 +116,10 @@
         </div>
     </div>
 </section>
-<section class="section-b-space">
+<section class="section-b-space pb-4">
     <div class="container">
         <div class="row d-none" id="new_products_wrapper">
-            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
+            <div class="col-12 text-center d-none align-items-center justify-content-between mb-4">
                 <div class="title1">
                     <h2 class="title-inner1 mb-0">{{ __('New Products') }}</h2>
                 </div>
@@ -127,8 +128,8 @@
                 <div class="vendor-product common_card" id="new_product_main_div"></div>
             </div>
         </div>
-        <div class="row d-none mt-4" id="featured_products_wrapper">
-            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
+        <div class="row d-none mt-3" id="featured_products_wrapper">
+            <div class="col-12 text-center d-none align-items-center justify-content-between mb-4">
                 <div class="title1">
                     <h2 class="title-inner1 mb-0">{{ __('Feature Product') }}</h2>
                 </div>
@@ -138,8 +139,8 @@
             </div>
         </div>
 
-        <div class="row d-none mt-md-5 mt-4" id="bestseller_products_wrapper">
-            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
+        <div class="row d-none mt-3" id="bestseller_products_wrapper">
+            <div class="col-12 text-center d-none align-items-center justify-content-between mb-4">
                 <div class="title1">
                     <h2 class="title-inner1 mb-0">{{ __('Best Seller') }}</h2>
                 </div>
@@ -150,8 +151,8 @@
                 </div>
             </div>
         </div>
-        <div class="row d-none mt-4" id="onsale_products_wrapper">
-            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
+        <div class="row d-none mt-3" id="onsale_products_wrapper">
+            <div class="col-12 text-center d-none align-items-center justify-content-between mb-4">
                 <div class="title1">
                     <h2 class="title-inner1 mb-0">{{ __('On Sale') }}</h2>
                 </div>
@@ -165,7 +166,7 @@
 <section class="section-b-space pt-0">
     <div class="container">
         <div class="row">
-            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
+            <div class="col-12 text-center d-none align-items-center justify-content-between mb-3">
                 <div class="title1">
                     <h2 class="title-inner1 mb-0">{{ __('Brands') }}</h2>
                 </div>

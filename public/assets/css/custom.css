@@ -2204,8 +2204,9 @@
 
 
   #cardCollpase4 svg {
-    padding-left: 60px;
-}
+      padding-left: 60px;
+  }
+
   .apexcharts-legend.apexcharts-align-center.position-bottom {
       height: 70px !important;
       inset: auto 0px 5px 20px !important;

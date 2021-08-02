@@ -5807,11 +5807,12 @@ footer {
           align-items: center; }
   .footer-social li,
   .social-white li {
-    display: inline-block !important;
+    display: block !important;
     padding-right: 25px; }
   .footer-social i,
   .social-white i {
     font-size: 20px;
+    width: 25px;
     color: #000000;
     -webkit-transition: 0.5s ease;
     transition: 0.5s ease; }
@@ -6795,7 +6796,7 @@ header {
   position: relative;
   font-size: 14px; }
   .onhover-dropdown .onhover-show-div {
-    top: calc(100% - 7px);
+    top: calc(100% - 10px);
     position: absolute;
     z-index: 99999;
     background-color: #ffffff;
@@ -6933,6 +6934,7 @@ header {
     cursor: pointer;
     color: #fff;
     padding: 5px 20px 5px 0;
+    line-height: 28px;
     /* padding-right: 0;  */
   }
     /* .top-header .header-dropdown li:last-child {
@@ -17306,15 +17308,15 @@ body.dark {
 
 .dark .onhover-dropdown .onhover-show-div {
   background-color: #232323;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
   -webkit-box-shadow: none;
           box-shadow: none; }
 
 .dark .testimonial {
   background-color: #232323;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease; }
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease; }
   .dark .testimonial .testimonial-slider .slick-track .slick-slide:nth-child(even) .media {
     border-color: #404040; }
   .dark .testimonial .testimonial-slider .media img {

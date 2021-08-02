@@ -7,17 +7,17 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 <div class="top-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-7">
+            <div class="col-4">
                 <div class="header-contact">
                     <ul>
                         <li>{{session('client_config')->company_name}}</li>
-                        <li>
+                        <!-- <li>
                             <i class="fa fa-phone" aria-hidden="true"></i>{{__('Call Us')}}: {{session('client_config')->phone_number}}
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
             </div>
-            <div class="col-lg-5 text-right">
+            <div class="col-8 text-right">
                 <ul class="header-dropdown">
                     <li class="onhover-dropdown change-language slected-language">
                         <a href="javascript:void(0)">{{session()->get('locale')}} 
