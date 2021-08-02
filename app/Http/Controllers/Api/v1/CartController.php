@@ -11,7 +11,7 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet,UserAddress, ClientPreference, Vendor};
+use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet,UserAddress, ClientPreference, LuxuryOption, Vendor};
 use GuzzleHttp\Client as GCLIENT;
 class CartController extends BaseController{
     use ApiResponser;
@@ -63,6 +63,7 @@ class CartController extends BaseController{
 
     /**     * Add product In Cart    *           */
     public function add(Request $request){
+        $luxury_option = LuxuryOption::where('title', $request->type)->first();
         try {
             $user = Auth::user();
             $langId = $user->language;
@@ -74,6 +75,7 @@ class CartController extends BaseController{
                 }
                 $unique_identifier = $user->system_user;
             }
+            
             $product = Product::where('sku', $request->sku)->first();
             if(!$product){
                 return $this->errorResponse('Invalid product.', 404);
@@ -133,6 +135,18 @@ class CartController extends BaseController{
                 $cart_detail = Cart::updateOrCreate(['user_id' => $user->id], $cart_detail);
             }else{
                 $cart_detail = Cart::updateOrCreate(['unique_identifier' => $unique_identifier], $cart_detail);
+            }
+            if ($luxury_option) {
+                $checkCartLuxuryOption = CartProduct::where('luxury_option_id', '!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
+                if ($checkCartLuxuryOption) {
+                    return $this->errorResponse('You are adding products in different mods', 404);
+                }
+                if ($luxury_option->id == 2 || $luxury_option->id == 3) {
+                    $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $request->vendor_id)->first();
+                    if ($checkVendorId) {
+                        return $this->errorResponse('Product already exist from another vendors', 404);
+                    }
+                }
             }
             if($cart_detail->id > 0){
                 $oldquantity = $isnew = 0;
