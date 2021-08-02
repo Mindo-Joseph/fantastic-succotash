@@ -28,7 +28,7 @@
 </header>
 <script type="text/template" id="address_template">
     <div class="col-md-12">
-        <div class="delivery_box">
+        <div class="delivery_box px-0">
             <label class="radio m-0"><%= address.address %> <%= address.city %><%= address.state %> <%= address.pincode %>
                 <input type="radio" checked="checked" name="address_id" value="<%= address.id %>">
                 <span class="checkround"></span>
@@ -164,7 +164,7 @@
                     <p class="total_amt m-0">{{__('Delivery Fee')}} :</p>
                 </td>
                 <td class="text-right pl-lg-2">
-                    <p class="total_amt mb-1 {{ ((in_array(1, $subscription_features)) ) ? 'discard_price' : '' }}">{{Session::get('currencySymbol')}} <%= product.delivery_fee_charges %></p>
+                    <p class="total_amt mb-1 <% if(product.delivery_fee_charges > 0) { %>{{ ((in_array(1, $subscription_features)) ) ? 'discard_price' : '' }}<% } %>">{{Session::get('currencySymbol')}} <%= product.delivery_fee_charges %></p>
                     <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= product.product_total_amount %></p>
                 </td>
             </tr>
@@ -224,30 +224,32 @@
             <td colspan="4" class="pr-0 pb-0">
                 <div class="mb-2">{{__('Do you want to give a tip?')}}</div>
                 <div class="tip_radio_controls">
-                    <input type="radio" class="tip_radio" id="control_01" name="select" value="<%= cart_details.tip_5_percent %>">
-                    <label class="tip_label" for="control_01">
-                        <h5 class="m-0" id="tip_5">{{Session::get('currencySymbol')}}<%= cart_details.tip_5_percent %></h5>
-                        <p class="m-0">5%</p>
-                    </label>
-                
-                    <input type="radio" class="tip_radio" id="control_02" name="select" value="<%= cart_details.tip_10_percent %>" >
-                    <label class="tip_label" for="control_02">
-                        <h5 class="m-0" id="tip_10">{{Session::get('currencySymbol')}}<%= cart_details.tip_10_percent %></h5>
-                        <p class="m-0">10%</p>
-                    </label>
-                
-                    <input type="radio" class="tip_radio" id="control_03" name="select" value="<%= cart_details.tip_15_percent %>" >
-                    <label class="tip_label" for="control_03">
-                        <h5 class="m-0" id="tip_15">{{Session::get('currencySymbol')}}<%= cart_details.tip_15_percent %></h5>
-                        <p class="m-0">15%</p>
-                    </label>
+                    <% if(cart_details.total_payable_amount > 0) { %>
+                        <input type="radio" class="tip_radio" id="control_01" name="select" value="<%= cart_details.tip_5_percent %>">
+                        <label class="tip_label" for="control_01">
+                            <h5 class="m-0" id="tip_5">{{Session::get('currencySymbol')}}<%= cart_details.tip_5_percent %></h5>
+                            <p class="m-0">5%</p>
+                        </label>
+                    
+                        <input type="radio" class="tip_radio" id="control_02" name="select" value="<%= cart_details.tip_10_percent %>" >
+                        <label class="tip_label" for="control_02">
+                            <h5 class="m-0" id="tip_10">{{Session::get('currencySymbol')}}<%= cart_details.tip_10_percent %></h5>
+                            <p class="m-0">10%</p>
+                        </label>
+                    
+                        <input type="radio" class="tip_radio" id="control_03" name="select" value="<%= cart_details.tip_15_percent %>" >
+                        <label class="tip_label" for="control_03">
+                            <h5 class="m-0" id="tip_15">{{Session::get('currencySymbol')}}<%= cart_details.tip_15_percent %></h5>
+                            <p class="m-0">15%</p>
+                        </label>
 
-                    <input type="radio" class="tip_radio" id="custom_control" name="select" value="custom" >
-                    <label class="tip_label" for="custom_control">
-                        <h5 class="m-0">{{__('Custom')}}<br>{{__('Amount')}}</h5>
-                    </label>
+                        <input type="radio" class="tip_radio" id="custom_control" name="select" value="custom" >
+                        <label class="tip_label" for="custom_control">
+                            <h5 class="m-0">{{__('Custom')}}<br>{{__('Amount')}}</h5>
+                        </label>
+                    <% } %>
                 </div>
-                <div class="custom_tip mb-3 d-none">
+                <div class="custom_tip mb-3 <% if(cart_details.total_payable_amount > 0) { %> d-none <% } %>">
                     <input class="input-number form-control" name="custom_tip_amount" id="custom_tip_amount" placeholder="{{__('Enter Custom Amount')}}" type="number" value="" step="0.1">
                 </div>
             </td>
@@ -444,16 +446,14 @@
                     </div>
                 </div>
                 <div class="col-8">
+                    <div class="spinner-box">
+                        <div class="circle-border">
+                            <div class="circle-core"></div>
+                        </div>
+                    </div>
                     <div class="table-responsive h-100">
                         <table class="table table-centered table-nowrap mb-0 h-100" id="cart_table">
                             <tbody>
-                                <td>
-                                    <div class="spinner-box">
-                                        <div class="circle-border">
-                                            <div class="circle-core"></div>
-                                        </div>
-                                    </div>
-                                </td>
                             </tbody>
                         </table>
                     </div>
