@@ -114,7 +114,7 @@ class UserhomeController extends FrontController{
         }
         Session::forget('type');
         Session::put('type', $request->type);
-        $vendors = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1);
+        $vendors = Vendor::with('products')->select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1);
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                 $selectedAddress = $preferences->Default_location_name;
@@ -134,6 +134,7 @@ class UserhomeController extends FrontController{
         $vendors = $vendors->where('status', '!=', $this->field_status)->inRandomOrder()->get();
         foreach ($vendors as $key => $value) {
             $vendor_ids[] = $value->id;
+            $value->vendorRating = $this->vendorRating($value->products);
         }
         if(($latitude) && ($longitude)) {
             Session::put('vendors', $vendor_ids);

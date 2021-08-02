@@ -123,8 +123,8 @@ class CategoryController extends FrontController
         if(view()->exists('frontend/cate-'.$page.'s')){
             return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
         }else{
-            // abort(404);
-            return response()->view('errors_custom', [], 404);
+            abort(404);
+            // return response()->view('errors_custom', [], 404);
         }
     }
 
@@ -133,7 +133,7 @@ class CategoryController extends FrontController
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
         
         if(strtolower($type) == 'vendor'){
-            $vendorData = Vendor::select('vendors.id', 'name', 'slug', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
+            $vendorData = Vendor::with('products')->select('vendors.id', 'name', 'slug', 'logo', 'banner', 'order_pre_time', 'order_min_amount');
             $vendorData = $vendorData->join('vendor_categories as vct', 'vct.vendor_id', 'vendors.id')->where('vct.category_id', $category_id)->where('vct.status', 1);
             $preferences= Session::get('preferences');
             if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
@@ -141,6 +141,9 @@ class CategoryController extends FrontController
                 $vendors= $vendorData->whereIn('vct.vendor_id', $vendors);
             }
             $vendorData = $vendorData->where('vendors.status', '!=', $this->field_status)->paginate($pagiNate);
+            foreach ($vendorData as $key => $value) {
+                $value->vendorRating = $this->vendorRating($value->products);
+            }
             return $vendorData;
         }
         elseif(strtolower($type) == 'brand'){

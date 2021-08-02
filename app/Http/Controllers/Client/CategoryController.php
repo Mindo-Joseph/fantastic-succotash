@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag, Vendor, DispatcherWarningPage, DispatcherTemplateTypeOption};
+use App\Models\{Client, ClientPreference, MapProvider, Category, Category_translation, ClientLanguage, Variant, Brand, CategoryHistory, Type, CategoryTag, Vendor, DispatcherWarningPage, DispatcherTemplateTypeOption, Product};
 use GuzzleHttp\Client as GCLIENT;
 class CategoryController extends BaseController{
     private $blocking = '2';
@@ -31,7 +31,7 @@ class CategoryController extends BaseController{
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
-        return view('backend.catalog.index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands]);
+        return view('backend.catalog.index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands, 'build' => $build]);
     }
 
     /**
@@ -264,7 +264,11 @@ class CategoryController extends BaseController{
      */
     public function destroy($domain = '', $id){
         $user = Auth::user();
-        Category::where('id', $id)->delete();
+        $parent = Category::where('id', $id)->first();
+        $array_of_ids = $this->getChildren($parent);
+        array_push($array_of_ids, $id);
+        Category::destroy($array_of_ids);
+        Product::whereIn('category_id', $array_of_ids)->delete();
         CategoryHistory::insert([
             'category_id' => $id,
             'action' => 'deleted',
@@ -275,7 +279,16 @@ class CategoryController extends BaseController{
         return redirect()->back()->with('success', 'Category deleted successfully!');
     }
 
-
+    private function getChildren($category){
+        $ids = [];
+        if($category->childs){
+            foreach ($category->childs as $cat) {
+                $ids[] = $cat->id;
+                $ids = array_merge($ids, $this->getChildren($cat));
+            }
+        }
+        return $ids;
+    }
 
 
 
@@ -313,5 +326,4 @@ class CategoryController extends BaseController{
         else
             return false;
     }
-
 }

@@ -3,18 +3,20 @@
 namespace App\Http\Controllers\Front;
 
 use Auth;
+use Session;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
-use App\Models\{PaymentOption};
+use App\Models\{PaymentOption, Client, ClientPreference, ClientCurrency};
 use App\Http\Traits\ApiResponser;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Front\FrontController;
 use Illuminate\Support\Facades\Validator;
 
-class PaypalGatewayController extends Controller
+class PaypalGatewayController extends FrontController
 {
     use ApiResponser;
     public $gateway;
+    public $currency;
 
     public function __construct()
     {
@@ -28,17 +30,21 @@ class PaypalGatewayController extends Controller
         $this->gateway->setPassword($password);
         $this->gateway->setSignature($signature);
         $this->gateway->setTestMode(true); //set it to 'false' when go live
+        
+        $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
+        $this->currency = (isset($primaryCurrency->currency->iso_code)) ? $primaryCurrency->currency->iso_code : 'USD';
     }
 
     public function paypalPurchase(Request $request){
         try{
-            $returnUrlParams = '?amount='.$request->amount;
+            $amount = $this->getDollarCompareAmount($request->amount);
+            $returnUrlParams = '?amount='.$amount;
             if($request->has('tip')){
                 $returnUrlParams = $returnUrlParams.'&tip='.$request->tip;
             }
             $response = $this->gateway->purchase([
-                'currency' => 'USD',
-                'amount' => $request->amount,
+                'currency' => 'USD', //$this->currency,
+                'amount' => $amount,
                 'cancelUrl' => url($request->cancelUrl),
                 'returnUrl' => url($request->returnUrl . $returnUrlParams),
             ])->send();
@@ -59,8 +65,9 @@ class PaypalGatewayController extends Controller
     {
         // Once the transaction has been approved, we need to complete it.
         if($request->has(['token', 'PayerID'])){
+            $amount = $this->getDollarCompareAmount($request->amount);
             $transaction = $this->gateway->completePurchase(array(
-                'amount'                => $request->amount,
+                'amount'                => $amount,
                 'payer_id'              => $request->PayerID,
                 'transactionReference'  => $request->token
             ));

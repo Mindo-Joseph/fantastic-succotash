@@ -53,6 +53,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     </div>
                 @endif
+                @if($client_preference_detail->show_contact_us == 1)
                 <div class="col-lg-3 col-md-6 mb-md-0 mb-3">
                     <div class="sub-title">
                         <div class="footer-title">
@@ -70,6 +71,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </section>

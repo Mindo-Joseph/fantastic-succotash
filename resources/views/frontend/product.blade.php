@@ -109,8 +109,7 @@
                                         @endif
                                     @endif
                                     <div class="description_txt my-3">
-                                        <p>It is a long established fact that a reader will be distracted by the
-                                            readable content of a page when looking at its layout.</p>
+                                        <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->meta_description : ''}}</p>
                                     </div>
                                     <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
                                     @if($product->inquiry_only == 0)

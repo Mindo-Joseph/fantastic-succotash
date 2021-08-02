@@ -40,7 +40,7 @@
                 @endphp
                 <input type="tel" class="form-control phone @error('phone_number') is-invalid @enderror" id="phone" placeholder="Phone Number" name="phone_number" value="{{$phn ? $phn : old('phone_number')}}" required="required">
                 <input type="hidden" id="countryData" name="countryData" value="us">
-                <input type="hidden" id="dialCode" name="dialCode" value="1">
+                <input type="hidden" id="dialCode" name="dialCode" value="{{$user->dial_code}}">
                 @error('phone_number')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>

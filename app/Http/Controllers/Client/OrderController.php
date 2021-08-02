@@ -98,13 +98,13 @@ class OrderController extends BaseController{
                 break;
                 case 'active_orders':
                     $order_status_options = [2,4,5];
-                    $orders = $orders->with('vendors', function ($query) use($order_status_options){
+                    $orders = $orders->whereHas('vendors', function ($query) use($order_status_options){
                         $query->whereIn('order_status_option_id', $order_status_options);
                     });
                 break;
                 case 'orders_history':
                     $order_status_options = [6,3];
-                    $orders = $orders->with('vendors', function ($query) use($order_status_options){
+                    $orders = $orders->whereHas('vendors', function ($query) use($order_status_options){
                         $query->whereIn('order_status_option_id', $order_status_options);
                     });
                 break;
@@ -276,12 +276,12 @@ class OrderController extends BaseController{
                                                         );
                                    
                         $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
-                                                        'customer_phone_number' => $customer->phone_number ?? '+919041969648',
-                                                        'customer_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
-                                                        'recipient_phone' => $customer->phone_number ?? '+919041969648',
-                                                        'recipient_email' => $customer->email ?? 'dineshk@codebrewinnovations.com',
+                                                        'customer_phone_number' => $customer->phone_number ?? rand(111111,11111),
+                                                        'customer_email' => $customer->email ?? null,
+                                                        'recipient_phone' => $customer->phone_number ?? rand(111111,11111),
+                                                        'recipient_email' => $customer->email ?? null,
                                                         'task_description' => "Order From :".$vendor_details->name,
-                                                        'allocation_type' => 'u',
+                                                        'allocation_type' => 'a',
                                                         'task_type' => 'now',
                                                         'cash_to_be_collected' => $payable_amount??0.00,
                                                         'barcode' => '',

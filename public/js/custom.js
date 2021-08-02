@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     $.ajaxSetup({
         headers: {
@@ -562,8 +563,9 @@ $(document).ready(function() {
         $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
         let address_id = $("input:radio[name='address_id']:checked").val();
         let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
+        let tip = $("#cart_tip_amount").val();
         if(payment_option_id == 1){
-            placeOrder(address_id, payment_option_id, '');
+            placeOrder(address_id, payment_option_id, '', tip);
         }else if (payment_option_id == 4){
             stripe.createToken(card).then(function(result) {
                 if (result.error) {
@@ -861,31 +863,32 @@ $(document).ready(function() {
     $(document).on('click', '.tip_radio_controls .tip_radio', function(){
         var tip = $(this).val();
         var amount_payable = $("#cart_payable_amount_original").val();
+        var currency = $("#cart_payable_amount_original").attr('data-curr');
         // if this was previously checked
         if ($(this).hasClass("active")){
             $(this).prop('checked', false);
             $(this).removeClass('active');
-            setTipAmount(0, amount_payable);
+            setTipAmount(0, amount_payable, currency);
         }else{
             $('.tip_radio_controls .tip_radio').removeClass("active");
             $(this).addClass('active');
-            setTipAmount(tip, amount_payable);
+            setTipAmount(tip, amount_payable, currency);
         }
         
     });
-    function setTipAmount(tip, amount_payable){
+    function setTipAmount(tip, amount_payable, currency){
         if(tip != 'custom'){
             if( (tip == '') || (isNaN(tip)) ){
                 tip = 0;
             }
             amount_payable = parseFloat(amount_payable) + parseFloat(tip);
             $("#cart_tip_amount").val(parseFloat(tip).toFixed(2));
-            $("#cart_total_payable_amount").html('$' + parseFloat(amount_payable).toFixed(2));
+            $("#cart_total_payable_amount").html(currency + parseFloat(amount_payable).toFixed(2));
             $(".custom_tip").addClass("d-none");
             $("#custom_tip_amount").val('');
         }
         else{
-            $("#cart_total_payable_amount").text('$'+ parseFloat(amount_payable).toFixed(2));
+            $("#cart_total_payable_amount").text(currency + parseFloat(amount_payable).toFixed(2));
             $("#cart_tip_amount").val(0);
             $(".custom_tip").removeClass("d-none");
             $("#custom_tip_amount").focus();
@@ -898,10 +901,11 @@ $(document).ready(function() {
             tip = 0;
         }
         var amount_elem = $("#cart_payable_amount_original");
+        var currency = amount_elem.attr('data-curr');
         var amount_payable = amount_elem.val();
         amount_payable = parseFloat(amount_payable) + parseFloat(tip);
         $("#cart_tip_amount").val(parseFloat(tip).toFixed(2));
-        $("#cart_total_payable_amount").html('$' + parseFloat(amount_payable).toFixed(2));
+        $("#cart_total_payable_amount").html(currency + parseFloat(amount_payable).toFixed(2));
         $("input[name='cart_total_payable_amount']").val(parseFloat(amount_payable).toFixed(2));
     });
     $(document).on('click', '.qty-minus', function() {
@@ -1090,4 +1094,11 @@ $(document).ready(function() {
 
     });
 
+    $(document).on('click', '#tasknow', function() {
+        $('#schedule_div').attr("style", "display: none !important");
+    });
+    $(document).on('click', '#taskschedule', function() {
+        $('#schedule_div').attr("style", "display: flex !important");
+    });
+    // var x = document.getElementById("schedule_div").autofocus;
 });

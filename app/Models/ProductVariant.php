@@ -21,9 +21,6 @@ class ProductVariant extends Model
 	}
 
 	public function vimage(){
-	    /*return $this->hasOne('App\Models\ProductVariantImage', 'product_variant_id', 'id')
-	    		->join('vendor_media as vm', 'vm.id', 'product_variant_images.product_image_id')
-	    		->select('vm.media_type', 'vm.path', 'product_variant_images.product_variant_id')->groupBy('product_variant_images.product_variant_id'); */
 		return $this->hasOne('App\Models\ProductVariantImage', 'product_variant_id', 'id')
 	    		->select('product_variant_id', 'product_image_id')->groupBy('product_variant_id');
 	}
@@ -38,6 +35,9 @@ class ProductVariant extends Model
 
 	public function translation($langId = 0){
         return $this->hasMany('App\Models\ProductTranslation', 'product_id', 'product_id');
+    }
+	public function translation_one($langId = 0){
+        return $this->hasOne('App\Models\ProductTranslation', 'product_id', 'product_id'); 
     }
     public function optionData() {
 	    return $this->belongsTo('App\Models\VariantOption', 'variant_option_id', 'id');
