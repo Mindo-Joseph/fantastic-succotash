@@ -79,7 +79,11 @@ class HomeController extends BaseController{
             $user_geo[] = $latitude;
             $user_geo[] = $longitude;
             $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
-            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
+            if($request->has('type')){
+                $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount')->where($request->type, 1);
+            }else{
+                $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
+            }
             if($preferences->is_hyperlocal == 1){
                 $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
                         $query->select('vendor_id')

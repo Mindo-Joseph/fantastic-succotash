@@ -61,7 +61,6 @@ class SocialController extends BaseController{
                 $customer = $customer->where('facebook_auth_id', $request->auth_id);
             } elseif ($driver == 'twitter'){
                 $customer = $customer->where('twitter_auth_id', $request->auth_id);
-
             } elseif ($driver == 'google'){
                 $customer = $customer->where('google_auth_id', $request->auth_id);
             }
@@ -90,7 +89,7 @@ class SocialController extends BaseController{
         }
         $customer->status = 1;
         $customer->is_email_verified = 1;
-        $customer->is_phone_verified = 0;
+        // $customer->is_phone_verified = 0;
         $customer->save();
         $user_cart = Cart::where('user_id', $customer->id)->first();
         if($user_cart){
@@ -142,7 +141,7 @@ class SocialController extends BaseController{
             $response['is_admin'] = $customer->is_admin;
             $response['phone_number'] = $customer->phone_number;
             $verified['is_email_verified'] = 1;
-            $verified['is_phone_verified'] = 1;
+            $verified['is_phone_verified'] = $customer->is_phone_verified;
             $client_preference = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
             $preferData['map_key'] = $client_preference->map_key;
             $preferData['theme_admin'] = $client_preference->theme_admin;

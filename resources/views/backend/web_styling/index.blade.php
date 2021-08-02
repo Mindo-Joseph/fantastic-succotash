@@ -91,7 +91,7 @@
             </div>
         </div>
     </div>
-    <!-- <div class="row">
+    <div class="row">
         <div class="col-xl-8">
             <div class="card-box home-options-list">
                 <div class="row mb-2">
@@ -131,7 +131,7 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 </form>
 
 @endsection

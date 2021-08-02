@@ -36,6 +36,17 @@ class WebStylingController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function updateWebStyles(Request $request){
+
+        $featured_vendor = HomePageLabel::where('slug', 'featured_vendors')->first();
+        if($featured_vendor){
+            $featured_vendor->is_active = $request->has('featured_vendors') && $request->featured_vendors == "on" ? 1 : 0;
+            $featured_vendor->save(); 
+        }
+        $vendors = HomePageLabel::where('slug', 'vendors')->first();
+        if($vendors){
+            $vendors->is_active = $request->has('vendors') && $request->vendors == "on" ? 1 : 0;
+            $vendors->save(); 
+        }
         $client_preferences = ClientPreference::first();
         if($client_preferences){
             if($request->has('favicon')){

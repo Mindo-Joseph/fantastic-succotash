@@ -48,7 +48,7 @@ $timezone = Auth::user()->timezone;
                                     @foreach($order_status_options as $order_status_option)
                                     @php
                                         $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'disabled': '';
-                                        if (in_array($order_status_option->id, $vendor_order_status_option_ids))
+                                        if($order_status_option->id == $order->vendors->first()->order_status_option_id)
                                         $glow = '';
                                         else
                                         $glow = 'completed';
@@ -200,6 +200,9 @@ $timezone = Auth::user()->timezone;
                     <div class="card-body">
                         <h4 class="header-title mb-3">{{ __('Payment Information') }}</h4>
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __('Payment By') }} :</span> {{ $order->paymentOption  ? $order->paymentOption->title : ''}}</p>
+                        @if($order->payment)
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __('Transaction Id') }} :</span> {{ $order->payment  ? $order->payment->transaction_id : ''}}</p>
+                        @endif
                     </div>
                 </div>
             </div>
