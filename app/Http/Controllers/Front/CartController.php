@@ -467,7 +467,7 @@ class CartController extends FrontController
                 $vendorData->taxable_amount = number_format($taxable_amount, 2);
                 $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount), 2);
                 if (!empty($subscription_features)) {
-                    $vendorData->product_total_amount = number_format(($vendorData->product_total_amount - $subscription_discount), 2);
+                    $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount - $subscription_discount), 2);
                 }
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
