@@ -359,18 +359,18 @@ class CartController extends FrontController
         if ($loyalty_card) {
             $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
         }
-        $order_loyalty_points_earned_detail = Order::where('user_id', $user->id)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
-        if ($order_loyalty_points_earned_detail) {
-            $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
-            if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
-                $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
-                if($customerCurrency->is_primary != 1){
-                    $loyalty_amount_saved = $loyalty_amount_saved * $customerCurrency->doller_compare;
-                }
-            }
-        }
         $subscription_features = array();
         if($user){
+            $order_loyalty_points_earned_detail = Order::where('user_id', $user->id)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
+            if ($order_loyalty_points_earned_detail) {
+                $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
+                if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
+                    $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
+                    if($customerCurrency->is_primary != 1){
+                        $loyalty_amount_saved = $loyalty_amount_saved * $customerCurrency->doller_compare;
+                    }
+                }
+            }
             $now = Carbon::now()->toDateTimeString();
             $user_subscription = SubscriptionInvoicesUser::with('features')
                 ->select('id', 'user_id', 'subscription_id')

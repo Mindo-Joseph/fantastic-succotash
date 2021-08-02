@@ -286,19 +286,19 @@ class VendorSubscriptionController extends BaseController
      */
     public function updateSubscriptionStatus(Request $request, $slug = '')
     {
-        $validator = Validator::make($request->all(), [
-            'subscription_status' => 'required'
-        ]);
-        if($validator->fails()){
-            foreach($validator->errors()->toArray() as $error_key => $error_value){
-                return $this->errorResponse($error_value[0], 400);
+        try{
+            DB::beginTransaction();
+            $validator = Validator::make($request->all(), [
+                'subscription_status' => 'required'
+            ]);
+            if($validator->fails()){
+                foreach($validator->errors()->toArray() as $error_key => $error_value){
+                    return $this->errorResponse($error_value[0], 400);
+                }
             }
-        }
-        $message = '';
-        $subscription_invoice = SubscriptionInvoicesVendor::with('plan')->where('slug', $slug)->first();
-        if(!empty($request->subscription_status)){
-            try {
-                DB::beginTransaction();
+            $message = '';
+            $subscription_invoice = SubscriptionInvoicesVendor::with('plan')->where('slug', $slug)->first();
+            if(!empty($request->subscription_status)){
                 $status = $request->subscription_status;
                 if($status == 'approve'){
                     $subscription_invoice->status_id = 2;
@@ -323,20 +323,20 @@ class VendorSubscriptionController extends BaseController
                 $subscription_invoice->save();
                 DB::commit();
                 return $this->successResponse('', 'Subscription has been '.$message.' successfully');
-            } 
-            catch (Exception $e) {
-                DB::rollback();
-                return $this->errorResponse($e->getMessage(), 400);
+            }else{
+                return $this->errorResponse('Invalid request', 400);
             }
-        }else{
-            return $this->errorResponse('Invalid request', 400);
+        }
+        catch(\Exception $ex){
+            DB::rollback();
+            return $this->errorResponse($ex->getMessage(), 400);
         }
     }
 
     /**
      * Display a listing of the resource.
      * Required Params-
-     *  status
+     *  status (invoice status)
      * 
      * @return \Illuminate\Http\Response
      */

@@ -156,15 +156,24 @@ class SubscriptionPlansVendorController extends BaseController
      */
     public function editSubscriptionPlan(Request $request, $domain = '', $slug='')
     {
-        $plan = SubscriptionPlansVendor::where('slug', $slug)->firstOrFail();
-        $planFeatures = SubscriptionPlanFeaturesVendor::select('feature_id')->where('subscription_plan_id', $plan->id)->get();
-        $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
-        $subPlanFeatures = array();
-        foreach($planFeatures as $feature){
-            $subPlanFeatures[] = $feature->feature_id;
+        try{
+            $plan = SubscriptionPlansVendor::where('slug', $slug)->first();
+            if($plan){
+                $planFeatures = SubscriptionPlanFeaturesVendor::select('feature_id')->where('subscription_plan_id', $plan->id)->get();
+                $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
+                $subPlanFeatures = array();
+                foreach($planFeatures as $feature){
+                    $subPlanFeatures[] = $feature->feature_id;
+                }
+                return response()->json(["status"=>"Success", "data"=>['features'=>$featuresList, 'plan' => $plan, 'subPlanFeatures'=>$subPlanFeatures]]);
+            }
+            else{
+                return $this->errorResponse('Invalid data', 400);
+            }
         }
-        $returnHTML = view('backend.subscriptions.edit-subscriptionPlanVendor')->with(['features'=>$featuresList, 'plan' => $plan, 'subPlanFeatures'=>$subPlanFeatures])->render();
-        return response()->json(array('success' => true, 'html'=>$returnHTML));
+        catch(\Exception $ex){
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
     }
 
     /**
@@ -175,10 +184,23 @@ class SubscriptionPlansVendorController extends BaseController
      */
     public function updateSubscriptionPlanStatus(Request $request, $domain = '', $slug='')
     {
-        $subscription = SubscriptionPlansVendor::where('slug', $slug)->firstOrFail();
-        $subscription->status = $request->status;
-        $subscription->save();
-        return response()->json(array('success' => true, 'message'=>'Subscription status has been updated.'));
+        try{
+            DB::beginTransaction();
+            $subscription = SubscriptionPlansVendor::where('slug', $slug)->first();
+            if($subscription){
+                $subscription->status = $request->status;
+                $subscription->save();
+                DB::commit();
+                return response()->json(array("status"=>"Success", 'message'=>'Subscription status has been updated.'));
+            }
+            else{
+                return $this->errorResponse('Invalid data', 400);
+            }
+        }
+        catch(\Exception $ex){
+            DB::rollback();
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
     }
 
     /**
@@ -189,10 +211,23 @@ class SubscriptionPlansVendorController extends BaseController
      */
     public function updateSubscriptionPlanOnRequest(Request $request, $domain = '', $slug='')
     {
-        $subscription = SubscriptionPlansVendor::where('slug', $slug)->firstOrFail();
-        $subscription->on_request = $request->on_request;
-        $subscription->save();
-        return response()->json(array('success' => true, 'message'=>'Subscription on request status has been updated.'));
+        try{
+            DB::beginTransaction();
+            $subscription = SubscriptionPlansVendor::where('slug', $slug)->first();
+            if($subscription){
+                $subscription->on_request = $request->on_request;
+                $subscription->save();
+                DB::commit();
+                return response()->json(array("status"=>"Success", 'message'=>'Subscription on request status has been updated.'));
+            }
+            else{
+                return $this->errorResponse('Invalid data', 400);
+            }
+        }
+        catch(\Exception $ex){
+            DB::rollback();
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
     }
 
     /**
@@ -204,11 +239,19 @@ class SubscriptionPlansVendorController extends BaseController
     public function deleteSubscriptionPlan(Request $request, $domain = '', $slug='')
     {
         try {
-            $subscription = SubscriptionPlansVendor::where('slug', $slug)->firstOrFail();
-            $subscription->delete();
-            return redirect()->back()->with('success', 'Subscription has been deleted successfully.');
+            DB::beginTransaction();
+            $subscription = SubscriptionPlansVendor::where('slug', $slug)->first();
+            if($subscription){
+                $subscription->delete();
+                DB::commit();
+                return response()->json(array("status"=>"Success", 'message'=>'Subscription has been deleted successfully.'));
+            }
+            else{
+                return $this->errorResponse('Invalid data', 400);
+            }
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Subscription cannot be deleted.');
+            DB::rollback();
+            return $this->errorResponse($ex->getMessage(), 400);
         }
     }
 
