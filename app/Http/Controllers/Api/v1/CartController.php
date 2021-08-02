@@ -139,12 +139,14 @@ class CartController extends BaseController{
             if ($luxury_option) {
                 $checkCartLuxuryOption = CartProduct::where('luxury_option_id', '!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
                 if ($checkCartLuxuryOption) {
-                    return $this->errorResponse('You are adding products in different mods', 404);
+                    return $this->errorResponse(['error' => 'You are adding products in different mods',
+                                                 'alert' => '1'], 404);
                 }
                 if ($luxury_option->id == 2 || $luxury_option->id == 3) {
-                    $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $request->vendor_id)->first();
+                    $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $product->vendor_id)->first();
                     if ($checkVendorId) {
-                        return $this->errorResponse('Product already exist from another vendors', 404);
+                        return $this->errorResponse(['error' => 'Your cart has existing items from another vendor',
+                                                     'alert' => '1'], 404);
                     }
                 }
             }
@@ -160,6 +162,7 @@ class CartController extends BaseController{
                     'vendor_id'  => $product->vendor_id,
                     'variant_id'  => $request->product_variant_id,
                     'currency_id' => $client_currency->currency_id,
+                    'luxury_option_id' => $luxury_option ? $luxury_option->id : 1,
                 ];
                 $cartProduct = CartProduct::where('cart_id', $cart_detail->id)
                             ->where('product_id', $product->id)
