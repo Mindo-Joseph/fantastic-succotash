@@ -143,15 +143,20 @@ $timezone = Auth::user()->timezone;
                                     @endif
                                     @endforeach
                                     <tr>
+                                        <th scope="row" colspan="4" class="text-end">{{__('Delivery Fee')}} :</th>
+                                        <td>$@money($vendor->delivery_fee)</td>
+                                    </tr>
+                                    <tr>
                                         <th scope="row" colspan="4" class="text-end">Sub Total :</th>
                                         <td>
                                             <div class="fw-bold">$@money($sub_total)</div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th scope="row" colspan="4" class="text-end">Total Discount :</th>
+                                        <th scope="row" colspan="4" class="text-end">{{__('Total Discount')}} :</th>
                                         <td>$@money($vendor->discount_amount)</td>
                                     </tr>
+                                   
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">Estimated Tax :</th>
                                         <td>$@money($taxable_amount)</td>
