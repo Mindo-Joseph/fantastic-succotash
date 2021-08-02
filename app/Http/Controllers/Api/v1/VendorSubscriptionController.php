@@ -57,8 +57,6 @@ class VendorSubscriptionController extends BaseController
      * select vendor subscription.
      * Required Params-
      *  slug (Subscription plan)
-     * 
-     * @return \Illuminate\Http\Response
      */
     public function selectSubscriptionPlan($slug = '')
     {
@@ -106,8 +104,6 @@ class VendorSubscriptionController extends BaseController
      * Required Params-
      *  id
      *  slug (Subscription plan)
-     * 
-     * @return \Illuminate\Http\Response
      */
     public function checkActiveSubscriptionPlan($id, $slug = '')
     {
@@ -135,8 +131,6 @@ class VendorSubscriptionController extends BaseController
      *  payment_option_id
      *  transaction_id
      *  amount
-     * 
-     * @return \Illuminate\Http\Response
      */
     public function purchaseSubscriptionPlan(Request $request, $id, $slug = '')
     {
@@ -247,8 +241,6 @@ class VendorSubscriptionController extends BaseController
      * Required Params-
      *  id
      *  slug (vendor invoice)
-     * 
-     * @return \Illuminate\Http\Response
      */
     public function cancelSubscriptionPlan($id, $slug = '')
     {
@@ -281,8 +273,6 @@ class VendorSubscriptionController extends BaseController
      * Required Params-
      *  slug (vendor invoice)
      *  subscription_status (approve, reject)
-     * 
-     * @return \Illuminate\Http\Response
      */
     public function updateSubscriptionStatus(Request $request, $slug = '')
     {
@@ -337,8 +327,6 @@ class VendorSubscriptionController extends BaseController
      * Display a listing of the resource.
      * Required Params-
      *  status (invoice status)
-     * 
-     * @return \Illuminate\Http\Response
      */
     public function getSubscriptionsFilterData(Request $request)
     {
