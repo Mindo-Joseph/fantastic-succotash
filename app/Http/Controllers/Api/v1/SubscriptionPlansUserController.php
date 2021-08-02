@@ -22,12 +22,19 @@ class SubscriptionPlansUserController extends BaseController
 {
     use ApiResponser;
     private $folderName = '/subscriptions/image';
+    /**
+     * Handle the incoming request.
+     */
+    public function __construct(request $request)
+    {
+        $preferences = ClientPreference::where(['id' => 1])->first();
+        if((isset($preferences->subscription_mode)) && ($preferences->subscription_mode == 0)){
+            return $this->errorResponse('Subscription mode is not active', 400);
+        }
+    }
 
     /**
      * Get user subscriptions
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function getSubscriptionPlans(Request $request)
     {
@@ -52,14 +59,20 @@ class SubscriptionPlansUserController extends BaseController
                 $plan->features = $features;
             }
         }
-        return response()->json(["status"=>"Success", "data"=>['features'=>$featuresList, 'subscription_plans'=>$sub_plans, 'subscribed_users_count'=>$subscribed_users_count, 'subscribed_users_percentage'=>$subscribed_users_percentage]]);
+        return response()->json(["status"=>"Success", "data"=>['features'=>$featuresList, 'all_plans'=>$sub_plans, 'subscribed_users_count'=>$subscribed_users_count, 'subscribed_users_percentage'=>$subscribed_users_percentage]]);
     }
 
     /**
      * save user subscription
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Required Params-
+     *  image
+     *  slug (Subscription plan)
+     *  title
+     *  features
+     *  price
+     *  frequency
+     *  status
+     *  description
      */
     public function saveSubscriptionPlan(Request $request, $slug='')
     {
@@ -136,11 +149,10 @@ class SubscriptionPlansUserController extends BaseController
 
     /**
      * edit user subscription
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Required Params-
+     *  slug (Subscription plan)
      */
-    public function editSubscriptionPlan(Request $request, $slug='')
+    public function editSubscriptionPlan($slug='')
     {
         try{
             $plan = SubscriptionPlansUser::where('slug', $slug)->first();
@@ -166,9 +178,9 @@ class SubscriptionPlansUserController extends BaseController
 
     /**
      * update user subscription status
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Required Params-
+     *  slug (Subscription plan)
+     *  status
      */
     public function updateSubscriptionPlanStatus(Request $request, $slug='')
     {
@@ -200,9 +212,8 @@ class SubscriptionPlansUserController extends BaseController
 
     /**
      * update user subscription
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Required Params-
+     *  slug (Subscription plan)
      */
     public function deleteSubscriptionPlan(Request $request, $slug='')
     {

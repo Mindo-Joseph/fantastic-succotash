@@ -47,7 +47,7 @@ class UserSubscriptionController extends BaseController
                 $sub->price = $sub->price * $clientCurrency->doller_compare;
             }
         }
-        return response()->json(["status"=>"Success", "data"=>['subscription_plans'=>$sub_plans, 'subscription'=>$active_subscription, "clientCurrency"=>$clientCurrency]]);
+        return response()->json(["status"=>"Success", "data"=>['all_plans'=>$sub_plans, 'subscription'=>$active_subscription, "clientCurrency"=>$clientCurrency]]);
     }
     
     /**
