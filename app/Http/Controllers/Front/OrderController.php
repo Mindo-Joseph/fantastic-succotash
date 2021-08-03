@@ -200,11 +200,11 @@ class OrderController extends FrontController
                         {
                             $delivery_count = 1;
                             $vendor_cart_product->delivery_fee = number_format($delivery_fee, 2);
-                            $payable_amount = $payable_amount + $delivery_fee;
+                          //  $payable_amount = $payable_amount + $delivery_fee;
                             $delivery_fee_charges = $delivery_fee;
                         }
 
-                    }
+                    } 
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
                     $order_product->order_id = $order->id;
