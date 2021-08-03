@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class HomePageLabelTranslation extends Model
 {
     use HasFactory;
+    protected $table = 'home_page_label_transaltions';
 }
