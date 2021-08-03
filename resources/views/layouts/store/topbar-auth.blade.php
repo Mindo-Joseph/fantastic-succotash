@@ -19,13 +19,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             </div>
             <div class="col-8 text-right">
                 <ul class="header-dropdown">
-                @if($client_preference_detail->show_wishlist == 1)
-                    <li>
-                        <a href="javascript:void(0)">{{session()->get('locale')}} 
-                            <img src="{{asset('front-assets/images/icon/wishlist.png')}}" class="img-fluid">
-                        </a>
-                    </li>
-                @endif
                     <li class="onhover-dropdown change-language slected-language">
                         <a href="javascript:void(0)">{{session()->get('locale')}} 
                             <img src="{{asset('front-assets/images/icon/translation.png')}}" class="img-fluid">
