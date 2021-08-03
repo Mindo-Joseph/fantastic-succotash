@@ -1,5 +1,4 @@
-@extends('layouts.store', ['title' => 'Login'])
-
+@extends('layouts.store', ['title' => __('My Wishlist')])
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -8,11 +7,8 @@
         padding-bottom: 20px;
     }
 </style>
-
 @endsection
-
 @section('content')
-
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -56,224 +52,112 @@
     .invalid-feedback {
         display: block;
     }
+    .box-info table tr:first-child td {
+        padding-top: .85rem;
+    }
 </style>
-
-
 <section class="section-b-space">
     <div class="container">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="row">
             <div class="col-lg-3">
-                <div class="account-sidebar"><a class="popup-btn">my account</a></div>
+                <div class="account-sidebar"><a class="popup-btn">{{__('My Account')}}</a></div>
                 <div class="dashboard-left">
-                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i> back</span></div>
-                    <div class="block-content">
-                        <ul>
-                            <li><a href="{{route('user.profile')}}">Account Info</a></li>
-                            <li><a href="{{route('user.addressBook')}}">Address Book</a></li>
-                            <li><a href="{{route('user.orders')}}">My Orders</a></li>
-                            <li class="active"><a href="{{route('user.wishlists')}}">My Wishlist</a></li>
-                            <li><a href="{{route('user.account')}}">My Wallet</a></li>
-                            <li><a href="{{route('user.changePassword')}}">Change Password</a></li>
-                            <li class="last"><a href="{{route('user.logout')}}" >Log Out</a></li>
-                        </ul>
-                    </div>
+                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}</span></div>
+                    @include('layouts.store/profile-sidebar')
                 </div>
             </div>
             <div class="col-lg-9">
                 <div class="dashboard-right">
                     <div class="dashboard">
                         <div class="page-title">
-                            <h2>Wishlist</h2>
+                            <h2>{{__('Wishlist')}}</h2>
                         </div>
-                        <!-- <div class="welcome-msg">
-                            <h5>Here are all your wishlist products !</h5>
-                        </div> -->
-                        
                         <div class="box-account box-info mt-3">
                             <div class="row">
                                 <div class="col-sm-12 table-responsive table-responsive-xs">
-                                    <table class="table cart-table border">
+                                    <table class="table wishlist-table border">
                                         <thead>
                                             <tr class="table-head">
                                                 <th scope="col">
                                                     <div class="form-group mb-0">
                                                         <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="w-1">
-                                                            <label class="custom-control-label" for="w-1"></label>
+                                                            <input type="checkbox" class="custom-control-input" id="w-all">
+                                                            <label class="custom-control-label" for="w-all"></label>
                                                         </div>
                                                     </div>
                                                 </th>   
-                                                <th scope="col">Image</th>
-                                                <th scope="col">product name</th>
-                                                <th scope="col">Unit price</th>
-                                                <th scope="col">Date Added</th>
-                                                <th scope="col">Stock Status</th>
+                                                <th scope="col">{{__('Image')}}</th>
+                                                <th scope="col">{{__('Product Name')}}</th>
+                                                <th scope="col">{{__('Price')}}</th>
+                                                <th scope="col">{{__('Date Added')}}</th>
+                                                <th scope="col">{{__('Stock Status')}}</th>
                                                 <th scope="col"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                       
-                                           <tr>
-                                                <td>
-                                                    <div class="form-group mb-0">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="w-2">
-                                                            <label class="custom-control-label" for="w-2"></label>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="product-icon">
-                                                        <img src="http://local.myorder.com/assets/images/products/product-1.png" alt="product-img" height="50">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="product-title pl-1">
-                                                        <h4 class="m-0">T-Shirt</h4>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    $20.00
-                                                </td>
-                                                <td>
-                                                    May 28, 2021
-                                                </td>
-                                                <td>
-                                                    <i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>
-                                                    <span>In Stock</span>
-                                                </td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
-                                                </td>
-                                           </tr>
-                                           <tr>
-                                                <td>
-                                                    <div class="form-group mb-0">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="w-3">
-                                                            <label class="custom-control-label" for="w-3"></label>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="product-icon">
-                                                        <img src="http://local.myorder.com/assets/images/products/product-1.png" alt="product-img" height="50">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="product-title pl-1">
-                                                        <h4 class="m-0">T-Shirt</h4>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    $20.00
-                                                </td>
-                                                <td>
-                                                    May 28, 2021
-                                                </td>
-                                                <td>
-                                                    <i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>
-                                                    <span>In Stock</span>
-                                                </td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
-                                                </td>
-                                           </tr>
-                                           <tr>
-                                                <td>
-                                                    <div class="form-group mb-0">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="w-4">
-                                                            <label class="custom-control-label" for="w-4"></label>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="product-icon">
-                                                        <img src="http://local.myorder.com/assets/images/products/product-1.png" alt="product-img" height="50">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="product-title pl-1">
-                                                        <h4 class="m-0">T-Shirt</h4>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    $20.00
-                                                </td>
-                                                <td>
-                                                    May 28, 2021
-                                                </td>
-                                                <td>
-                                                    <i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>
-                                                    <span>In Stock</span>
-                                                </td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
-                                                </td>
-                                           </tr>
-                                        <!-- @foreach($wishList as $wish)
-                                        
-                                            <tr>
-                                                <td>
-                                                    <div class="form-group mb-0">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="w-1">
-                                                            <label class="custom-control-label" for="w-1"></label>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <ul class="d-inline-flex align-items-center px-2 py-1">
-                                                        <li class="product-icon">
-                                                            <img src="http://local.myorder.com/assets/images/products/product-1.png" alt="product-img" height="50">
-                                                        </li>
-                                                        <li class="product-title pl-1">
-                                                            <h4 class="m-0">T-Shirt</h4>
-                                                            <p class="m-0">Sector 21, Chandigarh</p>
-                                                        </li>
-                                                    </ul>
-                                                    <a href="#"><img src="{{$wish['product']['media'][0]['image']['path']['proxy_url'].'200/200'.$wish['product']['media'][0]['image']['path']['image_path']}}" alt=""></a>
-                                                </td>
-                                                <td><a href="#">{{$wish['product']['sku']}}</a>
-                                                </td>
-                                                <td>
-                                                    <h2>${{$wish['product']['variant'][0]['price']}}</h2>
-                                                </td>
-                                                <td>
-                                                    @if($wish['product']['variant'][0]['quantity'] > 0)
-                                                    <p>In stock</p>
-                                                    @else
-                                                    <p>Not in stock</p>
-                                                    @endif
-                                                </td>
-                                                <td><a href="{{ route('removeWishlist', $wish['product']['sku']) }}" class="icon me-3"><i class="ti-close"></i> </a></td>
-                                            </tr>
-                                        @endforeach -->
+                                            @if(!empty($wishList))
+                                                @foreach($wishList as $key => $wish)
+                                                    <tr class="wishlist-row">
+                                                        <td>
+                                                            <div class="form-group mb-0">
+                                                                @if($wish['product']['variant'][0]['quantity'] > 0)
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input type="checkbox" class="custom-control-input" id="wp-{{$wish['product']['id']}}" data-variant="{{$wish['product']['variant'][0]['id']}}">
+                                                                    <label class="custom-control-label" for="wp-{{$wish['product']['id']}}"></label>
+                                                                </div>
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="product-icon">
+                                                                @foreach($wish['product']['media'] as $media)
+                                                                    <img src="{{$media['image']['path']['proxy_url'].'200/200'.$media['image']['path']['image_path']}}" alt="Product Image" height="50">
+                                                                    @break
+                                                                @endforeach
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="product-title pl-1">
+                                                                <h4 class="m-0">{{ $wish['product']['translation_title'] }}</h4>
+                                                            </div>
+                                                        </td>
+                                                        <td>{{ Session::get('currencySymbol') . $wish['product']['variant_price'] }}</td>
+                                                        <td>{{date('M d, Y', strtotime($wish['added_on']))}}</td>
+                                                        <td>
+                                                            @if($wish['product']['variant_quantity'] > 0)
+                                                                <i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>
+                                                                <span>{{__('In Stock')}}</span>
+                                                            @else
+                                                                <span>{{__('Not In Stock')}}</span>
+                                                            @endif
+                                                        </td>
+                                                        <td><a href="{{ route('removeWishlist', $wish['product']['sku']) }}" class="icon me-3"><i class="ti-close"></i> </a></td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                <tr><td align="center" colspan="6">{{__('No Item Exists In Your Wishlist')}}</td></tr>
+                                            @endif
                                         </tbody>
-                                        <tfoot class="border-top border-bottom">
-                                            <tr>
-                                                <td colspan="7" class="text-center pt-2">
-                                                    <a class="btn btn-solid float-left" href="">Add All to Cart</a>
-                                                    <a class="btn btn-solid float-right mr-2" href="">Add Selected to Cart</a>
-                                                </td>
-                                            </tr>
-                                        </tfoot>
+                                        @if(!empty($wishList))
+                                            <tfoot class="border-top border-bottom">
+                                                <tr>
+                                                    <td colspan="7" class="pt-2">
+                                                        <button type="button" class="btn btn-solid mr-2 addWishlistToCart">{{__('Add To Cart')}}</button>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        @endif
                                     </table>
                                 </div>
-                                <!-- @foreach($wishList as $wish)
-                                <div class="col-sm-4">
-                                    <div class="box">
-                                        <div class="box-title">
-                                            <h3>{{$wish['product']['sku']}}</h3><a href="{{ route('removeWishlist', $wish['product']['sku']) }}">Remove</a>
-                                        </div>
-                                        <div class="box-content">
-                                            <a href="{{route('second', ['ecommerce', 'product-detail'])}}"><img src="{{$wish['product']['media'][0]['image']['path']['proxy_url'].'200/200'.$wish['product']['media'][0]['image']['path']['image_path']}}" alt="product-img" height="100" /></a>
-                                            <h6>Price: {{$wish['product']['variant'][0]['price']}}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforeach -->
                             </div>
                         </div>
                     </div>
@@ -282,13 +166,10 @@
         </div>
     </div>
 </section>
-
-
 @endsection
-
 @section('script')
-
 <script type="text/javascript">
+    var add_wishlist_to_cart_url = "{{ route('addWishlistToCart') }}";
     var ajaxCall = 'ToCancelPrevReq';
     $('.verifyEmail').click(function() {
         verifyUser('email');
@@ -296,6 +177,41 @@
 
     $('.verifyPhone').click(function() {
         verifyUser('phone');
+    });
+
+    $("#w-all").click(function(){
+        if($(this).is(":checked")){
+            $(".wishlist-table").find(".custom-checkbox input[type='checkbox']").prop("checked", true);
+        }else{
+            $(".wishlist-table").find(".custom-checkbox input[type='checkbox']").prop("checked", false);
+        }
+    });
+
+    $(document).ready(function(){
+        $(document).on("click",".addWishlistToCart",function() {
+            let wishlist_products = [];
+            $(".wishlist-row .custom-control-input:checked").each(function(i, obj){
+                var id = $(obj).attr('id');
+                var product_id = id.replace('wp-', '');
+                var product_variant_id = $(obj).attr('data-variant');
+                wishlist_products.push({'product_id':product_id, 'variant_id':product_variant_id});
+            });
+            addWishlistToCart(wishlist_products);
+        });
+        function addWishlistToCart(wishlist_products) {
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: add_wishlist_to_cart_url,
+                data: {"wishlistProducts": wishlist_products},
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                },
+            });
+        }
     });
 
     function verifyUser($type = 'email') {

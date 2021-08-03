@@ -29,7 +29,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Settings</h4>
+                <h4 class="page-title">Profile</h4>
             </div>
         </div>
     </div>
@@ -60,14 +60,12 @@
                     <form id="UpdateClient" method="post" action="{{route('client.profile.update',Auth::user()->code)}}" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
-
                         <div class="row mb-2 d-flex align-items-center">
-
-                            <div class="col-md-4">
-                                <input type="file" accept="image/*" data-plugins="dropify" name="logo" data-default-file="{{$client->logo['image_fit'] . '400/400' . $client->logo['image_path']}}" />
-                                <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
+                            <div class="col-md-4 positoin-relative">
+                                <label>Upload Logo</label>
+                                <input type="file" accept="image/*" data-plugins="dropify" name="logo" data-default-file="{{$client->logo['proxy_url'] . '300/100' . $client->logo['image_path']}}" />
+                                <label class="logo-size d-block text-right mt-1">Image Size 300x100</label>
                             </div>
-
                             <div class="offset-2 col-md-6">
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
@@ -87,8 +85,6 @@
                                 </div>                              
                             </div>
                         </div>
-
-
                         <div class=" row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -156,8 +152,8 @@
                                     </span>
                                     @endif
                                     <select class="form-control" id="country" name="country_id" value="{{ old('country', $client->id ?? '')}}" placeholder="Country">
-                                        @foreach($countries as $code=>$country)
-                                        <option value="{{ $country->id }}" @if(Auth::user()->country == $country->name) selected @endif>{{ $country->name }}</option>
+                                        @foreach($countries as $code=> $country)
+                                            <option value="{{ $country->id }}" @if($client->country_id == $country->id) selected @endif>{{ $country->name }}</option>
                                         @endforeach
                                     </select>
                                     <span class="invalid-feedback" role="alert">
@@ -197,92 +193,7 @@
         </div>
         @endif
         
-        <div class="col-md-12">
-            <form method="post" action="{{route('client.password.update')}}">
-                @csrf
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card-box">
-                            <h4 class="header-title">Change Password</h4>
-                            <p class="sub-header">
-                                {{-- <code>Organization details</code>/Change Password. --}}
-                            </p>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group mb-2">
-                                        <label for="old_password">Old Password</label>
-                                        <div class="input-group input-group-merge ">
-                                            <input class="form-control " name="old_password" type="password" required="" id="old_password" placeholder="Enter your old password">
-                                            <div class="input-group-append" data-password="false">
-                                                <div class="input-group-text">
-                                                    <span class="password-eye"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @if($errors->has('old_password'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('old_password') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group mb-2">
-                                        <label for="password">New Password</label>
-                                        <div class="input-group input-group-merge ">
-                                            <input class="form-control " name="password" type="password" required="" id="password" placeholder="Enter your password">
-                                            <div class="input-group-append" data-password="false">
-                                                <div class="input-group-text">
-                                                    <span class="password-eye"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @if($errors->has('password'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group mb-2">
-                                        <label for="confirm_password">Confirm Password</label>
-                                        <div class="input-group input-group-merge ">
-                                            <input class="form-control " name="password_confirmation" type="password" required="" id="confirm_password" placeholder="Enter your confirm password">
-                                            <div class="input-group-append" data-password="false">
-                                                <div class="input-group-text">
-                                                    <span class="password-eye"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @if($errors->has('password_confirmation'))
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-
-                            </div>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <div class="form-group mb-0 text-cente2">
-                                        <button class="btn btn-info btn-block" type="submit"> Update </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+      
     </div>
 
     

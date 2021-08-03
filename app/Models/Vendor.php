@@ -1,22 +1,34 @@
 <?php
 
 namespace App\Models;
-
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 //use Laravel\Scout\Searchable;
 
 class Vendor extends Model{
   //use Searchable;
+    protected $fillable = ['name','slug','desc','logo','banner','address','email','website','phone_no','latitude','longitude','order_min_amount','order_pre_time','auto_reject_time','commission_percent','commission_fixed_per_order','commission_monthly','dine_in','takeaway','delivery','status','add_category','setting','show_slot','vendor_templete_id'];
+
     public function serviceArea(){
        return $this->hasMany('App\Models\ServiceArea')->select('vendor_id', 'geo_array', 'name'); 
     }
 
     public function products(){
-       return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
+      return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
     }
 
-    public function getLogoAttribute($value)
-    {
+    public function slot(){
+      $client = Client::first();
+      $mytime = Carbon::now()->setTimezone($client->timezone);
+      $current_time = $mytime->toTimeString();
+      return $this->hasMany('App\Models\VendorSlot', 'vendor_id', 'id')->has('day')->where('start_time', '<', $current_time)->where('end_time', '>', $current_time);
+    }
+
+    public function avgRating(){
+      return $this->hasMany('App\Models\Product', 'vendor_id', 'id')->avg('averageRating'); 
+    }
+    
+    public function getLogoAttribute($value){
       $values = array();
       $img = 'default/default_image.png';
       if(!empty($value)){
@@ -28,8 +40,7 @@ class Vendor extends Model{
       return $values;
     }
 
-    public function getBannerAttribute($value)
-    {
+    public function getBannerAttribute($value){
       $values = array();
       $img = 'default/default_image.png';
       if(!empty($value)){
@@ -46,7 +57,7 @@ class Vendor extends Model{
     }
 
     public function orders(){
-       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id'); 
+       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id'); 
     }
 
     public function activeOrders(){
@@ -57,4 +68,10 @@ class Vendor extends Model{
     public function permissionToUser(){
       return $this->hasMany('App\Models\UserVendor');
     }
+
+
+    public function product(){
+      return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
+    }
+
 }

@@ -26,12 +26,25 @@ class BrandController extends FrontController
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
         $navCategories = $this->categoryNav($langId);
+        $vendorIds = array();
+        $vendorList = Vendor::select('id', 'name')->where('status', '!=', $this->field_status)->get();
+        if(!empty($vendorList)){
+            foreach ($vendorList as $key => $value) {
+                $vendorIds[] = $value->id;
+            }
+        }
+        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+            if(Session::has('vendors')){
+                $vendorIds = Session::get('vendors');
+            }
+        }
 
         $brand = Brand::with(['translation' => function($q) use($langId){
                     $q->where('language_id', $langId);
                     }])->select('id', 'image')
                     ->where('status', '!=', 2)
                     ->where('id', $brandId)->firstOrFail();
+        $brand->translation_title = ($brand->translation->first()) ? $brand->translation->first()->title : '';
 
         $products = Product::with(['media.image', 'translation' => function($q) use($langId){
                     $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
@@ -48,9 +61,12 @@ class BrandController extends FrontController
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
         if(!empty($products)){
             foreach ($products as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
-                }
+                $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
+                $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
+                // foreach ($value->variant as $k => $v) {
+                //     $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                // }
             }
         }
         $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
@@ -73,13 +89,16 @@ class BrandController extends FrontController
         if(empty($navCategories)){
             $navCategories = $this->categoryNav($langId);
         }
-        $vendorIds[] = $vid;
-        //dd($brand->toArray());
-
+        
         $np = $this->productList($vendorIds, $langId, $curId, 'is_new');
+        foreach($np as $new){
+            $new->translation_title = (!empty($new->translation->first())) ? $new->translation->first()->title : $new->sku;
+            $new->variant_multiplier = (!empty($new->variant->first())) ? $new->variant->first()->multiplier : 1;
+            $new->variant_price = (!empty($new->variant->first())) ? $new->variant->first()->price : 0;
+        }
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-
-        return view('frontend.brand-products')->with(['brand' => $brand, 'products' => $products, 'newProducts' => $newProducts, 'navCategories' => $navCategories, 'variantSets' => $variantSets]);
+        $range_products = Product::join('product_variants', 'product_variants.product_id', '=', 'products.id')->orderBy('product_variants.price', 'desc')->groupBy('product_id')->select('*')->where('is_live', 1)->where('brand_id', $brandId)->get();
+        return view('frontend.brand-products')->with(['range_products' => $range_products, 'brand' => $brand, 'products' => $products, 'newProducts' => $newProducts, 'navCategories' => $navCategories, 'variantSets' => $variantSets]);
     }
 
     /**

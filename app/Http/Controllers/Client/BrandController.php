@@ -18,15 +18,8 @@ class BrandController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function create(){
-        $categories = Category::with('english')
-                        ->select('id', 'slug')
-                        ->where('id', '>', '1')
-                        ->where('status', '!=', '2')
-                        ->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();
-        $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
-                    ->where('is_active', 1)
-                    ->orderBy('is_primary', 'desc')->get();
+        $categories = Category::with('english')->select('id', 'slug')->where('id', '>', '1')->where('status', '!=', '2')->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->whereIn('type_id', ['1', '3', '6'])->get();
+        $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
         $returnHTML = view('backend.catalog.add-brand')->with(['categories' => $categories,  'languages' => $langs])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
@@ -83,12 +76,13 @@ class BrandController extends BaseController{
     public function edit($domain = '', $id)
     {
         $brand = Brand::with('translation', 'bc')->where('id', $id)->firstOrFail();
-        $categories = Category::with('english')
+        $categories = Category::with('translation_one','english')
                         ->select('id', 'slug')
                         ->where('id', '>', '1')
                         ->where('status', '!=', '2')
                         ->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();
+                        ->orderBy('position', 'asc')
+                        ->whereIn('type_id', ['1', '3', '6'])->get();
         $langs = ClientLanguage::with(['language', 'brand_trans' => function($query) use ($id) {
                         $query->where('brand_id', $id);
                     }])

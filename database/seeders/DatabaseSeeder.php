@@ -9,33 +9,37 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
+    public function run(){
          $this->call([
+              AppStylingSeeder::class,
               CurrencyTableSeeder::class,
               CountryTableSeeder::class,
               RoleSeeder::class,
               TypeSeeder::class,
               PaymentOptionSeeder::class,
-              //ClientTableSeeder::class,
               LanguageTableSeeder::class,
               NotificationSeeder::class,
-              //AdminsTableDataSeeder::class,
               MapProviderSeeder::class,
               SmsProviderSeeder::class,
               TemplateSeeder::class,
               PromoTypeSeeder::class,
-              //CategorySeeder::class,
-              //CategoryTranslationSeeder::class,
               CommonDataSeeder::class,
               BannerDataSeeder::class,
               TimezoneSeeder::class,
               AppStylingSeeder::class,
-              /*AddonsetDataSeeder::class,
-              VariantSeeder::class,
-              CatalogSeeder::class,
-              ProductSeeder::class,*/
-
+              PermissionSeeder::class,
+              ReturnReasonSeeder::class,
+              LuxuryOptionsSeeder::class,
+              OrderStatusSeeder::class,
+              OrderStatusSeeder::class,
+              VendorProductTempleteSeeder::class,
+              DispatcherStatusOptionSeeder::class,
+              SubscriptionFeaturesListUserSeeder::class,
+              SubscriptionFeaturesListVendorSeeder::class,
+              SubscriptionStatusOptionsSeeder::class,
+              HomePageLabelSeeder::class
           ]);
+        // $this->call(UsersTableSeeder::class);
+        $this->call(AppStylingOptionsTableSeeder::class);
     }
 }

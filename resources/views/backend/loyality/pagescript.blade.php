@@ -2,7 +2,6 @@
 
 <script>
     $('.chk_box').change(function() {
-        console.log("def");
         if (this.checked) {
             var status = 0;
         } else {
@@ -24,8 +23,30 @@
         });
     });
 
+    $('.chk_box1').change(function() {
+        if (this.checked) {
+            var status = 0;
+        } else {
+            var status = 1;
+        }
+        console.log($(this).attr("bid"));
+        var bid = $(this).attr("bid");
+        $.ajax({
+            url: "{{ route('loyalty.setLoyaltyCheck') }}",
+            type: "POST",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                id: bid,
+                status: status
+            },
+            success: function(response) {
+                console.log(response);
+                $.NotificationApp.send("Success", "Updated Successfully", "top-right", "#5ba035", "success");
+            },
+        });
+    });
+
     $(document).ready(function() {
-        console.log("1");
         $.ajax({
             url: "{{ route('loyalty.getRedeemPoints') }}",
             type: "POST",
@@ -62,6 +83,7 @@
             success: function(response) {
                 console.log(response);
                 $(".redeemPoint").modal("hide");
+                $.NotificationApp.send("Success", "Updated Successfully", "top-right", "#5ba035", "success");
             },
         });
     });
@@ -87,7 +109,6 @@
             data: '',
             dataType: 'json',
             success: function(data) {
-
                 $('#edit-loyalty-modal #editLoyaltyBox').html(data.html);
                 $('#edit-loyalty-modal').modal({
                     backdrop: 'static',
@@ -111,7 +132,6 @@
 
     $(document).on('click', '.submitEditForm', function(e) {
         e.preventDefault();
-        console.log("aagya");
         var form = document.getElementById('update_loyality_form');
         var formData = new FormData(form);
         var url = document.getElementById('lc_id').getAttribute('url');

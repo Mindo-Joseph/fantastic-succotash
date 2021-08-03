@@ -37,9 +37,7 @@ class SocialController extends BaseController{
             $prefer = $prefer->select('apple_client_id', 'apple_client_secret');
         }
         $prefer = $prefer->first();
-        return response()->json([
-            'data' => $prefer,
-        ]);
+        return response()->json(['data' => $prefer]);
     }
 
     public function login(Request $request, $driver = ''){
@@ -63,7 +61,6 @@ class SocialController extends BaseController{
                 $customer = $customer->where('facebook_auth_id', $request->auth_id);
             } elseif ($driver == 'twitter'){
                 $customer = $customer->where('twitter_auth_id', $request->auth_id);
-
             } elseif ($driver == 'google'){
                 $customer = $customer->where('google_auth_id', $request->auth_id);
             }
@@ -78,7 +75,6 @@ class SocialController extends BaseController{
                 $customer->role_id = 1;
             }
         }
-
         if($driver == 'facebook'){
             $customer->facebook_auth_id = $request->auth_id;
         } elseif ($driver == 'twitter'){
@@ -93,7 +89,7 @@ class SocialController extends BaseController{
         }
         $customer->status = 1;
         $customer->is_email_verified = 1;
-        $customer->is_phone_verified = 1;
+        // $customer->is_phone_verified = 0;
         $customer->save();
         $user_cart = Cart::where('user_id', $customer->id)->first();
         if($user_cart){
@@ -118,16 +114,15 @@ class SocialController extends BaseController{
         }
         $token1 = new Token;
         $token = $token1->make([
+            'issuedAt' => time(),
+            'algorithm' => 'HS256',
             'key' => 'royoorders-jwt',
             'issuer' => 'royoorders.com',
             'expiry' => strtotime('+1 month'),
-            'issuedAt' => time(),
-            'algorithm' => 'HS256',
         ])->get();
         $token1->setClaim('user_id', $customer->id);
         $customer->auth_token = $token;
         $customer->save();
-
         if($customer->id > 0){
             $checkSystemUser = $this->checkCookies($customer->id);
             $user_device = UserDevice::where('user_id', $customer->id)->where('device_type', '!=', 'web')->first();
@@ -143,22 +138,22 @@ class SocialController extends BaseController{
             $response['auth_token'] =  $token;
             $response['name'] = $customer->name;
             $response['email'] = $customer->email;
+            $response['is_admin'] = $customer->is_admin;
             $response['phone_number'] = $customer->phone_number;
             $verified['is_email_verified'] = 1;
-            $verified['is_phone_verified'] = 1;
-            $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
-                        'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
-            $preferData['theme_admin'] = $prefer->theme_admin;
-            $preferData['distance_unit'] = $prefer->distance_unit;
-            $preferData['map_provider'] = $prefer->map_provider;
-            $preferData['date_format'] = $prefer->date_format;
-            $preferData['time_format'] = $prefer->time_format;
-            $preferData['map_key'] = $prefer->map_key;
-            $preferData['sms_provider'] = $prefer->sms_provider;
-            $preferData['verify_email'] = $prefer->verify_email;
-            $preferData['verify_phone'] = $prefer->verify_phone;
-            $preferData['app_template_id'] = $prefer->app_template_id;
-            $preferData['web_template_id'] = $prefer->web_template_id;
+            $verified['is_phone_verified'] = $customer->is_phone_verified;
+            $client_preference = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
+            $preferData['map_key'] = $client_preference->map_key;
+            $preferData['theme_admin'] = $client_preference->theme_admin;
+            $preferData['date_format'] = $client_preference->date_format;
+            $preferData['time_format'] = $client_preference->time_format;
+            $preferData['map_provider'] = $client_preference->map_provider;
+            $preferData['sms_provider'] = $client_preference->sms_provider;
+            $preferData['verify_email'] = $client_preference->verify_email;
+            $preferData['verify_phone'] = $client_preference->verify_phone;
+            $preferData['distance_unit'] = $client_preference->distance_unit;
+            $preferData['app_template_id'] = $client_preference->app_template_id;
+            $preferData['web_template_id'] = $client_preference->web_template_id;
             $response['client_preference'] = $preferData;
             $response['verify_details'] = $verified;
             return response()->json(['data' => $response]);

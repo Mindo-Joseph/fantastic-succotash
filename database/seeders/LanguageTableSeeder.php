@@ -1,5 +1,7 @@
 <?php
 namespace Database\Seeders;
+
+use App\Models\Language;
 use Illuminate\Database\Seeder;
 
 class LanguageTableSeeder extends Seeder
@@ -11,7 +13,9 @@ class LanguageTableSeeder extends Seeder
      */
     public function run()
     {
-        \DB::table('languages')->delete();
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        \DB::table('languages')->truncate();    
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');   
 
         $language = array(
             array(
@@ -751,8 +755,8 @@ class LanguageTableSeeder extends Seeder
             ),
             array(
                 "sort_code" => "es",
-                "name" => "Spanish; Castilian",
-                "nativeName" => "español, castellano"
+                "name" => "Spanish",
+                "nativeName" => "español"
             ),
             array(
                 "sort_code" => "su",

@@ -3,15 +3,18 @@
 namespace App\Models;
 use Bavix\Wallet\Traits\HasWallet;
 use Bavix\Wallet\Interfaces\Wallet;
+use Bavix\Wallet\Traits\HasWalletFloat;
+use Bavix\Wallet\Interfaces\WalletFloat;
 use App\Notifications\PasswordReset;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements Wallet
+class User extends Authenticatable implements Wallet, WalletFloat
 {
-    use HasWallet;
     use Notifiable;
+    use HasWallet;
+    use HasWalletFloat;
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +22,7 @@ class User extends Authenticatable implements Wallet
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phone_number', 'email_verified_at', 'is_verified_phone', 'type', 'status', 'device_type', 'device_token', 'country_id', 'role_id', 'auth_token', 'remember_token'
+        'name', 'email', 'password', 'description', 'phone_number', 'image', 'email_verified_at', 'is_verified_phone', 'type', 'status', 'device_type', 'device_token', 'country_id', 'role_id', 'auth_token', 'remember_token'
     ];
 
     /**

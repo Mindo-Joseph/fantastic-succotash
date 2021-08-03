@@ -25,4 +25,22 @@ class Order extends Model{
 	public function paymentOption(){
 	    return $this->hasOne('App\Models\PaymentOption' , 'id', 'payment_option_id'); 
 	}
+	public function orderStatusVendor(){
+        return $this->hasMany('App\Models\VendorOrderStatus', 'order_id', 'id');
+    }
+	public function scopeBetween($query, $from, $to){
+        $query->whereBetween('created_at', [$from, $to]);
+    }
+	public function payment(){
+	    return $this->hasOne('App\Models\Payment' , 'order_id', 'id'); 
+	}
+	public function loyaltyCard(){
+	    return $this->hasOne('App\Models\LoyaltyCard' , 'id', 'loyalty_membership_id'); 
+	}
+	public function taxes(){
+	    return $this->hasMany('App\Models\OrderTax' , 'order_id', 'id' )->latest(); 
+	}
+	public function prescription(){
+	    return $this->hasMany('App\Models\OrderProductPrescription' , 'order_id', 'id'); 
+	}
 }

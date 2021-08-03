@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Vendor'])
+@extends('layouts.store', ['title' => $brand->translation_title ])
 
 @section('css')
 <style type="text/css">
@@ -51,13 +51,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-3 collection-filter">
-                    <!-- side-bar colleps block stat -->
                     <div class="collection-filter-block">
-                        <!-- brand filter start -->
-                        <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left"
-                                    aria-hidden="true"></i> back</span></div>
-                      
-
+                        <div class="collection-mobile-back">
+                            <span class="filter-back">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}
+                            </span>
+                        </div>
                         @if(!empty($variantSets) && count($variantSets) > 0)
                           @foreach($variantSets as $key => $sets)
                             <div class="collection-collapse-block border-0 open">
@@ -95,7 +94,7 @@
                           @endforeach
                         @endif
                         <div class="collection-collapse-block border-0 open">
-                            <h3 class="collapse-block-title">price</h3>
+                            <h3 class="collapse-block-title">{{__('Price')}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="wrapper mt-3">
                                     <div class="range-slider">
@@ -107,7 +106,7 @@
                     </div>
                     <!-- side-bar single product slider start -->
                     <div class="theme-card">
-                        <h5 class="title-border">new product</h5>
+                        <h5 class="title-border">{{__('New Product')}}</h5>
                         <div class="offer-slider slide-1">
                             @if(!empty($newProducts) && count($newProducts) > 0)
                                 @foreach($newProducts as $newProds)
@@ -120,16 +119,27 @@
                                         <div class="media">
                                             <a href="{{route('productDetail', $new['sku'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
                                             <div class="media-body align-self-center">
-                                                <div class="rating">
-                                                    @for($i = 1; $i < 6; $i++)
-                                                        <i class="fa fa-star"></i>
-                                                    @endfor
+                                                <div class="inner_spacing">
+                                                    <a href="{{route('productDetail', $new['url_slug'])}}">
+                                                        <h3>{{ $new['translation_title'] }}</h3>
+                                                    </a>
+                                                    @if($new['inquiry_only'] == 0)
+                                                    <h4 class="mt-1">
+                                                        <?php $multiply = $new['variant_multiplier']; ?>
+                                                        {{ Session::get('currencySymbol').' '.(number_format($new['variant_price'] * $multiply,2))}} </h4>
+                                                    @endif
+                                                    @if($client_preference_detail)
+                                                        @if($client_preference_detail->rating_check == 1)  
+                                                        <div class="custom_rating">
+                                                            @if($new['averageRating'] > 0)
+                                                                @for($i = 1; $i < 6; $i++)
+                                                                    <i class="fa fa-star{{ ($i <= $new['averageRating']) ? ' filled ' : '' }}"></i>
+                                                                @endfor
+                                                            @endif
+                                                        </div>
+                                                        @endif
+                                                    @endif
                                                 </div>
-                                                <a href="{{route('productDetail', $new['sku'])}}">
-                                                    <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
-                                                </a>
-                                                <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                                    {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}} </h4>
                                             </div>
                                         </div>
                                     @endforeach
@@ -138,21 +148,17 @@
                             @endif
                         </div>
                     </div>
-                    <!-- side-bar banner end here -->
                 </div>
                 <div class="collection-content col">
                     <div class="page-main-content">
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="top-banner-wrapper text-center">
-                                    
                                     @if(!empty($brand->image))
-                                      <a href="#"><img alt="" src="{{$brand->image['proxy_url'] . '1000/200' . $brand->image['image_path']}}" class="img-fluid blur-up lazyload" style="max-height: 200px;overflow: hidden;"></a>
+                                     <div class="common-banner"><img alt="" src="{{$brand->image['image_fit'] . '1000/200' . $brand->image['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
-
-                                        
                                     <div class="top-banner-content small-section">
-                                        <h4>{{ isset($brand->translation[0]->title) ? $brand->translation[0]->title : '' }}</h4>
+                                        <h4>{{ $brand->translation_title }}</h4>
                                     </div>
                                 </div>
                                 <div class="collection-product-wrapper">
@@ -164,11 +170,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <div class="product-filter-content">
-                                                    <!-- <div class="search-count">
-                                                        <h5>Showing Products 1-24 of 10 Result</h5>
-                                                    </div> -->
-                                                    <div class="collection-view">
+                                                <div class="product-filter-content border-left">
+                                                    <div class="collection-view border-left">
                                                         <ul>
                                                             <li><i class="fa fa-th grid-layout-view"></i></li>
                                                             <li><i class="fa fa-list-ul list-layout-view"></i></li>
@@ -195,13 +198,6 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    <!-- <div class="product-page-filter">
-                                                        <select>
-                                                            <option value="High to low">Sorting items</option>
-                                                            <option value="Low to High">50 Products</option>
-                                                            <option value="Low to High">100 Products</option>
-                                                        </select>
-                                                    </div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -210,7 +206,7 @@
                                         <div class="product-wrapper-grid">
                                             <div class="row margin-res">
 
-                                              @if(!empty($products))
+                                              @if($products->isNotEmpty())
                                                 @foreach($products as $key => $data)
 
                                                 <?php $imagePath = $imagePath2 = '';
@@ -222,42 +218,40 @@
                                                     $imagePath2 = $data->media[$i]->image->path['proxy_url'].'300/300'.$data->media[$i]->image->path['image_path'];
                                                 } ?>
                                                 <div class="col-xl-3 col-6 col-grid-box">
-                                                    <div class="product-box">
+                                                    <div class="product-box scale-effect">
                                                         <div class="img-wrapper">
                                                             <div class="front">
                                                                 <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
                                                             </div>
-                                                            <div class="back">
-                                                                <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath2}}" alt=""></a>
-                                                            </div>
                                                             <div class="cart-info cart-wrap">
                                                                 <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> 
                                                                 <a href="javascript:void(0)" title="Add to Wishlist" class="addWishList" proSku="{{$data->sku}}"><i class="ti-heart" aria-hidden="true"></i></a>
-                                                                <!-- <a data-toggle="modal" href="#" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a>
-                                                                <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a> -->
                                                             </div>
                                                         </div>
                                                         <div class="product-detail">
-                                                            <div>
-                                                                <div class="rating">
-                                                                @for($i = 1; $i < 6; $i++)
-                                                                    <i class="fa fa-star"></i>
-                                                                @endfor
-                                                            </div>
-                                                            <a href="{{route('productDetail', $data->sku)}}">
-                                                                <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
-                                                            </a>
-                                                            <h4>{{Session::get('currencySymbol').($data->variant[0]->price * $data->variant[0]->multiplier)}}</h4>
-                                                            <!-- <ul class="color-variant">
-                                                                <li class="bg-light0"></li>
-                                                                <li class="bg-light1"></li>
-                                                                <li class="bg-light2"></li>
-                                                            </ul> -->
+                                                            <div class="inner_spacing">
+                                                                <a href="{{route('productDetail', $data->sku)}}">
+                                                                    <h3>{{ $data->translation_title }}</h3>
+                                                                </a>
+                                                                <h4 class="mt-1">{{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}</h4>
+                                                                @if($client_preference_detail)
+                                                                    @if($client_preference_detail->rating_check == 1)  
+                                                                    <div class="custom_rating mt-0">
+                                                                        @if($data->averageRating > 0)
+                                                                            @for($i = 1; $i < 6; $i++)
+                                                                                <i class="fa fa-star{{ ($i <= $data->averageRating) ? ' filled ' : '' }}"></i>
+                                                                            @endfor
+                                                                        @endif
+                                                                    </div>
+                                                                    @endif
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 @endforeach
+                                              @else
+                                                <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">No Product Found</h5></div>
                                               @endif
                                             </div>
                                         </div>
@@ -265,31 +259,6 @@
                                             {{ $products->links() }}
                                         </div>
                                     </div>
-                                    <!-- <div class="product-pagination">
-                                        <div class="theme-paggination-block">
-                                            <div class="row">
-                                                <div class="col-xl-6 col-md-6 col-sm-12">
-                                                    <nav aria-label="Page navigation">
-                                                        <ul class="pagination">
-                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-chevron-left" aria-hidden="true"></i></span> <span class="sr-only">Previous</span></a></li>
-                                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true"><i
-                                                                            class="fa fa-chevron-right"
-                                                                            aria-hidden="true"></i></span> <span
-                                                                        class="sr-only">Next</span></a></li>
-                                                        </ul>
-                                                    </nav>
-                                                </div>
-                                                <div class="col-xl-6 col-md-6 col-sm-12">
-                                                    <div class="product-search-count-bottom">
-                                                        <h5>Showing Products 1-24 of 10 Result</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -299,11 +268,8 @@
         </div>
     </div>
 </section>
-
 @endsection
-
 @section('script')
-
 <script src="{{asset('front-assets/js/rangeSlider.min.js')}}"></script>
 <script src="{{asset('front-assets/js/my-sliders.js')}}"></script>
 <script>
@@ -311,10 +277,10 @@
     $('.js-range-slider').ionRangeSlider({
         type: 'double',
         grid: false,
-        min: 0,
-        max: 50000,
-        from: 200,
-        to: 50000,
+        min: "{{$range_products->last() ? $range_products->last()->price : 0}}",
+        max: "{{$range_products->first() ? $range_products->first()->price : 1000}}",
+        from: "{{$range_products->last() ? $range_products->last()->price : 0}}",
+        to: "{{$range_products->first() ? $range_products->first()->price : 1000}}",
         prefix: " "
     });
 

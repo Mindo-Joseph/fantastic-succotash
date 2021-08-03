@@ -84,7 +84,7 @@
                                                     <a href="javascript:void" class="btn btn-sm"> <i class="fa fa-times"></i></a>
                                                     @endif
                                                 </h3>
-                                                <a class="verifyEmail">Verify Now</a>
+                                                <a class="verifyEmail" style="cursor:pointer;">Verify Now</a>
                                             </div>
                                             <div class="box-content">
                                                 <p>{{Auth::user()->email}}</p>
@@ -128,7 +128,7 @@
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header border-bottom">
                 <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

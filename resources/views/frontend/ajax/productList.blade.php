@@ -3,7 +3,7 @@
 
       @if(!empty($listData))
         @foreach($listData as $key => $data)
-
+        @if(($data->variant)->isNotEmpty())
         <?php $imagePath = $imagePath2 = '';
         $mediaCount = count($data->media);
         for ($i = 0; $i < $mediaCount && $i < 2; $i++) { 
@@ -13,13 +13,10 @@
             $imagePath2 = $data->media[$i]->image->path['proxy_url'].'300/300'.$data->media[$i]->image->path['image_path'];
         } ?>
         <div class="col-xl-3 col-6 col-grid-box">
-            <div class="product-box">
+            <div class="product-box scale-effect">
                 <div class="img-wrapper">
                     <div class="front">
                         <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
-                    </div>
-                    <div class="back">
-                        <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath2}}" alt=""></a>
                     </div>
                     <div class="cart-info cart-wrap">
                         <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> 
@@ -48,6 +45,7 @@
                 </div>
             </div>
         </div>
+        @endif
         @endforeach
       @endif
     </div>

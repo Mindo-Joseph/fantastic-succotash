@@ -1,5 +1,4 @@
-@extends('layouts.store', ['title' => 'Vendor'])
-
+@extends('layouts.store', ['title' => $vendor->name])
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -10,9 +9,7 @@
 </style>
 <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/price-range.css')}}">
 @endsection
-
 @section('content')
-
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -48,6 +45,9 @@
     .product-right .size-box ul li.active {
         background-color: inherit;
     }
+    .product-box .product-detail h4, .product-box .product-info h4{
+        font-size: 16px;
+    }
 </style>
 <!-- section start -->
 <section class="section-b-space ratio_asos">
@@ -55,10 +55,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-3 collection-filter">
-                    <!-- side-bar colleps block stat -->
                     <div class="collection-filter-block">
-                        <!-- brand filter start -->
-                        <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i> back</span></div>
+                        <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}</span></div>
                         <div class="collection-collapse-block open">
                             @if(!empty($brands) && count($brands) > 0)
                             <h3 class="collapse-block-title">brand</h3>
@@ -76,14 +74,12 @@
                             </div>
                             @endif
                         </div>
-
                         @if(!empty($variantSets) && count($variantSets) > 0)
                         @foreach($variantSets as $key => $sets)
                         <div class="collection-collapse-block border-0 open">
-                            <h3 class="collapse-block-title">{{$sets->title}}</h3>
+                            <h3 class="collapse-block-title"> {{$sets->variantDetail->varcategory->cate->slug .' > '. $sets->title}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="collection-brand-filter">
-
                                     @if($sets->type == 2)
                                         @foreach($sets->options as $ok => $opt)
                                         <div class="chiller_cb small_label d-inline-block color-selector">
@@ -97,7 +93,6 @@
                                             @endif
                                         </div>
                                         @endforeach
-
                                     @else
                                         @foreach($sets->options as $ok => $opt)
                                         <div class="custom-control custom-checkbox collection-filter-checkbox">
@@ -110,11 +105,10 @@
                                 </div>
                             </div>
                         </div>
-
                         @endforeach
                         @endif
                         <div class="collection-collapse-block border-0 open">
-                            <h3 class="collapse-block-title">price</h3>
+                            <h3 class="collapse-block-title">{{__('Price')}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="wrapper mt-3">
                                     <div class="range-slider">
@@ -124,9 +118,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- side-bar single product slider start -->
                     <div class="theme-card">
-                        <h5 class="title-border">new product</h5>
+                        <h5 class="title-border">{{__('New Product')}}</h5>
                         <div class="offer-slider slide-1">
                             @if(!empty($newProducts) && count($newProducts) > 0)
                             @foreach($newProducts as $newProds)
@@ -137,18 +130,30 @@
                                     $imagePath = $v['image']['path']['proxy_url'] . '300/300' . $v['image']['path']['image_path'];
                                 } ?>
                                 <div class="media">
-                                    <a href="{{route('productDetail', $new['sku'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt=""></a>
+                                    <a href="{{route('productDetail', $new['url_slug'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt=""></a>
                                     <div class="media-body align-self-center">
-                                        <div class="rating">
-                                            @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                                @endfor
+                                        <div class="inner_spacing">
+                                            <a href="{{route('productDetail', $new['url_slug'])}}">
+                                                <h3>{{ $new['translation_title'] }}</h3>
+                                                @if($new['inquiry_only'] == 0)
+                                                    <h4 class="mt-1">
+                                                        <?php $multiply = $new['variant_multiplier']; ?>
+                                                        {{ Session::get('currencySymbol').' '.(number_format($new['variant_price'] * $multiply,2))}}
+                                                    </h4>
+                                                @endif
+                                                @if($client_preference_detail)
+                                                    @if($client_preference_detail->rating_check == 1)
+                                                    <div class="custom_rating">
+                                                        @if($new['averageRating'] > 0)
+                                                            @for($i = 1; $i < 6; $i++)
+                                                                <i class="fa fa-star{{ ($i <= $new['averageRating']) ? ' filled ' : '' }}"></i>
+                                                            @endfor
+                                                        @endif
+                                                    </div>
+                                                    @endif
+                                                @endif
+                                            </a>
                                         </div>
-                                        <a href="{{route('productDetail', $new['sku'])}}">
-                                            <h6>{{(!empty($new['translation']) && isset($new['translation'][0])) ? $new['translation'][0]['title'] : $new['sku']}}</h6>
-                                        </a>
-                                        <h4> <?php $multiply = (empty($new['variant'][0]['multiplier'])) ? 1 : $new['variant'][0]['multiplier']; ?>
-                                            {{ Session::get('currencySymbol').' '.($new['variant'][0]['price'] * $multiply)}}
-                                        </h4>
                                     </div>
                                 </div>
                                 @endforeach
@@ -163,30 +168,61 @@
                     <div class="page-main-content">
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="top-banner-wrapper text-center">
-
+                                <div class="top-banner-wrapper">
                                     @if(!empty($vendor->banner))
-                                    <a href="#"><img alt="" src="{{$vendor->banner['proxy_url'] . '1000/200' . $vendor->banner['image_path']}}" class="img-fluid blur-up lazyload" style="max-height: 200px;overflow: hidden;"></a>
+                                        <div class="common-banner text-center"><img alt="" src="{{$vendor->banner['proxy_url'] . '1000/200' . $vendor->banner['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
-
-
-                                    <div class="top-banner-content small-section">
-                                        <h4>{{ $vendor->name }}</h4>
+                                    <div class="row mt-n5">
+                                        <div class="col-md-8 offset-md-2">
+                                            <form action="">
+                                                <div class="row">
+                                                <div class="col-sm-12 text-center">
+                                                    <div class="file file--upload">
+                                                        <label>
+                                                            <span class="update_pic border-0">
+                                                            <img src="{{$vendor->logo['proxy_url'] . '1000/200' . $vendor->logo['image_path']}}" alt="">
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="name_location d-block py-0">
+                                                        <h5 class="mt-0 mb-1">{{$vendor->name}}</h5>
+                                                    </div>
+                                                    @if($vendor->is_show_vendor_details == 1)
+                                                        <div class="">
+                                                            @if($vendor->email)
+                                                                <a href="{{$vendor->email}}" target="_blank" data-toggle="tooltip" data-placement="bottom" title="{{$vendor->email}}"><i class="fa fa-envelope"></i></a>
+                                                            @endif
+                                                            <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="{{$vendor->address}}"><i class="fa fa-address-card mx-1"></i></a>
+                                                            @if($vendor->website)
+                                                                <a href="{{http_check($vendor->website) }}" target="_blank" data-toggle="tooltip" data-placement="bottom" title="{{$vendor->website}}"><i class="fa fa-home"></i></a>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                </div>
+                                                @if($vendor->desc)
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group" id="">
+                                                            <p>{{$vendor->desc}}</p>
+                                                        </div>
+                                                    </div>                                                  
+                                                </div>
+                                                @endif
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="collection-product-wrapper">
                                     <div class="product-top-filter">
                                         <div class="row">
                                             <div class="col-xl-12">
-                                                <div class="filter-main-btn"><span class="filter-btn btn btn-theme"><i class="fa fa-filter" aria-hidden="true"></i> Filter</span></div>
+                                                <div class="filter-main-btn"><span class="filter-btn btn btn-theme"><i class="fa fa-filter" aria-hidden="true"></i>{{__('Filter')}}</span></div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <div class="product-filter-content">
-                                                    <!-- <div class="search-count">
-                                                        <h5>Showing Products 1-24 of 10 Result</h5>
-                                                    </div> -->
+                                                <div class="product-filter-content border-left">
                                                     <div class="collection-view">
                                                         <ul>
                                                             <li><i class="fa fa-th grid-layout-view"></i></li>
@@ -204,7 +240,6 @@
                                                     <div class="product-page-per-view">
                                                         <?php $pnum = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 8; ?>
                                                         <select class="customerPaginate">
-
                                                             <option value="8" @if($pnum==8) selected @endif>Show 8
                                                             </option>
                                                             <option value="12" @if($pnum==12) selected @endif>Show 12 </option>
@@ -214,13 +249,6 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    <!-- <div class="product-page-filter">
-                                                        <select>
-                                                            <option value="High to low">Sorting items</option>
-                                                            <option value="Low to High">50 Products</option>
-                                                            <option value="Low to High">100 Products</option>
-                                                        </select>
-                                                    </div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -228,54 +256,49 @@
                                     <div class="displayProducts">
                                         <div class="product-wrapper-grid">
                                             <div class="row margin-res">
-
-                                                @if(!empty($listData))
-                                                @foreach($listData as $key => $data)
-
-                                                <?php $imagePath = $imagePath2 = '';
-                                                $mediaCount = count($data->media);
-                                                for ($i = 0; $i < $mediaCount && $i < 2; $i++) {
-                                                    if ($i == 0) {
-                                                        $imagePath = $data->media[$i]->image->path['proxy_url'] . '300/300' . $data->media[$i]->image->path['image_path'];
-                                                    }
-                                                    $imagePath2 = $data->media[$i]->image->path['proxy_url'] . '300/300' . $data->media[$i]->image->path['image_path'];
-                                                } ?>
-                                                <div class="col-xl-3 col-6 col-grid-box">
-                                                    <div class="product-box">
-                                                        <div class="img-wrapper">
-                                                            <div class="front">
-                                                                <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
-                                                            </div>
-                                                            <div class="back">
-                                                                <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath2}}" alt=""></a>
-                                                            </div>
-                                                            <div class="cart-info cart-wrap">
-                                                                <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button>
-                                                                <a href="javascript:void(0)" title="Add to Wishlist" class="addWishList" proSku="{{$data->sku}}"><i class="ti-heart" aria-hidden="true"></i></a>
-                                                                <!-- <a data-toggle="modal" href="#" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a>
-                                                                <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a> -->
-                                                            </div>
-                                                        </div>
-                                                        <div class="product-detail">
-                                                            <div>
-                                                                <div class="rating">
-                                                                    @for($i = 1; $i < 6; $i++) <i class="fa fa-star"></i>
-                                                                        @endfor
+                                                @if($listData->isNotEmpty())
+                                                    @foreach($listData as $key => $data)
+                                                    <?php $imagePath = $imagePath2 = '';
+                                                    $mediaCount = count($data->media);
+                                                    for ($i = 0; $i < $mediaCount && $i < 2; $i++) {
+                                                        if ($i == 0) {
+                                                            $imagePath = $data->media[$i]->image->path['proxy_url'] . '300/300' . $data->media[$i]->image->path['image_path'];
+                                                        }
+                                                        $imagePath2 = $data->media[$i]->image->path['proxy_url'] . '300/300' . $data->media[$i]->image->path['image_path'];
+                                                    } ?>
+                                                    <div class="col-xl-3 col-6 col-grid-box">
+                                                        <div class="product-box scale-effect">
+                                                            <div class="img-wrapper">
+                                                                <div class="front">
+                                                                    <a href="{{route('productDetail', $data->url_slug)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
                                                                 </div>
-                                                                <a href="{{route('productDetail', $data->sku)}}">
-                                                                    <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
-                                                                </a>
-                                                                <h4>{{Session::get('currencySymbol').($data->variant[0]->price * $data->variant[0]->multiplier)}}</h4>
-                                                                <!-- <ul class="color-variant">
-                                                                <li class="bg-light0"></li>
-                                                                <li class="bg-light1"></li>
-                                                                <li class="bg-light2"></li>
-                                                            </ul> -->
+                                                            </div>
+                                                            <div class="product-detail">
+                                                                <div class="inner_spacing">
+                                                                    <a href="{{route('productDetail', $data->url_slug)}}">
+                                                                        <h3>{{ $data->translation_title }}</h3>
+                                                                        @if($data['inquiry_only'] == 0)
+                                                                            <h4 class="mt-1">{{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}</h4>
+                                                                        @endif
+                                                                        @if($client_preference_detail)
+                                                                            @if($client_preference_detail->rating_check == 1)  
+                                                                            <div class="custom_rating mt-0">
+                                                                                @if($data->averageRating > 0)
+                                                                                    @for($i = 1; $i < 6; $i++)
+                                                                                        <i class="fa fa-star{{ ($i <= $data->averageRating) ? ' filled ' : '' }}"></i>
+                                                                                    @endfor
+                                                                                @endif
+                                                                            </div>
+                                                                            @endif
+                                                                        @endif
+                                                                    </a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                @endforeach
+                                                    @endforeach
+                                                @else
+                                                    <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">{{__('No Product Found')}}</h5></div>
                                                 @endif
                                             </div>
                                         </div>
@@ -283,31 +306,6 @@
                                             {{ $listData->links() }}
                                         </div>
                                     </div>
-                                    <!-- <div class="product-pagination">
-                                        <div class="theme-paggination-block">
-                                            <div class="row">
-                                                <div class="col-xl-6 col-md-6 col-sm-12">
-                                                    <nav aria-label="Page navigation">
-                                                        <ul class="pagination">
-                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-chevron-left" aria-hidden="true"></i></span> <span class="sr-only">Previous</span></a></li>
-                                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true"><i
-                                                                            class="fa fa-chevron-right"
-                                                                            aria-hidden="true"></i></span> <span
-                                                                        class="sr-only">Next</span></a></li>
-                                                        </ul>
-                                                    </nav>
-                                                </div>
-                                                <div class="col-xl-6 col-md-6 col-sm-12">
-                                                    <div class="product-search-count-bottom">
-                                                        <h5>Showing Products 1-24 of 10 Result</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -317,21 +315,18 @@
         </div>
     </div>
 </section>
-
 @endsection
-
 @section('script')
-
 <script src="{{asset('front-assets/js/rangeSlider.min.js')}}"></script>
 <script src="{{asset('front-assets/js/my-sliders.js')}}"></script>
 <script>
     $('.js-range-slider').ionRangeSlider({
         type: 'double',
         grid: false,
-        min: 0,
-        max: 50000,
-        from: 200,
-        to: 50000,
+        min: "{{$range_products->last() ? $range_products->last()->price : 0}}",
+        max: "{{$range_products->first() ? $range_products->first()->price : 1000}}",
+        from: "{{$range_products->last() ? $range_products->last()->price : 0}}",
+        to: "{{$range_products->first() ? $range_products->first()->price : 1000}}",
         prefix: ""
     });
 

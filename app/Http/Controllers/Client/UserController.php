@@ -1,14 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\Client;
-
+use Auth;
 use Image;
 use Password;
+use DataTables;
 use App\Models\Vendor;
 use App\Models\UserVendor;
 use App\Models\Permissions;
 use Illuminate\Http\Request;
 use App\Models\UserPermissions;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\PasswordReset;
@@ -28,8 +30,61 @@ class UserController extends BaseController{
     public function index(){
         $roles = Role::all();
         $countries = Country::all();
-        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->paginate(20);
-        return view('backend/users/index')->with(['users' => $users, 'roles' => $roles, 'countries' => $countries]);
+        $active_users = User::where('status', 1)->count();
+        $inactive_users = User::where('status', 3)->count();
+        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->paginate(10);
+        $social_logins = 0;
+        foreach ($users as  $user) {
+            if(!empty($user->facebook_auth_id)){
+                $social_logins++;
+            }elseif(!empty($user->twitter_auth_id)){
+                $social_logins++;
+            }elseif(!empty($user->google_auth_id)){
+                $social_logins++;
+            }elseif(!empty($user->apple_auth_id)){
+                $social_logins++;
+            }
+        }
+        return view('backend/users/index')->with(['inactive_users' => $inactive_users, 'social_logins' => $social_logins, 'active_users' => $active_users, 'users' => $users, 'roles' => $roles, 'countries' => $countries]);
+    }
+    public function getFilterData(Request $request){
+        $current_user = Auth::user();
+        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->get();
+        foreach ($users as  $user) {
+            $user->edit_url = route('customer.new.edit', $user->id);
+            $user->delete_url = route('customer.account.action', [$user->id, 3]);
+            $user->image_url = $user->image['proxy_url'].'40/40'.$user->image['image_path'];
+            $user->login_type = 'Email'; 
+            $user->is_superadmin = $current_user->is_superadmin; 
+            $user->login_type_value = $user->email;
+            if(!empty($user->facebook_auth_id)){
+                $user->login_type = 'Facebook';
+                $user->login_type_value = $user->facebook_auth_id;
+            }elseif(!empty($user->twitter_auth_id)){
+                $user->login_type = 'Twitter';
+                $user->login_type_value = $user->twitter_auth_id;
+            }elseif(!empty($user->google_auth_id)){
+                $user->login_type = 'Google';
+                $user->login_type_value = $user->google_auth_id;
+            }elseif(!empty($user->apple_auth_id)){
+                $user->login_type = 'Apple';
+                $user->login_type_value = $user->apple_auth_id;
+            }
+        }
+        return Datatables::of($users)
+        ->addIndexColumn()
+        ->filter(function ($instance) use ($request) {
+            if (!empty($request->get('search'))) {
+                $instance->collection = $instance->collection->filter(function ($row) use ($request){
+                    if (Str::contains(Str::lower($row['name']), Str::lower($request->get('search')))){
+                        return true;
+                    }elseif (Str::contains(Str::lower($row['email']), Str::lower($request->get('search')))) {
+                        return true;
+                    }
+                    return false;
+                });
+            }
+        })->make(true);
     }
 
     /**
@@ -39,6 +94,7 @@ class UserController extends BaseController{
      */
     public function deleteCustomer($domain = '', $uid, $action){
         $user = User::where('id', $uid)->firstOrFail();
+        $user->status = 3;
         $user->save();
         $msg = 'activated';
         if($action == 2){
@@ -112,6 +168,7 @@ class UserController extends BaseController{
             $user->image = Storage::disk('s3')->put('/profile', $file,'public');
         }
         $user->save();
+        $wallet = $user->wallet;
         $userCustomData = $this->userMetaData($user->id, 'web', 'web');
         return $user->id;
     }
@@ -151,10 +208,10 @@ class UserController extends BaseController{
         ];
         $client = User::where('id', $id)->update($data);
         //for updating permissions
+        $removepermissions = UserPermissions::where('user_id', $id)->delete();
         if ($request->permissions) {
             $userpermissions = $request->permissions;
             $addpermission = [];
-            $removepermissions = UserPermissions::where('user_id', $id)->delete();
             for ($i=0;$i<count($userpermissions);$i++) {
                 $addpermission[] =  array('user_id' => $id,'permission_id' => $userpermissions[$i]);
             }
@@ -171,5 +228,68 @@ class UserController extends BaseController{
             UserVendor::insert($addteampermission);
         }
         return redirect()->route('customer.index')->with('success', 'Customer Updated successfully!');
+    }
+    
+    public function profile(){
+        $countries = Country::all();
+        $client = Client::where('code', Auth::user()->code)->first();
+        $tzlist = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
+        return view('backend/setting/profile')->with(['client' => $client, 'countries' => $countries, 'tzlist' => $tzlist]);
+    }
+
+    public function updateProfile(Request $request, $domain = '', $id){
+        $user = Auth::user();
+        $client = Client::where('code', $user->code)->firstOrFail();
+        $rules = array(
+            'name' => 'required|string|max:50',
+            'phone_number' => 'required|digits:10',
+            'company_name' => 'required',
+            'company_address' => 'required',
+            'country_id' => 'required',
+            'timezone' => 'required',
+        );
+        $validation  = Validator::make($request->all(), $rules);
+        if ($validation->fails()) {
+            return redirect()->back()->withInput()->withErrors($validation);
+        }
+        $data = array();
+        foreach ($request->only('name', 'phone_number', 'company_name', 'company_address', 'country_id', 'timezone') as $key => $value) {
+            $data[$key] = $value;
+        }
+        $client = Client::where('code', Auth::user()->code)->first();
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $file_name = 'Clientlogo/' . uniqid() . '.' .  $file->getClientOriginalExtension();
+            $path = Storage::disk('s3')->put($file_name, file_get_contents($file), 'public');
+            $data['logo'] = $file_name;
+        } else {
+            $data['logo'] = $client->getRawOriginal('logo');
+        }
+        $client = Client::where('code', Auth::user()->code)->update($data);
+        $userdata = array();
+        foreach ($request->only('name', 'phone_number', 'timezone') as $key => $value) {
+            $userdata[$key] = $value;
+        }
+        $user = User::where('id', Auth::id())->update($userdata);
+        return redirect()->back()->with('success', 'Client Updated successfully!');
+    }
+    public function changePassword(Request $request){
+        $client = User::where('id', Auth::id())->first();
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required',
+            'password' => 'required|confirmed|min:6',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+        if (Hash::check($request->old_password, $client->password)) {
+            $client->password = Hash::make($request->password);
+            $client->save();
+            $clientData = 'empty';
+            return redirect()->back()->with('success', 'Password Changed successfully!');
+        } else {
+            $request->session()->flash('error', 'Wrong Old Password');
+            return redirect()->back();
+        }
     }
 }

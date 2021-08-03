@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Traits\ToasterResponser;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductsImport;
-
+use GuzzleHttp\Client as GCLIENT;
 class ProductController extends BaseController
 {
     private $folderName = 'prods';
@@ -149,7 +149,7 @@ class ProductController extends BaseController
             ->orderBy('position', 'asc')->get();
         $brands = Brand::join('brand_categories as bc', 'bc.brand_id', 'brands.id')
             ->select('brands.id', 'brands.title', 'brands.image')
-            ->where('bc.category_id', $product->category_id)->get();
+            ->where('bc.category_id', $product->category_id)->where('status',1)->get();
         $clientLanguages = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
             ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.is_primary')
             ->where('client_languages.client_code', Auth::user()->code)
@@ -192,10 +192,24 @@ class ProductController extends BaseController
             }
         }
         $otherProducts = Product::with('primary')->select('id', 'sku')->where('is_live', 1)->where('id', '!=', $product->id)->get();
-        $configData = ClientPreference::select('celebrity_check', 'need_dispacher_ride', 'need_delivery_service')
-            ->where('id', '>', 0)->first();
+        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode','need_dispacher_home_other_service')->first();
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
-        return view('backend/product/edit', ['typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
+        
+        $agent_dispatcher_tags = [];
+        $agent_dispatcher_on_demand_tags = [];
+        if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 7) # if type is pickup delivery then get dispatcher tags
+        {   
+            $vendor_id = $product->vendor_id;
+            $agent_dispatcher_tags = $this->getDispatcherTags($vendor_id);
+        }
+        if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 2) # if type is on demand
+        {   
+            $vendor_id = $product->vendor_id;
+            $agent_dispatcher_on_demand_tags = $this->getDispatcherOnDemandTags($vendor_id);
+        }
+
+        
+        return view('backend/product/edit', ['agent_dispatcher_on_demand_tags' => $agent_dispatcher_on_demand_tags,'agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }
 
     /**
@@ -208,6 +222,13 @@ class ProductController extends BaseController
     public function update(Request $request, $domain = '', $id)
     {
         $product = Product::where('id', $id)->firstOrFail();
+        $rule = array(
+            'sku' => 'required|unique:products,sku,'.$product->id,
+        );
+        $validation  = Validator::make($request->all(), $rule);
+        if ($validation->fails()) {
+            return redirect()->back()->withInput()->withErrors($validation);
+        }
         $product_category = ProductCategory::where('product_id', $id)->where('category_id', $request->category_id)->first();
         if(!$product_category){
             $product_category = new ProductCategory();
@@ -221,43 +242,43 @@ class ProductController extends BaseController
         foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live', 'brand_id') as $k => $val) {
             $product->{$k} = $val;
         }
+        $product->sku = $request->sku;
+        $product->url_slug = $request->url_slug;
+        $product->tags        = $request->tags??null;
         $product->category_id = $request->category_id;
+        $product->inquiry_only = ($request->has('inquiry_only') && $request->inquiry_only == 'on') ? 1 : 0;
         $product->tax_category_id = $request->tax_category;
         $product->is_new                    = ($request->has('is_new') && $request->is_new == 'on') ? 1 : 0;
         $product->is_featured               = ($request->has('is_featured') && $request->is_featured == 'on') ? 1 : 0;
         $product->is_physical               = ($request->has('is_physical') && $request->is_physical == 'on') ? 1 : 0;
+        $product->pharmacy_check               = ($request->has('pharmacy_check') && $request->pharmacy_check == 'on') ? 1 : 0;
         $product->has_inventory             = ($request->has('has_inventory') && $request->has_inventory == 'on') ? 1 : 0;
         $product->sell_when_out_of_stock    = ($request->has('sell_stock_out') && $request->sell_stock_out == 'on') ? 1 : 0;
         $product->requires_shipping         = ($request->has('require_ship') && $request->require_ship == 'on') ? 1 : 0;
         $product->Requires_last_mile        = ($request->has('last_mile') && $request->last_mile == 'on') ? 1 : 0;
-
+        $product->need_price_from_dispatcher = ($request->has('need_price_from_dispatcher') && $request->need_price_from_dispatcher == 'on') ? 1 : 0;
+        
         if (empty($product->publish_at)) {
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }
         $product->has_variant = ($request->has('variant_ids') && count($request->variant_ids) > 0) ? 1 : 0;
         $product->save();
         if ($product->id > 0) {
-
             $trans = ProductTranslation::where('product_id', $product->id)->where('language_id', $request->language_id)->first();
-
             if (!$trans) {
                 $trans = new ProductTranslation();
                 $trans->product_id = $product->id;
                 $trans->language_id = $request->language_id;
             }
-
             $trans->title               = $request->product_name;
             $trans->body_html           = $request->body_html;
             $trans->meta_title          = $request->meta_title;
             $trans->meta_keyword        = $request->meta_keyword;
             $trans->meta_description    = $request->meta_description;
             $trans->save();
-
             $varOptArray = $prodVarSet = $updateImage = array();
             $i = 0;
-
             $productImageSave = array();
-
             if ($request->has('fileIds')) {
                 foreach ($request->fileIds as $key => $value) {
                     $productImageSave[] = [
@@ -267,11 +288,8 @@ class ProductController extends BaseController
                     ];
                 }
             }
-
             ProductImage::insert($productImageSave);
-
             $cat = $addonsArray = $upArray = $crossArray = $relateArray = array();
-
             $delete = ProductAddon::where('product_id', $product->id)->delete();
             $delete = ProductUpSell::where('product_id', $product->id)->delete();
             $delete = ProductCrossSell::where('product_id', $product->id)->delete();
@@ -697,11 +715,84 @@ class ProductController extends BaseController
             $fileModel->path = '/storage/' . $filePath;
             $fileModel->status = 1;
             $fileModel->save();
+            $data = Excel::import(new ProductsImport($vendor_id, $fileModel->id), $request->file('product_excel'));
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Product image deleted successfully!'
+            ]);
         }
-        $data = Excel::import(new ProductsImport($vendor_id), $request->file('product_excel'));
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Product image deleted successfully!'
-        ]);
     }
+
+
+      # get dispatcher tags from dispatcher panel  
+      public function getDispatcherTags($vendor_id){
+        try {   
+            $dispatch_domain = $this->checkIfPickupDeliveryOn();
+                if ($dispatch_domain && $dispatch_domain != false) {
+
+                    $unique = Auth::user()->code;
+                    $email =  $unique.$vendor_id."_royodispatch@dispatch.com";
+
+                    $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);
+                            $url = $dispatch_domain->pickup_delivery_service_key_url;                      
+                            $res = $client->get($url.'/api/get-agent-tags?email_set='.$email);
+                            $response = json_decode($res->getBody(), true); 
+                            if($response && $response['message'] == 'success'){
+                                return $response['tags'];
+                            }
+                    
+                }
+            }    
+            catch(\Exception $e){
+            
+            }
+    }
+    # check if last mile delivery on 
+    public function checkIfPickupDeliveryOn(){
+        $preference = ClientPreference::first();
+        if($preference->need_dispacher_ride == 1 && !empty($preference->pickup_delivery_service_key) && !empty($preference->pickup_delivery_service_key_code) && !empty($preference->pickup_delivery_service_key_url))
+            return $preference;
+        else
+            return false;
+    }
+
+
+      # get dispatcher on demand tags from dispatcher panel  
+      public function getDispatcherOnDemandTags($vendor_id){
+        try {   
+            $dispatch_domain = $this->checkIfOnDemandOn();
+                if ($dispatch_domain && $dispatch_domain != false) {
+
+                    $unique = Auth::user()->code;
+                    $email =  $unique.$vendor_id."_royodispatch@dispatch.com";
+
+                    $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);
+                            $url = $dispatch_domain->pickup_delivery_service_key_url;                      
+                            $res = $client->get($url.'/api/get-agent-tags?email_set='.$email);
+                            $response = json_decode($res->getBody(), true); 
+                            if($response && $response['message'] == 'success'){
+                                return $response['tags'];
+                            }
+                    
+                }
+            }    
+            catch(\Exception $e){
+            
+            }
+    }
+    # check if last mile delivery on 
+    public function checkIfOnDemandOn(){
+        $preference = ClientPreference::first();
+        if($preference->need_dispacher_home_other_service == 1 && !empty($preference->dispacher_home_other_service_key) && !empty($preference->dispacher_home_other_service_key_url) && !empty($preference->dispacher_home_other_service_key_code))
+            return $preference;
+        else
+            return false;
+    }
+
 }

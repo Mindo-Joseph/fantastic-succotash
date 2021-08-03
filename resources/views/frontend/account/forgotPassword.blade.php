@@ -1,57 +1,10 @@
 @extends('layouts.store', ['title' => 'Forgot Password'])
-
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
         display: inline-block;
         padding-top: 20px;
         padding-bottom: 20px;
-    }
-    .productVariants .firstChild{
-        min-width: 150px;
-        text-align: left !important;
-        border-radius: 0% !important;
-        margin-right: 10px;
-        cursor: default;
-        border: none !important;
-    }
-    .product-right .color-variant li, .productVariants .otherChild{
-        height: 35px;
-        width: 35px;
-        border-radius: 50%;
-        margin-right: 10px;
-        cursor: pointer;
-        border: 1px solid #f7f7f7;
-        text-align: center;
-    }
-    .productVariants .otherSize{
-        height: auto !important;
-        width: auto !important;
-        border: none !important;
-        border-radius: 0%;
-    }
-    .product-right .size-box ul li.active {
-        background-color: inherit;
-    }
-    .iti__flag-container li, .flag-container li{
-        display: block;
-    }
-    .iti.iti--allow-dropdown, .allow-dropdown {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-    }
-    .iti.iti--allow-dropdown .phone, .flag-container .phone {
-        padding: 17px 0 17px 100px !important;
-    }
-    .social-logins{
-        text-align: center;
-    }
-    .social-logins img{
-        width: 100px;
-        height: 100px;
-        border-radius: 100%;
-        margin-right: 20px;
     }
     .register-page .theme-card .theme-form input {
         margin-bottom: 5px;
@@ -67,32 +20,24 @@
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-<section class="register-page section-b-space">
+<section class="register-page section-b-space fh">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
-                <h3>Enter Email Address</h3>
-                <div class="theme-card">
-                    <form name="register" id="register" action="{{route('customer.forgotPass')}}" class="theme-form" method="post"> @csrf
+            <div class="offset-lg-3 col-lg-6">
+                <h3>{{__('Enter Email Address')}}</h3>
+                <div class="card mt-4">
+                <div class="alert alert-success" role="alert" style="display:none;">fdgdfg</div>
+                    <form name="register" id="register" action="" class="theme-form" method="post">
                         <div class="form-row mb-3">
-                            <div class="col-md-6">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" placeholder="Email" required="" name="email" value="{{ old('email')}}">
-                                @if($errors->first('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                                @if(\Session::has('err_email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{!! \Session::get('err_email') !!}</strong>
-                                    </span>
-                                @endif
+                            <div class="col-md-12">
+                                <div class="input-group d-md-flex d-block text-center">
+                                    <input type="email" class="form-control text-left mb-0" id="email" placeholder="{{__('Enter Email')}}" required="" name="email" value="">
+                                    <button class="btn btn-solid mx-auto mt-3 mt-md-0" type="button" id="send_password_reset_link">{{__('Send Password Reset Link')}}</button>
+                                </div>
                             </div>
-                            <input type="hidden" name="device_type" value="web">
-                            <input type="hidden" name="device_token" value="web">
-                            <input type="hidden" id="countryData" name="countryData" value="us">
-                            <button type="submit" class="btn btn-solid mt-3 submitRegister">Send OTP</button>
+                            <div class="px-3">
+                                 <span class="invalid-feedback" role="alert" id="email_validation_error"></span>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -100,4 +45,10 @@
         </div>
     </div>
 </section>
+@endsection
+@section('script')
+<script type="text/javascript">
+    var forgot_password_url = "{{route('customer.forgotPass')}}";
+</script>
+<script src="{{asset('js/forgot_password.js')}}"></script>
 @endsection

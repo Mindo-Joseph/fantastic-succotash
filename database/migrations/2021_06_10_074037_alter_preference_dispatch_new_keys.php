@@ -17,7 +17,7 @@ class AlterPreferenceDispatchNewKeys extends Migration
             $table->string('delivery_service_key_url')->nullable();
             $table->string('delivery_service_key_code')->nullable();
         });
-    }
+    } 
 
     /**
      * Reverse the migrations.
@@ -26,6 +26,9 @@ class AlterPreferenceDispatchNewKeys extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('client_preferences', function (Blueprint $table) {
+            $table->dropColumn('delivery_service_key_url');
+            $table->dropColumn('delivery_service_key_code');
+        });
     }
 }

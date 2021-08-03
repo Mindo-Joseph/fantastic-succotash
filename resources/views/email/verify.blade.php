@@ -1,82 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>Prescription</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style type="text/css">
-        * {
-            padding: 0px;
-            margin: 0px;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .wrapper {
-            background: #eee;
-            padding: 6vh 6vw;
-            min-height: 100vh;
-        }
-
-        .container {
+   <head>
+      <meta charset="utf-8">
+      <title>Verify Mail</title>
+      <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+      <style type="text/css">
+         body{
+            padding: 0;
+            margin: 0;font-family: 'Lato', sans-serif;
+            font-weight: 400;
+         }
+         a{
+            text-decoration: none;
+         }
+         h1,h2,h3,h4{
+            font-weight: 700;
+            margin: 0;
+         }
+         p{
+            font-size: 16px;
+            line-height: 22px;
+            margin: 0 0 5px;
+         }
+         .container {
             background: #fff;
-            padding: 20px;
-            max-width: 730px;
+            padding: 0;
+            max-width: 560px;
             margin: 0 auto;
             border-radius: 4px;
             background-repeat: repeat;
-            width: 600px;
-        }
-    </style>
-</head>
-
-<body>
-    <section class="wrapper">
-        <div class="container" style="background: #fff;border-radius: 10px;padding: 50px 0 0;">
-
-            <table style="width: 100%;text-align: center;">
-                <thead style="padding: 0 30px;">
-                    <tr>
-                        <th style="padding: 0 0 30px 30px;">
-                            <img style="width: 100px;" src="" alt="">
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="text-align: left;padding: 0 30px;">
-                            <p style="font-size: 14px; margin-bottom: 15px;"><b> {{'Hi '.$customer_name.','}} </b></p>
-                            <p style="width: 85%;max-width: 100%; font-size: 14px;line-height: 30px; margin-bottom: 15px;">{{$code_text}}</p>
-                            <!-- <p style="width: 85%;max-width: 100%; font-size: 14px;line-height: 30px; margin-bottom: 15px;">{{$code}}</p> -->
-                            <a href="{{$link}}" style="width: 85%;max-width: 100%; font-size: 14px;line-height: 30px; margin-bottom: 15px;">Click here</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 40px 30px 20px;">
-                            <div class="driver_deatil">
-                                <div class="left-icon" style="width: 60px;height: 60px;overflow: hidden;border-radius: 50%;display: inline-block;vertical-align: middle;">
-                                    <img src="" alt=""
-                                        style="width: 100%;height: 100%;object-fit: cover;">
-                                </div>
-                                <div class="right_text" style="text-align: left;display: inline-block;vertical-align: middle;padding: 0 0 0 15px;">
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot style="background:#fafafa">
-                    <tr>
-                        <td style="padding: 20px 30px;font-size: 14px;">
-                            © Copyright 2021. All Rights Reserved.
-                        </td>
-                    </tr>
-                </tfoot>
+            width: 700px;
+         }
+         table {
+            border-collapse: separate;
+            text-indent: initial;
+            border-spacing: 0;
+            text-align: left;
+         }
+         table th,table td{
+            padding: 10px 15px;
+         }
+         ul {
+            margin: 0;padding: 0;
+         }
+         ul li{
+            list-style: none;
+         }
+      </style>
+   </head>
+   <body>
+      <section class="wrapper">
+         <div class="container" style="background: #fff;border-radius: 10px;">
+            <table style="width: 100%;">
+              <thead>
+                 <tr>
+                    <th style="text-align: center;">
+                        <a style="display: block;" href="#">
+                           <img src="{{ $mailData['logo']}}" height="50px" alt="">
+                        </a>
+                    </th>
+                 </tr>
+              </thead>
+              {!! $mailData['email_template_content'] !!}
             </table>
-
-        </div>
-    </section>
-
-
-</body>
-
+         </div>
+      </section>
+   </body>
 </html>

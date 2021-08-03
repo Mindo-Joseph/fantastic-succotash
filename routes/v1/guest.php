@@ -7,10 +7,12 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('header', 'Api\v1\HomeController@headerContent');
         Route::get('product/{id}', 'Api\v1\ProductController@productById');
         Route::post('get-products', 'Api\v1\ProductController@productList');
+        Route::get('cms/page/list', 'Api\v1\CMSPageController@getPageList');
         Route::get('brand/{id?}', 'Api\v1\BrandController@productsByBrand');
         Route::get('category/{id?}', 'Api\v1\CategoryController@categoryData');
         Route::get('vendor/{id?}', 'Api\v1\VendorController@productsByVendor');
         Route::post('search/{type}/{id?}', 'Api\v1\HomeController@globalSearch');
+        Route::post('cms/page/detail', 'Api\v1\CMSPageController@getPageDetail');
         Route::post('brand/filters/{id?}', 'Api\v1\BrandController@brandFilters');
         Route::get('celebrity/{all?}', 'Api\v1\CelebrityController@celebrityList');
         Route::post('vendor/filters/{id?}', 'Api\v1\VendorController@vendorFilters');

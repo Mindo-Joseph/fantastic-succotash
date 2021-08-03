@@ -81,7 +81,6 @@ class ClientController extends Controller{
         $languId = ($request->has('primary_language')) ? $request->primary_language : 1;
         DB::commit();
         $this->dispatchNow(new ProcessClientDataBase($data->id, $languId));
-        
         return redirect()->route('client.index')->with('success', 'Client Added successfully!');
         } catch (\Exception $e) {
             DB::rollback();
@@ -99,9 +98,7 @@ class ClientController extends Controller{
     public function update(Request $request, $id)
     {
         $client = Client::findOrFail($id);
-
         $validation  = Validator::make($request->all(), $client->rules($client->id));
-
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
@@ -126,7 +123,7 @@ class ClientController extends Controller{
         $client->database_username = env('DB_USERNAME');
         $client->database_password = env('DB_PASSWORD');
 
-        if( $update == 'false'){
+        if($update == 'false'){
             $client->logo = 'default/default_logo.png';
             $client->database_path = '';
             //$client->database_username = env('DB_USERNAME');

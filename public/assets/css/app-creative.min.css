@@ -57,7 +57,7 @@ body {
   overflow: hidden;
   padding: 0 15px 65px 15px;
   min-height: 80vh;
-  margin-top: 70px;
+  margin-top: 50px;
 }
 
 .left-side-menu {
@@ -172,12 +172,17 @@ body {
   content: "\F0142";
 }
 
-li > a[aria-expanded=true] > span.menu-arrow {
+body[data-sidebar-size="condensed"] #sidebar-menu > ul > li > a[data-toggle="collapse"]:after {
+  content: none !important;
+}
+
+/* li > a[aria-expanded=true] > .menu-arrow {
   transform: rotate(90deg);
 }
-li.menuitem-active > a:not(.collapsed) > span.menu-arrow {
+li.menuitem-active > a:not(.collapsed) > .menu-arrow {
   transform: rotate(90deg);
-}
+} */
+
 
 body[data-sidebar-size=condensed] .logo-box {
   width: 70px !important;
@@ -246,6 +251,7 @@ body[data-sidebar-size=condensed] .left-side-menu #sidebar-menu > ul > li:hover 
   color: #f3f7f9;
   background-color: #43bee1;
   box-shadow: inset 3px 5px 10px 0 rgb(154 161 171 / 20%);
+  border: 0;
 }
 body[data-sidebar-size=condensed] .left-side-menu #sidebar-menu > ul > li:hover > a span {
   display: inline;
@@ -666,15 +672,15 @@ body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a svg {
 
 .navbar-custom {
   background-color: #fff;
-  box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
-  padding: 0 10px 0 0;
+  box-shadow: 0 0 35px 0 rgb(154 161 171 / 15%);
+  padding: 10px 10px 10px 0;
   position: fixed;
   left: 0;
   right: 0;
-  height: 70px;
+  height: auto;
   z-index: 1001;
-  /* Search */
 }
+
 .navbar-custom .topnav-menu > li {
   float: left;
 }
@@ -683,9 +689,9 @@ body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a svg {
   color: rgba(0 0 0 / 0.6);
   min-width: 32px;
   display: block;
-  line-height: 70px;
+  line-height: normal;
   text-align: center;
-  max-height: 70px;
+  max-height: initial;
 }
 .navbar-custom .dropdown.show .nav-link {
   background-color: rgba(255, 255, 255, 0.05);
@@ -694,7 +700,7 @@ body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a svg {
   padding: 0;
 }
 .navbar-custom .app-search {
-  height: 70px;
+  height: auto;
   display: table;
   max-width: 180px;
   margin-right: 20px;
@@ -824,7 +830,7 @@ body[data-sidebar-icon=twotones] #sidebar-menu > ul > li > a svg {
 }
 
 .noti-icon {
-  font-size: 21px;
+  font-size: 18px;
   vertical-align: middle;
 }
 
@@ -3610,6 +3616,10 @@ body.authentication-bg-pattern {
   background-color: #43bee1;
   border-radius: 50%;
   border: 3px solid #fff;
+  animation: pulse-animation 2s infinite;
+}
+.track-order-list ul li.completed::before{
+  animation: none;
 }
 .track-order-list ul li.completed {
   border-color: #43bee1;
@@ -5222,7 +5232,7 @@ div.dt-button-info h2 {
 
 .dd-list .dd-item .dd-handle {
   border: none;
-  padding: 8px 16px;
+  padding: 12px 16px;
   height: auto;
   font-weight: 600;
   border-radius: 3px;

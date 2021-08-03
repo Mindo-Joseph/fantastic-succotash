@@ -1,29 +1,5 @@
-<div id="edit-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Edit Vendor</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-
-            <form id="save_edit_banner_form" method="post" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <div class="modal-body" id="editCardBox">
-                    
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-info waves-effect waves-light submitEditForm">Submit</button>
-                </div>
-                
-            </form>
-        </div>
-    </div>
-</div>
-
 <div class="modal fade" id="standard-modal" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="min-width: 530px;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="min-width: 530px;">
         <div class="modal-content">
             <div class="modal-header py-3 px-4 border-bottom-0 d-block">
                 <button type="button" class="close" data-dismiss="modal"
@@ -71,19 +47,19 @@
                                 {!! Form::label('title', 'Slot Type',['class' => 'control-label']) !!} 
                             </div>
                             @if($vendor->dine_in == 1)
-                                <div class="checkbox checkbox-success form-check-inline">
+                                <div class="checkbox checkbox-success form-check-inline"  @if($client_preferences->dinein_check == 0) style="display: none;" @endif>
                                     <input name="slot_type[]" type="checkbox" id="dine_in" checked value="dine_in">
                                     <label for="dine_in"> Dine in </label>
                                 </div>
                             @endif
                             @if($vendor->takeaway == 1)
-                                <div class="checkbox checkbox-success form-check-inline">
+                                <div class="checkbox checkbox-success form-check-inline"  @if($client_preferences->takeaway_check == 0) style="display: none;" @endif >
                                     <input name="slot_type[]" type="checkbox" id="takeaway" checked value="takeaway">
                                     <label for="takeaway"> Takeaway </label>
                                 </div>
                             @endif
                             @if($vendor->delivery == 1)
-                                <div class="checkbox checkbox-success form-check-inline">
+                                <div class="checkbox checkbox-success form-check-inline"  @if($client_preferences->delivery_check == 0) style="display: none;" @endif>
                                     <input name="slot_type[]" type="checkbox" id="delivery" checked value="delivery">
                                     <label for="delivery"> Delivery </label>
                                 </div>
@@ -161,7 +137,7 @@
 </div>
 
 <div class="modal fade" id="edit-slot-modal" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="min-width: 530px;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="min-width: 530px;">
         <div class="modal-content">
             <div class="modal-header py-3 px-4 border-bottom-0 d-block">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -304,7 +280,7 @@
     <div class="modal-dialog modal-full-width">
         <div class="modal-content">
 
-            <div class="modal-header">
+            <div class="modal-header border-bottom">
                 <h4 class="modal-title">Select Location</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
@@ -330,9 +306,9 @@
 </div>
 
 <div id="edit-area-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header border-bottom">
                 <h4 class="modal-title">Add Service Area</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
@@ -355,6 +331,149 @@
                     </div>
                 </div>
                 
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="edit_table_category" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h4 class="modal-title">Edit Table Category</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form action="{{ route('vendor.updateCategory', $vendor->id) }}" method="POST">
+                @csrf
+                <div class="modal-body mt-0" id="editTableCategory">
+                    <div class="row">
+                        <div class="col-lg-12 mb-2">
+                            {!! Form::label('title', 'Category Name',['class' => 'control-label']) !!}
+                            {!! Form::text('title', '',['class' => 'form-control', 'id' => 'edit_category_name', 'placeholder' => 'Category Name', 'required'=>'required']) !!}
+                        </div>
+                        <input type="hidden" name="vendor_id" value="{{ $vendor->id }}" />
+                        <input type="hidden" id="table_category_id" name="table_category_id" />
+                    </div>
+                    <div class="row">
+                        @foreach($languages as $langs)
+                        <div class="col-lg-6">
+                            <div class="outer_box px-3 py-2 mb-3">
+                                <div class="row rowYK">
+                                    <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="{{ ($langs->langId == 1) ? 'nameInput' : 'nameotherInput' }}">
+                                            {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
+                                            @if($langs->is_primary == 1)
+                                            {!! Form::text('name[]', null, ['class' => 'form-control', 'id' => 'vendor_dinein_category_language_name'.$langs->langId,  'required' => 'required']) !!}
+                                            @else
+                                            {!! Form::text('name[]', null, ['class' => 'form-control', 'id' => 'vendor_dinein_category_language_name'.$langs->langId ]) !!}
+                                            @endif
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong></strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {!! Form::hidden('language_id[]', $langs->langId) !!}
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-block btn-blue waves-effect waves-light w-100">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="edit_table_form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h4 class="modal-title">Edit Table</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form action="{{ route('vendor.updateTable', $vendor->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body mt-0" id="editCardBox">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Upload Category image</label>
+                            <input type="file" accept="image/*" data-default-file="" data-plugins="dropify" name="image" class="dropify" id="edit_table_image"/>
+                            <label class="logo-size d-block text-right mt-1">Image Size 1026x200</label>
+                        </div>
+                        <div class="col-sm-3 mb-2">
+                            {!! Form::label('title', 'Table Number',['class' => 'control-label']) !!}
+                            {!! Form::text('table_number', '',['class' => 'form-control', 'id' => 'edit_table_number', 'placeholder' => 'Table Number', 'required'=>'required']) !!}
+                        </div>
+                        <div class="col-sm-3 mb-2">
+                            {!! Form::label('title', 'Category',['class' => 'control-label']) !!}
+                            <select class="selectize-select form-control" name="vendor_dinein_category_id" id="assignTo">
+                                @foreach($dinein_categories as $dinein_category)
+                                <option value="{{$dinein_category->id}}">{{$dinein_category->title}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-2 mb-2">
+                            {!! Form::label('title', 'Seating Number',['class' => 'control-label']) !!}
+                            {!! Form::number('seating_number', '1',['class' => 'form-control',  'id' => 'edit_seating_number', 'min' => '1', 'onkeypress' => 'return isNumberKey(event)', 'placeholder' => 'Seating Number', 'required'=>'required']) !!}
+                        </div>
+                        <input type="hidden" name="vendor_id" value="{{ $vendor->id }}" />
+                        <input type="hidden" name="table_id" id="table_id" />
+                    </div>
+                    <div class="row">
+                        @foreach($languages as $langs)
+                        <div class="col-lg-6">
+                            <div class="outer_box px-3 py-2 mb-3">
+                                <div class="row rowYK">
+                                    <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="{{ ($langs->langId == 1) ? 'nameInput' : 'nameotherInput' }}">
+                                            {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
+                                            @if($langs->is_primary == 1)
+                                            {!! Form::text('name[]', null, ['class' => 'form-control', 'id' => 'vendor_dinein_table_language_name'.$langs->langId,  'required' => 'required']) !!}
+                                            @else
+                                            {!! Form::text('name[]', null, ['class' => 'form-control', 'id' => 'vendor_dinein_table_language_name'.$langs->langId ]) !!}
+                                            @endif
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong></strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {!! Form::hidden('language_id[]', $langs->langId) !!}
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="meta_titleInput">
+                                            {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!}
+                                            {!! Form::text('meta_title[]', null, ['class' => 'form-control', 'id' => 'vendor_dinein_table_language_meta_title'.$langs->langId ]) !!}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!}
+                                            {!! Form::textarea('meta_description[]', null, ['class'=>'form-control', 'id' => 'vendor_dinein_table_language_meta_description'.$langs->langId, 'rows' => '3']) !!}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {!! Form::label('title', 'Meta Keywords',['class' => 'control-label']) !!}
+                                            {!! Form::textarea('meta_keywords[]', null, ['class' => 'form-control', 'id' => 'vendor_dinein_table_language_meta_keyword'.$langs->langId, 'rows' => '3']) !!}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-block btn-blue waves-effect waves-light w-100">Save</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

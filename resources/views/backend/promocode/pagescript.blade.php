@@ -6,14 +6,11 @@
             }
         });
         e.preventDefault();
-
         var uri = "{{route('promocode.create')}}";
-
         var uid = $(this).attr('userId');
         if (uid > 0) {
             uri = "<?php echo url('client/promocode'); ?>" + '/' + uid + '/edit';
         }
-       
         $.ajax({
             type: "get",
             url: uri,
@@ -31,7 +28,6 @@
                     elems2 = document.getElementsByClassName('switch2Edit');
                     var switchery = new Switchery(elems1[0]);
                     var switchery = new Switchery(elems2[0]);
-
                     $('#edit-promo-form .select2-multiple').select2();
                 } else {
                     $('#add-promo-form #addCardBox').html(data.html);
@@ -45,14 +41,7 @@
                     var switchery = new Switchery(elems1[0]);
                     var switchery = new Switchery(elems2[0]);
                     $('#add-promo-form .select2-multiple').select2();
-                    // $('#add-promo-form #products2').select2();
-                    // $('#add-promo-form #categories1').select2();
-                    // $('#add-promo-form #categories2').select2();
-                    // $('#add-promo-form #products1').select2();
-                    // $('#add-promo-form #products2').select2();
-
                 }
-                
                 runPicker();
             },
             error: function(data) {
@@ -68,20 +57,14 @@
             minDate: new Date(),
             dateFormat: "Y-m-d H:i"
         });
-
         $('.selectpicker').selectpicker();
     }
-
-
     $('.openAddModal').click(function() {
         $('#add-promo-form').modal({
-            //backdrop: 'static',
             keyboard: false
         });
-        //var now = ;
         runPicker();
     });
-
     $(document).on('change', '.promoTypeField', function(e) {
         var type = $(this).val();
         document.getElementsByClassName("amountInputField")[0].value = 1;  
@@ -91,19 +74,16 @@
             document.getElementsByClassName("amountInputField")[0].setAttribute("max", ""); 
         }
     });
-
-     var point=false;
     var count=0;
+    var point=false;
     function check(e,value){
         var type = document.getElementsByClassName("promoTypeField")[0].value;
         if(type == 1){
             if(count==3)return false;
             var unicode=e.charCode? e.charCode : e.keyCode;
-            
             if( unicode == 46 && point==true)
                    return false;
-            if( unicode == 46 && point==false)
-            {
+            if( unicode == 46 && point==false){
                     point=true;
             }
             if (unicode!=8)if((unicode<48||unicode>57)&&unicode!=46)return false;
@@ -138,7 +118,6 @@
         var form = document.getElementById('editPromoForm');
         var formData = new FormData(form);
         var urls = document.getElementById('promocode_id').getAttribute('url');
-
         saveData(formData, 'edit', urls);
 
     });
@@ -159,10 +138,7 @@
             contentType: false,
             processData: false,
             success: function(response) {
-               
                 if (response.status == 'success') {
-                  
-                    // $(".modal .close").click();
                      location.reload();
                 } else {
                     $(".show_all_error.invalid-feedback").show();
@@ -187,23 +163,21 @@
         });
     }
 
-    $("#banner-datatable tbody").sortable({
-        placeholder: "ui-state-highlight",
-        handle: ".dragula-handle",
-        update: function(event, ui) {
-            var post_order_ids = new Array();
-            $('#post_list tr').each(function() {
-                post_order_ids.push($(this).data("row-id"));
-            });
-            console.log(post_order_ids);
-            saveOrder(post_order_ids);
-        }
-    });
+    // $("#banner-datatable tbody").sortable({
+    //     placeholder: "ui-state-highlight",
+    //     handle: ".dragula-handle",
+    //     update: function(event, ui) {
+    //         var post_order_ids = new Array();
+    //         $('#post_list tr').each(function() {
+    //             post_order_ids.push($(this).data("row-id"));
+    //         });
+    //         console.log(post_order_ids);
+    //         saveOrder(post_order_ids);
+    //     }
+    // });
 
     var CSRF_TOKEN = $("input[name=_token]").val();
-
     function saveOrder(orderVal) {
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -218,7 +192,6 @@
                 order: orderVal
             },
             success: function(response) {
-
                 if (response.status == 'success') {}
                 return response;
             }
@@ -228,8 +201,7 @@
     $("#user-modal #add_user").submit(function(e) {
         e.preventDefault();
     });
-
-    $(document).on('click', '.inlineRadioOptions', function() {
+    $(document).on('change', '.inlineRadioOptions', function() {
         var val = $(this).val();
         var apply = $(this).attr('for');
         if(val == '0'){
@@ -250,17 +222,10 @@
             $('#'+apply+'-promo-form #categoriesList').hide();
         }
     });
-    
-
-
     function myfunction(id) {
-        console.log(id);
+        $("#"+id).css("display", "block");
         $("#vendorsList").css("display", "none");
-        $("#categoriesList").css("display", "none");
         $("#productsList").css("display", "none");
-        var idd = "#" + id;
-        console.log(idd);
-        $("#" + id).css("display", "block");
-
+        $("#categoriesList").css("display", "none");
     }
 </script>

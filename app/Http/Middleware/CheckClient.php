@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Model\Client;
+use Client;
 use Illuminate\Support\Facades\Cache;
 use Request;
 use Config;

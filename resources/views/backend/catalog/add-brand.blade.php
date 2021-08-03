@@ -2,8 +2,9 @@
     <div class="col-md-12 pb-0 mb-0">
         <div class="row mb-2">
             <div class="col-md-12">              
+                <label>Upload image</label>
                 <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="" />
-                <p class="text-muted text-center mt-2 mb-0">Upload image</p>
+                <label class="logo-size d-block text-right mt-1">Image Size 350x200</label>
             </div>
         </div>
         <div class="row">

@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Api\v1;
 use DB;
 use Validation;
 use Carbon\Carbon;
-use App\Model\Client;
+use Client;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet};
-
+use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet,UserAddress, ClientPreference, LuxuryOption, Vendor};
+use GuzzleHttp\Client as GCLIENT;
 class CartController extends BaseController{
     use ApiResponser;
 
@@ -63,6 +63,7 @@ class CartController extends BaseController{
 
     /**     * Add product In Cart    *           */
     public function add(Request $request){
+        $luxury_option = LuxuryOption::where('title', $request->type)->first();
         try {
             $user = Auth::user();
             $langId = $user->language;
@@ -74,6 +75,7 @@ class CartController extends BaseController{
                 }
                 $unique_identifier = $user->system_user;
             }
+            
             $product = Product::where('sku', $request->sku)->first();
             if(!$product){
                 return $this->errorResponse('Invalid product.', 404);
@@ -134,6 +136,20 @@ class CartController extends BaseController{
             }else{
                 $cart_detail = Cart::updateOrCreate(['unique_identifier' => $unique_identifier], $cart_detail);
             }
+            if ($luxury_option) {
+                $checkCartLuxuryOption = CartProduct::where('luxury_option_id', '!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
+                if ($checkCartLuxuryOption) {
+                    return $this->errorResponse(['error' => 'You are adding products in different mods',
+                                                 'alert' => '1'], 404);
+                }
+                if ($luxury_option->id == 2 || $luxury_option->id == 3) {
+                    $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $product->vendor_id)->first();
+                    if ($checkVendorId) {
+                        return $this->errorResponse(['error' => 'Your cart has existing items from another vendor',
+                                                     'alert' => '1'], 404);
+                    }
+                }
+            }
             if($cart_detail->id > 0){
                 $oldquantity = $isnew = 0;
                 $cart_product_detail = [
@@ -146,6 +162,7 @@ class CartController extends BaseController{
                     'vendor_id'  => $product->vendor_id,
                     'variant_id'  => $request->product_variant_id,
                     'currency_id' => $client_currency->currency_id,
+                    'luxury_option_id' => $luxury_option ? $luxury_option->id : 1,
                 ];
                 $cartProduct = CartProduct::where('cart_id', $cart_detail->id)
                             ->where('product_id', $product->id)
@@ -202,7 +219,7 @@ class CartController extends BaseController{
     }
 
     /**        
-        update quantity in cart       
+    *    update quantity in cart       
     **/
     public function updateQuantity(Request $request){
         $user = Auth::user();
@@ -329,12 +346,14 @@ class CartController extends BaseController{
                     }, 'vendorProducts.product.taxCategory.taxRate', 
                 ])->select('vendor_id')->where('cart_id', $cartID)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $total_payable_amount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
-        $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0;
+        $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0; $total_delivery_amount = 0;
         if($cartData){
             $tax_details = [];
             foreach ($cartData as $ven_key => $vendorData) {
-                $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = 0;
-                $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';
+                $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
+                $delivery_count = 0;
+                $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';$deliver_charge = 0;
+                $delivery_fee_charges = 0.00;
                 $couponData = $couponProducts = array();
                 if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->vendor_id == $vendorData->vendor_id)){
                     $now = Carbon::now()->toDateTimeString();
@@ -369,7 +388,7 @@ class CartController extends BaseController{
                         }
                     }
                 }
-                foreach ($vendorData->vendorProducts as $pkey => $prod) {
+                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
                     $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0; 
                     $variantsData = $taxData = $vendorAddons = array();
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
@@ -394,7 +413,7 @@ class CartController extends BaseController{
                         $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
                         if(!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)){
                             $pro_disc = $discount_amount;
-                            if($minimum_spend < $quantity_price){
+                            if($minimum_spend <= $quantity_price){
                                 if($is_percent == 1){
                                     $pro_disc = ($quantity_price * $discount_percent)/ 100;
                                 }
@@ -404,7 +423,6 @@ class CartController extends BaseController{
                                     $quantity_price = 0;
                                 }
                                 $codeApplied = 1;
-                                
                             }else{
                                 $variantsData['coupon_msg'] = "Spend minimun ".$minimum_spend." to apply this coupon";
                                 $variantsData['coupon_not_appiled'] = 1;
@@ -434,10 +452,21 @@ class CartController extends BaseController{
                             }
                         }
                         $prod->taxdata = $taxData;
+                        if(!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1))
+                        {   
+                            $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                            if(!empty($deliver_charge) && $delivery_count == 0)
+                            {
+                                $delivery_count = 1;
+                                $prod->deliver_charge = number_format($deliver_charge, 2);
+                                $payable_amount = $payable_amount + $deliver_charge;
+                                $delivery_fee_charges = $deliver_charge;
+                            }
+                        }
                         if(!empty($prod->addon)){
                             foreach ($prod->addon as $ck => $addons) {
                                 $opt_quantity_price = 0;
-                                $opt_price_in_currency = $addons->option->price;
+                                $opt_price_in_currency = $addons->option ? $addons->option->price : 0;
                                 $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
                                 $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
                                 $vendorAddons[$ck]['quantity'] = $prod->quantity;
@@ -446,7 +475,7 @@ class CartController extends BaseController{
                                 $vendorAddons[$ck]['price'] = $opt_price_in_currency;
                                 $vendorAddons[$ck]['addon_title'] = $addons->set->title;
                                 $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
-                                $vendorAddons[$ck]['option_title'] = $addons->option->title;
+                                $vendorAddons[$ck]['option_title'] = $addons->option ? $addons->option->title : 0;
                                 $vendorAddons[$ck]['price_in_cart'] = $addons->option->price;
                                 $vendorAddons[$ck]['cart_product_id'] = $addons->cart_product_id;
                                 $vendorAddons[$ck]['multiplier'] = $clientCurrency->doller_compare;
@@ -454,7 +483,6 @@ class CartController extends BaseController{
                                 $payable_amount = $payable_amount + $opt_quantity_price;
                             }
                         }
-                        unset($prod->product->taxCategory);
                         unset($prod->addon);
                         unset($prod->pvariant);
                     }
@@ -467,11 +495,9 @@ class CartController extends BaseController{
                             );
                         }
                     }
-                    $deliver_charge = 0;
                     $prod->variants = $variantsData;
                     $prod->variant_options = $variant_options;
-                    $prod->deliver_charge = $deliver_charge;
-                    $payable_amount = $payable_amount + $deliver_charge;
+                    $payable_amount = $payable_amount;
                     $prod->product_addons = $vendorAddons;
                 }
                 $couponApplied = 0;
@@ -489,9 +515,11 @@ class CartController extends BaseController{
                 }
                 $vendorData->proSum = $proSum;
                 $vendorData->addonSum = $ttAddon;
+                $vendorData->deliver_charge = $deliver_charge;
+                $total_delivery_amount += $deliver_charge;
                 $vendorData->coupon_apply_on_vendor = $couponApplied;
                 $vendorData->is_coupon_applied = $is_coupon_applied;
-
+                $vendorData->is_coupon_applied = $is_coupon_applied;
                 if(empty($couponData)){
                     $vendorData->couponData = NULL;
                 }else{
@@ -515,13 +543,66 @@ class CartController extends BaseController{
         $cart->tax_details = $tax_details;
         $cart->gross_paybale_amount = $total_paying;
         $cart->total_discount_amount = $total_disc_amount;
-        $cart->total_payable_amount = $total_paying + $total_tax - $total_disc_amount;
         if($cart->user_id > 0){
-            $cart->loyaltyPoints = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
+            $cart->loyalty_amount = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
+            // if($total_paying > $cart->loyalty_amount){
+            //    $cart->loyalty_amount = 0.00; 
+            // }
             // $cart->wallet = $this->getWallet($cart->user_id, $clientCurrency->doller_compare, $currency);
         }
         $cart->products = $cartData;
         $cart->item_count = $item_count;
+        $temp_total_paying = $total_paying  + $total_tax - $total_disc_amount;
+        if($cart->loyalty_amount  >= $temp_total_paying){
+           $cart->total_payable_amount = 0.00;
+        }else{
+            $cart->total_payable_amount = $total_paying  + $total_tax - $total_disc_amount - $cart->loyalty_amount;
+        }
+        $cart->tip_5_percent = number_format((0.05 * $total_payable_amount), 2);
+        $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2);
+        $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2);
         return $cart;
+    }
+
+    public function getDeliveryFeeDispatcher($vendor_id){
+        try {
+                $dispatch_domain = $this->checkIfLastMileOn();
+                if ($dispatch_domain && $dispatch_domain != false) {
+                    $customer = User::find(Auth::id());
+                    $cus_address = UserAddress::where('user_id',Auth::id())->orderBy('is_primary','desc')->first();
+                    if($cus_address){
+                        $tasks = array();
+                        $vendor_details = Vendor::find($vendor_id);
+                            $location[] = array('latitude' => $vendor_details->latitude??30.71728880,
+                                                'longitude' => $vendor_details->longitude??76.80350870
+                                                );
+                            $location[] = array('latitude' => $cus_address->latitude??30.717288800000,
+                                    'longitude' => $cus_address->longitude??76.803508700000
+                                );
+                            $postdata =  ['locations' => $location];
+                            $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key,
+                                                        'shortcode' => $dispatch_domain->delivery_service_key_code,
+                                                        'content-type' => 'application/json']
+                                                            ]);
+                            $url = $dispatch_domain->delivery_service_key_url;                      
+                            $res = $client->post($url.'/api/get-delivery-fee',
+                                ['form_params' => ($postdata)]
+                            );
+                            $response = json_decode($res->getBody(), true);
+                            if($response && $response['message'] == 'success'){
+                                return $response['total'];
+                            }
+                    }
+                }
+            }    
+            catch(\Exception $e){}
+    }
+    # check if last mile delivery on 
+    public function checkIfLastMileOn(){
+        $preference = ClientPreference::first();
+        if($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url))
+            return $preference;
+        else
+            return false;
     }
 }

@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model{
       use SoftDeletes;
   
-    protected $fillables = ['sku', 'title', 'url_slug', 'description', 'body_html', 'vendor_id', 'category_id', 'type_id', 'country_origin_id', 'is_new', 'is_featured', 'is_live', 'is_physical', 'weight', 'weight_unit', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'publish_at'];
-
+    protected $fillable = ['sku', 'title', 'url_slug', 'description', 'body_html', 'vendor_id', 'category_id', 'type_id', 'country_origin_id', 'is_new', 'is_featured', 'is_live', 'is_physical', 'weight', 'weight_unit', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'publish_at', 'inquiry_only','has_variant','averageRating','tags', 'pharmacy_check', 'deleted_at', 'celebrity_id', 'brand_id', 'tax_category_id','need_price_from_dispatcher'];
+    
     public function addOn(){
        return $this->hasMany('App\Models\ProductAddon')->select('product_id', 'addon_id'); 
     }
@@ -119,14 +119,5 @@ class Product extends Model{
         return $this->belongsTo('App\Models\TaxCategory', 'tax_category_id', 'id')->select('id', 'title', 'code');
     }
 
-
-    /*public function allvariants(){
-        return $this->hasMany('App\Models\ProductVariantSet')
-        ->join('variants', 'variants.id', 'product_variant_sets.variant_type_id')
-        ->join('variant_options', 'product_variant_sets.product_id', 'variant_options.id')
-        ->select('product_variant_sets.product_id', 'variants.position', 'product_variant_sets.variant_type_id', 'variants.title as variant_title', 'variants.type', 'product_variant_sets.variant_option_id', 'variant_options.title as option_title', 'variant_options.variant_id', 'variant_options.hexacode', 'variant_options.position')
-        ->groupBy('product_variant_sets.product_variant_id')
-        ->groupBy('product_variant_sets.variant_type_id')
-        ->groupBy('product_variant_sets.variant_option_id');
-    }*/
+    
 }

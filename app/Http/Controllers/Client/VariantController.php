@@ -23,8 +23,9 @@ class VariantController extends BaseController
         $categories = Category::select('id', 'slug')
                         ->where('status', '!=', $this->blockdata)
                         ->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();
-
+                        ->orderBy('position', 'asc')
+                        ->whereIn('type_id', ['1', '3', '6'])
+                        ->get();
         $langs = ClientLanguage::with('language')->select('language_id', 'is_primary', 'is_active')
                     ->where('is_active', 1)
                     ->orderBy('is_primary', 'desc')->get();
@@ -95,10 +96,12 @@ class VariantController extends BaseController
         $variant = Variant::select('id', 'title', 'type', 'position')
                         ->with('translation', 'option.translation', 'varcategory')
                         ->where('id', $id)->firstOrFail();
-        $categories = Category::select('id', 'slug')
+        $categories = Category::with('translation_one')->select('id', 'slug')
                         ->where('status', '!=', $this->blockdata)
                         ->orderBy('parent_id', 'asc')
-                        ->orderBy('position', 'asc')->get();
+                        ->orderBy('position', 'asc')
+                        ->whereIn('type_id', ['1', '3', '6'])
+                        ->get();
         $langs = ClientLanguage::with(['language', 'variantTrans' => function($query) use ($id) {
                         $query->where('variant_id', $id);
                       }])

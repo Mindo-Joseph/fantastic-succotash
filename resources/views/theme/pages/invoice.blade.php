@@ -30,13 +30,13 @@
                             <div class="auth-logo">
                                 <div class="logo logo-dark">
                                     <span class="logo-lg">
-                                        <img src="{{asset('assets/images/logo-dark.png')}}"alt="" height="22">
+                                        <img src="{{asset('assets/images/logo-dark.png')}}"alt="" height="50">
                                     </span>
                                 </div>
             
                                 <div class="logo logo-light">
                                     <span class="logo-lg">
-                                        <img src="{{asset('assets/images/logo-light.png')}}"alt="" height="22">
+                                        <img src="{{asset('assets/images/logo-light.png')}}"alt="" height="50">
                                     </span>
                                 </div>
                             </div>

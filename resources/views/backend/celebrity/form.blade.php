@@ -1,9 +1,9 @@
 <input type="hidden" name="lc_id" id="lc_id" url="{{route('celebrity.update', $lc->id)}}">
-<div class="row mb-3">
-    <div class="col-md-3"></div>
+<div class="row">
     <div class="col-md-6" id="imageInput">
-        <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$lc->avatar['proxy_url'].'600/400'.$lc->avatar['image_path']}}" />
-        <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
+        <label>Upload image</label>
+        <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{$lc->avatar['proxy_url'].'600/400'.$lc->avatar['image_path']}}" />        
+        <label class="logo-size d-block text-right mt-1">Image Size 150x150</label>
         <span class="invalid-feedback" role="alert">
             <strong></strong>
         </span>
@@ -19,7 +19,16 @@
             </span>
         </div>
     </div>
-    <div class="col-md-6" id="country_list">
+    <div class="col-md-6" id="slugInput">
+        <div class="form-group">
+            {!! Form::label('title', 'Slug',['class' => 'control-label']) !!} 
+            {!! Form::text('slug', $lc->slug, ['class'=>'form-control', 'required' => 'required', 'onkeypress' => "return alphaNumeric(event)", 'id' => 'slug']) !!}
+            <span class="invalid-feedback" role="alert">
+                <strong></strong>
+            </span>
+        </div>
+    </div>
+    <div class="col-md-12" id="country_list">
         <div class="form-group">
             {!! Form::label('title', 'Country',['class' => 'control-label']) !!}
             <select class="form-control" id="countries" name="countries" data-placeholder="Choose ...">

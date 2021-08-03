@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\{Promocode, Product, Vendor, PromoType, Category, PromocodeUser, PromocodeProduct, PromocodeRestriction,PromoCodeDetail};
-
+use Auth;
 class PromocodeController extends BaseController
 {
     /**
@@ -16,7 +16,16 @@ class PromocodeController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $promocodes = Promocode::with('type', 'restriction')->get();
+        $promocodes = Promocode::with('type', 'restriction');
+        
+        if (Auth::user()->is_superadmin == 0) {
+            $promocodes = $promocodes->where('added_by', Auth::user()->id);
+           
+        }
+        $promocodes = $promocodes->get();
+        
+        
+        
         return view('backend/promocode/index')->with(['promocodes' => $promocodes]);
     }
 
@@ -30,8 +39,21 @@ class PromocodeController extends BaseController
         $dataIds = array();
         $promocode = new Promocode();
         $promoTypes = PromoType::where('status', 1)->get();
-        $products = Product::select('id', 'sku')->where('is_live', 1)->get();
-        $vendors = Vendor::select('id', 'name')->where('status', 1)->get();
+        $products = Product::select('id', 'sku')->where('is_live', 1);
+        if (Auth::user()->is_superadmin == 0) {
+            $products = $products->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $products = $products->get();
+        
+        $vendors = Vendor::select('id', 'name')->where('status', 1);
+        if (Auth::user()->is_superadmin == 0) {
+            $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendors = $vendors->get();
         $categories = Category::select('id', 'slug')->get();
         $returnHTML = view('backend.promocode.form')->with(['promo' => $promocode,  'promoTypes' => $promoTypes, 'categories' => $categories, 'vendors' => $vendors, 'products' => $products, 'restrictionType' => '', 'include' => '0', 'exclude' => '0', 'dataIds' => $dataIds])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
@@ -92,15 +114,24 @@ class PromocodeController extends BaseController
         $promocode->restriction_on = $request->restriction_on;
         $promocode->Paid_by_vendor_admin = $request->radioInline;
         $promocode->restriction_type = $request->restriction_type == 'include'?  0: 1;
+        $promocode->added_by = Auth::id()??null;
         $promocode->save();
         if($promocode->id){
             PromoCodeDetail::where('promocode_id', $promocode->id)->delete();
-            $productList = $request->restriction_on == 1 ? $request->vendorList : $request->productList;
-            foreach ($productList as  $refrence_id) {
-                $promo_code_detail = new PromoCodeDetail();
-                $promo_code_detail->promocode_id = $promocode->id;
-                $promo_code_detail->refrence_id = $refrence_id;
-                $promo_code_detail->save();
+            if($request->restriction_on == 0){
+                $productList = $request->productList;
+            }elseif($request->restriction_on == 1){
+                $productList = $request->vendorList;
+            }elseif($request->restriction_on == 2){
+                $productList = $request->categoryList;
+            }
+            if($productList){
+                foreach ($productList as  $refrence_id) {
+                    $promo_code_detail = new PromoCodeDetail();
+                    $promo_code_detail->promocode_id = $promocode->id;
+                    $promo_code_detail->refrence_id = $refrence_id;
+                    $promo_code_detail->save();
+                }
             }
         }
         return $promocode->id;
@@ -150,10 +181,31 @@ class PromocodeController extends BaseController
     public function edit($domain = '', $id){
         $dataIds = array();
         $promoTypes = PromoType::where('status', 1)->get();
-        $vendors = Vendor::select('id', 'name')->where('status', 1)->get();
-        $products = Product::select('id', 'sku')->where('is_live', 1)->get();
+        
+        $products = Product::select('id', 'sku')->where('is_live', 1);
+        if (Auth::user()->is_superadmin == 0) {
+            $products = $products->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $products = $products->get();
+        
+        $vendors = Vendor::select('id', 'name')->where('status', 1);
+        if (Auth::user()->is_superadmin == 0) {
+            $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendors = $vendors->get();
+
+
+
+
         $promocode = Promocode::with('restriction')->where('id', $id)->first();
-        $categories = Category::select('id', 'slug')->get();
+        $categories = Category::with('english')->select('id', 'slug')
+            ->where('id', '>', '1')->where('status', '!=', '2')
+            ->where('can_add_products', 1)->orderBy('parent_id', 'asc')
+            ->orderBy('position', 'asc')->get();
         foreach ($promocode->details as $detail) {
             $dataIds[] = $detail->refrence_id;
         }

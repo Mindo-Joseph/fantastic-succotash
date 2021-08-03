@@ -1,8 +1,8 @@
 <div id="add-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Add Vendor</h4>
+            <div class="modal-header border-bottom">
+                <h4 class="modal-title">Add {{getNomenclatureName('vendors', false)}}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_banner_form" method="post" enctype="multipart/form-data">
@@ -11,17 +11,17 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row mb-2">
-                                <div class="offset-md-1 col-md-3">
+                                <div class="col-md-3">
+                                    <label>Upload Logo</label>
                                     <input type="file" accept="image/*" data-plugins="dropify" name="logo" class="dropify" data-default-file="" />
-                                    <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
+                                    <label class="logo-size text-right w-100">Logo Size 170x96</label>
                                 </div> 
-                                <div class="col-md-1"></div>
-                                <div class="col-md-6"> <!--  Storage::disk('s3')->url($client->logo)  -->                 
+                                <div class="col-md-6">     
+                                    <label>Upload banner image</label>            
                                     <input type="file" accept="image/*" data-plugins="dropify" name="banner" class="dropify" data-default-file="" />
-                                    <p class="text-muted text-center mt-2 mb-0">Upload banner image</p>
+                                    <label class="logo-size text-right w-100">Image Size 830x200</label>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group" id="nameInput">
@@ -32,8 +32,34 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="form-group" id="descInput">
+                                        {!! Form::label('title', 'Description',['class' => 'control-label']) !!} 
+                                        {!! Form::textarea('desc', null, ['class' => 'form-control', 'rows' => '3']) !!}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="row mb-2" id="add">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group" id="emailInput">
+                                        <label for="">Email</label>
+                                        {!! Form::text('email', null, ['class'=>'form-control']) !!}
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group" id="phone_noInput">
+                                        <label for="">Phone Number</label>
+                                        {!! Form::tel('phone_no', null, ['class'=>'form-control']) !!}
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" id="add">
                                 <div class="col-md-4">
                                     <div class="form-group mb-3" id="addressInput">
                                         {!! Form::label('title', 'Address',['class' => 'control-label']) !!} 
@@ -71,43 +97,46 @@
                                         @endif
                                     </div>
                                 </div>
-                             
-                                <div class="col-md-4">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
-                                        <div>
-                                            <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#43bee1" checked='checked'>
-                                        </div>
+                                        <label for="">Website</label>
+                                        <input class="form-control" type="text" name="website">
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
-                                        <div>
-                                            <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                            @if($client_preferences->dinein_check == 1)
+                                                {!! Form::label('title', 'Dine In',['class' => 'control-label']) !!} 
+                                                <div class="mt-md-1">
+                                                    <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                                </div>
+                                            @endif
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
-                                        <div>
-                                            <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                            @if($client_preferences->takeaway_check == 1)
+                                                {!! Form::label('title', 'Takeaway',['class' => 'control-label']) !!} 
+                                                <div class="mt-md-1">
+                                                    <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                                </div>
+                                            @endif
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <!-- <div class="col-md-3">
-                                    <div class="form-group">
-                                        {!! Form::label('title', 'Show Category',['class' => 'control-label']) !!} 
-                                        <div>
-                                            <input type="checkbox" data-plugin="switchery" name="is_show_category" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                            @if($client_preferences->delivery_check == 1)
+                                                {!! Form::label('title', 'Delivery',['class' => 'control-label']) !!} 
+                                                <div class="mt-md-1">
+                                                    <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#43bee1" checked='checked'>
+                                                </div>
+                                            @endif
+                                            </div>
                                         </div>
-                                    </div>
-                                </div> -->
-                                <div class="col-md-12">
-                                    <div class="form-group" id="descInput">
-                                        {!! Form::label('title', 'Description',['class' => 'control-label']) !!} 
-                                        {!! Form::textarea('desc', null, ['class' => 'form-control', 'rows' => '3']) !!}
                                     </div>
                                 </div>
                             </div>
@@ -121,12 +150,11 @@
         </div>
     </div>
 </div>
-
 <div id="import-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Import Vendors</h4>
+            <div class="modal-header border-bottom">
+                <h4 class="modal-title">Import {{getNomenclatureName('vendors', false)}}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form method="post" enctype="multipart/form-data" id="save_imported_vendors">
@@ -140,7 +168,7 @@
                             <div class="row mb-2">
                                 <div class="col-md-12">            
                                     <input type="file" accept=".csv" onchange="submitImportForm()" data-plugins="dropify" name="vendor_csv" class="dropify" data-default-file="" required/>
-                                    <p class="text-muted text-center mt-2 mb-0">Upload Vendors CSV</p>
+                                    <p class="text-muted text-center mt-2 mb-0">Upload {{getNomenclatureName('vendors', true)}} CSV</p>
                                 </div>
                             </div>
                         </div>
@@ -157,8 +185,8 @@
                                 <tbody id="post_list">
                                     @foreach($csvVendors as $csv)
                                     <tr data-row-id="{{$csv->id}}">
-                                        <td> {{ $csv->id }}</td>
-                                        <td> {{ $csv->name }}</td>
+                                        <td> {{ $loop->iteration }} </td>
+                                        <td> {{ $csv->name }} </td>
                                         @if($csv->status == 1)
                                         <td>Pending</td>
                                         <td></td>
@@ -187,19 +215,15 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-info waves-effect waves-light submitImportForm">Submit</button>
-                </div> -->
             </form>
         </div>
     </div>
 </div>
-
 <div id="show-map-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-full-width">
         <div class="modal-content">
 
-            <div class="modal-header">
+            <div class="modal-header border-bottom">
                 <h4 class="modal-title">Select Location</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
@@ -224,25 +248,22 @@
     </div>
 </div>
 
-<div id="edit-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+<div id="dispatcher-login-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Edit Vendor</h4>
+            <div class="modal-header border-bottom">
+                <h4 class="modal-title">Dispatcher Login</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-
             <form id="save_edit_banner_form" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-body" id="editCardBox">
                     
                 </div>
-
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info waves-effect waves-light submitEditForm">Submit</button>
+                    <button type="button" class="btn btn-info waves-effect waves-light submitDispatcherForm">Submit</button>
                 </div>
-                
             </form>
         </div>
     </div>

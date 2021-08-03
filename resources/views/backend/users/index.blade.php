@@ -22,14 +22,18 @@
 }
 </style>
 @endsection
-
 @section('content')
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
+    <div class="row align-items-center">
+        <div class="col-sm-6">
             <div class="page-title-box">
                 <h4 class="page-title">Customers</h4>
             </div>
+        </div>
+        <div class="col-sm-6 text-right">
+            <button class="btn btn-info waves-effect waves-light text-sm-right addUserModal"
+                userId="0" ><i class="mdi mdi-plus-circle mr-1"></i> Add
+            </button>
         </div>
     </div>
     <div class="row">
@@ -37,7 +41,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
-                        <div class="col-sm-8">
+                        <div class="col-sm-12">
                             <div class="text-sm-left">
                                 @if (\Session::has('success'))
                                 <div class="alert alert-success">
@@ -51,15 +55,46 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-sm-4 text-right">
-                            <button class="btn btn-info waves-effect waves-light text-sm-right addUserModal"
-                             userId="0" style=""><i class="mdi mdi-plus-circle mr-1"></i> Add
-                            </button>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card widget-inline">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-4 col-md-4 mb-3 mb-md-0">
+                                            <div class="text-center">
+                                                <h3>
+                                                    <i class="fa fa-user text-primary mdi-24px"></i>
+                                                    <span data-plugin="counterup" id="total_vendor">{{$active_users}}</span>
+                                                </h3>
+                                                <p class="text-muted font-15 mb-0">Active User Count</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 col-md-4 mb-3 mb-md-0">
+                                            <div class="text-center">
+                                                <h3>
+                                                    <i class="fas fa-user-clock text-primary mdi-24px"></i>
+                                                    <span data-plugin="counterup" id="total_product">{{ $inactive_users }}</span>
+                                                </h3>
+                                                <p class="text-muted font-15 mb-0">Inactive User Count</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 col-md-4 mb-3 mb-md-0">
+                                            <div class="text-center">
+                                                <h3>
+                                                    <i class="mdi mdi-login text-primary mdi-24px"></i>
+                                                    <span data-plugin="counterup" id="total_product">{{ $social_logins }}</span>
+                                                </h3>
+                                                <p class="text-muted font-15 mb-0">Social Login Count</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <form name="saveOrder" id="saveOrder"> @csrf </form>
-                        <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
+                        <table class="table table-centered table-nowrap table-striped" id="user_datatable" width="100%">
                             <thead>
                                 <tr>
                                     <th>Image</th>
@@ -67,6 +102,8 @@
                                     <th>Login Type</th>
                                     <th>Email/Auth-id</th>
                                     <th>Phone</th>
+                                    <th>Email OTP</th>
+                                    <th>Phone OTP</th>
                                     <th>Orders</th>
                                     <th>Active Orders</th>
                                     <th>Status</th>
@@ -74,74 +111,9 @@
                                 </tr>
                             </thead>
                             <tbody id="post_list">
-                                @foreach($users as $user)
-                                <?php 
-                                    $loginType = 'Email'; 
-                                    $loginTypeValue = $user->email;
-                                    
-
-                                    if(!empty($user->facebook_auth_id)){
-                                        $loginType = 'Facebook';
-                                        $loginTypeValue = $user->facebook_auth_id;
-
-                                    }elseif(!empty($user->twitter_auth_id)){
-                                        $loginType = 'Twitter';
-                                        $loginTypeValue = $user->twitter_auth_id;
-
-                                    }elseif(!empty($user->google_auth_id)){
-                                        $loginType = 'Google';
-                                        $loginTypeValue = $user->google_auth_id;
-
-                                    }elseif(!empty($user->apple_auth_id)){
-                                        $loginType = 'Apple';
-                                        $loginTypeValue = $user->apple_auth_id;
-                                    } 
-                                ?>
-                                <tr data-row-id="{{$user->id}}">
-                                    <td> 
-                                        <img src="{{$user->image['proxy_url'].'40/40'.$user->image['image_path']}}" class="rounded-circle" alt="{{$user->id}}" >
-                                    </td>
-                                    <td>{{$user->name}}</td>
-                                    <td>{{$loginType}}</td>
-                                    <td> 
-                                        @if($user->is_email_verified == 1)
-                                          <i class="mdi mdi-email-check mr-1 mdi-icons"></i>
-                                        @endif
-                                        {{$loginTypeValue}}
-                                    </td>
-                                    <td>
-                                        @if($user->is_phone_verified == 1)
-                                          <i class="mdi mdi-phone-check mr-1 mdi-icons"></i>
-                                        @endif
-                                        {{ $user->phone_number }} 
-                                    </td>
-                                    
-                                    <td>{{$user->orders_count}}</td>
-                                    <td>{{$user->active_orders_count}}</td>
-                                    <td>
-                                        <input type="checkbox" data-id="{{$user->id}}" id="cur_{{$user->id}}" data-plugin="switchery" name="userAccount" class="chk_box" data-color="#43bee1" {{($user->status == 1) ? 'checked' : ''}} >
-                                    </td> 
-                                    <td> 
-                                        <div class="form-ul" style="width: 60px;">
-                                            <div class="inner-div" >
-                                                @if(Auth::user()->is_superadmin == 1)<a href="{{route('customer.new.edit', $user->id)}}"  class="action-icon editIconBtn"> 
-                                                <i class="mdi mdi-square-edit-outline"></i></a>
-
-                                                <a href="{{route('customer.account.action', [$user->id, 3])}}" onclick="return confirm('Are you sure? You want to delete the user.')" class="action-icon"> <i class="mdi mdi-delete" title="Delete user"></i></a>
-                                                @endif    
-                                            </div>
-                                            
-                                           
-                                         
-                                        </div>
-                                    </td> 
-                                </tr>
-                               @endforeach
+                                
                             </tbody>
                         </table>
-                    </div>
-                    <div class="pagination pagination-rounded justify-content-end mb-0">
-                        {{-- $users->links() --}}
                     </div>
                 </div>
             </div>
@@ -149,6 +121,125 @@
     </div>
 </div>
 @include('backend.users.modals')
+<script type="text/javascript">
+    $(document).ready(function() {
+        var table;
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        initDataTable();
+        $(document).on("click",".delete-vendor",function() {
+            var destroy_url = $(this).data('destroy_url');
+            var id = $(this).data('rel');
+            if (confirm('Are you sure?')) {
+              $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: destroy_url,
+                data:{'_method':'DELETE'},
+                success: function(response) {
+                    if (response.status == "Success") {
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                        window.location.reload();
+                    }
+                }
+            });
+            }
+        });
+        function initDataTable() {
+            try{
+            $('#user_datatable').DataTable({
+                "dom": '<"toolbar">Bfrtip',
+                "destroy": true,
+                "scrollX": true,
+                "processing": true,
+                "serverSide": true,
+                "iDisplayLength": 10,
+                language: {
+                    search: "",
+                    paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
+                    searchPlaceholder: "Search By Name, Email, Phone Number"
+                },
+                drawCallback: function () {
+                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                },
+                buttons: [],
+                ajax: {
+                  url: "{{route('user.filterdata')}}",
+                  data: function (d) {
+                    d.search = $('input[type="search"]').val();
+                    d.date_filter = $('#range-datepicker').val();
+                    d.payment_option = $('#payment_option_select_box option:selected').val();
+                    d.tax_type_filter = $('#tax_type_select_box option:selected').val();
+                  }
+                },
+                "initComplete": function(settings, json) {
+                    var elems = Array.prototype.slice.call(document.querySelectorAll('.chk_box'));
+                    elems.forEach(function(html) {
+                        var switchery = new Switchery(html);
+                    });
+                },
+                columns: [
+                    {data: 'image_url', name: 'image_url', orderable: false, searchable: false,"mRender": function ( data, type, full ) {
+                        return "<img src='"+full.image_url+"' class='rounded-circle' alt='"+full.id+"' >";
+                    }},
+                    {data: 'name', name: 'name', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
+                        return "<a href='"+full.edit_url+"'>"+full.name+"</a> ";
+                    }},
+                    {data: 'login_type', name: 'login_type', orderable: false, searchable: false},
+                    {data: 'login_type_value', name: 'login_type_value', orderable: false, searchable: false, "mRender": function ( data, type, full) {
+                        if(full.is_email_verified == 1){
+                            return "<i class='mdi mdi-email-check mr-1 mdi-icons'></i>"+full.login_type_value;
+                        }else{
+                            return "<i class='mdi mdi-email-remove mr-1 mdi-icons'></i>"+full.login_type_value;
+                        }
+                    }},
+                    {data: 'is_phone_verified', name: 'is_phone_verified', orderable: false, searchable: false, "mRender": function ( data, type, full) {
+                        if(full.is_phone_verified == 1){
+                            if(full.phone_number){
+                                return "<i class='mdi mdi-phone-check mr-1 mdi-icons'></i>"+full.phone_number;
+                            }else{
+                                return "";
+                            }
+                        }else{
+                            if(full.phone_number){
+                                return full.phone_number;
+                            }else{
+                                return "";
+                            }
+                        }
+                    }},
+                    {data: 'email_token', name: 'email_token', orderable: false, searchable: false},
+                    {data: 'phone_token', name: 'phone_token', orderable: false, searchable: false},
+                    {data: 'orders_count', name: 'orders_count', orderable: false, searchable: false},
+                    {data: 'active_orders_count', name: 'active_orders_count', orderable: false, searchable: false},
+                    {data: 'status', name: 'status', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
+                            if(full.status == 1){
+                                return "<input type='checkbox' data-id='"+full.id+"' id='cur_"+full.id+"' data-plugin='switchery' name='userAccount' class='chk_box' data-color='#43bee1' checked>";
+                            }else{
+                                return "<input type='checkbox' data-id='"+full.id+"' id='cur_"+full.id+"' data-plugin='switchery' name='userAccount' class='chk_box' data-color='#43bee1'>";
+                            }
+                    }},
+                    {data: 'is_superadmin', name: 'is_superadmin', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
+                        if(full.is_superadmin == 1){
+                            return "<div class='form-ul'><div class='inner-div'><a href='"+full.edit_url+"' class='action-icon editIconBtn'><i class='mdi mdi-square-edit-outline'></i></a><a href='"+full.delete_url+"' class='action-icon'><i class='mdi mdi-delete' title='Delete user'></i></a></div></div>";
+                        }
+                    }},
+                ]
+            });
+            }
+            finally{
+                var elems = Array.prototype.slice.call(document.querySelectorAll('.chk_box'));
+                console.log(elems);
+                elems.forEach(function(html) {
+                var switchery = new Switchery(html);
+            });
+        }
+        }
+    });
+</script>
 @endsection
 @section('script')
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>

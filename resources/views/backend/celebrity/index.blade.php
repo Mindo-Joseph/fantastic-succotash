@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Celebrity'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Celebrities'])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
@@ -27,11 +27,16 @@
 <div class="container-fluid">
 
     <!-- start page title -->
-    <div class="row">
-        <div class="col-12">
+    <div class="row align-items-center">
+        <div class="col-sm-6">
             <div class="page-title-box">
-                <h4 class="page-title">Celebrity</h4>
+                <h4 class="page-title">Celebrities</h4>
             </div>
+        </div>
+        <div class="col-sm-6 text-right">
+            <button class="btn btn-info waves-effect waves-light text-sm-right"
+                data-toggle="modal" data-target=".addModal"><i class="mdi mdi-plus-circle mr-1"></i> Add
+            </button>
         </div>
     </div>
     <!-- end page title -->
@@ -40,7 +45,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row mb-2">
-                        <div class="col-sm-8">
+                        <div class="col-sm-12">
                             <div class="text-sm-left">
                                 @if (\Session::has('success'))
                                 <div class="alert alert-success">
@@ -54,11 +59,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-sm-4 text-right">
-                            <button class="btn btn-info waves-effect waves-light text-sm-right"
-                              data-toggle="modal" data-target=".addModal"><i class="mdi mdi-plus-circle mr-1"></i> Add
-                            </button>
-                        </div>
+                        
                     </div>
 
                     <div class="table-responsive">
@@ -83,7 +84,7 @@
                                     <td> 
                                         <img class="rounded-circle" src="{{$celeb->avatar['proxy_url'].'60/60'.$celeb->avatar['image_path']}}" alt="{{$celeb->id}}" >
                                     </td>
-                                    <td> {{ $celeb->name }} </td>
+                                    <td><a class="openEditModal text-capitalize" loyaltyID="{{$celeb->id}}" href="#">{{ $celeb->name }}</a> </td>
                                     <td class="descript"> <span>{{ $celeb->description }} </span></td>
                                     <td> {{ (!empty($celeb->country)) ? ucwords(strtolower($celeb->country->name)) : '' }} </td>
                                     <!-- <td> 

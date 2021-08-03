@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Payment'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Payment Options'])
 
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
@@ -12,17 +12,26 @@
 
     <!-- start page title -->
     <div class="row">
-        <div class="col-12">
+        <!-- <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Payment</h4>
+                <h4 class="page-title">Payment Options</h4>
             </div>
-        </div>
+        </div> -->
       <div class="col-12">
          <div class="text-sm-left">
             @if (\Session::has('success'))
-            <div class="alert alert-success">
+            <div class="alert mt-2 mb-0 alert-success">
                <span>{!! \Session::get('success') !!}</span>
             </div>
+            @endif
+            @if ( ($errors) && (count($errors) > 0) )
+                <div class="alert mt-2 mb-0 alert-danger">
+                    <ul class="m-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
          </div>
       </div>
@@ -31,11 +40,15 @@
     <form method="POST" id="payment_option_form" action="{{route('payoption.updateAll')}}">
         @csrf
         @method('POST')
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-sm-8">
-                <div class="text-sm-left"></div>
+                <div class="text-sm-left">
+                    <div class="page-title-box">
+                        <h4 class="page-title">Payment Options</h4>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-4 text-right mb-2">
+            <div class="col-sm-4 text-right">
                 <button class="btn btn-info waves-effect waves-light save_btn" type="submit"> Save</button>
             </div>
         </div>
@@ -52,11 +65,14 @@
                 $password = (isset($creds->password)) ? $creds->password : '';
                 $signature = (isset($creds->signature)) ? $creds->signature : '';
                 $api_key = (isset($creds->api_key)) ? $creds->api_key : '';
+                $publishable_key = (isset($creds->publishable_key)) ? $creds->publishable_key : '';
+                $secret_key = (isset($creds->secret_key)) ? $creds->secret_key : '';
+                $public_key = (isset($creds->public_key)) ? $creds->public_key : '';
                 ?>
 
-                <div class="card-box">
+                <div class="card-box h-100">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h4 class="header-title text-uppercase mb-0">{{$opt->title}}</h4>
+                        <h4 class="header-title mb-0">{{$opt->title}}</h4>
                     </div>
                     <div class="form-group mb-0 switchery-demo">
                         <label for="" class="mr-3">Enable</label>
@@ -68,8 +84,14 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mb-0">
-                                    <label for="stripe_api_key" class="mr-3">API Key</label>
-                                    <input type="textbox" name="stripe_api_key" id="stripe_api_key" class="form-control" value="{{$api_key}}" @if($opt->status == 1) required @endif>
+                                    <label for="stripe_api_key" class="mr-3">Secret Key</label>
+                                    <input type="password" name="stripe_api_key" id="stripe_api_key" class="form-control" value="{{$api_key}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="stripe_publishable_key" class="mr-3">Publishable Key</label>
+                                    <input type="password" name="stripe_publishable_key" id="stripe_publishable_key" class="form-control" value="{{$publishable_key}}" @if($opt->status == 1) required @endif>
                                 </div>
                             </div>
                         </div>
@@ -88,13 +110,32 @@
                             <div class="col-12">
                                 <div class="form-group mb-0">
                                     <label for="paypal_password" class="mr-3">Password</label>
-                                    <input type="textbox" name="paypal_password" id="paypal_password" class="form-control" value="{{$password}}" @if($opt->status == 1) required @endif>
+                                    <input type="password" name="paypal_password" id="paypal_password" class="form-control" value="{{$password}}" @if($opt->status == 1) required @endif>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group mb-0">
                                     <label for="paypal_signature" class="mr-3">Signature</label>
-                                    <input type="textbox" name="paypal_signature" id="paypal_signature" class="form-control" value="{{$signature}}" @if($opt->status == 1) required @endif>
+                                    <input type="password" name="paypal_signature" id="paypal_signature" class="form-control" value="{{$signature}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if ( (strtolower($opt->title) == 'paystack') )
+                    <div id="paystack_fields_wrapper" @if($opt->status != 1) style="display:none" @endif>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="paystack_secret_key" class="mr-3">Secret Key</label>
+                                    <input type="password" name="paystack_secret_key" id="paystack_secret_key" class="form-control" value="{{$secret_key}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="paystack_public_key" class="mr-3">Publishable Key</label>
+                                    <input type="password" name="paystack_public_key" id="paystack_public_key" class="form-control" value="{{$public_key}}" @if($opt->status == 1) required @endif>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +177,6 @@
                     $("#stripe_fields_wrapper").find('input').removeAttr('required');
                 }
             }
-
             if( title.toLowerCase() == 'paypal' ){
                 if($(this).is(":checked")){
                     $("#paypal_fields_wrapper").show();
@@ -145,6 +185,16 @@
                 else{
                     $("#paypal_fields_wrapper").hide();
                     $("#paypal_fields_wrapper").find('input').removeAttr('required');
+                }
+            }
+            if( title.toLowerCase() == 'paystack' ){
+                if($(this).is(":checked")){
+                    $("#paystack_fields_wrapper").show();
+                    $("#paystack_fields_wrapper").find('input').attr('required', true);
+                }
+                else{
+                    $("#paystack_fields_wrapper").hide();
+                    $("#paystack_fields_wrapper").find('input').removeAttr('required');
                 }
             }
 

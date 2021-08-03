@@ -7,13 +7,14 @@ use Illuminate\Support\Collection;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use App\Models\{Brand, Category, ClientLanguage, CsvProductImport, Product, ProductCategory, ProductTranslation, ProductVariant, ProductVariantSet, TaxCategory, Variant, VariantOption, VendorCategory, VendorMedia};
+use App\Models\{Brand, Category, ClientLanguage, CategoryTranslation, CsvProductImport, Product, ProductCategory, ProductTranslation, ProductVariant, ProductVariantSet, TaxCategory, Variant, VariantOption, VendorCategory, VendorMedia};
 
 class ProductsImport implements ToCollection{
     private $folderName = 'prods';
     
-    public function  __construct($vendor_id){
+    public function  __construct($vendor_id ,$csv_product_import_id){
         $this->vendor_id= $vendor_id;
+        $this->csv_product_import_id = $csv_product_import_id;
     }
     public function collection(Collection $rows){
         $i = 0;
@@ -41,12 +42,12 @@ class ProductsImport implements ToCollection{
                     $checker = 1;
                 }
                 if ($row[4] != "") {
-                    $category_check = Category::where('slug', "LIKE", $row[4])->first();
+                    $category_check = CategoryTranslation::where('name', "LIKE", $row[4])->first();
                     if (!$category_check) { //check if category doesn't exist
                         $error[] = "Row " . $i . " : Category doesn't exist";
                         $checker = 1;
                     } else {
-                        $category_id = $category_check->id;
+                        $category_id = $category_check->category_id;
                         if (!VendorCategory::where([['vendor_id', '=', $this->vendor_id], ['category_id', '=', $category_id]])->exists()) { //check if category is activated for this vendor
                             $error[] = "Row " . $i . " : This category is not activated for this vendor";
                             $checker = 1;
@@ -212,32 +213,31 @@ class ProductsImport implements ToCollection{
                     }
 
                     // insert product
+                    $category = CategoryTranslation::where('name', $da[4])->first();
                     $product = Product::insertGetId([
-                        'sku' => $da[0],
-                        'url_slug' => $da[0],
-                        'category_id' => $da[4],
-                        'title' => ($da[1] == "") ? "" : $da[1],
-                        'body_html' => ($da[2] == "") ? "" : $da[2],
-                        'vendor_id' => $this->vendor_id,
-                        'type_id' => 1,
                         'is_new' => 1,
+                        'type_id' => 1,
+                        'sku' => $da[0],
                         'is_featured' => 0,
-                        'is_live' => ($da[3] == 'TRUE') ? 1 : 0,
                         'is_physical' => 0,
                         'has_inventory' => 0,
-                        'sell_when_out_of_stock' => 0,
+                        'url_slug' => $da[0],
+                        'brand_id' => $brand_id,
                         'requires_shipping' => 0,
                         'Requires_last_mile' => 0,
-                        'brand_id' => $brand_id,
+                        'sell_when_out_of_stock' => 0,
+                        'vendor_id' => $this->vendor_id,
+                        'category_id' => $category->category_id,
                         'tax_category_id' => $tax_category_id,
+                        'title' => ($da[1] == "") ? "" : $da[1],
+                        'is_live' => ($da[3] == 'TRUE') ? 1 : 0,
+                        'body_html' => ($da[2] == "") ? "" : $da[2],
                     ]);
 
                     //insertion into product category
-                    $category_check = Category::where('slug', $da[4])->first();
-                    $category_id = $category_check->id;
                     $cat[] = [
                         'product_id' => $product,
-                        'Category_id' => $category_id,
+                        'Category_id' => $category->category_id,
                     ];
                     ProductCategory::insert($cat);
 
@@ -324,11 +324,9 @@ class ProductsImport implements ToCollection{
                 else{
                     $product_id = Product::where('sku', $da[0])->first();
                     if ($da[5] != "" || $da[7] != "" || $da[9] != "") {
-
                         $product_hasvariant = Product::where('id', $product_id->id)->first();
                         $product_hasvariant->has_variant = 1;
                         $product_hasvariant->save();
-
                         //inserting product variant
                         $proVariant = ProductVariant::insertGetId([
                             'sku' => $da[11],
@@ -380,20 +378,15 @@ class ProductsImport implements ToCollection{
                 }
             }
         } 
-
+        $vendor_csv = CsvProductImport::where('vendor_id', $this->vendor_id)->where('id', $this->csv_product_import_id)->first();
         if (!empty($error)) {
-            $vendor_csv = CsvProductImport::where('vendor_id', $this->vendor_id)->first();
             $vendor_csv->status = 3;
             $vendor_csv->error = json_encode($error);
-            $vendor_csv->save();
-        }
-        else{
-            $vendor_csv = CsvProductImport::where('vendor_id', $this->vendor_id)->first();
+        }else{
             $vendor_csv->status = 2;
-            $vendor_csv->save();
         }
+        $vendor_csv->save();
     }
-
     private function generateBarcodeNumber(){
         $random_string = substr(md5(microtime()), 0, 14);
         while (ProductVariant::where('barcode', $random_string)->exists()) {

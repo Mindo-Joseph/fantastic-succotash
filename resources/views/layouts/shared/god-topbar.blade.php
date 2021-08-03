@@ -58,10 +58,10 @@
         </ul>
     
         <!-- LOGO -->
-        <div class="logo-box">
+        <div class="logo-box d-none d-lg-block">
             <a href="{{route('client.index')}}" class="logo logo-dark text-center">
                 <span class="logo-sm">
-                    <img src="{{asset('assets/images/logo-dark.png')}}"alt="" height="22">
+                    <img src="{{asset('assets/images/logo-dark.png')}}"alt="" height="50">
                     <!-- <span class="logo-lg-text-light">UBold</span> -->
                 </span>
                 <span class="logo-lg">
@@ -97,7 +97,6 @@
             </li>
 
             <li>
-                <!-- Mobile menu toggle (Horizontal Layout)-->
                 <a class="navbar-toggle nav-link" data-toggle="collapse" data-target="#topnav-menu-content">
                     <div class="lines">
                         <span></span>
@@ -105,11 +104,9 @@
                         <span></span>
                     </div>
                 </a>
-                <!-- End mobile menu toggle-->
             </li>   
             
         
         </ul>
-        <div class="clearfix"></div>
     </div>
 </div>

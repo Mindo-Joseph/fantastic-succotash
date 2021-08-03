@@ -54,7 +54,7 @@
                 @foreach($category->childs->toArray() as $cate)
                 <div class="category-block">
                     <a href="{{route('categoryDetail', $cate['id'])}}">
-                        <div class="category-image"><img alt="" src="{{$cate['icon']['proxy_url'] . '40/30' . $cate['icon']['image_path']}}" ></div>
+                        <div class="category-image"><img alt="" src="{{$cate['icon']['proxy_url'] . '100/80' . $cate['icon']['image_path']}}" ></div>
                     </a>
                     <div class="category-details">
                         <a href="{{route('categoryDetail', $cate['id'])}}">
@@ -83,11 +83,15 @@
                                 </div>                                
                             </div>
                             <div class="product-detail">
-                                <div class="rating">
-                                    @for($i = 1; $i < 6; $i++)
-                                        <i class="fa fa-star"></i>
-                                    @endfor
-                                </div>
+                                @if($client_preference_detail)
+                                    @if($client_preference_detail->rating_check == 1)  
+                                    <div class="rating">
+                                        @for($i = 1; $i < 6; $i++)
+                                            <i class="fa fa-star"></i>
+                                        @endfor
+                                    </div>
+                                    @endif
+                                @endif
                                 <a href="{{route('vendorDetail', $data->id)}}">
                                     <h6>{{$data->name}}</h6>
                                 </a>

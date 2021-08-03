@@ -1,8 +1,8 @@
 <div id="update-client-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header border-bottom">
                 <h4 class="modal-title">Update Agent</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
@@ -13,10 +13,10 @@
                 <div class="modal-body p-4">
                     <div class="row mb-2">
                         <div class="col-md-4">
+                            <label>Upload Logo</label>
                             <input type="file" data-plugins="dropify"
                                 data-default-file="{{isset($data->logo) ? asset('clients/'.$data->logo.'') : ''}}"
                                 name="logo" />
-                            <p class="text-muted text-center mt-2 mb-0">Upload Logo</p>
                         </div>
                     </div>
 

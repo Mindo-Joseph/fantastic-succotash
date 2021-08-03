@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Front;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{UserWishlist, Product};
+use App\Models\{UserWishlist, Product, ClientCurrency};
 use Carbon\Carbon;
 use Auth;
 use Session;
@@ -19,19 +20,26 @@ class WishlistController extends FrontController
     public function wishlists(){
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
+        $currency_id = Session::get('customerCurrency');
+        $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
         $wishList = UserWishlist::with(['product.media.image', 'product.translation' => function($q) use($langId){
             $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
             },
-            'product.variant' => function($q) use($langId){
-                $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+            'product.variant' => function($q){
+                $q->select('id', 'sku', 'product_id', 'quantity', 'price', 'barcode');
                 $q->groupBy('product_id');
             },
-        ])->select( "id", "user_id", "product_id")
+        ])->select( "id", "user_id", "product_id", "added_on")
         ->where('user_id', Auth::user()->id)->get();
         if(!empty($wishList)){
+            foreach($wishList as $key => $wish){
+                $wish->product->translation_title = (!empty($wish->product->translation)) ? $wish->product->translation[0]->title : 'NA';
+                $wish->product->variant_price = (!empty($wish->product->variant)) ? ($wish->product->variant[0]->price * $clientCurrency->doller_compare) : 0;
+                $wish->product->variant_quantity = (!empty($wish->product->variant)) ? $wish->product->variant[0]->quantity : 0;
+            }
             $wishList = $wishList->toArray();
         }
-       return view('frontend/account/wishlist')->with(['navCategories' => $navCategories, 'wishList' => $wishList]);
+       return view('frontend/account/wishlist')->with(['navCategories' => $navCategories, 'wishList' => $wishList, 'clientCurrency'=>$clientCurrency]);
     }
 
      /**
@@ -43,20 +51,18 @@ class WishlistController extends FrontController
     public function updateWishlist(Request $request)
     {
         $product = Product::where('sku', $request->sku)->firstOrFail();
-
         $exist = UserWishlist::where('user_id', Auth::user()->id)->where('product_id', $product->id)->first();
-
         if($exist){
             $exist->delete();
-            return response()->json(array('error' => true, 'message'=> 'Product has been removed from wishlist.'));
+            return response()->json(array('status' => 'success', 'message'=> 'Product has been removed from wishlist.'));
         }
         $wishlist = new UserWishlist();
         $wishlist->user_id = Auth::user()->id;
         $wishlist->product_id = $product->id;
+        $wishlist->product_variant_id = $request->variant_id;
         $wishlist->added_on = Carbon::now();
         $wishlist->save();
-
-        return response()->json(array('success' => true, 'message' => 'Product has been added in wishlist.'));
+        return response()->json(array('status' => 'success', 'message' => 'Product has been added in wishlist.'));
     }
 
      /**

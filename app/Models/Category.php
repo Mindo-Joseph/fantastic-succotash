@@ -9,16 +9,19 @@ class Category extends Model
 {
   use SoftDeletes;
   
-    protected $fillable = ['icon', 'image', 'is_visible', 'status', 'position', 'is_core', 'can_add_products', 'parent_id', 'vendor_id', 'client_code', 'display_mode', 'type_id'];
+    protected $fillable = ['icon', 'image', 'is_visible', 'status', 'position', 'is_core', 'can_add_products', 'parent_id', 'vendor_id', 'client_code', 'display_mode', 'type_id','warning_page_id', 'template_type_id', 'warning_page_design'];
+    public $timestamps = true;
 
     public function translation(){
       return $this->hasMany('App\Models\Category_translation')->join('client_languages as cl', 'cl.language_id', 'category_translations.language_id')->join('languages', 'category_translations.language_id', 'languages.id')->select('category_translations.*', 'languages.id as langId', 'languages.name as langName', 'cl.is_primary')->orderBy('cl.is_primary', 'desc')->where('cl.is_active', 1); 
     }
-
+    public function translation_one(){
+      return $this->hasOne('App\Models\Category_translation')->select('category_id', 'name')->where('language_id', 1); 
+    }
     public function english(){
        return $this->hasOne('App\Models\Category_translation')->select('category_id', 'name')->where('language_id', 1); 
     }
-
+    
     public function primary(){
 
       $langData = $this->hasOne('App\Models\Category_translation')->join('client_languages as cl', 'cl.language_id', 'category_translations.language_id')->select('category_translations.category_id', 'category_translations.name', 'category_translations.language_id')->where('cl.is_primary', 1);
@@ -44,9 +47,17 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id', 'id')->select('id', 'slug', 'parent_id', 'icon');
     }
-
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id', 'id');
+    }
     public function type(){
       return $this->belongsTo('App\Models\Type')->select('id', 'title'); 
+    }
+
+    public function categoryTag()
+    {
+        return $this->hasOne(CategoryTag::class)->select('category_id', 'tag');
     }
 
     public function getImageAttribute($value)

@@ -33,7 +33,6 @@ class CouponController extends BaseController
                     ->where('status', '0')
                     ->where('user_id', $user->id)->first();
         $promocode = Promocode::with('type', 'restriction')->where('is_deleted', '0')->whereDate('expiry_date', '>=', Carbon::now())->get();
-        
     }
 
     public function apply(Request $request){

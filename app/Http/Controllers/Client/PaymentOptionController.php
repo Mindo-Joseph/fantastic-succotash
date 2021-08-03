@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Http\Controllers\Client\BaseController;
+use Session;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Session;
-use Illuminate\Support\Facades\Validator;
-use App\Models\{Client, ClientPreference, PaymentOption};
+use App\Http\Traits\ToasterResponser;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{Client, ClientPreference, PaymentOption};
 
 class PaymentOptionController extends BaseController
 {
+    use ToasterResponser;
     private $folderName = 'payoption';
     /**
      * Display a listing of the resource.
@@ -20,7 +23,7 @@ class PaymentOptionController extends BaseController
      */
     public function index()
     {
-        $code = array('COD', 'wallet', 'layalty-points', 'paypal', 'stripe');
+        $code = array('cod', 'wallet', 'layalty-points', 'paypal', 'stripe');
         $payOption = PaymentOption::whereIn('code', $code)->get();
         return view('backend/payoption/index')->with(['payOption' => $payOption]);
     }
@@ -90,6 +93,11 @@ class PaymentOptionController extends BaseController
             if( (isset($active_arr[$id])) && ($active_arr[$id] == 'on') ){
                 $status = 1;
                 if( (isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'paypal') ){
+                    $validatedData = $request->validate([
+                        'paypal_username'       => 'required',
+                        'paypal_password'       => 'required',
+                        'paypal_signature'      => 'required',
+                    ]);
                     $json_creds = json_encode(array(
                         'username' => $request->paypal_username,
                         'password' => $request->paypal_password,
@@ -97,14 +105,32 @@ class PaymentOptionController extends BaseController
                     ));
                 }
                 else if( (isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'stripe') ){
+                    $validatedData = $request->validate([
+                        'stripe_api_key'        => 'required',
+                        'stripe_publishable_key'=> 'required'
+                    ], [
+                        'stripe_api_key.required'=> 'Stripe secret key field is required'
+                    ]);
                     $json_creds = json_encode(array(
-                        'api_key' => $request->stripe_api_key
+                        'api_key' => $request->stripe_api_key,
+                        'publishable_key' => $request->stripe_publishable_key
+                    ));
+                }
+                else if( (isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'paystack') ){
+                    $validatedData = $request->validate([
+                        'paystack_secret_key'=> 'required',
+                        'paystack_public_key'=> 'required'
+                    ]);
+                    $json_creds = json_encode(array(
+                        'secret_key' => $request->paystack_secret_key,
+                        'public_key' => $request->paystack_public_key
                     ));
                 }
             }
             PaymentOption::where('id', $id)->update(['status' => $status, 'credentials' => $json_creds]);
         }
-        return redirect()->back()->with('success', $msg);
+        $toaster = $this->successToaster('Success', $msg);
+        return redirect()->back()->with('toaster', $toaster);
         
     }
 

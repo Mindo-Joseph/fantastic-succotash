@@ -6,7 +6,7 @@
                     {!! Form::label('title', 'Select Category',['class' => 'control-label']) !!}
                     <select class="form-control selectize-select" id="edit_cateSelectBox" name="cate_id">
                         @foreach($categories as $cate)
-                            <option value="{{$cate->id}}" @if($variant->varcategory->category_id == $cate->id) selected @endif>{{$cate->slug}}</option>
+                            <option value="{{$cate->id}}" @if($variant->varcategory->category_id == $cate->id) selected @endif>{{$cate->translation_one['name']}}</option>
                         @endforeach
                     </select>
                     <span class="invalid-feedback" role="alert">

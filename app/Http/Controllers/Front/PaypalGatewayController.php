@@ -3,18 +3,20 @@
 namespace App\Http\Controllers\Front;
 
 use Auth;
+use Session;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
-use App\Models\{PaymentOption};
+use App\Models\{PaymentOption, Client, ClientPreference, ClientCurrency};
 use App\Http\Traits\ApiResponser;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Front\FrontController;
 use Illuminate\Support\Facades\Validator;
 
-class PaypalGatewayController extends Controller
+class PaypalGatewayController extends FrontController
 {
     use ApiResponser;
     public $gateway;
+    public $currency;
 
     public function __construct()
     {
@@ -28,16 +30,23 @@ class PaypalGatewayController extends Controller
         $this->gateway->setPassword($password);
         $this->gateway->setSignature($signature);
         $this->gateway->setTestMode(true); //set it to 'false' when go live
+        
+        $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
+        $this->currency = (isset($primaryCurrency->currency->iso_code)) ? $primaryCurrency->currency->iso_code : 'USD';
     }
 
-    public function postPaymentViaPaypal(Request $request)
-    {
+    public function paypalPurchase(Request $request){
         try{
+            $amount = $this->getDollarCompareAmount($request->amount);
+            $returnUrlParams = '?amount='.$amount;
+            if($request->has('tip')){
+                $returnUrlParams = $returnUrlParams.'&tip='.$request->tip;
+            }
             $response = $this->gateway->purchase([
-                'amount' => $request->input('amount'),
-                'currency' => 'USD',
-                'returnUrl' => url('/viewcart?amount='.$request->input('amount')),
-                'cancelUrl' => url('/viewcart')
+                'currency' => 'USD', //$this->currency,
+                'amount' => $amount,
+                'cancelUrl' => url($request->cancelUrl),
+                'returnUrl' => url($request->returnUrl . $returnUrlParams),
             ])->send();
             if ($response->isSuccessful()) {
                 return $this->successResponse($response->getData());
@@ -52,18 +61,18 @@ class PaypalGatewayController extends Controller
         }
     }
 
-    public function paypalSuccess(Request $request)
+    public function paypalCompletePurchase(Request $request)
     {
         // Once the transaction has been approved, we need to complete it.
         if($request->has(['token', 'PayerID'])){
+            $amount = $this->getDollarCompareAmount($request->amount);
             $transaction = $this->gateway->completePurchase(array(
-                'amount'                => $request->input('amount'),
-                'payer_id'              => $request->input('PayerID'),
-                'transactionReference'  => $request->input('token'),
+                'amount'                => $amount,
+                'payer_id'              => $request->PayerID,
+                'transactionReference'  => $request->token
             ));
             $response = $transaction->send();
             if ($response->isSuccessful()){
-                // $arr_body = $response->getData();
                 return $this->successResponse($response->getTransactionReference());
             } else {
                 return $this->errorResponse($response->getMessage(), 400);

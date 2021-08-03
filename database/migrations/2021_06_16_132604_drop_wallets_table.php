@@ -11,10 +11,11 @@ class DropWalletsTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
+    public function up(){
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('wallet_histories');
         Schema::dropIfExists('wallets');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 
     /**

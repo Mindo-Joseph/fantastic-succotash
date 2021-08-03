@@ -1,380 +1,300 @@
-@extends('layouts.vertical', ['title' => 'Ecommerce Dashboard'])
-
+@extends('layouts.vertical', ['title' => 'Dashboard'])
 @section('css')
-    <!-- Plugins css -->
-    <link href="{{asset('assets/libs/admin-resources/admin-resources.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/libs/admin-resources/admin-resources.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    span.nodatafound {
+  font-size:120% !important;
+  border: 1px solid #FC0;
+  background: #FFC;
+  color: #384F34;
+  display: block;
+  font-weight: bold;
+  margin: 2px auto 14px;
+  padding: 15px !important;
+  text-align: left;
+}
+</style>
 @endsection
-
 @section('content')
-    <!-- Start Content-->
-    <div class="container-fluid">
-        
-        <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box">
-                    <div class="page-title-right">
-                        <!-- <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
-                            <li class="breadcrumb-item active">Dashboard</li>
-                        </ol> -->
-                    </div>
-                    <h4 class="page-title">Dashboard</h4>
-                </div>
-            </div>
-        </div>     
-        <!-- end page title --> 
-
-        <div class="row">
-            <div class="col-md-6 col-xl-3">
-                <div class="widget-rounded-circle card-box">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="avatar-lg rounded bg-soft-primary">
-                                <i class="dripicons-wallet font-24 avatar-title text-primary"></i>
+<div class="container-fluid">
+    <div class="content dashboard-boxes">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <div class="d-flex align-items-center mb-3">
+                                <input type="text" id="range-datepicker" class="form-control flatpickr-input active" placeholder="2018-10-03 to 2018-10-10" readonly="">
+                                <a href="javascript: void(0);" class="btn btn-blue ml-2" id="dashboard_refresh_btn">
+                                    <i class="mdi mdi-autorenew"></i>
+                                </a>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="text-right">
-                                <h3 class="text-dark mt-1">$<span data-plugin="counterup">0</span></h3>
-                                <p class="text-muted mb-1 text-truncate">Total Revenue</p>
-                            </div>
-                        </div>
-                    </div> <!-- end row-->
-                </div> <!-- end widget-rounded-circle-->
-            </div> <!-- end col-->
-
-            <div class="col-md-6 col-xl-3">
-                <div class="widget-rounded-circle card-box">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="avatar-lg rounded bg-soft-success">
-                                <i class="dripicons-basket font-24 avatar-title text-success"></i>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="text-right">
-                                <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
-                                <p class="text-muted mb-1 text-truncate">Orders</p>
-                            </div>
-                        </div>
-                    </div> <!-- end row-->
-                </div> <!-- end widget-rounded-circle-->
-            </div> <!-- end col-->
-
-            <div class="col-md-6 col-xl-3">
-                <div class="widget-rounded-circle card-box">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="avatar-lg rounded bg-soft-info">
-                                <i class="dripicons-store font-24 avatar-title text-info"></i>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="text-right">
-                                <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
-                                <p class="text-muted mb-1 text-truncate">Stores</p>
-                            </div>
-                        </div>
-                    </div> <!-- end row-->
-                </div> <!-- end widget-rounded-circle-->
-            </div> <!-- end col-->
-
-            <div class="col-md-6 col-xl-3">
-                <div class="widget-rounded-circle card-box">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="avatar-lg rounded bg-soft-warning">
-                                <i class="dripicons-user-group font-24 avatar-title text-warning"></i>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="text-right">
-                                <h3 class="text-dark mt-1"><span data-plugin="counterup">0</span></h3>
-                                <p class="text-muted mb-1 text-truncate">Sellers</p>
-                            </div>
-                        </div>
-                    </div> <!-- end row-->
-                </div> <!-- end widget-rounded-circle-->
-            </div> <!-- end col-->
-        </div>
-        <!-- end row -->
-
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="card-box pb-2">
-                    <div class="float-right d-none d-md-inline-block">
-                        <div class="btn-group mb-2">
-                            <button type="button" class="btn btn-xs btn-light">Today</button>
-                            <button type="button" class="btn btn-xs btn-light">Weekly</button>
-                            <button type="button" class="btn btn-xs btn-secondary">Monthly</button>
-                        </div>
-                    </div>
-
-                    <h4 class="header-title mb-3">Sales Analytics</h4>
-
-                    <div class="row text-center">
-                        <div class="col-md-4">
-                            <p class="text-muted mb-0 mt-3">Current Week</p>
-                            <h2 class="font-weight-normal mb-3">
-                                <small class="mdi mdi-checkbox-blank-circle text-primary align-middle mr-1"></small>
-                                <span>$0</span>
-                            </h2>
-                        </div>
-                        <div class="col-md-4">
-                            <p class="text-muted mb-0 mt-3">Previous Week</p>
-                            <h2 class="font-weight-normal mb-3">
-                                <small class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
-                                <span>$0</span>
-                            </h2>
-                        </div>
-                        <div class="col-md-4">
-                            <p class="text-muted mb-0 mt-3">Targets</p>
-                            <h2 class="font-weight-normal mb-3">
-                                <small class="mdi mdi-checkbox-blank-circle text-success align-middle mr-1"></small>
-                                <span>$0</span>
-                            </h2>
-                        </div>
-                    </div>
-
-                    <div id="revenue-chart" class="apex-charts mt-3" data-colors="#43bee1,#1abc9c"></div>
-                </div> <!-- end card-box -->
-            </div> <!-- end col-->
-
-            <!-- <div class="col-xl-4">
-                <div class="card-box">
-                    <div class="dropdown float-right">
-                        <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
-                            <i class="mdi mdi-dots-vertical"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                            <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                            <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                            <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                        </div>
-                    </div>
-
-                    <h4 class="header-title mb-0">Total Revenue</h4>
-
-                    <div class="widget-chart text-center" dir="ltr">
-                        
-                        <div id="world-map-markers" style="height: 230px" class="mt-4"></div>
-
-                        <h5 class="text-muted mt-4">Total sales made today</h5>
-                        <h2>$178</h2>
-
-                        <p class="text-muted w-75 mx-auto sp-line-2">Traditional heading elements are designed to work best in the meat of your page content.</p>
-
-                        <div class="row mt-4">
-                            <div class="col-4">
-                                <p class="text-muted font-15 mb-1 text-truncate">Target</p>
-                                <h4><i class="fe-arrow-down text-danger mr-1"></i>$7.8k</h4>
-                            </div>
-                            <div class="col-4">
-                                <p class="text-muted font-15 mb-1 text-truncate">Last week</p>
-                                <h4><i class="fe-arrow-up text-success mr-1"></i>$1.4k</h4>
-                            </div>
-                            <div class="col-4">
-                                <p class="text-muted font-15 mb-1 text-truncate">Last Month</p>
-                                <h4><i class="fe-arrow-down text-danger mr-1"></i>$15k</h4>
-                            </div>
-                        </div>
-                        
+                        <h4 class="page-title">Dashboard</h4>
                     </div>
                 </div>
-            </div>  --><!-- end col-->
-        </div>
-        <!-- end row -->
-
-
-        <div class="row">
-            <div class="col-xl-6">
-                <div class="card-box">
-                    <h4 class="header-title mb-3">Transaction History</h4>
-
-                    <div class="table-responsive">
-                        No Record Found
-                        <!-- <table class="table table-centered table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="border-top-0">Name</th>
-                                    <th class="border-top-0">Card</th>
-                                    <th class="border-top-0">Date</th>
-                                    <th class="border-top-0">Amount</th>
-                                    <th class="border-top-0">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <img src="{{asset('assets/images/users/user-2.jpg')}}" alt="user-pic" class="rounded-circle avatar-sm bx-shadow-lg" />
-                                        <span class="ml-2">Imelda J. Stanberry</span>
-                                    </td>
-                                    <td>
-                                        <img src="{{asset('assets/images/cards/visa.png')}}"alt="user-card" height="24" />
-                                        <span class="ml-2">**** 3256</span>
-                                    </td>
-                                    <td>27.03.2018</td>
-                                    <td>$345.98</td>
-                                    <td><span class="badge badge-pill badge-danger">Failed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="{{asset('assets/images/users/user-3.jpg')}}" alt="user-pic" class="rounded-circle avatar-sm bx-shadow-lg" />
-                                        <span class="ml-2">Francisca S. Lobb</span>
-                                    </td>
-                                    <td>
-                                        <img src="{{asset('assets/images/cards/master.png')}}"alt="user-card" height="24" />
-                                        <span class="ml-2">**** 8451</span>
-                                    </td>
-                                    <td>28.03.2018</td>
-                                    <td>$1,250</td>
-                                    <td><span class="badge badge-pill badge-success">Paid</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="{{asset('assets/images/users/user-1.jpg')}}" alt="user-pic" class="rounded-circle avatar-sm bx-shadow-lg" />
-                                        <span class="ml-2">James A. Wert</span>
-                                    </td>
-                                    <td>
-                                        <img src="{{asset('assets/images/cards/amazon.png')}}"alt="user-card" height="24" />
-                                        <span class="ml-2">**** 2258</span>
-                                    </td>
-                                    <td>28.03.2018</td>
-                                    <td>$145</td>
-                                    <td><span class="badge badge-pill badge-success">Paid</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="{{asset('assets/images/users/user-4.jpg')}}" alt="user-pic" class="rounded-circle avatar-sm bx-shadow-lg" />
-                                        <span class="ml-2">Dolores J. Pooley</span>
-                                    </td>
-                                    <td>
-                                        <img src="{{asset('assets/images/cards/american-express.png')}}"alt="user-card" height="24" />
-                                        <span class="ml-2">**** 6950</span>
-                                    </td>
-                                    <td>29.03.2018</td>
-                                    <td>$2,005.89</td>
-                                    <td><span class="badge badge-pill badge-danger">Failed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="{{asset('assets/images/users/user-5.jpg')}}" alt="user-pic" class="rounded-circle avatar-sm bx-shadow-lg" />
-                                        <span class="ml-2">Karen I. McCluskey</span>
-                                    </td>
-                                    <td>
-                                        <img src="{{asset('assets/images/cards/discover.png')}}"alt="user-card" height="24" />
-                                        <span class="ml-2">**** 0021</span>
-                                    </td>
-                                    <td>31.03.2018</td>
-                                    <td>$24.95</td>
-                                    <td><span class="badge badge-pill badge-success">Paid</span></td>
-                                </tr>
-                            
-                            </tbody>
-                        </table> -->
-                    </div> 
-
-                </div> 
             </div>
-            <div class="col-xl-6">
-                <div class="card-box">
-                    <h4 class="header-title mb-3">Recent Products</h4>
+            <div class="row custom-cols">
+                <div class="col col-md-4 col-lg-3 col-xl">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body p-2">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Pending Orders</p>
+                                        <h3 class="text-dark mt-1 mb-0"><span class="counter" data-plugin="counterup" id="total_pending_order"></span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-md-right">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-heart font-22 avatar-title"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body p-2">
+                            <div class="row align-items-center">
+                            <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Active Orders</p>
+                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup" id="total_active_order"></span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-shopping-cart font-22 avatar-title"></i>
 
-                    <div class="table-responsive">
-                        No Record Found
-                        <!-- <table class="table table-centered table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="border-top-0">Product</th>
-                                    <th class="border-top-0">Category</th>
-                                    <th class="border-top-0">Added Date</th>
-                                    <th class="border-top-0">Amount</th>
-                                    <th class="border-top-0">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <img src="{{asset('assets/images/products/product-1.png')}}"alt="product-pic" height="36" />
-                                        <span class="ml-2">Adirondack Chair</span>
-                                    </td>
-                                    <td>
-                                        Dining Chairs
-                                    </td>
-                                    <td>27.03.2018</td>
-                                    <td>$345.98</td>
-                                    <td><span class="badge bg-soft-success text-success">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="{{asset('assets/images/products/product-2.png')}}"alt="product-pic" height="36" />
-                                        <span class="ml-2">Biblio Plastic Armchair</span>
-                                    </td>
-                                    <td>
-                                        Baby Chairs
-                                    </td>
-                                    <td>28.03.2018</td>
-                                    <td>$1,250</td>
-                                    <td><span class="badge bg-soft-success text-success">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="{{asset('assets/images/products/product-3.png')}}"alt="product-pic" height="36" />
-                                        <span class="ml-2">Amazing Modern Chair</span>
-                                    </td>
-                                    <td>
-                                        Plastic Armchair
-                                    </td>
-                                    <td>28.03.2018</td>
-                                    <td>$145</td>
-                                    <td><span class="badge bg-soft-danger text-danger">Deactive</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="{{asset('assets/images/products/product-4.png')}}"alt="product-pic" height="36" />
-                                        <span class="ml-2">Designer Awesome Chair</span>
-                                    </td>
-                                    <td>
-                                        Wing Chairs
-                                    </td>
-                                    <td>29.03.2018</td>
-                                    <td>$2,005.89</td>
-                                    <td><span class="badge bg-soft-success text-success">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <img src="{{asset('assets/images/products/product-5.png')}}"alt="product-pic" height="36" />
-                                        <span class="ml-2">The butterfly chair</span>
-                                    </td>
-                                    <td>
-                                        Plastic Armchair
-                                    </td>
-                                    <td>31.03.2018</td>
-                                    <td>$24.95</td>
-                                    <td><span class="badge bg-soft-success text-success">Active</span></td>
-                                </tr>
-                            
-                            </tbody>
-                        </table> -->
-                    </div> <!-- end table-responsive -->
-                </div> <!-- end card-box-->
-            </div> <!-- end col-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body p-2">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Delivered Orders</p>
+                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup" id="total_delivered_order"></span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-bar-chart-line font-22 avatar-title"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body p-2">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Cancelled Orders</p>
+                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup" id="total_rejected_order"></span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-eye font-22 avatar-title"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body p-2">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Vendor</p>
+                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup" id="total_vendor"></span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-eye font-22 avatar-title"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body p-2">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Categories</p>
+                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup" id="total_categories"></span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-md-right">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fa fa-list-alt font-22 avatar-title" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body p-2">
+                            <div class="row align-items-center">
+                            <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Products</p>
+                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup" id="total_products"></span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-shopping-cart font-22 avatar-title"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body p-2">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Banner Promotions</p>
+                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup" id="total_banners"></span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fa fa-bullhorn  font-22 avatar-title" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body p-2">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Brands</p>
+                                        <h3 class="text-dark mt-1"><span data-plugin="counterup" id="total_brands"></span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                    <i class="fa fa-shopping-cart font-22 avatar-title" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="widget-rounded-circle card">
+                        <div class="card-body p-2">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <div class="text-end">
+                                        <p class="text-muted mb-1 text-truncate">Return Request</p>
+                                        <h3 class="text-dark mt-1 mb-0"><span data-plugin="counterup" id="return_requests"></span></h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="avatar-lg rounded-circle ml-auto">
+                                        <i class="fe-eye font-22 avatar-title"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 mb-3">
+                    <div class="card mb-0">
+                        <div class="card-body p-2">
+                            <div class="card-widgets d-flex align-items-center select-date">
+                                <div class="btn-group mb-0 mx-2">
+                                    <button type="button" class="btn btn-xs btn-light yearSales">Yearly</button>
+                                    <button type="button" class="btn btn-xs btn-light weeklySales">Weekly</button>
+                                    <button type="button" class="btn btn-xs btn-secondary monthlySales">Monthly</button>
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-0">Sales Analytics</h4>
+                            <div id="cardCollpase2" class="collapse show mt-3" dir="ltr" style="position: relative;">
+                                <div id="sales-analytics" class="mt-4" data-colors="#1abc9c,#4a81d4" style="min-height: 393px;">
+                                </div>
+                                <div class="resize-triggers">
+                                    <div class="expand-trigger">
+                                        <div style="width: 974px; height: 394px;"></div>
+                                    </div>
+                                    <div class="contract-trigger"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                         <h4 class="header-title mb-0">Revenue By Location</h4>
+                         <div id="cardCollpase4" class="collapse pt-3 show">
+                            <div id="world-map-markers" style="height: 433px"></div>
+                         </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                         <h4 class="header-title mb-0 pb-2">Orders (Top Categories)</h4>
+                         <div class="gray-placeholder-img text-center py-5 my-2 hide" id="empty_card_collpase4">
+                             <img src="{{asset('assets/images/Dashboard _ Royo.png')}}" alt="">
+                         </div>
+                         <div id="cardCollpase4" class="collapse show pt-3">
+                            <div id="apexchartsfwg700r2" class="apexcharts-canvas apexchartsfwg700r2 apexcharts-theme-light" style="height: 433px"></div>
+                         </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- end row-->
-        
-    </div> <!-- container -->
-@endsection
-
+    </div>
+</div>
+<script>
 @section('script')
-    <!-- Third Party js-->
-    <script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
-
-    <!-- Plugins js-->
-    <script src="{{asset('assets/libs/admin-resources/admin-resources.min.js')}}"></script>
-
-    <!-- Page js-->
-    <script src="{{asset('assets/js/pages/ecommerce-dashboard.init.js')}}"></script>
+@endsection
+    var categoryInfo_url = "{{route('client.categoryInfo')}}";
+    var yearlyInfo_url = "{{route('client.yearlySalesInfo')}}";
+    var weeklyInfo_url = "{{route('client.weeklySalesInfo')}}";
+    var monthlyInfo_url = "{{route('client.monthlySalesInfo')}}";
+    var dashboard_filter_url = "{{ route('client.dashboard.filter') }}";
+</script>
+<script src="{{asset('js/admin_dashboard.js')}}"></script>
+<script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
+<script src="{{asset('assets/libs/apexcharts/apexcharts.min.js')}}"></script>
+<script src="{{asset('assets/libs/admin-resources/admin-resources.min.js')}}"></script>
 @endsection

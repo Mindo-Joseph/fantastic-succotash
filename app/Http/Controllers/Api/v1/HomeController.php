@@ -2,33 +2,34 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Api\v1\BaseController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory, BrandTranslation, Celebrity};
-use Validation;
 use DB;
-use Illuminate\Support\Facades\Storage;
 use Config;
+use Validation;
+use Carbon\Carbon;
 use ConvertCurrency;
+use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, PaymentOption, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory, BrandTranslation, Celebrity, UserVendor, AppStyling};
 
-class HomeController extends BaseController
-{
+class HomeController extends BaseController{
     use ApiResponser;
-    private $field_status = 2;
-    private $curLang = 0;
 
-    public function __construct(){
-        
-    }
+    private $curLang = 0;
+    private $field_status = 2;
 
     /** Return header data, client profile and configure data */
     public function headerContent(Request $request){
         try {
             $homeData = array();
-            $homeData['profile'] = Client::with('preferences')->select('company_name', 'code', 'logo', 'company_address', 'phone_number', 'email')->first();
+            $homeData['profile'] = Client::with('preferences')->select('company_name', 'code', 'sub_domain', 'logo', 'company_address', 'phone_number', 'email')->first();
+            $app_styling_detail = AppStyling::getSelectedData();
+            foreach ($app_styling_detail as $app_styling) {
+                $key = $app_styling['key'];
+                $homeData['profile']->preferences->$key = $app_styling['value'];
+            }
             $homeData['languages'] = ClientLanguage::with('language')->select('language_id', 'is_primary')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
             $banners = Banner::select("id", "name", "description", "image", "link", 'redirect_category_id', 'redirect_vendor_id')
                         ->where('status', 1)->where('validity_on', 1)
@@ -55,6 +56,11 @@ class HomeController extends BaseController
             }
             $homeData['banners'] = $banners;
             $homeData['currencies'] = ClientCurrency::with('currency')->select('currency_id', 'is_primary', 'doller_compare')->orderBy('is_primary', 'desc')->get();
+            $stripe_creds = PaymentOption::select('credentials')->where('code', 'stripe')->where('status', 1)->first();
+            if($stripe_creds){
+                $creds_arr = json_decode($stripe_creds->credentials);
+            }
+            $homeData['profile']->preferences->stripe_publishable_key = (isset($creds_arr->publishable_key)) ? $creds_arr->publishable_key : '';
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
@@ -65,62 +71,46 @@ class HomeController extends BaseController
     public function homepage(Request $request)
     {
         try{
+            $vends = [];
+            $homeData = [];
+            $user = Auth::user();
+            $latitude = $request->latitude;
+            $longitude = $request->longitude;
+            $user_geo[] = $latitude;
+            $user_geo[] = $longitude;
             $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
-            $lats = $request->latitude;
-            $longs = $request->longitude;
-            $user_geo[] = $lats;
-            $user_geo[] = $longs;
-            $vends = array();
-            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
-            // if($preferences->is_hyperlocal == 1){
-            //     $vendorData = $vendorData->whereIn('id', function($query) use($lats, $longs){
-            //             $query->select('vendor_id')
-            //             ->from(with(new ServiceArea)->getTable())
-            //             ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$lats." ".$longs.")'))");
-            //     });
-            // }
+            if($request->has('type')){
+                $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount')->where($request->type, 1);
+            }else{
+                $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
+            }
             if($preferences->is_hyperlocal == 1){
-                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($lats, $longs){
+                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
                         $query->select('vendor_id')
-                        ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$lats." ".$longs.")'))");
+                        ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$latitude." ".$longitude.")'))");
                 });
             }
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
-
             foreach ($vendorData as $key => $value) {
                 $vends[] = $value->id;
             }
             $isVendorArea = 0;
-            $langId = Auth::user()->language;
-            $homeData = array();
+            $langId = $user->language;
             $categories = $this->categoryNav($langId);
-            $homeData['reqData'] = $request->all();
-            $homeData['categories'] = $categories;
             $homeData['vendors'] = $vendorData;
+            $homeData['categories'] = $categories;
+            $homeData['reqData'] = $request->all();
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
-                            $q->select('brand_id', 'title')->where('language_id', $langId);
-                            }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
-            // $homeData['featuredProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_featured');
-            // $homeData['newProducts'] = $this->productList($vends, $langId, Auth::user()->currency, 'is_new');
-            // $homeData['onSale'] = $this->productList($vends, $langId, Auth::user()->currency);
+                                    $q->select('brand_id', 'title')->where('language_id', $langId);
+                                }])->select('id', 'image')->where('status', '!=', $this->field_status)
+                                ->orderBy('position', 'asc')->get();
+            $user_vendor_count = UserVendor::where('user_id', $user->id)->count();
+            $homeData['is_admin'] = $user_vendor_count > 0 ? 1 : 0;                  
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
     }
-
-    /*public function inServiceArea($user_geo, $area, $count = 0)
-    {
-        //echo '<pre>';print_r($area->toArray()); die;
-        foreach ($area as $geokey => $geovalue) {
-            $availables = $this->contains($user_geo, $geovalue->geo_coordinates);
-            if($availables){
-                return 1;
-            }
-            $count++;
-        }
-        return 0;
-    }*/
 
     /** return product meta data for new products, featured products, onsale products     */
     public function productList($venderIds, $langId = 1, $currency = 147, $where = '')
@@ -177,7 +167,7 @@ class HomeController extends BaseController
                 
                 foreach ($categories as $key => $value) {
                     $value->response_type = 'category';
-                    $response[] = $value;
+                    // $response[] = $value;
                 }
                 $brands = Brand::join('brand_translations as bt', 'bt.brand_id', 'brands.id')
                         ->select('brands.id', 'bt.title  as dataname')
@@ -188,21 +178,21 @@ class HomeController extends BaseController
 
                 foreach ($brands as $brand) {
                     $brand->response_type = 'brand';
-                    $response[] = $brand;
+                    // $response[] = $brand;
                 }
                 $vendors  = Vendor::select('id', 'name  as dataname', 'address')->where(function ($q) use ($keyword) {
                         $q->where('name', ' LIKE', '%' . $keyword . '%')->orWhere('address', 'LIKE', '%' . $keyword . '%');
                     })->where('vendors.status', '!=', '2')->get();
                 foreach ($vendors as $vendor) {
                     $vendor->response_type = 'vendor';
-                    $response[] = $vendor;
+                    // $response[] = $vendor;
                 }
                 $products = Product::join('product_translations as pt', 'pt.product_id', 'products.id')
                             ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
                             ->where('pt.language_id', $langId)
                             ->where(function ($q) use ($keyword) {
                                 $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
-                            })->where('products.is_live', 1)->whereNull('deleted_at')->get();
+                            })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->get();
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $response[] = $product;
@@ -223,7 +213,7 @@ class HomeController extends BaseController
                     });
                 if($for == 'category'){
                     $prodIds = array();
-                    $productCategory = ProductCategory::select('product_id')->where('category_id', $dataId)->get();
+                    $productCategory = ProductCategory::select('product_id')->where('category_id', $dataId)->distinct()->get();
                     if($productCategory){
                         foreach ($productCategory as $key => $value) {
                             $prodIds[] = $value->product_id;
@@ -237,7 +227,7 @@ class HomeController extends BaseController
                 if($for == 'brand'){
                     $products = $products->where('products.brand_id', $dataId);
                 }
-                $products = $products->where('products.is_live', 1)->whereNull('deleted_at')->get();
+                $products = $products->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->get();
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $response[] = $product;

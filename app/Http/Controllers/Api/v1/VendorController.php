@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use DB;
 use Validation;
 use Carbon\Carbon;
-use App\Model\Client;
+use Client;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
@@ -21,15 +21,6 @@ class VendorController extends BaseController{
             $vendor_ids = [];
             $category_details = [];
             $vendor_id = $request->vendor_id;
-            // $vendor_categories = VendorCategory::with('category')->where('vendor_id', $vendor_id)->get();
-            // foreach ($vendor_categories as $vendor_category) {
-            //     $category_details[] = array(
-            //         'id' => $vendor_category->category->id,
-            //         'name' => $vendor_category->category->slug,
-            //         'icon' => $vendor_category->category->icon,
-            //         'image' => $vendor_category->category->image
-            //     );
-            // }
             $type = Type::where('title' ,'Vendor')->first();
             $vendor_products = Product::with('category.categoryDetail')->where('vendor_id', $vendor_id)->where('is_live', 1)->get(['id']);
             foreach ($vendor_products as $vendor_product) {
@@ -38,7 +29,7 @@ class VendorController extends BaseController{
                         $vendor_ids[] = $vendor_product->category->categoryDetail->id;
                         $category_details[] = array(
                             'id' => $vendor_product->category->categoryDetail->id,
-                            'name' => $vendor_product->category->categoryDetail->slug,
+                            'name' => $vendor_product->category->categoryDetail->translation_one ? $vendor_product->category->categoryDetail->translation_one->name :$vendor_product->category->categoryDetail->slug,
                             'icon' => $vendor_product->category->categoryDetail->icon,
                             'image' => $vendor_product->category->categoryDetail->image
                         );
@@ -79,6 +70,11 @@ class VendorController extends BaseController{
                                 ->where('vendor_id', $vid);
                             })
                         ->groupBy('product_variant_sets.variant_type_id')->get();
+                    // ->join('product_categories as pc', 'pc.product_id', 'products.id')
+                    // ->whereNotIn('pc.category_id', function($qr) use($vid){ 
+                    //             $qr->select('category_id')->from('vendor_categories')
+                    //                 ->where('vendor_id', $vid)->where('status', 0);
+                    // })
             $products = Product::with(['category.categoryDetail', 'inwishlist' => function($qry) use($userid){
                             $qry->where('user_id', $userid);
                         },
@@ -89,12 +85,7 @@ class VendorController extends BaseController{
                             $q->select('id','sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                         },
-                    ])->join('product_categories as pc', 'pc.product_id', 'products.id')
-                    ->whereNotIn('pc.category_id', function($qr) use($vid){ 
-                                $qr->select('category_id')->from('vendor_categories')
-                                    ->where('vendor_id', $vid)->where('status', 0);
-                    })
-                    ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id')
+                    ])->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'products.category_id')
                     ->where('products.vendor_id', $vid)
                     ->where('products.is_live', 1)->paginate($paginate);
             if(!empty($products)){
@@ -146,7 +137,7 @@ class VendorController extends BaseController{
         if(!empty($multiArray)){
             foreach ($multiArray as $key => $value) {
                 $new_pIds = $new_vIds = array();
-                $vResult = ProductVariantSet::join('product_categories as pc', 'product_variant_sets.product_id', 'pc.product_id')->select('product_variant_sets.product_variant_id', 'product_variant_sets.product_id')
+                $vResult = ProductVariantSet::select('product_variant_sets.product_variant_id', 'product_variant_sets.product_id')
                     ->where('product_variant_sets.variant_type_id', $key)
                     ->whereIn('product_variant_sets.variant_option_id', $value);
                 if(!empty($variantIds)){

@@ -1,16 +1,10 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Tax Category'])
-
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Tax'])
 @section('css')
 <link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/dropify/dropify.min.css')}}" rel="stylesheet" type="text/css" />
 @endsection
-
 @section('content')
-
-<!-- Start Content-->
 <div class="container-fluid">
-
-    <!-- start page title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
@@ -34,7 +28,6 @@
             </div>
         </div>
     </div>
-    <!-- end page title -->
     <div class="row">
         <div class="col-6">
             <div class="card">
@@ -49,8 +42,6 @@
                             </button>
                         </div>
                     </div>
-
-
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
                             <thead>
@@ -64,10 +55,9 @@
                             </thead>
                             <tbody id="post_list">
                                 @foreach($taxCates as $cat)
-
                                 <tr data-row-id="{{$cat->id}}">
-                                    <td> {{ $cat->id }} </td>
-                                    <td> {{ $cat->title }} </td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td><a class="editTaxCateModal text-capitalize" userId="{{$cat->id}}" href="javascript:void(0);"> {{ $cat->title }}</a> </td>
                                     <td> {{ $cat->code }} </td>
                                     <td> {{ $cat->description }} </td>
                                     
@@ -93,7 +83,6 @@
                             </tbody>
                         </table>
                     </div>
-                    
                     <div class="pagination pagination-rounded justify-content-end mb-0"></div>
                 </div>
             </div> 
@@ -111,11 +100,11 @@
                             </button>
                         </div>
                     </div>
-
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-striped" id="Rate-datatable">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Identifier</th>
                                     <th>Tax Categories</th>
                                     <th>Postal Code(s)</th>
@@ -125,8 +114,8 @@
                             </thead>
                             <tbody id="post_list">
                                 @foreach($taxRates as $rat)
-
                                 <tr data-row-id="{{$cat->id}}">
+                                    <td>{{ $loop->iteration }}</td>
                                     <td> {{ $rat->identifier }} </td>
                                     <td> 
                                         @foreach($rat->category as $cats)
@@ -164,8 +153,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="pagination pagination-rounded justify-content-end mb-0">
-                    </div>
+                    <div class="pagination pagination-rounded justify-content-end mb-0"></div>
                 </div>
             </div>
         </div>
@@ -173,9 +161,6 @@
 </div>
 @include('backend.tax.modals')
 @endsection
-
 @section('script')
-
 @include('backend.tax.pagescript')
-
 @endsection

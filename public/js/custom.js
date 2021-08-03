@@ -1,9 +1,85 @@
+$(function() {
+    document.ajax_loading = false;
+    $.hasAjaxRunning = function() {
+        return document.ajax_loading;
+    };
+    $(document).ajaxStart(function() {
+        document.ajax_loading = true;
+    });
+    $(document).ajaxStop(function() {
+        document.ajax_loading = false;
+    });
+});
+
 $(document).ready(function() {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         }
     });
+    $("#main_search_box").blur(function(e) {
+        setTimeout(function(){
+           $('#search_box_main_div').html('').hide();
+          }, 
+        500);
+      });
+    $("#main_search_box").keyup(function(){
+        let keyword = $(this).val();
+        if(keyword.length == 3){
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                url: autocomplete_url,
+                data: { keyword: keyword },
+                success: function(response) {
+                    if(response.status == 'Success'){
+                        $('#search_box_main_div').html('');
+                        if(response.data.length != 0){
+                            let search_box_category_template = _.template($('#search_box_main_div_template').html());
+                            $("#search_box_main_div").append(search_box_category_template({results: response.data})).show();
+                        }else{
+                            $("#search_box_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                        }
+                    }
+                }
+            });
+        }
+    });
+    // Cabbooking Js Code 
+        $('.add-more-location').click(function(){
+            $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");
+            const height = document.querySelector('.location-box').offsetHeight;
+            var getheight = height;
+            var abc = 146;
+            var minheight = parseFloat(getheight + abc)+'px';
+            $('.location-list').attr('style', 'height:calc(100vh - '+minheight+' !important');
+        });
+
+        $('.location-inputs').on('click','.apremove',function(){
+            $(this).closest('.apdots').remove();
+            const height = document.querySelector('.location-box').offsetHeight;
+            var getheight = height;
+            var abc = 156;
+            var minheight = parseFloat(getheight + abc)+'px';
+            $('.location-list').attr('style', 'height:calc(100vh - '+minheight+' !important');
+        });
+    // Cabbooking Js Code  
+     
+   
+    $(".navigation-tab-item").click(function() {
+        $(".navigation-tab-item").removeClass("active");
+        $(this).addClass("active");
+        if($('body').attr('dir') == 'rtl'){
+            $(".navigation-tab-overlay").css({
+                right: $(this).prevAll().length * 130 + "px"
+            });
+        }else{
+            $(".navigation-tab-overlay").css({
+                left: $(this).prevAll().length * 100 + "px"
+            });
+        }
+    });
+  
     if($('#cart_main_page').length > 0){
         let address_checked = $("input:radio[name='address_id']").is(":checked");
         if(address_checked){
@@ -21,98 +97,7 @@ $(document).ready(function() {
     }
     var card = '';
     var stripe = '';
-    getHomePage();
-    function initializeSlider(){
-        $(".slide-6").slick({
-            dots: !1,
-            infinite: !0,
-            speed: 300,
-            slidesToShow: 6,
-            slidesToScroll: 6,
-            responsive: [
-                { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
-                { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
-                { breakpoint: 767, settings: { slidesToShow: 3, slidesToScroll: 3, infinite: !0 } },
-                { breakpoint: 480, settings: { slidesToShow: 2, slidesToScroll: 2 } },
-            ],
-        });
-        $(".product-4").slick({
-        arrows: !0,
-        dots: !1,
-        infinite: !1,
-        speed: 300,
-        slidesToShow: 6,
-        slidesToScroll: 1,
-        responsive: [
-            { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
-            { breakpoint: 991, settings: { slidesToShow: 2, slidesToScroll: 2 } },
-            { breakpoint: 420, settings: { slidesToShow: 1, slidesToScroll: 1 } },
-        ],
-        });
-        $('.vendor-product').slick({
-            infinite: true,
-            speed: 300,
-            arrows: false,
-            slidesToShow: 6,
-            slidesToScroll: 1,
-            autoplay: true,
-            autoplaySpeed: 5000,
-            responsive: [{
-                    breakpoint: 1200,
-                    settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 2
-                    }
-                },
-                {
-                    breakpoint: 767,
-                    settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1
-                    }
-                }
-            ]
-        });
-    }
-    function getHomePage(){
-        $.ajax({
-            data: {},
-            type: "POST",
-            dataType: 'json',
-            url: home_page_url,
-            success: function (response) {
-                if(response.status == "Success"){
-                    $(".slide-6").slick('unslick');
-                    $(".product-4").slick('unslick');
-                    let vendors = response.data.vendors;
-                    let banner_template = _.template($('#banner_template').html());
-                    let vendors_template = _.template($('#vendors_template').html());
-                    let new_products_template = _.template($('#new_products_template').html());
-                    $("#brand_main_div").append(banner_template({brands: response.data.brands}));
-                    $("#vendor_main_div").append(vendors_template({vendors: response.data.vendors}));
-                    $("#new_product_main_div").append(new_products_template({products: response.data.new_products}));
-                    $("#best_seller_main_div").append(new_products_template({products: response.data.new_products}));
-                    $("#feature_product_main_div").append(new_products_template({products: response.data.feature_products}));
-                    $("#on_sale_product_main_div").append(new_products_template({products: response.data.on_sale_products}));
-                    if(response.data.new_products.length > 0){
-                        $('#new_products_wrapper').removeClass('d-none');
-                        $('#bestseller_products_wrapper').removeClass('d-none');
-                    }
-                    if(response.data.on_sale_products > 0){
-                        $('#onsale_products_wrapper').removeClass('d-none');
-                    }
-                    if(response.data.feature_products > 0){
-                        $('#featured_products_wrapper').removeClass('d-none');
-                    }
-                    if(vendors.length > 0){
-                        $('#our_vendor_main_div').removeClass('d-none');
-                    }
-                    initializeSlider();
-                }else{
-                }
-            }
-        });
-    }
+    
     $(".search_btn").click(function () {
         $(".search_warpper").slideToggle("slow");
     });
@@ -124,9 +109,8 @@ $(document).ready(function() {
         $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ route('changePrimaryData') }}",
+            url: change_primary_data_url,
             data: {
-                "_token": "{{ csrf_token() }}",
                 "type": type,
                 "value1": v1, 
                 "value2": v2
@@ -149,16 +133,28 @@ $(document).ready(function() {
     }
     $('.addWishList').click(function(){
         var sku = $(this).attr('proSku');
+        var _this = $(this);
         $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ route('addWishlist') }}",
+            url: add_to_whishlist_url,
             data: {
-                "_token": "{{ csrf_token() }}",
-                "sku": sku
+                "_token": $('meta[name="_token"]').attr('content'),
+                "sku": sku,
+                "variant_id": $('#prod_variant_id').val()
             },
-            success: function(response) {
-
+            success: function(res) {
+                if(res.status == "success"){
+                    if(_this.hasClass('btn-solid')){
+                        if(res.message.indexOf('added') !== -1){
+                            _this.text('REMOVE FROM WISHLIST');
+                        }else{
+                            _this.text('ADD TO WISHLIST');
+                        }
+                    }
+                }else{
+                    location.reload();
+                }
             }
         });
     });
@@ -172,8 +168,9 @@ $(document).ready(function() {
         var changSymbol = $(this).attr('currSymbol');
         settingData('currency', changcurrId, changSymbol);
     });
+
     function stripeInitialize(){
-        stripe = Stripe('pk_test_51J0nVZSBx0AFwevbSTIDlYAaLjdsg4V4yoHpSo4BCZqGBzzGeU8Mnw1o0spfOYfMtyCXC11wEn6vBqbJeSNnAkw600U6jkzS3R');
+        stripe = Stripe(stripe_publishable_key);
         var elements = stripe.elements();
         var style = {
             base: {fontSize: '16px',color: '#32325d',borderColor: '#ced4da'},
@@ -181,20 +178,105 @@ $(document).ready(function() {
         card = elements.create('card', {hidePostalCode: true, style: style});
         card.mount('#stripe-card-element');
     }
+
+    if($("#stripe-card-element").length > 0){
+        stripeInitialize();
+    }
+
+    $(document).delegate(".subscribe_btn", "click", function(){
+        var sub_id = $(this).attr('data-id');
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: check_active_subscription_url.replace(":id", sub_id),
+            success: function(response) {
+                if(response.status == "Success"){
+                    $.ajax({
+                        type: "get",
+                        dataType: "json",
+                        url: subscription_payment_options_url.replace(":id", sub_id),
+                        success: function(response) {
+                            if(response.status == "Success"){
+                                $("#subscription_payment #subscription_title").html(response.sub_plan.title);
+                                $("#subscription_payment #subscription_price").html(response.currencySymbol + response.sub_plan.price);
+                                $("#subscription_payment #subscription_frequency").html(response.sub_plan.frequency);
+                                $("#subscription_payment #features_list").html(response.sub_plan.features);
+                                $("#subscription_payment #subscription_id").val(sub_id);
+                                $("#subscription_payment #subscription_amount").val(response.sub_plan.price);
+                                $("#subscription_payment #subscription_payment_methods").html('');
+                                let payment_method_template = _.template($('#payment_method_template').html());
+                                $("#subscription_payment #subscription_payment_methods").append(payment_method_template({payment_options: response.payment_options}));
+                                if(response.payment_options == ''){
+                                    $("#subscription_payment .subscription_confirm_btn").hide();
+                                }
+                                $("#subscription_payment").modal("show");
+                                stripeInitialize();
+                            }
+                        },error: function(error){
+                            var response = $.parseJSON(error.responseText);
+                            let error_messages = response.message;
+                            $("#error_response .message_body").html(error_messages);
+                            $("#error_response").modal("show");
+                        }
+                    });
+                }
+            },error: function(error){
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.message;
+                $("#error_response .message_body").html(error_messages);
+                $("#error_response").modal("show");
+            }
+        });
+    });
+    $(document).delegate(".subscription_confirm_btn", "click", function(){
+        var _this = $(".subscription_confirm_btn");
+        _this.attr("disabled", true);
+        var selected_option = $("input[name='subscription_payment_method']:checked");
+        var payment_option_id = selected_option.data("payment_option_id");
+        if( (selected_option.length > 0) && (payment_option_id > 0) ){
+            if( payment_option_id == 4 ){
+                stripe.createToken(card).then(function(result) {
+                    if (result.error) {
+                        $('#stripe_card_error').html(result.error.message);
+                        _this.attr("disabled", false);
+                    } else {
+                        $("#card_last_four_digit").val(result.token.card.last4);
+                        $("#card_expiry_month").val(result.token.card.exp_month);
+                        $("#card_expiry_year").val(result.token.card.exp_year);
+                        paymentViaStripe(result.token.id, '', payment_option_id);
+                    }
+                });
+            }else{
+                paymentViaPaypal('', payment_option_id);
+            }
+        }else{
+            _this.attr("disabled", false);
+            success_error_alert('error', 'Please select any payment option', "#subscription_payment .payment_response");
+        }
+    });
+
     function productRemove(cartproduct_id, vendor_id){
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: delete_cart_product_url,
             data: {cartproduct_id:cartproduct_id},
+            beforeSend: function() {
+                if($("#cart_table").length > 0){
+                    $(".spinner-box").show();
+                    $("#cart_table").hide();
+                }
+            },
             success: function(data) {
                 if(data.status == 'success'){
                     $('#cart_product_'+cartproduct_id).remove();
                     $('#shopping_cart1_'+cartproduct_id).remove();
                     $('#tr_vendor_products_'+cartproduct_id).remove();
                     cartTotalProductCount();
+                    cartHeader();
                     if($("#tbody_" + vendor_id + " > tr.vendor_products_tr").length == 0){
                         $('#tbody_'+vendor_id).remove();
+                        $('#thead_'+vendor_id).remove();
                     }
                     if($("[id^=tr_vendor_products_]").length == 0){
                         if($("#cart_main_page").length){
@@ -215,10 +297,15 @@ $(document).ready(function() {
     $(document).on("change","input:radio[name='address_id']",function() {
         if($(this).val()){
             $('#order_palced_btn').prop('disabled', false);
+            if($("#cart_table").length > 0){
+                $(".spinner-box").show();
+                $("#cart_table").hide();
+            }
             cartHeader($(this).val());
         }
     });
     $(document).on("click","#order_palced_btn",function() {
+        $('.alert-danger').html('');
         $.ajax({
             data: {},
             type: "POST",
@@ -234,69 +321,190 @@ $(document).ready(function() {
                     let payment_method_tab_pane_template = _.template($('#payment_method_tab_pane_template').html());
                     $("#v_pills_tabContent").append(payment_method_tab_pane_template({payment_options: response.data}));
                     $('#proceed_to_pay_modal').modal('show');
-
                     $('#proceed_to_pay_modal #total_amt').html($('#cart_total_payable_amount').html());
                     stripeInitialize();
                 }
+            },error: function(error){
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.message;
+                $.each(error_messages, function(key, error_message) {
+                    $('#min_order_validation_error_'+error_message.vendor_id).html(error_message.message).show();
+                });
             }
         });
     });
+    $(document).delegate("#topup_wallet_btn", "click", function() {
+        $.ajax({
+            data: {},
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            url: wallet_payment_options_url,
+            success: function(response) {
+                if (response.status == "Success") {
+                    $('#wallet_payment_methods').html('');
+                    let payment_method_template = _.template($('#payment_method_template').html());
+                    $("#wallet_payment_methods").append(payment_method_template({payment_options: response.data}));
+                    if(response.data == ''){
+                        $("#topup_wallet .topup_wallet_confirm").hide();
+                    }else{
+                        stripeInitialize();
+                    }
+                }
+            },error: function(error){
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.message;
+            }
+        });
+    });
+
+    let queryString = window.location.search;
+    let path = window.location.pathname;
+    let urlParams = new URLSearchParams(queryString);
+    if( (urlParams.has('PayerID')) && (urlParams.has('token')) ){
+        let tipAmount = 0;
+        if(urlParams.has('tip')){
+            tipAmount = urlParams.get('tip');
+        }
+        paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount);
+    }
+
     function paymentViaStripe(stripe_token, address_id, payment_option_id){
-        let cart_total_amount = $("input[name='cart_total_payable_amount']").val();
+        let total_amount = 0;
+        let tip = 0;
+        let cartElement = $("input[name='cart_total_payable_amount']");
+        let walletElement = $("input[name='wallet_amount']");
+        let subscriptionElement = $("input[name='subscription_amount']");
+        let tipElement = $("#cart_tip_amount");
+        let ajaxData = [];
+        if(cartElement.length > 0){
+            total_amount = cartElement.val();
+            tip = tipElement.val();
+            ajaxData.push({name: 'tip', value: tip});
+        }
+        else if(walletElement.length > 0){
+            total_amount = walletElement.val();
+        }
+        else if(subscriptionElement.length > 0){
+            total_amount = subscriptionElement.val();
+            ajaxData = $("#subscription_payment_form").serializeArray();
+        }
+        ajaxData.push(
+            {name: 'stripe_token', value: stripe_token},
+            {name: 'amount', value: total_amount},
+            {name: 'payment_option_id', value: payment_option_id}
+        );
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: payment_stripe_url,
-            data: {'stripe_token' : stripe_token ,'amount': cart_total_amount},
+            data: ajaxData,
             success: function (resp) {
                 if(resp.status == 'Success'){
-                    placeOrder(address_id, payment_option_id, resp.data.id);
+                    if(path.indexOf("cart") !== -1){
+                        placeOrder(address_id, payment_option_id, resp.data.id, tip);
+                    }
+                    else if(path.indexOf("wallet") !== -1){
+                        creditWallet(total_amount, payment_option_id, resp.data.id);
+                    }
+                    else if(path.indexOf("subscription") !== -1){
+                        userSubscriptionPurchase(total_amount, payment_option_id, resp.data.id);
+                    }
                 }else{
-                    success_error_alert('error', resp.message, "#stripe-payment-form .payment_response");
-                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    if(path.indexOf("cart") !== -1){
+                        success_error_alert('error', resp.message, "#stripe-payment-form .payment_response");
+                        $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    }
+                    else if(path.indexOf("wallet") !== -1){
+                        success_error_alert('error', resp.message, "#wallet_topup_form .payment_response");
+                        $(".topup_wallet_confirm").removeAttr("disabled");
+                    }
+                    else if(path.indexOf("subscription") !== -1){
+                        success_error_alert('error', resp.message, "#subscription_payment_form .payment_response");
+                        $(".subscription_confirm_btn").removeAttr("disabled");
+                    }
                 }
             },
             error: function(error){
                 var response = $.parseJSON(error.responseText);
-                success_error_alert('error', response.message, "#stripe-payment-form .payment_response");
-                $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                if(path.indexOf("cart") !== -1){
+                    success_error_alert('error', response.message, "#stripe-payment-form .payment_response");
+                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                }
+                else if(path.indexOf("wallet") !== -1){
+                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                    $(".topup_wallet_confirm").removeAttr("disabled");
+                }
+                else if(path.indexOf("subscription") !== -1){
+                    success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
+                    $(".subscription_confirm_btn").removeAttr("disabled");
+                }
             }
         });
     }
     function paymentViaPaypal(){
-        let cart_total_amount = $("input[name='cart_total_payable_amount']").val();
+        let total_amount = 0;
+        let tip = 0;
+        let tipElement = $("#cart_tip_amount");
+        let cartElement = $("input[name='cart_total_payable_amount']");
+        let walletElement = $("input[name='wallet_amount']");
+        let ajaxData = {};
+        if(cartElement.length > 0){
+            total_amount = cartElement.val();
+            tip = tipElement.val();
+            ajaxData.tip = tip;
+        }
+        else if(walletElement.length > 0){
+            total_amount = walletElement.val();
+        }
+        ajaxData.amount = total_amount;
+        ajaxData.returnUrl = path;
+        ajaxData.cancelUrl = path;
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: payment_paypal_url,
-            data: {'amount': cart_total_amount},
+            data: ajaxData,
             success: function (response) {
                 if(response.status == "Success"){
                     window.location.href = response.data;
                 }else{
-                    success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    if(cartElement.length > 0){
+                        success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                        $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    }
+                    else if(walletElement.length > 0){
+                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                        $(".topup_wallet_confirm").removeAttr("disabled");
+                    }
                 }
             },
             error: function(error){
                 var response = $.parseJSON(error.responseText);
-                success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                if(cartElement.length > 0){
+                    success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                }
+                else if(walletElement.length > 0){
+                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                    $(".topup_wallet_confirm").removeAttr("disabled");
+                }
             }
         });
     }
-
-    let queryString = window.location.search;
-    let urlParams = new URLSearchParams(queryString);
-    if( (urlParams.has('PayerID')) && (urlParams.has('token')) ){
-        paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'));
-    }
-
-    function paymentSuccessViaPaypal(amount, token, payer_id){
-        $('#order_palced_btn').trigger('click');
-        $('#v-pills-paypal-tab').trigger('click');
-        $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
-        let address_id = $("input:radio[name='address_id']:checked").val();
+    function paymentSuccessViaPaypal(amount, token, payer_id, path, tip=0){
+        let address_id = 0;
+        if(path.indexOf("cart") !== -1){
+            $('#order_palced_btn').trigger('click');
+            $('#v-pills-paypal-tab').trigger('click');
+            $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
+            address_id = $("input:radio[name='address_id']:checked").val();
+        }
+        else if(path.indexOf("wallet") !== -1){
+            $('#topup_wallet_btn').trigger('click');
+            $('#wallet_topup_form #radio-paypal').prop("checked", true);
+            $(".topup_wallet_confirm").attr("disabled", true);
+        }
         $.ajax({
             type: "GET",
             dataType: 'json',
@@ -304,25 +512,42 @@ $(document).ready(function() {
             data: {'amount': amount, 'token': token, 'PayerID': payer_id},
             success: function (response) {
                 if(response.status == "Success"){
-                    placeOrder(address_id, 3, response.data);
+                    if(path.indexOf("cart") !== -1){
+                        placeOrder(address_id, 3, response.data, tip);
+                    }
+                    else if(path.indexOf("wallet") !== -1){
+                        creditWallet(amount, 3, response.data);
+                    }
                 }else{
-                    success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    if(path.indexOf("cart") !== -1){
+                        success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                        $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    }
+                    else if(path.indexOf("wallet") !== -1){
+                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                        $(".topup_wallet_confirm").removeAttr("disabled");
+                    }
                 }
             },
             error: function(error){
                 var response = $.parseJSON(error.responseText);
-                success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                if(path.indexOf("cart") !== -1){
+                    success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                }
+                else if(path.indexOf("wallet") !== -1){
+                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                    $(".topup_wallet_confirm").removeAttr("disabled");
+                }
             }
         });
     }
-    function placeOrder(address_id, payment_option_id, transaction_id){
+    function placeOrder(address_id, payment_option_id, transaction_id, tip = 0){
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: place_order_url,
-            data: {address_id:address_id, payment_option_id:payment_option_id, transaction_id:transaction_id},
+            data: {address_id:address_id, payment_option_id:payment_option_id, transaction_id:transaction_id, tip : tip},
             success: function(response) {
                 if (response.status == "Success") {
                     window.location.href = base_url+'/order/success/'+response.data.order.id;
@@ -341,8 +566,9 @@ $(document).ready(function() {
         $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
         let address_id = $("input:radio[name='address_id']:checked").val();
         let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
+        let tip = $("#cart_tip_amount").val();
         if(payment_option_id == 1){
-            placeOrder(address_id, payment_option_id, '');
+            placeOrder(address_id, payment_option_id, '', tip);
         }else if (payment_option_id == 4){
             stripe.createToken(card).then(function(result) {
                 if (result.error) {
@@ -354,6 +580,77 @@ $(document).ready(function() {
             });
         }else if(payment_option_id == 3){
             paymentViaPaypal(address_id, payment_option_id);
+        }
+    });
+    function creditWallet(amount, payment_option_id, transaction_id){
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: credit_wallet_url,
+            data: {wallet_amount:amount, payment_option_id:payment_option_id, transaction_id:transaction_id},
+            success: function(response) {
+                if (response.status == "Success") {
+                    location.href = path;
+                    // $("#topup_wallet").modal("hide");
+                    // $(".table.wallet-transactions table-body").html('');
+                    $(".wallet_balance").text(response.data.wallet_balance);
+                    success_error_alert('success', response.message, "#wallet_response");
+                    // let wallet_transactions_template = _.template($('#wallet_transactions_template').html());
+                    // $(".table.wallet-transactions table-body").append(wallet_transactions_template({wallet_transactions:response.data.transactions}));
+                }else{
+                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                    $(".topup_wallet_confirm").attr("disabled", false);
+                }
+            },
+            error: function(error){
+                var response = $.parseJSON(error.responseText);
+                success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                $(".topup_wallet_confirm").removeAttr("disabled");
+            }
+        });
+    }
+    function userSubscriptionPurchase(amount, payment_option_id, transaction_id){
+        var id = $("#subscription_payment_form #subscription_id").val();
+        if(id != ''){
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: user_subscription_purchase_url.replace(":id", id),
+                data: {amount:amount, payment_option_id:payment_option_id, transaction_id:transaction_id},
+                success: function(response) {
+                    if (response.status == "Success") {
+                        location.href = path;
+                    }else{
+                        success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
+                        $(".subscription_confirm_btn").attr("disabled", false);
+                    }
+                },
+                error: function(error){
+                    var response = $.parseJSON(error.responseText);
+                    success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
+                    $(".subscription_confirm_btn").removeAttr("disabled");
+                }
+            });
+        }else{
+            success_error_alert('error', 'Invalid data', "#wallet_topup_form .payment_response");
+            $(".topup_wallet_confirm").removeAttr("disabled");
+        }
+    }
+    $(document).on("click", ".topup_wallet_confirm", function() {
+        // $(".topup_wallet_confirm").attr("disabled", true);
+        let payment_option_id = $('#wallet_payment_methods input[name="wallet_payment_method"]:checked').data('payment_option_id');
+        if (payment_option_id == 4){
+            stripe.createToken(card).then(function(result) {
+                if (result.error) {
+                    $('#stripe_card_error').html(result.error.message);
+                    $(".topup_wallet_confirm").attr("disabled", false);
+                } else {
+                    console.log(result.token.id);
+                    // paymentViaStripe(result.token.id, '', payment_option_id);
+                }
+            });
+        }else if(payment_option_id == 3){
+            paymentViaPaypal('', payment_option_id);
         }
     });
     $(document).on("click",".remove_promo_code_btn",function() {
@@ -432,9 +729,9 @@ $(document).ready(function() {
         $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
     });
     $(document).on("click","#remove_product_button",function() {
+        $('#remove_item_modal').modal('hide');
         let vendor_id = $('#remove_item_modal #vendor_id').val();
         let cartproduct_id = $('#remove_item_modal #cartproduct_id').val();
-        $('#remove_item_modal').modal('hide');
         productRemove(cartproduct_id, vendor_id);
     });
     function capitalizeFirstLetter(string) {
@@ -442,36 +739,56 @@ $(document).ready(function() {
     }
     function initialize() {
       var input = document.getElementById('address');
-      var autocomplete = new google.maps.places.Autocomplete(input);
-      google.maps.event.addListener(autocomplete, 'place_changed', function () {
-        var place = autocomplete.getPlace();
-        // console.log(place.name);
-        document.getElementById('city').value = place.name;
-        document.getElementById('longitude').value = place.geometry.location.lng()
-        document.getElementById('latitude').value = place.geometry.location.lat()
-        for(let i=1; i < place.address_components.length; i++){
-            let mapAddress = place.address_components[i];
-            if(mapAddress.long_name !=''){
-                if(mapAddress.types[0] =="administrative_area_level_1"){
-                    document.getElementById('state').value = mapAddress.long_name;
-                }
-                if(mapAddress.types[0] =="postal_code"){
-                    document.getElementById('pincode').value = mapAddress.long_name;
-                }
-                if(mapAddress.types[0] == "country"){
-                    var country = document.getElementById('country');
-                    for (let i = 0; i < country.options.length; i++) {
-                        if (country.options[i].text == mapAddress.long_name.toUpperCase()) {
-                            country.value = i;
-                            break;
+      if(input){
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var place = autocomplete.getPlace();
+            // console.log(place);
+            // document.getElementById('city').value = place.name;
+            document.getElementById('longitude').value = place.geometry.location.lng();
+            document.getElementById('latitude').value = place.geometry.location.lat();
+            for(let i=1; i < place.address_components.length; i++){
+                let mapAddress = place.address_components[i];
+                if(mapAddress.long_name !=''){
+                    let streetAddress = '';
+                    if (mapAddress.types[0] =="street_number") {
+                        streetAddress += mapAddress.long_name;
+                    }
+                    if (mapAddress.types[0] =="route") {
+                        streetAddress += mapAddress.short_name;
+                    }
+                    if($('#street').length > 0){
+                        document.getElementById('street').value = streetAddress;
+                    }
+                    if (mapAddress.types[0] =="locality") {
+                        document.getElementById('city').value = mapAddress.long_name;
+                    }
+                    if(mapAddress.types[0] =="administrative_area_level_1"){
+                        document.getElementById('state').value = mapAddress.long_name;
+                    }
+                    if(mapAddress.types[0] =="postal_code"){
+                        document.getElementById('pincode').value = mapAddress.long_name;
+                    }else{
+                        document.getElementById('pincode').value = '';
+                    }
+                    if(mapAddress.types[0] == "country"){
+                        var country = document.getElementById('country');
+                        if (typeof country.options != "undefined") {
+                            for (let i = 0; i < country.options.length; i++) {
+                                if (country.options[i].text.toUpperCase() == mapAddress.long_name.toUpperCase()) {
+                                    country.value = country.options[i].value;
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
-      });
+        });
+      }
     }
-    google.maps.event.addDomListener(window, 'load', initialize);
+    initialize();
+    // google.maps.event.addDomListener(window, 'load', initialize);
     function cartTotalProductCount(){
         let cart_qty_total = 0;
         $(".shopping-cart li" ).each(function( index ) {
@@ -492,9 +809,16 @@ $(document).ready(function() {
             type: "get",
             dataType: 'json',
             url: cart_product_url,
+            // beforeSend: function() {
+            //     if($("#cart_table").length > 0){
+            //         $(".spinner-box").show();
+            //         $("#cart_table").hide();
+            //     }
+            // },
             success: function(response) {
                 if (response.status == "success") {
                     $("#cart_table").html('');
+                    $(".spinner-box").hide();
                     var cart_details = response.cart_details;
                     if(response.cart_details.length != 0){
                         if(response.cart_details.products.length != 0){
@@ -514,10 +838,24 @@ $(document).ready(function() {
                         }
                     }
                 }
+            },
+            complete: function(data){
+                if($("#cart_table").length > 0){
+                    $(".spinner-box").hide();
+                    $("#cart_table").show();
+                }
+                if($(".number .fa-spinner fa-pulse").length > 0){
+                    $(".number .qty-minus .fa").removeAttr("class").addClass("fa fa-minus");
+                    $(".number .qty-plus .fa").removeAttr("class").addClass("fa fa-plus");
+                }
             }
         });
     }
-    function updateQuantity(cartproduct_id, quantity, base_price) {
+    function updateQuantity(cartproduct_id, quantity, base_price, iconElem='') {
+        if(iconElem != ''){
+            let elemClasses = $(iconElem).attr("class"); 
+            $(iconElem).removeAttr("class").addClass("fa fa-spinner fa-pulse");
+        }
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
@@ -526,28 +864,87 @@ $(document).ready(function() {
             success: function(response) {
                 var latest_price = parseInt(base_price) * parseInt(quantity);
                 $('#product_total_amount_'+cartproduct_id).html('$'+latest_price);
+                cartHeader();
+            },
+            error: function(err){
+                if($(".number .fa-spinner fa-pulse").length > 0){
+                    $(".number .qty-minus .fa").removeAttr("class").addClass("fa fa-minus");
+                    $(".number .qty-plus .fa").removeAttr("class").addClass("fa fa-plus");
+                }
             }
         });
     }
+    $(document).on('click', '.tip_radio_controls .tip_radio', function(){
+        var tip = $(this).val();
+        var amount_payable = $("#cart_payable_amount_original").val();
+        var currency = $("#cart_payable_amount_original").attr('data-curr');
+        // if this was previously checked
+        if ($(this).hasClass("active")){
+            $(this).prop('checked', false);
+            $(this).removeClass('active');
+            setTipAmount(0, amount_payable, currency);
+        }else{
+            $('.tip_radio_controls .tip_radio').removeClass("active");
+            $(this).addClass('active');
+            setTipAmount(tip, amount_payable, currency);
+        }
+        
+    });
+    function setTipAmount(tip, amount_payable, currency){
+        if(tip != 'custom'){
+            if( (tip == '') || (isNaN(tip)) ){
+                tip = 0;
+            }
+            amount_payable = parseFloat(amount_payable) + parseFloat(tip);
+            $("#cart_tip_amount").val(parseFloat(tip).toFixed(2));
+            $("#cart_total_payable_amount").html(currency + parseFloat(amount_payable).toFixed(2));
+            $(".custom_tip").addClass("d-none");
+            $("#custom_tip_amount").val('');
+        }
+        else{
+            $("#cart_total_payable_amount").text(currency + parseFloat(amount_payable).toFixed(2));
+            $("#cart_tip_amount").val(0);
+            $(".custom_tip").removeClass("d-none");
+            $("#custom_tip_amount").focus();
+        }
+        $("input[name='cart_total_payable_amount']").val(parseFloat(amount_payable).toFixed(2));
+    }
+    $(document).on('keyup', '#custom_tip_amount', function(){
+        var tip = $(this).val();
+        if( (tip == '') || (isNaN(tip)) ){
+            tip = 0;
+        }
+        var amount_elem = $("#cart_payable_amount_original");
+        var currency = amount_elem.attr('data-curr');
+        var amount_payable = amount_elem.val();
+        amount_payable = parseFloat(amount_payable) + parseFloat(tip);
+        $("#cart_tip_amount").val(parseFloat(tip).toFixed(2));
+        $("#cart_total_payable_amount").html(currency + parseFloat(amount_payable).toFixed(2));
+        $("input[name='cart_total_payable_amount']").val(parseFloat(amount_payable).toFixed(2));
+    });
     $(document).on('click', '.qty-minus', function() {
         let base_price = $(this).data('base_price');
         let cartproduct_id = $(this).attr("data-id");
         let qty = $('#quantity_'+cartproduct_id).val();
-        if (qty >= 1) {
+        $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
+        if (qty > 1) {
             $('#quantity_'+cartproduct_id).val(--qty);
+            updateQuantity(cartproduct_id, qty, base_price);
         }else{
-            alert('remove this product');
+            // alert('remove this product');
+            $('#remove_item_modal').modal('show');
+            let vendor_id = $(this).data('vendor_id');
+            $('#remove_item_modal #vendor_id').val(vendor_id);
+            $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
         }
-        updateQuantity(cartproduct_id, qty, base_price);
-        cartHeader();
     });
     $(document).on('click', '.qty-plus', function() {
         let base_price = $(this).data('base_price');
         let cartproduct_id = $(this).attr("data-id");
         let qty = $('#quantity_'+cartproduct_id).val();
         $('#quantity_'+cartproduct_id).val(++qty);
+        $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
         updateQuantity(cartproduct_id, qty, base_price);
-        cartHeader();
     });
     cartHeader();
     $(document).on("click","#cancel_save_address_btn",function() {
@@ -583,15 +980,32 @@ $(document).ready(function() {
                 "latitude": latitude,
                 "longitude": longitude,
             },
+            beforeSend: function() {
+                if($("#cart_table").length > 0){
+                    $(".spinner-box").show();
+                    $("#cart_table").hide();
+                }
+            },
             success: function(response) {
-                $('#add_new_address_form').hide();
-                let address_template = _.template($('#address_template').html());
-                if(address.length > 0){
-                    $('#order_palced_btn').attr('disabled', false);
-                    $("#address_template_main_div").append(address_template({address:response.address}));
+                if($("#add_edit_address").length > 0){
+                    $("#add_edit_address").modal('hide');
+                    location.reload();
+                }
+                else{
+                    $('#add_new_address_form').hide();
+                    let address_template = _.template($('#address_template').html());
+                    if(address.length > 0){
+                        $('#order_palced_btn').attr('disabled', false);
+                        $("#address_template_main_div").append(address_template({address:response.address}));
+                        cartHeader(response.address.id);
+                    }
                 }
             },
             error: function (reject) {
+                if($("#cart_table").length > 0){
+                    $(".spinner-box").hide();
+                    $("#cart_table").show();
+                }
                 if( reject.status === 422 ) {
                     var message = $.parseJSON(reject.responseText);
                     $.each(message.errors, function (key, val) {
@@ -602,7 +1016,9 @@ $(document).ready(function() {
         });
     });
     $(document).on("click",".addToCart",function() {
-        addToCart();
+        if(!$.hasAjaxRunning()){
+            addToCart();
+        }
     });
     function addToCart() {
         $.ajax({
@@ -653,6 +1069,61 @@ $(document).ready(function() {
         }
         setTimeout(function(){
             $(element).find(".alert").hide();
-        }, 5000);
+        }, 8000);
     }
+
+    $(document).on('click', '.prescription_btn', function(e) {
+        $("#product_id").val($(this).data("product"));
+        $("#vendor_idd").val($(this).data("vendor_id"));
+        $('#prescription_form').modal('show');
+   });
+
+    $(document).on('click', '.submitPrescriptionForm', function(e) { 
+        e.preventDefault();
+        var form =  document.getElementById('save_prescription_form');
+        var formData = new FormData(form);
+        var route_uri =  "add/product/prescription";
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: route_uri,
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            success: function(response) {
+
+                if (response.status == 'success') {
+                    $(".modal .close").click();
+                    location.reload(); 
+                } else {
+                    $(".show_all_error.invalid-feedback").show();
+                    $(".show_all_error.invalid-feedback").text(response.message);
+                }
+                return response;
+            },
+            complete: function(){
+                $('.loader_box').hide();
+            }
+        });
+
+    });
+
+    $(document).on('click', '#tasknow', function() {
+        $('#schedule_div').attr("style", "display: none !important");
+    });
+    $(document).on('click', '#taskschedule', function() {
+        $('#schedule_div').attr("style", "display: flex !important");
+    });
+    // var x = document.getElementById("schedule_div").autofocus;
 });

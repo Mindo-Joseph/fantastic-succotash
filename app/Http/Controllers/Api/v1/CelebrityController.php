@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Model\Client;
+use Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -86,7 +86,6 @@ class CelebrityController extends BaseController
                 ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.celebrity_id')
                 ->where('pc.celebrity_id', $cid)
                 ->paginate($paginate);
-        
             if(!empty($products)){
                 foreach ($products as $key => $product) {
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
@@ -95,7 +94,6 @@ class CelebrityController extends BaseController
                     }
                 }
             }
-            
             $response['celebrity'] = $celebrity;
             $response['products'] = $products;
             $response['filterVariant'] = $variantSets;

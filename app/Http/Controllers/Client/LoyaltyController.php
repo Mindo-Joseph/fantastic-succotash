@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Client\BaseController;
 use Illuminate\Http\Request;
-use App\Models\{ClientCurrency, LoyaltyCard};
+use App\Models\{Client, ClientCurrency, ClientPreference, LoyaltyCard};
 use Dotenv\Loader\Loader;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,8 +17,11 @@ class LoyaltyController extends BaseController
      */
     public function index()
     {
+        $status = 0;
+        $client_preferences = ClientPreference::first();
         $loyaltycards = LoyaltyCard::where('status', '!=', '2')->get();
-        return view('backend/loyality/index')->with(['loyaltycards' => $loyaltycards]);
+        $status = $client_preferences ? $client_preferences->loyalty_check : 0;
+        return view('backend/loyality/index')->with(['loyaltycards' => $loyaltycards, 'status' => $status]);
     }
 
     /**
@@ -157,12 +160,28 @@ class LoyaltyController extends BaseController
     public function getRedeemPoints($domain = '')
     {
         $currency = ClientCurrency::where('is_primary', '=', 1)->first();
-        $loyaltyCard = LoyaltyCard::first();
+        $loyaltyCard = LoyaltyCard::firstOrFail();
         if ($loyaltyCard->redeem_points_per_primary_currency == null) {
             return response()->json(['symbol' => $currency->currency->symbol,'value' => '0']);
         }else {
             return response()->json(['symbol' => $currency->currency->symbol,'value' => $loyaltyCard->redeem_points_per_primary_currency]);
         }
+    }
+
+     /**
+     * Get the default value of Redeem Point
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function setLoyaltyCheck(Request $request)
+    {
+        $client_preferences = ClientPreference::first();
+        if($client_preferences){
+            $client_preferences->loyalty_check = $request->status;
+            $client_preferences->save();
+        }
+        $update = LoyaltyCard::where('id', '>', 0)->update(['loyalty_check' => $request->status]);
     }
 
     /**
