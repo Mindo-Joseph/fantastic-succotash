@@ -85,7 +85,7 @@ $(document).ready(function() {
         });
     // Cabbooking Js Code  
      
-   
+   // top Moveble Tabbar on top js code
     $(".navigation-tab-item").click(function() {
         $(".navigation-tab-item").removeClass("active");
         $(this).addClass("active");

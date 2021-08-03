@@ -4115,10 +4115,63 @@ body[dir="rtl"] .main-menu .menu-right .icon-nav .onhover-div .show-div.shopping
     right: auto;
 }
 
+body[dir="rtl"] .radio {
+    padding: 0 30px 0 0;
+}
 
+body[dir="rtl"] .checkround {
+    left: auto;
+    right: 0;
+}
 
+body[dir="rtl"] .btn.promo_code_list_btn {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
 
+body[dir="rtl"] .pr-2 {
+    padding-right: initial !important;
+    padding-left: .75rem!important;
+}
 
+body[dir="rtl"] .mr-1, body[dir="rtl"] .mx-1 {
+    margin-right: initial !important;
+    margin-left: .275rem!important;
+}
+
+body[dir="rtl"] td.pt-0.pr-0 {
+    padding-left: 0;
+}
+
+body[dir="rtl"] .modal-header .close {
+    margin: -1rem auto -1rem -1rem;
+}
+
+body[dir="rtl"] .footer-social i {
+    margin-right: 5px;
+}
+
+body[dir="rtl"] .footer-social li:last-child i {
+    margin: 0 0 0 5px;
+}
+
+body[dir="rtl"] .pr-3 {
+    padding: 0 0 0 1.5rem !important;
+}
+
+body[dir="rtl"] .pl-3{
+    padding: 0 1.5rem 0 0 !important;
+}
+
+body[dir="rtl"]  .px-3 {
+    padding: 0 1.5rem !important;
+}
+
+body[dir="rtl"] #v_pills_tab {
+    border-radius: 0 12px 12px 0;
+}
 
 
 
@@ -4144,8 +4197,6 @@ body[dir="rtl"] .main-menu .menu-right .icon-nav .onhover-div .show-div.shopping
     }
 }
 
-
-
 @media(min-width: 992px) {
     .booking-experience {
         height: calc(100vh - 150px);
@@ -4170,7 +4221,6 @@ body[dir="rtl"] .main-menu .menu-right .icon-nav .onhover-div .show-div.shopping
     }
 
 }
-
 
 @media(max-width:991px) {
 

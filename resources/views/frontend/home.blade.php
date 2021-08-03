@@ -164,23 +164,23 @@ $actives=array();
     @endif
     @if(in_array("featured_vendors", $actives))
         <div class="row d-none mt-3" id="featured_products_wrapper">
-            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
+            <!-- <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                 <div class="title1">
                     <h2 class="title-inner1 mb-0">{{ __('Feature Product') }}</h2>
                 </div>
-            </div>
+            </div> -->
             <div class="col-12 theme-card">
                 <div class="vendor-product common_card" id="feature_product_main_div"></div>
             </div>
         </div>
     @endif
     @if(in_array("best_sellers", $actives))
-        <div class="row d-none mt-md-5 mt-4" id="bestseller_products_wrapper">
-            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
+        <div class="row d-none mt-3" id="bestseller_products_wrapper">
+            <!-- <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                 <div class="title1">
                     <h2 class="title-inner1 mb-0">{{ __('Best Seller') }}</h2>
                 </div>
-            </div>
+            </div> -->
             <div class="col-12 theme-card">
                 <div class="vendor-product common_card" id="best_seller_main_div">
 
@@ -190,11 +190,11 @@ $actives=array();
     @endif
     @if(in_array("on_sale", $actives))
         <div class="row d-none mt-3" id="onsale_products_wrapper">
-            <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
+            <!-- <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                 <div class="title1">
                     <h2 class="title-inner1 mb-0">{{ __('On Sale') }}</h2>
                 </div>
-            </div>
+            </div> -->
             <div class="col-12 theme-card">
                 <div class="vendor-product common_card" id="on_sale_product_main_div"></div>
             </div>
