@@ -674,15 +674,19 @@ form .btn {
 
 /* 26-05-2021 New Login Screens Css Done */
 
-.collection-filter .theme-card .offer-slider a {
+.collection-filter .theme-card .offer-slider .media>a {
     display: block;
-    width: 150px;
+    width: 50%;
     height: 150px;
+}
+
+.offer-slider .media-body {
+    width: 50%;
 }
 
 .theme-card .offer-slider img {
     height: 100%;
-    max-width: 100% !important;
+    max-width: initial !important;
     object-fit: cover;
     padding: 15px;
     width: 100%;
@@ -723,7 +727,7 @@ form .btn {
     cursor: pointer;
 }
 
-.theme-card .offer-slider a {
+.theme-card .offer-slider .media>a {
     width: 170px;
     height: 170px;
 }
@@ -977,7 +981,7 @@ label:hover~input:checked~.rate label
 }
 
 /* Spinner Start */
-.spinner-overlay{
+.spinner-overlay {
     display: none;
     position: fixed;
     top: 0px;
@@ -988,17 +992,20 @@ label:hover~input:checked~.rate label
     opacity: .5;
     z-index: 999;
 }
-.spinner-overlay .spinner-box .circle-border{
-    margin:auto;
-    left:0;
-    right:0;
-    top:0;
-    bottom:0;
-    position:fixed;
+
+.spinner-overlay .spinner-box .circle-border {
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    position: fixed;
 }
-.spinner-overlay .spinner-box .circle-core{
+
+.spinner-overlay .spinner-box .circle-core {
     background: black;
 }
+
 .spinner-box {
     width: 100%;
     height: auto;
@@ -1086,12 +1093,13 @@ body.dark .spinner-box .circle-core {
 .file .update_pic {
     height: 112.8px;
     width: 112.8px;
-    border: 0.9px solid #E9F0F8;
-    background: url(../images/user_pic.jpg) no-repeat center;
+    background: #ffffff7d url(../images/user_pic.jpg) no-repeat center;
     border-radius: 50%;
     background-size: cover;
     overflow: hidden;
     display: block;
+    padding: 10px;
+    box-shadow: 0 1px 10px #7777;
 }
 
 .file .update_pic img {
@@ -2679,7 +2687,7 @@ body .rating-form .btn-reset {
 .accordion .card-header button:hover,
 .accordion .card-header button[aria-expanded="true"] {
     border-color: var(--theme-deafult);
-    background: linear-gradient(270deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
+    background: linear-gradient(90deg, rgb(247, 235, 236) 0%, rgba(251, 246, 247, 0) 92.47%);
 }
 
 .accordion .card-header button:after {
@@ -3402,8 +3410,9 @@ header .homepage-address h2 {
     border-radius: 0;
 }
 
-.dark .product-box .img-wrapper,.dark  .product-wrap .img-wrapper{
-    box-shadow:none;
+.dark .product-box .img-wrapper,
+.dark .product-wrap .img-wrapper {
+    box-shadow: none;
     background: rgb(255 255 255 / 10%);
 }
 
@@ -3663,7 +3672,8 @@ a.vehical-view-box.row.no-gutters {
     padding: 0 0 20px;
 }
 
-.vehicle-details h4, .ride-price p {
+.vehicle-details h4,
+.ride-price p {
     font-size: 16px;
     color: #343a40;
 }
@@ -3784,14 +3794,14 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     padding: 6.7px 14px;
 }
 
-.pixelstrap > li > a > .sub-arrow{
+.pixelstrap>li>a>.sub-arrow {
     display: none;
 }
 
 .pixelstrap li a img {
     display: block;
     width: 40px;
-    margin: auto;
+    margin: 0 auto 10px;
 }
 
 
@@ -3814,7 +3824,9 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     padding: 3px;
 }
 
-.inner_spacing h3 label {font-weight: 700;}
+.inner_spacing h3 label {
+    font-weight: 700;
+}
 
 #brand_main_div a {
     /* background: rgb(0 0 0 / 10%); */
@@ -3827,6 +3839,23 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 
 #brand_main_div a img {
     margin: auto;
+}
+
+.offer-slider .inner_spacing {
+    padding: 0;
+    background: transparent;
+    width: 100%;
+}
+
+.page-link {
+    padding: .5rem 0.85rem;
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: var(--theme-deafult);
+    border-color: var(--theme-deafult);
 }
 
 
@@ -3999,7 +4028,7 @@ body[dir="rtl"] .collection-filter .theme-card .offer-slider img {
 
 body[dir="rtl"] .footer-social li,
 .social-white li {
-    padding: 0 0 0 25px;
+    padding: 0;
 }
 
 body[dir="rtl"] .footer-theme .sub-title .contact_link li {
@@ -4039,12 +4068,12 @@ body[dir=rtl] .checkbox-input input:checked+label:after {
     transform: rotate(50deg);
 }
 
-body[dir=rtl] pre{
+body[dir=rtl] pre {
     width: 100% !important;
     padding: 10px !important;
 }
 
-body[dir=rtl]  input.form-control.pac-target-input.gm-err-autocomplete {
+body[dir=rtl] input.form-control.pac-target-input.gm-err-autocomplete {
     background-position: center left 10px;
 }
 
@@ -4065,9 +4094,31 @@ body[dir="rtl"] .collection-collapse-block .collapse-block-title:after {
     right: auto;
 }
 
-body[dir="rtl"] .inner_spacing{
+body[dir="rtl"] .inner_spacing {
     text-align: right;
 }
+
+body[dir="rtl"] .footer-theme .sub-title .contact-list li {
+    padding: 13px 25px 0 0;
+}
+
+body[dir="rtl"] .footer-theme .sub-title .contact-list i {
+    left: auto;
+    right: 0;
+}
+
+body[dir="rtl"] .onhover-dropdown .onhover-show-div,
+body[dir="rtl"] .main-menu .menu-right .icon-nav .onhover-div .show-div.shopping-cart {
+    left: 0;
+    right: auto;
+}
+
+
+
+
+
+
+
 
 
 
@@ -4075,6 +4126,7 @@ body[dir="rtl"] .inner_spacing{
 
 /* Responsiveness Css Start From Here */
 @media (max-width: 1919px) {
+
     .pixelstrap a,
     .pixelstrap a:hover,
     .pixelstrap a:active {
@@ -4188,6 +4240,7 @@ body[dir="rtl"] .inner_spacing{
     .theme-form .input-group input.form-control {
         width: 100%;
     }
+
     .icon-nav .btn {
         font-size: 11px;
     }

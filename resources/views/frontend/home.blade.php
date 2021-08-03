@@ -74,7 +74,8 @@
                 </div>    
                 <div class="media-body align-self-center px-3">
                     <div class="inner_spacing">
-                        <h3 class="d-flex align-items-center justify-content-between"><label class="mb-0"><%= product.title %></label> <span class="rating">4.2</span></h3>
+                        <h3 class="d-flex align-items-center justify-content-between">
+                            <label class="mb-0"><%= product.title %></label> <span class="rating">4.2</span></h3>
                         <p><%= product.vendor_name %></p>
                         <h4>
                             <% if(product.inquiry_only == 0) { %>

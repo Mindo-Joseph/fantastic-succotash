@@ -44,13 +44,13 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                                         <li class="d-block mb-2">
                                             <a href="{{http_check($social_media_detail->url)}}" target="_blank">
                                                 <i class="fa fa-{{$social_media_detail->icon}}" aria-hidden="true"></i>
-                                                <span>Facebook</span>
+                                                <span>{{$social_media_detail->title ? $social_media_detail->title : "Facebook"}}</span>
                                             </a>
                                         </li>
                                     @endforeach
                                 </ul>
-                            </div>
-                        </div>
+                            </div>  
+                        </div>   
                     </div>
                 @endif
                 @if($client_preference_detail->show_contact_us == 1)
