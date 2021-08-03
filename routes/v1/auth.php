@@ -81,7 +81,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         // vendor subscription 
         Route::group(['prefix' => 'vendor/subscription'], function () {
-            Route::get('plans/{id}', 'Api\v1\VendorController@getSubscriptionPlans');
+            Route::get('plans/{id}', 'Api\v1\VendorSubscriptionController@getSubscriptionPlans');
             Route::get('select/{slug}', 'Api\v1\VendorSubscriptionController@selectSubscriptionPlan');
             Route::post('purchase/{id}/{slug}', 'Api\v1\VendorSubscriptionController@purchaseSubscriptionPlan');
             Route::post('cancel/{id}/{slug}', 'Api\v1\VendorSubscriptionController@cancelSubscriptionPlan');

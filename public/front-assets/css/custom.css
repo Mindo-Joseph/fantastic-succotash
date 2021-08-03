@@ -1008,7 +1008,7 @@ label:hover~input:checked~.rate label
 
 .spinner-box {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -3023,8 +3023,8 @@ form input.form-control[placeholder="Address"] {
 
 .dashboard .copy-message {
     position: absolute;
-    bottom: -25px;
-    right: 10px;
+    bottom: -35px;
+    right: -50px;
     background: var(--theme-deafult);
     opacity: 0.7;
     color: #ffff;
@@ -3032,6 +3032,8 @@ form input.form-control[placeholder="Address"] {
     border-radius: 50px;
     line-height: 24px;
     font-size: 14px;
+    min-width: 100px;
+    z-index: 1;
 }
 
 .footer-logo img {

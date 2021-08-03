@@ -11,7 +11,7 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet,UserAddress, ClientPreference, Vendor};
+use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet,UserAddress, ClientPreference, LuxuryOption, Vendor};
 use GuzzleHttp\Client as GCLIENT;
 class CartController extends BaseController{
     use ApiResponser;
@@ -63,6 +63,7 @@ class CartController extends BaseController{
 
     /**     * Add product In Cart    *           */
     public function add(Request $request){
+        $luxury_option = LuxuryOption::where('title', $request->type)->first();
         try {
             $user = Auth::user();
             $langId = $user->language;
@@ -74,6 +75,7 @@ class CartController extends BaseController{
                 }
                 $unique_identifier = $user->system_user;
             }
+            
             $product = Product::where('sku', $request->sku)->first();
             if(!$product){
                 return $this->errorResponse('Invalid product.', 404);
@@ -134,6 +136,20 @@ class CartController extends BaseController{
             }else{
                 $cart_detail = Cart::updateOrCreate(['unique_identifier' => $unique_identifier], $cart_detail);
             }
+            if ($luxury_option) {
+                $checkCartLuxuryOption = CartProduct::where('luxury_option_id', '!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
+                if ($checkCartLuxuryOption) {
+                    return $this->errorResponse(['error' => 'You are adding products in different mods',
+                                                 'alert' => '1'], 404);
+                }
+                if ($luxury_option->id == 2 || $luxury_option->id == 3) {
+                    $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $product->vendor_id)->first();
+                    if ($checkVendorId) {
+                        return $this->errorResponse(['error' => 'Your cart has existing items from another vendor',
+                                                     'alert' => '1'], 404);
+                    }
+                }
+            }
             if($cart_detail->id > 0){
                 $oldquantity = $isnew = 0;
                 $cart_product_detail = [
@@ -146,6 +162,7 @@ class CartController extends BaseController{
                     'vendor_id'  => $product->vendor_id,
                     'variant_id'  => $request->product_variant_id,
                     'currency_id' => $client_currency->currency_id,
+                    'luxury_option_id' => $luxury_option ? $luxury_option->id : 1,
                 ];
                 $cartProduct = CartProduct::where('cart_id', $cart_detail->id)
                             ->where('product_id', $product->id)
@@ -512,7 +529,7 @@ class CartController extends BaseController{
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
                 $vendorData->taxable_amount = $taxable_amount;
-                $vendorData->payable_amount = $payable_amount - $discount_amount + $deliver_charge;
+                $vendorData->payable_amount = $payable_amount - $discount_amount;
                 $total_paying = $total_paying + $payable_amount;
                 $total_tax = $total_tax + $taxable_amount;
                 $total_disc_amount = $total_disc_amount + $discount_amount;
@@ -535,11 +552,11 @@ class CartController extends BaseController{
         }
         $cart->products = $cartData;
         $cart->item_count = $item_count;
-        $temp_total_paying = $total_paying + $total_delivery_amount + $total_tax - $total_disc_amount;
+        $temp_total_paying = $total_paying  + $total_tax - $total_disc_amount;
         if($cart->loyalty_amount  >= $temp_total_paying){
            $cart->total_payable_amount = 0.00;
         }else{
-            $cart->total_payable_amount = $total_paying + $total_delivery_amount + $total_tax - $total_disc_amount - $cart->loyalty_amount;
+            $cart->total_payable_amount = $total_paying  + $total_tax - $total_disc_amount - $cart->loyalty_amount;
         }
         $cart->tip_5_percent = number_format((0.05 * $total_payable_amount), 2);
         $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2);

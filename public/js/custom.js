@@ -1,3 +1,15 @@
+$(function() {
+    document.ajax_loading = false;
+    $.hasAjaxRunning = function() {
+        return document.ajax_loading;
+    };
+    $(document).ajaxStart(function() {
+        document.ajax_loading = true;
+    });
+    $(document).ajaxStop(function() {
+        document.ajax_loading = false;
+    });
+});
 
 $(document).ready(function() {
     $.ajaxSetup({
@@ -269,12 +281,19 @@ $(document).ready(function() {
             dataType: 'json',
             url: delete_cart_product_url,
             data: {cartproduct_id:cartproduct_id},
+            beforeSend: function() {
+                if($("#cart_table").length > 0){
+                    $(".spinner-box").show();
+                    $("#cart_table").hide();
+                }
+            },
             success: function(data) {
                 if(data.status == 'success'){
                     $('#cart_product_'+cartproduct_id).remove();
                     $('#shopping_cart1_'+cartproduct_id).remove();
                     $('#tr_vendor_products_'+cartproduct_id).remove();
                     cartTotalProductCount();
+                    cartHeader();
                     if($("#tbody_" + vendor_id + " > tr.vendor_products_tr").length == 0){
                         $('#tbody_'+vendor_id).remove();
                         $('#thead_'+vendor_id).remove();
@@ -298,6 +317,10 @@ $(document).ready(function() {
     $(document).on("change","input:radio[name='address_id']",function() {
         if($(this).val()){
             $('#order_palced_btn').prop('disabled', false);
+            if($("#cart_table").length > 0){
+                $(".spinner-box").show();
+                $("#cart_table").hide();
+            }
             cartHeader($(this).val());
         }
     });
@@ -806,6 +829,12 @@ $(document).ready(function() {
             type: "get",
             dataType: 'json',
             url: cart_product_url,
+            // beforeSend: function() {
+            //     if($("#cart_table").length > 0){
+            //         $(".spinner-box").show();
+            //         $("#cart_table").hide();
+            //     }
+            // },
             success: function(response) {
                 if (response.status == "success") {
                     $("#cart_table").html('');
@@ -818,6 +847,11 @@ $(document).ready(function() {
                             if($('#cart_main_page').length != 0){
                                 let cart_template = _.template($('#cart_template').html());
                                 $("#cart_table").append(cart_template({cart_details:cart_details}));
+                                // if(cart_details.deliver_status == 0){
+                                //     $("#order_palced_btn").attr("disabled", true);
+                                // }else{
+                                //     $("#order_palced_btn").removeAttr("disabled");
+                                // }
                             }
                             cartTotalProductCount();
                         }else{
@@ -831,6 +865,10 @@ $(document).ready(function() {
                 }
             },
             complete: function(data){
+                if($("#cart_table").length > 0){
+                    $(".spinner-box").hide();
+                    $("#cart_table").show();
+                }
                 if($(".number .fa-spinner fa-pulse").length > 0){
                     $(".number .qty-minus .fa").removeAttr("class").addClass("fa fa-minus");
                     $(".number .qty-plus .fa").removeAttr("class").addClass("fa fa-plus");
@@ -851,6 +889,7 @@ $(document).ready(function() {
             success: function(response) {
                 var latest_price = parseInt(base_price) * parseInt(quantity);
                 $('#product_total_amount_'+cartproduct_id).html('$'+latest_price);
+                cartHeader();
             },
             error: function(err){
                 if($(".number .fa-spinner fa-pulse").length > 0){
@@ -923,7 +962,6 @@ $(document).ready(function() {
             $('#remove_item_modal #vendor_id').val(vendor_id);
             $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
         }
-        cartHeader();
     });
     $(document).on('click', '.qty-plus', function() {
         let base_price = $(this).data('base_price');
@@ -932,7 +970,6 @@ $(document).ready(function() {
         $('#quantity_'+cartproduct_id).val(++qty);
         $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
         updateQuantity(cartproduct_id, qty, base_price);
-        cartHeader();
     });
     cartHeader();
     $(document).on("click","#cancel_save_address_btn",function() {
@@ -968,6 +1005,12 @@ $(document).ready(function() {
                 "latitude": latitude,
                 "longitude": longitude,
             },
+            beforeSend: function() {
+                if($("#cart_table").length > 0){
+                    $(".spinner-box").show();
+                    $("#cart_table").hide();
+                }
+            },
             success: function(response) {
                 if($("#add_edit_address").length > 0){
                     $("#add_edit_address").modal('hide');
@@ -979,10 +1022,15 @@ $(document).ready(function() {
                     if(address.length > 0){
                         $('#order_palced_btn').attr('disabled', false);
                         $("#address_template_main_div").append(address_template({address:response.address}));
+                        cartHeader(response.address.id);
                     }
                 }
             },
             error: function (reject) {
+                if($("#cart_table").length > 0){
+                    $(".spinner-box").hide();
+                    $("#cart_table").show();
+                }
                 if( reject.status === 422 ) {
                     var message = $.parseJSON(reject.responseText);
                     $.each(message.errors, function (key, val) {
@@ -993,7 +1041,9 @@ $(document).ready(function() {
         });
     });
     $(document).on("click",".addToCart",function() {
-        addToCart();
+        if(!$.hasAjaxRunning()){
+            addToCart();
+        }
     });
     function addToCart() {
         $.ajax({

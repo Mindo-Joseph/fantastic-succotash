@@ -24,9 +24,6 @@ class SubscriptionPlansVendorController extends BaseController
     private $folderName = '/subscriptions/image';
     /**
      * Handle the incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function __construct(request $request)
     {
@@ -38,11 +35,8 @@ class SubscriptionPlansVendorController extends BaseController
 
     /**
      * Get user subscriptions
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function getSubscriptionPlans(Request $request)
+    public function getSubscriptionPlans()
     {
         $sub_plans = SubscriptionPlansVendor::with(['features.feature'])->orderBy('id', 'asc')->get();
         $featuresList = SubscriptionFeaturesListVendor::where('status', 1)->get();
@@ -68,16 +62,23 @@ class SubscriptionPlansVendorController extends BaseController
                 $plan->features = $features;
             }
         }
-        return response()->json(["status"=>"Success", "data"=>['features'=>$featuresList, 'subscription_plans'=>$sub_plans, 'subscribed_vendors_count'=>$subscribed_vendors_count, 'subscribed_vendors_percentage'=>$subscribed_vendors_percentage, 'awaiting_approval_subscriptions_count'=>$awaiting_approval_subscriptions_count, 'rejected_subscriptions_count'=>$rejected_subscriptions_count, 'approved_subscriptions_count'=>$approved_subscriptions_count]]);
+        return response()->json(["status"=>"Success", "data"=>['features'=>$featuresList, 'all_plans'=>$sub_plans, 'subscribed_vendors_count'=>$subscribed_vendors_count, 'subscribed_vendors_percentage'=>$subscribed_vendors_percentage, 'awaiting_approval_subscriptions_count'=>$awaiting_approval_subscriptions_count, 'rejected_subscriptions_count'=>$rejected_subscriptions_count, 'approved_subscriptions_count'=>$approved_subscriptions_count]]);
     }
 
     /**
      * save user subscription
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Required Params-
+     *  slug (Subscription plan)
+     *  image
+     *  title
+     *  features
+     *  price
+     *  frequency
+     *  status
+     *  on_request
+     *  description
      */
-    public function saveSubscriptionPlan(Request $request, $domain = '', $slug='')
+    public function saveSubscriptionPlan(Request $request, $slug='')
     {
         try{
             DB::beginTransaction();
@@ -150,11 +151,10 @@ class SubscriptionPlansVendorController extends BaseController
 
     /**
      * edit user subscription
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Required Params-
+     *  slug (Subscription plan)
      */
-    public function editSubscriptionPlan(Request $request, $domain = '', $slug='')
+    public function editSubscriptionPlan($slug='')
     {
         try{
             $plan = SubscriptionPlansVendor::where('slug', $slug)->first();
@@ -178,11 +178,11 @@ class SubscriptionPlansVendorController extends BaseController
 
     /**
      * update user subscription status
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Required Params-
+     *  slug (Subscription plan)
+     *  status
      */
-    public function updateSubscriptionPlanStatus(Request $request, $domain = '', $slug='')
+    public function updateSubscriptionPlanStatus(Request $request, $slug='')
     {
         try{
             DB::beginTransaction();
@@ -205,11 +205,11 @@ class SubscriptionPlansVendorController extends BaseController
 
     /**
      * update vendor subscription on request
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Required Params-
+     *  slug (Subscription plan)
+     *  on_request
      */
-    public function updateSubscriptionPlanOnRequest(Request $request, $domain = '', $slug='')
+    public function updateSubscriptionPlanOnRequest(Request $request, $slug='')
     {
         try{
             DB::beginTransaction();
@@ -231,12 +231,11 @@ class SubscriptionPlansVendorController extends BaseController
     }
 
     /**
-     * update user subscription
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * delete subscription plan
+     * Required Params-
+     *  slug (Subscription plan)
      */
-    public function deleteSubscriptionPlan(Request $request, $domain = '', $slug='')
+    public function deleteSubscriptionPlan($slug='')
     {
         try {
             DB::beginTransaction();

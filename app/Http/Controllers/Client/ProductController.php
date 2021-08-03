@@ -149,7 +149,7 @@ class ProductController extends BaseController
             ->orderBy('position', 'asc')->get();
         $brands = Brand::join('brand_categories as bc', 'bc.brand_id', 'brands.id')
             ->select('brands.id', 'brands.title', 'brands.image')
-            ->where('bc.category_id', $product->category_id)->get();
+            ->where('bc.category_id', $product->category_id)->where('status',1)->get();
         $clientLanguages = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
             ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.is_primary')
             ->where('client_languages.client_code', Auth::user()->code)
