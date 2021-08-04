@@ -89,28 +89,53 @@ class OrderController extends BaseController{
                 $query->where('user_id', Auth::user()->id);
             });
         }
+
+        $order_count = OrderVendor::orderBy('id','asc');
+        if (Auth::user()->is_superadmin == 0) {
+            $order_count = $order_count->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $pending_orders = clone $order_count;
+        $active_orders = clone $order_count;
+        $orders_history = clone $order_count;
+        
         if($filter_order_status){
             switch ($filter_order_status) { 
                 case 'pending_orders':
                     $orders = $orders->with('vendors', function ($query){
                         $query->where('order_status_option_id', 1);
                    });
+                   
                 break;
                 case 'active_orders':
                     $order_status_options = [2,4,5];
                     $orders = $orders->whereHas('vendors', function ($query) use($order_status_options){
                         $query->whereIn('order_status_option_id', $order_status_options);
                     });
+                    
                 break;
                 case 'orders_history':
                     $order_status_options = [6,3];
                     $orders = $orders->whereHas('vendors', function ($query) use($order_status_options){
                         $query->whereIn('order_status_option_id', $order_status_options);
                     });
+                   
                 break;
             }
         }
         $orders = $orders->whereHas('vendors')->paginate(50);
+
+
+        $pending_orders = $pending_orders->where('order_status_option_id', 1)->count();
+
+        $order_status_optionsa = [2,4,5];
+        $active_orders = $active_orders->whereIn('order_status_option_id', $order_status_optionsa)->count();
+
+        $order_status_optionsd = [6,3];
+        $orders_history = $orders_history->whereIn('order_status_option_id', $order_status_optionsd)->count();
+        
+      
         foreach ($orders as $key => $order) {
             $order->created_date = convertDateTimeInTimeZone($order->created_at, $user->timezone, 'd-m-Y, H:i A');
             foreach ($order->vendors as $vendor) {
@@ -129,7 +154,8 @@ class OrderController extends BaseController{
                 $orders->forget($key);
             }
         }
-        return $this->successResponse($orders,'',201);
+
+        return $this->successResponse(['orders'=> $orders,'pending_orders' => $pending_orders,'active_orders' => $active_orders,'orders_history' => $orders_history],'',201);
     }
     /**
      * Display the order.

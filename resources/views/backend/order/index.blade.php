@@ -167,20 +167,20 @@
             <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="pending_order-tab" data-toggle="tab" href="#pending_orders" role="tab" aria-selected="false" data-rel="pending_orders">
-                        <i class="icofont icofont-man-in-glasses"></i>Pending Orders <sup class="total-items">({{$pending_order_count}})</sup>
+                        <i class="icofont icofont-man-in-glasses"></i>Pending Orders <sup class="total-items" id="pending-orders">({{$pending_order_count}})</sup>
                     </a>
                     <div class="material-border"></div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="active_orders_tab" data-toggle="tab"
                         href="#active_orders" role="tab" aria-selected="true" data-rel="active_orders">
-                        <i class="icofont icofont-ui-home"></i>Active Orders <sup class="total-items">({{$active_order_count}})</sup>
+                        <i class="icofont icofont-ui-home"></i>Active Orders <sup class="total-items" id="active-orders">({{$active_order_count}})</sup>
                     </a>
                     <div class="material-border"></div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="orders_history_tab" data-toggle="tab" href="#orders_history" role="tab" aria-selected="false" data-rel="orders_history">
-                        <i class="icofont icofont-man-in-glasses"></i>Orders History <sup class="total-items">({{$past_order_count}})</sup>
+                        <i class="icofont icofont-man-in-glasses"></i>Orders History <sup class="total-items"  id="history-orders">({{$past_order_count}})</sup>
                     </a>
                     <div class="material-border"></div>
                 </li>
@@ -227,13 +227,16 @@
                 success: function(response) {
                     $('#order_list_order').hide();
                     if(response.status == 'Success'){
-                        if(response.data.data.length != 0){
+                        if(response.data.orders.data.length != 0){
                             let order_page_template = _.template($('#order_page_template').html());
-                            $("#"+filter_order_status).append(order_page_template({orders: response.data.data, next_page_url:response.data.next_page_url , filter_order_status:filter_order_status}));
+                            $("#"+filter_order_status).append(order_page_template({orders: response.data.orders.data, next_page_url:response.data.orders.next_page_url , filter_order_status:filter_order_status}));
                         }else{
                             let no_order_template = _.template($('#no_order_template').html());
                             $("#"+filter_order_status).html(no_order_template({}));
                         }
+                        $("#active-orders").html("("+response.data.active_orders+")");
+                        $("#pending-orders").html("("+response.data.pending_orders+")");
+                        $("#history-orders").html("("+response.data.orders_history+")");
                     }
                 },
                 error: function (data) {
