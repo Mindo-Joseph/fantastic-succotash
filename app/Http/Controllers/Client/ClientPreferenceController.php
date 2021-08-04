@@ -181,6 +181,12 @@ class ClientPreferenceController extends BaseController{
             $preference->need_dispacher_ride = ($request->has('need_dispacher_ride') && $request->need_dispacher_ride == 'on') ? 1 : 0;
           
             if($request->has('is_hyperlocal') && $request->is_hyperlocal == 'on'){
+                if( (!$request->has('Default_location_name')) || ($request->Default_location_name == '')
+                    || (!$request->has('Default_latitude')) || ($request->Default_latitude == '')
+                    || (!$request->has('Default_longitude')) || ($request->Default_longitude == '')
+                ){
+                    return redirect()->route('configure.index')->with('error', 'Invalid Hyperlocal Data');
+                }
                 $preference->Default_location_name = $request->Default_location_name;
                 $preference->Default_latitude = $request->Default_latitude;
                 $preference->Default_longitude = $request->Default_longitude;
