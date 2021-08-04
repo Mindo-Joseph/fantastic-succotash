@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Vendor'])
+@extends('layouts.vertical', ['demo' => 'creative', 'title' => getNomenclatureName('vendors', true)])
 
 @section('css')
 <link href="{{asset('assets/libs/fullcalendar-list/fullcalendar-list.min.css')}}" rel="stylesheet" type="text/css" />
@@ -28,8 +28,6 @@
 
 @section('content')
 <div class="container-fluid">
-
-    <!-- start page title -->
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
@@ -53,15 +51,12 @@
             </div>
         </div>
     </div>
-    <!-- end page title -->
-
     <div class="row">
         <div class="col-lg-3 col-xl-3">
             @include('backend.vendor.show-md-3')
         </div>
-
         <div class="col-lg-9 col-xl-9">
-            <div class="">
+            <div>
                 <ul class="nav nav-pills navtab-bg nav-justified">
                     <li class="nav-item">
                         <a href="{{ route('vendor.catalogs', $vendor->id) }}" aria-expanded="false" class="nav-link {{($tab == 'catalog') ? 'active' : '' }} {{$vendor->status == 1 ? '' : 'disabled'}}">
@@ -135,12 +130,8 @@
                     </div>
                 </div>
                 <div class="tab-content">
-                    <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} card-body" id="configuration">
-
-                    </div>
-                    <div class="tab-pane {{($tab == 'category') ? 'active show' : '' }}" id="category">
-
-                    </div>
+                    <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} card-body" id="configuration"></div>
+                    <div class="tab-pane {{($tab == 'category') ? 'active show' : '' }}" id="category"></div>
                     <div class="tab-pane {{($tab == 'catalog') ? 'active show' : '' }}" id="catalog">
                         <div class="card-box">
                             <div class="row">
@@ -244,16 +235,14 @@
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
-
                                         {!! Form::hidden('type_id', 1) !!}
                                         {!! Form::hidden('vendor_id', $vendor->id) !!}
                                     </div>
                                 </div>
-
                                 <div class="col-12 mb-2" style="cursor: not-allowed;">
                                     <div class="form-group" id="">
                                         {!! Form::label('title', 'URL Slug',['class' => 'control-label']) !!}
-                                        {!! Form::text('product_url', null, ['class'=>'form-control', 'id' => 'product_url', 'placeholder' => 'Apple iMac', 'style' => 'pointer-events:none;']) !!}
+                                        {!! Form::text('product_url', null, ['class'=>'form-control', 'id' => 'product_url', 'placeholder' => 'Apple iMac', 'onkeypress' => 'return slugify(event)']) !!}
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -262,11 +251,11 @@
                                         <select class="form-control selectizeInput" id="category_list" name="category">
                                             <option value="">Select Category...</option>
                                             @foreach($product_categories as $product_category)
-                                            @if($product_category->category)
-                                            @if( ($product_category->category->type_id == 1) || ($product_category->category->type_id == 3) || ($product_category->category->type_id == 7))
-                                            <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
-                                            @endif
-                                            @endif
+                                                @if($product_category->category)
+                                                    @if( ($product_category->category->type_id == 1) || ($product_category->category->type_id == 3) || ($product_category->category->type_id == 7))
+                                                        <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
+                                                    @endif
+                                                @endif
                                             @endforeach
                                         </select>
                                         <span class="invalid-feedback" role="alert">
@@ -312,7 +301,6 @@
                                         <th>File Name</th>
                                         <th colspan="2">Status</th>
                                         <th>Link</th>
-
                                     </tr>
                                 </thead>
                                 <tbody id="post_list">
@@ -320,7 +308,6 @@
                                     <tr data-row-id="{{$csv->id}}">
                                         <td> {{ $loop->iteration }}</td>
                                         <td> {{ $csv->name }}</td>
-
                                         @if($csv->status == 1)
                                         <td>Pending</td>
                                         <td></td>
@@ -356,25 +343,18 @@
         </div>
     </div>
 </div>
-
-
 <script type="text/javascript">
     $('.addProductBtn').click(function() {
         $('#add-product').modal({
             keyboard: false
         });
     });
-
-  
-
     $('.importProductBtn').click(function() {
         $('#import-product').modal({
             keyboard: false
         });
     });
-
     var regexp = /^[a-zA-Z0-9-_]+$/;
-
     function alplaNumeric(evt) {
         var charCode = String.fromCharCode(event.which || event.keyCode);
         if (!regexp.test(charCode)) {
@@ -383,9 +363,18 @@
         var n1 = document.getElementById('sku');
         var n2 = document.getElementById('product_url');
         n2.value = n1.value + charCode;
+        slugify(evt);
         return true;
     }
-
+    function slugify(evt) {
+      var charCode = String.fromCharCode(event.which || event.keyCode);
+      if (!regexp.test(charCode)) {
+        return false;
+      }
+      var string = $('#product_url').val();
+      var slug = string.toString().trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
+      $('#product_url').val(slug);
+    }
     $(document).on('click', '.submitProduct', function(e) {
         var form = document.getElementById('save_product_form');
         var formData = new FormData(form);
@@ -396,7 +385,6 @@
             contentType: false,
             processData: false,
             success: function(resp) {
-                console.log(resp);
                 if (resp.status == 'success') {
                     $('#save_product_form').submit();
                 }
@@ -426,7 +414,6 @@
                     $(".show_all_error.invalid-feedback").text('Something went wrong, Please try Again.');
                 }
                 return response;
-
             }
         });
     });
