@@ -81,17 +81,23 @@ class HomeController extends BaseController{
             $vends = [];
             $homeData = [];
             $user = Auth::user();
+            $preferences = ClientPreference::select('is_hyperlocal', 'Default_location_name', 'Default_latitude', 'Default_longitude')->first();
             $latitude = $request->latitude;
             $longitude = $request->longitude;
             $user_geo[] = $latitude;
             $user_geo[] = $longitude;
-            $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id')->first();
             if($request->has('type')){
                 $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount')->where($request->type, 1);
             }else{
                 $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
             }
             if($preferences->is_hyperlocal == 1){
+                if( (empty($latitude)) && (empty($longitude)) ){
+                    $address = $preferences->Default_location_name;
+                    $latitude = (!empty($preferences->Default_latitude)) ? floatval($preferences->Default_latitude) : 0;
+                    $longitude = (!empty($preferences->Default_latitude)) ? floatval($preferences->Default_longitude) : 0;
+                    $request->request->add(['latitude' => $latitude, 'longitude' => $longitude, 'address' => $address]);
+                }
                 $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
                         $query->select('vendor_id')
                         ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$latitude." ".$longitude.")'))");
@@ -103,7 +109,7 @@ class HomeController extends BaseController{
             }
             $isVendorArea = 0;
             $langId = $user->language;
-            $categories = $this->categoryNav($langId);
+            $categories = $this->categoryNav($langId, $vends);
             $homeData['vendors'] = $vendorData;
             $homeData['categories'] = $categories;
             $homeData['reqData'] = $request->all();
@@ -112,7 +118,7 @@ class HomeController extends BaseController{
                                 }])->select('id', 'image')->where('status', '!=', $this->field_status)
                                 ->orderBy('position', 'asc')->get();
             $user_vendor_count = UserVendor::where('user_id', $user->id)->count();
-            $homeData['is_admin'] = $user_vendor_count > 0 ? 1 : 0;                  
+            $homeData['is_admin'] = $user_vendor_count > 0 ? 1 : 0;
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());

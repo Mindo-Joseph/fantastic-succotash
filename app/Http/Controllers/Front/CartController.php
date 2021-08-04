@@ -101,21 +101,21 @@ class CartController extends FrontController
                             ->where('addon_sets.status', '!=', '2')
                             ->where('addon_sets.id', $key)->first();
                 if(!$addon){
-                    return $this->errorResponse('Invalid addon or delete by admin. Try again with remove some.', 404);
+                    return response()->json(["status" => "error", 'message' => 'Invalid addon or delete by admin. Try again with remove some.'], 404);
                 }
                 if($addon->min_select > count($value)){
                     return response()->json([
-                        "status" => "Error",
+                        "status" => "error",
                         'message' => 'Select minimum ' . $addon->min_select .' options of ' .$addon->title,
                         'data' => $addon
-                    ], 404);
+                    ], 400);
                 }
                 if($addon->max_select < count($value)){
                     return response()->json([
-                        "status" => "Error",
+                        "status" => "error",
                         'message' => 'You can select maximum ' . $addon->min_select .' options of ' .$addon->title,
                         'data' => $addon
-                    ], 404);
+                    ], 400);
                 }
             }
             if ($luxury_option) {
@@ -405,6 +405,7 @@ class CartController extends FrontController
      */
     public function getCart($cart, $address_id=0)
     {
+        $address = [];
         $cart_id = $cart->id;
         $user = Auth::user();
         $langId = Session::get('customerLanguage');
@@ -414,11 +415,13 @@ class CartController extends FrontController
         $customerCurrency = ClientCurrency::where('currency_id', $curId)->first();
         $latitude = '';
         $longitude = '';
-        if($address_id > 0){
-            $address = UserAddress::where('user_id', $user->id)->where('id', $address_id)->first();
-        }else{
-            $address = UserAddress::where('user_id', $user->id)->where('is_primary', 1)->first();
-            $address_id = ($address) ? $address->id : 0;
+        if($user){
+            if($address_id > 0){
+                $address = UserAddress::where('user_id', $user->id)->where('id', $address_id)->first();
+            }else{
+                $address = UserAddress::where('user_id', $user->id)->where('is_primary', 1)->first();
+                $address_id = ($address) ? $address->id : 0;
+            }
         }
         $latitude = ($address) ? $address->latitude : '';
         $longitude = ($address) ? $address->longitude : '';

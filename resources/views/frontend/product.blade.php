@@ -57,6 +57,22 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
+                    <div class="text-sm-left">
+                        @if (\Session::has('success'))
+                            <div class="alert alert-success">
+                                <span>{!! \Session::get('success') !!}</span>
+                            </div>
+                        @endif
+                        @if (\Session::has('error'))
+                            <div class="alert alert-danger">
+                                <span>{!! \Session::get('error') !!}</span>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-xl-12">
@@ -182,7 +198,11 @@
                                                 @foreach($product->addOn as $row => $addon)
                                                 <tr>
                                                     <td>
-                                                        <h4 addon_id="{{$addon->addon_id}}" class="header-title productAddonSet">{{$addon->title}} <small>(You can choose max {{$addon->max_select}} options)</small></h4>
+                                                        <h4 addon_id="{{$addon->addon_id}}" class="header-title productAddonSet">{{$addon->title}} 
+                                                            @if($addon->max_select > 0)
+                                                                <small>(You can choose max {{$addon->max_select}} options)</small>
+                                                            @endif
+                                                        </h4>
                                                     </td>
                                                 </tr>
                                                 <tr class="productAddonSetOptions" data-min="{{$addon->min_select}}" data-max="{{$addon->max_select}}">
@@ -410,7 +430,7 @@
                         </div>
                         <div class="col-12 form-group checkbox-input">
                             <input type="checkbox" id="agree" name="agree" required>
-                            <label for="agree">{{__('I accept the')}} <a href="{{url('extra-page/terms-conditions')}}" target="_blank">{{__('Terms And Conditions')}}</a> {{__('and have read the')}} <a href="{{url('extra-page/privacy-policy')}}" target="_blank"> {{__('Privacy Policy')}}</a></label>
+                            <label for="agree">{{__('I accept the')}} <a href="{{url('page/terms-conditions')}}" target="_blank">{{__('Terms And Conditions')}}</a> {{__('and have read the')}} <a href="{{url('page/privacy-policy')}}" target="_blank"> {{__('Privacy Policy')}}</a></label>
                             <span class="d-block text-danger error-text agreeError"></span>
                         </div>
                         <div class="col-12 mt-2">
@@ -553,7 +573,6 @@
     var addonoptids = [];
     $(function() {
         $(".productAddonOption").click(function(e) {
-            // e.preventDefault();
             var addon_elem = $(this).closest('tr');
             var addon_minlimit = addon_elem.data('min');
             var addon_maxlimit = addon_elem.data('max');
