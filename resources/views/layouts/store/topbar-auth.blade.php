@@ -18,7 +18,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     </div>
             </div>
             <div class="col-8 text-right">
-                <ul class="header-dropdown">
+                <ul class="header-dropdown">                    
+                    <li class="mobile-wishlist d-inline d-sm-none">
+                        <a href="{{route('user.wishlists')}}">
+                            <i class="fa fa-heart" aria-hidden="true"></i>
+                        </a>
+                    </li>
                     <li class="onhover-dropdown change-language slected-language">
                         <a href="javascript:void(0)">{{session()->get('locale')}} 
                             <img src="{{asset('front-assets/images/icon/translation.png')}}" class="img-fluid">

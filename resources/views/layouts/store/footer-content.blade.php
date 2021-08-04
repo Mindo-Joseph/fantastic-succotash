@@ -64,7 +64,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                             <ul class="contact-list">
                                 <li><i class="fa fa-map-marker"></i>Multikart Demo Store, Demo store India 345-659
                                 </li>
-                                <li><i class="fa fa-phone"></i>Call Us: 123-456-7898</li>
+                                <li><i class="fa fa-phone"></i>123-456-7898</li>
                                 <li><i class="fa fa-envelope-o"></i><a href="#">Support@Fiot.com</a></li>
                                 <li><i class="fa fa-fax"></i>123456</li>
                             </ul>
