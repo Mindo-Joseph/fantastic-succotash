@@ -89,6 +89,8 @@ $(document).ready(function () {
         });
     }
 
+    
+
     $("#dinein_tab").click(function () {
         var url = "dine_in";
         getHomePage("", "", url);

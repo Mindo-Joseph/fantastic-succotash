@@ -70,9 +70,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </script>
                         @if(auth()->user())
                         @if($client_preference_detail->show_wishlist == 1)
-                            <div class="icon-nav">
+                            <div class="icon-nav mx-2">
                                 <a href="{{route('user.wishlists')}}">
-                                    <img src="{{asset('front-assets/images/icon/wishlist.png')}}" class="img-fluid">
+                                    <i class="fa fa-heart" aria-hidden="true"></i>
                                 </a>
                             </div>
                         @endif
@@ -96,7 +96,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         <% _.each(cart_details.products, function(product, key){%>
                                         <% _.each(product.vendor_products, function(vendor_product, vp){%>
                                             <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
-                                                <a class='media' href='#'>
+                                                <a class='media' href='<%= show_cart_url %>'>
                                                     <% if(vendor_product.pvariant.media_one) { %>
                                                         <img class='mr-2' src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.image.path.image_path %>">
                                                     <% }else{ %>

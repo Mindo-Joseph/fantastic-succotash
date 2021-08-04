@@ -79,11 +79,6 @@ $timezone = Auth::user()->timezone;
                 </div>
             </div>
         </div>
-        <div class="row mb-3">
-            <div class="col-12">
-                <a href="{{route('user.profile')}}"><i class="fa fa-arrow-left mr-2" aria-hidden="true"></i>{{__('Back To Profile')}}</a>
-            </div>
-        </div>
         <div class="row">
             <div class="col-lg-3 profile-sidebar">
                 <div class="account-sidebar"><a class="popup-btn">{{__('My Account')}}</a></div>
@@ -129,11 +124,11 @@ $timezone = Auth::user()->timezone;
                                     <tbody>
                                         @foreach($user_transactions as $ut)
                                         <?php $reason = json_decode($ut->meta) ?>
-                                          <tr>
-                                              <td>{{convertDateTimeInTimeZone($ut->created_at, $timezone, 'l, F d, Y, H:i A')}}</td>
-                                              <td  class="name_">{!!$reason[0]!!}</td>
-                                              <td class="text-right {{ ($ut->type == 'deposit') ? 'text-success' : (($ut->type == 'deposit') ? 'text-danger' : '') }}"><b>{{Session::get('currencySymbol')}}@money(sprintf("%.2f", $ut->amount / 100))</b></td>
-                                          </tr>
+                                            <tr>
+                                                <td>{{convertDateTimeInTimeZone($ut->created_at, $timezone, 'l, F d, Y, H:i A')}}</td>
+                                                <td  class="name_">{!!$reason[0]!!}</td>
+                                                <td class="text-right {{ ($ut->type == 'deposit') ? 'text-success' : (($ut->type == 'deposit') ? 'text-danger' : '') }}"><b>{{Session::get('currencySymbol')}}@money(sprintf("%.2f", $ut->amount / 100))</b></td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                   </table>
