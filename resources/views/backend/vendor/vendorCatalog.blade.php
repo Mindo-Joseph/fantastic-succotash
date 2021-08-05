@@ -360,8 +360,7 @@
             return false;
         }
         var n1 = $('#sku').val();
-        var n2 = $('#url_slug').val();
-        n2.value = n1.value + charCode;
+        $('#url_slug').val(n1+charCode)
         slugify(evt);
         return true;
     }
