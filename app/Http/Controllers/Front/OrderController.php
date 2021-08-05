@@ -10,6 +10,7 @@ use Omnipay\Omnipay;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Models\ClientPreference;
+use App\Models\Client as CP;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
@@ -97,18 +98,18 @@ class OrderController extends FrontController
         }else{
             $user = Auth::user();
         }
-        $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
+        $client = CP::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
         $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from', 'mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
         $message = __('An otp has been sent to your email. Please check.');
         $otp = mt_rand(100000, 999999);
         if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
             $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
-            $sendto = 'puneet.g@codebrewinnovations.com';
+            $sendto =  'puneet.g@codebrewinnovations.com';
             $client_name = 'Sales';
             $mail_from = $data->mail_from;
             try {
                 $email_template_content = '';
-                $email_template = EmailTemplate::where('id', 2)->first();
+                $email_template = EmailTemplate::where('id', 5)->first();
                 if($email_template){
                     $email_template_content = $email_template->content;
                     $email_template_content = str_ireplace("{code}", $otp, $email_template_content);
@@ -125,7 +126,7 @@ class OrderController extends FrontController
                     'customer_name' => ucwords('Puneet Garg'),
                     'email_template_content' => $email_template_content,
                 ];
-                dispatch(new \App\Jobs\SendVerifyEmailJob($data))->onQueue('verify_email');
+                dispatch(new \App\Jobs\SendOrderSuccessEmailJob($data))->onQueue('verify_email');
                 $notified = 1;
             } catch (\Exception $e) {
             }
