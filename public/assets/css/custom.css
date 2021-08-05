@@ -2211,7 +2211,9 @@
       inset: auto 0px 5px 20px !important;
   }
 
-
+  .list-unstyled.remove-curser li {
+    cursor: context-menu;
+}
 
 
 

@@ -136,6 +136,7 @@
                         @endif
                      </div>
                      
+                     @if($last_mile_teams != null && count($last_mile_teams))
                      <div class="form-group mt-3 mb-0" style="{{(isset($preference) && $preference->need_delivery_service == '1') ? '' : 'display: none;'}}" id="lastMileTeamListDiv">
                         <div class="form-group">
                             {!! Form::label('title', 'Team Tag For Last Mile',['class' => 'control-label']) !!}
@@ -148,6 +149,7 @@
                             </select>
                         </div>
                      </div>
+                     @endif
 
 
                   </div>
