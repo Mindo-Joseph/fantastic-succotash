@@ -179,70 +179,27 @@
                             <th>QUANTITY</th>
                             <th>PRICE </th>
                         </tr>
-                        <tr>
-                            <td>
-                                <img src="../assets/images/email-temp/15.jpg" alt="" width="80">
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="margin-top: 15px;">Three seater Wood Style sofa for Leavingroom </h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px;    margin-bottom: 0px;">Size :
-                                    <span> L</span> </h5>
-                                <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>1</span></h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>$500</b></h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <img src="../assets/images/email-temp/16.jpg" alt="" width="80">
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="margin-top: 15px;">Three seater Wood Style sofa for Leavingroom </h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px;    margin-bottom: 0px;">Size :
-                                    <span> L</span> </h5>
-                                <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>1</span></h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>$500</b></h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <img src="../assets/images/email-temp/17.jpg" alt="" width="80">
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="margin-top: 15px;">Three seater Wood Style sofa for Leavingroom </h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px;    margin-bottom: 0px;">Size :
-                                    <span> L</span> </h5>
-                                <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>1</span></h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>$500</b></h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <img src="../assets/images/email-temp/18.jpg" alt="" width="80">
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="margin-top: 15px;">Three seater Wood Style sofa for Leavingroom </h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px;    margin-bottom: 0px;">Size :
-                                    <span> L</span> </h5>
-                                <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>1</span></h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>$500</b></h5>
-                            </td>
-                        </tr>
+                        @foreach($mailData['cartData']->products as $product)
+                        <h4>Vendor Name: {{$product->vendor->name}}</h4>
+                            @foreach($product->vendor_products as $vendor_product)
+                                <tr>
+                                    <td>
+                                        <img src="../assets/images/email-temp/15.jpg" alt="" width="80">
+                                    </td>
+                                    <td valign="top" style="padding-left: 15px;">
+                                        <h5 style="margin-top: 15px;">{{$vendor_product->product->translation_one->title}}</h5>
+                                    </td>
+                                    <td valign="top" style="padding-left: 15px;">
+                                        <h5 style="font-size: 14px; color:#444;margin-top:15px;    margin-bottom: 0px;">Size :
+                                            <span> L</span> </h5>
+                                        <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>{{$vendor_product->quantity}}</span></h5>
+                                    </td>
+                                    <td valign="top" style="padding-left: 15px;">
+                                        <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>{{$vendor_product->pvariant->quantity_price}}</b></h5>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endforeach
                         <tr class="pad-left-right-space ">
                             <td class="m-t-5" colspan="2" align="left">
                                 <p style="font-size: 14px;">Subtotal : </p>
@@ -250,6 +207,7 @@
                             <td class="m-t-5" colspan="2" align="right">
                                 <b style>$2000</b>
                             </td>
+                        </tr>
                         <tr class="pad-left-right-space">
                             <td colspan="2" align="left">
                                 <p style="font-size: 14px;">TAX :</p>
