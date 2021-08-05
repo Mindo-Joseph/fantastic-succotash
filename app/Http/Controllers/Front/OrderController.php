@@ -89,7 +89,7 @@ class OrderController extends FrontController
         //     return view('frontend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone, 'total_amount' => $request->total_amount, 'address_id' => $request->address_id]);
         // }
         $order = $this->orderSave($request, "1");
-        // $this->sendSuccessEmail($request);
+        $this->sendSuccessEmail($request);
         return $this->successResponse(['status' => 'success', 'order' => $order, 'message' => 'Order placed successfully.']);
     }
     public function sendSuccessEmail($request){
