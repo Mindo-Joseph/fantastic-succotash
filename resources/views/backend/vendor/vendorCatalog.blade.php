@@ -140,8 +140,7 @@
                                     <div class="">
                                         <a class="btn btn-info waves-effect waves-light text-sm-right importProductBtn {{$vendor->status == 1 ? '' : 'disabled'}}" dataid="0" href="javascript:void(0);" {{$vendor->status == 1 ? '' : 'disabled'}}><i class="mdi mdi-plus-circle mr-1"></i> Import
                                         </a>
-                                        <a class="btn btn-info waves-effect waves-light text-sm-right addProductBtn {{$vendor->status == 1 ? '' : 'disabled'}}" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> Add Product
-                                        </a>
+                                        <a class="btn btn-info waves-effect waves-light text-sm-right addProductBtn {{$vendor->status == 1 ? '' : 'disabled'}}" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> Add Product</a>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -231,7 +230,7 @@
                                     <div class="form-group" id="skuInput">
                                         {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                                         <span class="text-danger">*</span>
-                                        {!! Form::text('sku', null, ['class'=>'form-control','id' => 'sku', 'onkeypress' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
+                                        {!! Form::text('sku', null, ['class'=>'form-control','id' => 'sku', 'onkeypress' => 'return alplaNumeric(event)','onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
@@ -239,10 +238,13 @@
                                         {!! Form::hidden('vendor_id', $vendor->id) !!}
                                     </div>
                                 </div>
-                                <div class="col-12 mb-2" style="cursor: not-allowed;">
-                                    <div class="form-group" id="">
+                                <div class="col-12 mb-2">
+                                    <div class="form-group" id="url_slugInput">
                                         {!! Form::label('title', 'URL Slug',['class' => 'control-label']) !!}
-                                        {!! Form::text('product_url', null, ['class'=>'form-control', 'id' => 'product_url', 'placeholder' => 'Apple iMac', 'onkeypress' => 'return slugify(event)']) !!}
+                                        {!! Form::text('url_slug', null, ['class'=>'form-control', 'id' => 'url_slug', 'placeholder' => 'Apple iMac', 'onkeypress' => 'return slugify(event)']) !!}
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -328,7 +330,6 @@
                                             </ul>
                                         </td>
                                         @endif
-
                                         <td> <a href="{{ $csv->path }}">Download</a> </td>
                                     </tr>
                                     @endforeach
@@ -336,9 +337,7 @@
                             </table>
                         </div>
                     </div>
-                    <!-- <div class="modal-footer">
-                        <button type="submit" class="btn btn-info waves-effect waves-light ">Submit</button>
-                    </div> -->
+                </div>
             </form>
         </div>
     </div>
@@ -360,8 +359,8 @@
         if (!regexp.test(charCode)) {
             return false;
         }
-        var n1 = document.getElementById('sku');
-        var n2 = document.getElementById('product_url');
+        var n1 = $('#sku').val();
+        var n2 = $('#url_slug').val();
         n2.value = n1.value + charCode;
         slugify(evt);
         return true;
@@ -371,9 +370,9 @@
       if (!regexp.test(charCode)) {
         return false;
       }
-      var string = $('#product_url').val();
+      var string = $('#url_slug').val();
       var slug = string.toString().trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
-      $('#product_url').val(slug);
+      $('#url_slug').val(slug);
     }
     $(document).on('click', '.submitProduct', function(e) {
         var form = document.getElementById('save_product_form');
