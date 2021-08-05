@@ -276,13 +276,18 @@ class OrderController extends BaseController{
                     } else {
                         $cash_to_be_collected = 'No';
                         $payable_amount = 0.00;
-                    }
+                    }   
                         $dynamic = uniqid($order->id.$vendor);
                         $call_back_url = route('dispatch-order-update',$dynamic);
-
                         $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
                         $tasks = array();
                         $meta_data = '';
+
+                        $team_tag = null;
+                        if(!empty($dispatch_domain->last_mile_team))
+                        $team_tag = $dispatch_domain->last_mile_team;
+
+
                         $tasks[] = array('task_type_id' => 1,
                                                         'latitude' => $vendor_details->latitude??'',
                                                         'longitude' => $vendor_details->longitude??'',
@@ -311,6 +316,7 @@ class OrderController extends BaseController{
                                                         'task_type' => 'now',
                                                         'cash_to_be_collected' => $payable_amount??0.00,
                                                         'barcode' => '',
+                                                        'order_team_tag' => $team_tag,
                                                         'call_back_url' => $call_back_url??null,
                                                         'task' => $tasks
                                                         ];
