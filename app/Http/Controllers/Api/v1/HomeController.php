@@ -46,7 +46,7 @@ class HomeController extends BaseController{
                     $vendor_name = null;
                     if(!empty($value->link) && $value->link == 'category'){
                         $bannerLink = $value->redirect_category_id;
-                        if($bannerLink){
+                        if($bannerLink){ 
                             $categoryData = Category::where('status', '!=', $this->field_status)->where('id', $value->redirect_category_id)->with('translation_one')->first();
                             $value->redirect_name = $categoryData->translation_one ? $categoryData->translation_one->name : '';
                         }
