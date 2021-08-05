@@ -361,7 +361,7 @@
         }
         var n1 = $('#sku').val();
         var n2 = $('#url_slug').val();
-        n2.value = n1.value + charCode;
+        n2.value = n1.value + 0;
         slugify(evt);
         return true;
     }
