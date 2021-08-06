@@ -2140,6 +2140,11 @@ div#test {
     justify-content: center;
 }
 
+.vendorproduct-4 .product-box .img-wrapper,
+.vendorproduct-4 .product-wrap .img-wrapper {
+    box-shadow: 0 0 3px #ddd;
+}
+
 .product-box .img-wrapper img {
     border-radius: 4px;
 }
@@ -2348,7 +2353,6 @@ footer .form-control {
 .view_more_items:hover {
     color: #000;
 }
-
 
 .dropdown-menu-category>li>a:after {
     position: absolute;
@@ -3945,6 +3949,10 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     margin: auto;
 }
 
+.product-4 .slick-track{
+    display: flex;
+    align-items: center;
+}
 
 
 
