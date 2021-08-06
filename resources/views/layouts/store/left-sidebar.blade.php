@@ -11,8 +11,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     @include('layouts.store/topbar-guest')
   @endif
         <div class="container main-menu d-block">
-            <div class="row align-items-center py-2 position-initial">
-                <div class="col-lg-1 col-2">
+            <div class="row align-items-center py-md-2 position-initial">
+                <div class="col-lg-1 col-3">
                     <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                 </div>
                 <div class="col-lg-4 main-menu d-block order-lg-1 order-2">
@@ -31,7 +31,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             @endif
                         @endif
                         @if($mod_count > 1)
-                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mt-2 mt-lg-0 vendor_mods" id="top-tab" role="tablist">
+                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mb-2 mb-lg-0 vendor_mods" id="top-tab" role="tablist">
                                 @if($client_preference_detail->delivery_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
                                     <a class="nav-link {{$mod_count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
@@ -52,7 +52,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif 
                     </div>
                 </div>
-                <div class="col-lg-7 col-10 order-lg-2 order-1 position-initial">                
+                <div class="col-lg-7 col-9 order-lg-2 order-1 position-initial">                
                     <div class="search_bar menu-right d-flex align-items-center justify-content-end justify-content-lg-between w-100 ">
                         <div class="radius-bar">
                             <div class="search_form d-flex align-items-center justify-content-between">
