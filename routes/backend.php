@@ -43,7 +43,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('cms/emails/update', [EmailController::class, 'update'])->name('cms.emails.update');
     Route::get('account/orders', [OrderController::class, 'index'])->name('account.orders');
     Route::get('account/promo-code', [PromoCodeController::class, 'index'])->name('account.promo.code');
-    Route::get('product/import', [ProductImportController::class, 'getProductImport'])->name('product.import');
+    Route::get('product/import', [ProductImportController::class, 'getProductImportViaWoocommerce'])->name('product.import.woocommerce');
     Route::get('account/promo-code/filter', [PromoCodeController::class, 'filter'])->name('account.promo-code.filter');
     Route::get('account/promo-code/export', [PromoCodeController::class, 'export'])->name('account.promo-code.export');
     Route::get('social/media', [SocialMediaController::class, 'index'])->name('social.media.index');
