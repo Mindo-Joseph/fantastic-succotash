@@ -10306,6 +10306,13 @@ header.header-style .onhover-dropdown:before {
     visibility: visible;
 }
 
+.onhover-dropdown.mobile-account:hover .onhover-show-div {
+    opacity: 1;
+    -webkit-transform: translateY(7px);
+    transform: translateY(7px);
+    visibility: visible;
+}
+
 .onhover-div {
     position: relative;
     padding: 0;

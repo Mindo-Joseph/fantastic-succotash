@@ -15,7 +15,7 @@
     @include('layouts.store/left-sidebar')
 </header>
 <section class="p-0 small-slider">
-    <div class="slide-1 home-slider">
+    <div class="slide-1 home-slider"> 
         @foreach($banners as $banner)
         @php
         $url = '';
@@ -94,8 +94,8 @@
                 </div>    
                 <div class="media-body align-self-center">
                     <div class="inner_spacing px-0">
-                        <div class="d-flex align-items-center justify-content-between">    
-                            <h3 class="mb-0"><%= product.title %> </h3>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h3 class="m-0"><%= product.title %></h3>
                             <span class="rating">4.2</span>
                         </div>
                         <p><%= product.vendor_name %></p>
@@ -137,7 +137,11 @@
             </div>
             <div class="row">
                 <div class="col-12">
+                    @if($homePageLabel->slug == 'vendors')
+                    <div class="vendorproduct-4 product-m no-arrow" id="{{$homePageLabel->slug}}"></div>
+                    @else
                     <div class="product-4 product-m no-arrow" id="{{$homePageLabel->slug}}"></div>
+                    @endif
                 </div>
             </div>
         </div>
