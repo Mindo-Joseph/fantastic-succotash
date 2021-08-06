@@ -2199,16 +2199,13 @@
 .cursor {
     cursor: pointer !important;
 }
-
-
-  #cardCollpase4 svg {
+#cardCollpase4 svg {
     padding-left: 60px;
 }
 .apexcharts-legend.apexcharts-align-center.position-bottom {
     height: 70px !important;
     inset: auto 0px 5px 20px !important;
 }
-
 .list-unstyled.remove-curser li {
     cursor: context-menu;
 }

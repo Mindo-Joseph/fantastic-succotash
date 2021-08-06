@@ -182,13 +182,11 @@ $('.openAddModal').click(function(){
         var form =  document.getElementById('save_imported_products');
         var formData = new FormData(form);
         var data_uri = "{{route('product.import')}}";
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
             }
         });
-
         $.ajax({
             type: "post",
             headers: {
@@ -199,7 +197,6 @@ $('.openAddModal').click(function(){
             contentType: false,
             processData: false,
             success: function(response) {
-
                 if (response.status == 'success') {
                     $(".modal .close").click();
                     location.reload(); 
