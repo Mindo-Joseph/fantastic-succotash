@@ -4509,6 +4509,9 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(max-width: 576px) {
+    .navbar-brand{
+        padding: 0;
+    }
     .small-slider .home-slider .home {
         height: 170px;
     }
@@ -4534,6 +4537,9 @@ body[dir="rtl"] .inner_spacing h3 {
         bottom: 100%;
     }
     .sidebar-btn.dark-light-btn{
+        display: none;
+    }
+    .search_bar .onhover-div.pl-0.shake-effect {
         display: none;
     }
 }

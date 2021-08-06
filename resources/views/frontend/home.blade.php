@@ -96,7 +96,13 @@
                     <div class="inner_spacing px-0">
                         <div class="d-flex align-items-center justify-content-between">
                             <h3 class="m-0"><%= product.title %></h3>
-                            <span class="rating">4.2</span>
+                            <!-- @if($client_preference_detail)
+                                @if($client_preference_detail->rating_check == 1)
+                                    <% if(product.averageRating){%>
+                                        <span class="rating"><%= product.averageRating %></span>
+                                    <% } %>
+                                @endif
+                            @endif -->
                         </div>
                         <p><%= product.vendor_name %></p>
                         <h4>
@@ -104,24 +110,13 @@
                                 <%= product.price %>
                             <% } %>
                         </h4>
-                        @if($client_preference_detail)
-                            @if($client_preference_detail->rating_check == 1)
-                                <div class="custom_rating">
-                                    <% if(product.averageRating > 0) { %>
-                                        <% _.each([1,2,3,4,5], function(value, k){ %>
-                                            <i class="fa fa-star<%= (k+1 <= product.averageRating) ? ' filled' : '' %>"></i>
-                                        <% }); %>
-                                    <% } %>
-                                </div>
-                            @endif
-                        @endif
                     </div>
                 </div>
             </a>
         </div>
     <% }); %>
 </script>
-<section class="section-b-space p-t-0 pt-5 ratio_asos d-none" id="our_vendor_main_div">
+<section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos d-none" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $homePageLabel)
         <div class="container" id="{{$homePageLabel->slug.'1'}}">
