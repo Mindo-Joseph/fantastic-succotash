@@ -13888,7 +13888,7 @@ header.stickycls {
         background: transparent;
         color: #222222;
         border-radius: 0 !important;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 400;
         text-transform: capitalize;
         padding: 5px 20px !important;
@@ -14215,7 +14215,7 @@ header.stickycls {
         top: -8px;
     }
 
-    .pixelstrap li a {
+    .pixelstrap li a,.new-tag {
         padding: 10px 15px;
         font-size: 13px;
     }

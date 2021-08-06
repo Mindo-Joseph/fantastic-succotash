@@ -23,6 +23,9 @@ $(document).ready(function() {
           }, 
         500);
       });
+      $("#mobile_search_box_btn").click(function(){
+          $('.radius-bar').slideToggle();
+      });
     $("#main_search_box").keyup(function(){
         let keyword = $(this).val();
         if(keyword.length == 3){

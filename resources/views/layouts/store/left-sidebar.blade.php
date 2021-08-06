@@ -11,11 +11,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     @include('layouts.store/topbar-guest')
   @endif
         <div class="container main-menu d-block">
-            <div class="row align-items-center py-2">
+            <div class="row align-items-center py-2 position-initial">
                 <div class="col-lg-1 col-2">
                     <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                 </div>
-                <div class="col-lg-6 main-menu d-block order-lg-1 order-2">
+                <div class="col-lg-4 main-menu d-block order-lg-1 order-2">
                     <div class="d-md-flex mr-auto">  
                         @if( (Session::get('preferences')))
                             @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
@@ -31,7 +31,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             @endif
                         @endif
                         @if($mod_count > 1)
-                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mt-3 mt-md-0 vendor_mods" id="top-tab" role="tablist">
+                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mt-2 mt-lg-0 vendor_mods" id="top-tab" role="tablist">
                                 @if($client_preference_detail->delivery_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
                                     <a class="nav-link {{$mod_count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
@@ -52,9 +52,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif 
                     </div>
                 </div>
-                <div class="col-lg-5 col-10 order-lg-2 order-1">                
+                <div class="col-lg-7 col-10 order-lg-2 order-1 position-initial">                
                     <div class="search_bar menu-right d-flex align-items-center justify-content-end justify-content-lg-between w-100 ">
-                        <div class="radius-bar d-none d-lg-block">
+                        <div class="radius-bar">
                             <div class="search_form d-flex align-items-center justify-content-between">
                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
                                 <input class="form-control border-0 typeahead" type="search" placeholder="{{__('Search')}}" id="main_search_box">
@@ -134,7 +134,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <div class="icon-nav d-sm-none d-block">
                             <ul>
                                 <li class="onhover-div mobile-search">
-                                    <div><img src="../assets/images/icon/search.png" onclick="openSearch()" class="img-fluid blur-up lazyloaded" alt=""> <i class="ti-search" onclick="openSearch()"></i></div>
+                                    <a href="javascript:void(0);" id="mobile_search_box_btn"><img src="../assets/images/icon/search.png"  class="img-fluid blur-up lazyloaded" alt=""> <i class="ti-search"></i></a>
                                     <div id="search-overlay" class="search-overlay">
                                         <div> <span class="closebtn" onclick="closeSearch()" title="Close Overlay">×</span>
                                             <div class="overlay-content">
@@ -168,6 +168,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             <li><a href="#">rupees</a></li>
                                             <li><a href="#">pound</a></li>
                                             <li><a href="#">doller</a></li>
+                                        </ul>
+                                        <h6>Change Theme</h6>
+                                        <ul class="list-inline">
+                                            <li><a class="theme-layout-version" href="javascript:void(0)">Dark</a></li>
                                         </ul>
                                     </div>
                                 </li>
