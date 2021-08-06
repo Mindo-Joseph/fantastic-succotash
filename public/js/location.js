@@ -141,6 +141,7 @@ $(document).ready(function () {
                         $("#best_sellers").html('');
                         $("#featured_products").html('');
                         $("#on_sale").html('');
+                        console.log(response);
                         let vendors = response.data.vendors;
                         let banner_template = _.template($('#banner_template').html());
                         let vendors_template = _.template($('#vendors_template').html());
