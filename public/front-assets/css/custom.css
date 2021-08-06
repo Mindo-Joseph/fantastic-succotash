@@ -3936,11 +3936,17 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     padding: 0 20px;
 }
 
+.tab-product .tab-content.nav-material p, .product-full-tab .tab-content.nav-material p{
+    padding: 0;
+}
 
+.footer-title {
+    margin: 20px 0 10px;
+}
 
-
-
-
+.product-4 .slick-slide img{
+    margin: auto;
+}
 
 
 

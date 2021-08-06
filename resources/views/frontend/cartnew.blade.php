@@ -342,7 +342,7 @@
         @csrf
         <div class="card-box">
             <div class="row">
-                <div class="col-sm-4 left_box">
+                <div class="col-md-4 left_box">
                     <div class="row">
                         <div class="col-12 mb-2">
                             <h4 class="page-title">{{__('Delivery Address')}}</h4>
@@ -455,7 +455,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-md-8">
                     <div class="spinner-box">
                         <div class="circle-border">
                             <div class="circle-core"></div>
