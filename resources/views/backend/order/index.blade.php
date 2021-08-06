@@ -49,23 +49,6 @@
                             <% _.each(order.vendors, function(vendor, ve){%>
                                 <div class="row  <%= ve ==0 ? 'mt-0' : 'mt-3'%>" id="single-order-div<%= k %><%= ve %>">
                                     <div class="col-12">
-                                        <div class="row">
-                                            <div class="col-5" id="update-single-status">
-                                                <% if(vendor.order_status_option_id == 1) { %>
-                                                    <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>" data-count="<%= ve %>" data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="2" data-order_vendor_id="<%= vendor.order_vendor_id %>">Accept</button>
-                                                    <button class="update-status btn-danger" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">Reject</button>
-                                                    <% } else if(vendor.order_status_option_id == 2) { %>
-                                                        <button class="update-status btn-warning" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="4" data-order_vendor_id="<%= vendor.order_vendor_id %>">Processing</button>
-                                                    <% } else if(vendor.order_status_option_id == 4) { %>
-                                                            <button class="update-status btn-success" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="5" data-order_vendor_id="<%= vendor.order_vendor_id %>">Out For Delivery</button>
-                                                    <% } else if(vendor.order_status_option_id == 5) { %>
-                                                        <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="6" data-order_vendor_id="<%= vendor.order_vendor_id %>">Delivered</button>
-                                                    <% } else { %>
-                                                        
-                                                <% } %> 
-                                            </div>
-                                        </div>
-
                                         <a href="<%= vendor.vendor_detail_url %>" class="row order_detail order_detail_data align-items-top pb-3 card-box no-gutters h-100">
                                             <span class="left_arrow pulse">
                                             </span>
@@ -115,6 +98,22 @@
                                             </div>
                                         </a>
                                         
+                                        <div class="row">
+                                            <div class="col-5" id="update-single-status">
+                                                <% if(vendor.order_status_option_id == 1) { %>
+                                                    <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>" data-count="<%= ve %>" data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="2" data-order_vendor_id="<%= vendor.order_vendor_id %>">Accept</button>
+                                                    <button class="update-status btn-danger" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">Reject</button>
+                                                    <% } else if(vendor.order_status_option_id == 2) { %>
+                                                        <button class="update-status btn-warning" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="4" data-order_vendor_id="<%= vendor.order_vendor_id %>">Processing</button>
+                                                    <% } else if(vendor.order_status_option_id == 4) { %>
+                                                            <button class="update-status btn-success" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="5" data-order_vendor_id="<%= vendor.order_vendor_id %>">Out For Delivery</button>
+                                                    <% } else if(vendor.order_status_option_id == 5) { %>
+                                                        <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="6" data-order_vendor_id="<%= vendor.order_vendor_id %>">Delivered</button>
+                                                    <% } else { %>
+                                                        
+                                                <% } %> 
+                                            </div>
+                                        </div>
                                       
                                     </div>
                                 </div>

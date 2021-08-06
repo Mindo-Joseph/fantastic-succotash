@@ -2055,10 +2055,19 @@ div#test {
     margin: 0;
     font-weight: 700;
     color: rgb(0 0 0 / 68%);
+    padding-right: 10px;
     font-size: 18px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.inner_spacing .rating {
+    border-radius: 5px;
+    font-size: 11px;
+    color: #fff;
+    background: orange;
+    padding: 3px;
 }
 
 .inner_spacing h3+p {
@@ -3864,18 +3873,6 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     color: #fff;
     padding: 1px 15px;
     font-size: 12px;
-}
-
-.inner_spacing h3 span {
-    border-radius: 5px;
-    font-size: 11px;
-    color: #fff;
-    background: orange;
-    padding: 3px;
-}
-
-.inner_spacing h3 label {
-    font-weight: 700;
 }
 
 #brand_main_div a {

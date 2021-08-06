@@ -2227,7 +2227,11 @@ button.update-status {
     box-shadow: none;
 } 
 
-
+#top-tabContent {
+    height: calc(100vh - 199px);
+    overflow-y: auto;
+    padding: 0 20px;
+}
 
 
 
