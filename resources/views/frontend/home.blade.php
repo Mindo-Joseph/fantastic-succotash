@@ -15,7 +15,7 @@
     @include('layouts.store/left-sidebar')
 </header>
 <section class="p-0 small-slider">
-    <div class="slide-1 home-slider">
+    <div class="slide-1 home-slider"> 
         @foreach($banners as $banner)
         @php
         $url = '';
