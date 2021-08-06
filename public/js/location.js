@@ -145,12 +145,12 @@ $(document).ready(function () {
                         let banner_template = _.template($('#banner_template').html());
                         let vendors_template = _.template($('#vendors_template').html());
                         let products_template = _.template($('#products_template').html());
-                        $("#brands").append(banner_template({ brands: response.data.brands }));
-                        $("#vendors").append(vendors_template({ vendors: response.data.vendors }));
-                        $("#new_products").append(products_template({ products: response.data.new_products }));
-                        $("#best_sellers").append(products_template({ products: response.data.new_products }));
-                        $("#featured_products").append(products_template({ products: response.data.feature_products }));
-                        $("#on_sale").append(products_template({ products: response.data.on_sale_products }));
+                        $("#brands").append(banner_template({ brands: response.data.brands, type: "Brands" }));
+                        $("#vendors").append(vendors_template({ vendors: response.data.vendors , type: "Vendors" }));
+                        $("#new_products").append(products_template({ products: response.data.new_products, type: "New Product" }));
+                        $("#best_sellers").append(products_template({ products: response.data.new_products, type: "Best Seller" }));
+                        $("#featured_products").append(products_template({ products: response.data.feature_products, type: "Featured Product" }));
+                        $("#on_sale").append(products_template({ products: response.data.on_sale_products, type: "On Sale" }));
                         if (response.data.new_products.length > 0) {
                             $('#new_products1').removeClass('d-none');
                         } else {

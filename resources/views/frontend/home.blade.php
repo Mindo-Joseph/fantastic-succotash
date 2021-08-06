@@ -1,14 +1,5 @@
 @extends('layouts.store', ['title' => __('Home')])
-@php
-$actives=array();
-@endphp
-@foreach($homePageLabels as $homePageLabel)
-@php
-    if($homePageLabel->is_active == 1){
-        array_push($actives,$homePageLabel->slug);
-    }
-@endphp
-@endforeach
+
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -26,30 +17,30 @@ $actives=array();
 <section class="p-0 small-slider">
     <div class="slide-1 home-slider">
         @foreach($banners as $banner)
-            @php
-            $url = '';
-            if($banner->link == 'category'){
-                if($banner->category != null){
-                    $url = route('categoryDetail', $banner->category->slug);
-                }
-            }
-            else if($banner->link == 'vendor'){
-                if($banner->vendor != null){
-                    $url = route('vendorDetail', $banner->vendor->slug);
-                } 
-            }
-            @endphp
-            <div>
-                @if($url)
-                <a href="{{$url}}">
+        @php
+        $url = '';
+        if($banner->link == 'category'){
+        if($banner->category != null){
+        $url = route('categoryDetail', $banner->category->slug);
+        }
+        }
+        else if($banner->link == 'vendor'){
+        if($banner->vendor != null){
+        $url = route('vendorDetail', $banner->vendor->slug);
+        }
+        }
+        @endphp
+        <div>
+            @if($url)
+            <a href="{{$url}}">
                 @endif
-                    <div class="home text-center">
-                        <img src="{{$banner->image['image_fit'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
-                    </div>
+                <div class="home text-center">
+                    <img src="{{$banner->image['image_fit'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
+                </div>
                 @if($url)
-                </a>
-                @endif
-            </div>
+            </a>
+            @endif
+        </div>
         @endforeach
     </div>
 </section>
@@ -128,99 +119,47 @@ $actives=array();
         </div>
     <% }); %>
 </script>
-@if(in_array("vendors", $actives))
-<section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center d-none align-items-center justify-content-between mb-4">
-                <div class="title1">
-                    <h2 class="title-inner1 mb-0">{{getNomenclatureName('vendors', true)}}</h2>
+<section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
+    <div class="vendors">
+        @foreach($homePageLabels as $homePageLabel)
+        <div class="container" id="{{$homePageLabel->slug.'1'}}">
+            <div class="row">
+                <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
+                    <div class="title1">
+                        <!-- <h2 class="title-inner1 mb-0">{{ $homePageLabel->slug == 'vendors' ? getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2> -->
+                    </div>
+                    @if($homePageLabel->slug == 'vendors')
+                    <a class="view_more_items" href="{{route('vendor.all')}}">{{__('View More')}}</a>
+                    @endif
                 </div>
-                <a class="view_more_items" href="{{route('vendor.all')}}">{{__('View More')}}</a>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="product-4 product-m no-arrow" id="{{$homePageLabel->slug}}"></div>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="product-4 product-m no-arrow" id="vendor_main_div"></div>
-            </div>
-        </div>
+        @endforeach
     </div>
 </section>
-@endif
-<section class="section-b-space pb-4">
-    <div class="container">
-    @if(in_array("new_products", $actives))
-        <div class="row d-none" id="new_products_wrapper">
-            <div class="col-12 text-center d-none align-items-center justify-content-between mb-4">
-                <div class="title1">
-                    <h2 class="title-inner1 mb-0">{{ __('New Products') }}</h2>
-                </div>
-            </div>
-            <div class="col-12 theme-card">
-                <div class="vendor-product common_card" id="new_product_main_div"></div>
-            </div>
-        </div>
-    @endif
-    @if(in_array("featured_products", $actives))
-        <div class="row d-none mt-4" id="featured_products_wrapper">
-           
-            <div class="col-12 theme-card">
-                <div class="vendor-product common_card" id="feature_product_main_div"></div>
-            </div>
-        </div>
-    @endif
-    @if(in_array("best_sellers", $actives))
-        <div class="row d-none mt-3" id="bestseller_products_wrapper">
-            <div class="col-12 theme-card">
-                <div class="vendor-product common_card" id="best_seller_main_div">
-
-                </div>
-            </div>
-        </div>
-    @endif
-    @if(in_array("on_sale", $actives))
-        <div class="row d-none mt-3" id="onsale_products_wrapper">
-            <div class="col-12 theme-card">
-                <div class="vendor-product common_card" id="on_sale_product_main_div"></div>
-            </div>
-        </div>
-    @endif
-    </div>
-</section>
-@if(in_array("brands", $actives))
-<section class="section-b-space pt-0">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center d-none align-items-center justify-content-between mb-3">
-                <div class="title1">
-                    <h2 class="title-inner1 mb-0">{{ __('Brands') }}</h2>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="slide-6 no-arrow" id="brand_main_div"></div>
-            </div>
-        </div>
-    </div>
-</section>
-@endif
 <div class="modal fade" id="age_restriction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-        <div class="modal-body text-center">
-            <img src="{{asset('assets/images/18.png')}}" alt="">
-            <p class="mb-0 mt-3">{{ $client_preference_detail ? $client_preference_detail->age_restriction_title : 'Are you 18 or older?' }}</p>
-            <p class="mb-0">Are you sure you want to continue?</p> 
-        </div>
-        <div class="modal-footer d-block">
-            <div class="row no-gutters">
-                <div class="col-6 pr-1">
-                    <button type="button" class="btn btn-solid w-100 age_restriction_yes" data-dismiss="modal">Yes</button>
-                </div>
-                <div class="col-6 pl-1">
-                    <button type="button" class="btn btn-solid w-100 age_restriction_no" data-dismiss="modal">No</button>
+            <div class="modal-body text-center">
+                <img src="{{asset('assets/images/18.png')}}" alt="">
+                <p class="mb-0 mt-3">{{ $client_preference_detail ? $client_preference_detail->age_restriction_title : 'Are you 18 or older?' }}</p>
+                <p class="mb-0">Are you sure you want to continue?</p>
+            </div>
+            <div class="modal-footer d-block">
+                <div class="row no-gutters">
+                    <div class="col-6 pr-1">
+                        <button type="button" class="btn btn-solid w-100 age_restriction_yes" data-dismiss="modal">Yes</button>
+                    </div>
+                    <div class="col-6 pl-1">
+                        <button type="button" class="btn btn-solid w-100 age_restriction_no" data-dismiss="modal">No</button>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 </div>
