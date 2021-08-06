@@ -56,32 +56,32 @@ class productImportData extends Command{
         try {
             \Log::info("Chat Cron Starting...");
             $this->info('Chat Cron Starting...');
-            $clients = Client::where('database_name', 'local')->orderBy('id','ASC')->get();
+            $clients = Client::orderBy('id','ASC')->get();
             foreach ($clients as $client) {
                 try{
-                $database_name = 'royo_'.$client->database_name;
-                $default = [
-                    'driver' => env('DB_CONNECTION','mysql'),
-                    'host' => env('DB_HOST'),
-                    'port' => env('DB_PORT'),
-                    'database' => $database_name,
-                    'username' => env('DB_USERNAME'),
-                    'password' => env('DB_PASSWORD'),
-                    'charset' => 'utf8mb4',
-                    'collation' => 'utf8mb4_unicode_ci',
-                    'prefix' => '',
-                    'prefix_indexes' => true,
-                    'strict' => false,
-                    'engine' => null
-                ];
-                Config::set("database.connections.$database_name", $default);
-                Config::set("client_id", $client->id);
-                Config::set("client_connected",true);
-                Config::set("client_data",$client);
-                DB::setDefaultConnection($database_name);
-                DB::purge($database_name);
-                $this->info("client requests $client->domain_name");
-                \App\Models\CsvProductImport::where('type', 1)->chunk(10, function($requests) use($client){
+                    $database_name = 'royo_'.$client->database_name;
+                    $default = [
+                        'driver' => env('DB_CONNECTION','mysql'),
+                        'host' => env('DB_HOST'),
+                        'port' => env('DB_PORT'),
+                        'database' => $database_name,
+                        'username' => env('DB_USERNAME'),
+                        'password' => env('DB_PASSWORD'),
+                        'charset' => 'utf8mb4',
+                        'collation' => 'utf8mb4_unicode_ci',
+                        'prefix' => '',
+                        'prefix_indexes' => true,
+                        'strict' => false,
+                        'engine' => null
+                    ];
+                    Config::set("database.connections.$database_name", $default);
+                    Config::set("client_id", $client->id);
+                    Config::set("client_connected",true);
+                    Config::set("client_data",$client);
+                    DB::setDefaultConnection($database_name);
+                    DB::purge($database_name);
+                    $this->info("client requests $client->domain_name");
+                    \App\Models\CsvProductImport::where('type', 1)->chunk(10, function($requests) use($client){
                     foreach ($requests as  $request_data) {
                         try{
                             $temp_products = json_decode($request_data->raw_data,false);
@@ -134,20 +134,23 @@ class productImportData extends Command{
                                     ProductVariant::insert(['sku' => $new_product->sku, 'product_id' => $new_product->id, 'barcode' => $this->generateBarcodeNumber(), 'price' => $product->price]);
                                 }
                             }
-                            Log::emergency('End command:productImportData !'.time());
+                            $request_data->status = 2;
+                            $request_data->save();
                         }catch(Exception $ex){
                             \Log::info("Error ".$ex->getMessage());
                             $this->error('Error '.$ex->getMessage());
+                            $request_data->status = 3;
+                            $request_data->status = json_encode([$ex->getMessage()]);;
+                            $request_data->save();
                         }
                     }
                 });
-
+                Log::info('End command:productImportData !'.time());
             }catch(Exception $ex){
                 $this->info($ex->getMessage());
                 continue;
             }
-            }
-            
+        }
         } catch (Exception $e) {
             
         }
