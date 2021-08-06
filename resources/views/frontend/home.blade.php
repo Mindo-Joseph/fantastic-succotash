@@ -128,7 +128,6 @@ $actives=array();
         </div>
     <% }); %>
 </script>
-
 @if(in_array("vendors", $actives))
 <section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
     <div class="container">
@@ -164,11 +163,7 @@ $actives=array();
     @endif
     @if(in_array("featured_products", $actives))
         <div class="row d-none mt-4" id="featured_products_wrapper">
-            <!-- <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
-                <div class="title1">
-                    <h2 class="title-inner1 mb-0">{{ __('Feature Product') }}</h2>
-                </div>
-            </div> -->
+           
             <div class="col-12 theme-card">
                 <div class="vendor-product common_card" id="feature_product_main_div"></div>
             </div>
@@ -176,11 +171,6 @@ $actives=array();
     @endif
     @if(in_array("best_sellers", $actives))
         <div class="row d-none mt-3" id="bestseller_products_wrapper">
-            <!-- <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
-                <div class="title1">
-                    <h2 class="title-inner1 mb-0">{{ __('Best Seller') }}</h2>
-                </div>
-            </div> -->
             <div class="col-12 theme-card">
                 <div class="vendor-product common_card" id="best_seller_main_div">
 
@@ -190,11 +180,6 @@ $actives=array();
     @endif
     @if(in_array("on_sale", $actives))
         <div class="row d-none mt-3" id="onsale_products_wrapper">
-            <!-- <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
-                <div class="title1">
-                    <h2 class="title-inner1 mb-0">{{ __('On Sale') }}</h2>
-                </div>
-            </div> -->
             <div class="col-12 theme-card">
                 <div class="vendor-product common_card" id="on_sale_product_main_div"></div>
             </div>
@@ -218,29 +203,27 @@ $actives=array();
     </div>
 </section>
 @endif
-
-<!-- Modal -->
 <div class="modal fade" id="age_restriction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-            <div class="modal-body text-center">
-                <img src="{{asset('assets/images/18.png')}}" alt="">
-                <p class="mb-0 mt-3">{{ $client_preference_detail ? $client_preference_detail->age_restriction_title : 'Are you 18 or older?' }}</p>
-                <p class="mb-0">Are you sure you want to continue?</p> 
-            </div>
-            <div class="modal-footer d-block">
-                <div class="row no-gutters">
-                    <div class="col-6 pr-1">
-                        <button type="button" class="btn btn-solid w-100 age_restriction_yes" data-dismiss="modal">Yes</button>
-                    </div>
-                    <div class="col-6 pl-1">
-                        <button type="button" class="btn btn-solid w-100 age_restriction_no" data-dismiss="modal">No</button>
-                    </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-body text-center">
+            <img src="{{asset('assets/images/18.png')}}" alt="">
+            <p class="mb-0 mt-3">{{ $client_preference_detail ? $client_preference_detail->age_restriction_title : 'Are you 18 or older?' }}</p>
+            <p class="mb-0">Are you sure you want to continue?</p> 
+        </div>
+        <div class="modal-footer d-block">
+            <div class="row no-gutters">
+                <div class="col-6 pr-1">
+                    <button type="button" class="btn btn-solid w-100 age_restriction_yes" data-dismiss="modal">Yes</button>
+                </div>
+                <div class="col-6 pl-1">
+                    <button type="button" class="btn btn-solid w-100 age_restriction_no" data-dismiss="modal">No</button>
                 </div>
             </div>
-            </div>
+        </div>
         </div>
     </div>
+</div>
 @endsection
 @section('script')
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>

@@ -106,7 +106,7 @@ $timezone = Auth::user()->timezone;
                                     </div>
                                     <div class="col-md-6 text-md-right text-center">
                                         <button type="button" class="btn btn-solid" id="topup_wallet_btn" data-toggle="modal" data-target="#topup_wallet">{{__('Topup Wallet')}}</button>
-                                        <button type="button" class="btn btn-solid" data-toggle="modal" data-target="#add-money">{{__('Payout')}}</button>
+                                        <!-- <button type="button" class="btn btn-solid" data-toggle="modal" data-target="#add-money">{{__('Payout')}}</button> -->
                                     </div>
                                 </div>
                             </div>
@@ -124,11 +124,14 @@ $timezone = Auth::user()->timezone;
                                     <tbody>
                                         @foreach($user_transactions as $ut)
                                         <?php $reason = json_decode($ut->meta) ?>
-                                            <tr>
-                                                <td>{{convertDateTimeInTimeZone($ut->created_at, $timezone, 'l, F d, Y, H:i A')}}</td>
-                                                <td  class="name_">{!!$reason[0]!!}</td>
-                                                <td class="text-right {{ ($ut->type == 'deposit') ? 'text-success' : (($ut->type == 'deposit') ? 'text-danger' : '') }}"><b>{{Session::get('currencySymbol')}}@money(sprintf("%.2f", $ut->amount / 100))</b></td>
-                                            </tr>
+                                        @php
+                                        $amount = ($ut->amount / 100) * $clientCurrency->doller_compare;
+                                        @endphp
+                                          <tr>
+                                              <td>{{convertDateTimeInTimeZone($ut->created_at, $timezone, 'l, F d, Y, H:i A')}}</td>
+                                              <td  class="name_">{!!$reason[0]!!}</td>
+                                              <td class="text-right {{ ($ut->type == 'deposit') ? 'text-success' : (($ut->type == 'deposit') ? 'text-danger' : '') }}"><b>{{Session::get('currencySymbol')}}@money(sprintf("%.2f",$amount))</b></td>
+                                          </tr>
                                         @endforeach
                                     </tbody>
                                   </table>

@@ -135,6 +135,23 @@
                         </span>
                         @endif
                      </div>
+                     
+                     @if($last_mile_teams != null && count($last_mile_teams))
+                     <div class="form-group mt-3 mb-0" style="{{(isset($preference) && $preference->need_delivery_service == '1') ? '' : 'display: none;'}}" id="lastMileTeamListDiv">
+                        <div class="form-group">
+                            {!! Form::label('title', 'Team Tag For Last Mile',['class' => 'control-label']) !!}
+                            <select class="form-control" id="lastMileTeamList" name="last_mile_team" data-toggle="select2" >
+                              <option value="0">{{__('Select Team Tag')}}</option>
+                              @foreach($last_mile_teams as $nm)
+                                 <option value="{{$nm['name']}}" @if($preference->last_mile_team == $nm['name']) selected="selected" @endif>{{$nm['name']}}</option>
+                              @endforeach
+                              
+                            </select>
+                        </div>
+                     </div>
+                     @endif
+
+
                   </div>
                </div>
             </div>
