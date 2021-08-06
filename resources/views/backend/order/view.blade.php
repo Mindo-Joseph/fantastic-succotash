@@ -72,7 +72,7 @@ $timezone = Auth::user()->timezone;
                                             @continue
                                         @endif
 
-                                        <li class="{{$class}} {{$glow}}  @if(in_array($order_status_option->id, $open_option)) open-for-update-status @else disabled @endif  " data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
+                                        <li class="{{$class}} {{$glow}}  @if(in_array($order_status_option->id, $open_option))open-for-update-status @else disabled @endif" data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
                                             <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
                                             <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
                                                 @if($date)
@@ -274,6 +274,7 @@ $timezone = Auth::user()->timezone;
                     $('#text_muted_'+status_option_id).html('<small class="text-muted">'+response.created_date+'</small>');
                     if(status_option_id == 2)
                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                    location.reload();
                 },
             });
         }
