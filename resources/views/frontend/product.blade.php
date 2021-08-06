@@ -85,25 +85,27 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="product-slick">
-                                    @if(!empty($product->media))
-                                    @foreach($product->media as $k => $img)
-                                    <div class="image_mask">
-                                        <img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}">
-                                    </div>
-                                    @endforeach
-                                    @endif
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 p-0">
-                                        <div class="slider-nav">
-                                            @if(!empty($product->media))
+                                <div id="product-slick-wrapper">
+                                    <div class="product-slick">
+                                        @if(!empty($product->media))
                                             @foreach($product->media as $k => $img)
-                                            <div>
-                                                <img class="img-fluid blur-up lazyload" src="{{$img->image->path['proxy_url'].'300/300'.$img->image->path['image_path']}}">
+                                            <div class="image_mask">
+                                                <img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}">
                                             </div>
                                             @endforeach
-                                            @endif
+                                        @endif
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 p-0">
+                                            <div class="slider-nav">
+                                                @if(!empty($product->media))
+                                                    @foreach($product->media as $k => $img)
+                                                    <div>
+                                                        <img class="img-fluid blur-up lazyload" src="{{$img->image->path['proxy_url'].'300/300'.$img->image->path['image_path']}}">
+                                                    </div>
+                                                    @endforeach
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -127,73 +129,83 @@
                                     <div class="description_txt my-3">
                                         <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->meta_description : ''}}</p>
                                     </div>
-                                    <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
-                                    @if($product->inquiry_only == 0)
-                                    <h3 id="productPriceValue" class="mb-md-3">
-                                        <b class="mr-1">{{Session::get('currencySymbol').(number_format($product->variant[0]->price * $product->variant[0]->multiplier,2))}}</b>
-                                        @if($product->variant[0]->compare_at_price > 0 )
-                                        <span class="org_price">{{Session::get('currencySymbol').(number_format($product->variant[0]->compare_at_price * $product->variant[0]->multiplier,2))}}</span>
+                                    <div id="product_variant_wrapper">
+                                        <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
+                                        @if($product->inquiry_only == 0)
+                                            <h3 id="productPriceValue" class="mb-md-3">
+                                                <b class="mr-1">{{Session::get('currencySymbol').(number_format($product->variant[0]->price * $product->variant[0]->multiplier,2))}}</b>
+                                                @if($product->variant[0]->compare_at_price > 0 )
+                                                    <span class="org_price">{{Session::get('currencySymbol').(number_format($product->variant[0]->compare_at_price * $product->variant[0]->multiplier,2))}}</span>
+                                                @endif
+                                            </h3>
                                         @endif
-                                    </h3>
-                                    @endif
-
-                                    @if(!empty($product->variantSet))
-                                    @php
-                                    $selectedVariant = isset($product->variant[0]) ? $product->variant[0]->id : 0;
-                                    @endphp
-                                    @foreach($product->variantSet as $key => $variant)
-                                    @if($variant->type == 1 || $variant->type == 2)
-                                    <div class="size-box">
-                                        <ul class="productVariants">
-                                            <li class="firstChild">{{$variant->title}}</li>
-                                            <li class="otherSize">
-                                                @foreach($variant->option2 as $k => $optn)
-                                                <?php $var_id = $variant->variant_type_id;
-                                                $opt_id = $optn->variant_option_id;
-                                                $checked = ($selectedVariant == $optn->product_variant_id) ? 'checked' : '';
-                                                ?>
-                                                <label class="radio d-inline-block txt-14 mr-2">{{$optn->title}}
-                                                    <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" {{$checked}} class="changeVariant dataVar{{$var_id}}">
-                                                    <span class="checkround"></span>
-                                                </label>
-                                                @endforeach
-                                            </li>
-                                        </ul>
                                     </div>
-                                    @else
-                                    @endif
-                                    @endforeach
-                                    @endif
-
-                                    @if($product->inquiry_only == 0)
-                                    <div class="product-description border-product">
-                                        <h6 class="product-title mt-0">{{__('Quantity')}}:
-                                            @if(!$product->variant[0]->quantity > 0)
-                                            <span id="outofstock" style="color: red;">{{__('Out of Stock')}}</span>
-                                            @endif
-                                        </h6>
-                                        @if($product->variant[0]->quantity > 0)
-                                        <div class="qty-box">
-                                            <div class="input-group">
-                                                <span class="input-group-prepend">
-                                                    <button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i>
-                                                    </button>
-                                                </span>
-                                                <input type="text" name="quantity" id="quantity" class="form-control input-number quantity_count" value="1">
-                                                <span class="input-group-prepend quant-plus">
-                                                    <button type="button" class="btn quantity-right-plus " data-type="plus" data-field="">
-                                                        <i class="ti-angle-right"></i>
-                                                    </button>
-                                                </span>
+                                    <div id="product_variant_options_wrapper">
+                                        @if(!empty($product->variantSet))
+                                            @php
+                                                $selectedVariant = isset($product->variant[0]) ? $product->variant[0]->id : 0;
+                                            @endphp
+                                            @foreach($product->variantSet as $key => $variant)
+                                                @if($variant->type == 1 || $variant->type == 2)
+                                                <div class="size-box">
+                                                    <ul class="productVariants">
+                                                        <li class="firstChild">{{$variant->title}}</li>
+                                                        <li class="otherSize">
+                                                            @foreach($variant->option2 as $k => $optn)
+                                                            <?php $var_id = $variant->variant_type_id;
+                                                            $opt_id = $optn->variant_option_id;
+                                                            $checked = ($selectedVariant == $optn->product_variant_id) ? 'checked' : '';
+                                                            ?>
+                                                            <label class="radio d-inline-block txt-14 mr-2">{{$optn->title}}
+                                                                <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" class="changeVariant dataVar{{$var_id}}">
+                                                                <span class="checkround"></span>
+                                                            </label>
+                                                            @endforeach
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                @else
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                    <div id="variant_response">
+                                        <span class="text-danger mb-2 mt-2"></span>
+                                    </div>
+                                    <div id="product_variant_quantity_wrapper">
+                                        @if($product->inquiry_only == 0)
+                                        <div class="product-description border-product">
+                                            <h6 class="product-title mt-0">{{__('Quantity')}}:
+                                                @if(!$product->variant[0]->quantity > 0)
+                                                    <span id="outofstock" style="color: red;">{{__('Out of Stock')}}</span>
+                                                @else
+                                                    <input type="hidden" id="instock" value="{{$product->variant[0]->quantity}}">
+                                                @endif
+                                            </h6>
+                                            @if($product->variant[0]->quantity > 0)
+                                            <div class="qty-box">
+                                                <div class="input-group">
+                                                    <span class="input-group-prepend">
+                                                        <button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i>
+                                                        </button>
+                                                    </span>
+                                                    <input type="text" name="quantity" id="quantity" class="form-control input-number quantity_count" value="1">
+                                                    <span class="input-group-prepend quant-plus">
+                                                        <button type="button" class="btn quantity-right-plus " data-type="plus" data-field="">
+                                                            <i class="ti-angle-right"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
                                             </div>
+                                            @endif
                                         </div>
                                         @endif
                                     </div>
-                                    @endif
+                                    
                                     @if(!empty($product->addOn) && $product->addOn->count() > 0)
                                     <div class="border-product">
                                         <h6 class="product-title">Addon List</h6>
-                                        <table class="table table-centered table-nowrap table-striped" id="banner-datatable">
+                                        <table class="table table-centered table-nowrap table-striped" id="addon-table">
                                             <tbody>
                                                 @foreach($product->addOn as $row => $addon)
                                                 <tr>
@@ -325,6 +337,91 @@
         </div>
     </div>
 </section>
+<script type="text/template" id="variant_image_template">
+    <% if(media != '') { %>
+        <div class="product-slick">
+            <% _.each(media, function(img, key){ %>
+                <div class="image_mask">
+                    <img class="img-fluid blur-up lazyload image_zoom_cls-<%= key %>" src="<%= img.pimage.image.path['proxy_url'] %>600/800<%= img.pimage.image.path['image_path'] %>">
+                </div>
+            <% }); %>
+        </div>
+        <div class="row">
+            <div class="col-12 p-0">
+                <div class="slider-nav">
+                    <% _.each(media, function(img, key){ %>
+                        <div>
+                            <img class="img-fluid blur-up lazyload" src="<%= img.pimage.image.path['proxy_url'] %>300/300<%= img.pimage.image.path['image_path'] %>">
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+    <% }else{ %>
+        <div class="product-slick" style="min-height: 200px; display: table; width: 100%;">
+            <div class="image_mask" style="vertical-align: middle; display: table-cell; text-align: center">Image Not Available</div>
+        </div>
+    <% } %>
+</script>
+<script type="text/template" id="variant_template">
+    <input type="hidden" name="variant_id" id="prod_variant_id" value="<%= variant.id %>">
+    <% if(variant.product.inquiry_only == 0) { %>
+        <h3 id="productPriceValue" class="mb-md-3">
+            <b class="mr-1"><%= variant.productPrice %></b>
+            <% if(variant.compare_at_price > 0 ) { %>
+                <span class="org_price">{{Session::get('currencySymbol')}}<%= variant.compare_at_price %></span>
+            <% } %>
+        </h3>
+    <% } %>
+</script>
+<script type="text/template" id="variant_options_template">
+    <% _.each(availableSets, function(type, key){ %>
+        <% if(type.variant_detail.type == 1 || type.variant_detail.type == 2) { %>
+            <div class="size-box">
+                <ul class="productVariants">
+                    <li class="firstChild"><%= type.variant_detail.title %></li>
+                    <li class="otherSize">
+                        <% _.each(type.option_data, function(opt, key){ %>
+                        <label class="radio d-inline-block txt-14 mr-2"><%= opt.title %>
+                            <input id="lineRadio-<%= opt.id %>" name="var_<%= opt.variant_id %>" vid="<%= opt.variant_id %>" optid="<%= opt.id %>" value="<%= opt.id %>" type="radio" class="changeVariant dataVar<%= opt.variant_id %>">
+                            <span class="checkround"></span>
+                        </label>
+                        <% }); %>
+                    </li>
+                </ul>
+            </div>
+        <% } %>
+    <% }); %>
+</script>
+<script type="text/template" id="variant_quantity_template">
+    <% if(variant.product.inquiry_only == 0) { %>
+    <div class="product-description border-product">
+        <h6 class="product-title mt-0">{{__('Quantity')}}:
+            <% if(!variant.quantity > 0) { %>
+                <span id="outofstock" style="color: red;">{{__('Out of Stock')}}</span>
+            <% }else{ %>
+                <input type="hidden" id="instock" value="<%= variant.quantity %>">
+            <% } %>
+        </h6>
+        <% if(variant.quantity > 0) { %>
+        <div class="qty-box">
+            <div class="input-group">
+                <span class="input-group-prepend">
+                    <button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i>
+                    </button>
+                </span>
+                <input type="text" name="quantity" id="quantity" class="form-control input-number quantity_count" value="1">
+                <span class="input-group-prepend quant-plus">
+                    <button type="button" class="btn quantity-right-plus " data-type="plus" data-field="">
+                        <i class="ti-angle-right"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <% } %>
+    </div>
+    <% } %>
+</script>
 @if($product->related_products->count() > 0)
 <section class="">
     <div class="container">
@@ -556,11 +653,39 @@
                 }
             },
             success: function(response) {
-                var res = response.result;
-                console.log(res.id);
-                $('#prod_variant_id').val(res.id);
-                $('#productPriceValue').html(res.productPrice);
-                $('#instock').html("In Stock (" + res.quantity + ")");
+                if(response.status == 'Success'){
+                    $("#variant_response span").html('');
+                    // var res = response.variant;
+                    // $('#prod_variant_id').val(res.id);
+                    // $('#productPriceValue').html(res.productPrice);
+                    // $('#instock').html("In Stock (" + res.quantity + ")");
+                    if(response.variant != ''){
+                        $('#product_variant_wrapper').html('');
+                        let variant_template = _.template($('#variant_template').html());
+                        $("#product_variant_wrapper").append(variant_template({variant:response.variant}));
+                    
+                        $('#product_variant_quantity_wrapper').html('');
+                        let variant_quantity_template = _.template($('#variant_quantity_template').html());
+                        $("#product_variant_quantity_wrapper").append(variant_quantity_template({variant:response.variant}));
+                        if(response.variant.quantity < 1){
+                            $(".addToCart, #addon-table").hide();
+                        }else{
+                            $(".addToCart, #addon-table").show();
+                        }
+
+                        $('#product-slick-wrapper').html('');
+                        let variant_image_template = _.template($('#variant_image_template').html());
+                        $("#product-slick-wrapper").append(variant_image_template({media:response.variant.media}));
+
+                        if(response.variant.media != ''){
+                            $(".product-slick").slick({ slidesToShow: 1, slidesToScroll: 1, arrows: !0, fade: !0, asNavFor: ".slider-nav" });
+                            $(".slider-nav").slick({ vertical: !1, slidesToShow: 3, slidesToScroll: 1, asNavFor: ".product-slick", arrows: !1, dots: !1, focusOnSelect: !0 });
+                        }
+                    }
+                }else{
+                    $("#variant_response span").html(response.message);
+                    $(".addToCart, #addon-table").hide();
+                }
             },
             error: function(data) {
 
