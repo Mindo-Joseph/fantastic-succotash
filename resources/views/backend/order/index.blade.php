@@ -33,8 +33,7 @@
                         <div class="col-md-3"><%= order.created_date %></div>
                         <div class="col-md-3">
                             <a class="text-capitalize" href="#"><%= order.user.name %></a>
-                        </div>
-                        
+                        </div>                        
 
                         <% if(order.address !== null) { %>
                         <div class="col-md-3">
@@ -116,7 +115,6 @@
                                                 </ul>
                                             </div>
                                         </a>
-                                        
                                       
                                     </div>
                                 </div>
