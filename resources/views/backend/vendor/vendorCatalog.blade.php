@@ -288,12 +288,24 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
-                        </div>
-                        <div class="col-md-12">
-                            <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />
-                            <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
-                            <p class="text-muted text-center mt-2 mb-0">Upload CSV File</p>
+                            <div class="row align-items-center mb-3">
+                                <div class="col-md-4">
+                                    <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
+                                    <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />
+                                    <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
+                                    <p class="text-muted text-center mt-2 mb-0">Upload CSV File</p>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="consumer_key" placeholder="Consumer Key">
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="consumer_secret" placeholder="Consumer Secret">
+                                    </div>
+                                    <button class="btn btn-info" id="save_btn">Save</button>
+                                    <button class="btn btn-info" id="import_product_from_products">Import Products From Ecommerce</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-12">
                             <table class="table table-centered table-nowrap table-striped" id="">
