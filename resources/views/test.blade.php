@@ -727,7 +727,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -746,7 +746,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/pYuRTyCq1V0zAdMX5kakYkWKmO81TEkyprg4Cqgp.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -765,7 +765,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -784,7 +784,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/IDGuBlBZ0JaFok1JCLntxzDvDZqBE86Nu28zcCh9.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -803,7 +803,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/WXBAjSXzudaQeoEfXtEaOgVqtCetzGexwmLbWFNX.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -822,7 +822,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -841,7 +841,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/WXBAjSXzudaQeoEfXtEaOgVqtCetzGexwmLbWFNX.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -861,7 +861,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -881,7 +881,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/pYuRTyCq1V0zAdMX5kakYkWKmO81TEkyprg4Cqgp.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -900,7 +900,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -919,7 +919,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/IDGuBlBZ0JaFok1JCLntxzDvDZqBE86Nu28zcCh9.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -938,7 +938,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -957,7 +957,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -976,7 +976,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/pYuRTyCq1V0zAdMX5kakYkWKmO81TEkyprg4Cqgp.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -995,7 +995,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -1014,7 +1014,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/IDGuBlBZ0JaFok1JCLntxzDvDZqBE86Nu28zcCh9.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -1033,7 +1033,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/WXBAjSXzudaQeoEfXtEaOgVqtCetzGexwmLbWFNX.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -1052,7 +1052,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>

@@ -38,7 +38,7 @@
 
                         <% if(order.address !== null) { %>
                         <div class="col-md-3">
-                            <p class="ellipsis" data-toggle="tooltip" data-placement="top" title="<%= order.address.address %>">
+                            <p class="ellipsis mb-0" data-toggle="tooltip" data-placement="top" title="<%= order.address.address %>">
                                 <%= order.address.address %>
                             </p>
                         </div>  
@@ -304,17 +304,17 @@
                         that.replaceWith("<button class='update-status btn-warning' data-full_div='"+ full_div +"' data-single_div='"+ single_div +"'  data-count='"+ count +"'  data-order_id='"+ order_id +"'  data-vendor_id='"+ vendor_id +"'  data-status_option_id='"+ status_option_id_next +"' data-order_vendor_id="+ order_vendor_id +">"+ next_status +"</button>");
                         return false;
                     }else{
-                            if(count == 0){
-                            $(full_div).slideUp(1000, function() {
-                            $(this).remove();
-                            });
-                    
-                            }else{
-                            $(single_div).slideUp(1000, function() {
-                            $(this).remove();
-                            });
-                    
-                            }
+                        if(count == 0){
+                        $(full_div).slideUp(1000, function() {
+                        $(this).remove();
+                        });
+                
+                        }else{
+                        $(single_div).slideUp(1000, function() {
+                        $(this).remove();
+                        });
+                
+                        }
                     }
 
                     
