@@ -561,7 +561,7 @@
                             <% } %>
                         </div>
                     </div>
-                    <div class="row mt-5">
+                    <div class="row mt-3">
                         <div class="col-md-12 text-md-right">
                             <button type="button" class="btn btn-solid" data-dismiss="modal">{{ __('Cancel') }}</button>
                             <button type="button" class="btn btn-solid ml-1 proceed_to_pay">{{__('Place Order')}}</button>

@@ -2044,7 +2044,7 @@ div#test {
 }
 
 .inner_spacing {
-    padding: 10px 10px 10px;
+    padding: 10px 0;
     text-align: left;
     background: rgb(255 255 255 / 10%);
     width: calc(100% - 20px);
@@ -2059,9 +2059,18 @@ div#test {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-right: 10px;
 }
 
-.inner_spacing h3+p {
+.inner_spacing .rating {
+    border-radius: 5px;
+    font-size: 11px;
+    color: #fff;
+    background: orange;
+    padding: 3px;
+}
+
+.inner_spacing p {
     font-size: 14px;
     margin: 5px 0 0;
     white-space: nowrap;
@@ -2124,7 +2133,7 @@ div#test {
 .product-wrap .img-wrapper {
     border-radius: 4px;
     margin-top: 15px;
-    box-shadow: 0 0 3px #ddd;
+    /* box-shadow: 0 0 3px #ddd; */
     height: 200px;
     display: flex;
     align-items: center;
@@ -3866,18 +3875,6 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     font-size: 12px;
 }
 
-.inner_spacing h3 span {
-    border-radius: 5px;
-    font-size: 11px;
-    color: #fff;
-    background: orange;
-    padding: 3px;
-}
-
-.inner_spacing h3 label {
-    font-weight: 700;
-}
-
 #brand_main_div a {
     /* background: rgb(0 0 0 / 10%); */
     min-height: 100px;
@@ -4340,6 +4337,10 @@ body[dir="rtl"] .pulse {
     left: auto;
 }
 
+body[dir="rtl"] .inner_spacing h3 {
+    padding-left: 10px;
+    padding-right: 0;
+}
 
 
 .position-initial{

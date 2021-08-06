@@ -372,7 +372,9 @@ class OrderController extends FrontController
             DB::beginTransaction();
             $delivery_on_vendors = array();
             if( (isset($request->auth_token)) && (!empty($request->auth_token)) ){
-                $user = User::where('auth_token', $request->auth_token)->first();
+                $user = User::whereHas('device',function  ($qu) use ($request){
+                    $qu->where('access_token', $request->auth_token);
+                })->first();
             }else{
                 $user = Auth::user();
             }

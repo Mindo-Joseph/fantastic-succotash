@@ -26,8 +26,12 @@ class WalletController extends Controller{
     }
 
     public function creditMyWallet(Request $request)
-    {
-        $user = User::where('auth_token', $request->auth_token)->first();
+    {   
+        $user = User::whereHas('device',function  ($qu) use ($request){
+            $qu->where('access_token', $request->auth_token);
+        })->first();
+
+       
         if($user){
             $credit_amount = $request->amount;
             $wallet = $user->wallet;
