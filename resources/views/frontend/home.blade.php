@@ -135,7 +135,11 @@
             </div>
             <div class="row">
                 <div class="col-12">
+                    @if($homePageLabel->slug == 'vendors')
+                    <div class="vendorproduct-4 product-m no-arrow" id="{{$homePageLabel->slug}}"></div>
+                    @else
                     <div class="product-4 product-m no-arrow" id="{{$homePageLabel->slug}}"></div>
+                    @endif
                 </div>
             </div>
         </div>

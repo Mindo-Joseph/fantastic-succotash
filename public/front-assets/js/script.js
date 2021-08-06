@@ -239,7 +239,7 @@
             dots: !1,
             infinite: !0,
             speed: 300,
-            slidesToShow: 6,
+            slidesToShow: 8,
             slidesToScroll: 6,
             responsive: [
                 { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
