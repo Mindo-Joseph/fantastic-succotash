@@ -1072,22 +1072,22 @@ $(document).ready(function() {
             },
         });
     }
-    $(document).on('click', '.quantity-right-plus', function() {
+    $(document).delegate('.quantity-right-plus', 'click', function() {
         var quan = parseInt($('.quantity_count').val());
-        var str = $('#instock').html();
-        var res = parseInt(str.substring(10, str.length - 1));
-        if (quan > res) {
+        var str = $('#instock').val();
+        // var res = parseInt(str.substring(10, str.length - 1));
+        if (quan > str) {
             alert("Quantity is not available in stock");
-            $('.quantity_count').val(res)
+            $('.quantity_count').val(str)
         }
     });
-    $(document).on('change', '.quantity_count', function() {
+    $(document).delegate('.quantity_count', 'change', function() {
         var quan = $(this).val();
         var str = $('#instock').html();
-        var res = parseInt(str.substring(10, str.length - 1));
-        if (quan > res) {
+        // var res = parseInt(str.substring(10, str.length - 1));
+        if (quan > str) {
             alert("Quantity is not available in stock");
-            $('.quantity_count').val(res)
+            $('.quantity_count').val(str)
         }
     });
 
