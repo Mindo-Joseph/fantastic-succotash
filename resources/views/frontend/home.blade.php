@@ -92,10 +92,12 @@
                 <div class="product-image">
                     <img src="<%= product.image_url %>" alt="">
                 </div>    
-                <div class="media-body align-self-center px-3">
-                    <div class="inner_spacing">
-                        <h3 class="d-flex align-items-center justify-content-between">
-                            <label class="mb-0"><%= product.title %></label> <span class="rating">4.2</span></h3>
+                <div class="media-body align-self-center">
+                    <div class="inner_spacing px-0">
+                        <div class="d-flex align-items-center justify-content-between">    
+                            <h3 class="mb-0"><%= product.title %> </h3>
+                            <span class="rating">4.2</span>
+                        </div>
                         <p><%= product.vendor_name %></p>
                         <h4>
                             <% if(product.inquiry_only == 0) { %>
@@ -119,7 +121,7 @@
         </div>
     <% }); %>
 </script>
-<section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
+<section class="section-b-space p-t-0 pt-5 ratio_asos d-none" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $homePageLabel)
         <div class="container" id="{{$homePageLabel->slug.'1'}}">
@@ -128,9 +130,9 @@
                     <div class="title1">
                         <!-- <h2 class="title-inner1 mb-0">{{ $homePageLabel->slug == 'vendors' ? getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2> -->
                     </div>
-                    @if($homePageLabel->slug == 'vendors')
+                    <!-- @if($homePageLabel->slug == 'vendors')
                     <a class="view_more_items" href="{{route('vendor.all')}}">{{__('View More')}}</a>
-                    @endif
+                    @endif -->
                 </div>
             </div>
             <div class="row">
