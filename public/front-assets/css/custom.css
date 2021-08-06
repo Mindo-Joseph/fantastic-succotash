@@ -3944,7 +3944,12 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 .footer-title {
     margin: 20px 0 10px;
 }
-
+.footer-theme .sub-title .contact-list .fa.fa-map-marker {
+    top: 7px;
+}
+.footer-theme .sub-title .contact-list .fa.fa-map-marker {
+    top: 7px;
+}
 .product-4 .slick-slide img{
     margin: auto;
 }
