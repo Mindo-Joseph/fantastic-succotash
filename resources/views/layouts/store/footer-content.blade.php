@@ -1,5 +1,5 @@
 @php
-$clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
+$clientData = \App\Models\Client::where('id', '>', 0)->first();
 $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
 $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('language_id', session()->get('customerLanguage'));}])->get();
 @endphp
@@ -44,7 +44,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                                         <li class="d-block mb-2">
                                             <a href="{{http_check($social_media_detail->url)}}" target="_blank">
                                                 <i class="fa fa-{{$social_media_detail->icon}}" aria-hidden="true"></i>
-                                                <span>{{$social_media_detail->title ? $social_media_detail->title : "Facebook"}}</span>
+                                                <span>{{$social_media_detail->icon ? ucfirst($social_media_detail->icon) : "Facebook"}}</span>
                                             </a>
                                         </li>
                                     @endforeach
@@ -62,11 +62,11 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         
                         <div class="footer-contant">
                             <ul class="contact-list">
-                                <li><i class="fa fa-map-marker"></i>Multikart Demo Store, Demo store India 345-659
+                                <li><i class="fa fa-map-marker"></i>{{$clientData ? $clientData->company_address : 'Demo Store, 345-659'}}
                                 </li>
-                                <li><i class="fa fa-phone"></i>123-456-7898</li>
-                                <li><i class="fa fa-envelope-o"></i><a href="#">Support@Fiot.com</a></li>
-                                <li><i class="fa fa-fax"></i>123456</li>
+                                <li><i class="fa fa-phone"></i>{{$clientData ? $clientData->phone_number : '123-456-7898'}}</li>
+                                <li><i class="fa fa-envelope-o"></i><a href="#">{{$clientData ? $clientData->email : 'Support@Fiot.com'}}</a></li>
+                                <!-- <li><i class="fa fa-fax"></i>123456</li> -->
                             </ul>
                         </div>
                     </div>

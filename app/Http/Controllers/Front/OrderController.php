@@ -91,7 +91,7 @@ class OrderController extends FrontController
         $order = $this->orderSave($request, "1");
         return $this->successResponse(['status' => 'success', 'order' => $order, 'message' => 'Order placed successfully.']);
     }
-    public function sendSuccessEmail($request){
+    public function sendSuccessEmail($request, $order){
         if( (isset($request->auth_token)) && (!empty($request->auth_token)) ){
             $user = User::where('auth_token', $request->auth_token)->first();
         }else{
@@ -103,17 +103,13 @@ class OrderController extends FrontController
         $otp = mt_rand(100000, 999999);
         if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
             $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
-            $sendto =  'puneet.g@codebrewinnovations.com';
+            $sendto =  $user->email;
             $client_name = 'Sales';
             $mail_from = $data->mail_from;
             try {
                 $email_template_content = '';
                 $email_template = EmailTemplate::where('id', 5)->first();
-                if($email_template){
-                    $email_template_content = $email_template->content;
-                    $email_template_content = str_ireplace("{code}", $otp, $email_template_content);
-                    $email_template_content = str_ireplace("{customer_name}", ucwords('Puneet Garg'), $email_template_content);
-                }
+                $address = UserAddress::where('id', $request->address_id)->first();
                 if ($user) {
                     $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
                 } else {
@@ -122,7 +118,16 @@ class OrderController extends FrontController
                 if ($cart) {
                     $cartDetails = $this->getCart($cart);
                 }
-                $address = UserAddress::where('id', $request->address_id)->first();
+                if($email_template){
+                    $email_template_content = $email_template->content;
+                    // dd($cartDetails->products[0]['vendor_products'][0]['product']['media'][0]['image']['path']['image_fit']);
+                    $returnHTML = view('email.orderProducts')->with(['cartData' => $cartDetails])->render();
+                    // dd($returnHTML);
+                    $email_template_content = str_ireplace("{customer_name}", ucwords($user->name), $email_template_content);
+                    $email_template_content = str_ireplace("{order_id}", $order->id, $email_template_content);
+                    $email_template_content = str_ireplace("{products}", $returnHTML, $email_template_content);
+                    $email_template_content = str_ireplace("{address}", $address->address.', '.$address->state.', '.$address->country.', '.$address->pincode, $email_template_content);
+                }
                 $data = [
                     'code' => $otp,
                     'link' => "link",
@@ -131,7 +136,7 @@ class OrderController extends FrontController
                     'client_name' => $client_name,
                     'logo' => $client->logo['original'],
                     'subject' => $email_template->subject,
-                    'customer_name' => ucwords('Puneet Garg'),
+                    'customer_name' => ucwords($user->name),
                     'email_template_content' => $email_template_content,
                     'cartData' => $cartDetails,
                     'user_address' => $address,
@@ -600,7 +605,7 @@ class OrderController extends FrontController
             $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
             $order->payable_amount = $total_delivery_fee + $payable_amount + $tip_amount - $total_discount - $loyalty_amount_saved;
             $order->save();
-            $this->sendSuccessEmail($request);
+            $this->sendSuccessEmail($request, $order);
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();
             CartProduct::where('cart_id', $cart->id)->delete();
