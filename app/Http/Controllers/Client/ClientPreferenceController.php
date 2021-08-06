@@ -116,7 +116,7 @@ class ClientPreferenceController extends BaseController{
             }
             }
             catch(\Exception $e){
-                return redirect()->route('configure.index')->with('error', 'Invalid Last Mile Delivery Royo Dispatcher URL !'); 
+                return redirect()->route('configure.index')->with('error', 'Invalid Last Mile Delivery Dispatcher URL !'); 
             }                                                
         }
 
@@ -139,7 +139,7 @@ class ClientPreferenceController extends BaseController{
                 }
                 }
                 catch(\Exception $e){
-                    return redirect()->route('configure.index')->with('error', 'Invalid Pickup & Delivery Royo Dispatcher URL !'); 
+                    return redirect()->route('configure.index')->with('error', 'Invalid Pickup & Delivery Dispatcher URL !'); 
                 } 
                 
         }
@@ -163,7 +163,7 @@ class ClientPreferenceController extends BaseController{
                 }
                 }
                 catch(\Exception $e){
-                    return redirect()->route('configure.index')->with('error', 'Invalid On Demand Services Royo Dispatcher URL !'); 
+                    return redirect()->route('configure.index')->with('error', 'Invalid On Demand Services Dispatcher URL !'); 
                 } 
             
         }

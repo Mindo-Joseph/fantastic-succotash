@@ -46,7 +46,7 @@ class HomeController extends BaseController{
                     $vendor_name = null;
                     if(!empty($value->link) && $value->link == 'category'){
                         $bannerLink = $value->redirect_category_id;
-                        if($bannerLink){ 
+                        if($bannerLink){
                             $categoryData = Category::where('status', '!=', $this->field_status)->where('id', $value->redirect_category_id)->with('translation_one')->first();
                             $value->redirect_name = $categoryData->translation_one ? $categoryData->translation_one->name : '';
                         }
@@ -91,8 +91,12 @@ class HomeController extends BaseController{
             $longitude = $request->longitude;
             $user_geo[] = $latitude;
             $user_geo[] = $longitude;
-            if($request->has('type')){
-                $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount')->where($request->type, 1);
+            if($request->has('type') ){
+                if($request->type == ''){
+                    $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
+                }else{
+                    $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount')->where($request->type, 1);
+                }
             }else{
                 $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
             }

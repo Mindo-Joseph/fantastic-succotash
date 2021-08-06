@@ -272,7 +272,7 @@ class UserhomeController extends FrontController{
         if(is_array($venderIds)){
             $products = $products->whereIn('vendor_id', $venderIds);
         }
-        $products = $products->where('is_live', 1)->take(6)->inRandomOrder()->get();
+        $products = $products->where('is_live', 1)->take(10)->inRandomOrder()->get();
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {

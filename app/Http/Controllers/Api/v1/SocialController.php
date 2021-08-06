@@ -125,15 +125,22 @@ class SocialController extends BaseController{
         $customer->save();
         if($customer->id > 0){
             $checkSystemUser = $this->checkCookies($customer->id);
-            $user_device = UserDevice::where('user_id', $customer->id)->where('device_type', '!=', 'web')->first();
-            if(!$user_device){
-                $user_device = new UserDevice();
-                $user_device->user_id = $customer->id;
-                $user_device->access_token = '';
-            }
-            $user_device->device_type = $request->device_type;
-            $user_device->device_token = $request->device_token;
-            $user_device->save();
+
+            // $user_device = UserDevice::where('user_id', $customer->id)->where('device_type', '!=', 'web')->first();
+            // if(!$user_device){
+            //     $user_device = new UserDevice();
+            //     $user_device->user_id = $customer->id;
+            //     $user_device->access_token = '';
+            // }
+            // $user_device->device_type = $request->device_type;
+            // $user_device->device_token = $request->device_token;
+            // $user_device->save();
+
+            $user_device = UserDevice::updateOrCreate(['device_token' => $request->device_token],
+                                                          ['user_id' => $customer->id,
+                                                          'device_type' => $request->device_type,
+                                                          'access_token' => $token]);
+            
             $response['status'] = 'Success';
             $response['auth_token'] =  $token;
             $response['name'] = $customer->name;

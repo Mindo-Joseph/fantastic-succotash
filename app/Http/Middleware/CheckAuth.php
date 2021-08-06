@@ -33,7 +33,11 @@ class CheckAuth
                 return response()->json(['error' => 'Invalid Session', 'message' => 'Session Expired'], 401);
                 abort(404);
             }
-            $user = User::where('auth_token', $token)->first();
+            $user = User::whereHas('device', function($qu) use ($token){
+                $qu->where('access_token', $token);
+            })->first();
+
+           
             if(!$user){
                 return response()->json(['error' => 'Invalid Session', 'message' => 'Invalid Token or session has been expired.'], 401);
                 abort(404);

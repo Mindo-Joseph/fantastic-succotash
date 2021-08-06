@@ -230,7 +230,7 @@
                                     <div class="form-group" id="skuInput">
                                         {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                                         <span class="text-danger">*</span>
-                                        {!! Form::text('sku', null, ['class'=>'form-control','id' => 'sku', 'onkeypress' => 'return alplaNumeric(event)','onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
+                                        {!! Form::text('sku', null, ['class'=>'form-control','id' => 'sku', 'onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
@@ -288,12 +288,24 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
-                        </div>
-                        <div class="col-md-12">
-                            <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />
-                            <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
-                            <p class="text-muted text-center mt-2 mb-0">Upload CSV File</p>
+                            <div class="row align-items-center mb-3">
+                                <div class="col-md-4">
+                                    <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
+                                    <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />
+                                    <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
+                                    <p class="text-muted text-center mt-2 mb-0">Upload CSV File</p>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="consumer_key" placeholder="Consumer Key">
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="consumer_secret" placeholder="Consumer Secret">
+                                    </div>
+                                    <button class="btn btn-info" id="save_btn">Save</button>
+                                    <button class="btn btn-info" id="import_product_from_products">Import Products From Ecommerce</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-12">
                             <table class="table table-centered table-nowrap table-striped" id="">
@@ -354,21 +366,32 @@
         });
     });
     var regexp = /^[a-zA-Z0-9-_]+$/;
-    function alplaNumeric(evt) {
-        var charCode = String.fromCharCode(event.which || event.keyCode);
-        if (!regexp.test(charCode)) {
-            return false;
-        }
+    function alplaNumeric() {
         var n1 = $('#sku').val();
-        $('#url_slug').val(n1+charCode)
-        slugify(evt);
-        return true;
+        if(regexp.test(n1)){
+            var n1 = $('#sku').val();
+            $('#url_slug').val(n1);
+            slugify();
+        }
+        else{
+            $('#sku').val(n1.split(' ').join(''));
+        }
+        // var charCode = String.fromCharCode(event.which || event.keyCode);
+        // if (!regexp.test(charCode)) {
+        //     console.log(">>>ne");
+        //     return false;
+        // }
+        // console.log(">>>ne2");
+        // var n1 = $('#sku').val();
+        // $('#url_slug').val(n1+charCode)
+        
+        // return true;
     }
-    function slugify(evt) {
-      var charCode = String.fromCharCode(event.which || event.keyCode);
-      if (!regexp.test(charCode)) {
-        return false;
-      }
+    function slugify() {
+    //   var charCode = String.fromCharCode(event.which || event.keyCode);
+    //   if (!regexp.test(charCode)) {
+    //     return false;
+    //   }
       var string = $('#url_slug').val();
       var slug = string.toString().trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
       $('#url_slug').val(slug);
