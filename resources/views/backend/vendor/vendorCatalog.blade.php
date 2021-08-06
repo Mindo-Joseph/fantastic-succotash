@@ -230,7 +230,7 @@
                                     <div class="form-group" id="skuInput">
                                         {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                                         <span class="text-danger">*</span>
-                                        {!! Form::text('sku', null, ['class'=>'form-control','id' => 'sku', 'onkeypress' => 'return alplaNumeric(event)','onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
+                                        {!! Form::text('sku', null, ['class'=>'form-control','id' => 'sku', 'onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
@@ -366,21 +366,32 @@
         });
     });
     var regexp = /^[a-zA-Z0-9-_]+$/;
-    function alplaNumeric(evt) {
-        var charCode = String.fromCharCode(event.which || event.keyCode);
-        if (!regexp.test(charCode)) {
-            return false;
-        }
+    function alplaNumeric() {
         var n1 = $('#sku').val();
-        $('#url_slug').val(n1+charCode)
-        slugify(evt);
-        return true;
+        if(regexp.test(n1)){
+            var n1 = $('#sku').val();
+            $('#url_slug').val(n1);
+            slugify();
+        }
+        else{
+            $('#sku').val(n1.split(' ').join(''));
+        }
+        // var charCode = String.fromCharCode(event.which || event.keyCode);
+        // if (!regexp.test(charCode)) {
+        //     console.log(">>>ne");
+        //     return false;
+        // }
+        // console.log(">>>ne2");
+        // var n1 = $('#sku').val();
+        // $('#url_slug').val(n1+charCode)
+        
+        // return true;
     }
-    function slugify(evt) {
-      var charCode = String.fromCharCode(event.which || event.keyCode);
-      if (!regexp.test(charCode)) {
-        return false;
-      }
+    function slugify() {
+    //   var charCode = String.fromCharCode(event.which || event.keyCode);
+    //   if (!regexp.test(charCode)) {
+    //     return false;
+    //   }
       var string = $('#url_slug').val();
       var slug = string.toString().trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
       $('#url_slug').val(slug);
