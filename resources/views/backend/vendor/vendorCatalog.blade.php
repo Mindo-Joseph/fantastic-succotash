@@ -23,6 +23,57 @@
         -moz-transform: translateY(-50%);
         transform: translateY(-50%);
     }
+    .button {
+      position: relative;
+      padding: 8px 16px;
+      background: #009579;
+      border: none;
+      outline: none;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    .button:active {
+      background: #007a63;
+    }
+
+    .button__text {
+      font: bold 20px "Quicksand", san-serif;
+      color: #ffffff;
+      transition: all 0.2s;
+    }
+
+    .button--loading .button__text {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    .button--loading::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      border: 4px solid transparent;
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: button-loading-spinner 1s ease infinite;
+    }
+
+    @keyframes button-loading-spinner {
+      from {
+        transform: rotate(0turn);
+      }
+
+      to {
+        transform: rotate(1turn);
+      }
+    }
+
 </style>
 @endsection
 
@@ -283,27 +334,31 @@
                 <h4 class="modal-title">Add Product</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <form method="post" enctype="multipart/form-data" id="save_imported_products">
-                @csrf
+            
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12 text-center">
                             <div class="row align-items-center mb-3">
                                 <div class="col-md-4">
-                                    <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
-                                    <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />
-                                    <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
-                                    <p class="text-muted text-center mt-2 mb-0">Upload CSV File</p>
+                                    <form method="post" enctype="multipart/form-data" id="save_imported_products">
+                                        @csrf
+                                        <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
+                                        <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />
+                                        <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
+                                        <p class="text-muted text-center mt-2 mb-0">Upload CSV File</p>
+                                    </form>
                                 </div>
                                 <div class="col-md-8">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" name="consumer_key" placeholder="Consumer Key">
-                                    </div>
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" name="consumer_secret" placeholder="Consumer Secret">
-                                    </div>
-                                    <button class="btn btn-info" id="save_btn">Save</button>
-                                    <button class="btn btn-info" id="import_product_from_products">Import Products From Ecommerce</button>
+                                    <form id="woocommerces_form">
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="consumer_key" placeholder="Consumer Key" value="{{$woocommerce_detail ? $woocommerce_detail->consumer_key : ''}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="consumer_secret" placeholder="Consumer Secret" value="{{$woocommerce_detail ? $woocommerce_detail->consumer_secret : ''}}">
+                                        </div>
+                                        <button class="btn btn-info button" id="save_woocommerce_btn" type="button" onclick="this.classList.toggle('button--loading')">Save</button>
+                                        <button class="btn btn-info button" id="import_product_from_wocomerce" data-vendor="{{$vendor->id}}" onclick="this.classList.toggle('button--loading')">Import Products From Woocommerce</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -350,7 +405,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            
         </div>
     </div>
 </div>
@@ -396,6 +451,44 @@
       var slug = string.toString().trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
       $('#url_slug').val(slug);
     }
+    $(document).on('click', '#save_woocommerce_btn', function(e) {
+        var that = $(this);
+        that.attr('disabled', true);
+        var form = document.getElementById('woocommerces_form');
+        var formData = new FormData(form);
+        $.ajax({
+            type: "post",
+            url: "{{route('woocommerce.save')}}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                that.attr('disabled', false);
+                that.removeClass('button--loading');
+                if (response.status == 'success') {
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                }
+            }
+        });
+    });
+    $(document).on('click', '#import_product_from_wocomerce', function(e) {
+        var that = $(this);
+        that.attr('disabled', true);
+        var vendor_id = $(this).data('vendor');
+        $.ajax({
+            type: "POST",
+            data: {vendor_id:vendor_id},
+            url: "{{route('product.import.woocommerce')}}",
+            dataType: 'json',
+            success: function(response) {
+                that.attr('disabled', false);
+                that.removeClass('button--loading');
+                if (response.status == 'success') {
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                }
+            }
+        });
+    });
     $(document).on('click', '.submitProduct', function(e) {
         var form = document.getElementById('save_product_form');
         var formData = new FormData(form);
