@@ -79,11 +79,6 @@ $timezone = Auth::user()->timezone;
                 </div>
             </div>
         </div>
-        <div class="row mb-3">
-            <div class="col-12">
-                <a href="{{route('user.profile')}}"><i class="fa fa-arrow-left mr-2" aria-hidden="true"></i>{{__('Back To Profile')}}</a>
-            </div>
-        </div>
         <div class="row">
             <div class="col-lg-3 profile-sidebar">
                 <div class="account-sidebar"><a class="popup-btn">{{__('My Account')}}</a></div>

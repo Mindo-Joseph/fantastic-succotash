@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -119,193 +118,131 @@
 </head>
 
 <body style="margin: 20px auto;">
-    <table align="center" border="0" cellpadding="0" cellspacing="0"
-        style="padding: 0 30px;background-color: #fff; -webkit-box-shadow: 0px 0px 14px -4px rgba(0, 0, 0, 0.2705882353);box-shadow: 0px 0px 14px -4px rgba(0, 0, 0, 0.2705882353);width: 100%;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" style="padding: 0 30px;background-color: #fff; -webkit-box-shadow: 0px 0px 14px -4px rgba(0, 0, 0, 0.2705882353);box-shadow: 0px 0px 14px -4px rgba(0, 0, 0, 0.2705882353);width: 100%;">
         <tbody>
             <tr>
                 <td>
-                    <table align="left" border="0" cellpadding="0" cellspacing="0" style="text-align: left;"
-                        width="100%">
+                    <table align="left" border="0" cellpadding="0" cellspacing="0" style="text-align: left;" width="100%">
                         <tr>
                             <td style="text-align: center;">
-                                <img src="../assets/images/email-temp/delivery-2.png" alt=""
-                                    style=";margin-bottom: 30px;">
+                                <img src="../assets/images/email-temp/delivery-2.png" alt="" style="margin-bottom: 30px;">
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <p style="font-size: 14px;"><b>Hi John Doe,</b></p>
+                                <p style="font-size: 14px;"><b>Hi {{$mailData['customer_name']}},</b></p>
                                 <p style="font-size: 14px;">Order Is Successfully Processsed And Your Order Is On The
                                     Way,</p>
-                                <p style="font-size: 14px;">Transaction ID : 267676GHERT105467,</p>
+                                <!-- <p style="font-size: 14px;">Transaction ID : 267676GHERT105467,</p> -->
                             </td>
                         </tr>
                     </table>
-
-                    <table cellpadding="0" cellspacing="0" border="0" align="left"
-                        style="width: 100%;margin-top: 10px;    margin-bottom: 10px;">
+                    <table cellpadding="0" cellspacing="0" border="0" align="left" style="width: 100%;margin-top: 10px;    margin-bottom: 10px;">
                         <tbody>
                             <tr>
-                                <td
-                                    style="background-color: #fafafa;border: 1px solid #ddd;padding: 15px;letter-spacing: 0.3px;width: 50%;">
-                                    <h5
-                                        style="font-size: 16px; font-weight: 600;color: #000; line-height: 16px; padding-bottom: 13px; border-bottom: 1px solid #e6e8eb; letter-spacing: -0.65px; margin-top:0; margin-bottom: 13px;">
+                                <td style="background-color: #fafafa;border: 1px solid #ddd;padding: 15px;letter-spacing: 0.3px;width: 50%;">
+                                    <h5 style="font-size: 16px; font-weight: 600;color: #000; line-height: 16px; padding-bottom: 13px; border-bottom: 1px solid #e6e8eb; letter-spacing: -0.65px; margin-top:0; margin-bottom: 13px;">
                                         Your Shipping Address</h5>
-                                    <p
-                                        style="text-align: left;font-weight: normal; font-size: 14px; color: #000000;line-height: 21px;    margin-top: 0;">
-                                        268 Cambridge Lane New Albany,<br> IN 47150268 Cambridge Lane <br>New Albany, IN
-                                        47150</p>
+                                    <p style="text-align: left;font-weight: normal; font-size: 14px; color: #000000;line-height: 21px;    margin-top: 0;">
+                                        {{$mailData['user_address']['address']}}, <br>{{$mailData['user_address']['state']}}, {{$mailData['user_address']['country']}}
+                                        {{$mailData['user_address']['pincode']}}</p>
                                 </td>
                                 <td><img src="../assets/images/email-temp/space.jpg" alt=" " height="25" width="30">
                                 </td>
-                                <td
-                                    style="background-color: #fafafa;border: 1px solid #ddd;padding: 15px;letter-spacing: 0.3px;width: 50%;">
-                                    <h5
-                                        style="font-size: 16px;font-weight: 600;color: #000; line-height: 16px; padding-bottom: 13px; border-bottom: 1px solid #e6e8eb; letter-spacing: -0.65px; margin-top:0; margin-bottom: 13px;">
+                                <!-- <td style="background-color: #fafafa;border: 1px solid #ddd;padding: 15px;letter-spacing: 0.3px;width: 50%;">
+                                    <h5 style="font-size: 16px;font-weight: 600;color: #000; line-height: 16px; padding-bottom: 13px; border-bottom: 1px solid #e6e8eb; letter-spacing: -0.65px; margin-top:0; margin-bottom: 13px;">
                                         Your Billing Address:</h5>
-                                    <p
-                                        style="text-align: left;font-weight: normal; font-size: 14px; color: #000000;line-height: 21px;    margin-top: 0;">
+                                    <p style="text-align: left;font-weight: normal; font-size: 14px; color: #000000;line-height: 21px;    margin-top: 0;">
                                         268 Cambridge Lane New Albany,<br> IN 47150268 Cambridge Lane <br>New Albany, IN
                                         47150</p>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>
-                    <table class="order-detail" border="0" cellpadding="0" cellspacing="0" align="left"
-                        style="width: 100%;    margin-bottom: 50px;">
-                        <tr align="left">
-                            <th>PRODUCT</th>
-                            <th style="padding-left: 15px;">DESCRIPTION</th>
-                            <th>QUANTITY</th>
-                            <th>PRICE </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <img src="../assets/images/email-temp/15.jpg" alt="" width="80">
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="margin-top: 15px;">Three seater Wood Style sofa for Leavingroom </h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px;    margin-bottom: 0px;">Size :
-                                    <span> L</span> </h5>
-                                <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>1</span></h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>$500</b></h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <img src="../assets/images/email-temp/16.jpg" alt="" width="80">
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="margin-top: 15px;">Three seater Wood Style sofa for Leavingroom </h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px;    margin-bottom: 0px;">Size :
-                                    <span> L</span> </h5>
-                                <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>1</span></h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>$500</b></h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <img src="../assets/images/email-temp/17.jpg" alt="" width="80">
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="margin-top: 15px;">Three seater Wood Style sofa for Leavingroom </h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px;    margin-bottom: 0px;">Size :
-                                    <span> L</span> </h5>
-                                <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>1</span></h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>$500</b></h5>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <img src="../assets/images/email-temp/18.jpg" alt="" width="80">
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="margin-top: 15px;">Three seater Wood Style sofa for Leavingroom </h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px;    margin-bottom: 0px;">Size :
-                                    <span> L</span> </h5>
-                                <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>1</span></h5>
-                            </td>
-                            <td valign="top" style="padding-left: 15px;">
-                                <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>$500</b></h5>
-                            </td>
-                        </tr>
-                        <tr class="pad-left-right-space ">
-                            <td class="m-t-5" colspan="2" align="left">
-                                <p style="font-size: 14px;">Subtotal : </p>
-                            </td>
-                            <td class="m-t-5" colspan="2" align="right">
-                                <b style>$2000</b>
-                            </td>
-                        <tr class="pad-left-right-space">
-                            <td colspan="2" align="left">
-                                <p style="font-size: 14px;">TAX :</p>
-                            </td>
-                            <td colspan="2" align="right">
-                                <b>$5</b>
-                            </td>
-                        </tr>
-                        <tr class="pad-left-right-space">
-                            <td colspan="2" align="left">
-                                <p style="font-size: 14px;">VAT :</p>
-                            </td>
-                            <td colspan="2" align="right">
-                                <b>$5</b>
-                            </td>
-                        </tr>
-                        <tr class="pad-left-right-space">
-                            <td colspan="2" align="left">
-                                <p style="font-size: 14px;">SHIPPING Charge :</p>
-                            </td>
-                            <td colspan="2" align="right">
-                                <b>$2</b>
-                            </td>
-                        </tr>
-                        <tr class="pad-left-right-space">
-                            <td colspan="2" align="left">
-                                <p style="font-size: 14px;">Discount :</p>
-                            </td>
-                            <td colspan="2" align="right">
-                                <b> $1000</b>
-                            </td>
-                        </tr>
-                        <tr class="pad-left-right-space ">
-                            <td class="m-b-5" colspan="2" align="left">
-                                <p style="font-size: 14px;">Total :</p>
-                            </td>
-                            <td class="m-b-5" colspan="2" align="right">
-                                <b>$2600</b>
-                            </td>
-                        </tr>
-
-                    </table>
-
+                    @foreach($mailData['cartData']['products'] as $product)
+                        <h4>Vendor: {{$product['vendor']['name']}}</h4>
+                        <table class="order-detail" border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%;    margin-bottom: 50px;">
+                            <tr align="left">
+                                <th>PRODUCT</th>
+                                <th style="padding-left: 15px;">DESCRIPTION</th>
+                                <th>QUANTITY</th>
+                                <th>PRICE </th>
+                            </tr>
+                                @php
+                                    $total_products = 0;
+                                @endphp
+                                @foreach($product['vendor_products'] as $vendor_product)
+                                    <tr>
+                                        <td>
+                                            <img src="{{$vendor_product['product']['media'][0]['image']['path']['image_fit']}}100/100{{$vendor_product['product']['media'][0]['image']['path']['image_path']}}" alt="" width="80">
+                                        </td>
+                                        <td valign="top" style="padding-left: 15px;">
+                                            <h5 style="margin-top: 15px;">{{$vendor_product['product']['translation_one']['title']}}</h5>
+                                        </td>
+                                        <td valign="top" style="padding-left: 15px;">
+                                            <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>{{$vendor_product['quantity']}}</span></h5>
+                                        </td>
+                                        <td valign="top" style="padding-left: 15px;">
+                                            <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>${{$vendor_product['pvariant']['price']}}</b></h5>
+                                            @php
+                                                $total_products += $vendor_product['pvariant']['price'];
+                                            @endphp
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            <tr class="pad-left-right-space ">
+                                <td class="m-t-5" colspan="2" align="left">
+                                    <p style="font-size: 14px;">Subtotal : </p>
+                                </td>
+                                <td class="m-t-5" colspan="2" align="right">
+                                    <b style>${{$total_products}}</b>
+                                </td>
+                            </tr>
+                            <tr class="pad-left-right-space">
+                                <td colspan="2" align="left">
+                                    <p style="font-size: 14px;">TAX :</p>
+                                </td>
+                                <td colspan="2" align="right">
+                                    <b>${{$product['taxable_amount']}}</b>
+                                </td>
+                            </tr>
+                            <tr class="pad-left-right-space">
+                                <td colspan="2" align="left">
+                                    <p style="font-size: 14px;">SHIPPING Charge :</p>
+                                </td>
+                                <td colspan="2" align="right">
+                                    <b>${{$product['delivery_fee_charges']}}</b>
+                                </td>
+                            </tr>
+                            <tr class="pad-left-right-space">
+                                <td colspan="2" align="left">
+                                    <p style="font-size: 14px;">Discount :</p>
+                                </td>
+                                <td colspan="2" align="right">
+                                    <b> ${{$product['discount_amount']}}</b>
+                                </td>
+                            </tr>
+                            <tr class="pad-left-right-space ">
+                                <td class="m-b-5" colspan="2" align="left">
+                                    <p style="font-size: 14px;">Total :</p>
+                                </td>
+                                <td class="m-b-5" colspan="2" align="right">
+                                    <b>${{$product['payable_amount']}}</b>
+                                </td>
+                            </tr>
+                        </table>
+                    @endforeach
                 </td>
             </tr>
         </tbody>
     </table>
-    <table class="main-bg-light text-center top-0" align="center" border="0" cellpadding="0" cellspacing="0"
-        width="100%">
+    <table class="main-bg-light text-center top-0" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td style="padding: 30px;">
                 <div>
                     <h4 class="title" style="margin:0;text-align: center;">Follow us</h4>
                 </div>
-                <table border="0" cellpadding="0" cellspacing="0" class="footer-social-icon" align="center"
-                    class="text-center" style="margin-top:20px;">
+                <table border="0" cellpadding="0" cellspacing="0" class="footer-social-icon" align="center" class="text-center" style="margin-top:20px;">
                     <tr>
                         <td>
                             <a href="#"><img src="../assets/images/email-temp/facebook.png" alt=""></a>
