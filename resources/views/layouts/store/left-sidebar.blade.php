@@ -84,10 +84,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                             </form>
                             <ul>
-                                <li class="onhover-div pl-0">
+                                <li class="onhover-div pl-0 shake-effect">
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->cart_enable == 1)
-                                            <a class="btn btn-solid" href="{{route('showCart')}}">
+                                            <a class="btn btn-solid " href="{{route('showCart')}}">
                                                 <i class="fa fa-shopping-cart mr-1 " aria-hidden="true"></i> <span>{{__('Cart')}} •</span> <span id="cart_qty_span"></span> 
                                             </a>
                                         @endif
@@ -120,7 +120,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
                                         <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('View Cart')}}</a>
                                     </script>
-                                    <ul class="show-div shopping-cart" id="header_cart_main_ul"></ul>
+                                    <ul class="show-div shopping-cart " id="header_cart_main_ul"></ul>
                                 </li>
                             </ul>
                         </div>

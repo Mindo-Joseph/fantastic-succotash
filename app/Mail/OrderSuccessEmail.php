@@ -37,7 +37,7 @@ class OrderSuccessEmail extends Mailable{
      * @return $this
      */
     public function build(){
-        dd($this->mailData['cartData']);
+        // dd($this->mailData['user_address']);
         return $this->view('email.orderSuccesseEmail')->from($this->mailData['mail_from'])->subject($this->mailData['subject'])->with('mailData', $this->mailData);
     }
 }

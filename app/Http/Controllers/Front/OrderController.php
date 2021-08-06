@@ -122,6 +122,7 @@ class OrderController extends FrontController
                 if ($cart) {
                     $cartDetails = $this->getCart($cart);
                 }
+                $address = UserAddress::where('id', $request->address_id)->first();
                 $data = [
                     'code' => $otp,
                     'link' => "link",
@@ -133,6 +134,7 @@ class OrderController extends FrontController
                     'customer_name' => ucwords('Puneet Garg'),
                     'email_template_content' => $email_template_content,
                     'cartData' => $cartDetails,
+                    'user_address' => $address,
                 ];
                 dispatch(new \App\Jobs\SendOrderSuccessEmailJob($data))->onQueue('verify_email');
                 $notified = 1;
