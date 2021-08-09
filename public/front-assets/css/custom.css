@@ -2055,6 +2055,7 @@ div#test {
     margin: 0;
     font-weight: 700;
     color: rgb(0 0 0 / 68%);
+    padding-right: 10px;
     font-size: 18px;
     white-space: nowrap;
     overflow: hidden;
@@ -2069,6 +2070,7 @@ div#test {
     background: orange;
     padding: 3px;
 }
+
 
 .inner_spacing p {
     font-size: 14px;

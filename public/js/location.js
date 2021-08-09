@@ -134,7 +134,6 @@ $(document).ready(function () {
             dataType: 'json',
             url: home_page_data_url,
             success: function (response) {
-                console.log(response.data);
                 if (response.status == "Success") {
                     // $("#main-menu").html('');
                     // let nav_categories_template = _.template($('#nav_categories_template').html());
@@ -156,7 +155,6 @@ $(document).ready(function () {
                         $("#best_sellers").html('');
                         $("#featured_products").html('');
                         $("#on_sale").html('');
-                        console.log(response);
                         let vendors = response.data.vendors;
                         let banner_template = _.template($('#banner_template').html());
                         let vendors_template = _.template($('#vendors_template').html());
@@ -188,7 +186,6 @@ $(document).ready(function () {
                             $('#featured_products1').addClass('d-none');
                         }
                         if (vendors.length > 0) {
-                            console.log("njkfen");
                             $('#our_vendor_main_div').removeClass('d-none');
                         } else {
                             $('#our_vendor_main_div').addClass('d-none');

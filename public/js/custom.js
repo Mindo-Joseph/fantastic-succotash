@@ -329,6 +329,9 @@ $(document).ready(function() {
     });
     $(document).on("click","#order_palced_btn",function() {
         $('.alert-danger').html('');
+        if((typeof guest_cart != undefined) && (guest_cart == 1)){
+            window.location.href = login_url;
+        }
         $.ajax({
             data: {},
             type: "POST",

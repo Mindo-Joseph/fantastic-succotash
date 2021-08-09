@@ -10291,6 +10291,10 @@ header.header-style .onhover-dropdown:before {
     border-radius: 0 !important;
 }
 
+.onhover-dropdown.mobile-account .onhover-show-div {
+    top: calc(100% - 13px);
+}
+
 .onhover-dropdown .onhover-show-div.product-page-full {
     z-index: 99999;
 }

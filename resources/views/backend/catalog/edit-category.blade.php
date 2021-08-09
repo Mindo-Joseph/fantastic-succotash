@@ -91,9 +91,6 @@
                 @if($type->title == 'Celebrity' && $preference->celebrity_check == 0)
                     @continue
                 @endif
-                @if($type->title == 'Pickup/Delivery' && $preference->takeaway_check == 0)
-                    @continue
-                @endif
                <div class="col-sm-6 col-md-4">
                   <div class="card p-0 text-center select-category" id="tooltip-container">
                      <input class="form-check-input type-select" for="edit" type="radio" id="type_id_{{$type->id}}" name="type_id" @if($category->type_id == $type->id) checked @endif value="{{$type->id}}">

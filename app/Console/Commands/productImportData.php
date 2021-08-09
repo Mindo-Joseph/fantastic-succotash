@@ -118,13 +118,13 @@ class productImportData extends Command{
                                             $new_product = new Product();
                                             $new_product->sku = $sku;
                                             $new_product->type_id = 1;
-                                            $new_product->vendor_id = 10;
                                             $new_product->url_slug = $url_slug;
                                             $new_product->category_id = $category_id;
+                                            $new_product->vendor_id = $request_data->vendor_id;
                                             $new_product->save();
                                             $vendor_media = new VendorMedia();
                                             $vendor_media->media_type = 1;
-                                            $vendor_media->vendor_id = 10;
+                                            $vendor_media->vendor_id = $request_data->vendor_id;
                                             $vendor_media->path = $filePath;
                                             $vendor_media->save();
                                             $product_image = new ProductImage();

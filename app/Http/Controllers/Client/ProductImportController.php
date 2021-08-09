@@ -29,9 +29,14 @@ class ProductImportController extends Controller{
     private $folderName = 'prods';
     public function postWoocommerceDetail(Request $request){
         try {
+            $request->validate([
+                'domain_name' => 'required',
+                'consumer_key' => 'required',
+                'consumer_secret' => 'required',
+            ]);
             $woocommerce_detail = Woocommerce::first();
-            $woocommerce->url = $request->url;
             $woocommerce = $woocommerce_detail ? $woocommerce_detail : new Woocommerce();
+            $woocommerce->url = $request->domain_name;
             $woocommerce->consumer_key = $request->consumer_key;
             $woocommerce->consumer_secret = $request->consumer_secret;
             $woocommerce->save();
@@ -49,10 +54,11 @@ class ProductImportController extends Controller{
             DB::beginTransaction();
             $user = Auth::user();
             $woocommerce_detail = Woocommerce::first();
+            $domain_name = $woocommerce_detail->url;
             $consumer_key = $woocommerce_detail->consumer_key;
-            $consumer_secret = $woocommerce_detail->consumer_key;
+            $consumer_secret = $woocommerce_detail->consumer_secret;
             if($consumer_key && $consumer_secret){
-                $response = Http::get("https://yogo.gd/wc-api/v3/products?filter%5Blimit%5D=800&consumer_key=$consumer_key&consumer_secret=$consumer_secret");
+                $response = Http::get("$domain_name/wc-api/v3/products?filter%5Blimit%5D=800&consumer_key=$consumer_key&consumer_secret=$consumer_secret");
                 if($response->status() == 200){
                     Storage::makeDirectory('app/public/json');
                     $response_data = $response->json();
