@@ -241,11 +241,12 @@ class ProductController extends FrontController{
                     //     $sets[] = ['variant_types' => $variant_type_id, 'variant_options' => $variant_option_id];
                     // }
                 }
-                // if(count($variantData) <= 1){
+                if(count($variantData) <= 1){
                     $variantData = $variantData->first()->toArray();
-                // }else{
-                //     $variantData = array();
-                // }
+                }else{
+                    $variantData = array();
+                }
+                // dd($variantData->toArray());
                 return response()->json(array('status' => 'Success', 'variant' => $variantData, 'availableSets' => $availableSets->variantSet));
             }
         }
