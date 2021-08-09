@@ -86,9 +86,9 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('stripe/showForm/{token}', 'Front\PaymentController@showFormApp')->name('stripe.formApp');
     Route::post('stripe/make', 'Front\PaymentController@makePayment')->name('stripe.makePayment');
 	Route::post('inquiryMode/store', 'Front\ProductInquiryController@store')->name('inquiryMode.store');
+	Route::get('viewcart','Front\CartController@showCart')->name('showCart');
 });
 Route::group(['middleware' => ['domain', 'webAuth']], function() {
-	Route::get('viewcart','Front\CartController@showCart')->name('showCart');
 	Route::get('user/orders', 'Front\OrderController@orders')->name('user.orders');
 	Route::post('user/store', 'Front\AddressController@store')->name('address.store');
 	Route::get('user/addAddress', 'Front\AddressController@add')->name('addNewAddress');
