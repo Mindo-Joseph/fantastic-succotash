@@ -116,7 +116,7 @@
         </div>
     <% }); %>
 </script>
-<section class="section-b-space p-t-0 pt-5 ratio_asos d-none" id="our_vendor_main_div">
+<section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos d-none" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $homePageLabel)
         <div class="container" id="{{$homePageLabel->slug.'1'}}">

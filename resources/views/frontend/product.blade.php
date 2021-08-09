@@ -189,7 +189,7 @@
                                                         <button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i>
                                                         </button>
                                                     </span>
-                                                    <input type="text" name="quantity" id="quantity" class="form-control input-number quantity_count" value="1">
+                                                    <input type="text" name="quantity" id="quantity" class="form-control input-qty-number quantity_count" value="1">
                                                     <span class="input-group-prepend quant-plus">
                                                         <button type="button" class="btn quantity-right-plus " data-type="plus" data-field="">
                                                             <i class="ti-angle-right"></i>
@@ -410,7 +410,7 @@
                     <button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i>
                     </button>
                 </span>
-                <input type="text" name="quantity" id="quantity" class="form-control input-number quantity_count" value="1">
+                <input type="text" name="quantity" id="quantity" class="form-control input-qty-number quantity_count" value="1">
                 <span class="input-group-prepend quant-plus">
                     <button type="button" class="btn quantity-right-plus " data-type="plus" data-field="">
                         <i class="ti-angle-right"></i>
