@@ -2068,7 +2068,8 @@ div#test {
     font-size: 11px;
     color: #fff;
     background: orange;
-    padding: 3px;
+    padding: 3px 5px;
+    letter-spacing: 0;
 }
 
 

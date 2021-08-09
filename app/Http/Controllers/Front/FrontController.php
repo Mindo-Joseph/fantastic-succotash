@@ -105,6 +105,7 @@ class FrontController extends Controller
         // pr($products->toArray());die;          
         if (!empty($products)) {
             foreach ($products as $key => $value) {
+                $value->averageRating = number_format($value->averageRating, 1, '.', '');
                 foreach ($value->variant as $k => $v) {
                     $value->variant[$k]->multiplier = Session::get('currencyMultiplier');
                 }
@@ -287,10 +288,9 @@ class FrontController extends Controller
             }
             if($product_count > 0){
                 $vendor_rating = $product_rating / $product_count;
-                $vendor_rating = number_format($vendor_rating, 2);
             }
         }
-        return $vendor_rating;
+        return number_format($vendor_rating, 1, '.', '');
     }
 
     /* doller compare amount */

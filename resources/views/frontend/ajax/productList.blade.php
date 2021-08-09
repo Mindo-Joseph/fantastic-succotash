@@ -20,27 +20,22 @@
                     </div>
                     <div class="cart-info cart-wrap">
                         <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> 
-                        <a href="javascript:void(0)" title="Add to Wishlist"><i class="ti-heart" aria-hidden="true"></i></a>
-                        <!-- <a data-toggle="modal" href="#" data-target="#quick-view" title="Quick View"><i class="ti-search" aria-hidden="true"></i></a>
-                        <a href="compare.html" title="Compare"><i class="ti-reload" aria-hidden="true"></i></a> -->
+                        <a href="javascript:void(0)" title="Add to Wishlist" class="addWishList" proSku="{{$data->sku}}"><i class="ti-heart" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <div class="product-detail">
-                    <div>
-                        <div class="rating">
-                        @for($i = 1; $i < 6; $i++)
-                            <i class="fa fa-star"></i>
-                        @endfor
-                    </div>
-                    <a href="{{route('productDetail', $data->sku)}}">
-                        <h6>{{(!empty($data->translation) && isset($data->translation[0])) ? $data->translation[0]->title : ''}}</h6>
-                    </a>
-                    <h4>{{Session::get('currencySymbol').($data->variant[0]->price * $data->variant[0]->multiplier)}}</h4>
-                    <!-- <ul class="color-variant">
-                        <li class="bg-light0"></li>
-                        <li class="bg-light1"></li>
-                        <li class="bg-light2"></li>
-                    </ul> -->
+                    <div class="inner_spacing">
+                        <a href="{{route('productDetail', $data->sku)}}">
+                            <h3>{{ $data->translation_title }}</h3>
+                        </a>
+                        <h4 class="mt-1">{{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}</h4>
+                        @if($client_preference_detail)
+                            @if($client_preference_detail->rating_check == 1)  
+                                @if($data->averageRating > 0)
+                                    <span class="rating">{{ number_format($data->averageRating, 1, '.', '') }} <i class="fa fa-star text-white p-0"></i></span>
+                                @endif
+                            @endif
+                        @endif
                     </div>
                 </div>
             </div>
