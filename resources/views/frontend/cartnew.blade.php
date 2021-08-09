@@ -420,7 +420,7 @@
                                             <div class="input-group">
                                                 <input type="text" class="form-control" id="address" placeholder="{{__('Address')}}" aria-label="Recipient's Address" aria-describedby="button-addon2">
                                                 <div class="input-group-append">
-                                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                                    <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
                                                         <i class="fa fa-map-marker" aria-hidden="true"></i>
                                                     </button>
                                                 </div>
@@ -483,7 +483,7 @@
                     <a class="btn btn-solid" href="{{ url('/') }}">{{__('Continue Shopping')}}</a>
                 </div>
                 <div class="col-sm-6 text-md-right">
-                    <button id="order_palced_btn" class="btn btn-solid" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Continue')}}</button>
+                    <button id="order_palced_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Continue')}}</button>
                 </div>
             </div>
         </div>
@@ -636,6 +636,35 @@
         </div>
     </div>
 </div>
+<div class="modal fade pick-address" id="pick_address" tabindex="-1" aria-labelledby="pick-addressLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog  modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title" id="pick-addressLabel">{{ __('Select Location') }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="address-map-container" class="w-100" style="height: 500px; min-width: 500px;">
+                    <div id="pick-address-map" class="h-100"></div>
+                </div>
+                <div class="pick_address p-2 mb-2 position-relative">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-solid ml-auto pick_address_confirm w-100" data-dismiss="modal">{{ __('Ok') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
+
+@section('script')
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
     var guest_cart = {{ $guest_user ? 1 : 0 }};
@@ -650,5 +679,35 @@
     var payment_option_list_url = "{{route('payment.option.list')}}";
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
+
+    $(document).on('click', '.showMapHeader', function(){
+        var lats = document.getElementById('latitude').value;
+        var lngs = document.getElementById('longitude').value;
+
+        var myLatlng = new google.maps.LatLng(lats, lngs);
+        var mapProp = {
+            center:myLatlng,
+            zoom:13,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+            
+        };
+        var map=new google.maps.Map(document.getElementById("pick-address-map"), mapProp);
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            draggable:true  
+        });
+        // marker drag event
+        google.maps.event.addListener(marker,'drag',function(event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+        //marker drag event end
+        google.maps.event.addListener(marker,'dragend',function(event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+        $('#pick_address').modal('show');
+    });
 </script>
 @endsection
