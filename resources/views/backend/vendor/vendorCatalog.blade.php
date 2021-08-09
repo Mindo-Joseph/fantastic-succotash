@@ -467,6 +467,8 @@
                 that.removeClass('button--loading');
                 if (response.status == 'success') {
                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                }else{
+                    $.NotificationApp.send("Error", response.message, "top-right", "#FF0000", "error");
                 }
             }
         });
@@ -485,6 +487,8 @@
                 that.removeClass('button--loading');
                 if (response.status == 'success') {
                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                }else{
+                    $.NotificationApp.send("Error", response.message, "top-right", "#FF0000", "error");
                 }
             }
         });

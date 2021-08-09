@@ -30,6 +30,7 @@ class ProductImportController extends Controller{
     public function postWoocommerceDetail(Request $request){
         try {
             $woocommerce_detail = Woocommerce::first();
+            $woocommerce->url = $request->url;
             $woocommerce = $woocommerce_detail ? $woocommerce_detail : new Woocommerce();
             $woocommerce->consumer_key = $request->consumer_key;
             $woocommerce->consumer_secret = $request->consumer_secret;
@@ -47,26 +48,44 @@ class ProductImportController extends Controller{
             $base_path = base_path();
             DB::beginTransaction();
             $user = Auth::user();
-            $response = Http::get('https://yogo.gd/wc-api/v3/products?filter%5Blimit%5D=800&consumer_key=ck_8abd4b1f9ba171e4b21db9a70bef6c711d6ba3f0&consumer_secret=cs_b17a5e26234bae2899e0926c8762247d1f03c684');
-            Storage::makeDirectory('app/public/json');
-            $response_data = $response->json();
-            $products = json_encode($response_data , true);
-            $csv_product_import = new CsvProductImport;
-            $fileName = md5(time()). '_datafile.json';
-            $filePath = Storage::disk('public')->put($fileName, $products);
-            $csv_product_import->vendor_id = $request->vendor_id;
-            $csv_product_import->name = $fileName;
-            $csv_product_import->path = '/storage/json/' . $fileName;
-            $csv_product_import->status = 1;
-            $csv_product_import->type = 1;
-            $csv_product_import->raw_data = $products;
-            $csv_product_import->save();
-            DB::commit();
-            shell_exec("nohup php $base_path/artisan command:productImportData > /dev/null 2>&1 &");
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Import Product Successfully!'
-            ]);
+            $woocommerce_detail = Woocommerce::first();
+            $consumer_key = $woocommerce_detail->consumer_key;
+            $consumer_secret = $woocommerce_detail->consumer_key;
+            if($consumer_key && $consumer_secret){
+                $response = Http::get("https://yogo.gd/wc-api/v3/products?filter%5Blimit%5D=800&consumer_key=$consumer_key&consumer_secret=$consumer_secret");
+                if($response->status() == 200){
+                    Storage::makeDirectory('app/public/json');
+                    $response_data = $response->json();
+                    $products = json_encode($response_data , true);
+                    $csv_product_import = new CsvProductImport;
+                    $fileName = md5(time()). '_datafile.json';
+                    $filePath = Storage::disk('public')->put($fileName, $products);
+                    $csv_product_import->vendor_id = $request->vendor_id;
+                    $csv_product_import->name = $fileName;
+                    $csv_product_import->path = '/storage/json/' . $fileName;
+                    $csv_product_import->status = 1;
+                    $csv_product_import->type = 1;
+                    $csv_product_import->raw_data = $products;
+                    $csv_product_import->save();
+                    DB::commit();
+                    shell_exec("nohup php $base_path/artisan command:productImportData > /dev/null 2>&1 &");
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Import Product Via Woocommerce Request Submitted Successfully!'
+                    ]);
+                }else{
+                    $response_data = $response->json();
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => $response_data['errors'][0]['message']
+                    ]);
+                }
+            }else{
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Consumer Secret is invalid.'
+                ]);
+            }
         } catch (Exception $e) {
             DB::rollback();
         }
