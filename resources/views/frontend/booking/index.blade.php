@@ -55,26 +55,31 @@
 
                 </div>
             </div>
-            <div class="vehical-container style-4" style="height:calc(100vh - 397px !important">
-                <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
-                    <div class="col-3 vehicle-icon">
-                        <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png">
-                    </div>
-                    <div class="col-9">
-                        <div class="row no-gutters">
-                            <div class="col-8 vehicle-details">
-                                <h4 class="m-0"><b>Go Intercity</b></h4>
-                                <p class="station-rides ellips">Affordable outstation rides</p>
-                                <p class="waiting-time m-0"><span class="mr-1">In 2 mins.</span><span>03:04 pm</span></p>
-                            </div>
-                            <div class="col-4 ride-price pl-2">
-                                <p class="mb-0"><b>₹2,634.37</b></p>
+            <div class="vehical-container style-4" style="height:calc(100vh - 397px !important" id="search_product_main_div">
+                
+            </div>
+            <script type="text/template" id="products_template">
+                <% _.each(results, function(result, key){%>
+                    <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
+                        <div class="col-3 vehicle-icon">
+                            <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png">
+                        </div>
+                        <div class="col-9">
+                            <div class="row no-gutters">
+                                <div class="col-8 vehicle-details">
+                                    <h4 class="m-0"><b><%= result.name %></b></h4>
+                                    <p class="station-rides ellips"><%= result.description %></p>
+                                    <p class="waiting-time m-0"><span class="mr-1">In 2 mins.</span><span>03:04 pm</span></p>
+                                </div>
+                                <div class="col-4 ride-price pl-2">
+                                    <p class="mb-0"><b>{{Session::get('currencySymbol')}}<%= result.tags_price%></b></p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-                <hr class="m-0">
-            </div>
+                    </a>
+                    <hr class="m-0">
+                <% }); %>
+            </script>
         </div>
     </div>
 </section>
@@ -83,6 +88,6 @@
 </script>
 <script>
 var live_location = "{{ URL::asset('/images/live_location.gif') }}";
-var autocomplete_urls = "{{url('api/v1/pickup-delivery/get-list-of-vehicles/18?page=1&limit=12')}}";
+var autocomplete_urls = "{{url('looking/get-list-of-vehicles/2')}}";
 </script>
 @endsection
