@@ -224,9 +224,6 @@ class ProductController extends FrontController{
         ->select('id')
         ->where('id', $product->id)->first();
 
-        $selectedVarOptions = [];
-        $disabledVarOptions = [];
-        
         if($pv_ids){
             $variantData = ProductVariant::with('product', 'media.pimage.image')->select('id', 'sku', 'quantity', 'price', 'compare_at_price', 'barcode', 'product_id')
                 ->whereIn('id', $pv_ids)->get();
@@ -244,12 +241,11 @@ class ProductController extends FrontController{
                     //     $sets[] = ['variant_types' => $variant_type_id, 'variant_options' => $variant_option_id];
                     // }
                 }
-                if(count($variantData) <= 1){
+                // if(count($variantData) <= 1){
                     $variantData = $variantData->first()->toArray();
-                }else{
-                    $variantData = array();
-                }
-                // dd($variantData->toArray());
+                // }else{
+                //     $variantData = array();
+                // }
                 return response()->json(array('status' => 'Success', 'variant' => $variantData, 'availableSets' => $availableSets->variantSet));
             }
         }
