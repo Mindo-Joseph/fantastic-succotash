@@ -117,9 +117,11 @@ class UserSubscriptionController extends BaseController
     {
         try{
             $user = Auth::user();
+            $now = Carbon::now()->toDateString();
             $userActiveSubscription = SubscriptionInvoicesUser::with(['plan'])
                                 ->whereNull('cancelled_at')
                                 ->where('user_id', $user->id)
+                                ->where('end_date', '>=', $now )
                                 ->orderBy('end_date', 'desc')->first();
             if( ($userActiveSubscription) && ($userActiveSubscription->plan->slug != $slug) ){
                 return $this->errorResponse('You cannot buy two subscriptions at the same time', 400);
