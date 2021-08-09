@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\Web\OrderProductRatingRequest;
 use App\Http\Requests\Web\OrderProductReturnRequest;
-use App\Models\{Order,OrderProductRating,VendorOrderStatus,OrderProduct,OrderProductRatingFile,ReturnReason,OrderReturnRequest,OrderReturnRequestFile};
+use App\Models\{Client, ClientPreference, EmailTemplate, Order,OrderProductRating,VendorOrderStatus,OrderProduct,OrderProductRatingFile,ReturnReason,OrderReturnRequest,OrderReturnRequestFile, OrderVendor, OrderVendorProduct, User};
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 
@@ -83,7 +83,6 @@ class ReturnOrderController extends FrontController{
      * return  order product 
     */
     public function updateProductReturn(OrderProductReturnRequest $request){
-     
         try {
             $user = Auth::user();
             $order_deliver = 0;
@@ -124,6 +123,7 @@ class ReturnOrderController extends FrontController{
        
             }
             if(isset($returns)) {
+                $this->sendSuccessEmail($request);
                 return $this->successResponse($returns,'Return Submitted.');
             }
             return $this->errorResponse('Invalid order', 200);
@@ -133,8 +133,44 @@ class ReturnOrderController extends FrontController{
         }
     }
 
-
-    
-
-
+    public function sendSuccessEmail($request){
+        if( (isset($request->auth_token)) && (!empty($request->auth_token)) ){
+            $user = User::where('auth_token', $request->auth_token)->first();
+        }else{
+            $user = Auth::user();
+        }
+        $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
+        $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from', 'mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
+        $message = __('An otp has been sent to your email. Please check.');
+        if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
+            $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+            $sendto =  $user->email;
+            $client_name = 'Sales';
+            $mail_from = $data->mail_from;
+            try {
+                $order_vendor_product = OrderVendorProduct::where('id', $request->order_vendor_product_id)->first();
+                $email_template_content = '';
+                $email_template = EmailTemplate::where('id', 4)->first();
+                if($email_template){
+                    $email_template_content = $email_template->content;
+                    $email_template_content = str_ireplace("{product_image}", $order_vendor_product->image['image_fit'].'200/200'.$order_vendor_product->image['image_path'], $email_template_content);
+                    $email_template_content = str_ireplace("{product_name}", $order_vendor_product->product->title, $email_template_content);
+                    $email_template_content = str_ireplace("{price}", $order_vendor_product->price, $email_template_content);
+                }
+                $data = [
+                    'link' => "link",
+                    'email' => $sendto,
+                    'mail_from' => $mail_from,
+                    'client_name' => $client_name,
+                    'logo' => $client->logo['original'],
+                    'subject' => $email_template->subject,
+                    'customer_name' => ucwords($user->name),
+                    'email_template_content' => $email_template_content,
+                ];
+                dispatch(new \App\Jobs\SendOrderSuccessEmailJob($data))->onQueue('verify_email');
+                $notified = 1;
+            } catch (\Exception $e) {
+            }
+        }
+    }
 }
