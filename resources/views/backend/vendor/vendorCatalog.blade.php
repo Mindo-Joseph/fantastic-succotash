@@ -350,7 +350,7 @@
                                 <div class="col-md-8">
                                     <form id="woocommerces_form">
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="domain_name" placeholder="Domain Name" value="{{$woocommerce_detail ? $woocommerce_detail->url : ''}}">
+                                            <input class="form-control" type="url" name="domain_name" placeholder="Domain Name" value="{{$woocommerce_detail ? $woocommerce_detail->url : ''}}">
                                              <span class="text-danger" id="domain_name_error"></span>
                                         </div>
                                         <div class="form-group">
@@ -362,7 +362,7 @@
                                              <span class="text-danger" id="consumer_secret_error"></span>
                                         </div>
                                         <button class="btn btn-info button" id="save_woocommerce_btn" type="button" onclick="this.classList.toggle('button--loading')">Save</button>
-                                        <button class="btn btn-info button" id="import_product_from_wocomerce" data-vendor="{{$vendor->id}}" onclick="this.classList.toggle('button--loading')">Import Products From Woocommerce</button>
+                                        <button class="btn btn-info button" id="import_product_from_woocomerce" data-vendor="{{$vendor->id}}" onclick="this.classList.toggle('button--loading')">Import Products From Woocommerce</button>
                                     </form>
                                 </div>
                             </div>
@@ -458,7 +458,9 @@
     }
     $(document).on('click', '#save_woocommerce_btn', function(e) {
         var that = $(this);
+        $('.text-danger').html('');
         that.attr('disabled', true);
+        $('#import_product_from_woocomerce').attr('disabled', true);
         var form = document.getElementById('woocommerces_form');
         var formData = new FormData(form);
         $.ajax({
@@ -470,22 +472,28 @@
             success: function(response) {
                 that.attr('disabled', false);
                 that.removeClass('button--loading');
+                $('#import_product_from_woocomerce').attr('disabled', false);
                 if (response.status == 'success') {
                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
                 }else{
                     $.NotificationApp.send("Error", response.message, "top-right", "#FF0000", "error");
                 }
-            },error:function(error){
-               var response = $.parseJSON(error.responseText);
-               let error_messages = response.errors;
-               $.each(error_messages, function(key, error_message) {
-                $('#'+key+'_error').html(error_message[0]).show();
-               });
+            },
+            error:function(error){
+                that.attr('disabled', false);
+                that.removeClass('button--loading');
+                $('#import_product_from_woocomerce').attr('disabled', false);
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.errors;
+                $.each(error_messages, function(key, error_message) {
+                    $('#'+key+'_error').html(error_message[0]).show();
+                });
             }
         });
     });
-    $(document).on('click', '#import_product_from_wocomerce', function(e) {
+    $(document).on('click', '#import_product_from_woocomerce', function(e) {
         var that = $(this);
+        $('#save_woocommerce_btn').attr('disabled', true);
         that.attr('disabled', true);
         var vendor_id = $(this).data('vendor');
         $.ajax({
@@ -496,6 +504,7 @@
             success: function(response) {
                 that.attr('disabled', false);
                 that.removeClass('button--loading');
+                $('#save_woocommerce_btn').attr('disabled', false);
                 if (response.status == 'success') {
                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
                 }else{

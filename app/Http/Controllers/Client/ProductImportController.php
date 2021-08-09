@@ -54,10 +54,11 @@ class ProductImportController extends Controller{
             DB::beginTransaction();
             $user = Auth::user();
             $woocommerce_detail = Woocommerce::first();
+            $domain_name = $woocommerce_detail->url;
             $consumer_key = $woocommerce_detail->consumer_key;
-            $consumer_secret = $woocommerce_detail->consumer_key;
+            $consumer_secret = $woocommerce_detail->consumer_secret;
             if($consumer_key && $consumer_secret){
-                $response = Http::get("https://yogo.gd/wc-api/v3/products?filter%5Blimit%5D=800&consumer_key=$consumer_key&consumer_secret=$consumer_secret");
+                $response = Http::get("$domain_name/wc-api/v3/products?filter%5Blimit%5D=800&consumer_key=$consumer_key&consumer_secret=$consumer_secret");
                 if($response->status() == 200){
                     Storage::makeDirectory('app/public/json');
                     $response_data = $response->json();
