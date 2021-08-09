@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1;
+namespace App\Http\Controllers\Front;
 
 use DB;
 use Config;
@@ -15,7 +15,7 @@ use App\Models\{Category,ClientPreference,ClientCurrency,Vendor,ProductVariantSe
 use App\Http\Traits\ApiResponser;
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Support\Facades\Validator;
-class PickupDeliveryController extends BaseController{
+class PickupDeliveryController extends FrontController{
 	
     use ApiResponser;
     
@@ -100,7 +100,8 @@ class PickupDeliveryController extends BaseController{
             $response['vendor'] = $vendor;
             $response['products'] = $products;
             $response['loyalty_amount_saved'] = $loyalty_amount_saved??0.00;
-            return response()->json(['status','data' => $response]);
+           // $response['filterData'] = $variantSets;
+            return response()->json(['data' => $response]);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage().''.$e->getLineNo(), $e->getCode());
         }

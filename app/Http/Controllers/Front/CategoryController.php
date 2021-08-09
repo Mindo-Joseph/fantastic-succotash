@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, Celebrity, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea};
-use Illuminate\Http\Request;
 use Session;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{Currency, Banner, Category, Brand, Product, Celebrity, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea, UserAddress};
 
 class CategoryController extends FrontController
 {
@@ -120,12 +120,17 @@ class CategoryController extends FrontController
             $new->variant_price = (!empty($new->variant->first())) ? $new->variant->first()->price : 0;
         }
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-        if(view()->exists('frontend/cate-'.$page.'s')){
-            return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
+        if($page == 'pickup/delivery'){
+            $user_addresses = UserAddress::get();
+            return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories]);
         }else{
-            abort(404);
-            // return response()->view('errors_custom', [], 404);
+            if(view()->exists('frontend/cate-'.$page.'s')){
+                return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
+            }else{
+                abort(404);
+            }
         }
+        
     }
 
     public function listData($langId, $category_id, $type = ''){
