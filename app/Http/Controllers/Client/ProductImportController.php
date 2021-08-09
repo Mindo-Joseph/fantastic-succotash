@@ -29,9 +29,14 @@ class ProductImportController extends Controller{
     private $folderName = 'prods';
     public function postWoocommerceDetail(Request $request){
         try {
+            $request->validate([
+                'domain_name' => 'required',
+                'consumer_key' => 'required',
+                'consumer_secret' => 'required',
+            ]);
             $woocommerce_detail = Woocommerce::first();
-            $woocommerce->url = $request->url;
             $woocommerce = $woocommerce_detail ? $woocommerce_detail : new Woocommerce();
+            $woocommerce->url = $request->domain_name;
             $woocommerce->consumer_key = $request->consumer_key;
             $woocommerce->consumer_secret = $request->consumer_secret;
             $woocommerce->save();

@@ -345,16 +345,21 @@
                                         <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
                                         <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />
                                         <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
-                                        <p class="text-muted text-center mt-2 mb-0">Upload CSV File</p>
                                     </form>
                                 </div>
                                 <div class="col-md-8">
                                     <form id="woocommerces_form">
                                         <div class="form-group">
+                                            <input class="form-control" type="text" name="domain_name" placeholder="Domain Name" value="{{$woocommerce_detail ? $woocommerce_detail->url : ''}}">
+                                             <span class="text-danger" id="domain_name_error"></span>
+                                        </div>
+                                        <div class="form-group">
                                             <input class="form-control" type="text" name="consumer_key" placeholder="Consumer Key" value="{{$woocommerce_detail ? $woocommerce_detail->consumer_key : ''}}">
+                                             <span class="text-danger" id="consumer_key_error"></span>
                                         </div>
                                         <div class="form-group">
                                             <input class="form-control" type="text" name="consumer_secret" placeholder="Consumer Secret" value="{{$woocommerce_detail ? $woocommerce_detail->consumer_secret : ''}}">
+                                             <span class="text-danger" id="consumer_secret_error"></span>
                                         </div>
                                         <button class="btn btn-info button" id="save_woocommerce_btn" type="button" onclick="this.classList.toggle('button--loading')">Save</button>
                                         <button class="btn btn-info button" id="import_product_from_wocomerce" data-vendor="{{$vendor->id}}" onclick="this.classList.toggle('button--loading')">Import Products From Woocommerce</button>
@@ -470,6 +475,12 @@
                 }else{
                     $.NotificationApp.send("Error", response.message, "top-right", "#FF0000", "error");
                 }
+            },error:function(error){
+               var response = $.parseJSON(error.responseText);
+               let error_messages = response.errors;
+               $.each(error_messages, function(key, error_message) {
+                $('#'+key+'_error').html(error_message[0]).show();
+               });
             }
         });
     });
