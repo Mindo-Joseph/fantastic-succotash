@@ -61,7 +61,7 @@ $(document).ready(function () {
                 { breakpoint: 420, settings: { slidesToShow: 1, slidesToScroll: 1 } },
             ],
         });
-        $(".vendorproduct-4").slick({
+        $(".product-5").slick({
             arrows: !0,
             dots: !1,
             infinite: !1,
@@ -144,11 +144,13 @@ $(document).ready(function () {
                     if (path == '/') {
                         $(".slide-6").slick('destroy');
                         $(".product-4").slick('destroy');
+                        $(".product-5").slick('destroy');
                         if ($('.vendor-product').html() != '') {
                             $('.vendor-product').slick('destroy');
                         }
                         $(".slide-6").html('');
                         $(".product-4").html('');
+                        $(".product-5").html('');
                         $('.vendor-product').html('');
                         $("#new_products").html('');
                         $("#best_sellers").html('');
