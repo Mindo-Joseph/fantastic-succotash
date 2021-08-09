@@ -1078,16 +1078,25 @@ $(document).ready(function() {
         // var res = parseInt(str.substring(10, str.length - 1));
         if (quan > str) {
             alert("Quantity is not available in stock");
-            $('.quantity_count').val(str)
+            $('.quantity_count').val(str);
+        }else{
+            var s =$(".qty-box .input-qty-number"),
+                i = parseInt(s.val(), 10);
+            isNaN(i) || s.val(i + 1);
         }
+    });
+    $(document).delegate(".quantity-left-minus", "click", function () {
+        var s = $(".qty-box .input-qty-number"),
+            i = parseInt(s.val(), 10);
+        !isNaN(i) && i > 1 && s.val(i - 1);
     });
     $(document).delegate('.quantity_count', 'change', function() {
         var quan = $(this).val();
-        var str = $('#instock').html();
+        var str = $('#instock').val();
         // var res = parseInt(str.substring(10, str.length - 1));
         if (quan > str) {
             alert("Quantity is not available in stock");
-            $('.quantity_count').val(str)
+            $('.quantity_count').val(str);
         }
     });
 
