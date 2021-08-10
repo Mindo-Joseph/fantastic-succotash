@@ -45,7 +45,7 @@ class PickupDeliveryController extends FrontController{
                             $q->select('id','sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                         }])->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'products.category_id','products.tags')->where('products.id', $product_id)->where('products.is_live', 1)->firstOrFail(); 
-        $image_url = $product->media->first() ? $product->media->first()->image->path['proxy_url'].'360/360'.$product->media->first()->image->path['image_path'] : '';
+        $image_url = $product->media->first() ? $product->media->first()->image->path['image_fit'].'360/360'.$product->media->first()->image->path['image_path'] : '';
         $product->image_url = $image_url;
         $product->name = $product->translation->first() ? $product->translation->first()->title :'';
         $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';
@@ -107,7 +107,7 @@ class PickupDeliveryController extends FrontController{
                     ->where('products.is_live', 1)->distinct()->get(); 
             if(!empty($products)){
                 foreach ($products as $key => $product) {
-                    $image_url = $product->media->first() ? $product->media->first()->image->path['proxy_url'].'200/200'.$product->media->first()->image->path['image_path'] : '';
+                    $image_url = $product->media->first() ? $product->media->first()->image->path['image_fit'].'300/300'.$product->media->first()->image->path['image_path'] : '';
                     $product->image_url = $image_url;
                     $product->name = $product->translation->first() ? $product->translation->first()->title :'';
                     $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';

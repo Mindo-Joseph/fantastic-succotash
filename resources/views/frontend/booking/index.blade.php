@@ -88,9 +88,9 @@
                 <div class="cab-amount-details px-2">
                     <div class="row">
                         <div class="col-6 mb-2">Distance</div>
-                        <div class="col-6 mb-2 text-right">20.25 kms</div>
+                        <div class="col-6 mb-2 text-right" id="distance"></div>
                         <div class="col-6 mb-2">Duration</div>
-                        <div class="col-6 mb-2 text-right">10.25 mins</div>
+                        <div class="col-6 mb-2 text-right" id="duration"></div>
                         <div class="col-6 mb-2">Delivery fee</div>
                         <div class="col-6 mb-2 text-right">$114.02</div>
                         <% if(result.loyalty_amount_saved) { %>

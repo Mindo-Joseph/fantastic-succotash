@@ -83,6 +83,7 @@ $(document).ready(function () {
                         $('.cab-detail-box').removeClass('d-none');
                         let cab_detail_box_template = _.template($('#cab_detail_box_template').html());
                         $("#cab_detail_box").append(cab_detail_box_template({result: response.data})).show();
+                        getDistance();
                     }else{
                         $("#cab_detail_box ").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
                     }
@@ -130,6 +131,8 @@ $(document).ready(function () {
             travelMode: google.maps.TravelMode.DRIVING
           }, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
+              var point = response.routes[0].legs[0];
+              // alert(point.duration.text);
               directionsDisplay.setDirections(response);
             } else {
               window.alert('Directions request failed due to ' + status);
@@ -174,7 +177,8 @@ $(document).ready(function () {
         if (status !== google.maps.DistanceMatrixStatus.OK) {
             console.log('Error:', status);
         } else {
-            console.log(response);
+            console.log('distance is'+response.rows[0].elements[0].distance.text);
+            console.log('duration is'+response.rows[0].elements[0].duration.text);
             $("#distance").text(response.rows[0].elements[0].distance.text).show();
             $("#duration").text(response.rows[0].elements[0].duration.text).show();
         }
