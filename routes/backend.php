@@ -201,6 +201,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     // pickup & delivery 
     Route::group(['prefix' => 'vendor/dispatcher'], function () {
         Route::post('updateCreateVendorInDispatch', 'Client\VendorController@updateCreateVendorInDispatch')->name('update.Create.Vendor.In.Dispatch');
+        Route::post('updateCreateVendorInDispatchOnDemand', 'Client\VendorController@updateCreateVendorInDispatchOnDemand')->name('update.Create.Vendor.In.Dispatch.OnDemand');
     });
 });
 Route::get('/search11',[SearchController::class,'search']);
