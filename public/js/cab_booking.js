@@ -115,23 +115,9 @@ $(document).ready(function () {
     });
     function getVendorList(){
         $('.location-list').hide();
-        var latitudes = $('input[name="latitude[]"]').map(function(){
-           return this.value;
-        }).get();
-        var longitudes = $('input[name="longitude[]"]').map(function(){
-           return this.value;
-        }).get();
-        var locations = [];
-         $(latitudes).each(function(index, data) {
-            let longitude = longitudes[index];
-            var data = {};
-            data.latitude = data;
-            data.longitude = longitude;
-            locations.push(data);
-         });
-        var post_data = JSON.stringify(locations);
+        
         $.ajax({
-            data: {locations:post_data},
+            data: {},
             type: "POST",
             dataType: 'json',
             url: autocomplete_urls,
@@ -149,18 +135,33 @@ $(document).ready(function () {
         });
     }
     $(document).on("click",".vendor-list",function() {
+        var locations = [];
         let vendor_id = $(this).data('vendor');
+        var latitudes = $('input[name="latitude[]"]').map(function(){
+           return this.value;
+        }).get();
+        var longitudes = $('input[name="longitude[]"]').map(function(){
+           return this.value;
+        }).get();
+         $(latitudes).each(function(index, latitude) {
+            let longitude = longitudes[index];
+            var data = {};
+            data.latitude = latitude;
+            data.longitude = longitude;
+            locations.push(data);
+         });
+        var post_data = JSON.stringify(locations);
         $.ajax({
-            data: {},
             type: "POST",
             dataType: 'json',
+            data: {locations:post_data},
             url: get_vehicle_list+'/'+vendor_id,
             success: function(response) {
                 if(response.status == 'Success'){
                     $('#search_product_main_div').html('');
                     if(response.data.length != 0){
                         let products_template = _.template($('#products_template').html());
-                        $("#search_product_main_div").append(products_template({results: response.data})).show();
+                        $("#search_product_main_div").append(products_template({results: response.data.products})).show();
                     }else{
                         $("#search_product_main_div ").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
                     }
