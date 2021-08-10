@@ -624,7 +624,7 @@
                     </a>
                 </div>
 
-                <div class="cab-detail-box style-4">
+                <!-- <div class="cab-detail-box style-4">
                     <div class="cab-outer style-4">
                         <div class="bg-white p-2">
                             <a href="#">✕</a>
@@ -655,7 +655,7 @@
                         <h4 class="d-flex align-items-center justify-content-between mb-2"><span><i class="fa fa-money" aria-hidden="true"></i> Cash</span> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
                         <button class="btn btn-solid w-100">Request XL Intercity</button>
                     </div>                
-                </div>
+                </div> -->
 
             </form>
         </div>
