@@ -145,23 +145,17 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 		Route::get('get-return-products', 'Front\ReturnOrderController@getReturnProducts')->name('get-return-products');
 		Route::post('update-product-return', 'Front\ReturnOrderController@updateProductReturn')->name('update.order.return');
 	});
-
-
 	// Return product 
 	Route::group(['prefix' => 'looking'], function () {
 		Route::get('/', 'Front\BookingController@index')->name('bookingIndex');
-
 		Route::post('get-list-of-vehicles-old/{id}', 'Front\PickupDeliveryController@getListOfVehicles');
 		Route::post('get-list-of-vehicles/{id}', 'Front\PickupDeliveryController@productsByVendorInPickupDelivery');
+		Route::post('vendor/list/{category_id}', 'Front\PickupDeliveryController@postVendorListByCategoryId');
 		Route::post('create-order', 'Front\PickupDeliveryController@createOrder');
 		Route::post('cart/updateQuantity', 'Front\CartController@updateQuantity');
 		Route::post('promo-code/list', 'Front\PickupDeliveryController@postPromoCodeList');
 		Route::post('promo-code/verify', 'Front\PickupDeliveryController@postVerifyPromoCode');
 		Route::post('promo-code/remove', 'Front\PickupDeliveryController@postRemovePromoCode');
 	});
-
-
-
-	
 	Route::post('upload-file', 'Front\RatingController@uploadFile')->name('uploadfile');
 });
