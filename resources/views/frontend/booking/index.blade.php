@@ -13,21 +13,21 @@
             <div class="location-box">
                 <ul class="location-inputs position-relative pl-2">
                     <li class="d-block mb-3 dots">
-                        <input class="form-control pickup-text" type="text" placeholder="Add a pick-up location" id="pickup_location"/>
+                        <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Pick-Up Location')}}" id="pickup_location"/>
                         <input type="hidden" name="latitude[]" value="" id="pickup_location_latitude" />
                         <input type="hidden" name="longitude[]" value="" id="pickup_location_longitude" />
                         <i class="fa fa-times ml-1" aria-hidden="true"></i>
                     </li>
                     <li class="d-block mb-3 dots">
-                        <input class="form-control pickup-text" type="text" placeholder="Enter Your Destination" id="destination_location" />
+                        <input class="form-control pickup-text" type="text" placeholder="{{__('Enter Your Destination')}}" id="destination_location" />
                         <input type="hidden" name="latitude[]" value="" id="destination_location_latitude" />
                         <input type="hidden" name="longitude[]" value="" id="destination_location_longitude" />
                         <i class="fa fa-times ml-1" aria-hidden="true"></i>
                     </li>
                 </ul>
-                <a class="add-more-location position-relative pl-2" href="javascript:void(0)">Add Destination</a>
+                <a class="add-more-location position-relative pl-2" href="javascript:void(0)">{{__('Add Destination')}}</a>
             </div>
-            <div class="location-list style-4 d-none">
+            <div class="location-list style-4">
                 @forelse($user_addresses as $user_address)
                     <a class="search-location-result position-relative d-block" href="javascript:void(0);" data-address="{{$user_address->address}}" data-latitude="{{$user_address->latitude}}" data-longitude="{{$user_address->longitude}}">
                         <h4 class="mt-0 mb-1"><b>{{$user_address->address}}</b></h4>

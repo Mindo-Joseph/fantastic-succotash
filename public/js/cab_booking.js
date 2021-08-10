@@ -113,10 +113,25 @@ $(document).ready(function () {
         var longitude = $(this).data('longitude');
         displayLocation(latitude, longitude);
     });
-    getVendorList();
     function getVendorList(){
+        $('.location-list').hide();
+        var latitudes = $('input[name="latitude[]"]').map(function(){
+           return this.value;
+        }).get();
+        var longitudes = $('input[name="longitude[]"]').map(function(){
+           return this.value;
+        }).get();
+        var locations = [];
+         $(latitudes).each(function(index, data) {
+            let longitude = longitudes[index];
+            var data = {};
+            data.latitude = data;
+            data.longitude = longitude;
+            locations.push(data);
+         });
+        var post_data = JSON.stringify(locations);
         $.ajax({
-            data: {},
+            data: {locations:post_data},
             type: "POST",
             dataType: 'json',
             url: autocomplete_urls,
@@ -147,7 +162,7 @@ $(document).ready(function () {
                         let products_template = _.template($('#products_template').html());
                         $("#search_product_main_div").append(products_template({results: response.data})).show();
                     }else{
-                        $("#search_product_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                        $("#search_product_main_div ").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
                     }
                 }
             }
@@ -217,6 +232,7 @@ $(document).ready(function () {
             $('#destination_location_latitude').val(place2.geometry.location.lat());
             $('#destination_location_longitude').val(place2.geometry.location.lng());
             initMap2();
+            getVendorList();
         });
       }
     }
