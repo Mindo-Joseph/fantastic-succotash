@@ -67,16 +67,26 @@ class AuthController extends BaseController{
 
         }
         $user_refferal = UserRefferal::where('user_id', $user->id)->first();
-        $device = UserDevice::where('user_id', $user->id)->first();
-        if(!$device){
-            $device = new UserDevice();
-            $device->user_id = $user->id;
-        }
-        $device->device_type = $loginReq->device_type;
-        $device->device_token = $loginReq->device_token;
-        $device->save();
+
+        // $device = UserDevice::where('user_id', $user->id)->first();
+        // if(!$device){
+        //     $device = new UserDevice();
+        //     $device->user_id = $user->id;
+        // }
+        // $device->device_type = $loginReq->device_type;
+        // $device->device_token = $loginReq->device_token;
+        // $device->access_token = $token;
+        // $device->save();
+
+
+        $device = UserDevice::updateOrCreate(['device_token' => $loginReq->device_token],
+                                                          ['user_id' => $user->id,
+                                                          'device_type' => $loginReq->device_type,
+                                                          'access_token' => $token]);
+
         $user->auth_token = $token;
         $user->save();
+
         $user_cart = Cart::where('user_id', $user->id)->first();
         if($user_cart){
             $unique_identifier_cart = Cart::where('unique_identifier', $loginReq->device_token)->first();
@@ -242,13 +252,20 @@ class AuthController extends BaseController{
             $preferData['web_template_id'] = $prefer->web_template_id;
             $response['client_preference'] = $preferData;
             $response['refferal_code'] = $userRefferal ? $userRefferal->refferal_code: '';
-            $user_device[] = [
-                'access_token' => '',
-                'user_id' => $user->id,
-                'device_type' => $signReq->device_type,
-                'device_token' => $signReq->device_token,
-            ];
-            UserDevice::insert($user_device);
+            
+            // $user_device[] = [
+            //     'access_token' => '',
+            //     'user_id' => $user->id,
+            //     'device_type' => $signReq->device_type,
+            //     'device_token' => $signReq->device_token,
+            // ];
+            // UserDevice::insert($user_device);
+
+            $user_device = UserDevice::updateOrCreate(['device_token' => $signReq->device_token],
+                                                          ['user_id' => $user->id,
+                                                          'device_type' => $signReq->device_type,
+                                                          'access_token' => $token]);
+
             if(!empty($prefer->sms_key) && !empty($prefer->sms_secret) && !empty($prefer->sms_from)){
                 $response['send_otp'] = 1;
                 $to = '+'.$user->dial_code.$user->phone_number;
@@ -457,6 +474,9 @@ class AuthController extends BaseController{
         $blockToken->token = $header['authorization'][0];
         $blockToken->expired = '1';
         $blockToken->save();
+
+        $del_token = UserDevice::where('access_token',$header['authorization'][0])->delete();
+
         return response()->json([
             'message' => 'Successfully logged out'
         ]);

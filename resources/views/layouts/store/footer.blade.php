@@ -22,7 +22,7 @@
     var selected_address = 0;
     var autocomplete_url = "{{ route('autocomplete') }}";
     let stripe_publishable_key = '{{ $stripe_publishable_key }}';
-    var home_page_url = "{{ route('userHome') }}";
+    var login_url = "{{ route('customer.login') }}";
     var home_page_url = "{{ route('userHome') }}";
     let home_page_url2 = home_page_url.concat("/");
     if((home_page_url != window.location.href) && (home_page_url2 != window.location.href)){

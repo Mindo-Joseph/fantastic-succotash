@@ -10291,6 +10291,10 @@ header.header-style .onhover-dropdown:before {
     border-radius: 0 !important;
 }
 
+.onhover-dropdown.mobile-account .onhover-show-div {
+    top: calc(100% - 13px);
+}
+
 .onhover-dropdown .onhover-show-div.product-page-full {
     z-index: 99999;
 }
@@ -10299,6 +10303,13 @@ header.header-style .onhover-dropdown:before {
     opacity: 1;
     -webkit-transform: translateY(10px);
     transform: translateY(10px);
+    visibility: visible;
+}
+
+.onhover-dropdown.mobile-account:hover .onhover-show-div {
+    opacity: 1;
+    -webkit-transform: translateY(7px);
+    transform: translateY(7px);
     visibility: visible;
 }
 
@@ -13889,7 +13900,7 @@ header.stickycls {
         color: #222222;
         border-radius: 0 !important;
         font-size: 12px;
-        font-weight: 400;
+        font-weight: 600;
         text-transform: capitalize;
         padding: 5px 20px !important;
     }

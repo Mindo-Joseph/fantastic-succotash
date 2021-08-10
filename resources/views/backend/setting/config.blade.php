@@ -98,7 +98,7 @@
                   <h4 class="header-title mb-0">Last Mile Delivery</h4>
                   <button class="btn btn-info d-block" type="submit"> Save </button>
                </div>
-               <p class="sub-header">Offer Last Mile Delivery with Royo Dispatcher.</p>
+               <p class="sub-header">Offer Last Mile Delivery with Dispatcher.</p>
                <div class="row">
                   <div class="col-12">
                      <div class="form-group mb-0">
@@ -109,7 +109,7 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
-                        <label for="delivery_service_key_url">Royo Dispatcher URL * ( https://www.abc.com )</label>
+                        <label for="delivery_service_key_url">Dispatcher URL * ( https://www.abc.com )</label>
                         <input type="text" name="delivery_service_key_url" id="delivery_service_key_url" placeholder="https://www.abc.com" class="form-control" value="{{ old('delivery_service_key_url', $preference->delivery_service_key_url ?? '')}}">
                         @if($errors->has('delivery_service_key_url'))
                         <span class="text-danger" role="alert">
@@ -118,7 +118,7 @@
                         @endif
                      </div>
                      <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
-                        <label for="delivery_service_key_code">Royo Dispatcher Short code</label>
+                        <label for="delivery_service_key_code">Dispatcher Short code</label>
                         <input type="text" name="delivery_service_key_code" id="delivery_service_key_code" placeholder="" class="form-control" value="{{ old('delivery_service_key_code', $preference->delivery_service_key_code ?? '')}}">
                         @if($errors->has('delivery_service_key_code'))
                         <span class="text-danger" role="alert">
@@ -127,7 +127,7 @@
                         @endif
                      </div>
                      <div class="form-group mt-3 mb-0 deliveryServiceFields" style="{{((isset($preference) && $preference->need_delivery_service == '1')) ? '' : 'display:none;'}}">
-                        <label for="delivery_service_key">Royo Dispatcher API key</label>
+                        <label for="delivery_service_key">Dispatcher API key</label>
                         <input type="text" name="delivery_service_key" id="delivery_service_key" placeholder="" class="form-control" value="{{ old('delivery_service_key', $preference->delivery_service_key ?? '')}}">
                         @if($errors->has('delivery_service_key'))
                         <span class="text-danger" role="alert">
@@ -162,7 +162,7 @@
                   <h4 class="header-title mb-0">Pickup & Delivery</h4>
                   <button class="btn btn-info d-block" type="submit"> Save </button>
                </div>
-               <p class="sub-header">Offer Pickup & Delivery with Royo Dispatcher.</p>
+               <p class="sub-header">Offer Pickup & Delivery with Dispatcher.</p>
                <div class="row">
                   <div class="col-12">
                      <div class="form-group mb-0">
@@ -173,7 +173,7 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
-                        <label for="pickup_delivery_service_key_url">Royo Dispatcher URL* ( https://www.abc.com )</label>
+                        <label for="pickup_delivery_service_key_url">Dispatcher URL* ( https://www.abc.com )</label>
                         <input type="text" name="pickup_delivery_service_key_url" id="pickup_delivery_service_key_url" placeholder="https://www.abc.com" class="form-control" value="{{ old('pickup_delivery_service_key_url', $preference->pickup_delivery_service_key_url ?? '')}}">
                         @if($errors->has('pickup_delivery_service_key_url'))
                         <span class="text-danger" role="alert">
@@ -183,7 +183,7 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
-                        <label for="delivery_service_key_code">Royo Dispatcher Short code</label>
+                        <label for="delivery_service_key_code">Dispatcher Short code</label>
                         <input type="text" name="pickup_delivery_service_key_code" id="pickup_delivery_service_key_code" placeholder="" class="form-control" value="{{ old('pickup_delivery_service_key_code', $preference->pickup_delivery_service_key_code ?? '')}}">
                         @if($errors->has('pickup_delivery_service_key_code'))
                         <span class="text-danger" role="alert">
@@ -193,7 +193,7 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_ride == '1')) ? '' : 'display:none;'}}">
-                        <label for="pickup_delivery_service_key">Royo Dispatcher API key</label>
+                        <label for="pickup_delivery_service_key">Dispatcher API key</label>
                         <input type="text" name="pickup_delivery_service_key" id="pickup_delivery_service_key" placeholder="" class="form-control" value="{{ old('pickup_delivery_service_key', $preference->pickup_delivery_service_key ?? '')}}">
                         @if($errors->has('pickup_delivery_service_key'))
                         <span class="text-danger" role="alert">
@@ -212,7 +212,7 @@
                   <h4 class="header-title mb-0">{{ __('On Demand Services') }}</h4>
                   <button class="btn btn-info d-block" type="submit"> Save </button>
                </div>
-               <p class="sub-header">{{ __('Offer On Demand Services with Royo Dispatcher.') }}</p>
+               <p class="sub-header">{{ __('Offer On Demand Services with Dispatcher.') }}</p>
                <div class="row">
                   <div class="col-12">
                      <div class="form-group mb-0">
@@ -223,7 +223,7 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 home_other_dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_home_other_service == '1')) ? '' : 'display:none;'}}">
-                        <label for="dispacher_home_other_service_key_url">{{ __('Royo Dispatcher URL') }} *(https://www.abc.com)</label>
+                        <label for="dispacher_home_other_service_key_url">{{ __('Dispatcher URL') }} *(https://www.abc.com)</label>
                         <input type="text" name="dispacher_home_other_service_key_url" id="dispacher_home_other_service_key_url" placeholder="https://www.abc.com" class="form-control" value="{{ old('dispacher_home_other_service_key_url', $preference->dispacher_home_other_service_key_url ?? '')}}">
                         @if($errors->has('dispacher_home_other_service_key_url'))
                         <span class="text-danger" role="alert">
@@ -233,7 +233,7 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 home_other_dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_home_other_service == '1')) ? '' : 'display:none;'}}">
-                        <label for="dispacher_home_other_service_key_code">{{ __('Royo Dispatcher Short code') }}</label>
+                        <label for="dispacher_home_other_service_key_code">{{ __('Dispatcher Short code') }}</label>
                         <input type="text" name="dispacher_home_other_service_key_code" id="dispacher_home_other_service_key_code" placeholder="" class="form-control" value="{{ old('dispacher_home_other_service_key_code', $preference->dispacher_home_other_service_key_code ?? '')}}">
                         @if($errors->has('dispacher_home_other_service_key_code'))
                         <span class="text-danger" role="alert">
@@ -243,7 +243,7 @@
                      </div>
 
                      <div class="form-group mt-3 mb-0 home_other_dispatcherFields" style="{{((isset($preference) && $preference->need_dispacher_home_other_service == '1')) ? '' : 'display:none;'}}">
-                        <label for="dispacher_home_other_service_key">{{ __('Royo Dispatcher API key') }}</label>
+                        <label for="dispacher_home_other_service_key">{{ __('Dispatcher API key') }}</label>
                         <input type="text" name="dispacher_home_other_service_key" id="dispacher_home_other_service_key" placeholder="" class="form-control" value="{{ old('dispacher_home_other_service_key', $preference->dispacher_home_other_service_key ?? '')}}">
                         @if($errors->has('dispacher_home_other_service_key'))
                         <span class="text-danger" role="alert">

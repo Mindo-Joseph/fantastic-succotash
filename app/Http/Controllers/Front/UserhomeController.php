@@ -154,7 +154,7 @@ class UserhomeController extends FrontController{
                 'sku' => $new_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
                 'url_slug' => $new_product_detail->url_slug,
-                'averageRating' => $new_product_detail->averageRating,
+                'averageRating' => number_format($new_product_detail->averageRating, 1, '.', ''),
                 'inquiry_only' => $new_product_detail->inquiry_only,
                 'vendor_name' => $new_product_detail->vendor ? $new_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.(number_format($new_product_detail->variant->first()->price * $multiply,2)),
@@ -169,7 +169,7 @@ class UserhomeController extends FrontController{
                 'sku' => $feature_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
                 'url_slug' => $feature_product_detail->url_slug,
-                'averageRating' => $feature_product_detail->averageRating,
+                'averageRating' => number_format($feature_product_detail->averageRating, 1, '.', ''),
                 'inquiry_only' => $feature_product_detail->inquiry_only,
                 'vendor_name' => $feature_product_detail->vendor ? $feature_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.(number_format($feature_product_detail->variant->first()->price * $multiply,2)),
@@ -184,7 +184,7 @@ class UserhomeController extends FrontController{
                 'sku' => $on_sale_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
                 'url_slug' => $on_sale_product_detail->url_slug,
-                'averageRating' => $on_sale_product_detail->averageRating,
+                'averageRating' => number_format($on_sale_product_detail->averageRating, 1, '.', ''),
                 'inquiry_only' => $on_sale_product_detail->inquiry_only,
                 'vendor_name' => $on_sale_product_detail->vendor ? $on_sale_product_detail->vendor->name : '',
                 'price' => Session::get('currencySymbol').' '.(number_format($on_sale_product_detail->variant->first()->price * $multiply,2)),
@@ -272,7 +272,7 @@ class UserhomeController extends FrontController{
         if(is_array($venderIds)){
             $products = $products->whereIn('vendor_id', $venderIds);
         }
-        $products = $products->where('is_live', 1)->take(6)->inRandomOrder()->get();
+        $products = $products->where('is_live', 1)->take(10)->inRandomOrder()->get();
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {

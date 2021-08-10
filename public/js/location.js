@@ -53,6 +53,19 @@ $(document).ready(function () {
             dots: !1,
             infinite: !1,
             speed: 300,
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            responsive: [
+                { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
+                { breakpoint: 991, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+                { breakpoint: 420, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+            ],
+        });
+        $(".product-5").slick({
+            arrows: !0,
+            dots: !1,
+            infinite: !1,
+            speed: 300,
             slidesToShow: 6,
             slidesToScroll: 1,
             responsive: [
@@ -87,10 +100,129 @@ $(document).ready(function () {
             }
             ]
         });
+       
     }
 
-    
+    $( document ).ready(function() {
+        $('.date-items').slick({
+            infinite: true,
+            speed: 300,
+            arrows: true,
+            dots: false,
+            slidesToShow: 7,
+            slidesToScroll: 5,
+            autoplay: false,
+            autoplaySpeed: 5000,
+            rtl: false,
+            responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+            ]
+        });
+        
+        $('.booking-time').slick({
+            infinite: true,
+            speed: 300,
+            arrows: true,
+            dots: false,
+            slidesToShow: 4,
+            slidesToScroll: 3,
+            autoplay: false,
+            autoplaySpeed: 5000,
+            rtl: false,
+            responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+            ]
+        });
 
+        $('.hours-slot').slick({
+            infinite: true,
+            speed: 300,
+            arrows: true,
+            dots: false,
+            slidesToShow: 9,
+            slidesToScroll: 3,
+            autoplay: false,
+            autoplaySpeed: 5000,
+            rtl: false,
+            responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+            ]
+        });
+        
+        $('.materials-slide').slick({
+            infinite: true,
+            speed: 300,
+            arrows: true,
+            dots: false,
+            slidesToShow: 4,
+            slidesToScroll: 3,
+            autoplay: false,
+            autoplaySpeed: 5000,
+            rtl: false,
+            responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+            ]
+        });
+
+        
+    });
+       
+    $(document ).ready(function() {
+        $("#number").hide();
+        $("#add_btn").click(function(){
+            $("#number").show();
+            $(this).hide();
+        });
+    });
+    
     $("#dinein_tab").click(function () {
         var url = "dine_in";
         getHomePage("", "", url);
@@ -131,11 +263,13 @@ $(document).ready(function () {
                     if (path == '/') {
                         $(".slide-6").slick('destroy');
                         $(".product-4").slick('destroy');
+                        $(".product-5").slick('destroy');
                         if ($('.vendor-product').html() != '') {
                             $('.vendor-product').slick('destroy');
                         }
                         $(".slide-6").html('');
                         $(".product-4").html('');
+                        $(".product-5").html('');
                         $('.vendor-product').html('');
                         $("#new_products").html('');
                         $("#best_sellers").html('');

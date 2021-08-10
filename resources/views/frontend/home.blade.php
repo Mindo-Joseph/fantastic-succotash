@@ -15,7 +15,7 @@
     @include('layouts.store/left-sidebar')
 </header>
 <section class="p-0 small-slider">
-    <div class="slide-1 home-slider">
+    <div class="slide-1 home-slider"> 
         @foreach($banners as $banner)
         @php
         $url = '';
@@ -54,19 +54,15 @@
                     </a>
                 </div>
             </div>
-            <div class="product-detail">
+            <div class="product-detail inner_spacing">
                 <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                     <h6><%= vendor.name %></h6>
                 </a>
                 @if($client_preference_detail)
                     @if($client_preference_detail->rating_check == 1)
-                        <div class="custom_rating">
-                            <% if(vendor.vendorRating > 0) { %>
-                                <% _.each([1,2,3,4,5], function(value, k){ %>
-                                    <i class="fa fa-star<%= (k+1 <= vendor.vendorRating) ? ' filled' : '' %>"></i>
-                                <% }); %>
-                            <% } %>
-                        </div>
+                        <% if(vendor.vendorRating > 0){%>
+                            <span class="rating"><%= vendor.vendorRating %> <i class="fa fa-star text-white p-0"></i></span>
+                        <% } %>
                     @endif
                 @endif
             </div>
@@ -92,34 +88,31 @@
                 <div class="product-image">
                     <img src="<%= product.image_url %>" alt="">
                 </div>    
-                <div class="media-body align-self-center px-3">
-                    <div class="inner_spacing">
-                        <h3 class="d-flex align-items-center justify-content-between">
-                            <label class="mb-0"><%= product.title %></label> <span class="rating">4.2</span></h3>
+                <div class="media-body align-self-center">
+                    <div class="inner_spacing px-0">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h3 class="m-0"><%= product.title %></h3>
+                            @if($client_preference_detail)
+                                @if($client_preference_detail->rating_check == 1)
+                                    <% if(product.averageRating > 0){%>
+                                        <span class="rating"><%= product.averageRating %> <i class="fa fa-star text-white p-0"></i></span>
+                                    <% } %>
+                                @endif
+                            @endif
+                        </div>
                         <p><%= product.vendor_name %></p>
                         <h4>
                             <% if(product.inquiry_only == 0) { %>
                                 <%= product.price %>
                             <% } %>
                         </h4>
-                        @if($client_preference_detail)
-                            @if($client_preference_detail->rating_check == 1)
-                                <div class="custom_rating">
-                                    <% if(product.averageRating > 0) { %>
-                                        <% _.each([1,2,3,4,5], function(value, k){ %>
-                                            <i class="fa fa-star<%= (k+1 <= product.averageRating) ? ' filled' : '' %>"></i>
-                                        <% }); %>
-                                    <% } %>
-                                </div>
-                            @endif
-                        @endif
                     </div>
                 </div>
             </a>
         </div>
     <% }); %>
 </script>
-<section class="section-b-space p-t-0 pt-5 ratio_asos pb-0 d-none" id="our_vendor_main_div">
+<section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos d-none" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $homePageLabel)
         <div class="container" id="{{$homePageLabel->slug.'1'}}">
@@ -128,14 +121,18 @@
                     <div class="title1">
                         <!-- <h2 class="title-inner1 mb-0">{{ $homePageLabel->slug == 'vendors' ? getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2> -->
                     </div>
-                    @if($homePageLabel->slug == 'vendors')
+                    <!-- @if($homePageLabel->slug == 'vendors')
                     <a class="view_more_items" href="{{route('vendor.all')}}">{{__('View More')}}</a>
-                    @endif
+                    @endif -->
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
+                    @if($homePageLabel->slug == 'vendors')
+                    <div class="product-5 product-m no-arrow" id="{{$homePageLabel->slug}}"></div>
+                    @else
                     <div class="product-4 product-m no-arrow" id="{{$homePageLabel->slug}}"></div>
+                    @endif
                 </div>
             </div>
         </div>

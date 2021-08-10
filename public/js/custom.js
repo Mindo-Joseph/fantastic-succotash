@@ -329,6 +329,9 @@ $(document).ready(function() {
     });
     $(document).on("click","#order_palced_btn",function() {
         $('.alert-danger').html('');
+        if((typeof guest_cart != undefined) && (guest_cart == 1)){
+            window.location.href = login_url;
+        }
         $.ajax({
             data: {},
             type: "POST",
@@ -1059,6 +1062,7 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if(response.status == 'success'){
+                    $(".shake-effect").effect( "shake", {times:3}, 1200 );
                     cartHeader();
                 }else{
                     alert(response.message);
@@ -1071,22 +1075,31 @@ $(document).ready(function() {
             },
         });
     }
-    $(document).on('click', '.quantity-right-plus', function() {
+    $(document).delegate('.quantity-right-plus', 'click', function() {
         var quan = parseInt($('.quantity_count').val());
-        var str = $('#instock').html();
-        var res = parseInt(str.substring(10, str.length - 1));
-        if (quan > res) {
+        var str = $('#instock').val();
+        // var res = parseInt(str.substring(10, str.length - 1));
+        if (quan > str) {
             alert("Quantity is not available in stock");
-            $('.quantity_count').val(res)
+            $('.quantity_count').val(str);
+        }else{
+            var s =$(".qty-box .input-qty-number"),
+                i = parseInt(s.val(), 10);
+            isNaN(i) || s.val(i + 1);
         }
     });
-    $(document).on('change', '.quantity_count', function() {
+    $(document).delegate(".quantity-left-minus", "click", function () {
+        var s = $(".qty-box .input-qty-number"),
+            i = parseInt(s.val(), 10);
+        !isNaN(i) && i > 1 && s.val(i - 1);
+    });
+    $(document).delegate('.quantity_count', 'change', function() {
         var quan = $(this).val();
-        var str = $('#instock').html();
-        var res = parseInt(str.substring(10, str.length - 1));
-        if (quan > res) {
+        var str = $('#instock').val();
+        // var res = parseInt(str.substring(10, str.length - 1));
+        if (quan > str) {
             alert("Quantity is not available in stock");
-            $('.quantity_count').val(res)
+            $('.quantity_count').val(str);
         }
     });
 

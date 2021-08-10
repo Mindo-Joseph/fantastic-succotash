@@ -3,6 +3,7 @@
 use App\Http\Controllers\Front\SearchController;
 use App\Http\Controllers\Client\CMS\PageController;
 use App\Http\Controllers\Client\CMS\EmailController;
+use App\Http\Controllers\Client\CMS\NotificationController;
 use App\Http\Controllers\Client\SocialMediaController;
 use App\Http\Controllers\Client\DownloadFileController;
 use App\Http\Controllers\Client\ProductImportController;
@@ -41,9 +42,13 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::get('cms/emails', [EmailController::class, 'index'])->name('cms.emails');
     Route::get('cms/emails/{id}', [EmailController::class, 'show'])->name('cms.emails.show');
     Route::post('cms/emails/update', [EmailController::class, 'update'])->name('cms.emails.update');
+    Route::get('cms/notifications', [NotificationController::class, 'index'])->name('cms.notifications');
+    Route::get('cms/notifications/{id}', [NotificationController::class, 'show'])->name('cms.notifications.show');
+    Route::post('cms/notifications/update', [NotificationController::class, 'update'])->name('cms.notifications.update');
     Route::get('account/orders', [OrderController::class, 'index'])->name('account.orders');
     Route::get('account/promo-code', [PromoCodeController::class, 'index'])->name('account.promo.code');
-    Route::get('product/import', [ProductImportController::class, 'getProductImport'])->name('product.import');
+    Route::post('woocommerce/save', [ProductImportController::class, 'postWoocommerceDetail'])->name('woocommerce.save');
+    Route::post('product/import', [ProductImportController::class, 'getProductImportViaWoocommerce'])->name('product.import.woocommerce');
     Route::get('account/promo-code/filter', [PromoCodeController::class, 'filter'])->name('account.promo-code.filter');
     Route::get('account/promo-code/export', [PromoCodeController::class, 'export'])->name('account.promo-code.export');
     Route::get('social/media', [SocialMediaController::class, 'index'])->name('social.media.index');

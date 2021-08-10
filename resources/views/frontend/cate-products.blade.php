@@ -107,13 +107,9 @@
                                                     @endif
                                                     @if($client_preference_detail)
                                                         @if($client_preference_detail->rating_check == 1)  
-                                                        <div class="custom_rating">
                                                             @if($new['averageRating'] > 0)
-                                                                @for($i = 1; $i < 6; $i++)
-                                                                    <i class="fa fa-star{{ ($i <= $new['averageRating']) ? ' filled ' : '' }}"></i>
-                                                                @endfor
+                                                                <span class="rating">{{ $new['averageRating'] }} <i class="fa fa-star text-white p-0"></i></span>
                                                             @endif
-                                                        </div>
                                                         @endif
                                                     @endif
                                                 </div>
@@ -218,7 +214,7 @@
                                                     $imagePath2 = $data->media[$i]->image->path['proxy_url'].'300/300'.$data->media[$i]->image->path['image_path'];
                                                 } ?>
                                                 <div class="col-xl-3 col-6 col-grid-box">
-                                                    <div class="product-box scale-effect">
+                                                    <div class="product-box scale-effect mt-0">
                                                         <div class="img-wrapper">
                                                             <div class="front">
                                                                 <a href="{{route('productDetail', $data->url_slug)}}"><img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt=""></a>
@@ -233,13 +229,9 @@
                                                                     @endif
                                                                     @if($client_preference_detail)
                                                                         @if($client_preference_detail->rating_check == 1)  
-                                                                        <div class="custom_rating mt-0">
                                                                             @if($data->averageRating > 0)
-                                                                                @for($i = 1; $i < 6; $i++)
-                                                                                    <i class="fa fa-star{{ ($i <= $data->averageRating) ? ' filled ' : '' }}"></i>
-                                                                                @endfor
+                                                                                <span class="rating">{{ number_format($data->averageRating, 1, '.', '') }} <i class="fa fa-star text-white p-0"></i></span>
                                                                             @endif
-                                                                        </div>
                                                                         @endif
                                                                     @endif
                                                                 </a>

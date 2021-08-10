@@ -11,8 +11,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     @include('layouts.store/topbar-guest')
   @endif
         <div class="container main-menu d-block">
-            <div class="row align-items-center py-2 position-initial">
-                <div class="col-lg-1 col-2">
+            <div class="row align-items-center py-md-2 position-initial">
+                <div class="col-lg-1 col-3">
                     <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                 </div>
                 <div class="col-lg-4 main-menu d-block order-lg-1 order-2">
@@ -31,7 +31,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             @endif
                         @endif
                         @if($mod_count > 1)
-                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mt-2 mt-lg-0 vendor_mods" id="top-tab" role="tablist">
+                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mb-2 mb-lg-0 vendor_mods" id="top-tab" role="tablist">
                                 @if($client_preference_detail->delivery_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
                                     <a class="nav-link {{$mod_count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
@@ -52,7 +52,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif 
                     </div>
                 </div>
-                <div class="col-lg-7 col-10 order-lg-2 order-1 position-initial">                
+                <div class="col-lg-7 col-9 order-lg-2 order-1 position-initial">                
                     <div class="search_bar menu-right d-flex align-items-center justify-content-end justify-content-lg-between w-100 ">
                         <div class="radius-bar">
                             <div class="search_form d-flex align-items-center justify-content-between">
@@ -89,10 +89,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                             </form>
                             <ul>
-                                <li class="onhover-div pl-0 d-sm-inline-block d-none">
+                                <li class="onhover-div pl-0 shake-effect">
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->cart_enable == 1)
-                                            <a class="btn btn-solid" href="{{route('showCart')}}">
+                                            <a class="btn btn-solid " href="{{route('showCart')}}">
                                                 <i class="fa fa-shopping-cart mr-1 " aria-hidden="true"></i> <span>{{__('Cart')}} •</span> <span id="cart_qty_span"></span> 
                                             </a>
                                         @endif
@@ -103,7 +103,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
                                                 <a class='media' href='<%= show_cart_url %>'>
                                                     <% if(vendor_product.pvariant.media_one) { %>
-                                                        <img class='mr-2' src="<%= vendor_product.pvariant.media_one.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.image.path.image_path %>">
+                                                        <img class='mr-2' src="<%= vendor_product.pvariant.media_one.pimage.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.pimage.image.path.image_path %>">
                                                     <% }else{ %>
                                                         <img class='mr-2' src="<%= vendor_product.pvariant.media_second.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_second.image.path.image_path %>">
                                                     <% } %>
@@ -125,7 +125,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
                                         <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('View Cart')}}</a>
                                     </script>
-                                    <ul class="show-div shopping-cart" id="header_cart_main_ul"></ul>
+                                    <ul class="show-div shopping-cart " id="header_cart_main_ul"></ul>
                                 </li>
                                 <li class="d-inline-block d-lg-none"><div class="toggle-nav p-0 d-inline-block"><i class="fa fa-bars sidebar-bar"></i></div></li>
                             </ul>

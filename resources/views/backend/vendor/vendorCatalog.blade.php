@@ -23,6 +23,57 @@
         -moz-transform: translateY(-50%);
         transform: translateY(-50%);
     }
+    .button {
+      position: relative;
+      padding: 8px 16px;
+      background: #009579;
+      border: none;
+      outline: none;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    .button:active {
+      background: #007a63;
+    }
+
+    .button__text {
+      font: bold 20px "Quicksand", san-serif;
+      color: #ffffff;
+      transition: all 0.2s;
+    }
+
+    .button--loading .button__text {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    .button--loading::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      border: 4px solid transparent;
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: button-loading-spinner 1s ease infinite;
+    }
+
+    @keyframes button-loading-spinner {
+      from {
+        transform: rotate(0turn);
+      }
+
+      to {
+        transform: rotate(1turn);
+      }
+    }
+
 </style>
 @endsection
 
@@ -230,7 +281,7 @@
                                     <div class="form-group" id="skuInput">
                                         {!! Form::label('title', 'SKU (Allowed Keys -> a-z,A-Z,0-9,-,_)',['class' => 'control-label']) !!}
                                         <span class="text-danger">*</span>
-                                        {!! Form::text('sku', null, ['class'=>'form-control','id' => 'sku', 'onkeypress' => 'return alplaNumeric(event)','onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
+                                        {!! Form::text('sku', null, ['class'=>'form-control','id' => 'sku', 'onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
                                         <span class="invalid-feedback" role="alert">
                                             <strong></strong>
                                         </span>
@@ -283,17 +334,38 @@
                 <h4 class="modal-title">Add Product</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <form method="post" enctype="multipart/form-data" id="save_imported_products">
-                @csrf
+            
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
-                        </div>
-                        <div class="col-md-12">
-                            <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />
-                            <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
-                            <p class="text-muted text-center mt-2 mb-0">Upload CSV File</p>
+                            <div class="row align-items-center mb-3">
+                                <div class="col-md-4">
+                                    <form method="post" enctype="multipart/form-data" id="save_imported_products">
+                                        @csrf
+                                        <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
+                                        <input type="hidden" value="{{$vendor->id}}" name="vendor_id" />
+                                        <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
+                                    </form>
+                                </div>
+                                <div class="col-md-8">
+                                    <form id="woocommerces_form">
+                                        <div class="form-group">
+                                            <input class="form-control" type="url" name="domain_name" placeholder="Domain Name" value="{{$woocommerce_detail ? $woocommerce_detail->url : ''}}">
+                                             <span class="text-danger" id="domain_name_error"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="consumer_key" placeholder="Consumer Key" value="{{$woocommerce_detail ? $woocommerce_detail->consumer_key : ''}}">
+                                             <span class="text-danger" id="consumer_key_error"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="consumer_secret" placeholder="Consumer Secret" value="{{$woocommerce_detail ? $woocommerce_detail->consumer_secret : ''}}">
+                                             <span class="text-danger" id="consumer_secret_error"></span>
+                                        </div>
+                                        <button class="btn btn-info button" id="save_woocommerce_btn" type="button" onclick="this.classList.toggle('button--loading')">Save</button>
+                                        <button class="btn btn-info button" id="import_product_from_woocomerce" data-vendor="{{$vendor->id}}" onclick="this.classList.toggle('button--loading')">Import Products From Woocommerce</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-12">
                             <table class="table table-centered table-nowrap table-striped" id="">
@@ -338,7 +410,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            
         </div>
     </div>
 </div>
@@ -354,25 +426,93 @@
         });
     });
     var regexp = /^[a-zA-Z0-9-_]+$/;
-    function alplaNumeric(evt) {
-        var charCode = String.fromCharCode(event.which || event.keyCode);
-        if (!regexp.test(charCode)) {
-            return false;
-        }
+    function alplaNumeric() {
         var n1 = $('#sku').val();
-        $('#url_slug').val(n1+charCode)
-        slugify(evt);
-        return true;
+        if(regexp.test(n1)){
+            var n1 = $('#sku').val();
+            $('#url_slug').val(n1);
+            slugify();
+        }
+        else{
+            $('#sku').val(n1.split(' ').join(''));
+        }
+        // var charCode = String.fromCharCode(event.which || event.keyCode);
+        // if (!regexp.test(charCode)) {
+        //     console.log(">>>ne");
+        //     return false;
+        // }
+        // console.log(">>>ne2");
+        // var n1 = $('#sku').val();
+        // $('#url_slug').val(n1+charCode)
+        
+        // return true;
     }
-    function slugify(evt) {
-      var charCode = String.fromCharCode(event.which || event.keyCode);
-      if (!regexp.test(charCode)) {
-        return false;
-      }
+    function slugify() {
+    //   var charCode = String.fromCharCode(event.which || event.keyCode);
+    //   if (!regexp.test(charCode)) {
+    //     return false;
+    //   }
       var string = $('#url_slug').val();
       var slug = string.toString().trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
       $('#url_slug').val(slug);
     }
+    $(document).on('click', '#save_woocommerce_btn', function(e) {
+        var that = $(this);
+        $('.text-danger').html('');
+        that.attr('disabled', true);
+        $('#import_product_from_woocomerce').attr('disabled', true);
+        var form = document.getElementById('woocommerces_form');
+        var formData = new FormData(form);
+        $.ajax({
+            type: "post",
+            url: "{{route('woocommerce.save')}}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                that.attr('disabled', false);
+                that.removeClass('button--loading');
+                $('#import_product_from_woocomerce').attr('disabled', false);
+                if (response.status == 'success') {
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                }else{
+                    $.NotificationApp.send("Error", response.message, "top-right", "#FF0000", "error");
+                }
+            },
+            error:function(error){
+                that.attr('disabled', false);
+                that.removeClass('button--loading');
+                $('#import_product_from_woocomerce').attr('disabled', false);
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.errors;
+                $.each(error_messages, function(key, error_message) {
+                    $('#'+key+'_error').html(error_message[0]).show();
+                });
+            }
+        });
+    });
+    $(document).on('click', '#import_product_from_woocomerce', function(e) {
+        var that = $(this);
+        $('#save_woocommerce_btn').attr('disabled', true);
+        that.attr('disabled', true);
+        var vendor_id = $(this).data('vendor');
+        $.ajax({
+            type: "POST",
+            data: {vendor_id:vendor_id},
+            url: "{{route('product.import.woocommerce')}}",
+            dataType: 'json',
+            success: function(response) {
+                that.attr('disabled', false);
+                that.removeClass('button--loading');
+                $('#save_woocommerce_btn').attr('disabled', false);
+                if (response.status == 'success') {
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                }else{
+                    $.NotificationApp.send("Error", response.message, "top-right", "#FF0000", "error");
+                }
+            }
+        });
+    });
     $(document).on('click', '.submitProduct', function(e) {
         var form = document.getElementById('save_product_form');
         var formData = new FormData(form);

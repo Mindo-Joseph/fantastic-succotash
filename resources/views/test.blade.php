@@ -2,8 +2,667 @@
 @section('content')
 
 
+    <section class="home-serivces">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md-8 offset-md-2">
+                    <div class="step-indicator">
+                        <div class="step step1 active">
+                            <div class="step-icon">1</div>
+                            <p>Service Details</p>
+                        </div>
+                        <div class="indicator-line active"></div>
+                        <div class="step step2">
+                            <div class="step-icon">2</div>
+                            <p>Date & Time</p>
+                        </div>
+                        <div class="indicator-line"></div>
+                        <div class="step step3">
+                            <div class="step-icon">3</div>
+                            <p>Payment</p>
+                        </div>
+                    </div>
 
-    <section class="cab-booking pt-0">
+                    <div class="row mt-4">
+
+                        <div class="col-md-8">
+                            <div class="card-box">
+                                <ul>
+                                    <li><a class="btn btn-solid" href="#">Individual</a></li>
+                                    <li><a class="btn btn-solid" href="#">Group</a></li>
+                                </ul>
+                                
+                                <div class="service-data-wrapper mb-5">
+                                   
+                                    <div class="service-data mt-4">
+                                        <h4><b>Apartment</b></h4>
+                                        <div class="service-img mb-3">
+                                            <img class="img-fluid" src="https://d222mnpmkyzhbp.cloudfront.net/prod/assets/images/attribute-categories/15925783568.jpg" alt="">
+                                        </div>
+
+                                        <div class="row classes_wrapper no-gutters" href="#">                                       
+                                            <div class="col-md-9 col-sm-8 pr-md-2">
+                                                <h5 class="mb-1"><b>Studio Apartment</b></h5>
+                                                <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <h5 class="my-sm-0 my-3">$30.00</h5>
+                                                    <a id="add_btn" class="btn btn-solid" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
+                                                    
+                                                    <div class="number" id="number">
+                                                        <span class="minus qty-minus">
+                                                            <i class="fa fa-minus" aria-hidden="true"></i>
+                                                        </span>
+                                                        <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="" class="input-number" step="0.01" id="">
+                                                        <span class="plus qty-plus" data-id="" data-base_price="">
+                                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        </span>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
+                                                <div class="class_img">
+                                                    <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row classes_wrapper no-gutters" href="#">                                       
+                                            <div class="col-md-9 col-sm-8 pr-md-2">
+                                                <h5 class="mb-1"><b>Studio Apartment</b></h5>
+                                                <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <h5 class="my-sm-0 my-3">$30.00</h5>
+                                                    <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
+                                                <div class="class_img">
+                                                    <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row classes_wrapper no-gutters" href="#">                                       
+                                            <div class="col-md-9 col-sm-8 pr-md-2">
+                                                <h5 class="mb-1"><b>Studio Apartment</b></h5>
+                                                <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <h5 class="my-sm-0 my-3">$30.00</h5>
+                                                    <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
+                                                <div class="class_img">
+                                                    <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="service-data mt-4">
+                                        <h4><b>Group</b></h4>
+                                        <div class="service-img mb-3">
+                                            <img class="img-fluid" src="https://d222mnpmkyzhbp.cloudfront.net/prod/assets/images/attribute-categories/15925783568.jpg" alt="">
+                                        </div>
+
+                                        <div class="row classes_wrapper no-gutters" href="#">                                       
+                                            <div class="col-md-9 col-sm-8 pr-md-2">
+                                                <h5 class="mb-1"><b>Studio Apartment</b></h5>
+                                                <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <h5 class="my-sm-0 my-3">$30.00</h5>
+                                                    <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
+                                                <div class="class_img">
+                                                    <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row classes_wrapper no-gutters" href="#">                                       
+                                            <div class="col-md-9 col-sm-8 pr-md-2">
+                                                <h5 class="mb-1"><b>Studio Apartment</b></h5>
+                                                <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <h5 class="my-sm-0 my-3">$30.00</h5>
+                                                    <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
+                                                <div class="class_img">
+                                                    <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row classes_wrapper no-gutters" href="#">                                       
+                                            <div class="col-md-9 col-sm-8 pr-md-2">
+                                                <h5 class="mb-1"><b>Studio Apartment</b></h5>
+                                                <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <h5 class="my-sm-0 my-3">$30.00</h5>
+                                                    <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
+                                                <div class="class_img">
+                                                    <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Step Two Html -->
+                                <h4 class="mb-2"><b>When would you like your service?</b></h4>
+                                <div class="date-items radio-btns">
+                                    <div>
+                                        <div class="radios">
+                                            <p>Mon</p>
+                                            <input type="radio" value='1' name='date-time' id='radio1'/>
+                                            <label for='radio1'>
+                                                <span class="customCheckbox" aria-hidden="true">9</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <p>Tus</p>
+                                            <input type="radio" value='1' name='date-time' id='radio2'/>
+                                            <label for='radio2'><span class="customCheckbox" aria-hidden="true">10</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <p>Wed</p>
+                                            <input type="radio" value='1' name='date-time' id='radio3'/>
+                                            <label for='radio3'><span class="customCheckbox" aria-hidden="true">11</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <p>Thu</p>
+                                            <input type="radio" value='1' name='date-time' id='radio4'/>
+                                            <label for='radio4'><span class="customCheckbox" aria-hidden="true">12</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <p>Fri</p>
+                                            <input type="radio" value='1' name='date-time' id='radio5'/>
+                                            <label for='radio5'><span class="customCheckbox" aria-hidden="true">13</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <p>Sat</p>
+                                            <input type="radio" value='1' name='date-time' id='radio6'/>
+                                            <label for='radio6'><span class="customCheckbox" aria-hidden="true">14</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <p>Sun</p>
+                                            <input type="radio" value='1' name='date-time' id='radio8'/>
+                                            <label for='radio8'><span class="customCheckbox" aria-hidden="true">15</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <p>Sun</p>
+                                            <input type="radio" value='1' name='date-time' id='radio9'/>
+                                            <label for='radio9'><span class="customCheckbox" aria-hidden="true">15</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <p>Sun</p>
+                                            <input type="radio" value='1' name='date-time' id='radio10'/>
+                                            <label for='radio10'><span class="customCheckbox" aria-hidden="true">15</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="booking-time-wrapper">
+                                    <h4 class="mt-4 mb-2"><b>When would you like your service?</b></h4>
+                                    <div class="booking-time radio-btns long-radio">
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='booking-radio' id='time1'/>
+                                                <label for='time1'><span class="customCheckbox" aria-hidden="true">09:00 - 10:00</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='booking-radio' id='time2'/>
+                                                <label for='time2'><span class="customCheckbox" aria-hidden="true">10:00 - 11:00</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='booking-radio' id='time3'/>
+                                                <label for='time3'><span class="customCheckbox" aria-hidden="true">11:00 - 12:00</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='booking-radio' id='time4'/>
+                                                <label for='time4'><span class="customCheckbox" aria-hidden="true">12:00 - 01:00</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='booking-radio' id='time5'/>
+                                                <label for='time5'><span class="customCheckbox" aria-hidden="true">02:00 - 03:00</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='booking-radio' id='time6'/>
+                                                <label for='time6'><span class="customCheckbox" aria-hidden="true">04:00 - 05:00</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='booking-radio' id='time7'/>
+                                                <label for='time7'><span class="customCheckbox" aria-hidden="true">05:00 - 06:00</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <P>Your service will start between 09:00-10:00</P>
+                                </div>
+
+                                <div class="booking-time-wrapper">
+                                    <h4 class="mt-4 mb-2"><b>When would you like your service?</b></h4>
+                                    <textarea class="form-control" name="" id="" cols="30" rows="7"></textarea>
+                                </div>
+
+
+                                <!-- Step Three Start From Here -->
+                                <div class="step-three">
+                                    <h4 class="mt-4 mb-2"><b>How many hours do you need your professional to stay? <i class="fa fa-info-circle" aria-hidden="true"></i></b></h4>
+                                    <div class="hours-slot radio-btns">
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='hours-radio' id='h-1'/>
+                                                <label for='h-1'><span class="customCheckbox" aria-hidden="true">1</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='hours-radio' id='h-2'/>
+                                                <label for='h-2'><span class="customCheckbox" aria-hidden="true">2</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='hours-radio' id='h-3'/>
+                                                <label for='h-3'><span class="customCheckbox" aria-hidden="true">3</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='hours-radio' id='h-4'/>
+                                                <label for='h-4'><span class="customCheckbox" aria-hidden="true">4</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='hours-radio' id='h-5'/>
+                                                <label for='h-5'><span class="customCheckbox" aria-hidden="true">5</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='hours-radio' id='h-6'/>
+                                                <label for='h-6'><span class="customCheckbox" aria-hidden="true">6</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='hours-radio' id='h-7'/>
+                                                <label for='h-7'><span class="customCheckbox" aria-hidden="true">7</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h4 class="mt-4 mb-2"><b>How many professionals do you need?</b></h4>
+                                    <div class="hours-slot radio-btns">
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='pro-radio' id='p-1'/>
+                                                <label for='p-1'><span class="customCheckbox" aria-hidden="true">1</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='pro-radio' id='p-2'/>
+                                                <label for='p-2'><span class="customCheckbox" aria-hidden="true">2</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='pro-radio' id='p-3'/>
+                                                <label for='p-3'><span class="customCheckbox" aria-hidden="true">3</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='pro-radio' id='p-4'/>
+                                                <label for='p-4'><span class="customCheckbox" aria-hidden="true">4</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h4 class="mt-4 mb-2"><b>Do you require cleaning materials? <i class="fa fa-info-circle" aria-hidden="true"></i></b></h4>
+                                    <div class="materials-slide radio-btns long-radio">
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='materials-radio' id='mat1'/>
+                                                <label for='mat1'><span class="customCheckbox" aria-hidden="true">No, I have them</span></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='1' name='materials-radio' id='mat2'/>
+                                                <label for='mat2'><span class="customCheckbox" aria-hidden="true">Yes, please</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="booking-time-wrapper">
+                                    <h4 class="mt-4 mb-2"><b>When would you like your service?</b> </h4>
+                                    <textarea class="form-control" name="" id="" cols="30" rows="7"></textarea>
+                                </div>
+
+                                <hr>
+                                <div class="card-footer bg-transparent px-0">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <a href="#"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+                                        <button class="btn btn-solid">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card-box p-2">
+                                <div class="product-order">
+                                    <div class="total-sec border-0 py-0 my-0">
+                                        <h5 class="d-flex align-items-center justify-content-between pb-2 border-bottom"><b>City</b><b>Dubai</b></h5>
+                                    </div>
+                                    <div class="total-sec border-0 py-0 my-0">
+                                        <h5 class="d-flex align-items-center justify-content-between pb-2 border-bottom"><b>Service</b></h5>
+                                        <ul>
+                                            <li>Tax <span>$0.00</span></li>
+                                            <li>Delivery Fee <span>$53.66</span></li>
+                                            <li>Tip Amount <span>$14.91</span></li>
+                                            <li>Loyalty Amount <span>$3,831.37</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="final-total mt-3">
+                                        <h3>Total <span>$313.20</span></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <section class="cab-booking pt-0 d-none">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4850.865733603189!2d76.82393041076074!3d30.716149768967526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1627015845978!5m2!1sen!2sin" width="100%" height="100vh" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        <div class="booking-experience ds bc">
+            <form class="address-form">
+                <div class="location-box d-none">
+                    <ul class="location-inputs position-relative pl-2">
+                        <li class="d-block mb-3 dots">
+                            <input class="form-control pickup-text" type="text" placeholder="From CH Devi Lal Centre of Learning" />
+                            <i class="fa fa-times ml-1" aria-hidden="true"></i>
+                        </li>
+                        <li class="d-block mb-3 dots">
+                            <input class="form-control pickup-text" type="text" placeholder="To Sector 14" />
+                            <i class="fa fa-times ml-1" aria-hidden="true"></i>
+                        </li>
+                    </ul>
+                    <a class="add-more-location position-relative pl-2" href="javascript:void(0)">Add Destination</a>
+                </div>
+
+                <div class="location-list style-4 d-none">
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14 first</b></h4>
+                        <p class="ellips mb-0">Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">BEL Colony, Sector 14, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">BEL Colony, Sector 14, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Sector 14</b></h4>
+                        <p class="ellips mb-0">BEL Colony, Sector 14, Panchkula, Haryana, India</p>
+                    </a>
+                    <a class="search-location-result position-relative d-block" href="#">
+                        <h4 class="mt-0 mb-1"><b>Haryana General Store last</b></h4>
+                        <p class="ellips mb-0">Sector 14, BEL Colony, Budanpur, Panchkula, Haryana, India</p>
+                    </a>
+                </div>
+                
+                <div class="cab-button d-none align-items-center py-2">
+                    <a class="btn btn-solid ml-2" href="#">uber</a>
+                    <a class="btn btn-solid ml-2" href="#">ola</a>
+                </div>
+                
+                <div class="vehical-container style-4 d-none">
+                    <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
+                        <div class="col-3 vehicle-icon">
+                            <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png" class="j0 i2">
+                        </div>
+                        <div class="col-9">
+                            <div class="row no-gutters">
+                                <div class="col-8 vehicle-details">
+                                    <h4 class="m-0"><b>Go Intercity</b></h4>
+                                    <p class="station-rides ellips">Affordable outstation rides</p>
+                                    <p class="waiting-time m-0"><span class="mr-1">In 2 mins.</span><span>03:04 pm</span></p>
+                                </div>
+                                <div class="col-4 ride-price pl-2">
+                                    <p class="mb-0"><b>₹2,634.37</b></p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <hr class="m-0">
+                    <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
+                        <div class="col-3 vehicle-icon">
+                            <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png" class="j0 i2">
+                        </div>
+                        <div class="col-9">
+                            <div class="row no-gutters">
+                                <div class="col-8 vehicle-details">
+                                    <h4 class="m-0"><b>Go Intercity</b></h4>
+                                    <p class="station-rides ellips">Affordable outstation rides</p>
+                                    <p class="waiting-time m-0"><span class="mr-1">In 2 mins.</span><span>03:04 pm</span></p>
+                                </div>
+                                <div class="col-4 ride-price pl-2">
+                                    <p class="mb-0"><b>₹2,634.37</b></p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <hr class="m-0">
+                    <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
+                        <div class="col-3 vehicle-icon">
+                            <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png" class="j0 i2">
+                        </div>
+                        <div class="col-9">
+                            <div class="row no-gutters">
+                                <div class="col-8 vehicle-details">
+                                    <h4 class="m-0"><b>Go Intercity</b></h4>
+                                    <p class="station-rides ellips">Affordable outstation rides</p>
+                                    <p class="waiting-time m-0"><span class="mr-1">In 2 mins.</span><span>03:04 pm</span></p>
+                                </div>
+                                <div class="col-4 ride-price pl-2">
+                                    <p class="mb-0"><b>₹2,634.37</b></p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <hr class="m-0">
+                    <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
+                        <div class="col-3 vehicle-icon">
+                            <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png" class="j0 i2">
+                        </div>
+                        <div class="col-9">
+                            <div class="row no-gutters">
+                                <div class="col-8 vehicle-details">
+                                    <h4 class="m-0"><b>Go Intercity</b></h4>
+                                    <p class="station-rides ellips">Affordable outstation rides</p>
+                                    <p class="waiting-time m-0"><span class="mr-1">In 2 mins.</span><span>03:04 pm</span></p>
+                                </div>
+                                <div class="col-4 ride-price pl-2">
+                                    <p class="mb-0"><b>₹2,634.37</b></p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <hr class="m-0">
+                    <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
+                        <div class="col-3 vehicle-icon">
+                            <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png" class="j0 i2">
+                        </div>
+                        <div class="col-9">
+                            <div class="row no-gutters">
+                                <div class="col-8 vehicle-details">
+                                    <h4 class="m-0"><b>Go Intercity</b></h4>
+                                    <p class="station-rides ellips">Affordable outstation rides</p>
+                                    <p class="waiting-time m-0"><span class="mr-1">In 2 mins.</span><span>03:04 pm</span></p>
+                                </div>
+                                <div class="col-4 ride-price pl-2">
+                                    <p class="mb-0"><b>₹2,634.37</b></p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <hr class="m-0">
+                    <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
+                        <div class="col-3 vehicle-icon">
+                            <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png" class="j0 i2">
+                        </div>
+                        <div class="col-9">
+                            <div class="row no-gutters">
+                                <div class="col-8 vehicle-details">
+                                    <h4 class="m-0"><b>Go Intercity</b></h4>
+                                    <p class="station-rides ellips">Affordable outstation rides</p>
+                                    <p class="waiting-time m-0"><span class="mr-1">In 2 mins.</span><span>03:04 pm</span></p>
+                                </div>
+                                <div class="col-4 ride-price pl-2">
+                                    <p class="mb-0"><b>₹2,634.37</b></p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <hr class="m-0">
+                    <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
+                        <div class="col-3 vehicle-icon">
+                            <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png" class="j0 i2">
+                        </div>
+                        <div class="col-9">
+                            <div class="row no-gutters">
+                                <div class="col-8 vehicle-details">
+                                    <h4 class="m-0"><b>Go Intercity</b></h4>
+                                    <p class="station-rides ellips">Affordable outstation rides</p>
+                                    <p class="waiting-time m-0"><span class="mr-1">In 2 mins.</span><span>03:04 pm</span></p>
+                                </div>
+                                <div class="col-4 ride-price pl-2">
+                                    <p class="mb-0"><b>₹2,634.37</b></p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="cab-detail-box style-4">
+                    <div class="cab-outer style-4">
+                        <div class="bg-white p-2">
+                            <a href="#">✕</a>
+                            <div class="w-100 h-100">
+                                <img src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/IntercityXL.png" alt="">
+                            </div>
+                            <div class="cab-location-details">
+                                <h4 class="d-flex align-items-center justify-content-between"><b>XL Intercity</b> <b>₹3,206.50</b></h4>
+                                <p class="mb-0">In 3 mins.</p>
+                                <p class="mb-0">4 Seats.</p>
+                                <p> Outstation rides in spacious SUVs</p>
+                            </div>
+                        </div>
+                        <div class="cab-amount-details px-2">
+                            <div class="row">
+                                <div class="col-6 mb-2">Distance</div>
+                                <div class="col-6 mb-2 text-right">20.25 kms</div>
+                                <div class="col-6 mb-2">Duration</div>
+                                <div class="col-6 mb-2 text-right">10.25 mins</div>
+                                <div class="col-6 mb-2">Delivery fee</div>
+                                <div class="col-6 mb-2 text-right">$114.02</div>
+                                <div class="col-6 mb-2">Loyalty</div>
+                                <div class="col-6 mb-2 text-right">-$102.95</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="payment-promo-container p-2">
+                        <h4 class="d-flex align-items-center justify-content-between mb-2"><span><i class="fa fa-money" aria-hidden="true"></i> Cash</span> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
+                        <button class="btn btn-solid w-100">Request XL Intercity</button>
+                    </div>                
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+
+    <!-- <section class="cab-booking pt-0">
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4850.865733603189!2d76.82393041076074!3d30.716149768967526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1627015845978!5m2!1sen!2sin" width="100%" height="100vh" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         <div class="booking-experience ds bc">
             <form class="address-form">
@@ -424,10 +1083,10 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>   -->
 
     <!-- Vendor Sign Up Form -->
-    <section class="vendor-signup">
+    <!-- <section class="vendor-signup">
         <div class="container">
 
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
@@ -567,10 +1226,10 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- Order Return Page -->
-    <section class="return-page">
+    <!-- <section class="return-page">
         <div class="container">
             <h2 >Choose items to return</h2>
             <form class="" action="">
@@ -627,10 +1286,10 @@
                 <button class="btn btn-solid mt-3 ">Request</button>
             </form>
         </div>
-    </section>
+    </section> -->
 
     <!-- Return List Page -->
-    <section class="return-list-page">
+    <!-- <section class="return-list-page">
         <div class="container">
             <h2></h2>
             <div class="row">
@@ -727,7 +1386,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -746,7 +1405,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/pYuRTyCq1V0zAdMX5kakYkWKmO81TEkyprg4Cqgp.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -765,7 +1424,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -784,7 +1443,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/IDGuBlBZ0JaFok1JCLntxzDvDZqBE86Nu28zcCh9.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -803,7 +1462,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/WXBAjSXzudaQeoEfXtEaOgVqtCetzGexwmLbWFNX.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -822,7 +1481,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -841,7 +1500,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/WXBAjSXzudaQeoEfXtEaOgVqtCetzGexwmLbWFNX.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -861,7 +1520,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -881,7 +1540,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/pYuRTyCq1V0zAdMX5kakYkWKmO81TEkyprg4Cqgp.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -900,7 +1559,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -919,7 +1578,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/IDGuBlBZ0JaFok1JCLntxzDvDZqBE86Nu28zcCh9.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -938,7 +1597,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -957,7 +1616,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -976,7 +1635,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/pYuRTyCq1V0zAdMX5kakYkWKmO81TEkyprg4Cqgp.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -995,7 +1654,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/NVtOSeR3oh8PW8JPOMCHj4uIQuHUR49M5xqSQMoU.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -1014,7 +1673,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/IDGuBlBZ0JaFok1JCLntxzDvDZqBE86Nu28zcCh9.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -1033,7 +1692,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/WXBAjSXzudaQeoEfXtEaOgVqtCetzGexwmLbWFNX.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -1052,7 +1711,7 @@
                                 <div class="product-image p-0 mb-2">
                                     <img src="https://imgproxy.royoorders.com/insecure/fill/300/300/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/HGutDcpC4i8tMidJ7lIgiVosqPorYZ73GKOrZMU2.jpg" alt="">
                                 </div>    
-                                <div class="media-body align-self-center px-3">
+                                <div class="media-body align-self-center">
                                     <div class="inner_spacing">
                                         <h3>Pizza</h3>
                                         <p>DeliveryZone</p>
@@ -1232,11 +1891,11 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
             <div class="modal-header border-bottom">
@@ -1288,7 +1947,7 @@
             </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
 
@@ -1309,6 +1968,10 @@
 
     <script src="{{asset('assets/js/pages/form-pickers.init.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+    
+    <script type="text/javascript">
+        
+    </script>
 
     <script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -1341,10 +2004,10 @@
     var banner = document.getElementById('banner');
     banner.src = URL.createObjectURL(event.target.files[0]);
    };
+
+  
     </script>
 
-    <script>
-        
-    </script>
+   
     
 @endsection

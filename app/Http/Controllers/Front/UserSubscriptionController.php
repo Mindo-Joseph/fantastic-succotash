@@ -119,9 +119,11 @@ class UserSubscriptionController extends FrontController
      */
     public function checkActiveSubscription(Request $request, $domain = '', $slug = '')
     {
+        $now = Carbon::now()->toDateString();
         $userActiveSubscription = SubscriptionInvoicesUser::with(['plan'])
                                 ->whereNull('cancelled_at')
                                 ->where('user_id', Auth::user()->id)
+                                ->where('end_date', '>=', $now )
                                 ->orderBy('end_date', 'desc')->first();
         if( ($userActiveSubscription) && ($userActiveSubscription->plan->slug != $slug) ){
             return $this->errorResponse(__('You cannot buy two subscriptions at the same time'), 402);

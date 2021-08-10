@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Front;
+
+use DB;
 use Auth;
 use Session;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category};
 class ProductController extends FrontController{
@@ -166,43 +167,89 @@ class ProductController extends FrontController{
     public function getVariantData(Request $request, $domain = '', $sku){
         $product = Product::select('id')->where('sku', $sku)->firstOrFail();
         $pv_ids = array();
+        $product_variant = '';
         if ($request->has('options') && !empty($request->options)) {
             foreach ($request->options as $key => $value) {
-                $newIds = array();
-                $product_variant = ProductVariantSet::where('variant_type_id', $request->variants[$key])
-                    ->where('variant_option_id', $request->options[$key]);
+                // $newIds = array();
+                // $product_variant = ProductVariantSet::where('variant_type_id', $request->variants[$key])
+                //     ->where('variant_option_id', $request->options[$key]);
 
-                if (!empty($pv_ids)) {
-                    $product_variant = $product_variant->whereIn('product_variant_id', $pv_ids);
-                }
-                $product_variant = $product_variant->where('product_id', $product->id)->get();
+                // if (!empty($pv_ids)) {
+                //     $product_variant = $product_variant->whereIn('product_variant_id', $pv_ids);
+                // }
+                // $product_variant = $product_variant->where('product_id', $product->id)->get();
+                // if ($product_variant) {
+                //     foreach ($product_variant as $key => $value) {
+                //         if(!in_array($value->product_variant_id, $pv_ids)){
+                //             $pv_ids[] = $value->product_variant_id;
+                //         }
+                //     }
+                // }
+                // $pv_ids = $newIds;
 
                 if ($product_variant) {
-                    foreach ($product_variant as $key => $value) {
-                        $newIds[] = $value->product_variant_id;
+                    $pv_ids = array();
+                    foreach ($product_variant as $k => $variant) {
+                        if($request->options[$key]){
+                            $variantSet = ProductVariantSet::where('variant_type_id', $request->variants[$key])
+                            ->where('variant_option_id', $request->options[$key])
+                            ->where('product_variant_id', $variant->product_variant_id)->first();
+                            if($variantSet){
+                                if(!in_array($variantSet->product_variant_id, $pv_ids)){
+                                    $pv_ids[] = $variantSet->product_variant_id;
+                                }
+                            }
+                        }
                     }
                 }
-                $pv_ids = $newIds;
-            }
-        }
-        $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
-        $variantData = ProductVariant::select('id', 'sku', 'quantity', 'price',  'barcode', 'product_id')
-            ->where('id', $pv_ids[0])->first();
-        if ($variantData) {
-            $variantData->productPrice = Session::get('currencySymbol') . $variantData->price * $clientCurrency->doller_compare;
-            $availableSet = ProductVariantSet::where('product_id', $product->id)->get();
-            $sets = array();
-            foreach($availableSet->groupBy('product_variant_id') as $avSets){
-                $variant_type_id = array();
-                $variant_option_id = array();
-                foreach($avSets as $avSet){
-                    $variant_type_id[] = $avSet->variant_type_id;
-                    $variant_option_id[] = $avSet->variant_option_id;
+                else{
+                    $product_variant = ProductVariantSet::where('variant_type_id', $request->variants[$key])
+                    ->where('variant_option_id', $request->options[$key])->where('product_id', $product->id)->get();
+                    if($product_variant){
+                        foreach ($product_variant as $k => $variant) {
+                            if(!in_array($variant->product_variant_id, $pv_ids)){
+                                $pv_ids[] = $variant->product_variant_id;
+                            }
+                        }
+                    }
                 }
-                $sets[] = ['variant_types' => $variant_type_id, 'variant_options' => $variant_option_id];
             }
-            return response()->json(array('success' => true, 'result' => $variantData->toArray(), 'set' => $sets));
         }
-        return response()->json(array('error' => true, 'result' => NULL));
+        // dd($pv_ids);
+        $sets = array();
+        $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
+        $availableSets = Product::with(['variantSet.variantDetail','variantSet.option2'=>function($q)use($product, $pv_ids){
+            $q->where('product_id', $product->id); //->whereIn('product_variant_id', $pv_ids);
+        }])
+        ->select('id')
+        ->where('id', $product->id)->first();
+
+        if($pv_ids){
+            $variantData = ProductVariant::with('product', 'media.pimage.image')->select('id', 'sku', 'quantity', 'price', 'compare_at_price', 'barcode', 'product_id')
+                ->whereIn('id', $pv_ids)->get();
+            if ($variantData) {
+                foreach($variantData as $variant){
+                    $variant->productPrice = Session::get('currencySymbol') . number_format(($variant->price * $clientCurrency->doller_compare), 2, '.', '');
+                    // $sets[] = $availableSet->toArray();
+                    // foreach($availableSet->groupBy('product_variant_id') as $avSets){
+                    //     $variant_type_id = array();
+                    //     $variant_option_id = array();
+                    //     foreach($avSets as $avSet){
+                    //         $variant_type_id[] = $avSet->variant_type_id;
+                    //         $variant_option_id[] = $avSet->variant_option_id;
+                    //     }
+                    //     $sets[] = ['variant_types' => $variant_type_id, 'variant_options' => $variant_option_id];
+                    // }
+                }
+                if(count($variantData) <= 1){
+                    $variantData = $variantData->first()->toArray();
+                }else{
+                    $variantData = array();
+                }
+                // dd($variantData->toArray());
+                return response()->json(array('status' => 'Success', 'variant' => $variantData, 'availableSets' => $availableSets->variantSet));
+            }
+        }
+        return response()->json(array('status' => 'Error', 'message' => 'This variant is currenty not available', 'availableSets' => $availableSets->variantSet));
     }
 }
