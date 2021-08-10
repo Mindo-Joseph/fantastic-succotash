@@ -2,24 +2,24 @@
 @section('content')
 
 
-    <section class="home-serivces d-none">
+    <section class="home-serivces">
         <div class="container">
             <div class="row mb-5">
                 <div class="col-md-8 offset-md-2">
                     <div class="step-indicator">
                         <div class="step step1 active">
                             <div class="step-icon">1</div>
-                            <p>Delivery</p>
+                            <p>Service Details</p>
                         </div>
                         <div class="indicator-line active"></div>
                         <div class="step step2">
                             <div class="step-icon">2</div>
-                        <p>Payment</p>
+                            <p>Date & Time</p>
                         </div>
                         <div class="indicator-line"></div>
                         <div class="step step3">
                             <div class="step-icon">3</div>
-                        <p>Confirmation</p>
+                            <p>Payment</p>
                         </div>
                     </div>
 
@@ -381,16 +381,19 @@
                         <div class="col-md-4">
                             <div class="card-box p-2">
                                 <div class="product-order">
-                                    <div class="total-sec border-0">
+                                    <div class="total-sec border-0 py-0 my-0">
+                                        <h5 class="d-flex align-items-center justify-content-between pb-2 border-bottom"><b>City</b><b>Dubai</b></h5>
+                                    </div>
+                                    <div class="total-sec border-0 py-0 my-0">
+                                        <h5 class="d-flex align-items-center justify-content-between pb-2 border-bottom"><b>Service</b></h5>
                                         <ul>
-                                            <li>City<span>Dubai</span></li>
                                             <li>Tax <span>$0.00</span></li>
                                             <li>Delivery Fee <span>$53.66</span></li>
                                             <li>Tip Amount <span>$14.91</span></li>
                                             <li>Loyalty Amount <span>$3,831.37</span></li>
                                         </ul>
                                     </div>
-                                    <div class="final-total">
+                                    <div class="final-total mt-3">
                                         <h3>Total <span>$313.20</span></h3>
                                     </div>
                                 </div>
@@ -407,7 +410,7 @@
 
 
 
-    <section class="cab-booking pt-0">
+    <section class="cab-booking pt-0 d-none">
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4850.865733603189!2d76.82393041076074!3d30.716149768967526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1627015845978!5m2!1sen!2sin" width="100%" height="100vh" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         <div class="booking-experience ds bc">
             <form class="address-form">
