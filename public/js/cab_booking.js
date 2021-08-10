@@ -104,7 +104,7 @@ $(document).ready(function () {
             dataType: 'json',
             url: get_product_detail+'/'+product_id,
             success: function(response) {
-                if(response.status == 'Success'){
+                if(response.status == 'Success'){ 
                     $('#cab_detail_box').html('');
                     if(response.data.length != 0){
                         $('.address-form').addClass('d-none');
