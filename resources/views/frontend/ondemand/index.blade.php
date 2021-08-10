@@ -31,120 +31,68 @@
                     <div class="col-md-8">
                         <div class="card-box">
                             <ul>
-                                <li><a class="btn btn-solid" href="#">Individual</a></li>
-                                <li><a class="btn btn-solid" href="#">Group</a></li>
+
+                                @if(!empty($category->childs) && count($category->childs) > 0)
+                                    <li><a class="btn btn-solid" href="#">{{$cate['translation_name']}}</a></li>
+
+                                @endif
+
+                               
                             </ul>
                             
                             <div class="service-data-wrapper mb-5">
                                
                                 <div class="service-data mt-4">
-                                    <h4><b>Apartment</b></h4>
-                                    <div class="service-img mb-3">
-                                        <img class="img-fluid" src="https://d222mnpmkyzhbp.cloudfront.net/prod/assets/images/attribute-categories/15925783568.jpg" alt="">
-                                    </div>
+                                    <h4><b>{{ $category->translation_name }}</b></h4>
 
-                                    <div class="row classes_wrapper no-gutters" href="#">                                       
-                                        <div class="col-md-9 col-sm-8 pr-md-2">
-                                            <h5 class="mb-1"><b>Studio Apartment</b></h5>
-                                            <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <h5 class="my-sm-0 my-3">$30.00</h5>
-                                                <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
-                                            <div class="class_img">
-                                                <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row classes_wrapper no-gutters" href="#">                                       
-                                        <div class="col-md-9 col-sm-8 pr-md-2">
-                                            <h5 class="mb-1"><b>Studio Apartment</b></h5>
-                                            <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <h5 class="my-sm-0 my-3">$30.00</h5>
-                                                <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
-                                            <div class="class_img">
-                                                <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row classes_wrapper no-gutters" href="#">                                       
-                                        <div class="col-md-9 col-sm-8 pr-md-2">
-                                            <h5 class="mb-1"><b>Studio Apartment</b></h5>
-                                            <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <h5 class="my-sm-0 my-3">$30.00</h5>
-                                                <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
-                                            <div class="class_img">
-                                                <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="service-data mt-4">
-                                    <h4><b>Group</b></h4>
+                                   
+                                    @if(!empty($category->image))
                                     <div class="service-img mb-3">
-                                        <img class="img-fluid" src="https://d222mnpmkyzhbp.cloudfront.net/prod/assets/images/attribute-categories/15925783568.jpg" alt="">
+                                        <img class="img-fluid" src="{{$category->image['proxy_url'] . '1000/200' . $category->image['image_path']}}" alt="">
                                     </div>
+                                    @endif
 
-                                    <div class="row classes_wrapper no-gutters" href="#">                                       
+                                    @if($listData->isNotEmpty())
+                                    @foreach($listData as $key => $data)
+                                    {{-- new product design  --}}
+                                          <div class="row classes_wrapper no-gutters" href="#">                                       
                                         <div class="col-md-9 col-sm-8 pr-md-2">
-                                            <h5 class="mb-1"><b>Studio Apartment</b></h5>
-                                            <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
+                                            <h5 class="mb-1"><b>{!! $data->translation_title !!}</b></h5>
+                                            <p class="mb-1">{!! $data->translation_description !!}</p>
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <h5 class="my-sm-0 my-3">$30.00</h5>
+                                                <h5 class="my-sm-0 my-3">@if($data->inquiry_only == 0)
+                                                    {{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}
+                                                @endif</h5>
                                                 <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
                                             </div>
                                         </div>
                                         <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
+                                            <?php $imagePath = $imagePath2 = '';
+                                                $mediaCount = count($data->media);
+                                                for ($i = 0; $i < $mediaCount && $i < 2; $i++) { 
+                                                    if($i == 0){
+                                                        $imagePath = $data->media[$i]->image->path['proxy_url'].'300/300'.$data->media[$i]->image->path['image_path'];
+                                                    }
+                                                    $imagePath2 = $data->media[$i]->image->path['proxy_url'].'300/300'.$data->media[$i]->image->path['image_path'];
+                                                } ?>
                                             <div class="class_img">
-                                                <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
+                                                <img src="{{$imagePath}}" alt="">
                                             </div>
                                         </div>
                                     </div>
                                     <hr>
-                                    <div class="row classes_wrapper no-gutters" href="#">                                       
-                                        <div class="col-md-9 col-sm-8 pr-md-2">
-                                            <h5 class="mb-1"><b>Studio Apartment</b></h5>
-                                            <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <h5 class="my-sm-0 my-3">$30.00</h5>
-                                                <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
-                                            <div class="class_img">
-                                                <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row classes_wrapper no-gutters" href="#">                                       
-                                        <div class="col-md-9 col-sm-8 pr-md-2">
-                                            <h5 class="mb-1"><b>Studio Apartment</b></h5>
-                                            <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <h5 class="my-sm-0 my-3">$30.00</h5>
-                                                <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
-                                            <div class="class_img">
-                                                <img src="https://easybook.co/easybook_html/images/class-1.jpg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
+
+                                    {{-- <-- end new product design --> --}}
+                                    @endforeach
+                                  @else
+                                    <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">No Product Found</h5></div>
+                                  @endif
+
+                                  
+
                                 </div>
+                               
 
                             </div>
 
@@ -381,7 +329,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    {{-- <div class="col-md-4">
                         <div class="card-box p-2">
                             <div class="product-order">
                                 <div class="total-sec border-0 py-0 my-0">
@@ -401,7 +349,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
 

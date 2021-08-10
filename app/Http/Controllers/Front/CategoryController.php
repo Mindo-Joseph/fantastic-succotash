@@ -124,7 +124,7 @@ class CategoryController extends FrontController
             $user_addresses = UserAddress::get();
             return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories]);
         }elseif($page == 'on demand service'){
-            return view('frontend.ondemand.index')->with(['navCategories' => $navCategories]);
+            return view('frontend.ondemand.index')->with(['listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }else{
             if(view()->exists('frontend/cate-'.$page.'s')){
                 return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
@@ -186,6 +186,7 @@ class CategoryController extends FrontController
             if(!empty($products)){
                 foreach ($products as $key => $value) {
                     $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
+                    $value->translation_description = (!empty($value->translation->first())) ? $value->translation->first()->body_html : $value->sku;
                     $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
                     // foreach ($value->variant as $k => $v) {
