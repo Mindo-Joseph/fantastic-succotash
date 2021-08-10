@@ -1,5 +1,109 @@
 $(document).ready(function () {
     var selected_address = '';
+    const styles = [
+    {
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "saturation": -100
+            },
+            {
+                "gamma": 0.54
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "stylers": [
+            {
+                "color": "#4d4946"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "labels.text",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "elementType": "labels.text",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            }
+        ]
+    },
+    {
+        "featureType": "transit.line",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "gamma": 0.48
+            }
+        ]
+    },
+    {
+        "featureType": "transit.station",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "gamma": 7.18
+            }
+        ]
+    }
+];
     $(document).on("click","#show_dir",function() {
         initMap2();
     });
@@ -9,27 +113,46 @@ $(document).ready(function () {
         var longitude = $(this).data('longitude');
         displayLocation(latitude, longitude);
     });
-    getVendorProducts();
-    function getVendorProducts(){
+    getVendorList();
+    function getVendorList(){
         $.ajax({
-                data: {},
-                type: "POST",
-                dataType: 'json',
-                url: autocomplete_urls,
-                success: function(response) {
-                    if(response.status == 'Success'){
-                        $('#search_box_main_div').html('');
-                        if(response.data.length != 0){
-                            let search_box_category_template = _.template($('#search_box_main_div_template').html());
-                            $("#search_box_main_div").append(search_box_category_template({results: response.data})).show();
-                        }else{
-                            $("#search_box_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
-                        }
+            data: {},
+            type: "POST",
+            dataType: 'json',
+            url: autocomplete_urls,
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $('#vendor_main_div').html('');
+                    if(response.data.length != 0){
+                        let vendors_template = _.template($('#vendors_template').html());
+                        $("#vendor_main_div").append(vendors_template({results: response.data})).show();
+                    }else{
+                        $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
                     }
                 }
+            }
         });
-       
     }
+    $(document).on("click",".vendor-list",function() {
+        let vendor_id = $(this).data('vendor');
+        $.ajax({
+            data: {},
+            type: "POST",
+            dataType: 'json',
+            url: get_vehicle_list+'/'+vendor_id,
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $('#search_product_main_div').html('');
+                    if(response.data.length != 0){
+                        let products_template = _.template($('#products_template').html());
+                        $("#search_product_main_div").append(products_template({results: response.data})).show();
+                    }else{
+                        $("#search_product_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                    }
+                }
+            }
+        });
+    });
     function initMap2() {
         let pickup_location_latitude = $('#pickup_location_latitude').val();
         let pickup_location_longitude = $('#pickup_location_longitude').val();
@@ -41,6 +164,7 @@ $(document).ready(function () {
             if(pointA && pointB){
                 myOptions = {zoom: 7,center: pointA};
                 map = new google.maps.Map(document.getElementById('booking-map'), myOptions),
+                map.setOptions({ styles:  styles}),
                 // Instantiate a directions service.
                 directionsService = new google.maps.DirectionsService,
                 directionsDisplay = new google.maps.DirectionsRenderer({
@@ -124,6 +248,7 @@ $(document).ready(function () {
             center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
             zoom: 13
         });
+        map.setOptions({ styles:  styles});
         var icon_set = {
             url: live_location, // url
             scaledSize: new google.maps.Size(30, 30), // scaled size
