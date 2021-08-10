@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'On-Demand'])
+@extends('layouts.store', ['title' => (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug])
 @section('content')
 <header>
     <div class="mobile-fix-option"></div>
@@ -63,7 +63,11 @@
                                                 <h5 class="my-sm-0 my-3">@if($data->inquiry_only == 0)
                                                     {{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}
                                                 @endif</h5>
-                                                <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
+
+                                                <a class="btn btn-solid add_on_demand" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
+
+                                                
+
                                             </div>
                                         </div>
                                         <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
@@ -329,7 +333,7 @@
                         </div>
                     </div>
 
-                    {{-- <div class="col-md-4">
+                    <div class="col-md-4">
                         <div class="card-box p-2">
                             <div class="product-order">
                                 <div class="total-sec border-0 py-0 my-0">
@@ -349,7 +353,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
 
 
@@ -359,3 +363,23 @@
 </section>
 
 @endsection
+
+@section('script')
+
+
+<script type="text/javascript">
+    $(".add_on_demand" ).click(function() {
+     
+            let that = $(this);
+            var ajaxCall = 'ToCancelPrevReq';
+            var vendor_id = that.data("vendor_id");
+            var product_id = that.data("product_id");
+            var add_to_cart_url = "{{ route('addToCart') }}";
+
+            
+            addToCart();
+            
+    });
+    </script>
+
+@endsection    

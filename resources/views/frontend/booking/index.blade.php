@@ -11,22 +11,23 @@
     <div class="booking-experience ds bc">
         <div class="address-form">
             <div class="location-box">
-                <ul class="location-inputs position-relative pl-2">
-                    <li class="d-block mb-3 dots">
-                        <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Pick-Up Location')}}" id="pickup_location"/>
-                        <input type="hidden" name="latitude[]" value="" id="pickup_location_latitude" />
-                        <input type="hidden" name="longitude[]" value="" id="pickup_location_longitude" />
-                        <i class="fa fa-times ml-1" aria-hidden="true"></i>
-                    </li>
-                    <li class="d-block mb-3 dots">
-                        <input class="form-control pickup-text" type="text" placeholder="{{__('Enter Your Destination')}}" id="destination_location" />
-                        <input type="hidden" name="latitude[]" value="" id="destination_location_latitude" />
-                        <input type="hidden" name="longitude[]" value="" id="destination_location_longitude" />
-                        <i class="fa fa-times ml-1" aria-hidden="true"></i>
-                    </li>
-                </ul>
-                <a class="add-more-location position-relative pl-2" href="javascript:void(0)">{{__('Add Destination')}}</a>
+                <ul class="location-inputs position-relative pl-2" id="location_input_main_div"></ul>
+                <a class="add-more-location position-relative pl-2" href="javascript:void(0)" id="add_more_location_btn">{{__('Add Destination')}}</a>
             </div>
+            <script type="text/template" id="location_input_template">
+                <li class="d-block mb-3 dots">
+                    <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Pick-Up Location')}}" id="pickup_location_<%= random_id %>"/>
+                    <input type="hidden" name="pickup_location_latitude[]" value="" id="pickup_location_latitude_<%= random_id %>"/>
+                    <input type="hidden" name="pickup_location_longitude[]" value="" id="pickup_location_longitude_<%= random_id %>"/>
+                    <i class="fa fa-times ml-1" aria-hidden="true"></i>
+                </li>
+                <li class="d-block mb-3 dots">
+                    <input class="form-control pickup-text" type="text" placeholder="{{__('Enter Your Destination')}}" id="destination_location_<%= random_id %>" />
+                    <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude_<%= random_id %>"/>
+                    <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude_<%= random_id %>"/>
+                    <i class="fa fa-times ml-1" aria-hidden="true"></i>
+                </li>
+            </script>
             <div class="location-list style-4">
                 @forelse($user_addresses as $user_address)
                     <a class="search-location-result position-relative d-block" href="javascript:void(0);" data-address="{{$user_address->address}}" data-latitude="{{$user_address->latitude}}" data-longitude="{{$user_address->longitude}}">
@@ -59,8 +60,6 @@
                             <div class="row no-gutters">
                                 <div class="col-8 vehicle-details">
                                     <h4 class="m-0"><b><%= result.name %></b></h4>
-                                    <p class="station-rides ellips"><%= result.description %></p>
-                                    <p class="waiting-time m-0"><span class="mr-1">In 2 mins.</span><span>03:04 pm</span></p>
                                 </div>
                                 <div class="col-4 ride-price pl-2">
                                     <p class="mb-0"><b>{{Session::get('currencySymbol')}}<%= result.tags_price%></b></p>
@@ -77,11 +76,10 @@
                 <div class="bg-white p-2">
                     <a class="close-cab-detail-box" href="javascript:void()">✕</a>
                     <div class="w-100 h-100">
-                        <img src="<%= result.image_url %>" alt="">
+                        <img src="<%= result.image_url %>">
                     </div>
                     <div class="cab-location-details">
                         <h4 class="d-flex align-items-center justify-content-between"><b><%= result.name %></b> <b>{{Session::get('currencySymbol')}}<%= result.tags_price%></b></h4>
-                        <p class="mb-0">In 3 mins.</p>
                         <p><%= result.description %></p>
                     </div>
                 </div>
@@ -91,8 +89,6 @@
                         <div class="col-6 mb-2 text-right" id="distance"></div>
                         <div class="col-6 mb-2">Duration</div>
                         <div class="col-6 mb-2 text-right" id="duration"></div>
-                        <div class="col-6 mb-2">Delivery fee</div>
-                        <div class="col-6 mb-2 text-right">$114.02</div>
                         <% if(result.loyalty_amount_saved) { %>
                             <div class="col-6 mb-2">Loyalty</div>
                             <div class="col-6 mb-2 text-right">-{{Session::get('currencySymbol')}}<%= result.loyalty_amount_saved %></div>

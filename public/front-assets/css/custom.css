@@ -4435,6 +4435,16 @@ body[dir="rtl"] .inner_spacing h3 {
   .indicator-line.active {
     background: var(--theme-deafult);
   }
+
+  .category-active-btns {
+    top: 0;
+    position: fixed;
+    width: 575px;
+    max-width: 100%;
+    background-color: #fff;
+    padding: 10px 0;
+    z-index: 1;
+}
   
   @media screen and (max-width: 500px) {
     .step p {
