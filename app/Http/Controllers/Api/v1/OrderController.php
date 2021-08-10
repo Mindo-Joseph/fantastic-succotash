@@ -8,7 +8,7 @@ use GuzzleHttp\Client as GCLIENT;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, User, Payment};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment};
 
 class OrderController extends Controller {
     use ApiResponser;
@@ -273,6 +273,7 @@ class OrderController extends Controller {
                         ]);
                     }
                     DB::commit();
+                    $this->sendOrderNotification($user->id);
                     return $this->successResponse($order, 'Order placed successfully.', 201);
                     }
                 }else{
@@ -283,6 +284,36 @@ class OrderController extends Controller {
             catch (Exception $e) {
             DB::rollback();
             return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
+    public function sendOrderNotification($id){
+        $token = User::whereNotNull('device_token')->pluck('device_token')->where('user_id', $id)->toArray();
+        $from = env('FIREBASE_SERVER_KEY');
+        
+        $notification_content = NotificationTemplate::where('id', 1)->first();
+        if($notification_content){
+            $headers = [
+                'Authorization: key=' . $from,
+                'Content-Type: application/json',
+            ];
+            $data = [
+                "registration_ids" => $token,
+                "notification" => [
+                    'title' => $notification_content->label,
+                    'body'  => $notification_content->content,
+                ]
+            ];
+            $dataString = $data;
+    
+            $ch = curl_init();
+            curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+            curl_setopt( $ch,CURLOPT_POST, true );
+            curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+            curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+            curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+            curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $dataString ) );
+            $result = curl_exec($ch );
+            curl_close( $ch );
         }
     }
     public function getOrdersList(Request $request){
