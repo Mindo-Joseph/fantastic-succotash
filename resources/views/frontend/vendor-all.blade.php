@@ -27,20 +27,18 @@
                     </div>
                     <div class="product-detail">
                         <div class="inner_spacing">
-                            <a href="http://local.myorder.com/product/AC105">
+                            <a href="{{route('vendorDetail')}}/{{ $vendor->slug }}">
                                 <h3>{{ $vendor->name }}</h3>
-                            </a>
-                            @if($client_preference_detail)
-                                @if($client_preference_detail->rating_check == 1)
-                                    <div class="custom_rating">
-                                        @if($vendor->vendorRating > 0)
-                                            @for($i = 1; $i < 6; $i++)
-                                                <i class="fa fa-star{{ ($i <= $vendor->vendorRating) ? ' filled' : '' }}"></i>
-                                            @endfor
-                                        @endif
-                                    </div>
+                                @if($client_preference_detail)
+                                    @if($client_preference_detail->rating_check == 1)
+                                        <div class="custom_rating">
+                                            @if($vendor->vendorRating > 0)
+                                                <span class="rating">{{$vendor->vendorRating}} <i class="fa fa-star text-white p-0"></i></span>
+                                            @endif
+                                        </div>
+                                    @endif
                                 @endif
-                            @endif
+                            </a>
                         </div>
                     </div>
                 </div>

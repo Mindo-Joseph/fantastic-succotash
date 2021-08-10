@@ -224,9 +224,6 @@ class ProductController extends FrontController{
         ->select('id')
         ->where('id', $product->id)->first();
 
-        $selectedVarOptions = [];
-        $disabledVarOptions = [];
-        
         if($pv_ids){
             $variantData = ProductVariant::with('product', 'media.pimage.image')->select('id', 'sku', 'quantity', 'price', 'compare_at_price', 'barcode', 'product_id')
                 ->whereIn('id', $pv_ids)->get();

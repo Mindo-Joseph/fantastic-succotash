@@ -100,10 +100,129 @@ $(document).ready(function () {
             }
             ]
         });
+       
     }
 
-    
+    $( document ).ready(function() {
+        $('.date-items').slick({
+            infinite: true,
+            speed: 300,
+            arrows: true,
+            dots: false,
+            slidesToShow: 7,
+            slidesToScroll: 5,
+            autoplay: false,
+            autoplaySpeed: 5000,
+            rtl: false,
+            responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+            ]
+        });
+        
+        $('.booking-time').slick({
+            infinite: true,
+            speed: 300,
+            arrows: true,
+            dots: false,
+            slidesToShow: 4,
+            slidesToScroll: 3,
+            autoplay: false,
+            autoplaySpeed: 5000,
+            rtl: false,
+            responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+            ]
+        });
 
+        $('.hours-slot').slick({
+            infinite: true,
+            speed: 300,
+            arrows: true,
+            dots: false,
+            slidesToShow: 9,
+            slidesToScroll: 3,
+            autoplay: false,
+            autoplaySpeed: 5000,
+            rtl: false,
+            responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+            ]
+        });
+        
+        $('.materials-slide').slick({
+            infinite: true,
+            speed: 300,
+            arrows: true,
+            dots: false,
+            slidesToShow: 4,
+            slidesToScroll: 3,
+            autoplay: false,
+            autoplaySpeed: 5000,
+            rtl: false,
+            responsive: [{
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+            ]
+        });
+
+        
+    });
+       
+    $(document ).ready(function() {
+        $("#number").hide();
+        $("#add_btn").click(function(){
+            $("#number").show();
+            $(this).hide();
+        });
+    });
+    
     $("#dinein_tab").click(function () {
         var url = "dine_in";
         getHomePage("", "", url);

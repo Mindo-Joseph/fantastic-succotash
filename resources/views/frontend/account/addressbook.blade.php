@@ -283,8 +283,8 @@
       <div class="modal-body p-0">
         <div class="row">
             <div class="col-md-12">
-                <div id="address-map-container" style="height: 500px; min-width: 500px; width: 100%;">
-                    <div id="pick-address-map"></div>
+                <div id="address-map-container" class="w-100" style="height: 500px; min-width: 500px;">
+                    <div id="pick-address-map" class="h-100"></div>
                 </div>
                 <div class="pick_address p-2 mb-2 position-relative">
                     <div class="text-center">
@@ -421,29 +421,28 @@
         var lngs = document.getElementById('longitude').value;
 
         var myLatlng = new google.maps.LatLng(lats, lngs);
-            var mapProp = {
-                center:myLatlng,
-                zoom:13,
-                mapTypeId:google.maps.MapTypeId.ROADMAP
-              
-            };
-            var map=new google.maps.Map(document.getElementById("pick-address-map"), mapProp);
-                var marker = new google.maps.Marker({
-                  position: myLatlng,
-                  map: map,
-                  draggable:true  
-              });
-            // marker drag event
-            google.maps.event.addListener(marker,'drag',function(event) {
-                console.log(event.latLng.lat());
-                document.getElementById('latitude').value = event.latLng.lat();
-                document.getElementById('longitude').value = event.latLng.lng();
-            });
-            //marker drag event end
-            google.maps.event.addListener(marker,'dragend',function(event) {
-                document.getElementById('latitude').value = event.latLng.lat();
-                document.getElementById('longitude').value = event.latLng.lng();
-            });
+        var mapProp = {
+            center:myLatlng,
+            zoom:13,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+            
+        };
+        var map=new google.maps.Map(document.getElementById("pick-address-map"), mapProp);
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            draggable:true  
+        });
+        // marker drag event
+        google.maps.event.addListener(marker,'drag',function(event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+        //marker drag event end
+        google.maps.event.addListener(marker,'dragend',function(event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
         $('#pick_address').modal('show');
 
     });

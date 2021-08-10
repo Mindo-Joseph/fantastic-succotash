@@ -111,22 +111,18 @@
                                 </div>
                             </div>
                             <div class="col-lg-6 rtl-text">
-                                <div class="product-right">
+                                <div class="product-right inner_spacing">
                                     <h2 class="mb-0">
                                         {{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}
                                     </h2>
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->rating_check == 1)  
-                                        <div class="custom_rating">
                                             @if($product->averageRating > 0)
-                                                @for($i = 1; $i < 6; $i++)
-                                                    <i class="fa fa-star{{ ($i <= $product->averageRating) ? ' filled ' : '' }}"></i>
-                                                @endfor
+                                                <span class="rating">{{ number_format($product->averageRating, 1, '.', '') }} <i class="fa fa-star text-white p-0"></i></span>
                                             @endif
-                                        </div>
                                         @endif
                                     @endif
-                                    <div class="description_txt my-3">
+                                    <div class="description_txt mt-3">
                                         <p>{{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->meta_description : ''}}</p>
                                     </div>
                                     <div id="product_variant_wrapper">
@@ -157,7 +153,7 @@
                                                             $checked = ($selectedVariant == $optn->product_variant_id) ? 'checked' : '';
                                                             ?>
                                                             <label class="radio d-inline-block txt-14 mr-2">{{$optn->title}}
-                                                                <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" class="changeVariant dataVar{{$var_id}}">
+                                                                <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" class="changeVariant dataVar{{$var_id}}" {{$checked}}>
                                                                 <span class="checkround"></span>
                                                             </label>
                                                             @endforeach

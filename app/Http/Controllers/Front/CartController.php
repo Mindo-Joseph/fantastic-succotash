@@ -28,16 +28,19 @@ class CartController extends FrontController
         $user = Auth::user();
         $countries = Country::get();
         $langId = Session::get('customerLanguage');
+        $guest_user = true;
         if ($user) {
             $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
             $addresses = UserAddress::where('user_id', $user->id)->get();
+            $guest_user = false;
         } else {
             $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
-            $addresses = [];
+            $addresses = collect();
         }
         if ($cart) {
             $cartData = CartProduct::where('status', [0, 1])->where('cart_id', $cart->id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         }
+        // dd($cartData->toArray());
         $navCategories = $this->categoryNav($langId);
         $subscription_features = array();
         if ($user) {
@@ -53,7 +56,7 @@ class CartController extends FrontController
                 }
             }
         }
-        return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features]);
+        return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user]);
     }
 
     public function postAddToCart(Request $request, $domain = '')
@@ -428,7 +431,7 @@ class CartController extends FrontController
         $cartData = CartProduct::with([
             'vendor', 'coupon' => function ($qry) use ($cart_id) {
                 $qry->where('cart_id', $cart_id);
-            }, 'vendorProducts.pvariant.media.image', 'vendorProducts.product.media.image',
+            }, 'vendorProducts.pvariant.media.pimage.image', 'vendorProducts.product.media.image',
             'vendorProducts.pvariant.vset.variantDetail.trans' => function ($qry) use ($langId) {
                 $qry->where('language_id', $langId);
             },
@@ -485,12 +488,12 @@ class CartController extends FrontController
             foreach ($cartData as $ven_key => $vendorData) {
                 $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
-                // if($address_id > 0){
-                //     $serviceArea = $vendorData->vendor->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                //         $query->select('vendor_id')
-                //         ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                //     })->where('id', $vendorData->vendor_id)->get();
-                // }
+                if($address_id > 0){
+                    $serviceArea = $vendorData->vendor->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                        $query->select('vendor_id')
+                        ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                    })->where('id', $vendorData->vendor_id)->get();
+                }
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;

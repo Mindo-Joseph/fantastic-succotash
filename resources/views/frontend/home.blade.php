@@ -54,19 +54,15 @@
                     </a>
                 </div>
             </div>
-            <div class="product-detail">
+            <div class="product-detail inner_spacing">
                 <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                     <h6><%= vendor.name %></h6>
                 </a>
                 @if($client_preference_detail)
                     @if($client_preference_detail->rating_check == 1)
-                        <div class="custom_rating">
-                            <% if(vendor.vendorRating > 0) { %>
-                                <% _.each([1,2,3,4,5], function(value, k){ %>
-                                    <i class="fa fa-star<%= (k+1 <= vendor.vendorRating) ? ' filled' : '' %>"></i>
-                                <% }); %>
-                            <% } %>
-                        </div>
+                        <% if(vendor.vendorRating > 0){%>
+                            <span class="rating"><%= vendor.vendorRating %> <i class="fa fa-star text-white p-0"></i></span>
+                        <% } %>
                     @endif
                 @endif
             </div>
@@ -96,13 +92,13 @@
                     <div class="inner_spacing px-0">
                         <div class="d-flex align-items-center justify-content-between">
                             <h3 class="m-0"><%= product.title %></h3>
-                            <!-- @if($client_preference_detail)
+                            @if($client_preference_detail)
                                 @if($client_preference_detail->rating_check == 1)
-                                    <% if(product.averageRating){%>
-                                        <span class="rating"><%= product.averageRating %></span>
+                                    <% if(product.averageRating > 0){%>
+                                        <span class="rating"><%= product.averageRating %> <i class="fa fa-star text-white p-0"></i></span>
                                     <% } %>
                                 @endif
-                            @endif -->
+                            @endif
                         </div>
                         <p><%= product.vendor_name %></p>
                         <h4>

@@ -46,6 +46,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('payment/options/{page}', 'Api\v1\PaymentOptionController@getPaymentOptions');
         Route::get('payment/{gateway}', 'Api\v1\PaymentOptionController@postPayment');
         Route::post('payment/place/order', 'Api\v1\PaymentOptionController@postPlaceOrder');
+        Route::get('user/loyalty/info', 'Api\v1\LoyaltyController@index');
         // Rating & review 
         Route::group(['prefix' => 'rating'], function () {
             Route::post('update-product-rating', 'Api\v1\RatingController@updateProductRating');
