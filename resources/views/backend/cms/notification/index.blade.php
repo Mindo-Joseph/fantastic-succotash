@@ -70,7 +70,7 @@
                     </div>
                 </div>            
             </div>
-        </div>         
+        </div>
     </div>
 </div>
 <script type="text/javascript">
@@ -88,7 +88,7 @@
         });
         $(document).on("click",".notification-page-detail",function() {
             $('#edit_page_content #content').val('');
-            $('#edit_page_content #content').summernote('destroy');
+            // $('#edit_page_content #content').summernote('destroy');
             let url = $(this).data('show_url');
             let language_id = $('#edit_page_content #client_language :selected').val();
             $.get(url,function(response) {
@@ -99,7 +99,7 @@
                         $('#edit_page_content #tags').html(response.data.tags);
                         $('#edit_page_content #subject').val(response.data.subject);
                         $('#edit_page_content #content').val(response.data.content);
-                        $('#edit_page_content #content').summernote({'height':450});
+                        // $('#edit_page_content #content').summernote({'height':450});
                     }else{
                       $(':input:text').val('');
                       $('textarea').val('');

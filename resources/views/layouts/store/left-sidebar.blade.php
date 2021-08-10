@@ -177,7 +177,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </li>
                                 <li class="onhover-div mobile-cart">
                                     <a href="{{route('showCart')}}"><i class="ti-shopping-cart"></i></a>
-                                    <span class="cart_qty_cls">2</span>
+                                    <span class="cart_qty_cls" style="display:none"></span>
                                     <ul class="show-div shopping-cart">
                                     </ul>
                                 </li>
@@ -239,7 +239,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     </li>
     <% _.each(nav_categories, function(category, key){ %>
         <li>
-            <a href="{{route('categoryDetail')}}/<%= category.slug %>"><%= category.name %></a>
+            <a href="{{route('categoryDetail')}}/<%= category.slug %>">
+                @if($client_preference_detail->show_icons == 1)
+                    <img src="<%= category.icon.image_fit %>200/200<%= category.icon.image_path %>" alt="">
+                @endif
+                <%= category.name %>
+            </a>
             <% if(category.children) { %>
                 <ul>
                 <% _.each(category.children, function(childs, key1){ %>
