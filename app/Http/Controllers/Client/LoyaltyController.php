@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Http\Controllers\Client\BaseController;
-use Illuminate\Http\Request;
-use App\Models\{Client, ClientCurrency, ClientPreference, LoyaltyCard};
+use DB;
 use Dotenv\Loader\Loader;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{Client, ClientCurrency, ClientPreference, LoyaltyCard};
 
 class LoyaltyController extends BaseController
 {
+    private $folderName = '/loyalty/image';
     /**
      * Display a listing of the resource.
      *
@@ -20,6 +23,7 @@ class LoyaltyController extends BaseController
         $status = 0;
         $client_preferences = ClientPreference::first();
         $loyaltycards = LoyaltyCard::where('status', '!=', '2')->get();
+        // dd($loyaltycards->toArray());
         $status = $client_preferences ? $client_preferences->loyalty_check : 0;
         return view('backend/loyality/index')->with(['loyaltycards' => $loyaltycards, 'status' => $status]);
     }
@@ -60,6 +64,10 @@ class LoyaltyController extends BaseController
         $loyaltyCard->per_order_points = $request->input('per_order_points');
         $loyaltyCard->amount_per_loyalty_point = $request->input('amount_per_loyalty_point');
         $loyaltyCard->status = '0';
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $loyaltyCard->image = Storage::disk('s3')->put($this->folderName, $file,'public');
+        }
 
         $loyaltyCard->save();
         if ($loyaltyCard->id > 0) {
@@ -118,6 +126,13 @@ class LoyaltyController extends BaseController
         $loyaltyCard->minimum_points = $request->input('minimum_points');
         $loyaltyCard->per_order_points = $request->input('per_order_points');
         $loyaltyCard->amount_per_loyalty_point = $request->input('amount_per_loyalty_point');
+        if(!empty($loyaltyCard->image)){
+            Storage::disk('s3')->delete($loyaltyCard->image);
+        }
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $loyaltyCard->image = Storage::disk('s3')->put($this->folderName, $file,'public');
+        }
         $loyaltyCard->save();
         return response()->json([
             'status' => 'success',
