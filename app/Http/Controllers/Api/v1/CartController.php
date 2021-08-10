@@ -581,9 +581,11 @@ class CartController extends BaseController{
             $cart->total_payable_amount = $total_paying  + $total_tax - $total_disc_amount - $loyalty_amount_saved;
         }
         $cart->loyalty_amount = $loyalty_amount_saved;
-        $cart->tip_5_percent = number_format((0.05 * $total_payable_amount), 2, '.', '');
-        $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2, '.', '');
-        $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2, '.', '');
+        $cart->tip = array(
+            ['label'=>'5%', 'value' => number_format((0.05 * $cart->total_payable_amount), 2, '.', '')],
+            ['label'=>'10%', 'value' => number_format((0.1 * $cart->total_payable_amount), 2, '.', '')],
+            ['label'=>'15%', 'value' => number_format((0.15 * $cart->total_payable_amount), 2, '.', '')]
+        );
         return $cart;
     }
 

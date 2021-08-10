@@ -49,6 +49,17 @@ trait ApiResponser{
         else
             return false;
     }
+
+
+
+	 # check if on demand service  on 
+	 public function checkIfOnDemandOnCommon(){
+        $preference = ClientPreference::select('id','need_dispacher_home_other_service','dispacher_home_other_service_key','dispacher_home_other_service_key_code','dispacher_home_other_service_key_url')->first();
+        if($preference->need_dispacher_home_other_service == 1 && !empty($preference->dispacher_home_other_service_key) && !empty($preference->dispacher_home_other_service_key_code) && !empty($preference->dispacher_home_other_service_key_url))
+            return $preference;
+        else
+            return false;
+    }
 	
 
 }

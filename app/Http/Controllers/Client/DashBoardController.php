@@ -68,7 +68,7 @@ class DashBoardController extends BaseController{
             if($date_filter){
                 $total_categories->whereBetween('created_at', [$from_date, $end_date]);
             }
-            $total_categories = $total_categories->count();
+            $total_categories = $total_categories->where('id', '>', '1')->where('deleted_at', NULL)->count();
             $total_revenue = Order::orderBy('id','desc');
             if (Auth::user()->is_superadmin == 0) {
                 $total_revenue = $total_revenue->whereHas('vendors.vendor.permissionToUser', function ($query) {

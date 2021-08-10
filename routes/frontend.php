@@ -152,6 +152,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 		Route::get('/', 'Front\BookingController@index')->name('bookingIndex');
 		Route::post('get-list-of-vehicles-old/{id}', 'Front\PickupDeliveryController@getListOfVehicles');
 		Route::post('get-list-of-vehicles/{id}', 'Front\PickupDeliveryController@productsByVendorInPickupDelivery');
+		Route::post('product-detail/{id}', 'Front\PickupDeliveryController@postCabProductById');
 		Route::post('vendor/list/{category_id}', 'Front\PickupDeliveryController@postVendorListByCategoryId');
 		Route::post('create-order', 'Front\PickupDeliveryController@createOrder');
 		Route::post('cart/updateQuantity', 'Front\CartController@updateQuantity');

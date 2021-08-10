@@ -182,11 +182,14 @@ class ClientPreferenceController extends BaseController{
                $preference->{$key} = $value; 
             }
         }
+        
         /* Hyperlocal update */
         if($request->has('hyperlocals') && $request->hyperlocals == '1'){
             $preference->is_hyperlocal = ($request->has('is_hyperlocal') && $request->is_hyperlocal == 'on') ? 1 : 0;
             $preference->need_delivery_service = ($request->has('need_delivery_service') && $request->need_delivery_service == 'on') ? 1 : 0;
             $preference->need_dispacher_ride = ($request->has('need_dispacher_ride') && $request->need_dispacher_ride == 'on') ? 1 : 0;
+            $preference->need_dispacher_home_other_service = ($request->has('need_dispacher_home_other_service') && $request->need_dispacher_home_other_service == 'on') ? 1 : 0;
+          
           
             if($request->has('is_hyperlocal') && $request->is_hyperlocal == 'on'){
                 if( (!$request->has('Default_location_name')) || ($request->Default_location_name == '')
@@ -205,18 +208,14 @@ class ClientPreferenceController extends BaseController{
             if($request->has('need_dispacher_ride') && $request->need_dispacher_ride == 'on'){
                 $preference->dispatcher_key = $request->dispatcher_key;
             }
+
+            if($request->has('need_dispacher_home_other_service') && $request->need_dispacher_home_other_service == 'on'){
+                $preference->dispacher_home_other_service_key = $request->dispacher_home_other_service_key;
+            }
            
             
         }
         
-         if($request->has('need_dispacher_home_other_service') && $request->need_dispacher_home_other_service == 'on'){
-            $preference->need_dispacher_home_other_service = $request->need_dispacher_home_other_service;
-            $preference->dispacher_home_other_service_key = $request->dispacher_home_other_service_key;
-            $preference->dispacher_home_other_service_key_url = $request->dispacher_home_other_service_key_url;
-            $preference->dispacher_home_other_service_key_code = $request->dispacher_home_other_service_key_code;
-        }
-        $preference->need_dispacher_home_other_service = ($request->has('need_dispacher_home_other_service') && $request->need_dispacher_home_other_service == 'on') ? 1 : 0;
-      
         /* social login update */        
         if($request->has('social_login') && $request->social_login == '1'){
             $preference->fb_login = ($request->has('fb_login') && $request->fb_login == 'on') ? 1 : 0; 
@@ -242,22 +241,10 @@ class ClientPreferenceController extends BaseController{
             $preference->celebrity_check = ($request->has('celebrity_check') && $request->celebrity_check == 'on') ? 1 : 0;
             $preference->subscription_mode = ($request->has('subscription_mode') && $request->subscription_mode == 'on') ? 1 : 0;
         }
-        if($request->has('languages')){
-            $existLanguage = array();
-            foreach ($request->languages as $lan) {
-                $lang = ClientLanguage::where('client_code',Auth::user()->code)->where('language_id', $lan)->first();
-                if(!$lang){
-                    $lang = new ClientLanguage();
-                    $lang->client_code = Auth::user()->code;
-                }
-                $lang->is_primary = 0;
-                $lang->language_id = $lan;
-                $lang->is_active = 1;
-                $lang->save();
-                $existLanguage[] = $lan;
-            }
-            $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->whereNotIn('language_id', $existLanguage)->where('is_primary', 0)->update(['is_active' => 0]);
-        }
+
+        
+        
+        
         if($request->has('primary_language')){
             $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->where('is_primary', 1)->update(['is_active' => 0, 'is_primary' => 0]);
             $primary_change = ClientLanguage::where('client_code', Auth::user()->code)->where('language_id', $request->primary_language)->update(['is_active' => 1, 'is_primary' => 1]);
@@ -270,7 +257,28 @@ class ClientPreferenceController extends BaseController{
                 ];
                 ClientLanguage::insert($primary_lang);
             }
+
+            $existLanguage = array();
+            if($request->has('languages')){
+                foreach ($request->languages as $lan) {
+                    $lang = ClientLanguage::where('client_code',Auth::user()->code)->where('language_id', $lan)->first();
+                    if(!$lang){
+                        $lang = new ClientLanguage();
+                        $lang->client_code = Auth::user()->code;
+                    }
+                    $lang->is_primary = 0;
+                    $lang->language_id = $lan;
+                    $lang->is_active = 1;
+                    $lang->save();
+                    $existLanguage[] = $lan;
+                }
+            }
+            
+
+            $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->whereNotIn('language_id', $existLanguage)->where('is_primary', 0)->update(['is_active' => 0]);
+ 
         }
+        
         if($request->has('primary_currency')){
             $oldAdditional = ClientCurrency::where('currency_id', $request->primary_currency)
                         ->where('is_primary', 0)->delete();

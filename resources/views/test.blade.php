@@ -2,7 +2,7 @@
 @section('content')
 
 
-    <section class="home-serivces">
+    <section class="home-serivces d-none">
         <div class="container">
             <div class="row mb-5">
                 <div class="col-md-8 offset-md-2">
@@ -422,7 +422,7 @@
 
 
 
-    <section class="cab-booking pt-0 d-none">
+    <section class="cab-booking pt-0">
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4850.865733603189!2d76.82393041076074!3d30.716149768967526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1627015845978!5m2!1sen!2sin" width="100%" height="100vh" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         <div class="booking-experience ds bc">
             <form class="address-form">
@@ -624,7 +624,7 @@
                     </a>
                 </div>
 
-                <!-- <div class="cab-detail-box style-4">
+                <div class="cab-detail-box style-4">
                     <div class="cab-outer style-4">
                         <div class="bg-white p-2">
                             <a href="#">✕</a>
@@ -641,9 +641,9 @@
                         <div class="cab-amount-details px-2">
                             <div class="row">
                                 <div class="col-6 mb-2">Distance</div>
-                                <div class="col-6 mb-2 text-right">20.25 kms</div>
+                                <div class="col-6 mb-2 text-right" id="distance">20.25 kms</div>
                                 <div class="col-6 mb-2">Duration</div>
-                                <div class="col-6 mb-2 text-right">10.25 mins</div>
+                                <div class="col-6 mb-2 text-right" id="">10.25 mins</div>
                                 <div class="col-6 mb-2">Delivery fee</div>
                                 <div class="col-6 mb-2 text-right">$114.02</div>
                                 <div class="col-6 mb-2">Loyalty</div>
@@ -655,7 +655,7 @@
                         <h4 class="d-flex align-items-center justify-content-between mb-2"><span><i class="fa fa-money" aria-hidden="true"></i> Cash</span> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
                         <button class="btn btn-solid w-100">Request XL Intercity</button>
                     </div>                
-                </div> -->
+                </div> 
 
             </form>
         </div>
