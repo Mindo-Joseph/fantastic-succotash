@@ -13,7 +13,10 @@
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light" id="block_btn" data-vendor_id="{{$vendor->id}}" data-status="{{$vendor->status == 2  ? '1' : '2'}}">{{$vendor->status == 2 ? 'Unblock' : 'Block'}}</button>
             @endif
             @if($client_preferences->need_dispacher_ride == 1)
-            <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcher" data-id="{{ $vendor->id }}"> Login Into Dispatcher </button>
+            <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcher" data-id="{{ $vendor->id }}"> Login Into Dispatcher (Pickup & Delivery) </button>
+            @endif
+            @if($client_preferences->need_dispacher_home_other_service == 1)
+            <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcherOnDemand" data-id="{{ $vendor->id }}"> Login Into Dispatcher (On Demand Services) </button>
             @endif
             @endif
         </div>

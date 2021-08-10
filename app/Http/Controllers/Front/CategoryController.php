@@ -123,6 +123,8 @@ class CategoryController extends FrontController
         if($page == 'pickup/delivery'){
             $user_addresses = UserAddress::get();
             return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories]);
+        }elseif($page == 'on demand service'){
+            return view('frontend.ondemand.index')->with(['navCategories' => $navCategories]);
         }else{
             if(view()->exists('frontend/cate-'.$page.'s')){
                 return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
