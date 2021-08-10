@@ -3743,6 +3743,24 @@ a.vehical-view-box.row.no-gutters {
     color: #343a40;
 }
 
+.promo-box {
+    overflow: auto;
+    position: absolute;
+    top: 0;
+    height: calc(100vh - 150px);
+    width: 100%;
+    background: #fff;
+    padding: 0 20px 30px;
+}
+
+.payment-promo-container h4{
+    cursor: pointer;
+}
+
+.payment-modal .modal-dialog {
+    max-width: 400px;
+}
+
 /* Search Bar Css */
 .list-box {
     box-shadow: 0 16px 32px 0 rgb(0 0 0 / 5%) !important;
