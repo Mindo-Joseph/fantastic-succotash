@@ -353,7 +353,7 @@
                             <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#43bee1" @if($product->Requires_last_mile == 1) checked @endif>
                         </div>
                         @endif
-                        @if($configData->pharmacy_check == 1 && $product->category->categoryDetail->type_id != 7)
+                        @if($configData->pharmacy_check == 1)
                         <div class="col-md-6 d-flex justify-content-between mb-2">
                             {!! Form::label('title', 'Requires Prescription',['class' => 'control-label']) !!}
                             <input type="checkbox" bid="" id="pharmacy_check" data-plugin="switchery" name="pharmacy_check" class="chk_box" data-color="#43bee1" @if($product->pharmacy_check == 1) checked @endif>
