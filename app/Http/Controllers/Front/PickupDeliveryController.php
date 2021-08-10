@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\OrderProductRatingRequest;
-use App\Models\{Category,ClientPreference,ClientCurrency,Vendor,ProductVariantSet,Product,LoyaltyCard,UserAddress,Order,OrderVendor,OrderProduct,VendorOrderStatus,Client,Promocode,PromoCodeDetail};
+use App\Models\{Category,ClientPreference,ClientCurrency,Vendor,ProductVariantSet,Product,LoyaltyCard,UserAddress,Order,OrderVendor,OrderProduct,VendorOrderStatus,Client,Promocode,PromoCodeDetail, VendorCategory};
 use App\Http\Traits\ApiResponser;
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +21,21 @@ class PickupDeliveryController extends FrontController{
     use ApiResponser;
     
 
-
+    public function postVendorListByCategoryId(Request $request, $domain = '',$category_id = 0){
+        $vendor_ids = [];
+        $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
+        foreach ($vendor_categories as $vendor_category) {
+           if(!in_array($vendor_category->vendor_id, $vendor_ids)){
+                $vendor_ids[] = $vendor_category->vendor_id;
+           }
+        }
+        $vendors = Vendor::select('id', 'name', 'banner', 'show_slot', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where('delivery', 1)->where('status', '!=', 2)->whereIn('id', $vendor_ids)->with('slot')->withAvg('product', 'averageRating')->get();
+        foreach ($vendors as $vendor) {
+            $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
+            unset($vendor->products);
+        }
+        return $this->successResponse($vendors);
+    }
     # get all vehicles category by vendor
 
     public function productsByVendorInPickupDelivery(Request $request, $domain = '',$vid = 0){
@@ -115,8 +129,6 @@ class PickupDeliveryController extends FrontController{
                         }])
                         ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
                         ->where('id', $cid)->first();
-            
-
             if(!$category){
                 return response()->json(['error' => 'No record found.'], 200);
             }

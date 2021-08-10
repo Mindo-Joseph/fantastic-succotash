@@ -113,27 +113,46 @@ $(document).ready(function () {
         var longitude = $(this).data('longitude');
         displayLocation(latitude, longitude);
     });
-    getVendorProducts();
-    function getVendorProducts(){
+    getVendorList();
+    function getVendorList(){
         $.ajax({
-                data: {},
-                type: "POST",
-                dataType: 'json',
-                url: autocomplete_urls,
-                success: function(response) {
-                    if(response.status == 'Success'){
-                        $('#search_product_main_div').html('');
-                        if(response.data.length != 0){
-                            let products_template = _.template($('#products_template').html());
-                            $("#search_product_main_div").append(products_template({results: response.data})).show();
-                        }else{
-                            $("#search_product_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
-                        }
+            data: {},
+            type: "POST",
+            dataType: 'json',
+            url: autocomplete_urls,
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $('#vendor_main_div').html('');
+                    if(response.data.length != 0){
+                        let vendors_template = _.template($('#vendors_template').html());
+                        $("#vendor_main_div").append(vendors_template({results: response.data})).show();
+                    }else{
+                        $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
                     }
                 }
+            }
         });
-       
     }
+    $(document).on("click",".vendor-list",function() {
+        let vendor_id = $(this).data('vendor');
+        $.ajax({
+            data: {},
+            type: "POST",
+            dataType: 'json',
+            url: get_vehicle_list+'/'+vendor_id,
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $('#search_product_main_div').html('');
+                    if(response.data.length != 0){
+                        let products_template = _.template($('#products_template').html());
+                        $("#search_product_main_div").append(products_template({results: response.data})).show();
+                    }else{
+                        $("#search_product_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                    }
+                }
+            }
+        });
+    });
     function initMap2() {
         let pickup_location_latitude = $('#pickup_location_latitude').val();
         let pickup_location_longitude = $('#pickup_location_longitude').val();

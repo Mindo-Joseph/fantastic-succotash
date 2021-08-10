@@ -37,27 +37,18 @@
                 @endforelse
             </div>
             <div class="table-responsive style-4">
-                <div class="cab-button d-flex flex-nowrap align-items-center py-2">
-                    <a class="btn btn-solid ml-2" href="#">uber</a>
-                    <a class="btn btn-solid ml-2" href="#">ola</a>
-                    <a class="btn btn-solid ml-2" href="#">uber</a>
-                    <a class="btn btn-solid ml-2" href="#">ola</a>
-                    <a class="btn btn-solid ml-2" href="#">uber</a>
-                    <a class="btn btn-solid ml-2" href="#">ola</a>
-                    <a class="btn btn-solid ml-2" href="#">uber</a>
-                    <a class="btn btn-solid ml-2" href="#">ola</a>
-                    <a class="btn btn-solid ml-2" href="#">uber</a>
-                    <a class="btn btn-solid ml-2" href="#">ola</a>
-                    <a class="btn btn-solid ml-2" href="#">uber</a>
-                    <a class="btn btn-solid ml-2" href="#">ola</a>
-                    <a class="btn btn-solid ml-2" href="#">uber</a>
-                    <a class="btn btn-solid ml-2" href="#">ola</a>
-
+                <div class="cab-button d-flex flex-nowrap align-items-center py-2" id="vendor_main_div">
+                    
                 </div>
             </div>
             <div class="vehical-container style-4" style="height:calc(100vh - 397px !important" id="search_product_main_div">
                 
             </div>
+            <script type="text/template" id="vendors_template">
+                <% _.each(results, function(result, key){%>
+                    <a class="btn btn-solid ml-2 vendor-list" href="javascript:void(0);" data-vendor="<%= result.id %>"><%= result.name %></a>
+                <% }); %>
+            </script>
             <script type="text/template" id="products_template">
                 <% _.each(results, function(result, key){%>
                     <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
@@ -83,11 +74,9 @@
         </div>
     </div>
 </section>
-<script type="text/template">
-    
-</script>
 <script>
 var live_location = "{{ URL::asset('/images/live_location.gif') }}";
-var autocomplete_urls = "{{url('looking/get-list-of-vehicles/2')}}";
+var autocomplete_urls = "{{url('looking/vendor/list/14')}}";
+var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";
 </script>
 @endsection
