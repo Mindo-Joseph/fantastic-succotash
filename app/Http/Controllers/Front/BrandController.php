@@ -186,7 +186,9 @@ class BrandController extends FrontController
         if(!empty($products)){
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {
-                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                    $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
+                    $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                    $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
                 }
             }
         }

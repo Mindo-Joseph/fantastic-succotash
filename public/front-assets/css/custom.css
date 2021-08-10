@@ -2068,7 +2068,8 @@ div#test {
     font-size: 11px;
     color: #fff;
     background: orange;
-    padding: 3px;
+    padding: 3px 5px;
+    letter-spacing: 0;
 }
 
 
@@ -4388,7 +4389,7 @@ body[dir="rtl"] .inner_spacing h3 {
         height: calc(100vh - 150px);
         position: absolute;
         width: 400px;
-        top: 100px;
+        top: 200px;
     }
 
     .fh {

@@ -143,13 +143,9 @@
                                                 @endif
                                                 @if($client_preference_detail)
                                                     @if($client_preference_detail->rating_check == 1)
-                                                    <div class="custom_rating">
                                                         @if($new['averageRating'] > 0)
-                                                            @for($i = 1; $i < 6; $i++)
-                                                                <i class="fa fa-star{{ ($i <= $new['averageRating']) ? ' filled ' : '' }}"></i>
-                                                            @endfor
+                                                            <span class="rating">{{ $new['averageRating'] }} <i class="fa fa-star text-white p-0"></i></span>
                                                         @endif
-                                                    </div>
                                                     @endif
                                                 @endif
                                             </a>
@@ -270,22 +266,18 @@
                                                             <div class="media-body align-self-center">
                                                                 <div class="inner_spacing w-100">
                                                                     <h3 class="d-flex align-items-center justify-content-between">
-                                                                        <label class="mb-0">{{ $data->translation_title }}</label> <span class="rating">4.2</span>
+                                                                        <label class="mb-0">{{ $data->translation_title }}</label>
+                                                                        @if($client_preference_detail)
+                                                                            @if($client_preference_detail->rating_check == 1)  
+                                                                                @if($data->averageRating > 0)
+                                                                                    <span class="rating">{{ number_format($data->averageRating, 1, '.', '') }} <i class="fa fa-star text-white p-0"></i></span>
+                                                                                @endif
+                                                                            @endif
+                                                                        @endif
                                                                     </h3>
                                                                     <p>Lorem ipsum dolor sit amet.</p>
                                                                     @if($data['inquiry_only'] == 0)
                                                                         <h4 class="mt-1">{{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}</h4>
-                                                                    @endif
-                                                                    @if($client_preference_detail)
-                                                                        @if($client_preference_detail->rating_check == 1)  
-                                                                        <div class="custom_rating mt-0">
-                                                                            @if($data->averageRating > 0)
-                                                                                @for($i = 1; $i < 6; $i++)
-                                                                                    <i class="fa fa-star{{ ($i <= $data->averageRating) ? ' filled ' : '' }}"></i>
-                                                                                @endfor
-                                                                            @endif
-                                                                        </div>
-                                                                        @endif
                                                                     @endif
                                                                 </div>
                                                             </div>

@@ -46,14 +46,10 @@
                                                         {{ Session::get('currencySymbol').' '.(number_format($new['variant_price'] * $multiply,2))}} </h4>
                                                     @endif
                                                     @if($client_preference_detail)
-                                                        @if($client_preference_detail->rating_check == 1)  
-                                                        <div class="custom_rating">
+                                                        @if($client_preference_detail->rating_check == 1)
                                                             @if($new['averageRating'] > 0)
-                                                                @for($i = 1; $i < 6; $i++)
-                                                                    <i class="fa fa-star{{ ($i <= $new['averageRating']) ? ' filled ' : '' }}"></i>
-                                                                @endfor
+                                                                <span class="rating">{{ $new['averageRating'] }} <i class="fa fa-star text-white p-0"></i></span>
                                                             @endif
-                                                        </div>
                                                         @endif
                                                     @endif
                                                 </div>
