@@ -426,7 +426,7 @@
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4850.865733603189!2d76.82393041076074!3d30.716149768967526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1627015845978!5m2!1sen!2sin" width="100%" height="100vh" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         <div class="booking-experience ds bc">
             <form class="address-form">
-                <div class="location-box d-none">
+                <div class="location-box">
                     <ul class="location-inputs position-relative pl-2">
                         <li class="d-block mb-3 dots">
                             <input class="form-control pickup-text" type="text" placeholder="From CH Devi Lal Centre of Learning" />
@@ -496,7 +496,7 @@
                     <a class="btn btn-solid ml-2" href="#">ola</a>
                 </div>
                 
-                <div class="vehical-container style-4 d-none">
+                <div class="vehical-container style-4">
                     <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
                         <div class="col-3 vehicle-icon">
                             <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png" class="j0 i2">
@@ -624,7 +624,7 @@
                     </a>
                 </div>
 
-                <div class="cab-detail-box style-4">
+                <div class="cab-detail-box style-4 d-none">
                     <div class="cab-outer style-4">
                         <div class="bg-white p-2">
                             <a href="#">✕</a>
