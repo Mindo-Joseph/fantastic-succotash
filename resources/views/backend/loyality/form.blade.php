@@ -1,4 +1,10 @@
 <div class="row mb-2">
+    <div class="col-md-12">
+        <label>Upload Image </label>
+        <input type="file" accept="image/*" data-plugins="dropify" name="image" class="dropify" data-default-file="{{ $lc->image['proxy_url'].'100/100'.$lc->image['image_path'] }}" />
+    </div> 
+</div>
+<div class="row mb-2">
     <div class="col-md-6">
         <div class="form-group" id="nameInput">
             {!! Form::label('title', 'Name',['class' => 'control-label']) !!}

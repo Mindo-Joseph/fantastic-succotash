@@ -9,7 +9,7 @@ class LoyaltyCard extends Model
 {
     use HasFactory;
 
-	protected $fillable = ['name','description','minimum_points','per_order_minimum_amount','per_order_points','per_purchase_minimum_amount','amount_per_loyalty_point','redeem_points_per_primary_currency','status','loyalty_check'];
+	protected $fillable = ['name','description','image','minimum_points','per_order_minimum_amount','per_order_points','per_purchase_minimum_amount','amount_per_loyalty_point','redeem_points_per_primary_currency','status','loyalty_check'];
 
     public static function getLoyaltyPoint($minimum_points, $payable_amount){
     	$per_order_points = 0;
@@ -22,5 +22,18 @@ class LoyaltyCard extends Model
     	}
         $data = ['per_order_points' => $per_order_points, 'loyalty_card_id' => $loyalty_card_id];
     	return $data;
+    }
+
+	public function getImageAttribute($value)
+    {
+      $values = array();
+      $img = 'default/default_image.png';
+      if(!empty($value)){
+        $img = $value;
+      }
+      $values['proxy_url'] = env('IMG_URL1');
+      $values['image_path'] = env('IMG_URL2').'/'.\Storage::disk('s3')->url($img);
+      $values['image_fit'] = env('FIT_URl');
+      return $values;
     }
 }
