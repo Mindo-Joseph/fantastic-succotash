@@ -53,7 +53,7 @@
                 <% _.each(results, function(result, key){%>
                     <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
                         <div class="col-3 vehicle-icon">
-                            <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png">
+                            <img class='img-fluid' src='<%= result.image_url %>'>
                         </div>
                         <div class="col-9">
                             <div class="row no-gutters">
