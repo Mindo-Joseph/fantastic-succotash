@@ -77,7 +77,11 @@
                         @if(!empty($variantSets) && count($variantSets) > 0)
                         @foreach($variantSets as $key => $sets)
                         <div class="collection-collapse-block border-0 open">
-                            <h3 class="collapse-block-title"> {{$sets->variantDetail->varcategory->cate->slug .' > '. $sets->title}}</h3>
+                            @php
+                            $slug = $sets->variantDetail->varcategory->cate ? $sets->variantDetail->varcategory->cate->slug.' > ' : '';
+                            @endphp
+                            @if($slug)
+                            <h3 class="collapse-block-title"> {{$slug . $sets->title}}</h3>
                             <div class="collection-collapse-block-content">
                                 <div class="collection-brand-filter">
                                     @if($sets->type == 2)
@@ -101,9 +105,9 @@
                                         </div>
                                         @endforeach
                                     @endif
-
                                 </div>
                             </div>
+                            @endif
                         </div>
                         @endforeach
                         @endif

@@ -235,6 +235,11 @@
                                             <a href="{{route('cms.emails')}}">Emails</a>
                                         </li>
                                     @endif
+                                    @if(in_array('cms_notifications',$allowed) || Auth::user()->is_superadmin == 1)
+                                        <li>
+                                            <a href="{{route('cms.notifications')}}">Notifications</a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         </li>
