@@ -107,7 +107,7 @@ class PickupDeliveryController extends FrontController{
                     ->where('products.is_live', 1)->distinct()->get(); 
             if(!empty($products)){
                 foreach ($products as $key => $product) {
-                    $image_url = $product->media->first() ? $product->media->first()->image->path['image_fit'].'300/300'.$product->media->first()->image->path['image_path'] : '';
+                    $image_url = $product->media->first() ? $product->media->first()->image->path['image_fit'].'93/93'.$product->media->first()->image->path['image_path'] : '';
                     $product->image_url = $image_url;
                     $product->name = $product->translation->first() ? $product->translation->first()->title :'';
                     $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';
