@@ -27,14 +27,14 @@
 
                         <div class="col-md-8">
                             <div class="card-box">
-                                <ul>
-                                    <li><a class="btn btn-solid" href="#">Individual</a></li>
-                                    <li><a class="btn btn-solid" href="#">Group</a></li>
+                                <ul class="category-btns">
+                                    <li id="one"><a class="btn btn-solid" href="#">Individual</a></li>
+                                    <li id="two"><a class="btn btn-solid" href="#">Group</a></li>
                                 </ul>
                                 
-                                <div class="service-data-wrapper mb-5">
+                                <div class="service-data-wrapper mb-5" id="nav">
                                    
-                                    <div class="service-data mt-4">
+                                    <div class="service-data mt-4" id="nav1">
                                         <h4><b>Apartment</b></h4>
                                         <div class="service-img mb-3">
                                             <img class="img-fluid" src="https://d222mnpmkyzhbp.cloudfront.net/prod/assets/images/attribute-categories/15925783568.jpg" alt="">
@@ -99,7 +99,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="service-data mt-4">
+                                    <div class="service-data mt-4" id="nav2">
                                         <h4><b>Group</b></h4>
                                         <div class="service-img mb-3">
                                             <img class="img-fluid" src="https://d222mnpmkyzhbp.cloudfront.net/prod/assets/images/attribute-categories/15925783568.jpg" alt="">
@@ -410,10 +410,7 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -426,7 +423,8 @@
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4850.865733603189!2d76.82393041076074!3d30.716149768967526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1627015845978!5m2!1sen!2sin" width="100%" height="100vh" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         <div class="booking-experience ds bc">
             <form class="address-form">
-                <div class="location-box">
+
+                <div class="location-box d-none">
                     <ul class="location-inputs position-relative pl-2">
                         <li class="d-block mb-3 dots">
                             <input class="form-control pickup-text" type="text" placeholder="From CH Devi Lal Centre of Learning" />
@@ -624,7 +622,7 @@
                     </a>
                 </div>
 
-                <div class="cab-detail-box style-4 d-none">
+                <div class="cab-detail-box style-4 ">
                     <div class="cab-outer style-4">
                         <div class="bg-white p-2">
                             <a href="#">✕</a>
@@ -649,6 +647,12 @@
                                 <div class="col-6 mb-2">Loyalty</div>
                                 <div class="col-6 mb-2 text-right">-$102.95</div>
                             </div>
+                        </div>
+                        <div class="coupon_box d-flex w-100 py-2 align-items-center">
+                            <img src="http://local.myorder.com/assets/images/discount_icon.svg">
+                            <label class="mb-0 ml-1">                                
+                                <a href="javascript:void(0)" class="promo_code_list_btn ml-1" data-vendor_id="2" data-cart_id="4" data-amount="4.00">Select a promo code</a>
+                            </label>
                         </div>
                     </div>
                     <div class="payment-promo-container p-2">
@@ -865,9 +869,9 @@
                 </div>
             </form>
         </div>
-    </section>
+    </section> -->
     
-    <div class="search-list">
+    <!-- <div class="search-list">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -1083,7 +1087,7 @@
                 </div>
             </div>
         </div>
-    </div>   -->
+    </div>  -->
 
     <!-- Vendor Sign Up Form -->
     <!-- <section class="vendor-signup">
