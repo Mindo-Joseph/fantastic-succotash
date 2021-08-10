@@ -823,9 +823,9 @@ $(document).ready(function() {
             }
         });
         if(cart_qty_total > 0){
-            $('#cart_qty_span').html(cart_qty_total).show();
+            $('#cart_qty_span, .cart_qty_cls').html(cart_qty_total).show();
         }else{
-            $('#cart_qty_span').html(cart_qty_total).hide();
+            $('#cart_qty_span, .cart_qty_cls').html(cart_qty_total).hide();
         }
     }
     function cartHeader(address_id) {

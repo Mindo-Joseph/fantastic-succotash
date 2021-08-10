@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{CsvProductImport, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell};
+use App\Models\{CsvProductImport, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell, CartProduct, CartAddon, UserWishlist};
 use Illuminate\Support\Facades\Storage;
 use App\Http\Traits\ToasterResponser;
 use Maatwebsite\Excel\Facades\Excel;
@@ -387,8 +387,19 @@ class ProductController extends BaseController
      */
     public function destroy($domain = '', $id)
     {
-        Product::where('id', $id)->delete();
-        return redirect()->back()->with('success', 'Product deleted successfully!');
+        try{
+            DB::beginTransaction();
+            Product::where('id', $id)->delete();
+            CartProduct::where('product_id', $id)->delete();
+            CartAddon::where('cart_product_id', $id)->delete();
+            UserWishlist::where('product_id', $id)->delete();
+            DB::commit();
+            return redirect()->back()->with('success', 'Product deleted successfully!');
+        }
+        catch(\Exception $ex){
+            DB::rollback();
+            redirect()->back()->with('error', $ex->getMessage());
+        }
     }
 
     /**      Make variant rows          */
