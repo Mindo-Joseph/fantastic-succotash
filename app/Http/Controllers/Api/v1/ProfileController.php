@@ -289,7 +289,7 @@ class ProfileController extends BaseController{
                     $response['send_email'] = 1;
                 }
                 catch(\Exception $e){
-                    return response()->json(['data' => $response]);
+                    return response()->json(['data' => $e->getMessage()]);
                 }
             }
         }
