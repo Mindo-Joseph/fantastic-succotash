@@ -51,7 +51,7 @@
             </script>
             <script type="text/template" id="products_template">
                 <% _.each(results, function(result, key){%>
-                    <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
+                    <a class="vehical-view-box row align-items-center no-gutters px-2" href="javascript:void(0)" data-product_id="<%= result.id %>">
                         <div class="col-3 vehicle-icon">
                             <img class='img-fluid' src='<%= result.image_url %>'>
                         </div>
@@ -72,11 +72,53 @@
                 <% }); %>
             </script>
         </div>
+        <script type="text/template" id="cab_detail_box_template">
+            <div class="cab-outer style-4">
+                <div class="bg-white p-2">
+                    <a class="close-cab-detail-box" href="javascript:void()">✕</a>
+                    <div class="w-100 h-100">
+                        <img src="<%= result.image_url %>" alt="">
+                    </div>
+                    <div class="cab-location-details">
+                        <h4 class="d-flex align-items-center justify-content-between"><b><%= result.name %></b> <b>{{Session::get('currencySymbol')}}<%= result.tags_price%></b></h4>
+                        <p class="mb-0">In 3 mins.</p>
+                        <p><%= result.description %></p>
+                    </div>
+                </div>
+                <div class="cab-amount-details px-2">
+                    <div class="row">
+                        <div class="col-6 mb-2">Distance</div>
+                        <div class="col-6 mb-2 text-right">20.25 kms</div>
+                        <div class="col-6 mb-2">Duration</div>
+                        <div class="col-6 mb-2 text-right">10.25 mins</div>
+                        <div class="col-6 mb-2">Delivery fee</div>
+                        <div class="col-6 mb-2 text-right">$114.02</div>
+                        <% if(result.loyalty_amount_saved) { %>
+                            <div class="col-6 mb-2">Loyalty</div>
+                            <div class="col-6 mb-2 text-right">-{{Session::get('currencySymbol')}}<%= result.loyalty_amount_saved %></div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <div class="payment-promo-container p-2">
+                <h4 class="d-flex align-items-center justify-content-between mb-2">
+                    <span>
+                        <i class="fa fa-money" aria-hidden="true"></i> Cash
+                    </span>
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </h4>
+                <button class="btn btn-solid w-100">Request <%= result.name %></button>
+            </div>
+        </script>
+        <div class="cab-detail-box style-4 d-none" id="cab_detail_box">
+                            
+        </div> 
     </div>
 </section>
 <script>
 var live_location = "{{ URL::asset('/images/live_location.gif') }}";
 var autocomplete_urls = "{{url('looking/vendor/list/14')}}";
 var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";
+var get_product_detail = "{{url('looking/product-detail')}}";
 </script>
 @endsection
