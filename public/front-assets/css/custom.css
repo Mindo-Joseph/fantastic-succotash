@@ -4411,8 +4411,9 @@ body[dir="rtl"] .inner_spacing h3 {
     bottom: -40px;
     color: #c2c2c2;
     font-size: 14px;
-    font-weight: bold;
-  }
+    font-weight: 400;
+    width: 100px;
+}
   
   .step.active p {
     color: var(--theme-deafult);

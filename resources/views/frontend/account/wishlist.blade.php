@@ -109,11 +109,13 @@
                                                     <tr class="wishlist-row">
                                                         <td>
                                                             <div class="form-group mb-0">
-                                                                @if($wish['product']['variant'][0]['quantity'] > 0)
-                                                                <div class="custom-control custom-checkbox">
-                                                                    <input type="checkbox" class="custom-control-input" id="wp-{{$wish['product']['id']}}" data-variant="{{$wish['product']['variant'][0]['id']}}">
-                                                                    <label class="custom-control-label" for="wp-{{$wish['product']['id']}}"></label>
-                                                                </div>
+                                                                @if(empty($wish['product']['deleted_at']))
+                                                                    @if($wish['product']['variant'][0]['quantity'] > 0)
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" class="custom-control-input" id="wp-{{$wish['product']['id']}}" data-variant="{{$wish['product']['variant'][0]['id']}}">
+                                                                        <label class="custom-control-label" for="wp-{{$wish['product']['id']}}"></label>
+                                                                    </div>
+                                                                    @endif
                                                                 @endif
                                                             </div>
                                                         </td>
@@ -133,11 +135,15 @@
                                                         <td>{{ Session::get('currencySymbol') . $wish['product']['variant_price'] }}</td>
                                                         <td>{{date('M d, Y', strtotime($wish['added_on']))}}</td>
                                                         <td>
-                                                            @if($wish['product']['variant_quantity'] > 0)
-                                                                <i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>
-                                                                <span>{{__('In Stock')}}</span>
+                                                            @if(empty($wish['product']['deleted_at']))
+                                                                @if($wish['product']['variant_quantity'] > 0)
+                                                                    <i class="fa fa-check-square-o mr-1" aria-hidden="true"></i>
+                                                                    <span>{{__('In Stock')}}</span>
+                                                                @else
+                                                                    <span>{{__('Not In Stock')}}</span>
+                                                                @endif
                                                             @else
-                                                                <span>{{__('Not In Stock')}}</span>
+                                                                <span class="text-danger">This product no longer exists</span>
                                                             @endif
                                                         </td>
                                                         <td><a href="{{ route('removeWishlist', $wish['product']['sku']) }}" class="icon me-3"><i class="ti-close"></i> </a></td>
