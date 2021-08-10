@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs, VendorRegistrationDocument, EmailTemplate, UserDevice};
+use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs, VendorRegistrationDocument, EmailTemplate, NotificationTemplate, UserDevice};
 use Kutia\Larafirebase\Facades\Larafirebase;
 
 class CustomerAuthController extends FrontController
@@ -38,66 +38,35 @@ class CustomerAuthController extends FrontController
     }
 
     public function sendNotification(){
-        $token = ["cYR1E7AW-qE:APA91bGXeZ9ovCxjF-V0uCpGEDcXOqwsXvQUZn64b2Aid0uB3XEm3XrewWAUh6FGRUoddy27hvDRfm8tP0CyUzMbhABef3G7wuf85116RmV3QpJrPJAugs7gzWsmKGJI1fCOLc4qgCRK"];  
-        $from = "AAAA-gxQcf4:APA91bF2-7wHcDDUpdnOAjPkRECMcMqZyto1g3CloNTSvp4tvaM6yX2H1H3FFWQj3mHE_t0LkKKu5M_ASTjIaKvvuLDTrXe9eO7Xi7k8YbH6M355gz7x0GTbK7E9F7I7CAQS3AILs4J_";
-         
-      
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-        // curl_setopt($ch, CURLOPT_POST, true);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-        // $response = curl_exec($ch);
-        // dd($response);
-
-        // $msg = array
-        //       (
-        //         'body'  => "Testing Testing",
-        //         'title' => "Hi, From Raj",
-        //         'receiver' => 'erw',
-        //         'icon'  => "https://image.flaticon.com/icons/png/512/270/270014.png",/*Default Icon*/
-        //         'sound' => 'mySound'
-        //       );
-
-
-        // $fields = array
-        //         (
-        //             'to'        => $token,
-        //             'notification'  => $msg
-        //         );
-
-        $headers = [
-            'Authorization: key=' . $from,
-            'Content-Type: application/json',
-        ];
-        // $headers = array
-        //         (
-        //             'Authorization: key=' . $from,
-        //             'Content-Type: application/json'
-        //         );
-
-        $data = [
-            "registration_ids" => $token,
-            "notification" => [
-                'title' => "Hi, From Raj",
-                'body'  => "Testing Testing",
-            ]
-        ];
-        $dataString = $data;
-
-        //#Send Reponse To FireBase Server 
-        $ch = curl_init();
-        curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
-        curl_setopt( $ch,CURLOPT_POST, true );
-        curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-        curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-        curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $dataString ) );
-        $result = curl_exec($ch );
-        dd($result);
-        curl_close( $ch );
+        $token = ["ep6RrGVuT2-1MU6l1KHdIr:APA91bHVYY9GO--vjKfZNUKJuo0L-GH7KPaHi3xCZjoIkNqjxd8mKrBIsuChZngeIkJq9l3KgMhfzqRaFrHBY_w90ScBfSXTu-YHWLMl6QspOSDlMUrsNFPiDQ1V52F4A1kIjcJta_R6"];  
+        $from = env('FIREBASE_SERVER_KEY');
+        
+        $notification_content = NotificationTemplate::where('id', 3)->first();
+        if($notification_content){
+            $headers = [
+                'Authorization: key=' . $from,
+                'Content-Type: application/json',
+            ];
+            $data = [
+                "registration_ids" => $token,
+                "notification" => [
+                    'title' => "Hor bhai",
+                    'body'  => "kya haal hh",
+                ]
+            ];
+            $dataString = $data;
+    
+            $ch = curl_init();
+            curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+            curl_setopt( $ch,CURLOPT_POST, true );
+            curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+            curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+            curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+            curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $dataString ) );
+            $result = curl_exec($ch );
+            dd($result);
+            curl_close( $ch );
+        }
     }
 
     public function loginForm($domain = '')
