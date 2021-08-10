@@ -46,7 +46,18 @@
                                                 <p class="mb-1">In only 15 minutes get a 100% biosafe Municipality approved disinfection for your studio.</p>
                                                 <div class="d-flex align-items-center justify-content-between">
                                                     <h5 class="my-sm-0 my-3">$30.00</h5>
-                                                    <a class="btn btn-solid" href="#">Add <i class="fa fa-plus"></i></a>
+                                                    <a id="add_btn" class="btn btn-solid" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
+                                                    
+                                                    <div class="number" id="number">
+                                                        <span class="minus qty-minus">
+                                                            <i class="fa fa-minus" aria-hidden="true"></i>
+                                                        </span>
+                                                        <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="" class="input-number" step="0.01" id="">
+                                                        <span class="plus qty-plus" data-id="" data-base_price="">
+                                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        </span>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
@@ -399,6 +410,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
 
@@ -1956,6 +1968,10 @@
 
     <script src="{{asset('assets/js/pages/form-pickers.init.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+    
+    <script type="text/javascript">
+        
+    </script>
 
     <script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -1992,8 +2008,6 @@
   
     </script>
 
-    <script>
-        
-    </script>
+   
     
 @endsection
