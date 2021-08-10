@@ -73,7 +73,7 @@ class WishlistController extends FrontController
      */
     public function removeWishlist($domain = '', Request $request, $sku)
     {
-        $product = Product::where('sku', $sku)->firstOrFail();
+        $product = Product::withTrashed()->where('sku', $sku)->firstOrFail();
 
         $exist = UserWishlist::where('user_id', Auth::user()->id)->where('product_id', $product->id)->first();
 
