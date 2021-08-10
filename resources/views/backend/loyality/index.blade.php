@@ -69,6 +69,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Image</th>
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th>Minimum Points</th>
@@ -82,6 +83,9 @@
                                 <tr data-row-id="{{$ban->id}}">
                                     <td class="draggableTd">
                                         <span class="dragula-handle"></span>
+                                    </td>
+                                    <td>
+                                        <img src="{{$ban->image['proxy_url'].'40/40'.$ban->image['image_path']}}" class="rounded-circle" alt="{{$ban->name}}" >
                                     </td>
                                     <td><a class="openEditModal" loyaltyID="{{$ban->id}}" href="#"> {{ $ban->name }} </a></td>
                                     <td> {{ Str::limit($ban->description, 50, ' ...') }} </td>

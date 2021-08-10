@@ -494,7 +494,7 @@
                     <a class="btn btn-solid ml-2" href="#">ola</a>
                 </div>
                 
-                <div class="vehical-container style-4 d-none">
+                <div class="vehical-container style-4">
                     <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
                         <div class="col-3 vehicle-icon">
                             <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png" class="j0 i2">
@@ -639,9 +639,9 @@
                         <div class="cab-amount-details px-2">
                             <div class="row">
                                 <div class="col-6 mb-2">Distance</div>
-                                <div class="col-6 mb-2 text-right">20.25 kms</div>
+                                <div class="col-6 mb-2 text-right" id="distance">20.25 kms</div>
                                 <div class="col-6 mb-2">Duration</div>
-                                <div class="col-6 mb-2 text-right">10.25 mins</div>
+                                <div class="col-6 mb-2 text-right" id="">10.25 mins</div>
                                 <div class="col-6 mb-2">Delivery fee</div>
                                 <div class="col-6 mb-2 text-right">$114.02</div>
                                 <div class="col-6 mb-2">Loyalty</div>
@@ -659,7 +659,7 @@
                         <h4 class="d-flex align-items-center justify-content-between mb-2"><span><i class="fa fa-money" aria-hidden="true"></i> Cash</span> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
                         <button class="btn btn-solid w-100">Request XL Intercity</button>
                     </div>                
-                </div>
+                </div> 
 
             </form>
         </div>

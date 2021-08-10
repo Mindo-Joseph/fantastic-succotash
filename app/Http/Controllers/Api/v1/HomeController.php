@@ -84,6 +84,7 @@ class HomeController extends BaseController{
     {
         try{
             $vends = [];
+            $vends = [];
             $homeData = [];
             $user = Auth::user();
             $preferences = ClientPreference::select('is_hyperlocal', 'Default_location_name', 'Default_latitude', 'Default_longitude')->first();
@@ -113,6 +114,10 @@ class HomeController extends BaseController{
                 });
             }
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
+            foreach ($vendorData as $vendor) {
+                unset($vendor->products);
+                $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
+            }
             foreach ($vendorData as $key => $value) {
                 $vends[] = $value->id;
             }

@@ -21,7 +21,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs, VendorRegistrationDocument, EmailTemplate};
+use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs, VendorRegistrationDocument, EmailTemplate, NotificationTemplate, UserDevice};
+use Kutia\Larafirebase\Facades\Larafirebase;
 
 class CustomerAuthController extends FrontController
 {
@@ -29,6 +30,43 @@ class CustomerAuthController extends FrontController
     public function getTestHtmlPage()
     {
         return view('test');
+    }
+
+    public function fcm()
+    {
+        return view('firebase');
+    }
+
+    public function sendNotification(){
+        $token = ["ep6RrGVuT2-1MU6l1KHdIr:APA91bHVYY9GO--vjKfZNUKJuo0L-GH7KPaHi3xCZjoIkNqjxd8mKrBIsuChZngeIkJq9l3KgMhfzqRaFrHBY_w90ScBfSXTu-YHWLMl6QspOSDlMUrsNFPiDQ1V52F4A1kIjcJta_R6"];  
+        $from = env('FIREBASE_SERVER_KEY');
+        
+        $notification_content = NotificationTemplate::where('id', 3)->first();
+        if($notification_content){
+            $headers = [
+                'Authorization: key=' . $from,
+                'Content-Type: application/json',
+            ];
+            $data = [
+                "registration_ids" => $token,
+                "notification" => [
+                    'title' => "Hor bhai",
+                    'body'  => "kya haal hh",
+                ]
+            ];
+            $dataString = $data;
+    
+            $ch = curl_init();
+            curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+            curl_setopt( $ch,CURLOPT_POST, true );
+            curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+            curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+            curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+            curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $dataString ) );
+            $result = curl_exec($ch );
+            dd($result);
+            curl_close( $ch );
+        }
     }
 
     public function loginForm($domain = '')

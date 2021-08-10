@@ -14,7 +14,7 @@ use App\Models\Client as CP;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, VendorOrderStatus,OrderTax, SubscriptionInvoicesUser};
+use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus,OrderTax, SubscriptionInvoicesUser};
 
 class OrderController extends FrontController
 {
@@ -91,7 +91,7 @@ class OrderController extends FrontController
         $order = $this->orderSave($request, "1");
         return $this->successResponse(['status' => 'success', 'order' => $order, 'message' => 'Order placed successfully.']);
     }
-    public function sendSuccessEmail($request, $order){
+    public function sendSuccessEmail($request, $order, $vendor_id=''){
         if( (isset($request->auth_token)) && (!empty($request->auth_token)) ){
             $user = User::where('auth_token', $request->auth_token)->first();
         }else{
@@ -103,7 +103,14 @@ class OrderController extends FrontController
         $otp = mt_rand(100000, 999999);
         if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
             $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
-            $sendto =  $user->email;
+            if($vendor_id == ""){
+                $sendto =  $user->email;
+            }else{
+                $vendor = Vendor::where('id', $vendor_id)->first();
+                if($vendor){
+                    $sendto =  $vendor->email;
+                }
+            }
             $client_name = 'Sales';
             $mail_from = $data->mail_from;
             try {
@@ -120,9 +127,11 @@ class OrderController extends FrontController
                 }
                 if($email_template){
                     $email_template_content = $email_template->content;
-                    // dd($cartDetails->products[0]['vendor_products'][0]['product']['media'][0]['image']['path']['image_fit']);
-                    $returnHTML = view('email.orderProducts')->with(['cartData' => $cartDetails])->render();
-                    // dd($returnHTML);
+                    if($vendor_id == ""){
+                        $returnHTML = view('email.orderProducts')->with(['cartData' => $cartDetails])->render();
+                    }else{
+                        $returnHTML = view('email.orderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id])->render();
+                    }
                     $email_template_content = str_ireplace("{customer_name}", ucwords($user->name), $email_template_content);
                     $email_template_content = str_ireplace("{order_id}", $order->id, $email_template_content);
                     $email_template_content = str_ireplace("{products}", $returnHTML, $email_template_content);
@@ -605,6 +614,10 @@ class OrderController extends FrontController
             $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
             $order->payable_amount = $total_delivery_fee + $payable_amount + $tip_amount - $total_discount - $loyalty_amount_saved;
             $order->save();
+            foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
+                $this->sendSuccessEmail($request, $order, $vendor_id);
+            }
+            $this->sendOrderNotification($user->id);
             $this->sendSuccessEmail($request, $order);
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();
@@ -633,6 +646,36 @@ class OrderController extends FrontController
         }
     }
 
+    public function sendOrderNotification($id){
+        $token = User::whereNotNull('device_token')->pluck('device_token')->where('user_id', $id)->toArray();
+        $from = env('FIREBASE_SERVER_KEY');
+        
+        $notification_content = NotificationTemplate::where('id', 1)->first();
+        if($notification_content){
+            $headers = [
+                'Authorization: key=' . $from,
+                'Content-Type: application/json',
+            ];
+            $data = [
+                "registration_ids" => $token,
+                "notification" => [
+                    'title' => $notification_content->label,
+                    'body'  => $notification_content->content,
+                ]
+            ];
+            $dataString = $data;
+    
+            $ch = curl_init();
+            curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+            curl_setopt( $ch,CURLOPT_POST, true );
+            curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+            curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+            curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+            curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $dataString ) );
+            $result = curl_exec($ch );
+            curl_close( $ch );
+        }
+    }
     public function makePayment(Request $request)
     {
         $token = $request->stripeToken;

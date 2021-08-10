@@ -134,7 +134,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <div class="icon-nav d-sm-none d-block">
                             <ul>
                                 <li class="onhover-div mobile-search">
-                                    <a href="javascript:void(0);" id="mobile_search_box_btn"><img src="../assets/images/icon/search.png"  class="img-fluid blur-up lazyloaded" alt=""> <i class="ti-search"></i></a>
+                                    <a href="javascript:void(0);" id="mobile_search_box_btn"><i class="ti-search"></i></a>
                                     <div id="search-overlay" class="search-overlay">
                                         <div> <span class="closebtn" onclick="closeSearch()" title="Close Overlay">×</span>
                                             <div class="overlay-content">
@@ -155,7 +155,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     </div>
                                 </li>
                                 <li class="onhover-div mobile-setting">
-                                    <div><img src="../assets/images/icon/setting.png" class="img-fluid blur-up lazyloaded" alt=""> <i class="ti-settings"></i></div>
+                                    <div><i class="ti-settings"></i></div>
                                     <div class="show-div setting">
                                         <h6>language</h6>
                                         <ul>
@@ -176,42 +176,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     </div>
                                 </li>
                                 <li class="onhover-div mobile-cart">
-                                    <a href="{{route('showCart')}}"><img src="../assets/images/icon/cart.png" class="img-fluid blur-up lazyloaded" alt=""> <i class="ti-shopping-cart"></i></a>
-                                    <span class="cart_qty_cls">2</span>
+                                    <a href="{{route('showCart')}}"><i class="ti-shopping-cart"></i></a>
+                                    <span class="cart_qty_cls" style="display:none"></span>
                                     <ul class="show-div shopping-cart">
-                                        <li>
-                                            <div class="media">
-                                                <a href="#"><img alt="" class="me-3" src="../assets/images/fashion/product/1.jpg"></a>
-                                                <div class="media-body">
-                                                    <a href="#">
-                                                        <h4>item name</h4>
-                                                    </a>
-                                                    <h4><span>1 x $ 299.00</span></h4>
-                                                </div>
-                                            </div>
-                                            <div class="close-circle"><a href="#"><i class="fa fa-times" aria-hidden="true"></i></a></div>
-                                        </li>
-                                        <li>
-                                            <div class="media">
-                                                <a href="#"><img alt="" class="me-3" src="../assets/images/fashion/product/2.jpg"></a>
-                                                <div class="media-body">
-                                                    <a href="#">
-                                                        <h4>item name</h4>
-                                                    </a>
-                                                    <h4><span>1 x $ 299.00</span></h4>
-                                                </div>
-                                            </div>
-                                            <div class="close-circle"><a href="#"><i class="fa fa-times" aria-hidden="true"></i></a></div>
-                                        </li>
-                                        <li>
-                                            <div class="total">
-                                                <h5>subtotal : <span>$299.00</span></h5>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="buttons"><a href="cart.html" class="view-cart">view
-                                                    cart</a> <a href="#" class="checkout">checkout</a></div>
-                                        </li>
                                     </ul>
                                 </li>
                             </ul>
@@ -272,7 +239,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     </li>
     <% _.each(nav_categories, function(category, key){ %>
         <li>
-            <a href="{{route('categoryDetail')}}/<%= category.slug %>"><%= category.name %></a>
+            <a href="{{route('categoryDetail')}}/<%= category.slug %>">
+                @if($client_preference_detail->show_icons == 1)
+                    <img src="<%= category.icon.image_fit %>200/200<%= category.icon.image_path %>" alt="">
+                @endif
+                <%= category.name %>
+            </a>
             <% if(category.children) { %>
                 <ul>
                 <% _.each(category.children, function(childs, key1){ %>

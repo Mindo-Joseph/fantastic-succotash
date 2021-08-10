@@ -8,6 +8,8 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('dispatch-order-status-update/{id?}', 'Front\DispatcherController@dispatchOrderStatusUpdate')->name('dispatch-order-update'); // Order Status update Dispatch
 	Route::get('dispatch-pickup-delivery/{id?}', 'Front\DispatcherController@dispatchPickupDeliveryUpdate')->name('dispatch-pickup-delivery'); // pickup delivery update from dispatch
 	Route::get('demo', 'Front\CustomerAuthController@getTestHtmlPage');
+	Route::get('fcm', 'Front\CustomerAuthController@fcm');
+	Route::get('send-notification', 'Front\CustomerAuthController@sendNotification');
 	Route::get('test/email', function(){
 		$send_mail = 'test@yopmail.com';
 		// App\Jobs\SendRefferalCodeEmailJob::dispatch($send_mail);
@@ -145,23 +147,18 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 		Route::get('get-return-products', 'Front\ReturnOrderController@getReturnProducts')->name('get-return-products');
 		Route::post('update-product-return', 'Front\ReturnOrderController@updateProductReturn')->name('update.order.return');
 	});
-
-
 	// Return product 
 	Route::group(['prefix' => 'looking'], function () {
 		Route::get('/', 'Front\BookingController@index')->name('bookingIndex');
-
 		Route::post('get-list-of-vehicles-old/{id}', 'Front\PickupDeliveryController@getListOfVehicles');
 		Route::post('get-list-of-vehicles/{id}', 'Front\PickupDeliveryController@productsByVendorInPickupDelivery');
+		Route::post('product-detail/{id}', 'Front\PickupDeliveryController@postCabProductById');
+		Route::post('vendor/list/{category_id}', 'Front\PickupDeliveryController@postVendorListByCategoryId');
 		Route::post('create-order', 'Front\PickupDeliveryController@createOrder');
 		Route::post('cart/updateQuantity', 'Front\CartController@updateQuantity');
 		Route::post('promo-code/list', 'Front\PickupDeliveryController@postPromoCodeList');
 		Route::post('promo-code/verify', 'Front\PickupDeliveryController@postVerifyPromoCode');
 		Route::post('promo-code/remove', 'Front\PickupDeliveryController@postRemovePromoCode');
 	});
-
-
-
-	
 	Route::post('upload-file', 'Front\RatingController@uploadFile')->name('uploadfile');
 });
