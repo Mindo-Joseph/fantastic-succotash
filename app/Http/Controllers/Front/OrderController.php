@@ -91,7 +91,7 @@ class OrderController extends FrontController
         $order = $this->orderSave($request, "1");
         return $this->successResponse(['status' => 'success', 'order' => $order, 'message' => 'Order placed successfully.']);
     }
-    public function sendSuccessEmail($request, $order){
+    public function sendSuccessEmail($request, $order, $vendor_id=''){
         if( (isset($request->auth_token)) && (!empty($request->auth_token)) ){
             $user = User::where('auth_token', $request->auth_token)->first();
         }else{
@@ -103,7 +103,14 @@ class OrderController extends FrontController
         $otp = mt_rand(100000, 999999);
         if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
             $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
-            $sendto =  $user->email;
+            if($vendor_id == ""){
+                $sendto =  $user->email;
+            }else{
+                $vendor = Vendor::where('id', $vendor_id)->first();
+                if($vendor){
+                    $sendto =  $vendor->email;
+                }
+            }
             $client_name = 'Sales';
             $mail_from = $data->mail_from;
             try {
@@ -120,9 +127,11 @@ class OrderController extends FrontController
                 }
                 if($email_template){
                     $email_template_content = $email_template->content;
-                    // dd($cartDetails->products[0]['vendor_products'][0]['product']['media'][0]['image']['path']['image_fit']);
-                    $returnHTML = view('email.orderProducts')->with(['cartData' => $cartDetails])->render();
-                    // dd($returnHTML);
+                    if($vendor_id == ""){
+                        $returnHTML = view('email.orderProducts')->with(['cartData' => $cartDetails])->render();
+                    }else{
+                        $returnHTML = view('email.orderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id])->render();
+                    }
                     $email_template_content = str_ireplace("{customer_name}", ucwords($user->name), $email_template_content);
                     $email_template_content = str_ireplace("{order_id}", $order->id, $email_template_content);
                     $email_template_content = str_ireplace("{products}", $returnHTML, $email_template_content);
@@ -605,6 +614,9 @@ class OrderController extends FrontController
             $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
             $order->payable_amount = $total_delivery_fee + $payable_amount + $tip_amount - $total_discount - $loyalty_amount_saved;
             $order->save();
+            foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
+                $this->sendSuccessEmail($request, $order, $vendor_id);
+            }
             $this->sendSuccessEmail($request, $order);
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();

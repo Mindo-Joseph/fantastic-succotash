@@ -211,9 +211,18 @@ $(document).ready(function () {
             }
             ]
         });
+
+        
     });
        
-
+    $(document ).ready(function() {
+        $("#number").hide();
+        $("#add_btn").click(function(){
+            $("#number").show();
+            $(this).hide();
+        });
+    });
+    
     $("#dinein_tab").click(function () {
         var url = "dine_in";
         getHomePage("", "", url);
