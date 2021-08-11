@@ -124,7 +124,7 @@ class CartController extends BaseController{
             $client_currency = ClientCurrency::where('is_primary', '=', 1)->first();
             $cart_detail = [
                 'is_gift' => 0,
-                'status' => '1',
+                'status' => '0',
                 'item_count' => 0,
                 'user_id' => $user->id,
                 'created_by' => $user->id,
@@ -551,6 +551,11 @@ class CartController extends BaseController{
                 if(!empty($vendorData->coupon->promo)){
                     unset($vendorData->coupon->promo);
                 }
+
+                if (in_array(1, $subscription_features)) {
+                    $subscription_discount = $subscription_discount + $deliver_charge;
+                }
+                $total_subscription_discount = $total_subscription_discount + $subscription_discount;
             }
         }
         $cart_product_luxury_id = CartProduct::where('cart_id', $cartID)->select('luxury_option_id', 'vendor_id')->first();
@@ -559,6 +564,10 @@ class CartController extends BaseController{
                 $vendor_address = Vendor::where('id', $cart_product_luxury_id->vendor_id)->select('address')->first();
                 $cart->address = $vendor_address->address;
             }
+        }
+        if (!empty($subscription_features)) {
+            $total_disc_amount = $total_disc_amount + $total_subscription_discount;
+            $cart->total_subscription_discount = $total_subscription_discount;
         }
         $cart->total_tax = $total_tax;
         $cart->tax_details = $tax_details;

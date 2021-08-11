@@ -1,3 +1,16 @@
+jQuery(window).scroll(function () {
+    var scroll = jQuery(window).scrollTop();
+
+    if (scroll <= 192) {
+
+        jQuery(".category-btns").removeClass("category-active-btns");
+
+    } else {
+
+        jQuery(".category-btns").addClass("category-active-btns");
+
+    }
+});
 $(document).ready(function () {
 
     if (window.location.pathname == '/') {
@@ -221,8 +234,11 @@ $(document).ready(function () {
             $("#number").show();
             $(this).hide();
         });
+        
     });
-    
+
+   
+
     $("#dinein_tab").click(function () {
         var url = "dine_in";
         getHomePage("", "", url);

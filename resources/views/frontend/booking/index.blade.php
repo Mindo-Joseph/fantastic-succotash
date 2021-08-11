@@ -11,22 +11,29 @@
     <div class="booking-experience ds bc">
         <div class="address-form">
             <div class="location-box">
-                <ul class="location-inputs position-relative pl-2">
+                <ul class="location-inputs position-relative pl-2" id="location_input_main_div">
                     <li class="d-block mb-3 dots">
                         <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Pick-Up Location')}}" id="pickup_location"/>
-                        <input type="hidden" name="latitude[]" value="" id="pickup_location_latitude" />
-                        <input type="hidden" name="longitude[]" value="" id="pickup_location_longitude" />
-                        <i class="fa fa-times ml-1" aria-hidden="true"></i>
+                        <input type="hidden" name="pickup_location_latitude[]" value="" id="pickup_location_latitude"/>
+                        <input type="hidden" name="pickup_location_longitude[]" value="" id="pickup_location_longitude" />
                     </li>
                     <li class="d-block mb-3 dots">
-                        <input class="form-control pickup-text" type="text" placeholder="{{__('Enter Your Destination')}}" id="destination_location" />
-                        <input type="hidden" name="latitude[]" value="" id="destination_location_latitude" />
-                        <input type="hidden" name="longitude[]" value="" id="destination_location_longitude" />
+                        <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Stop')}}" id="destination_location" />
+                        <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude" />
+                        <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude" />
                         <i class="fa fa-times ml-1" aria-hidden="true"></i>
                     </li>
                 </ul>
                 <a class="add-more-location position-relative pl-2" href="javascript:void(0)">{{__('Add Destination')}}</a>
             </div>
+            <script type="text/template" id="destination_location_template">
+                <li class="d-block mb-3 dots" id="dots_<%= random_id %>">
+                    <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Stop')}}" id="destination_location_<%= random_id %>" />
+                    <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude_<%= random_id %>" />
+                    <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude_<%= random_id %>" />
+                    <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel="<%= random_id %>"></i>
+                </li>
+            </script>
             <div class="location-list style-4">
                 @forelse($user_addresses as $user_address)
                     <a class="search-location-result position-relative d-block" href="javascript:void(0);" data-address="{{$user_address->address}}" data-latitude="{{$user_address->latitude}}" data-longitude="{{$user_address->longitude}}">
@@ -59,8 +66,6 @@
                             <div class="row no-gutters">
                                 <div class="col-8 vehicle-details">
                                     <h4 class="m-0"><b><%= result.name %></b></h4>
-                                    <p class="station-rides ellips"><%= result.description %></p>
-                                    <p class="waiting-time m-0"><span class="mr-1">In 2 mins.</span><span>03:04 pm</span></p>
                                 </div>
                                 <div class="col-4 ride-price pl-2">
                                     <p class="mb-0"><b>{{Session::get('currencySymbol')}}<%= result.tags_price%></b></p>
@@ -77,27 +82,30 @@
                 <div class="bg-white p-2">
                     <a class="close-cab-detail-box" href="javascript:void()">✕</a>
                     <div class="w-100 h-100">
-                        <img src="<%= result.image_url %>" alt="">
+                        <img src="<%= result.image_url %>">
                     </div>
                     <div class="cab-location-details">
                         <h4 class="d-flex align-items-center justify-content-between"><b><%= result.name %></b> <b>{{Session::get('currencySymbol')}}<%= result.tags_price%></b></h4>
-                        <p class="mb-0">In 3 mins.</p>
                         <p><%= result.description %></p>
                     </div>
                 </div>
                 <div class="cab-amount-details px-2">
                     <div class="row">
-                        <div class="col-6 mb-2">Distance</div>
+                        <div class="col-6 mb-2">{{__('Distance')}}</div>
                         <div class="col-6 mb-2 text-right" id="distance"></div>
-                        <div class="col-6 mb-2">Duration</div>
+                        <div class="col-6 mb-2">{{__('Duration')}}</div>
                         <div class="col-6 mb-2 text-right" id="duration"></div>
-                        <div class="col-6 mb-2">Delivery fee</div>
-                        <div class="col-6 mb-2 text-right">$114.02</div>
                         <% if(result.loyalty_amount_saved) { %>
                             <div class="col-6 mb-2">Loyalty</div>
                             <div class="col-6 mb-2 text-right">-{{Session::get('currencySymbol')}}<%= result.loyalty_amount_saved %></div>
                         <% } %>
                     </div>
+                </div>
+                <div class="coupon_box d-flex w-100 py-2 align-items-center">
+                    <img src="{{asset('assets/images/discount_icon.svg')}}">
+                    <label class="mb-0 ml-1">                                
+                        <a href="javascript:void(0)" class="promo_code_list_btn_cab_booking ml-1" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>">Select a promo code</a>
+                    </label>
                 </div>
             </div>
             <div class="payment-promo-container p-2">
@@ -110,15 +118,44 @@
                 <button class="btn btn-solid w-100">Request <%= result.name %></button>
             </div>
         </script>
+        <script type="text/template" id="cab_booking_promo_code_template">
+            <% _.each(promo_codes, function(promo_code, key){%>
+                <div class="col-12 mt-2">
+                    <div class="coupon-code mt-0">
+                        <div class="p-2">
+                            <img src="<%= promo_code.image.image_fit %>100/35<%= promo_code.image.image_path %>" alt="">
+                            <h6 class="mt-0"><%= promo_code.title %></h6>
+                        </div>
+                        <hr class="m-0">
+                        <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
+                            <label class="m-0"><%= promo_code.name %></label>
+                            <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="17" data-cart_id="4" data-coupon_id="3" data-amount="86.36" style="cursor: pointer;">Apply</a>
+                        </div>
+                        <hr class="m-0">
+                        <div class="offer-text p-2">
+                            <p class="m-0"><%= promo_code.short_desc %></p>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </script>
         <div class="cab-detail-box style-4 d-none" id="cab_detail_box">
                             
-        </div> 
+        </div>
+        <div class="promo-box style-4 d-none">
+            <a class="d-block mt-2 close-promo-code-detail-box" href="javascript:void(0)">✕</a>
+            <div class="row" id="cab_booking_promo_code_list_main_div">
+                
+            </div>    
+        </div>
     </div>
 </section>
 <script>
-var live_location = "{{ URL::asset('/images/live_location.gif') }}";
 var autocomplete_urls = "{{url('looking/vendor/list/14')}}";
-var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";
 var get_product_detail = "{{url('looking/product-detail')}}";
+var promo_code_list_url = "{{route('verify.promocode.list')}}";
+var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";
+var live_location = "{{ URL::asset('/images/live_location.gif') }}";
+var no_coupon_available_message = "{{__('No Other Coupons Available.')}}";
 </script>
 @endsection
