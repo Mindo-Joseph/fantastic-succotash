@@ -61,6 +61,8 @@ $(document).ready(function () {
                         if(response.data.length == 1){
                             $('.vendor-list').trigger('click');
                             $('.table-responsive').remove();
+                        }else{
+                            $('.vendor-list').first().trigger('click');
                         }
                     }else{
                         $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
