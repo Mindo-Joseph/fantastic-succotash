@@ -87,9 +87,10 @@ $(document).ready(function() {
     //         $('.vehical-container').attr('style', 'height:calc(100vh - '+minheight+' !important');
     //     });
     // // Cabbooking Js Code  
+
      
    // top Moveble Tabbar on top js code
-    $(".navigation-tab-item").click(function() {
+    /*$(".navigation-tab-item").click(function() {
         $(".navigation-tab-item").removeClass("active");
         $(this).addClass("active");
         if($('body').attr('dir') == 'rtl'){
@@ -101,7 +102,7 @@ $(document).ready(function() {
                 left: $(this).prevAll().length * 100 + "px"
             });
         }
-    });
+    });*/
   
     if($('#cart_main_page').length > 0){
         let address_checked = $("input:radio[name='address_id']").is(":checked");
