@@ -124,7 +124,7 @@ class CartController extends BaseController{
             $client_currency = ClientCurrency::where('is_primary', '=', 1)->first();
             $cart_detail = [
                 'is_gift' => 0,
-                'status' => '1',
+                'status' => '0',
                 'item_count' => 0,
                 'user_id' => $user->id,
                 'created_by' => $user->id,

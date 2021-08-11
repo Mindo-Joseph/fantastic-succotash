@@ -8,7 +8,7 @@ use GuzzleHttp\Client as GCLIENT;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser};
 
 class OrderController extends Controller {
     use ApiResponser;
@@ -68,6 +68,18 @@ class OrderController extends Controller {
             $user = Auth::user();
             if($user){
                 DB::beginTransaction();
+                $subscription_features = array();
+                $now = Carbon::now()->toDateTimeString();
+                $user_subscription = SubscriptionInvoicesUser::with('features')
+                    ->select('id', 'user_id', 'subscription_id')
+                    ->where('user_id', $user->id)
+                    ->where('end_date', '>', $now)
+                    ->orderBy('end_date', 'desc')->first();
+                if ($user_subscription) {
+                    foreach ($user_subscription->features as $feature) {
+                        $subscription_features[] = $feature->feature_id;
+                    }
+                }
                 $loyalty_amount_saved = 0;
                 $redeem_points_per_primary_currency = '';
                 $loyalty_card = LoyaltyCard::where('status', '0')->first();
@@ -108,7 +120,7 @@ class OrderController extends Controller {
                     $customerCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
                     $clientCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
                     $cart_products = CartProduct::with('product.pimage', 'product.variants', 'product.taxCategory.taxRate','coupon', 'product.addon')->where('cart_id', $cart->id)->where('status', [0,1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
-                    $total_delivery_fee = 0;
+                    $total_subscription_discount = $total_delivery_fee = 0;
                     foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                         $delivery_fee = 0;
                         $deliver_charge = $delivery_fee_charges = 0.00;
@@ -240,6 +252,10 @@ class OrderController extends Controller {
                         $order_status->save();
                     }
                     $loyalty_points_earned = LoyaltyCard::getLoyaltyPoint($loyalty_points_used, $payable_amount);
+                    if(in_array(1, $subscription_features)){
+                        $total_subscription_discount = $total_subscription_discount + $total_delivery_fee;
+                    }
+                    $total_discount = $total_discount + $total_subscription_discount;
                     $order->total_amount = $total_amount;
                     $order->total_discount = $total_discount;
                     $order->taxable_amount = $taxable_amount;
@@ -260,6 +276,7 @@ class OrderController extends Controller {
                     $order->loyalty_amount_saved = $loyalty_amount_saved;
                     $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
                     $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
+                    $order->subscription_discount = $total_subscription_discount;
                     $order->payable_amount = $total_delivery_fee + $payable_amount + $tip_amount - $total_discount - $loyalty_amount_saved;
                     $order->save();
                     CartCoupon::where('cart_id', $cart->id)->delete();
