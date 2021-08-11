@@ -101,6 +101,12 @@
                         <% } %>
                     </div>
                 </div>
+                <div class="coupon_box d-flex w-100 py-2 align-items-center">
+                    <img src="{{asset('assets/images/discount_icon.svg')}}">
+                    <label class="mb-0 ml-1">                                
+                        <a href="javascript:void(0)" class="promo_code_list_btn_cab_booking ml-1" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>">Select a promo code</a>
+                    </label>
+                </div>
             </div>
             <div class="payment-promo-container p-2">
                 <h4 class="d-flex align-items-center justify-content-between mb-2">
@@ -112,15 +118,44 @@
                 <button class="btn btn-solid w-100">Request <%= result.name %></button>
             </div>
         </script>
+        <script type="text/template" id="cab_booking_promo_code_template">
+            <% _.each(promo_codes, function(promo_code, key){%>
+                <div class="col-12 mt-2">
+                    <div class="coupon-code mt-0">
+                        <div class="p-2">
+                            <img src="<%= promo_code.image.image_fit %>100/35<%= promo_code.image.image_path %>" alt="">
+                            <h6 class="mt-0"><%= promo_code.title %></h6>
+                        </div>
+                        <hr class="m-0">
+                        <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
+                            <label class="m-0"><%= promo_code.name %></label>
+                            <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="17" data-cart_id="4" data-coupon_id="3" data-amount="86.36" style="cursor: pointer;">Apply</a>
+                        </div>
+                        <hr class="m-0">
+                        <div class="offer-text p-2">
+                            <p class="m-0"><%= promo_code.short_desc %></p>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </script>
         <div class="cab-detail-box style-4 d-none" id="cab_detail_box">
                             
-        </div> 
+        </div>
+        <div class="promo-box style-4 d-none">
+            <a class="d-block mt-2 close-promo-code-detail-box" href="javascript:void(0)">✕</a>
+            <div class="row" id="cab_booking_promo_code_list_main_div">
+                
+            </div>    
+        </div>
     </div>
 </section>
 <script>
-var live_location = "{{ URL::asset('/images/live_location.gif') }}";
 var autocomplete_urls = "{{url('looking/vendor/list/14')}}";
-var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";
 var get_product_detail = "{{url('looking/product-detail')}}";
+var promo_code_list_url = "{{route('verify.promocode.list')}}";
+var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";
+var live_location = "{{ URL::asset('/images/live_location.gif') }}";
+var no_coupon_available_message = "{{__('No Other Coupons Available.')}}";
 </script>
 @endsection

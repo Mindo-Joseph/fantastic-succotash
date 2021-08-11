@@ -89,6 +89,34 @@ $(document).ready(function () {
             }
         });
     });
+    $(document).on("click",".promo_code_list_btn_cab_booking",function() {
+        let amount = $(this).data('amount');
+        let vendor_id = $(this).data('vendor_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: promo_code_list_url,
+            data: {amount:amount, vendor_id:vendor_id},
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $('#cab_booking_promo_code_list_main_div').html('');
+                    if(response.data.length != 0){
+                        $('.promo-box').removeClass('d-none');
+                        $('.cab-detail-box').addClass('d-none');
+                        let cab_booking_promo_code_template = _.template($('#cab_booking_promo_code_template').html());
+                        $("#cab_booking_promo_code_list_main_div").append(cab_booking_promo_code_template({promo_codes: response.data})).show();
+                    }else{
+                        $("#cab_booking_promo_code_list_main_div").html(no_coupon_available_message).show();
+                    }
+                }
+            }
+        });
+        
+    });
+    $(document).on("click",".close-promo-code-detail-box",function() {
+        $('.promo-box').addClass('d-none');
+        $('.cab-detail-box').removeClass('d-none');
+    });
     $(document).on("click",".close-cab-detail-box",function() {
         $('.cab-detail-box').addClass('d-none');
         $('.address-form').removeClass('d-none');
