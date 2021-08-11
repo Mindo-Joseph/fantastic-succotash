@@ -129,7 +129,7 @@
                         <hr class="m-0">
                         <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
                             <label class="m-0"><%= promo_code.name %></label>
-                            <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="17" data-cart_id="4" data-coupon_id="3" data-amount="86.36" style="cursor: pointer;">Apply</a>
+                            <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="<%= vendor_id %>" data-coupon_id="<%= promo_code.id %>" data-product_id="<%= product_id %>" data-amount="<%= amount %>" style="cursor: pointer;">Apply</a>
                         </div>
                         <hr class="m-0">
                         <div class="offer-text p-2">

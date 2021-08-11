@@ -17,14 +17,17 @@ $(document).ready(function () {
         }
     });
     $(document).on("click", ".location-inputs .apremove",function() {
-        $('#dots_'+$(this).data('rel')).remove();
-        var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
-           return this.value;
-        }).get();
-        if(destination_location_names.length < 5){
-            $('.add-more-location').show();
-        }else{
-            $('.add-more-location').hide();
+        if('#dots_'+$(this).data('rel')){
+            $('#dots_'+$(this).data('rel')).remove();
+            var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
+               return this.value;
+            }).get();
+            if(destination_location_names.length < 5){
+                $('.add-more-location').show();
+            }else{
+                $('.add-more-location').hide();
+            }
+            initMap2();
         }
     });
     function initializeNew(random_id) {
@@ -167,7 +170,6 @@ $(document).ready(function () {
         var pointA = new google.maps.LatLng(pickup_location_latitude, pickup_location_longitude);
         map = new google.maps.Map(document.getElementById('booking-map'), {zoom: 7,center: pointA});
         map.setOptions({ styles:  styles});
-        // Instantiate a directions service.
         directionsService = new google.maps.DirectionsService;
         directionsDisplay = new google.maps.DirectionsRenderer({map: map});
         calculateAndDisplayRoute(directionsService, directionsDisplay);
@@ -183,21 +185,24 @@ $(document).ready(function () {
                 stopover: true,
               });
         });
-        directionsService.route({
-            waypoints:waypts,
-            optimizeWaypoints:true,
-            origin: $('#pickup_location').val(),
-            travelMode: google.maps.TravelMode.DRIVING,
-            destination: $('#destination_location').val(),
-        }, function(response, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-              var point = response.routes[0].legs[0];
-              console.log(point.duration.text);
-              directionsDisplay.setDirections(response);
-            } else {
-              window.alert('Directions request failed due to ' + status);
-            }
-        });
+        let origin = $('#pickup_location').val();
+        let destination = $('#destination_location').val();
+        if(origin && destination){
+            directionsService.route({
+                origin: origin,
+                waypoints:waypts,
+                optimizeWaypoints:true,
+                destination: destination,
+                travelMode: google.maps.TravelMode.DRIVING,
+            }, function(response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                  var point = response.routes[0].legs[0];
+                  directionsDisplay.setDirections(response);
+                } else {
+                  window.alert('Directions request failed due to ' + status);
+                }
+            });
+        }
     }
     initialize();
     function initialize() {
