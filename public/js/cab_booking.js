@@ -4,31 +4,24 @@ $(document).ready(function () {
     $(document).on("click","#show_dir",function() {
         initMap2();
     });
-    setTimeout(function(){ $('#add_more_location_btn').trigger('click'); }, 100);
-    $(document).on("click","#add_more_location_btn",function() {
+    $(document).on("click", ".add-more-location",function() {
         let random_id = Date.now();
-        let location_input_template = _.template($('#location_input_template').html());
-        $("#location_input_main_div").append(location_input_template({random_id:random_id})).show();
-        initialize('pickup_location_'+random_id, 'destination_location_'+random_id, random_id);
+        let destination_location_template = _.template($('#destination_location_template').html());
+        $("#location_input_main_div").append(destination_location_template({random_id:random_id})).show();
+        initializeNew(random_id);
     });
-    function initialize(first_input, second_input, random_id) {
-      var input = document.getElementById(first_input);
-      var input2 = document.getElementById(second_input);
-      if(input){
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        var autocomplete2 = new google.maps.places.Autocomplete(input2);
+    $(document).on("click", ".location-inputs .apremove",function() {
+        var rel = $(this).data('rel');
+        $('#dots_'+rel).remove();
+    });
+    function initializeNew(random_id) {
+      var input2 = document.getElementById('destination_location_'+random_id);
+      if(input2){
+        var autocomplete = new google.maps.places.Autocomplete(input2);
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
-            var place = autocomplete.getPlace();
-           $('#pickup_location_latitude_'+random_id).val(place.geometry.location.lat());
-           $('#pickup_location_longitude_'+random_id).val(place.geometry.location.lng());
-           initMap2();
-        });
-        google.maps.event.addListener(autocomplete2, 'place_changed', function () {
-            var place2 = autocomplete2.getPlace();
+            var place2 = autocomplete.getPlace();
             $('#destination_location_latitude_'+random_id).val(place2.geometry.location.lat());
             $('#destination_location_longitude_'+random_id).val(place2.geometry.location.lng());
-            initMap2();
-            getVendorList();
         });
       }
     }
@@ -51,6 +44,10 @@ $(document).ready(function () {
                     if(response.data.length != 0){
                         let vendors_template = _.template($('#vendors_template').html());
                         $("#vendor_main_div").append(vendors_template({results: response.data})).show();
+                        if(response.data.length == 1){
+                            $('.vendor-list').trigger('click');
+                            $('.table-responsive').remove();
+                        }
                     }else{
                         $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
                     }
@@ -104,7 +101,7 @@ $(document).ready(function () {
             dataType: 'json',
             url: get_product_detail+'/'+product_id,
             success: function(response) {
-                if(response.status == 'Success'){ 
+                if(response.status == 'Success'){
                     $('#cab_detail_box').html('');
                     if(response.data.length != 0){
                         $('.address-form').addClass('d-none');
@@ -120,12 +117,21 @@ $(document).ready(function () {
         });
     });
     function initMap2() {
-        var pickup_location_latitudes = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
-        var pickup_location_longitudes = $('input[name="pickup_location_longitude[]"]').map(function(){return this.value;}).get();
-        var destination_location_latitudes = $('input[name="destination_location_latitude[]"]').map(function(){return this.value;}).get();
-        var destination_location_longitudes = $('input[name="destination_location_longitude[]"]').map(function(){return this.value;}).get();
+        var locations = [];
         let pickup_location_latitude = $('#pickup_location_latitude').val();
         let pickup_location_longitude = $('#pickup_location_longitude').val();
+        var latitudes = $('input[name="destination_location_latitude[]"]').map(function(){
+           return this.value;
+        }).get();
+        var longitudes = $('input[name="destination_location_latitude[]"]').map(function(){
+           return this.value;
+        }).get();
+        $(latitudes).each(function(index, latitude) {
+            var data = {};
+            data.latitude = latitude;
+            data.longitude = longitudes[index];
+            locations.push(data);
+        });
         let destination_location_latitude = $('#destination_location_latitude').val();
         let destination_location_longitude = $('#destination_location_longitude').val();
         if(pickup_location_latitude && pickup_location_longitude && destination_location_latitude && destination_location_longitude){
@@ -164,14 +170,35 @@ $(document).ready(function () {
           }, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
               var point = response.routes[0].legs[0];
-              // alert(point.duration.text);
+              console.log(point.duration.text);
               directionsDisplay.setDirections(response);
             } else {
               window.alert('Directions request failed due to ' + status);
             }
           });
     }
-    
+    initialize();
+    function initialize() {
+      var input = document.getElementById('pickup_location');
+      var input2 = document.getElementById('destination_location');
+      if(input){
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        var autocomplete2 = new google.maps.places.Autocomplete(input2);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var place = autocomplete.getPlace();
+           $('#pickup_location_latitude').val(place.geometry.location.lat());
+           $('#pickup_location_longitude').val(place.geometry.location.lng());
+           initMap2();
+        });
+        google.maps.event.addListener(autocomplete2, 'place_changed', function () {
+            var place2 = autocomplete2.getPlace();
+            $('#destination_location_latitude').val(place2.geometry.location.lat());
+            $('#destination_location_longitude').val(place2.geometry.location.lng());
+            initMap2();
+            getVendorList();
+        });
+      }
+    }
     function getDistance(){
      //Find the distance
      var distanceService = new google.maps.DistanceMatrixService();
