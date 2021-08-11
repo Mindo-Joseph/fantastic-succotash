@@ -419,7 +419,7 @@
                             </select>
                         </div>
                         <div class="col-sm-2 mb-2">
-                            {!! Form::label('title', 'Seating Number',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'Seat Capacity',['class' => 'control-label']) !!}
                             {!! Form::number('seating_number', '1',['class' => 'form-control',  'id' => 'edit_seating_number', 'min' => '1', 'onkeypress' => 'return isNumberKey(event)', 'placeholder' => 'Seating Number', 'required'=>'required']) !!}
                         </div>
                         <input type="hidden" name="vendor_id" value="{{ $vendor->id }}" />
