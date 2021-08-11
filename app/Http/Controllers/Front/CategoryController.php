@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, Celebrity, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea, UserAddress};
-
+use App\Models\{Currency, Banner, Category, Brand, Product, Celebrity, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea, UserAddress,Country,Cart,CartProduct,SubscriptionInvoicesUser,ClientPreference,LoyaltyCard,Order};
+use Auth;
+use DB;
 class CategoryController extends FrontController
 {
     private $field_status = 2;
@@ -124,7 +125,8 @@ class CategoryController extends FrontController
             $user_addresses = UserAddress::get();
             return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories]);
         }elseif($page == 'on demand service'){
-            return view('frontend.ondemand.index')->with(['listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
+            $cartDataGet = $this->getCartOnDemand();
+            return view('frontend.ondemand.index')->with(['cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }else{
             if(view()->exists('frontend/cate-'.$page.'s')){
                 return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
@@ -134,7 +136,44 @@ class CategoryController extends FrontController
         }
         
     }
+    // get cart data in on demand product listing page 
+    public function getCartOnDemand()
+    {
+        $cartData = [];
+        $user = Auth::user();
+        $countries = Country::get();
+        $langId = Session::get('customerLanguage');
+        $guest_user = true;
+        if ($user) {
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
+            $addresses = UserAddress::where('user_id', $user->id)->get();
+            $guest_user = false;
+        } else {
+            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
+            $addresses = collect();
+        }
+        if ($cart) {
+            $cartData = CartProduct::where('status', [0, 1])->where('cart_id', $cart->id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
+        }
+        // dd($cartData->toArray());
+        $navCategories = $this->categoryNav($langId);
+        $subscription_features = array();
+        if ($user) {
+            $now = Carbon::now()->toDateTimeString();
+            $user_subscription = SubscriptionInvoicesUser::with('features')
+                ->select('id', 'user_id', 'subscription_id')
+                ->where('user_id', $user->id)
+                ->where('end_date', '>', $now)
+                ->orderBy('end_date', 'desc')->first();
+            if ($user_subscription) {
+                foreach ($user_subscription->features as $feature) {
+                    $subscription_features[] = $feature->feature_id;
+                }
+            }
+        }
 
+        return ['cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user];
+    }
     public function listData($langId, $category_id, $type = ''){
 
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
@@ -175,7 +214,7 @@ class CategoryController extends FrontController
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
                         'variant' => function($q) use($langId){
-                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode','id');
                             $q->groupBy('product_id');
                         },
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating', 'products.inquiry_only')->where('products.is_live', 1)->where('category_id', $category_id);
@@ -278,7 +317,7 @@ class CategoryController extends FrontController
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
                         'variant' => function($q) use($langId, $variantIds){
-                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode','id');
                             if(!empty($variantIds)){
                                 $q->whereIn('id', $variantIds);
                             }
