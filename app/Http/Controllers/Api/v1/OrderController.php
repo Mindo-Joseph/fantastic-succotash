@@ -291,7 +291,7 @@ class OrderController extends Controller {
                         ]);
                     }
                     DB::commit();
-                    $this->sendOrderNotification($user->id);
+                    // $this->sendOrderNotification($user->id);
                     return $this->successResponse($order, 'Order placed successfully.', 201);
                     }
                 }else{
