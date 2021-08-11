@@ -637,19 +637,8 @@ class PickupDeliveryController extends FrontController{
     }
     public function postRemovePromoCode(Request $request){
         try {
-            $validator = $this->validatePromoCode();
-            if($validator->fails()){
-                return $this->errorResponse($validator->messages(), 422);
-            }
-            $cart_detail = Cart::where('id', $request->cart_id)->first();
-            if(!$cart_detail){
-                return $this->errorResponse('Invalid Cart Id', 422);
-            }
-            $cart_detail = Promocode::where('id', $request->coupon_id)->first();
-            if(!$cart_detail){
-                return $this->errorResponse('Invalid Promocode Id', 422);
-            }
-            return $this->successResponse(null, 'Promotion Code Removed Successfully.', 201);
+            $response = ['currency_symbol' => Session::get('currencySymbol')];
+            return $this->successResponse($response, 'Promotion Code Removed Successfully.', 201);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
