@@ -317,6 +317,7 @@
         </tr>
     </tfoot>
 </script>
+
 <script type="text/template" id="promo_code_template">
     <% _.each(promo_codes, function(promo_code, key){%>
         <div class="col-lg-6 mt-3">

@@ -4041,8 +4041,22 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     overflow: auto;
 }
 
+#header_cart_main_ul_ondemand li {
+    display: block;
+    position: relative;
+    padding-right: 25px;
+}
 
+#header_cart_main_ul_ondemand .close-circle {
+    position: absolute;
+    right: 0;
+    top: 10px;
+}
 
+.ling-throgh {
+    text-decoration: line-through;
+    color: #6c757d;
+}
 
 
 

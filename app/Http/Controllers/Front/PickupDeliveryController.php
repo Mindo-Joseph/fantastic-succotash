@@ -618,18 +618,18 @@ class PickupDeliveryController extends FrontController{
                 return $this->errorResponse('Invalid Promocode Id', 422);
             }
 
-            if($cart_detail->promo_type_id == 2)
-            {
+            if($cart_detail->promo_type_id == 2){
                 $cart_detail['new_amount'] = $cart_detail->amount;
                 if($cart_detail['new_amount'] < 0)
                 $cart_detail['new_amount'] = 0.00;
+                $cart_detail['currency_symbol'] = Session::get('currencySymbol');
             }
             if($cart_detail->promo_type_id == 1){ 
                 $cart_detail['new_amount'] = ($request->amount * ($cart_detail->amount/100));
                 if($cart_detail['new_amount'] < 0)
                 $cart_detail['new_amount'] = 0.00;
+                $cart_detail['currency_symbol'] = Session::get('currencySymbol');
             }
-            
             return $this->successResponse($cart_detail, 'Promotion Code Used Successfully.', 201);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
@@ -637,20 +637,8 @@ class PickupDeliveryController extends FrontController{
     }
     public function postRemovePromoCode(Request $request){
         try {
-            $validator = $this->validatePromoCode();
-            if($validator->fails()){
-                return $this->errorResponse($validator->messages(), 422);
-            }
-            $cart_detail = Cart::where('id', $request->cart_id)->first();
-            if(!$cart_detail){
-                return $this->errorResponse('Invalid Cart Id', 422);
-            }
-            $cart_detail = Promocode::where('id', $request->coupon_id)->first();
-            if(!$cart_detail){
-                return $this->errorResponse('Invalid Promocode Id', 422);
-            }
-           
-            return $this->successResponse(null, 'Promotion Code Removed Successfully.', 201);
+            $response = ['currency_symbol' => Session::get('currencySymbol')];
+            return $this->successResponse($response, 'Promotion Code Removed Successfully.', 201);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
