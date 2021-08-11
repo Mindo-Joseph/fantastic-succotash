@@ -49,6 +49,7 @@
                             <div class="form-group">
                                 <label for="">{{ __('Email') }}</label>
                                 <input type="email" class="form-control @if(isset($errors) && $errors->has('email')) is-invalid @endif" aria-describedby="" placeholder="{{ __('Email') }}" value="{{ old('email')}}" name="email">
+                                <input type="hidden" value="" id="access_token" name="access_token">
                                 @if($errors->first('email'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -103,15 +104,6 @@
 @section('script')
 <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
 <script>
-    // $(document).ready(function() {
-    //     $(".submitLogin").click(function(e) {
-    //         e.preventDefault();
-    //         console.log(getToken());
-    //         console.log("nkhf");
-    //     });
-    // });
-    function getToken(){
-        var final_token = "1234";
         var firebaseConfig = {
             apiKey: "AIzaSyBtE2uCaikxgUDbn5SqmzW2fGcGOpUlkqc",
             authDomain: "royo-order-version2.firebaseapp.com",
@@ -126,17 +118,12 @@
         messaging
         .requestPermission()
         .then(function () {
-            // console.log("Notification permission granted.");
             return messaging.getToken()
         })
         .then(function(token) {
-            final_token = token;
-            // console.log(token);
+            $("#access_token").val(token);
         })
         .catch(function (err) {
-            // console.log("Unable to get permission to notify.", err);
         });
-        return final_token;
-    }
 </script>
 @endsection

@@ -111,6 +111,18 @@ class CustomerAuthController extends FrontController
     public function login(LoginRequest $req, $domain = ''){
         if (Auth::attempt(['email' => $req->email, 'password' => $req->password, 'status' => 1])) {
             $userid = Auth::id();
+            if($req->has('access_token')){
+                if($req->access_token){
+                    $user_device = UserDevice::where('user_id', $userid)->where('device_token', $req->access_token)->first();
+                    if(!$user_device){
+                        $user_device = new UserDevice();
+                        $user_device->user_id = $userid;
+                        $user_device->device_type = 'web';
+                        $user_device->device_token = $req->access_token;
+                        $user_device->save();
+                    }
+                }
+            }
             $this->checkCookies($userid);
             $user_cart = Cart::where('user_id', $userid)->first();
             if ($user_cart) {

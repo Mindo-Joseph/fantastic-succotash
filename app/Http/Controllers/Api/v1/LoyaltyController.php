@@ -16,6 +16,7 @@ use Dotenv\Loader\Loader;
 
 class LoyaltyController extends BaseController
 {
+    use ApiResponser;
     /**
      * Display a loyalty points to user.
      *

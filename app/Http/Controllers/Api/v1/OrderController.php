@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\v1;
 use DB;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use GuzzleHttp\Client as GCLIENT;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice};
 
 class OrderController extends Controller {
     use ApiResponser;
@@ -290,7 +291,7 @@ class OrderController extends Controller {
                         ]);
                     }
                     DB::commit();
-                    $this->sendOrderNotification($user->id);
+                    // $this->sendOrderNotification($user->id);
                     return $this->successResponse($order, 'Order placed successfully.', 201);
                     }
                 }else{
@@ -304,7 +305,7 @@ class OrderController extends Controller {
         }
     }
     public function sendOrderNotification($id){
-        $token = User::whereNotNull('device_token')->pluck('device_token')->where('user_id', $id)->toArray();
+        $token = UserDevice::whereNotNull('device_token')->pluck('device_token')->where('user_id', $id)->toArray();
         $from = env('FIREBASE_SERVER_KEY');
         
         $notification_content = NotificationTemplate::where('id', 1)->first();

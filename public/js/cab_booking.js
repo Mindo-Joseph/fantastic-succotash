@@ -4,15 +4,65 @@ $(document).ready(function () {
     $(document).on("click","#show_dir",function() {
         initMap2();
     });
+    $(document).on("click", "#cab_booking_place_order",function() {
+        var tasks = [];
+        var pickup_location_names = $('input[name="pickup_location_name[]"]').map(function(){return this.value;}).get();
+        var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){return this.value;}).get();
+        var pickup_location_latitudes = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
+        var pickup_location_longitudes = $('input[name="pickup_location_longitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_latitudes = $('input[name="destination_location_latitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_longitudes = $('input[name="destination_location_longitude[]"]').map(function(){return this.value;}).get();
+        $(pickup_location_latitudes).each(function(index, latitude) {
+            var data = {};
+            data.barcode = null;
+            data.task_type_id = 1;
+            data.post_code = null;
+            data.short_name = null;
+            data.latitude = latitude;
+            data.appointment_duration = null;
+            data.address = pickup_location_names[index];
+            data.longitude = pickup_location_longitudes[index];
+            tasks.push(data);
+        });
+        $(destination_location_latitudes).each(function(index, latitude) {
+            var data = {};
+            data.barcode = null;
+            data.task_type_id = 1;
+            data.post_code = null;
+            data.short_name = null;
+            data.latitude = latitude;
+            data.appointment_duration = null;
+            data.address = destination_location_names[index];
+            data.longitude = destination_location_longitudes[index];
+            tasks.push(data);
+        });
+        console.log(tasks);
+    });
     $(document).on("click", ".add-more-location",function() {
         let random_id = Date.now();
         let destination_location_template = _.template($('#destination_location_template').html());
         $("#location_input_main_div").append(destination_location_template({random_id:random_id})).show();
         initializeNew(random_id);
+        var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
+           return this.value;
+        }).get();
+        if(destination_location_names.length == 5){
+            $('.add-more-location').hide();
+        }
     });
     $(document).on("click", ".location-inputs .apremove",function() {
-        var rel = $(this).data('rel');
-        $('#dots_'+rel).remove();
+        if($('#dots_'+$(this).data('rel')).length != 0){
+            $('#dots_'+$(this).data('rel')).remove();
+            var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
+               return this.value;
+            }).get();
+            if(destination_location_names.length < 5){
+                $('.add-more-location').show();
+            }else{
+                $('.add-more-location').hide();
+            }
+            initMap2();
+        }
     });
     function initializeNew(random_id) {
       var input2 = document.getElementById('destination_location_'+random_id);
@@ -22,6 +72,7 @@ $(document).ready(function () {
             var place2 = autocomplete.getPlace();
             $('#destination_location_latitude_'+random_id).val(place2.geometry.location.lat());
             $('#destination_location_longitude_'+random_id).val(place2.geometry.location.lng());
+            initMap2();
         });
       }
     }
@@ -32,6 +83,9 @@ $(document).ready(function () {
         displayLocation(latitude, longitude);
     });
     function getVendorList(){
+      let pickup_location = $('#pickup_location').val();
+      let destination_location = $('#destination_location').val();
+      if(pickup_location && destination_location){
         $('.location-list').hide();
         $.ajax({
             data: {},
@@ -47,6 +101,8 @@ $(document).ready(function () {
                         if(response.data.length == 1){
                             $('.vendor-list').trigger('click');
                             $('.table-responsive').remove();
+                        }else{
+                            $('.vendor-list').first().trigger('click');
                         }
                     }else{
                         $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
@@ -54,6 +110,7 @@ $(document).ready(function () {
                 }
             }
         });
+      }
     }
     $(document).on("click",".vendor-list",function() {
         var locations = [];
@@ -89,9 +146,10 @@ $(document).ready(function () {
             }
         });
     });
-    $(document).on("click",".promo_code_list_btn_cab_booking",function() {
+    $(document).on("click","#promo_code_list_btn_cab_booking",function() {
         let amount = $(this).data('amount');
         let vendor_id = $(this).data('vendor_id');
+        let product_id = $(this).data('product_id');
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -104,14 +162,57 @@ $(document).ready(function () {
                         $('.promo-box').removeClass('d-none');
                         $('.cab-detail-box').addClass('d-none');
                         let cab_booking_promo_code_template = _.template($('#cab_booking_promo_code_template').html());
-                        $("#cab_booking_promo_code_list_main_div").append(cab_booking_promo_code_template({promo_codes: response.data})).show();
+                        $("#cab_booking_promo_code_list_main_div").append(cab_booking_promo_code_template({promo_codes: response.data, vendor_id:vendor_id, product_id:product_id, amount:amount})).show();
                     }else{
                         $("#cab_booking_promo_code_list_main_div").html(no_coupon_available_message).show();
                     }
                 }
             }
         });
-        
+    });
+    $(document).on("click","#remove_promo_code_cab_booking_btn",function() {
+        let amount = $(this).data('amount');
+        let vendor_id = $(this).data('vendor_id');
+        let product_id = $(this).data('product_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: cab_booking_promo_code_remove_url,
+            data: {amount:amount, vendor_id:vendor_id},
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $('#promo_code_list_btn_cab_booking').show();
+                    $('#remove_promo_code_cab_booking_btn').hide();
+                    $('.cab-detail-box #discount_amount').text('').hide();
+                    $('.cab-detail-box .code-text').text("Select A Promo Code").show();
+                    $('.cab-detail-box #real_amount').text(response.data.currency_symbol+' '+amount);
+                }
+            }
+        });
+    });
+    $(document).on("click",".cab_booking_apply_promo_code_btn",function() {
+        let amount = $(this).data('amount');
+        let vendor_id = $(this).data('vendor_id');
+        let coupon_id = $(this).data('coupon_id');
+        let product_id = $(this).data('product_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url:  apply_cab_booking_promocode_coupon_url,
+            data: {amount:amount, vendor_id:vendor_id, product_id:product_id, coupon_id},
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $('.promo-box').addClass('d-none');
+                    $('.cab-detail-box').removeClass('d-none');
+                    $('#promo_code_list_btn_cab_booking').hide();
+                    $('#remove_promo_code_cab_booking_btn').show();
+                    let real_amount = $('.cab-detail-box #real_amount').text();
+                    $('.cab-detail-box #discount_amount').text(real_amount).show();
+                    $('.cab-detail-box .code-text').text('Code '+response.data.name+' applied').show();
+                    $('.cab-detail-box #real_amount').text(response.data.currency_symbol+''+response.data.new_amount);
+                }
+            }
+        });
     });
     $(document).on("click",".close-promo-code-detail-box",function() {
         $('.promo-box').addClass('d-none');
@@ -148,62 +249,42 @@ $(document).ready(function () {
         var locations = [];
         let pickup_location_latitude = $('#pickup_location_latitude').val();
         let pickup_location_longitude = $('#pickup_location_longitude').val();
-        var latitudes = $('input[name="destination_location_latitude[]"]').map(function(){
-           return this.value;
-        }).get();
-        var longitudes = $('input[name="destination_location_latitude[]"]').map(function(){
-           return this.value;
-        }).get();
-        $(latitudes).each(function(index, latitude) {
-            var data = {};
-            data.latitude = latitude;
-            data.longitude = longitudes[index];
-            locations.push(data);
-        });
-        let destination_location_latitude = $('#destination_location_latitude').val();
-        let destination_location_longitude = $('#destination_location_longitude').val();
-        if(pickup_location_latitude && pickup_location_longitude && destination_location_latitude && destination_location_longitude){
-            var pointA = new google.maps.LatLng(pickup_location_latitude, pickup_location_longitude);
-            pointB = new google.maps.LatLng(destination_location_latitude, destination_location_longitude);
-            if(pointA && pointB){
-                myOptions = {zoom: 7,center: pointA};
-                map = new google.maps.Map(document.getElementById('booking-map'), myOptions),
-                map.setOptions({ styles:  styles}),
-                // Instantiate a directions service.
-                directionsService = new google.maps.DirectionsService,
-                directionsDisplay = new google.maps.DirectionsRenderer({
-                  map: map
-                }),
-                markerA = new google.maps.Marker({
-                  position: pointA,
-                  title: "point A",
-                  label: "A",
-                  map: map
-                }),
-                markerB = new google.maps.Marker({
-                  position: pointB,
-                  title: "point B",
-                  label: "B",
-                  map: map
-                });
-                calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB);
-            }
-        }
+        var pointA = new google.maps.LatLng(pickup_location_latitude, pickup_location_longitude);
+        map = new google.maps.Map(document.getElementById('booking-map'), {zoom: 7,center: pointA});
+        map.setOptions({ styles:  styles});
+        directionsService = new google.maps.DirectionsService;
+        directionsDisplay = new google.maps.DirectionsRenderer({map: map});
+        calculateAndDisplayRoute(directionsService, directionsDisplay);
     }
-    function calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB) {
-          directionsService.route({
-            origin: pointA,
-            destination: pointB,
-            travelMode: google.maps.TravelMode.DRIVING
-          }, function(response, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-              var point = response.routes[0].legs[0];
-              console.log(point.duration.text);
-              directionsDisplay.setDirections(response);
-            } else {
-              window.alert('Directions request failed due to ' + status);
-            }
-          });
+    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        const waypts = [];
+        var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
+           return this.value;
+        }).get();
+        $(destination_location_names).each(function(index, destination_location_name) {
+            waypts.push({
+                location: destination_location_name,
+                stopover: true,
+              });
+        });
+        let origin = $('#pickup_location').val();
+        let destination = $('#destination_location').val();
+        if(origin && destination){
+            directionsService.route({
+                origin: origin,
+                waypoints:waypts,
+                optimizeWaypoints:true,
+                destination: destination,
+                travelMode: google.maps.TravelMode.DRIVING,
+            }, function(response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                  var point = response.routes[0].legs[0];
+                  directionsDisplay.setDirections(response);
+                } else {
+                  window.alert('Directions request failed due to ' + status);
+                }
+            });
+        }
     }
     initialize();
     function initialize() {
@@ -217,6 +298,7 @@ $(document).ready(function () {
            $('#pickup_location_latitude').val(place.geometry.location.lat());
            $('#pickup_location_longitude').val(place.geometry.location.lng());
            initMap2();
+           getVendorList();
         });
         google.maps.event.addListener(autocomplete2, 'place_changed', function () {
             var place2 = autocomplete2.getPlace();

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Front;
+use DB;
 use Auth;
 use Session;
 use Carbon\Carbon;

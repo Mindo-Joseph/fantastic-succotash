@@ -38,20 +38,20 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                             <div class="footer-title">
                                 <h4>{{ __('Connect') }}</h4>
                             </div>
-                        </div>
-                        <div class="footer-contant">
-                            <div class="footer-social">
-                                <ul>
-                                    @foreach($social_media_details as $social_media_detail)
-                                        <li class="d-block mb-2">
-                                            <a href="{{http_check($social_media_detail->url)}}" target="_blank">
-                                                <i class="fa fa-{{$social_media_detail->icon}}" aria-hidden="true"></i>
-                                                <span>{{$social_media_detail->icon ? ucfirst($social_media_detail->icon) : "Facebook"}}</span>
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>  
+                            <div class="footer-contant">
+                                <div class="footer-social">
+                                    <ul>
+                                        @foreach($social_media_details as $social_media_detail)
+                                            <li class="d-block">
+                                                <a href="{{http_check($social_media_detail->url)}}" target="_blank">
+                                                    <i class="fa fa-{{$social_media_detail->icon}}" aria-hidden="true"></i>
+                                                    <span>{{$social_media_detail->icon ? ucfirst($social_media_detail->icon) : "Facebook"}}</span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>  
+                            </div>   
                         </div>   
                     </div>
                 @endif
