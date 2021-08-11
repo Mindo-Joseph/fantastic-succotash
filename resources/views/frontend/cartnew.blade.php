@@ -57,15 +57,19 @@
         </div>
     </div>
 </div>
+
+
+
 <script type="text/template" id="cart_template">
     <% _.each(cart_details.products, function(product, key){%>
+
         <thead id="thead_<%= product.vendor.id %>">
             <tr>
                 <th colspan="3">
                     <%= product.vendor.name %>
                 </th>
                 <th colspan="4">
-                    <div class="countdownholder alert-danger" id="min_order_validation_error_<%= product.vendor.id %>" style="display:none;">Your cart will be expired in
+                    <div class="countdownholder alert-danger" id="min_order_validation_error_<%= product.vendor.id %>" style="display:none;">Your cart will be expired in </div>
                 </th>
             </tr>
             <% if( (product.isDeliverable != undefined) && (product.isDeliverable == 0) ) { %>
@@ -135,24 +139,22 @@
                         </td>
                     </tr>
                     <% _.each(vendor_product.addon, function(addon, ad){%>
-                    <tr>
-                         
-                            <td></td>
-                            <td class="items-details text-left">
-                                <p class="m-0"><%= addon.option.title %></p>
-                            </td>
-                            <td>
-                                <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= addon.option.price_in_cart %></div>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-right pl-lg-2">
-                                <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= addon.option.quantity_price %></div>
-                            </td>
+                    <tr>                         
+                        <td></td>
+                        <td class="items-details text-left">
+                            <p class="m-0"><%= addon.option.title %></p>
+                        </td>
+                        <td>
+                            <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= addon.option.price_in_cart %></div>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right pl-lg-2">
+                            <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= addon.option.quantity_price %></div>
+                        </td>
                     </tr> 
-
-                        <% }); %>
+                    <% }); %>
                 <% } %>
             <% }); %>
             <tr class="vertical-top">
@@ -349,7 +351,7 @@
         <div class="card-box">
             <div class="row d-flex justify-space-around">
                 @if(!$guest_user)
-                    <div class="col-md-4 left_box">
+                    <div class="col-lg-4 left_box">
                         <div class="row">
                             <div class="col-12 mb-2">
                                 <h4 class="page-title">{{__('Delivery Address')}}</h4>
@@ -463,17 +465,163 @@
                         </div>
                     </div>
                 @endif
-                <div class="{{ $guest_user ? 'col-md-12' : 'col-md-8' }}">
+                <div class="{{ $guest_user ? 'col-md-12' : 'col-lg-8' }}">
                     <div class="spinner-box">
                         <div class="circle-border">
                             <div class="circle-core"></div>
                         </div>
                     </div>
-                    <div class="table-responsive h-100">
+                    <div class="table-responsive">
                         <table class="table table-centered table-nowrap mb-0 h-100" id="cart_table">
                             <tbody>
                             </tbody>
                         </table>
+                    </div>
+
+
+
+                    <!-- Cart Page New Design Lauout -->
+                    <div class="cart-page-layout d-none">
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="m-0">
+                                <b>La Fresca de Italia</b>
+                                </h5>
+                            </div>
+                        </div>
+                        <hr class="mt-2">
+                        <div class="row">
+                            <div class="col-12">
+                                <b class="text-danger">
+                                    Products for this vendor are not deliverable at your area. Please change address or remove product.
+                                </b>
+                            </div>
+                        </div>
+                        <hr class="mt-2">
+                        <div class="row align-items-md-center">
+                            <div class="col-4 col-md-2 pr-0">
+                                <img class="mr-2 w-100" src="https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/prods/TQrxjF7VnxmZwnQAng49ZxSdtdQ8tVvsEA33OmBu.jpg">
+                            </div>
+                            <div class="col-8 col-md-10">
+                                <div class="row align-items-md-center">
+                                    <div class="col-md-3">
+                                        <h4 class="mt-0">Deluxe Veggie</h4>
+                                    </div>
+                                    <div class="col-md-2 text-md-center">
+                                        <div class="items-price">$4</div>
+                                    </div>
+                                    <div class="col-md-4 text-md-center">
+                                        <div class="number">
+                                            <span class="minus qty-minus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>" data-vendor_id="<%= vendor_product.vendor_id %>">
+                                                <i class="fa fa-minus" aria-hidden="true"></i>
+                                            </span>
+                                            <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>">
+                                            <span class="plus qty-plus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 text-right text-md-center p-in">
+                                        <a class="action-icon d-block remove_product_via_cart" data-product="197" data-vendor_id="2">
+                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-2 text-md-right">
+                                        <div class="items-price">$8.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-lg-6 mb-3 mb-lg-0">
+                                <div class="coupon_box d-flex w-100 align-items-center">
+                                    <img src="http://local.myorder.com/assets/images/discount_icon.svg">
+                                    <label class="mb-0 ml-2">
+                                        <a href="javascript:void(0)" class="promo_code_list_btn ml-1" data-vendor_id="2" data-cart_id="4" data-amount="8.00">Select a promo code</a>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-9 text-lg-right">
+                                        <p class="total_amt m-0">Delivery Fee :</p>
+                                    </div>
+                                    <div class="col-3 text-right">
+                                        <p class="total_amt mb-1 ">$ 0.00</p>
+                                        <p class="total_amt m-0">$ 8.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-lg-5 col-xl-6"></div>
+                            <div class="col-lg-7 col-xl-6">
+                                <div class="row">
+                                    <div class="col-6">	Sub Total</div>
+                                    <div class="col-6 text-right">$2,191.98</div>
+                                </div>
+                                <hr class="my-2">
+                                <div class="row">
+                                    <div class="col-6">Tax</div>
+                                    <div class="col-6 text-right">$2.50</div>
+                                </div>
+                                <hr class="my-2">
+                                <div class="row">
+                                    <div class="col-6">Loyalty Amount</div>
+                                    <div class="col-6 text-right">$408.60</div>
+                                </div>
+                                <hr class="my-2">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="mb-2">Do you want to give a tip?</div>
+                                        <div class="tip_radio_controls">
+                                            
+                                        </div>
+                                        <div class="custom_tip mb-2">
+                                            <input class="input-number form-control" name="custom_tip_amount" id="custom_tip_amount" placeholder="Enter Custom Amount" type="number" value="" step="0.1">
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="my-2">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="total_amt m-0">Amount Payable</p>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <p class="total_amt m-0" id="cart_total_payable_amount" data-cart_id="4">$1.40</p>
+                                        <div>
+                                            <input type="hidden" name="cart_tip_amount" id="cart_tip_amount" value="0.40">
+                                            <input type="hidden" name="cart_total_payable_amount" value="1.40">
+                                            <input type="hidden" name="cart_payable_amount_original" id="cart_payable_amount_original" data-curr="$" value="1,785.88">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row d-flex align-items-center arabic-lng no-gutters mt-2 mb-4" id="dateredio">
+                                    <div class="col-md-5 pr-2">
+                                        <div class="login-form">
+                                            <ul class="list-inline">
+                                                <li class="d-inline-block mr-1">
+                                                    <input type="radio" class="custom-control-input check" id="tasknow" name="task_type" value="now" checked="">
+                                                    <label class="custom-control-label" for="tasknow">Now</label>
+                                                </li>
+                                                <li class="d-inline-block">
+                                                    <input type="radio" class="custom-control-input check" id="taskschedule" name="task_type" value="schedule">
+                                                    <label class="custom-control-label" for="taskschedule">Schedule</label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7 datenow align-items-center justify-content-between" id="schedule_div" style="display:flex!important">
+                                            <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value=" ">
+                                        <!-- <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button> -->
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
