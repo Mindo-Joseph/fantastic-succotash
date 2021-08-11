@@ -619,7 +619,7 @@ class OrderController extends FrontController
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $this->sendSuccessEmail($request, $order, $vendor_id);
             }
-            // $this->sendOrderNotification($user->id, $vendor_ids);
+            $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();
