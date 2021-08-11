@@ -82,11 +82,35 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div id="product-slick-wrapper">
+                                    @php
+                                        if($product->variant->first()->media->isNotEmpty()){
+                                            $product->media = $product->variant->first()->media;
+                                        }
+                                        if($product->media->isEmpty()){
+                                            $arr = [
+                                                'image' => (object)[
+                                                    'path' => [
+                                                        'proxy_url' => env('IMG_URL1'),
+                                                        'image_path' => env('IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png')
+                                                    ]
+                                                ]
+                                            ];
+                                            $coll = (object)collect($arr)->all();
+                                            $product->media[] = $coll;
+                                        }
+                                    @endphp
                                     <div class="product-slick">
                                         @if(!empty($product->media))
-                                            @foreach($product->media as $k => $img)
+                                            @foreach($product->media as $k => $image)
+                                            @php
+                                                if(isset($image->pimage)){
+                                                    $img = $image->pimage->image;
+                                                }else{
+                                                    $img = $image->image;
+                                                }
+                                            @endphp
                                             <div class="image_mask">
-                                                <img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" src="{{$img->image->path['proxy_url'].'600/800'.$img->image->path['image_path']}}">
+                                                <img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" src="{{$img->path['proxy_url'].'600/800'.$img->path['image_path']}}">
                                             </div>
                                             @endforeach
                                         @endif
@@ -95,9 +119,16 @@
                                         <div class="col-12 p-0">
                                             <div class="slider-nav">
                                                 @if(!empty($product->media))
-                                                    @foreach($product->media as $k => $img)
+                                                    @foreach($product->media as $k => $image)
+                                                    @php
+                                                        if(isset($image->pimage)){
+                                                            $img = $image->pimage->image;
+                                                        }else{
+                                                            $img = $image->image;
+                                                        }
+                                                    @endphp
                                                     <div>
-                                                        <img class="img-fluid blur-up lazyload" src="{{$img->image->path['proxy_url'].'300/300'.$img->image->path['image_path']}}">
+                                                        <img class="img-fluid blur-up lazyload" src="{{$img->path['proxy_url'].'300/300'.$img->path['image_path']}}">
                                                     </div>
                                                     @endforeach
                                                 @endif

@@ -21,16 +21,16 @@
                         <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Stop')}}" id="destination_location" />
                         <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude" />
                         <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude" />
-                        <i class="fa fa-times ml-1" aria-hidden="true"></i>
+                        <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel="{{Carbon\Carbon::now()->timestamp}}"></i>
                     </li>
                 </ul>
                 <a class="add-more-location position-relative pl-2" href="javascript:void(0)">{{__('Add Destination')}}</a>
             </div>
             <script type="text/template" id="destination_location_template">
                 <li class="d-block mb-3 dots" id="dots_<%= random_id %>">
-                    <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Stop')}}" id="destination_location_<%= random_id %>" />
-                    <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude_<%= random_id %>" />
-                    <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude_<%= random_id %>" />
+                    <input class="form-control pickup-text" type="text" name="destination_location_name[]" placeholder="{{__('Add A Stop')}}" id="destination_location_<%= random_id %>" data-rel="<%= random_id %>"/>
+                    <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude_<%= random_id %>" data-rel="<%= random_id %>"/>
+                    <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude_<%= random_id %>" data-rel="<%= random_id %>"/>
                     <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel="<%= random_id %>"></i>
                 </li>
             </script>
@@ -129,7 +129,7 @@
                         <hr class="m-0">
                         <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
                             <label class="m-0"><%= promo_code.name %></label>
-                            <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="17" data-cart_id="4" data-coupon_id="3" data-amount="86.36" style="cursor: pointer;">Apply</a>
+                            <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="<%= vendor_id %>" data-coupon_id="<%= promo_code.id %>" data-product_id="<%= product_id %>" data-amount="<%= amount %>" style="cursor: pointer;">Apply</a>
                         </div>
                         <hr class="m-0">
                         <div class="offer-text p-2">
