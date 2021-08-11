@@ -9,10 +9,23 @@ $(document).ready(function () {
         let destination_location_template = _.template($('#destination_location_template').html());
         $("#location_input_main_div").append(destination_location_template({random_id:random_id})).show();
         initializeNew(random_id);
+        var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
+           return this.value;
+        }).get();
+        if(destination_location_names.length == 5){
+            $('.add-more-location').hide();
+        }
     });
     $(document).on("click", ".location-inputs .apremove",function() {
-        var rel = $(this).data('rel');
-        $('#dots_'+rel).remove();
+        $('#dots_'+$(this).data('rel')).remove();
+        var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
+           return this.value;
+        }).get();
+        if(destination_location_names.length < 5){
+            $('.add-more-location').show();
+        }else{
+            $('.add-more-location').hide();
+        }
     });
     function initializeNew(random_id) {
       var input2 = document.getElementById('destination_location_'+random_id);
@@ -22,6 +35,7 @@ $(document).ready(function () {
             var place2 = autocomplete.getPlace();
             $('#destination_location_latitude_'+random_id).val(place2.geometry.location.lat());
             $('#destination_location_longitude_'+random_id).val(place2.geometry.location.lng());
+            initMap2();
         });
       }
     }
@@ -148,54 +162,32 @@ $(document).ready(function () {
         var locations = [];
         let pickup_location_latitude = $('#pickup_location_latitude').val();
         let pickup_location_longitude = $('#pickup_location_longitude').val();
-        var latitudes = $('input[name="destination_location_latitude[]"]').map(function(){
-           return this.value;
-        }).get();
-        var longitudes = $('input[name="destination_location_latitude[]"]').map(function(){
-           return this.value;
-        }).get();
-        $(latitudes).each(function(index, latitude) {
-            var data = {};
-            data.latitude = latitude;
-            data.longitude = longitudes[index];
-            locations.push(data);
-        });
-        let destination_location_latitude = $('#destination_location_latitude').val();
-        let destination_location_longitude = $('#destination_location_longitude').val();
-        if(pickup_location_latitude && pickup_location_longitude && destination_location_latitude && destination_location_longitude){
-            var pointA = new google.maps.LatLng(pickup_location_latitude, pickup_location_longitude);
-            pointB = new google.maps.LatLng(destination_location_latitude, destination_location_longitude);
-            if(pointA && pointB){
-                myOptions = {zoom: 7,center: pointA};
-                map = new google.maps.Map(document.getElementById('booking-map'), myOptions),
-                map.setOptions({ styles:  styles}),
-                // Instantiate a directions service.
-                directionsService = new google.maps.DirectionsService,
-                directionsDisplay = new google.maps.DirectionsRenderer({
-                  map: map
-                }),
-                markerA = new google.maps.Marker({
-                  position: pointA,
-                  title: "point A",
-                  label: "A",
-                  map: map
-                }),
-                markerB = new google.maps.Marker({
-                  position: pointB,
-                  title: "point B",
-                  label: "B",
-                  map: map
-                });
-                calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB);
-            }
-        }
+        var pointA = new google.maps.LatLng(pickup_location_latitude, pickup_location_longitude);
+        map = new google.maps.Map(document.getElementById('booking-map'), {zoom: 7,center: pointA});
+        map.setOptions({ styles:  styles});
+        // Instantiate a directions service.
+        directionsService = new google.maps.DirectionsService;
+        directionsDisplay = new google.maps.DirectionsRenderer({map: map});
+        calculateAndDisplayRoute(directionsService, directionsDisplay);
     }
-    function calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, pointB) {
-          directionsService.route({
-            origin: pointA,
-            destination: pointB,
-            travelMode: google.maps.TravelMode.DRIVING
-          }, function(response, status) {
+    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        const waypts = [];
+        var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
+           return this.value;
+        }).get();
+        $(destination_location_names).each(function(index, destination_location_name) {
+            waypts.push({
+                location: destination_location_name,
+                stopover: true,
+              });
+        });
+        directionsService.route({
+            waypoints:waypts,
+            optimizeWaypoints:true,
+            origin: $('#pickup_location').val(),
+            travelMode: google.maps.TravelMode.DRIVING,
+            destination: $('#destination_location').val(),
+        }, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
               var point = response.routes[0].legs[0];
               console.log(point.duration.text);
@@ -203,7 +195,7 @@ $(document).ready(function () {
             } else {
               window.alert('Directions request failed due to ' + status);
             }
-          });
+        });
     }
     initialize();
     function initialize() {

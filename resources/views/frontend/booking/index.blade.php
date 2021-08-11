@@ -28,9 +28,9 @@
             </div>
             <script type="text/template" id="destination_location_template">
                 <li class="d-block mb-3 dots" id="dots_<%= random_id %>">
-                    <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Stop')}}" id="destination_location_<%= random_id %>" />
-                    <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude_<%= random_id %>" />
-                    <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude_<%= random_id %>" />
+                    <input class="form-control pickup-text" type="text" name="destination_location_name[]" placeholder="{{__('Add A Stop')}}" id="destination_location_<%= random_id %>" data-rel="<%= random_id %>"/>
+                    <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude_<%= random_id %>" data-rel="<%= random_id %>"/>
+                    <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude_<%= random_id %>" data-rel="<%= random_id %>"/>
                     <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel="<%= random_id %>"></i>
                 </li>
             </script>
