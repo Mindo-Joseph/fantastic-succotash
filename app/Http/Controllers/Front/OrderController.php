@@ -14,7 +14,7 @@ use App\Models\Client as CP;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus,OrderTax, SubscriptionInvoicesUser};
+use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus,OrderTax, SubscriptionInvoicesUser, UserDevice, UserVendor};
 
 class OrderController extends FrontController
 {
@@ -445,9 +445,11 @@ class OrderController extends FrontController
             $taxable_amount = 0;
             $payable_amount = 0;
             $tax_category_ids = [];
+            $vendor_ids = [];
             $total_delivery_fee = 0;
             $total_subscription_discount = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
+                $vendor_ids[] = $vendor_id;
                 $delivery_fee = 0; 
                 $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
@@ -617,7 +619,7 @@ class OrderController extends FrontController
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $this->sendSuccessEmail($request, $order, $vendor_id);
             }
-            $this->sendOrderNotification($user->id);
+            // $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();
@@ -646,8 +648,24 @@ class OrderController extends FrontController
         }
     }
 
-    public function sendOrderNotification($id){
-        $token = User::whereNotNull('device_token')->pluck('device_token')->where('user_id', $id)->toArray();
+    public function sendOrderNotification($id, $vendorIds){
+        $super_admin = User::where('is_superadmin', 1)->pluck('id');
+        $user_vendors = UserVendor::whereIn('vendor_id', $vendorIds)->pluck('user_id');
+        $devices = UserDevice::whereNotNull('device_token')->where('user_id', $id)->pluck('device_token');
+        foreach($devices as $device){
+            $token[] = $device;  
+        }
+        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_vendors)->pluck('device_token');
+        foreach($devices as $device){
+            $token[] = $device;  
+        }
+        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $super_admin)->pluck('device_token');
+        foreach($devices as $device){
+            $token[] = $device;  
+        }
+        $token[] = "d4SQZU1QTMyMaENeZXL3r6:APA91bHoHsQ-rnxsFaidTq5fPse0k78qOTo7ZiPTASiH69eodqxGoMnRu2x5xnX44WfRhrVJSQg2FIjdfhwCyfpnZKL2bHb5doCiIxxpaduAUp4MUVIj8Q43SB3dvvvBkM1Qc1ThGtEM";  
+        // dd($token);
+        
         $from = env('FIREBASE_SERVER_KEY');
         
         $notification_content = NotificationTemplate::where('id', 1)->first();
@@ -673,6 +691,7 @@ class OrderController extends FrontController
             curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
             curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $dataString ) );
             $result = curl_exec($ch );
+            // dd($result);
             curl_close( $ch );
         }
     }
