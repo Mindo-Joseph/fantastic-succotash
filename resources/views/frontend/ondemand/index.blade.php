@@ -63,9 +63,37 @@
                                                 <h5 class="my-sm-0 my-3">@if($data->inquiry_only == 0)
                                                     {{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}
                                                 @endif</h5>
+                                                
 
+                                                @if(isset($data->variant[0]->checkIfInCart) && count($data->variant[0]->checkIfInCart) > 0)
+                                                <div class="number" id="show_plus_minus{{$data->id}}">
+                                                    <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus{{$data->id}}" data-id="{{$data->variant[0]->checkIfInCart['0']['id']}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                        <i class="fa fa-minus" aria-hidden="true"></i>
+                                                    </span>
+                                                    <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="{{$data->variant[0]->checkIfInCart['0']['quantity']}}" class="input-number" step="0.01" id="quantity_ondemand_{{$data->variant[0]->checkIfInCart['0']['id']}}" readonly>
+                                                    <span class="plus qty-plus-ondemand"  data-id="{{$data->variant[0]->checkIfInCart['0']['id']}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </span>
+                                                </div>
+                                                <a class="btn btn-solid add_on_demand" style="display:none;" id="add_button_href{{$data->variant[0]->checkIfInCart['0']['id']}}" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
+                                               
+                                                @else
                                                 <a class="btn btn-solid add_on_demand" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
+                                                <div class="number" style="display:none;" id="show_plus_minus{{$data->id}}">
+                                                    <span class="minus qty-minus-ondemand"  readonly data-id="" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                        <i class="fa fa-minus" aria-hidden="true"></i>
+                                                    </span>
+                                                    <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" id="quantity_ondemand_d{{$data->id}}" readonly placeholder="1" type="text" value="1" class="input-number input_qty" step="0.01">
+                                                    <span class="plus qty-plus-ondemand"  data-id="" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </span>
+                                                </div>
+                                                
+                                                @endif
 
+                                                
+
+                                              
                                                 
 
                                             </div>
@@ -366,7 +394,48 @@
                                             </li>
                                         <% }); %>
                                         <% }); %>
-                                        <li><div class='total'><h5>{{__('Total')}} : <span id='totalCart'>{{Session::get('currencySymbol')}}<%= cart_details.gross_amount %></span></h5></div></li>
+
+                                        <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('PRICE DETAILS')}} </h5>
+                                        <li>
+                                            <div class='media-body'>                                                                
+                                                <h6 class="d-flex align-items-center justify-content-between">
+                                                    <span class="ellips">{{__('Price')}}</span>
+                                                    <span>{{Session::get('currencySymbol')}}<%= cart_details.gross_amount %></span>
+                                                </h6>
+                                            </div>
+                                        </li>
+
+                                        <li>
+                                            <div class='media-body'>                                                                
+                                                <h6 class="d-flex align-items-center justify-content-between">
+                                                    <span class="ellips">{{__('Tax')}}</span>
+                                                    <span>{{Session::get('currencySymbol')}}<%= cart_details.total_taxable_amount %></span>
+                                                </h6>
+                                            </div>
+                                        </li>
+
+                                        <% if(cart_details.loyalty_amount > 0) { %>
+                                        <li>
+                                            <div class='media-body'>                                                                
+                                                <h6 class="d-flex align-items-center justify-content-between">
+                                                    <span class="ellips">{{__('Loyalty Amount')}} </span>
+                                                    <span>{{Session::get('currencySymbol')}}<%= cart_details.loyalty_amount %></span>
+                                                </h6>
+                                            </div>
+                                        </li>
+                                        <% } %>
+
+                                        <li>
+                                            <div class='media-body'>                                                                
+                                                <h6 class="d-flex align-items-center justify-content-between">
+                                                    <span class="ellips">{{__('Total')}}</span>
+                                                    <span>{{Session::get('currencySymbol')}}<%= cart_details.total_payable_amount %></span>
+                                                </h6>
+                                            </div>
+                                        </li>
+
+                                       
+                                        
                                  </script>
                                  <ul class="show-div shopping-cart" id="header_cart_main_ul_ondemand">
                                  </ul>
@@ -408,3 +477,20 @@
 <!-- end remove_item_modal -->
 @endsection
 
+@section('script')
+<script src="https://js.stripe.com/v3/"></script>
+<script type="text/javascript">
+    var guest_cart = {{ $guest_user ? 1 : 0 }};
+    var base_url = "{{url('/')}}";
+    var place_order_url = "{{route('user.placeorder')}}";
+    var payment_stripe_url = "{{route('payment.stripe')}}";
+    var user_store_address_url = "{{route('address.store')}}";
+    var promo_code_remove_url = "{{ route('remove.promocode') }}";
+    var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
+    var update_qty_url = "{{ url('product/updateCartQuantity') }}";
+    var promocode_list_url = "{{ route('verify.promocode.list') }}";
+    var payment_option_list_url = "{{route('payment.option.list')}}";
+    var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
+    var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
+</script>
+@endsection

@@ -207,7 +207,7 @@ class CartController extends FrontController
                 // }
                 // CartAddon::insert($create_cart_addons);
             // }
-            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
+            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!','cart_product_id' => $cartProduct->id]);
         } catch (Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
         }
@@ -312,7 +312,7 @@ class CartController extends FrontController
                     $cartAddOn->save();
                 }
             }
-            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
+            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!','cart_product_id' => $cartProduct->id]);
         }
     }
 

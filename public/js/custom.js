@@ -879,9 +879,18 @@ $(document).ready(function() {
                     $(".spinner-box").hide();
                     $("#cart_table").show();
                 }
+
+                if($("#header_cart_main_ul_ondemand").length > 0){
+                    $(".spinner-box").hide();
+                    $("#header_cart_main_ul_ondemand").show();
+                    $(".number .qty-minus-ondemand .fa").removeAttr("class").addClass("fa fa-minus");
+                    $(".number .qty-plus-ondemand .fa").removeAttr("class").addClass("fa fa-plus");
+                }
+                
                 if($(".number .fa-spinner fa-pulse").length > 0){
                     $(".number .qty-minus .fa").removeAttr("class").addClass("fa fa-minus");
                     $(".number .qty-plus .fa").removeAttr("class").addClass("fa fa-plus");
+                    
                 }
             }
         });
@@ -1068,8 +1077,11 @@ $(document).ready(function() {
         var variant_id = that.data("variant_id");
         var addonids = [];
         var addonoptids = [];
+        var show_plus_minus = "#show_plus_minus"+product_id;
         if(!$.hasAjaxRunning()){
-            addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id);
+            addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id,show_plus_minus);
+            $(this).hide();
+            $("#show_plus_minus"+product_id).show();
         }
         
     });
@@ -1105,8 +1117,62 @@ $(document).ready(function() {
         });
     }
 
-    // on demand add to cart 
-    function addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id) {
+   
+    // **********************************************   all function for ondemand services   *****************************************  ////////////////////////
+
+    $(document).on('click', '.qty-minus-ondemand', function() {
+        let base_price = $(this).data('base_price');
+        let cartproduct_id = $(this).attr("data-id");
+        let qty = $('#quantity_ondemand_'+cartproduct_id).val();
+        $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
+        if (qty > 1) {
+            $('#quantity_ondemand_'+cartproduct_id).val(--qty);
+            updateQuantityOnDemand(cartproduct_id, qty, base_price);
+        }else{
+            let parent_div_id = $(this).attr("data-parent_div_id");
+            // alert('remove this product');
+            $('#remove_item_modal').modal('show');
+            let vendor_id = $(this).data('vendor_id');
+            $('#remove_item_modal #vendor_id').val(vendor_id);
+            $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
+        }
+    });
+    $(document).on('click', '.qty-plus-ondemand', function() {
+        let base_price = $(this).data('base_price');
+        let cartproduct_id = $(this).attr("data-id");
+        let qty = $('#quantity_ondemand_'+cartproduct_id).val();
+        $('#quantity_ondemand_'+cartproduct_id).val(++qty);
+        $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
+        updateQuantityOnDemand(cartproduct_id, qty, base_price);
+    });
+
+
+    function updateQuantityOnDemand(cartproduct_id, quantity, base_price, iconElem='') {
+        if(iconElem != ''){
+            let elemClasses = $(iconElem).attr("class"); 
+            $(iconElem).removeAttr("class").addClass("fa fa-spinner fa-pulse");
+        }
+        ajaxCall = $.ajax({
+            type: "post",
+            dataType: "json",
+            url: update_qty_url,
+            data: {"quantity": quantity, "cartproduct_id": cartproduct_id},
+            success: function(response) {
+                var latest_price = parseInt(base_price) * parseInt(quantity);
+                $('#product_total_amount_'+cartproduct_id).html('$'+latest_price);
+                cartHeader();
+            },
+            error: function(err){
+                if($(".number .fa-spinner fa-pulse").length > 0){
+                    $(".number .qty-minus .fa").removeAttr("class").addClass("fa fa-minus");
+                    $(".number .qty-plus .fa").removeAttr("class").addClass("fa fa-plus");
+                }
+            }
+        });
+    }
+
+     // on demand add to cart 
+     function addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id,show_plus_minus) {
         $.ajax({
             type: "post",
             dataType: "json",
@@ -1123,7 +1189,10 @@ $(document).ready(function() {
                 if(response.status == 'success'){
                     $(".shake-effect").effect( "shake", {times:3}, 1200 );
                     cartHeader();
-                   
+                     $(show_plus_minus+" .minus").attr('data-id',response.cart_product_id);
+                     $(show_plus_minus+" .plus").attr('data-id',response.cart_product_id);
+                     $(show_plus_minus+" .input_qty").attr('id',"quantity_ondemand_"+response.cart_product_id);
+                    
                 }else{
                     alert(response.message);
                 }
@@ -1137,9 +1206,8 @@ $(document).ready(function() {
     }
 
 
-    // show cart data for on demand services 
-   
-    /// END show cart data for on demand services
+
+    /// ***************************************       END show cart data for on demand services    ***************************************************************///////////////// 
 
 
 

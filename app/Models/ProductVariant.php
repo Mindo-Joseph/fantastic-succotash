@@ -65,4 +65,9 @@ class ProductVariant extends Model
     public function wishlist(){
        return $this->hasOne('App\Models\UserWishlist', 'product_id', 'product_id')->select('product_id', 'user_id'); 
     }
+
+    public function checkIfInCart()
+    {
+        return $this->hasMany('App\Models\CartProduct', 'variant_id', 'id');
+    }
 }
