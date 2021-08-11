@@ -51,7 +51,7 @@ $(document).ready(function () {
         }
     });
     $(document).on("click", ".location-inputs .apremove",function() {
-        if('#dots_'+$(this).data('rel')){
+        if($('#dots_'+$(this).data('rel')).length != 0){
             $('#dots_'+$(this).data('rel')).remove();
             var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
                return this.value;
