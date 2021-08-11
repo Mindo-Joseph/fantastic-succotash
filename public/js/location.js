@@ -57,8 +57,8 @@ $(document).ready(function () {
             responsive: [
                 { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
                 { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
-                { breakpoint: 767, settings: { slidesToShow: 3, slidesToScroll: 3, infinite: !0 } },
-                { breakpoint: 480, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+                { breakpoint: 767, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 3, infinite: !0 } },
+                { breakpoint: 480, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
             ],
         });
         $(".product-4").slick({
@@ -67,11 +67,11 @@ $(document).ready(function () {
             infinite: !1,
             speed: 300,
             slidesToShow: 4,
-            slidesToScroll: 1,
+            slidesToScroll: 3,
             responsive: [
                 { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
-                { breakpoint: 991, settings: { slidesToShow: 2, slidesToScroll: 2 } },
-                { breakpoint: 420, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+                { breakpoint: 991, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
+                { breakpoint: 420, settings: { slidesToShow: 1, arrows: true,slidesToScroll: 1 } },
             ],
         });
         $(".product-5").slick({
@@ -80,11 +80,11 @@ $(document).ready(function () {
             infinite: !1,
             speed: 300,
             slidesToShow: 6,
-            slidesToScroll: 1,
+            slidesToScroll: 3,
             responsive: [
                 { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
-                { breakpoint: 991, settings: { slidesToShow: 2, slidesToScroll: 2 } },
-                { breakpoint: 420, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+                { breakpoint: 991, settings: { slidesToShow: 2, arrows: true,slidesToScroll: 2 } },
+                { breakpoint: 420, settings: { slidesToShow: 1, arrows: true,slidesToScroll: 1 } },
             ],
         });
         $('.vendor-product').slick({
@@ -93,7 +93,7 @@ $(document).ready(function () {
             arrows: false,
             dots: false,
             slidesToShow: 4,
-            slidesToScroll: 1,
+            slidesToScroll: 3,
             autoplay: true,
             autoplaySpeed: 5000,
             rtl: false,
@@ -108,12 +108,12 @@ $(document).ready(function () {
                 breakpoint: 767,
                 settings: {
                     slidesToShow: 1,
-                    slidesToScroll: 1
+                    slidesToScroll: 1,
+                    arrows: true
                 }
             }
             ]
-        });
-       
+        });       
     }
 
     $( document ).ready(function() {
@@ -138,7 +138,8 @@ $(document).ready(function () {
                 breakpoint: 767,
                 settings: {
                     slidesToShow: 1,
-                    slidesToScroll: 1
+                    slidesToScroll: 1,
+                    arrows: true
                 }
             }
             ]
@@ -165,7 +166,8 @@ $(document).ready(function () {
                 breakpoint: 767,
                 settings: {
                     slidesToShow: 1,
-                    slidesToScroll: 1
+                    slidesToScroll: 1,
+                    arrows: true
                 }
             }
             ]
@@ -192,7 +194,8 @@ $(document).ready(function () {
                 breakpoint: 767,
                 settings: {
                     slidesToShow: 1,
-                    slidesToScroll: 1
+                    slidesToScroll: 1,
+                    arrows: true
                 }
             }
             ]
@@ -219,7 +222,8 @@ $(document).ready(function () {
                 breakpoint: 767,
                 settings: {
                     slidesToShow: 1,
-                    slidesToScroll: 1
+                    slidesToScroll: 1,
+                    arrows: true
                 }
             }
             ]

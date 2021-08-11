@@ -49,6 +49,9 @@ $(document).ready(function () {
         displayLocation(latitude, longitude);
     });
     function getVendorList(){
+      let pickup_location = $('#pickup_location').val();
+      let destination_location = $('#destination_location').val();
+      if(pickup_location && destination_location){
         $('.location-list').hide();
         $.ajax({
             data: {},
@@ -73,6 +76,7 @@ $(document).ready(function () {
                 }
             }
         });
+      }
     }
     $(document).on("click",".vendor-list",function() {
         var locations = [];
@@ -108,9 +112,10 @@ $(document).ready(function () {
             }
         });
     });
-    $(document).on("click",".promo_code_list_btn_cab_booking",function() {
+    $(document).on("click","#promo_code_list_btn_cab_booking",function() {
         let amount = $(this).data('amount');
         let vendor_id = $(this).data('vendor_id');
+        let product_id = $(this).data('product_id');
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -123,14 +128,57 @@ $(document).ready(function () {
                         $('.promo-box').removeClass('d-none');
                         $('.cab-detail-box').addClass('d-none');
                         let cab_booking_promo_code_template = _.template($('#cab_booking_promo_code_template').html());
-                        $("#cab_booking_promo_code_list_main_div").append(cab_booking_promo_code_template({promo_codes: response.data})).show();
+                        $("#cab_booking_promo_code_list_main_div").append(cab_booking_promo_code_template({promo_codes: response.data, vendor_id:vendor_id, product_id:product_id, amount:amount})).show();
                     }else{
                         $("#cab_booking_promo_code_list_main_div").html(no_coupon_available_message).show();
                     }
                 }
             }
         });
-        
+    });
+    $(document).on("click","#remove_promo_code_cab_booking_btn",function() {
+        let amount = $(this).data('amount');
+        let vendor_id = $(this).data('vendor_id');
+        let product_id = $(this).data('product_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: cab_booking_promo_code_remove_url,
+            data: {amount:amount, vendor_id:vendor_id},
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $('#promo_code_list_btn_cab_booking').show();
+                    $('#remove_promo_code_cab_booking_btn').hide();
+                    $('.cab-detail-box #discount_amount').text('').hide();
+                    $('.cab-detail-box .code-text').text("Select A Promo Code").show();
+                    $('.cab-detail-box #real_amount').text(response.data.currency_symbol+' '+amount);
+                }
+            }
+        });
+    });
+    $(document).on("click",".cab_booking_apply_promo_code_btn",function() {
+        let amount = $(this).data('amount');
+        let vendor_id = $(this).data('vendor_id');
+        let coupon_id = $(this).data('coupon_id');
+        let product_id = $(this).data('product_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url:  apply_cab_booking_promocode_coupon_url,
+            data: {amount:amount, vendor_id:vendor_id, product_id:product_id, coupon_id},
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $('.promo-box').addClass('d-none');
+                    $('.cab-detail-box').removeClass('d-none');
+                    $('#promo_code_list_btn_cab_booking').hide();
+                    $('#remove_promo_code_cab_booking_btn').show();
+                    let real_amount = $('.cab-detail-box #real_amount').text();
+                    $('.cab-detail-box #discount_amount').text(real_amount).show();
+                    $('.cab-detail-box .code-text').text('Code '+response.data.name+' applied').show();
+                    $('.cab-detail-box #real_amount').text(response.data.currency_symbol+''+response.data.new_amount);
+                }
+            }
+        });
     });
     $(document).on("click",".close-promo-code-detail-box",function() {
         $('.promo-box').addClass('d-none');
@@ -216,6 +264,7 @@ $(document).ready(function () {
            $('#pickup_location_latitude').val(place.geometry.location.lat());
            $('#pickup_location_longitude').val(place.geometry.location.lng());
            initMap2();
+           getVendorList();
         });
         google.maps.event.addListener(autocomplete2, 'place_changed', function () {
             var place2 = autocomplete2.getPlace();
