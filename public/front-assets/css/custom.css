@@ -4050,6 +4050,10 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     top: 10px;
 }
 
+.ling-throgh {
+    text-decoration: line-through;
+    color: #6c757d;
+}
 
 
 

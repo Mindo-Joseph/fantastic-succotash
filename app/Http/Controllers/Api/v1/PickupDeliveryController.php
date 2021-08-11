@@ -580,14 +580,11 @@ class PickupDeliveryController extends BaseController{
             if(!$vendor){
                 return response()->json(['error' => 'Invalid vendor id.'], 404);
             }
-           
             $cart_detail = Promocode::where('id', $request->coupon_id)->first();
             if(!$cart_detail){
                 return $this->errorResponse('Invalid Promocode Id', 422);
             }
-
-            if($cart_detail->promo_type_id == 2)
-            {
+            if($cart_detail->promo_type_id == 2){
                 $cart_detail['new_amount'] = $cart_detail->amount;
                 if($cart_detail['new_amount'] < 0)
                 $cart_detail['new_amount'] = 0.00;
@@ -597,7 +594,6 @@ class PickupDeliveryController extends BaseController{
                 if($cart_detail['new_amount'] < 0)
                 $cart_detail['new_amount'] = 0.00;
             }
-            
             return $this->successResponse($cart_detail, 'Promotion Code Used Successfully.', 201);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
