@@ -64,7 +64,7 @@
                                                     {{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}
                                                 @endif</h5>
 
-                                                <a class="btn btn-solid add_on_demand" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
+                                                <a class="btn btn-solid add_on_demand" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
 
                                                 
 
@@ -332,25 +332,46 @@
                             </div> --}}
                         </div>
                     </div>
-
+                    
                     <div class="col-md-4">
                         <div class="card-box p-2">
                             <div class="product-order">
                                 <div class="total-sec border-0 py-0 my-0">
                                     <h5 class="d-flex align-items-center justify-content-between pb-2 border-bottom"><b>City</b><b>Dubai</b></h5>
+                                    <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('SERVICE DETAILS')}} </h5>
                                 </div>
-                                <div class="total-sec border-0 py-0 my-0">
-                                    <h5 class="d-flex align-items-center justify-content-between pb-2 border-bottom"><b>Service</b></h5>
-                                    <ul>
-                                        <li>Tax <span>$0.00</span></li>
-                                        <li>Delivery Fee <span>$53.66</span></li>
-                                        <li>Tip Amount <span>$14.91</span></li>
-                                        <li>Loyalty Amount <span>$3,831.37</span></li>
-                                    </ul>
+                                <div class="spinner-box">
+                                    <div class="circle-border">
+                                        <div class="circle-core"></div>
+                                    </div>
                                 </div>
-                                <div class="final-total mt-3">
-                                    <h3>Total <span>$313.20</span></h3>
-                                </div>
+                            
+                                <script type="text/template" id="header_cart_template_ondemand">
+                                        <% _.each(cart_details.products, function(product, key){%>
+                                        <% _.each(product.vendor_products, function(vendor_product, vp){%>
+                                            <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
+                                                <a class='media' href='<%= show_cart_url %>'>
+                                                     <div class='media-body'>                                                                
+                                                        <h6 class="d-flex align-items-center justify-content-between">
+                                                            <span class="ellips"><%= vendor_product.quantity %>x <%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></span>
+                                                            <span>{{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %></span>
+                                                        </h6>
+                                                    </div>
+                                                </a>
+                                                <div class='close-circle'>
+                                                    <a  class="action-icon d-block mb-3 remove_product_via_cart" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
+                                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        <% }); %>
+                                        <% }); %>
+                                        <li><div class='total'><h5>{{__('Total')}} : <span id='totalCart'>{{Session::get('currencySymbol')}}<%= cart_details.gross_amount %></span></h5></div></li>
+                                 </script>
+                                 <ul class="show-div shopping-cart" id="header_cart_main_ul_ondemand">
+                                 </ul>
+                                
+                                
                             </div>
                         </div>
                     </div>
@@ -362,24 +383,28 @@
     </div>
 </section>
 
+<!-- remove_item_modal -->
+<div class="modal fade remove-item-modal" id="remove_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_itemLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="remove_itemLabel">{{__('Remove Item')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="vendor_id" value="">
+                <input type="hidden" id="cartproduct_id" value="">
+                <h6 class="m-0">{{__('Are You Sure You Want To Remove This Item?')}}</h6>
+            </div>
+            <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+                <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">{{__('Cancel')}}</button>
+                <button type="button" class="btn btn-solid" id="remove_product_button">{{__('Remove')}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end remove_item_modal -->
 @endsection
 
-@section('script')
-
-
-<script type="text/javascript">
-    $(".add_on_demand" ).click(function() {
-     
-            let that = $(this);
-            var ajaxCall = 'ToCancelPrevReq';
-            var vendor_id = that.data("vendor_id");
-            var product_id = that.data("product_id");
-            var add_to_cart_url = "{{ route('addToCart') }}";
-
-            
-            addToCart();
-            
-    });
-    </script>
-
-@endsection    
