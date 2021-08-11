@@ -4,6 +4,40 @@ $(document).ready(function () {
     $(document).on("click","#show_dir",function() {
         initMap2();
     });
+    $(document).on("click", "#cab_booking_place_order",function() {
+        var tasks = [];
+        var pickup_location_names = $('input[name="pickup_location_name[]"]').map(function(){return this.value;}).get();
+        var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){return this.value;}).get();
+        var pickup_location_latitudes = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
+        var pickup_location_longitudes = $('input[name="pickup_location_longitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_latitudes = $('input[name="destination_location_latitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_longitudes = $('input[name="destination_location_longitude[]"]').map(function(){return this.value;}).get();
+        $(pickup_location_latitudes).each(function(index, latitude) {
+            var data = {};
+            data.barcode = null;
+            data.task_type_id = 1;
+            data.post_code = null;
+            data.short_name = null;
+            data.latitude = latitude;
+            data.appointment_duration = null;
+            data.address = pickup_location_names[index];
+            data.longitude = pickup_location_longitudes[index];
+            tasks.push(data);
+        });
+        $(destination_location_latitudes).each(function(index, latitude) {
+            var data = {};
+            data.barcode = null;
+            data.task_type_id = 1;
+            data.post_code = null;
+            data.short_name = null;
+            data.latitude = latitude;
+            data.appointment_duration = null;
+            data.address = destination_location_names[index];
+            data.longitude = destination_location_longitudes[index];
+            tasks.push(data);
+        });
+        console.log(tasks);
+    });
     $(document).on("click", ".add-more-location",function() {
         let random_id = Date.now();
         let destination_location_template = _.template($('#destination_location_template').html());
