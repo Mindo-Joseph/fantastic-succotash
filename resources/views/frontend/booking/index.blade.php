@@ -21,7 +21,7 @@
                         <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Stop')}}" id="destination_location" />
                         <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude" />
                         <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude" />
-                        <i class="fa fa-times ml-1" aria-hidden="true"></i>
+                        <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel="{{Carbon\Carbon::now()->timestamp}}"></i>
                     </li>
                 </ul>
                 <a class="add-more-location position-relative pl-2" href="javascript:void(0)">{{__('Add Destination')}}</a>
