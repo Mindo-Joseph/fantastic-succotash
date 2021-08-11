@@ -494,7 +494,7 @@
                     <a class="btn btn-solid ml-2" href="#">ola</a>
                 </div>
                 
-                <div class="vehical-container style-4">
+                <div class="vehical-container style-4 d-none">
                     <a class="vehical-view-box row align-items-center no-gutters px-2" href="#">
                         <div class="col-3 vehicle-icon">
                             <img class="img-fluid" src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/v1.1/Select_v1.png" class="j0 i2">
@@ -656,10 +656,120 @@
                         </div>
                     </div>
                     <div class="payment-promo-container p-2">
-                        <h4 class="d-flex align-items-center justify-content-between mb-2"><span><i class="fa fa-money" aria-hidden="true"></i> Cash</span> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
+                        <h4 class="d-flex align-items-center justify-content-between mb-2" data-toggle="modal" data-target="#payment_modal"><span><i class="fa fa-money" aria-hidden="true"></i> Cash</span> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
                         <button class="btn btn-solid w-100">Request XL Intercity</button>
                     </div>                
                 </div> 
+                
+                <div class="promo-box style-4 d-none">
+                    <a class="d-block mt-2" href="#">✕</a>
+                    <div class="row" id="promo_code_list_main_div">
+        
+                        <div class="col-12 mt-2">
+                            <div class="coupon-code mt-0">
+                                <div class="p-2">
+                                    <img src="https://imgproxy.royoorders.com/insecure/fill/100/35/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/promocode/jyevATxvaAFDVYlbg8QE2QBDBmuBYY6qrxuw8Rsl.png" alt="">
+                                    <h6 class="mt-0">Converse20</h6>
+                                </div>
+                                <hr class="m-0">
+                                <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
+                                    <label class="m-0">CONV20</label>
+                                    <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="17" data-cart_id="4" data-coupon_id="3" data-amount="86.36" style="cursor: pointer;">Apply</a>
+                                </div>
+                                <hr class="m-0">
+                                <div class="offer-text p-2">
+                                    <p class="m-0">20% off on all Converse products with free Delivery.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <div class="coupon-code mt-0">
+                                <div class="p-2">
+                                    <img src="https://imgproxy.royoorders.com/insecure/fill/100/35/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/promocode/jyevATxvaAFDVYlbg8QE2QBDBmuBYY6qrxuw8Rsl.png" alt="">
+                                    <h6 class="mt-0">Converse20</h6>
+                                </div>
+                                <hr class="m-0">
+                                <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
+                                    <label class="m-0">CONV20</label>
+                                    <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="17" data-cart_id="4" data-coupon_id="3" data-amount="86.36" style="cursor: pointer;">Apply</a>
+                                </div>
+                                <hr class="m-0">
+                                <div class="offer-text p-2">
+                                    <p class="m-0">20% off on all Converse products with free Delivery.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <div class="coupon-code mt-0">
+                                <div class="p-2">
+                                    <img src="https://imgproxy.royoorders.com/insecure/fill/100/35/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/promocode/jyevATxvaAFDVYlbg8QE2QBDBmuBYY6qrxuw8Rsl.png" alt="">
+                                    <h6 class="mt-0">Converse20</h6>
+                                </div>
+                                <hr class="m-0">
+                                <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
+                                    <label class="m-0">CONV20</label>
+                                    <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="17" data-cart_id="4" data-coupon_id="3" data-amount="86.36" style="cursor: pointer;">Apply</a>
+                                </div>
+                                <hr class="m-0">
+                                <div class="offer-text p-2">
+                                    <p class="m-0">20% off on all Converse products with free Delivery.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <div class="coupon-code mt-0">
+                                <div class="p-2">
+                                    <img src="https://imgproxy.royoorders.com/insecure/fill/100/35/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/promocode/jyevATxvaAFDVYlbg8QE2QBDBmuBYY6qrxuw8Rsl.png" alt="">
+                                    <h6 class="mt-0">Converse20</h6>
+                                </div>
+                                <hr class="m-0">
+                                <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
+                                    <label class="m-0">CONV20</label>
+                                    <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="17" data-cart_id="4" data-coupon_id="3" data-amount="86.36" style="cursor: pointer;">Apply</a>
+                                </div>
+                                <hr class="m-0">
+                                <div class="offer-text p-2">
+                                    <p class="m-0">20% off on all Converse products with free Delivery.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <div class="coupon-code mt-0">
+                                <div class="p-2">
+                                    <img src="https://imgproxy.royoorders.com/insecure/fill/100/35/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/promocode/jyevATxvaAFDVYlbg8QE2QBDBmuBYY6qrxuw8Rsl.png" alt="">
+                                    <h6 class="mt-0">Converse20</h6>
+                                </div>
+                                <hr class="m-0">
+                                <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
+                                    <label class="m-0">CONV20</label>
+                                    <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="17" data-cart_id="4" data-coupon_id="3" data-amount="86.36" style="cursor: pointer;">Apply</a>
+                                </div>
+                                <hr class="m-0">
+                                <div class="offer-text p-2">
+                                    <p class="m-0">20% off on all Converse products with free Delivery.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <div class="coupon-code mt-0">
+                                <div class="p-2">
+                                    <img src="https://imgproxy.royoorders.com/insecure/fill/100/35/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/promocode/jyevATxvaAFDVYlbg8QE2QBDBmuBYY6qrxuw8Rsl.png" alt="">
+                                    <h6 class="mt-0">Converse20</h6>
+                                </div>
+                                <hr class="m-0">
+                                <div class="code-outer p-2 text-uppercase d-flex align-items-center justify-content-between">
+                                    <label class="m-0">CONV20</label>
+                                    <a class="btn btn-solid apply_promo_code_btn" data-vendor_id="17" data-cart_id="4" data-coupon_id="3" data-amount="86.36" style="cursor: pointer;">Apply</a>
+                                </div>
+                                <hr class="m-0">
+                                <div class="offer-text p-2">
+                                    <p class="m-0">20% off on all Converse products with free Delivery.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>    
+                </div>
 
             </form>
         </div>
@@ -1953,6 +2063,43 @@
         </div>
     </div> -->
 
+
+    <!-- Modal -->
+    <div class="modal fade payment-modal payment-modal-width" id="payment_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="payment_modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header pb-0">
+            <h5 class="modal-title" id="payment_modalLabel">Choose Profile</h5>
+            <button type="button" class="close right-top" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body p-0">
+            <h4 class="payment-button"  data-toggle="modal" data-target="#select_payment_option" aria-label="Close">Select Payment Method</h4>
+        </div>
+       
+        </div>
+    </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade select-payment-option payment-modal-width" id="select_payment_option" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="select_payment_optionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="select_payment_optionLabel">Choose payment method</h5>
+                <button type="button" class="close right-top" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Cash</span></h4>
+            </div>        
+        </div>
+    </div>
+    </div>
 
 
     <script src="{{asset('front-assets/js/popper.min.js')}}"></script>

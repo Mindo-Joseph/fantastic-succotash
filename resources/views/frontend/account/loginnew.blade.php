@@ -44,7 +44,7 @@
                 @endif
                 <div class="row mt-3 arabic-language">
                     <div class="offset-xl-2 col-xl-8 text-left">
-                        <form name="login" id="login" action="{{route('customer.loginData')}}" class="px-lg-4" method="post"> 
+                        <form name="login" id="login" action="{{route('customer.loginData')}}"  class="px-lg-4" method="post"> 
                             @csrf
                             <div class="form-group">
                                 <label for="">{{ __('Email') }}</label>
@@ -101,4 +101,42 @@
 </section> 
 @endsection
 @section('script')
+<script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+<script>
+    // $(document).ready(function() {
+    //     $(".submitLogin").click(function(e) {
+    //         e.preventDefault();
+    //         console.log(getToken());
+    //         console.log("nkhf");
+    //     });
+    // });
+    function getToken(){
+        var final_token = "1234";
+        var firebaseConfig = {
+            apiKey: "AIzaSyBtE2uCaikxgUDbn5SqmzW2fGcGOpUlkqc",
+            authDomain: "royo-order-version2.firebaseapp.com",
+            projectId: "royo-order-version2",
+            storageBucket: "royo-order-version2.appspot.com",
+            messagingSenderId: "1073948422654",
+            appId: "1:1073948422654:web:4dd137a854484fa3c410af",
+            measurementId: "G-59QSSL4RQ1"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+        messaging
+        .requestPermission()
+        .then(function () {
+            // console.log("Notification permission granted.");
+            return messaging.getToken()
+        })
+        .then(function(token) {
+            final_token = token;
+            // console.log(token);
+        })
+        .catch(function (err) {
+            // console.log("Unable to get permission to notify.", err);
+        });
+        return final_token;
+    }
+</script>
 @endsection

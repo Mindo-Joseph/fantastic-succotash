@@ -50,8 +50,8 @@ class CustomerAuthController extends FrontController
             $data = [
                 "registration_ids" => $token,
                 "notification" => [
-                    'title' => "Hor bhai",
-                    'body'  => "kya haal hh",
+                    'title' => "Title message",
+                    'body'  => "Sample Body Message",
                 ]
             ];
             $dataString = $data;

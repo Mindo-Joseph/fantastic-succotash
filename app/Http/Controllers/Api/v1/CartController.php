@@ -124,7 +124,7 @@ class CartController extends BaseController{
             $client_currency = ClientCurrency::where('is_primary', '=', 1)->first();
             $cart_detail = [
                 'is_gift' => 0,
-                'status' => '1',
+                'status' => '0',
                 'item_count' => 0,
                 'user_id' => $user->id,
                 'created_by' => $user->id,
@@ -527,6 +527,7 @@ class CartController extends BaseController{
                         $vendorData->coupon_not_appiled = 1;
                     }
                 }
+                $deliver_charge = $deliver_charge * $clientCurrency->doller_compare;
                 $vendorData->proSum = $proSum;
                 $vendorData->addonSum = $ttAddon;
                 $vendorData->deliver_charge = $deliver_charge;
@@ -567,12 +568,12 @@ class CartController extends BaseController{
         }
         if (!empty($subscription_features)) {
             $total_disc_amount = $total_disc_amount + $total_subscription_discount;
-            $cart->total_subscription_discount = $total_subscription_discount;
+            $cart->total_subscription_discount = $total_subscription_discount * $clientCurrency->doller_compare;
         }
         $cart->total_tax = $total_tax;
         $cart->tax_details = $tax_details;
         $cart->gross_paybale_amount = $total_paying;
-        $cart->total_discount_amount = $total_disc_amount;
+        $cart->total_discount_amount = $total_disc_amount * $clientCurrency->doller_compare;
         $cart->products = $cartData;
         $cart->item_count = $item_count;
         $temp_total_paying = $total_paying  + $total_tax - $total_disc_amount;

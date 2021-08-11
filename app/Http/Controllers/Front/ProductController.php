@@ -43,7 +43,7 @@ class ProductController extends FrontController{
             'variant.set' => function ($sel) {
                 $sel->select('product_variant_id', 'variant_option_id');
             },
-            'variant.vimage.pimage.image', 'related', 'upSell', 'crossSell', 'vendor', 'media.image', 'translation' => function ($q) use ($langId) {
+            'variant.media.pimage.image', 'related', 'upSell', 'crossSell', 'vendor', 'media.image', 'translation' => function ($q) use ($langId) {
                 $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                 $q->where('language_id', $langId);
             },
@@ -191,13 +191,13 @@ class ProductController extends FrontController{
                     $pv_ids = array();
                     foreach ($product_variant as $k => $variant) {
                         if($request->options[$key]){
-                            $variantSet = ProductVariantSet::where('variant_type_id', $request->variants[$key])
-                            ->where('variant_option_id', $request->options[$key])
-                            ->where('product_variant_id', $variant->product_variant_id)->first();
-                            if($variantSet){
-                                if(!in_array($variantSet->product_variant_id, $pv_ids)){
-                                    $pv_ids[] = $variantSet->product_variant_id;
-                                }
+                            $variantSet = ProductVariantSet::whereIn('variant_type_id', $request->variants)
+                            ->whereIn('variant_option_id', $request->options)
+                            ->where('product_variant_id', $variant->product_variant_id)->get();
+                            if(count($variantSet) == count($request->variants)){
+                                // if(!in_array($variantSet->product_variant_id, $pv_ids)){
+                                    $pv_ids[] = $variant->product_variant_id;
+                                // }
                             }
                         }
                     }
@@ -215,7 +215,6 @@ class ProductController extends FrontController{
                 }
             }
         }
-        // dd($pv_ids);
         $sets = array();
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         $availableSets = Product::with(['variantSet.variantDetail','variantSet.option2'=>function($q)use($product, $pv_ids){
@@ -246,7 +245,6 @@ class ProductController extends FrontController{
                 }else{
                     $variantData = array();
                 }
-                // dd($variantData->toArray());
                 return response()->json(array('status' => 'Success', 'variant' => $variantData, 'availableSets' => $availableSets->variantSet));
             }
         }

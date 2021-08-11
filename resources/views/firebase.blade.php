@@ -29,81 +29,63 @@
     </body>
 
     <script>
-            // Your web app's Firebase configuration
-            var firebaseConfig = {
-                apiKey: "AIzaSyBtE2uCaikxgUDbn5SqmzW2fGcGOpUlkqc",
-                authDomain: "royo-order-version2.firebaseapp.com",
-                projectId: "royo-order-version2",
-                storageBucket: "royo-order-version2.appspot.com",
-                messagingSenderId: "1073948422654",
-                appId: "1:1073948422654:web:4dd137a854484fa3c410af",
-                measurementId: "G-59QSSL4RQ1"
-            };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    //firebase.analytics();
-    const messaging = firebase.messaging();
+        var firebaseConfig = {
+            apiKey: "AIzaSyBtE2uCaikxgUDbn5SqmzW2fGcGOpUlkqc",
+            authDomain: "royo-order-version2.firebaseapp.com",
+            projectId: "royo-order-version2",
+            storageBucket: "royo-order-version2.appspot.com",
+            messagingSenderId: "1073948422654",
+            appId: "1:1073948422654:web:4dd137a854484fa3c410af",
+            measurementId: "G-59QSSL4RQ1"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
         messaging
-    .requestPermission()
-    .then(function () {
-    //MsgElem.innerHTML = "Notification permission granted." 
-        console.log("Notification permission granted.");
-
-        // get the token in the form of promise
-        return messaging.getToken()
-    })
-    .then(function(token) {
-    // print the token on the HTML page     
-    console.log(token);
-    
-    
-    
-    })
-    .catch(function (err) {
-        console.log("Unable to get permission to notify.", err);
-    });
-
-    messaging.onMessage(function(payload) {
-        console.log(payload);
-        var notify;
-        notify = new Notification(payload.notification.title,{
-            body: payload.notification.body,
-            icon: payload.notification.icon,
-            tag: "Dummy"
+        .requestPermission()
+        .then(function () {
+            console.log("Notification permission granted.");
+            return messaging.getToken()
+        })
+        .then(function(token) {
+        console.log(token);
+        })
+        .catch(function (err) {
+            console.log("Unable to get permission to notify.", err);
         });
-        console.log(payload.notification);
-    });
-
-        //firebase.initializeApp(config);
-    var database = firebase.database().ref().child("/users/");
-    
-    database.on('value', function(snapshot) {
-        renderUI(snapshot.val());
-    });
-
-    // On child added to db
-    database.on('child_added', function(data) {
-        console.log("Comming");
-        if(Notification.permission!=='default'){
+        messaging.onMessage(function(payload) {
+            console.log(payload);
             var notify;
-            
-            notify= new Notification('CodeWife - '+data.val().username,{
-                'body': data.val().message,
-                'icon': 'bell.png',
-                'tag': data.getKey()
+            notify = new Notification(payload.notification.title,{
+                body: payload.notification.body,
+                icon: payload.notification.icon,
+                tag: "Dummy"
             });
-            notify.onclick = function(){
-                alert(this.tag);
+            console.log(payload.notification);
+        });
+        var database = firebase.database().ref().child("/users/");
+        database.on('value', function(snapshot) {
+            renderUI(snapshot.val());
+        });
+        database.on('child_added', function(data) {
+            console.log("Comming");
+            if(Notification.permission!=='default'){
+                var notify;
+                
+                notify= new Notification('CodeWife - '+data.val().username,{
+                    'body': data.val().message,
+                    'icon': 'bell.png',
+                    'tag': data.getKey()
+                });
+                notify.onclick = function(){
+                    // alert(this.tag);
+                }
+            }else{
+                // alert('Please allow the notification first');
             }
-        }else{
-            alert('Please allow the notification first');
-        }
-    });
-
-    self.addEventListener('notificationclick', function(event) {       
-        event.notification.close();
-    });
-
+        });
+        self.addEventListener('notificationclick', function(event) {       
+            event.notification.close();
+        });
 
     </script>
 </html>
