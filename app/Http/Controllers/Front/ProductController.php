@@ -79,7 +79,6 @@ class ProductController extends FrontController{
             ->where('url_slug', $url_slug)
             ->where('is_live', 1)
             ->firstOrFail();
-        // dd($product->toArray());
         $doller_compare = 1;
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         if($clientCurrency){
@@ -216,7 +215,6 @@ class ProductController extends FrontController{
                 }
             }
         }
-        // dd($pv_ids);
         $sets = array();
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         $availableSets = Product::with(['variantSet.variantDetail','variantSet.option2'=>function($q)use($product, $pv_ids){
