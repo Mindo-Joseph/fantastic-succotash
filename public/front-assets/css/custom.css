@@ -3743,6 +3743,72 @@ a.vehical-view-box.row.no-gutters {
     color: #343a40;
 }
 
+.promo-box {
+    overflow: auto;
+    position: absolute;
+    top: 0;
+    height: calc(100vh - 150px);
+    width: 100%;
+    background: #fff;
+    padding: 0 20px 30px;
+}
+
+.payment-promo-container h4{
+    cursor: pointer;
+}
+
+.payment-modal-width .modal-dialog {
+    max-width: 100%;
+}
+.payment-modal-width .modal-dialog .modal-content {
+    max-width: 400px;
+    margin: auto;
+}
+
+/* .select-payment-option .modal-dialog .modal-content {
+    left: -8px;
+} */
+
+.payment-modal-width .modal-title {
+    font-size: 20px;
+}
+
+.payment-modal .modal-header {
+    padding: 27px 20px 0;
+}
+
+.payment-button {
+    padding: 23.5px 20px;
+    margin: 0;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.payment-button:hover {
+    background-color: #F7F7F7;
+}
+
+.select-payment-option .modal-header {
+    padding: 23px 20px 0;
+}
+
+.select-payment-option .modal-title {
+    font-size: 26px;
+}
+
+button.close.right-top {
+    position: fixed;
+    top: 28px;
+    right: 28px;
+    z-index: 222;
+    color: #fff;
+    opacity: 1;
+}
+
 /* Search Bar Css */
 .list-box {
     box-shadow: 0 16px 32px 0 rgb(0 0 0 / 5%) !important;
@@ -3983,7 +4049,6 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     right: 0;
     top: 10px;
 }
-
 
 
 
@@ -4445,6 +4510,16 @@ body[dir="rtl"] .inner_spacing h3 {
   .indicator-line.active {
     background: var(--theme-deafult);
   }
+
+  .category-active-btns {
+    top: 0;
+    position: fixed;
+    width: 575px;
+    max-width: 100%;
+    background-color: #fff;
+    padding: 10px 0;
+    z-index: 1;
+}
   
   @media screen and (max-width: 500px) {
     .step p {

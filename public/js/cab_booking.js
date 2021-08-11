@@ -4,6 +4,27 @@ $(document).ready(function () {
     $(document).on("click","#show_dir",function() {
         initMap2();
     });
+    $(document).on("click", ".add-more-location",function() {
+        let random_id = Date.now();
+        let destination_location_template = _.template($('#destination_location_template').html());
+        $("#location_input_main_div").append(destination_location_template({random_id:random_id})).show();
+        initializeNew(random_id);
+    });
+    $(document).on("click", ".location-inputs .apremove",function() {
+        var rel = $(this).data('rel');
+        $('#dots_'+rel).remove();
+    });
+    function initializeNew(random_id) {
+      var input2 = document.getElementById('destination_location_'+random_id);
+      if(input2){
+        var autocomplete = new google.maps.places.Autocomplete(input2);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var place2 = autocomplete.getPlace();
+            $('#destination_location_latitude_'+random_id).val(place2.geometry.location.lat());
+            $('#destination_location_longitude_'+random_id).val(place2.geometry.location.lng());
+        });
+      }
+    }
     $(document).on("click",".search-location-result",function() {
         $('#pickup_location').val($(this).data('address'));
         var latitude = $(this).data('latitude');
@@ -23,6 +44,10 @@ $(document).ready(function () {
                     if(response.data.length != 0){
                         let vendors_template = _.template($('#vendors_template').html());
                         $("#vendor_main_div").append(vendors_template({results: response.data})).show();
+                        if(response.data.length == 1){
+                            $('.vendor-list').trigger('click');
+                            $('.table-responsive').remove();
+                        }
                     }else{
                         $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
                     }
@@ -64,6 +89,34 @@ $(document).ready(function () {
             }
         });
     });
+    $(document).on("click",".promo_code_list_btn_cab_booking",function() {
+        let amount = $(this).data('amount');
+        let vendor_id = $(this).data('vendor_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: promo_code_list_url,
+            data: {amount:amount, vendor_id:vendor_id},
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $('#cab_booking_promo_code_list_main_div').html('');
+                    if(response.data.length != 0){
+                        $('.promo-box').removeClass('d-none');
+                        $('.cab-detail-box').addClass('d-none');
+                        let cab_booking_promo_code_template = _.template($('#cab_booking_promo_code_template').html());
+                        $("#cab_booking_promo_code_list_main_div").append(cab_booking_promo_code_template({promo_codes: response.data})).show();
+                    }else{
+                        $("#cab_booking_promo_code_list_main_div").html(no_coupon_available_message).show();
+                    }
+                }
+            }
+        });
+        
+    });
+    $(document).on("click",".close-promo-code-detail-box",function() {
+        $('.promo-box').addClass('d-none');
+        $('.cab-detail-box').removeClass('d-none');
+    });
     $(document).on("click",".close-cab-detail-box",function() {
         $('.cab-detail-box').addClass('d-none');
         $('.address-form').removeClass('d-none');
@@ -92,8 +145,21 @@ $(document).ready(function () {
         });
     });
     function initMap2() {
+        var locations = [];
         let pickup_location_latitude = $('#pickup_location_latitude').val();
         let pickup_location_longitude = $('#pickup_location_longitude').val();
+        var latitudes = $('input[name="destination_location_latitude[]"]').map(function(){
+           return this.value;
+        }).get();
+        var longitudes = $('input[name="destination_location_latitude[]"]').map(function(){
+           return this.value;
+        }).get();
+        $(latitudes).each(function(index, latitude) {
+            var data = {};
+            data.latitude = latitude;
+            data.longitude = longitudes[index];
+            locations.push(data);
+        });
         let destination_location_latitude = $('#destination_location_latitude').val();
         let destination_location_longitude = $('#destination_location_longitude').val();
         if(pickup_location_latitude && pickup_location_longitude && destination_location_latitude && destination_location_longitude){
@@ -132,7 +198,7 @@ $(document).ready(function () {
           }, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
               var point = response.routes[0].legs[0];
-              // alert(point.duration.text);
+              console.log(point.duration.text);
               directionsDisplay.setDirections(response);
             } else {
               window.alert('Directions request failed due to ' + status);

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Front;
-
+use Auth;
 use Session;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -122,8 +122,13 @@ class CategoryController extends FrontController
         }
         $newProducts = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
         if($page == 'pickup/delivery'){
-            $user_addresses = UserAddress::get();
-            return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories]);
+            if(!Auth::user()){
+                return redirect()->route('customer.login');
+            }else{
+
+                $user_addresses = UserAddress::get();
+                return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories]);
+            }
         }elseif($page == 'on demand service'){
             $cartDataGet = $this->getCartOnDemand();
             return view('frontend.ondemand.index')->with(['cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);

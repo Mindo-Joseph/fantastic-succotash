@@ -144,7 +144,7 @@ class CartController extends FrontController
                 'product_id' => $request->product_id,
                 'variant_id'  => $request->variant_id,
                 'currency_id' => $client_currency->currency_id,
-                'luxury_option_id' => $luxury_option->id??'',
+                'luxury_option_id' => ($luxury_option) ? $luxury_option->id : 0,
             ];
             $cartProduct = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cart_detail->id)->first();
             if(!$cartProduct){
