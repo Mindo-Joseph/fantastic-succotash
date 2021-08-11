@@ -171,7 +171,9 @@
                         </div>
                     </div>
                 </div>
+                @if($product->category->categoryDetail->type_id != 7)
                 <div class="card-box">
+
                     <h5 class="text-uppercase mt-0 mb-3 bg-light p-2">Pricing Information</h5>
                     @if($product->has_variant == 0)
                     <div class="row mb-2">
@@ -183,19 +185,23 @@
                             {!! Form::label('title', 'Compare at price (Optional)', ['class' => 'control-label']) !!}
                             {!! Form::text('compare_at_price', $product->variant[0]->compare_at_price, ['class'=>'form-control', 'id' => 'compare_at_price', 'placeholder' => '200', 'onkeypress' => 'return isNumberKey(event)']) !!}
                         </div>
-                        <div class="col-4 mb-2">
+                        {{-- <div class="col-4 mb-2">
                             {!! Form::label('title', 'Cost Price (Optional)', ['class' => 'control-label']) !!}
                             {!! Form::text('cost_price', $product->variant[0]->cost_price, ['class'=>'form-control', 'id' => 'cost_price', 'placeholder' => '200', 'onkeypress' => 'return isNumberKey(event)']) !!}
-                        </div>
+                        </div> --}}
                     </div>
                     @endif
                     <div class="row mb-2">
+                        @if($product->category->categoryDetail->type_id != 8)
                         <div class="col-sm-4">
                             {!! Form::label('title', 'Track Inventory') !!} <br>
                             <input type="checkbox" bid="" id="has_inventory" data-plugin="switchery" name="has_inventory" class="chk_box" data-color="#43bee1" checked>
                         </div>
+                        @endif
+
                         <div class="col-sm-8 check_inventory">
                             <div class="row">
+                                @if($product->category->categoryDetail->type_id != 8)
                                 @if($product->has_variant == 0)
                                 <div class="col-sm-4">
                                     {!! Form::label('title', 'Quantity',['class' => 'control-label']) !!}
@@ -206,17 +212,21 @@
                                     {!! Form::label('title', 'Sell When Out Of Stock',['class' => 'control-label']) !!} <br />
                                     <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#43bee1" @if($product->sell_when_out_of_stock == 1) checked @endif>
                                 </div>
-                                @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 2)
-                                <div class="col-sm-4">
+                                @endif
+                                @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 8)
+                                {{-- <div class="col-sm-4">
                                     {!! Form::label('title', 'Need Price From Dispatcher',['class' => 'control-label']) !!} <br />
                                     <input type="checkbox" bid="" id="need_price_from_dispatcher" data-plugin="switchery" name="need_price_from_dispatcher" class="chk_box" data-color="#43bee1" @if($product->need_price_from_dispatcher == 1) checked @endif>
-                                </div>
+                                </div> --}}
                                 @endif
                                 
                             </div>
                         </div>
                     </div>
+
                 </div>
+                @endif
+
                 @if($productVariants->count() > 0)
                 <div class="card-box">
                     <div class="row mb-2 bg-light">
@@ -343,7 +353,7 @@
                             <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile" class="chk_box" data-color="#43bee1" @if($product->Requires_last_mile == 1) checked @endif>
                         </div>
                         @endif
-                        @if($configData->pharmacy_check == 1 && $product->category->categoryDetail->type_id != 7)
+                        @if($configData->pharmacy_check == 1)
                         <div class="col-md-6 d-flex justify-content-between mb-2">
                             {!! Form::label('title', 'Requires Prescription',['class' => 'control-label']) !!}
                             <input type="checkbox" bid="" id="pharmacy_check" data-plugin="switchery" name="pharmacy_check" class="chk_box" data-color="#43bee1" @if($product->pharmacy_check == 1) checked @endif>
@@ -370,7 +380,7 @@
                             </div>
                         @endif
                             
-                        @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 2)
+                        @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 8)
                             <div class="col-md-6 d-flex justify-content-between mb-2">
                                 {!! Form::label('title', 'Dispatcher Tags',['class' => 'control-label']) !!}
                                 <select class="selectize-select1 form-control"  name="tags" required>
@@ -394,6 +404,8 @@
                                 <option value="1" @if($product->is_live == 1) selected @endif>Published</option>
                             </select>
                         </div>
+
+                        @if($product->category->categoryDetail->type_id != 8 && $product->category->categoryDetail->type_id != 7)
                         <div class="col-md-6 mb-2">
                             {!! Form::label('title', 'Brand',['class' => 'control-label']) !!}
                             <select class="form-control " id="brand_idBox" name="brand_id">
@@ -403,6 +415,8 @@
                                 @endforeach
                             </select>
                         </div>
+                        @endif
+
                         <div class="col-md-6 mb-2">
                             {!! Form::label('title', 'Tax Category',['class' => 'control-label']) !!}
                             <select class="form-control " id="typeSelectBox" name="tax_category">
@@ -497,6 +511,7 @@
                                 @endforeach
                             </select>
                         </div>
+                        @if($product->category->categoryDetail->type_id != 8)
                         <div class="col-md-6 mb-2">
                             {!! Form::label('title', 'Up Cell Products',['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="up_cell[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
@@ -522,6 +537,7 @@
                                 @endforeach
                             </select>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>

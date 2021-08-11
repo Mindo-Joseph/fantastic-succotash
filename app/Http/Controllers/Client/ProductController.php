@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{CsvProductImport, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell};
+use App\Models\{CsvProductImport, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell, CartProduct, CartAddon, UserWishlist};
 use Illuminate\Support\Facades\Storage;
 use App\Http\Traits\ToasterResponser;
 use Maatwebsite\Excel\Facades\Excel;
@@ -190,17 +190,18 @@ class ProductController extends BaseController
         
         $agent_dispatcher_tags = [];
         $agent_dispatcher_on_demand_tags = [];
-        if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 7) # if type is pickup delivery then get dispatcher tags
+
+         if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 7) # if type is pickup delivery then get dispatcher tags
         {   
             $vendor_id = $product->vendor_id;
             $agent_dispatcher_tags = $this->getDispatcherTags($vendor_id);
         }
-        if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 2) # if type is on demand
+        if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 8) # if type is on demand
         {   
             $vendor_id = $product->vendor_id;
             $agent_dispatcher_on_demand_tags = $this->getDispatcherOnDemandTags($vendor_id);
         }
-
+       
         
         return view('backend/product/edit', ['agent_dispatcher_on_demand_tags' => $agent_dispatcher_on_demand_tags,'agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }
@@ -386,8 +387,19 @@ class ProductController extends BaseController
      */
     public function destroy($domain = '', $id)
     {
-        Product::where('id', $id)->delete();
-        return redirect()->back()->with('success', 'Product deleted successfully!');
+        try{
+            DB::beginTransaction();
+            Product::where('id', $id)->delete();
+            CartProduct::where('product_id', $id)->delete();
+            CartAddon::where('cart_product_id', $id)->delete();
+            UserWishlist::where('product_id', $id)->delete();
+            DB::commit();
+            return redirect()->back()->with('success', 'Product deleted successfully!');
+        }
+        catch(\Exception $ex){
+            DB::rollback();
+            redirect()->back()->with('error', $ex->getMessage());
+        }
     }
 
     /**      Make variant rows          */

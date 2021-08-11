@@ -19,20 +19,20 @@ class NotificationTemplateSeeder extends Seeder
             [
                 'label' =>'New Order',
                 'subject' =>'New Vendor Signup',
-                'tags' => '{order_id}, {customer_name}', 
-                'content' => '<tbody> <tr> <td> <div style="margin-bottom: 20px;"> <h4 style="margin-bottom: 5px;">Thanks for your Order</h4></div> </td> </tr></tbody>'
+                'tags' => '', 
+                'content' => 'Thanks for your Order'
             ],
             [
                 'label' => 'Order Status Update',
                 'subject' => 'Verify Mail',
-                'tags' => '{order_id}, {customer_name}', 
-                'content' => '<tbody> <tr> <td> <div style="margin-bottom: 20px;"> <h4 style="margin-bottom: 5px;">Your Order status has been updated</h4></div> </td> </tr></tbody>'
+                'tags' => '', 
+                'content' => 'Your Order status has been updated'
             ],
             [
                 'label' =>'Refund Status Update',
                 'subject' => 'Reset Password Notification',
-                'tags' => '{order_id}, {customer_name}',
-                'content' => '<tbody> <tr> <td> <div style="margin-bottom: 20px;"> <h4 style="margin-bottom: 5px;">Your Order status has been updated</h4></div> </td> </tr></tbody>'
+                'tags' => '',
+                'content' => 'Your Order status has been updated'
             ]
         ];
         NotificationTemplate::truncate();

@@ -9,6 +9,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('dispatch-pickup-delivery/{id?}', 'Front\DispatcherController@dispatchPickupDeliveryUpdate')->name('dispatch-pickup-delivery'); // pickup delivery update from dispatch
 	Route::get('demo', 'Front\CustomerAuthController@getTestHtmlPage');
 	Route::get('fcm', 'Front\CustomerAuthController@fcm');
+	Route::get('send-notification', 'Front\CustomerAuthController@sendNotification');
 	Route::get('test/email', function(){
 		$send_mail = 'test@yopmail.com';
 		// App\Jobs\SendRefferalCodeEmailJob::dispatch($send_mail);
@@ -151,6 +152,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 		Route::get('/', 'Front\BookingController@index')->name('bookingIndex');
 		Route::post('get-list-of-vehicles-old/{id}', 'Front\PickupDeliveryController@getListOfVehicles');
 		Route::post('get-list-of-vehicles/{id}', 'Front\PickupDeliveryController@productsByVendorInPickupDelivery');
+		Route::post('product-detail/{id}', 'Front\PickupDeliveryController@postCabProductById');
 		Route::post('vendor/list/{category_id}', 'Front\PickupDeliveryController@postVendorListByCategoryId');
 		Route::post('create-order', 'Front\PickupDeliveryController@createOrder');
 		Route::post('cart/updateQuantity', 'Front\CartController@updateQuantity');

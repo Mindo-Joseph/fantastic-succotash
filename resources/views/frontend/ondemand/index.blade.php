@@ -1,0 +1,385 @@
+@extends('layouts.store', ['title' => (!empty($category->translation) && isset($category->translation[0])) ? $category->translation[0]->name : $category->slug])
+@section('content')
+<header>
+    <div class="mobile-fix-option"></div>
+    @include('layouts.store/left-sidebar')
+</header>
+
+<section class="home-serivces">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-md-8 offset-md-2">
+                {{-- <div class="step-indicator">
+                    <div class="step step1 active">
+                        <div class="step-icon">1</div>
+                        <p>Service Details</p>
+                    </div>
+                    <div class="indicator-line active"></div>
+                    <div class="step step2">
+                        <div class="step-icon">2</div>
+                        <p>Date & Time</p>
+                    </div>
+                    <div class="indicator-line"></div>
+                    <div class="step step3">
+                        <div class="step-icon">3</div>
+                        <p>Payment</p>
+                    </div>
+                </div> --}}
+
+                <div class="row mt-4">
+
+                    <div class="col-md-8">
+                        <div class="card-box">
+                            <ul>
+
+                                @if(!empty($category->childs) && count($category->childs) > 0)
+                                    <li><a class="btn btn-solid" href="#">{{$cate['translation_name']}}</a></li>
+
+                                @endif
+
+                               
+                            </ul>
+                            
+                            <div class="service-data-wrapper mb-5">
+                               
+                                <div class="service-data mt-4">
+                                    <h4><b>{{ $category->translation_name }}</b></h4>
+
+                                   
+                                    @if(!empty($category->image))
+                                    <div class="service-img mb-3">
+                                        <img class="img-fluid" src="{{$category->image['proxy_url'] . '1000/200' . $category->image['image_path']}}" alt="">
+                                    </div>
+                                    @endif
+
+                                    @if($listData->isNotEmpty())
+                                    @foreach($listData as $key => $data)
+                                    {{-- new product design  --}}
+                                          <div class="row classes_wrapper no-gutters" href="#">                                       
+                                        <div class="col-md-9 col-sm-8 pr-md-2">
+                                            <h5 class="mb-1"><b>{!! $data->translation_title !!}</b></h5>
+                                            <p class="mb-1">{!! $data->translation_description !!}</p>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h5 class="my-sm-0 my-3">@if($data->inquiry_only == 0)
+                                                    {{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}
+                                                @endif</h5>
+
+                                                <a class="btn btn-solid add_on_demand" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
+
+                                                
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
+                                            <?php $imagePath = $imagePath2 = '';
+                                                $mediaCount = count($data->media);
+                                                for ($i = 0; $i < $mediaCount && $i < 2; $i++) { 
+                                                    if($i == 0){
+                                                        $imagePath = $data->media[$i]->image->path['proxy_url'].'300/300'.$data->media[$i]->image->path['image_path'];
+                                                    }
+                                                    $imagePath2 = $data->media[$i]->image->path['proxy_url'].'300/300'.$data->media[$i]->image->path['image_path'];
+                                                } ?>
+                                            <div class="class_img">
+                                                <img src="{{$imagePath}}" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    
+
+                                    {{-- <-- end new product design --> --}}
+                                    @endforeach
+                                  @else
+                                    <div class="col-xl-12 col-12 mt-4"><h5 class="text-center">No Product Found</h5></div>
+                                  @endif
+
+                                  
+
+                                </div>
+                               
+
+                            </div>
+
+                            <!-- Step Two Html -->
+                            {{-- <h4 class="mb-2"><b>When would you like your service?</b></h4>
+                            <div class="date-items radio-btns">
+                                <div>
+                                    <div class="radios">
+                                        <p>Mon</p>
+                                        <input type="radio" value='1' name='date-time' id='radio1'/>
+                                        <label for='radio1'>
+                                            <span class="customCheckbox" aria-hidden="true">9</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="radios">
+                                        <p>Tus</p>
+                                        <input type="radio" value='1' name='date-time' id='radio2'/>
+                                        <label for='radio2'><span class="customCheckbox" aria-hidden="true">10</span></label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="radios">
+                                        <p>Wed</p>
+                                        <input type="radio" value='1' name='date-time' id='radio3'/>
+                                        <label for='radio3'><span class="customCheckbox" aria-hidden="true">11</span></label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="radios">
+                                        <p>Thu</p>
+                                        <input type="radio" value='1' name='date-time' id='radio4'/>
+                                        <label for='radio4'><span class="customCheckbox" aria-hidden="true">12</span></label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="radios">
+                                        <p>Fri</p>
+                                        <input type="radio" value='1' name='date-time' id='radio5'/>
+                                        <label for='radio5'><span class="customCheckbox" aria-hidden="true">13</span></label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="radios">
+                                        <p>Sat</p>
+                                        <input type="radio" value='1' name='date-time' id='radio6'/>
+                                        <label for='radio6'><span class="customCheckbox" aria-hidden="true">14</span></label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="radios">
+                                        <p>Sun</p>
+                                        <input type="radio" value='1' name='date-time' id='radio8'/>
+                                        <label for='radio8'><span class="customCheckbox" aria-hidden="true">15</span></label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="radios">
+                                        <p>Sun</p>
+                                        <input type="radio" value='1' name='date-time' id='radio9'/>
+                                        <label for='radio9'><span class="customCheckbox" aria-hidden="true">15</span></label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="radios">
+                                        <p>Sun</p>
+                                        <input type="radio" value='1' name='date-time' id='radio10'/>
+                                        <label for='radio10'><span class="customCheckbox" aria-hidden="true">15</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="booking-time-wrapper">
+                                <h4 class="mt-4 mb-2"><b>When would you like your service?</b></h4>
+                                <div class="booking-time radio-btns long-radio">
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='booking-radio' id='time1'/>
+                                            <label for='time1'><span class="customCheckbox" aria-hidden="true">09:00 - 10:00</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='booking-radio' id='time2'/>
+                                            <label for='time2'><span class="customCheckbox" aria-hidden="true">10:00 - 11:00</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='booking-radio' id='time3'/>
+                                            <label for='time3'><span class="customCheckbox" aria-hidden="true">11:00 - 12:00</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='booking-radio' id='time4'/>
+                                            <label for='time4'><span class="customCheckbox" aria-hidden="true">12:00 - 01:00</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='booking-radio' id='time5'/>
+                                            <label for='time5'><span class="customCheckbox" aria-hidden="true">02:00 - 03:00</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='booking-radio' id='time6'/>
+                                            <label for='time6'><span class="customCheckbox" aria-hidden="true">04:00 - 05:00</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='booking-radio' id='time7'/>
+                                            <label for='time7'><span class="customCheckbox" aria-hidden="true">05:00 - 06:00</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <P>Your service will start between 09:00-10:00</P>
+                            </div>
+
+                            <div class="booking-time-wrapper">
+                                <h4 class="mt-4 mb-2"><b>When would you like your service?</b></h4>
+                                <textarea class="form-control" name="" id="" cols="30" rows="7"></textarea>
+                            </div> --}}
+
+
+                            <!-- Step Three Start From Here -->
+                            {{-- <div class="step-three">
+                                <h4 class="mt-4 mb-2"><b>How many hours do you need your professional to stay? <i class="fa fa-info-circle" aria-hidden="true"></i></b></h4>
+                                <div class="hours-slot radio-btns">
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='hours-radio' id='h-1'/>
+                                            <label for='h-1'><span class="customCheckbox" aria-hidden="true">1</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='hours-radio' id='h-2'/>
+                                            <label for='h-2'><span class="customCheckbox" aria-hidden="true">2</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='hours-radio' id='h-3'/>
+                                            <label for='h-3'><span class="customCheckbox" aria-hidden="true">3</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='hours-radio' id='h-4'/>
+                                            <label for='h-4'><span class="customCheckbox" aria-hidden="true">4</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='hours-radio' id='h-5'/>
+                                            <label for='h-5'><span class="customCheckbox" aria-hidden="true">5</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='hours-radio' id='h-6'/>
+                                            <label for='h-6'><span class="customCheckbox" aria-hidden="true">6</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='hours-radio' id='h-7'/>
+                                            <label for='h-7'><span class="customCheckbox" aria-hidden="true">7</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="mt-4 mb-2"><b>How many professionals do you need?</b></h4>
+                                <div class="hours-slot radio-btns">
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='pro-radio' id='p-1'/>
+                                            <label for='p-1'><span class="customCheckbox" aria-hidden="true">1</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='pro-radio' id='p-2'/>
+                                            <label for='p-2'><span class="customCheckbox" aria-hidden="true">2</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='pro-radio' id='p-3'/>
+                                            <label for='p-3'><span class="customCheckbox" aria-hidden="true">3</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='pro-radio' id='p-4'/>
+                                            <label for='p-4'><span class="customCheckbox" aria-hidden="true">4</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="mt-4 mb-2"><b>Do you require cleaning materials? <i class="fa fa-info-circle" aria-hidden="true"></i></b></h4>
+                                <div class="materials-slide radio-btns long-radio">
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='materials-radio' id='mat1'/>
+                                            <label for='mat1'><span class="customCheckbox" aria-hidden="true">No, I have them</span></label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="radios">
+                                            <input type="radio" value='1' name='materials-radio' id='mat2'/>
+                                            <label for='mat2'><span class="customCheckbox" aria-hidden="true">Yes, please</span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="booking-time-wrapper">
+                                <h4 class="mt-4 mb-2"><b>When would you like your service?</b> </h4>
+                                <textarea class="form-control" name="" id="" cols="30" rows="7"></textarea>
+                            </div>
+
+                            <hr>
+                            <div class="card-footer bg-transparent px-0">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <a href="#"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+                                    <button class="btn btn-solid">Next</button>
+                                </div>
+                            </div> --}}
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card-box p-2">
+                            <div class="product-order">
+                                <div class="total-sec border-0 py-0 my-0">
+                                    <h5 class="d-flex align-items-center justify-content-between pb-2 border-bottom"><b>City</b><b>Dubai</b></h5>
+                                </div>
+                                <div class="total-sec border-0 py-0 my-0">
+                                    <h5 class="d-flex align-items-center justify-content-between pb-2 border-bottom"><b>Service</b></h5>
+                                    <ul>
+                                        <li>Tax <span>$0.00</span></li>
+                                        <li>Delivery Fee <span>$53.66</span></li>
+                                        <li>Tip Amount <span>$14.91</span></li>
+                                        <li>Loyalty Amount <span>$3,831.37</span></li>
+                                    </ul>
+                                </div>
+                                <div class="final-total mt-3">
+                                    <h3>Total <span>$313.20</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@endsection
+
+@section('script')
+
+
+<script type="text/javascript">
+    $(".add_on_demand" ).click(function() {
+     
+            let that = $(this);
+            var ajaxCall = 'ToCancelPrevReq';
+            var vendor_id = that.data("vendor_id");
+            var product_id = that.data("product_id");
+            var add_to_cart_url = "{{ route('addToCart') }}";
+
+            
+            addToCart();
+            
+    });
+    </script>
+
+@endsection    

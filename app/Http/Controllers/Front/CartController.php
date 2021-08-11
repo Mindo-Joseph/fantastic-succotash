@@ -502,8 +502,8 @@ class CartController extends FrontController
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
                     $prod->pvariant->price_in_cart = $prod->pvariant->price;
                     $prod->pvariant->price = $price_in_currency;
-                    $prod->pvariant->media_one = $prod->pvariant->media ? $prod->pvariant->media->first() : [];
-                    $prod->pvariant->media_second = $prod->product->media ? $prod->product->media->first() : [];
+                    $prod->pvariant->media_one = isset($prod->pvariant->media) ? $prod->pvariant->media->first() : [];
+                    $prod->pvariant->media_second = isset($prod->product->media) ? $prod->product->media->first() : [];
                     $prod->pvariant->multiplier = $customerCurrency->doller_compare;
                     $prod->pvariant->quantity_price = number_format($quantity_price, 2);
                     $payable_amount = $payable_amount + $quantity_price;

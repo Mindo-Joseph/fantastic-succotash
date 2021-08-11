@@ -36,6 +36,42 @@ class PickupDeliveryController extends FrontController{
         }
         return $this->successResponse($vendors);
     }
+    public function postCabProductById(Request $request, $domain = '',$product_id = 0){
+        $user = Auth::user();
+        $language_id = Session::get('customerLanguage');
+        $product = Product::with(['category.categoryDetail','media.image', 'translation' => function($q) use($language_id){
+                            $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $language_id);
+                        },'variant' => function($q) use($language_id){
+                            $q->select('id','sku', 'product_id', 'quantity', 'price', 'barcode');
+                            $q->groupBy('product_id');
+                        }])->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'products.category_id','products.tags')->where('products.id', $product_id)->where('products.is_live', 1)->firstOrFail(); 
+        $image_url = $product->media->first() ? $product->media->first()->image->path['image_fit'].'360/360'.$product->media->first()->image->path['image_path'] : '';
+        $product->image_url = $image_url;
+        $product->name = $product->translation->first() ? $product->translation->first()->title :'';
+        $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';
+        $product->tags_price = 1.90;
+        $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
+        foreach ($product->variant as $k => $v) {
+            $product->variant[$k]->price = $product->tags_price;
+            $product->variant[$k]->multiplier = 1;
+        }
+        $loyalty_amount_saved = 0;
+        $redeem_points_per_primary_currency = '';
+        $loyalty_card = LoyaltyCard::where('status', '0')->first();
+        if ($loyalty_card) {
+            $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
+        }
+        $loyalty_points_used;
+        $order_loyalty_points_earned_detail = Order::where('user_id', $user->id)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
+        if ($order_loyalty_points_earned_detail) {
+            $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
+            if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
+                $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
+            }
+        }
+        $product->loyalty_amount_saved = $loyalty_amount_saved;
+        return $this->successResponse($product);
+    }
     # get all vehicles category by vendor
 
     public function productsByVendorInPickupDelivery(Request $request, $domain = '',$vid = 0){
@@ -68,12 +104,14 @@ class PickupDeliveryController extends FrontController{
                     })
                     ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id','products.tags')
                     ->where('products.vendor_id', $vid)
-                    ->where('products.is_live', 1)->distinct()->paginate($paginate); 
+                    ->where('products.is_live', 1)->distinct()->get(); 
             if(!empty($products)){
                 foreach ($products as $key => $product) {
+                    $image_url = $product->media->first() ? $product->media->first()->image->path['image_fit'].'93/93'.$product->media->first()->image->path['image_path'] : '';
+                    $product->image_url = $image_url;
                     $product->name = $product->translation->first() ? $product->translation->first()->title :'';
                     $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';
-                    $product->tags_price = $this->getDeliveryFeeDispatcher($request,$product);
+                    $product->tags_price = 1.90;
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                     foreach ($product->variant as $k => $v) {
                         $product->variant[$k]->price = $product->tags_price;
@@ -88,13 +126,13 @@ class PickupDeliveryController extends FrontController{
                 $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
             }
             $loyalty_points_used;
-                $order_loyalty_points_earned_detail = Order::where('user_id', $userid)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
-                if ($order_loyalty_points_earned_detail) {
-                    $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
-                    if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
-                        $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
-                    }
+            $order_loyalty_points_earned_detail = Order::where('user_id', $userid)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
+            if ($order_loyalty_points_earned_detail) {
+                $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
+                if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
+                    $loyalty_amount_saved = $loyalty_points_used / $redeem_points_per_primary_currency;
                 }
+            }
            
             $response['vendor'] = $vendor;
             $response['products'] = $products;

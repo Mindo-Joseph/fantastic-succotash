@@ -551,6 +551,11 @@ class CartController extends BaseController{
                 if(!empty($vendorData->coupon->promo)){
                     unset($vendorData->coupon->promo);
                 }
+
+                if (in_array(1, $subscription_features)) {
+                    $subscription_discount = $subscription_discount + $deliver_charge;
+                }
+                $total_subscription_discount = $total_subscription_discount + $subscription_discount;
             }
         }
         $cart_product_luxury_id = CartProduct::where('cart_id', $cartID)->select('luxury_option_id', 'vendor_id')->first();
@@ -559,6 +564,10 @@ class CartController extends BaseController{
                 $vendor_address = Vendor::where('id', $cart_product_luxury_id->vendor_id)->select('address')->first();
                 $cart->address = $vendor_address->address;
             }
+        }
+        if (!empty($subscription_features)) {
+            $total_disc_amount = $total_disc_amount + $total_subscription_discount;
+            $cart->total_subscription_discount = $total_subscription_discount;
         }
         $cart->total_tax = $total_tax;
         $cart->tax_details = $tax_details;
@@ -581,9 +590,11 @@ class CartController extends BaseController{
             $cart->total_payable_amount = $total_paying  + $total_tax - $total_disc_amount - $loyalty_amount_saved;
         }
         $cart->loyalty_amount = $loyalty_amount_saved;
-        $cart->tip_5_percent = number_format((0.05 * $total_payable_amount), 2, '.', '');
-        $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2, '.', '');
-        $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2, '.', '');
+        $cart->tip = array(
+            ['label'=>'5%', 'value' => number_format((0.05 * $cart->total_payable_amount), 2, '.', '')],
+            ['label'=>'10%', 'value' => number_format((0.1 * $cart->total_payable_amount), 2, '.', '')],
+            ['label'=>'15%', 'value' => number_format((0.15 * $cart->total_payable_amount), 2, '.', '')]
+        );
         return $cart;
     }
 
