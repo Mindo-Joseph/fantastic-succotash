@@ -2065,16 +2065,38 @@
 
 
     <!-- Modal -->
-    <div class="modal fade payment-modal" id="payment_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="payment_modalLabel" aria-hidden="true">
+    <div class="modal fade payment-modal payment-modal-width" id="payment_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="payment_modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header pb-0">
             <h5 class="modal-title" id="payment_modalLabel">Choose Profile</h5>
+            <button type="button" class="close right-top" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
         <div class="modal-body p-0">
-            
+            <h4 class="payment-button"  data-toggle="modal" data-target="#select_payment_option" aria-label="Close">Select Payment Method</h4>
         </div>
        
+        </div>
+    </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade select-payment-option payment-modal-width" id="select_payment_option" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="select_payment_optionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="select_payment_optionLabel">Choose payment method</h5>
+                <button type="button" class="close right-top" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Cash</span></h4>
+            </div>        
         </div>
     </div>
     </div>

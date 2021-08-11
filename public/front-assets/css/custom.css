@@ -3757,8 +3757,56 @@ a.vehical-view-box.row.no-gutters {
     cursor: pointer;
 }
 
-.payment-modal .modal-dialog {
+.payment-modal-width .modal-dialog {
+    max-width: 100%;
+}
+.payment-modal-width .modal-dialog .modal-content {
     max-width: 400px;
+    margin: auto;
+}
+
+/* .select-payment-option .modal-dialog .modal-content {
+    left: -8px;
+} */
+
+.payment-modal-width .modal-title {
+    font-size: 20px;
+}
+
+.payment-modal .modal-header {
+    padding: 27px 20px 0;
+}
+
+.payment-button {
+    padding: 23.5px 20px;
+    margin: 0;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.payment-button:hover {
+    background-color: #F7F7F7;
+}
+
+.select-payment-option .modal-header {
+    padding: 23px 20px 0;
+}
+
+.select-payment-option .modal-title {
+    font-size: 26px;
+}
+
+button.close.right-top {
+    position: fixed;
+    top: 28px;
+    right: 28px;
+    z-index: 222;
+    color: #fff;
+    opacity: 1;
 }
 
 /* Search Bar Css */
@@ -3989,7 +4037,6 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     height: calc(100vh - 250px);
     overflow: auto;
 }
-
 
 
 
