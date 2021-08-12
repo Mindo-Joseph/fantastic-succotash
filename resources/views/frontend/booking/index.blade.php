@@ -46,6 +46,7 @@
                         <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel="{{Carbon\Carbon::now()->timestamp}}"></i>
                     </li>
                 </ul>
+
                 <a class="add-more-location position-relative pl-2" href="javascript:void(0)">{{__('Add Destination')}}</a>
             </div>
             <script type="text/template" id="destination_location_template">
@@ -56,6 +57,7 @@
                     <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel="<%= random_id %>"></i>
                 </li>
             </script>
+            <div class="spinner-border avatar-lg text-primary m-2 cab-booking-main-loader" role="status" style="display:none;"></div>
             <div class="location-list style-4">
                 @forelse($user_addresses as $user_address)
                     <a class="search-location-result position-relative d-block" href="javascript:void(0);" data-address="{{$user_address->address}}" data-latitude="{{$user_address->latitude}}" data-longitude="{{$user_address->longitude}}">
@@ -214,6 +216,7 @@
         </div>
     </div>
 </section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 var autocomplete_urls = "{{url('looking/vendor/list/14')}}";
 var get_product_detail = "{{url('looking/product-detail')}}";
@@ -221,6 +224,7 @@ var promo_code_list_url = "{{route('verify.promocode.list')}}";
 var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";
 var cab_booking_create_order = "{{url('looking/create-order')}}";
 var live_location = "{{ URL::asset('/images/live_location.gif') }}";
+var order_tracking_details_url = "{{url('order-tracking-details')}}";
 var cab_booking_promo_code_remove_url = "{{url('looking/promo-code/remove')}}";
 var apply_cab_booking_promocode_coupon_url = "{{ route('verify.cab.booking.promo-code') }}";
 var no_coupon_available_message = "{{__('No Other Coupons Available.')}}";

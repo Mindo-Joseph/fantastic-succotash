@@ -7,14 +7,16 @@ $(document).ready(function () {
     $(document).on("click", "#pickup_now, #pickup_later",function() {
         var schedule_datetime = '';
         if($(this).data('rel') =='pickup_later'){
-            schedule_datetime = $('#schedule_datetime').val();
-            if(!schedule_datetime){
+            let temp_schedule_datetime = $('#schedule_datetime').val();
+            if(!temp_schedule_datetime){
                 $('#schedule_datetime_main_div').show();
                 return false;
             }
+            schedule_datetime = moment(temp_schedule_datetime).format('YYYY-MM-DD HH:MM')
         }
         var tasks = [];
-        $(this).attr('disabled', true);
+        $('#pickup_now').attr('disabled', true);
+        $('#pickup_later').attr('disabled', true);
         var pickup_location_names = $('input[name="pickup_location_name[]"]').map(function(){return this.value;}).get();
         var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){return this.value;}).get();
         var pickup_location_latitudes = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
@@ -57,7 +59,8 @@ $(document).ready(function () {
             url: cab_booking_create_order,
             data: {payment_option_id: 1, vendor_id: vendor_id, product_id: product_id,coupon_id: coupon_id, amount: amount, tasks: tasks, task_type:task_type, schedule_datetime:schedule_datetime},
             success: function(response) {
-                $(this).attr('disabled', false);
+                $('#pickup_now').attr('disabled', false);
+                $('#pickup_later').attr('disabled', false);
                 if(response.status == '200'){
                     $('#cab_detail_box').html('');
                     let order_success_template = _.template($('#order_success_template').html());
@@ -71,9 +74,17 @@ $(document).ready(function () {
     });
     function getDriverDetails(dispatch_traking_url) {
         var new_dispatch_traking_url = dispatch_traking_url.replace('/order/','/order-details/')
-        $.get(new_dispatch_traking_url, function( data ) {
-        console.log('i mmmmm here'+data);
+        $.ajax({
+            url: new_dispatch_traking_url,
+            dataType: "jsonp",
+            crossDomain: true,
+            success: function( response ) {
+                console.log( response ); // server response
+            }
         });
+        // $.get(new_dispatch_traking_url, function( data ) {
+        //     console.log('i mmmmm here'+data);
+        // });
     }
 
     $(document).on("click", ".add-more-location",function() {
@@ -144,6 +155,7 @@ $(document).ready(function () {
         let destination_location = $('#destination_location').val();
         if(pickup_location && destination_location){
             $('.location-list').hide();
+            $('.cab-booking-main-loader').show();
             $.ajax({
                 data: {locations: post_data},
                 type: "POST",
@@ -151,6 +163,7 @@ $(document).ready(function () {
                 url: autocomplete_urls,
                 success: function(response) {
                     if(response.status == 'Success'){
+                        $('.cab-booking-main-loader').hide();
                         $('#vendor_main_div').html('');
                         if(response.data.length != 0){
                             let vendors_template = _.template($('#vendors_template').html());
@@ -170,6 +183,7 @@ $(document).ready(function () {
         }
     }
     $(document).on("click",".vendor-list",function() {
+        $('.cab-booking-main-loader').show();
         var locations = [];
         let vendor_id = $(this).data('vendor');
         var pickup_location_latitude = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
@@ -195,6 +209,7 @@ $(document).ready(function () {
             url: get_vehicle_list+'/'+vendor_id,
             success: function(response) {
                 if(response.status == 'Success'){
+                    $('.cab-booking-main-loader').hide();
                     $('#search_product_main_div').html('');
                     if(response.data.length != 0){
                         let products_template = _.template($('#products_template').html());
