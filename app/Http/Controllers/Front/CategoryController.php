@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{Currency, Banner, Category, Brand, Product, Celebrity, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea, UserAddress,Country,Cart,CartProduct,SubscriptionInvoicesUser,ClientPreference,LoyaltyCard,Order};
-use DB;
-class CategoryController extends FrontController
-{
+class CategoryController extends FrontController{
     private $field_status = 2;
     
     /** 

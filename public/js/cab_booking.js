@@ -5,6 +5,7 @@ $(document).ready(function () {
         initMap2();
     });
     $(document).on("click", "#cab_booking_place_order",function() {
+        $(this).attr('disabled', true);
         var tasks = [];
         var pickup_location_names = $('input[name="pickup_location_name[]"]').map(function(){return this.value;}).get();
         var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){return this.value;}).get();
@@ -13,30 +14,48 @@ $(document).ready(function () {
         var destination_location_latitudes = $('input[name="destination_location_latitude[]"]').map(function(){return this.value;}).get();
         var destination_location_longitudes = $('input[name="destination_location_longitude[]"]').map(function(){return this.value;}).get();
         $(pickup_location_latitudes).each(function(index, latitude) {
-            var data = {};
-            data.barcode = null;
-            data.task_type_id = 1;
-            data.post_code = null;
-            data.short_name = null;
-            data.latitude = latitude;
-            data.appointment_duration = null;
-            data.address = pickup_location_names[index];
-            data.longitude = pickup_location_longitudes[index];
-            tasks.push(data);
+            var sample_array = {};
+            sample_array.barcode = null;
+            sample_array.task_type_id = 1;
+            sample_array.post_code = null;
+            sample_array.short_name = null;
+            sample_array.latitude = latitude;
+            sample_array.appointment_duration = null;
+            sample_array.address = pickup_location_names[index];
+            sample_array.longitude = pickup_location_longitudes[index];
+            tasks.push(sample_array);
         });
         $(destination_location_latitudes).each(function(index, latitude) {
-            var data = {};
-            data.barcode = null;
-            data.task_type_id = 1;
-            data.post_code = null;
-            data.short_name = null;
-            data.latitude = latitude;
-            data.appointment_duration = null;
-            data.address = destination_location_names[index];
-            data.longitude = destination_location_longitudes[index];
-            tasks.push(data);
+            var sample_array = {};
+            sample_array.barcode = null;
+            sample_array.task_type_id = 1;
+            sample_array.post_code = null;
+            sample_array.short_name = null;
+            sample_array.latitude = latitude;
+            sample_array.appointment_duration = null;
+            sample_array.address = destination_location_names[index];
+            sample_array.longitude = destination_location_longitudes[index];
+            tasks.push(sample_array);
         });
-        console.log(tasks);
+        let amount = $(this).data('amount');
+        let product_image = $(this).data('image');
+        let vendor_id = $(this).data('vendor_id');
+        let coupon_id = $(this).data('coupon_id');
+        let product_id = $(this).data('product_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: cab_booking_create_order,
+            data: {payment_option_id: 1, vendor_id: vendor_id, product_id: product_id,coupon_id: coupon_id, amount: amount, tasks: tasks, task_type:'now'},
+            success: function(response) {
+                $(this).attr('disabled', false);
+                if(response.status == '200'){
+                    $('#cab_detail_box').html('');
+                    let order_success_template = _.template($('#order_success_template').html());
+                    $("#cab_detail_box").append(order_success_template({result: response.data, product_image: product_image})).show();
+                }
+            }
+        });
     });
     $(document).on("click", ".add-more-location",function() {
         let random_id = Date.now();

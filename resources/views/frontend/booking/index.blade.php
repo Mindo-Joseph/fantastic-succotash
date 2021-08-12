@@ -114,7 +114,7 @@
                     </span>
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                 </h4>
-                <button class="btn btn-solid w-100" id="cab_booking_place_order">Request <%= result.name %></button>
+                <button class="btn btn-solid w-100" id="cab_booking_place_order" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" data-image="<%= result.image_url %>">Request <%= result.name %></button>
             </div>
         </script>
         <script type="text/template" id="cab_booking_promo_code_template">
@@ -138,6 +138,40 @@
                 </div>
             <% }); %>
         </script>
+        <script type="text/template" id="order_success_template">
+            <div class="bg-white p-2">
+                <div class="w-100 h-100">
+                    <img src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/IntercityXL.png" alt="">
+                </div>
+                <div class="cab-location-details">
+                    <h4><b>Searching For Nearby Drivers</b></h4>
+                    <p class="mb-0">Processing......</p>
+                </div>
+                <div class="cab-location-details">
+                   <div class="row align-items-center">
+                       <div class="col-8">
+                            <h4><b><%= result.user_name %></b></h4>
+                            <p class="mb-0"><%= result.phone_number %></p>
+                       </div>
+                       <div class="col-4">
+                           <div class="taxi-img">
+                               <img src="<%= product_image %>" alt="">
+                           </div>
+                       </div>
+                   </div>
+                </div>
+            </div>
+            <div class="cab-amount-details px-2">
+                <div class="row">
+                    <div class="col-6 mb-2">ETA</div>
+                    <div class="col-6 mb-2 text-right" id="distance">--</div>
+                    <div class="col-6 mb-2">Order ID</div>
+                    <div class="col-6 mb-2 text-right" id=""><%= result.order_number %></div>
+                    <div class="col-6 mb-2">Amount Paid</div>
+                    <div class="col-6 mb-2 text-right">$<%= result.total_amount %></div>
+                </div>
+            </div>
+        </script>
         <div class="cab-detail-box style-4 d-none" id="cab_detail_box"></div>
         <div class="promo-box style-4 d-none">
             <a class="d-block mt-2 close-promo-code-detail-box" href="javascript:void(0)">✕</a>
@@ -152,6 +186,7 @@ var autocomplete_urls = "{{url('looking/vendor/list/14')}}";
 var get_product_detail = "{{url('looking/product-detail')}}";
 var promo_code_list_url = "{{route('verify.promocode.list')}}";
 var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";
+var cab_booking_create_order = "{{url('looking/create-order')}}";
 var live_location = "{{ URL::asset('/images/live_location.gif') }}";
 var cab_booking_promo_code_remove_url = "{{url('looking/promo-code/remove')}}";
 var apply_cab_booking_promocode_coupon_url = "{{ route('verify.cab.booking.promo-code') }}";
