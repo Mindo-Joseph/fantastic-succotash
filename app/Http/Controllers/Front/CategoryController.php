@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Front;
 use DB;
 use Auth;
 use Session;
+use Carbon\CarbonPeriod;
+use DateTime;
+use DateInterval;
+use DateTimeZone;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -129,8 +133,8 @@ class CategoryController extends FrontController
                 return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories]);
             }
         }elseif($page == 'on demand service'){
-            $cartDataGet = $this->getCartOnDemand();
-            return view('frontend.ondemand.index')->with(['cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
+            $cartDataGet = $this->getCartOnDemand($request);
+            return view('frontend.ondemand.index')->with(['time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }else{
             if(view()->exists('frontend/cate-'.$page.'s')){
                 return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
@@ -141,7 +145,7 @@ class CategoryController extends FrontController
         
     }
     // get cart data in on demand product listing page 
-    public function getCartOnDemand()
+    public function getCartOnDemand($request)
     {
         $cartData = [];
         $user = Auth::user();
@@ -176,8 +180,46 @@ class CategoryController extends FrontController
             }
         }
 
-        return ['cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user];
+        $user = Auth::user();
+        $timezone = $user->timezone ?? 'Asia/Kolkata';
+        
+        $start_date = new DateTime("now", new  DateTimeZone($timezone) );
+        $start_date =  $start_date->format('Y-m-d');
+        $end_date = Date('Y-m-d', strtotime('+13 days'));
+
+        $start_time = new DateTime("now", new  DateTimeZone($timezone) );
+        $start_time = $start_time->format('Y-m-d H:m');
+        $end_time = date('Y-m-d 23:59');
+        $period = CarbonPeriod::create($start_date, $end_date);
+        $time_slots = $this->SplitTime($start_time, $end_time, "60");
+        return ['time_slots' => $time_slots,'period' => $period,'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user];
     }
+
+
+    function SplitTime($StartTime, $EndTime, $Duration="30"){
+       
+       
+        $ReturnArray = array ();// Define output
+        if(date ("i", strtotime($StartTime)) > 30)
+        $startwith = 00;
+        else
+        $startwith = 30;
+        $StartTime = date ("Y-m-d G", strtotime($StartTime));
+        $StartTime = $StartTime.":".$startwith;
+        $StartTime    = strtotime ($StartTime); //Get Timestamp
+        $EndTime      = strtotime ($EndTime); //Get Timestamp
+        $AddMins  = $Duration * 30;
+       
+        
+        while ($StartTime <= $EndTime) //Run loop
+        {   
+            $ReturnArray[] = date ("G:i", $StartTime);
+            $StartTime += $AddMins; //Endtime check
+        }
+        return $ReturnArray;
+    }
+
+
     public function listData($langId, $category_id, $type = ''){
 
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
@@ -394,6 +436,37 @@ class CategoryController extends FrontController
             }
         }
         return $result;
+    }
+
+
+    // ***********   getTimeSlotsForOndemand ************** /////////////////
+    public function getTimeSlotsForOndemand(Request $request){
+
+        $user = Auth::user();
+        $timezone = $user->timezone ?? 'Asia/Kolkata';
+
+     
+        $dates = new DateTime("now", new DateTimeZone($timezone) );
+        $today = $dates->format('Y-m-d');
+
+        if($today < $request->cur_date){
+            $curr_time = "00:00";
+        }else{
+            $daten = new DateTime("now", new DateTimeZone($timezone) );
+            $curr_time = $daten->format('H:i');
+    
+        }
+        
+
+        $date = $request->cur_date;
+       
+        $start_time = $date." ".$curr_time;
+        $end_time = $date." 23:59";
+        $time_slots = $this->SplitTime($start_time, $end_time, "60");
+      
+        if ($request->ajax()) {
+           return \Response::json(\View::make('frontend.ondemand.time-slots-for-date', array('time_slots' => $time_slots))->render());
+        }
     }
 
 }
