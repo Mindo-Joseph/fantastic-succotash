@@ -4254,7 +4254,11 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     margin-left: 0;
 }
 
-
+#vendor_main_div {
+    width: 1200px;
+    max-width: max-content;
+    padding: 0 20px 0 0;
+}
 
 
 
@@ -4831,6 +4835,9 @@ body[dir="rtl"] .inner_spacing h3 {
     }
     .p-in{
         position: initial !important;
+    }
+    .common-banner {
+        height: auto;
     }
 }
 
