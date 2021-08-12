@@ -2178,7 +2178,7 @@
       overflow-x: auto;
   }
 
-  /* STYLE 4 */
+/* STYLE 4 */
 
 .scroll-style::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -2241,7 +2241,9 @@ button.update-status {
     padding: 0 12px 0 20px;
 }
 
-
+.bg-soft-warning.text-warning {
+    margin: 0 2px;
+}
 
 
 

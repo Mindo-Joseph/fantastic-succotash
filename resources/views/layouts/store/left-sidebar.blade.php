@@ -99,28 +99,28 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     @endif
                                     <script type="text/template" id="header_cart_template">
                                         <% _.each(cart_details.products, function(product, key){%>
-                                        <% _.each(product.vendor_products, function(vendor_product, vp){%>
-                                            <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
-                                                <a class='media' href='<%= show_cart_url %>'>
-                                                    <% if(vendor_product.pvariant.media_one) { %>
-                                                        <img class='mr-2' src="<%= vendor_product.pvariant.media_one.pimage.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.pimage.image.path.image_path %>">
-                                                    <% }else{ %>
-                                                        <img class='mr-2' src="<%= vendor_product.pvariant.media_second.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_second.image.path.image_path %>">
-                                                    <% } %>
-                                                    <div class='media-body'>                                                                
-                                                        <h4><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
-                                                        <h4>
-                                                            <span><%= vendor_product.quantity %> x <%= vendor_product.pvariant.price %></span>
-                                                        </h4>
-                                                    </div>
-                                                </a>
-                                                <div class='close-circle'>
-                                                    <a href="javascript::void(0);" data-product="<%= vendor_product.id %>" class='remove-product'>
-                                                        <i class='fa fa-times' aria-hidden='true'></i>
+                                            <% _.each(product.vendor_products, function(vendor_product, vp){%>
+                                                <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
+                                                    <a class='media' href='<%= show_cart_url %>'>
+                                                        <% if(vendor_product.pvariant.media_one) { %>
+                                                            <img class='mr-2' src="<%= vendor_product.pvariant.media_one.pimage.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.pimage.image.path.image_path %>">
+                                                        <% }else{ %>
+                                                            <img class='mr-2' src="<%= vendor_product.pvariant.media_second.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_second.image.path.image_path %>">
+                                                        <% } %>
+                                                        <div class='media-body'>                                                                
+                                                            <h4><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
+                                                            <h4>
+                                                                <span><%= vendor_product.quantity %> x <%= vendor_product.pvariant.price %></span>
+                                                            </h4>
+                                                        </div>
                                                     </a>
-                                                </div>
-                                            </li>
-                                        <% }); %>
+                                                    <div class='close-circle'>
+                                                        <a href="javascript::void(0);" data-product="<%= vendor_product.id %>" class='remove-product'>
+                                                            <i class='fa fa-times' aria-hidden='true'></i>
+                                                        </a>
+                                                    </div>
+                                                </li>
+                                            <% }); %>
                                         <% }); %>
                                         <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%= cart_details.gross_amount %></span></h5></div></li>
                                         <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('View Cart')}}</a>
@@ -206,8 +206,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         <img src="{{$cate['icon']['image_fit']}}200/200{{$cate['icon']['image_path']}}" alt="">
                                         @endif
                                         {{$cate['name']}}</a>
-                                    @if(!empty($cate['children']))
-                                        
+                                    @if(!empty($cate['children']))                                        
                                         <ul>
                                             @foreach($cate['children'] as $childs)
                                             <li>

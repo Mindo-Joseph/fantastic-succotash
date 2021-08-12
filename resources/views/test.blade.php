@@ -421,6 +421,10 @@
         <div class="booking-experience ds bc" style="top: 80px;">
             <form class="address-form">
 
+                <div class="loader-outer">
+                    <div class="spinner-border avatar-lg text-primary m-2" role="status"></div>
+                </div>
+
                 <div class="location-box d-none">
                     <ul class="location-inputs position-relative pl-2">
                         <li class="d-block mb-3 dots">
