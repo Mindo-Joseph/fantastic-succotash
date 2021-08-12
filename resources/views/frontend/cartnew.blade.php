@@ -110,7 +110,7 @@
                             <span class="minus qty-minus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                 <i class="fa fa-minus" aria-hidden="true"></i>
                             </span>
-                            <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>">
+                            <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>" readonly>
                             <span class="plus qty-plus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </span>
@@ -353,7 +353,112 @@
             <div class="row d-flex justify-space-around">
                 @if(!$guest_user)
                     <div class="col-lg-4 left_box">
-                        @include('frontend.order.cartnew-left')
+                        <div class="row mb-4" id="address_template_main_div">
+                            @forelse($addresses as $k => $address)
+                            <div class="col-md-12">
+                                <div class="delivery_box px-0">
+                                    <label class="radio m-0">{{$address->address}}, {{$address->state}} {{$address->pincode}}
+                                        @if($address->is_primary)
+                                        <input type="radio" name="address_id" value="{{$address->id}}" checked="checked">
+                                        @else
+                                        <input type="radio" name="address_id" value="{{$address->id}}" {{$k == 0? 'checked="checked""' : '' }}>
+                                        @endif
+                                        <span class="checkround"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            @empty
+                            <div class="col-12 address-no-found">
+                                <p>{{__('Address not available.')}}</p>
+                            </div>
+                            @endforelse
+                            <div class="col-12 mt-4 text-center" id="add_new_address_btn">
+                                <a class="btn btn-solid w-100 mx-auto mb-4">
+                                    <i class="fa fa-plus mr-1" aria-hidden="true"></i>{{__('Add New Address')}}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12" id="add_new_address_form" style="display:none;">
+                                <div class="theme-card w-100">
+                                    <div class="form-row no-gutters">
+                                        <div class="col-12">
+                                            <label for="type">{{__('Address Type')}}</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="delivery_box pt-0 pl-0  pb-3">
+                                                <label class="radio m-0">{{__('Home')}}
+                                                    <input type="radio" checked="checked" name="address_type" value="1">
+                                                    <span class="checkround"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="delivery_box pt-0 pl-0  pb-3">
+                                                <label class="radio m-0">{{__('Office')}}
+                                                    <input type="radio" name="address_type" value="2">
+                                                    <span class="checkround"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="delivery_box pt-0 pl-0  pb-3">
+                                                <label class="radio m-0">{{__('Others')}}
+                                                    <input type="radio" name="address_type" value="3">
+                                                    <span class="checkround"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="latitude">
+                                    <input type="hidden" id="longitude">
+                                    <div class="form-row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="address">{{__('Address')}}</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="address" placeholder="{{__('Address')}}" aria-label="Recipient's Address" aria-describedby="button-addon2">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
+                                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <span class="text-danger" id="address_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row mb-3">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="city">{{__('City')}}</label>
+                                            <input type="text" class="form-control" id="city" placeholder="{{__('City')}}" value="">
+                                            <span class="text-danger" id="city_error"></span>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="state">{{__('State')}}</label>
+                                            <input type="text" class="form-control" id="state" placeholder="{{__('State')}}" value="">
+                                            <span class="text-danger" id="state_error"></span>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="country">{{__('Country')}}</label>
+                                            <select name="country" id="country" class="form-control">
+                                                @foreach($countries as $co)
+                                                <option value="{{$co->id}}">{{$co->name}}</option>
+                                                @endforeach
+                                            </select>
+                                            <span class="text-danger" id="country_error"></span>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="pincode">{{__('Pincode')}}</label>
+                                            <input type="text" class="form-control" id="pincode" placeholder="{{__('Pincode')}}" value="">
+                                            <span class="text-danger" id="pincode_error"></span>
+                                        </div>
+                                        <div class="col-md-12 mt-3">
+                                            <button type="button" class="btn btn-solid" id="save_address">{{__('Save Address')}}</button>
+                                            <button type="button" class="btn btn-solid black-btn" id="cancel_save_address_btn">{{__('Cancel')}}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 @endif
                 <div class="{{ $guest_user ? 'col-md-12' : 'col-lg-8' }}">

@@ -15,8 +15,12 @@
 @if($action != 'delivery')
     <div class="row mb-4" id="address_template_main_div">
         <div class="col-12 mt-4 text-center">
+            <div>
+                <input type="hidden" id="latitude" value="{{ $vendor_details->service_area->first()->latitude }}">
+                <input type="hidden" id="longitude" value="{{ $vendor_details->service_area->first()->longitude }}">
+            </div>
             <div class="input-group">
-                <input type="text" class="form-control" id="address" placeholder="{{__('Address')}}" aria-label="{{$label}} Address" aria-describedby="button-addon2" disabled readonly>
+                <input type="text" class="form-control" id="address" value="{{$vendor_address->address}}" placeholder="{{__('Address')}}" aria-label="{{$label}} Address" aria-describedby="button-addon2" disabled readonly>
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
                         <i class="fa fa-map-marker" aria-hidden="true"></i>

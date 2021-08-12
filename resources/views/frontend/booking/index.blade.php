@@ -1,5 +1,27 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
+<style type="text/css">
+.cab-location-details img {
+    height: 30px;
+}
+.cabbooking-loader {
+  width: 30px;
+  height: 30px;
+  animation: loading 1s infinite ease-out;
+  margin: auto;
+  border-radius: 50%;
+  background-color: red;
+}
+@keyframes loading {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(8);
+    opacity: 0;
+  }
+}
+</style>
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -54,7 +76,7 @@
             </script>
             <script type="text/template" id="products_template">
                 <% _.each(results, function(result, key){%>
-                    <a class="vehical-view-box row align-items-center no-gutters px-2" href="javascript:void(0)" data-product_id="<%= result.id %>">
+                    <a class="vehical-view-box row align-items-center no-gutters px-2 my-2" href="javascript:void(0)" data-product_id="<%= result.id %>">
                         <div class="col-3 vehicle-icon">
                             <img class='img-fluid' src='<%= result.image_url %>'>
                         </div>
@@ -63,7 +85,7 @@
                                 <div class="col-8 vehicle-details">
                                     <h4 class="m-0"><b><%= result.name %></b></h4>
                                 </div>
-                                <div class="col-4 ride-price pl-2">
+                                <div class="col-4 ride-price pl-2 text-right">
                                     <p class="mb-0"><b>{{Session::get('currencySymbol')}}<%= result.tags_price%></b></p>
                                 </div>
                             </div>
@@ -141,21 +163,21 @@
         <script type="text/template" id="order_success_template">
             <div class="bg-white p-2">
                 <div class="w-100 h-100">
-                    <img src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/IntercityXL.png" alt="">
+                    <img src="<%= product_image %>" alt="">
                 </div>
                 <div class="cab-location-details">
                     <h4><b>Searching For Nearby Drivers</b></h4>
-                    <p class="mb-0">Processing......</p>
+                    <img src="{{url('images/cabbooking-loader.gif')}}">
                 </div>
-                <div class="cab-location-details">
+                <div class="cab-location-details" id="driver_details" style="display:none;">
                    <div class="row align-items-center">
-                       <div class="col-8">
-                            <h4><b><%= result.user_name %></b></h4>
-                            <p class="mb-0"><%= result.phone_number %></p>
+                       <div class="col-8" >
+                            <h4 id="driver_name"><b><%= result.user_name %></b></h4>
+                            <p class="mb-0" id="driver_phone_number"><%= result.phone_number %></p>
                        </div>
                        <div class="col-4">
                            <div class="taxi-img">
-                               <img src="<%= product_image %>" alt="">
+                               <img src="">
                            </div>
                        </div>
                    </div>

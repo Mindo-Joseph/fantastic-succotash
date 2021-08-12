@@ -13,7 +13,8 @@ jQuery(window).scroll(function () {
 });
 $(document).ready(function () {
 
-    // if (window.location.pathname == '/') {
+    if (window.location.pathname == '/') {
+        getHomePage("", "");
     //     $(document).ready(function () {
     //         $.ajax({
     //             url: client_preferences_url,
@@ -36,7 +37,7 @@ $(document).ready(function () {
     //             },
     //         });
     //     });
-    // }
+    }
 
     $(".age_restriction_no").click(function () {
         window.location.replace("https://google.com");
@@ -276,7 +277,10 @@ $(document).ready(function () {
             type = "dine_in";
         }else if(id == "takeaway_tab"){
             type = "takeaway";
+        }else{
+            type = "delivery";
         }
+        // console.log()
         if(!$.hasAjaxRunning()){
             vendorType(latitude, longitude, type);
         }
@@ -293,6 +297,7 @@ $(document).ready(function () {
                     if (cartProducts != "") {
                         $("#remove_cart_modal").modal('show');
                         $("#remove_cart_modal #remove_cart_button").attr("data-cart_id", response.data.id);
+                        $(".nav-tabs.vendor_mods").attr("data-mod", type);
                     } else {
                         getHomePage(latitude, longitude, type);
                     }
@@ -427,7 +432,6 @@ $(document).ready(function () {
         let lat = $("#address-latitude").val();
         let long = $("#address-longitude").val();
         displayLocation(lat, long);
-        getHomePage(lat, long);
     }
 
     // $(document).on('click', '#location_search_wrapper .dropdown-menu', function (e) {
@@ -474,7 +478,11 @@ $(document).ready(function () {
                 if (response.status == 'success') {
                     let latitude = $("#address-latitude").val();
                     let longitude = $("#address-longitude").val();
-                    getHomePage(latitude, longitude);
+                    let vendor_mod = "";
+                    if($(".nav-tabs.vendor_mods .nav-link").length > 0){
+                        vendor_mod = $(".nav-tabs.vendor_mods").attr("data-mod");
+                    }
+                    getHomePage(latitude, longitude, vendor_mod);
                 }
             }
         });

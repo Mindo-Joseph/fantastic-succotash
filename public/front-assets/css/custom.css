@@ -1046,7 +1046,7 @@ body.dark .spinner-box .circle-core {
 /* Spinner End */
 
 .btn-solid {
-    padding: 6.7px 29px;
+    padding: 6.7px 10px;
     border-radius: 4px;
     border-width: 1px;
 }
@@ -4254,10 +4254,15 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     margin-left: 0;
 }
 
+<<<<<<< HEAD
 #vendor_main_div {
     width: 1200px;
     max-width: max-content;
     padding: 0 20px 0 0;
+=======
+.vehicle-icon .img-fluid {
+    width: 70px;
+>>>>>>> 5d803fa7d7db1095e27bf75128c93dbbad53e239
 }
 
 
