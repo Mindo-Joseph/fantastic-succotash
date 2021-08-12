@@ -19,8 +19,6 @@ use Illuminate\Support\Facades\Validator;
 class PickupDeliveryController extends FrontController{
 	
     use ApiResponser;
-    
-
     public function postVendorListByCategoryId(Request $request, $domain = '',$category_id = 0){
         $vendor_ids = [];
         $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
@@ -49,7 +47,7 @@ class PickupDeliveryController extends FrontController{
         $product->image_url = $image_url;
         $product->name = $product->translation->first() ? $product->translation->first()->title :'';
         $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';
-        $product->tags_price = 1.90;
+        $product->tags_price = $this->getDeliveryFeeDispatcher($request, $product);
         $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
         foreach ($product->variant as $k => $v) {
             $product->variant[$k]->price = $product->tags_price;
@@ -111,7 +109,7 @@ class PickupDeliveryController extends FrontController{
                     $product->image_url = $image_url;
                     $product->name = $product->translation->first() ? $product->translation->first()->title :'';
                     $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';
-                    $product->tags_price = 1.90;
+                    $product->tags_price = $this->getDeliveryFeeDispatcher($request, $product);
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                     foreach ($product->variant as $k => $v) {
                         $product->variant[$k]->price = $product->tags_price;

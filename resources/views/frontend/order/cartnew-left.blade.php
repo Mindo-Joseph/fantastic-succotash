@@ -13,22 +13,34 @@
     </div>
 </div>
 @if($action != 'delivery')
-    <div class="row mb-4" id="address_template_main_div">
-        <div class="col-12 mt-4 text-center">
-            <div>
-                <input type="hidden" id="latitude" value="{{ $vendor_details->service_area->first()->latitude }}">
-                <input type="hidden" id="longitude" value="{{ $vendor_details->service_area->first()->longitude }}">
-            </div>
-            <div class="input-group">
-                <input type="text" class="form-control" id="address" value="{{$vendor_address->address}}" placeholder="{{__('Address')}}" aria-label="{{$label}} Address" aria-describedby="button-addon2" disabled readonly>
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
-                        <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </div>
+    <div>
+        <input type="hidden" id="latitude" value="{{ $vendor_details['vendor_address']->latitude }}">
+        <input type="hidden" id="longitude" value="{{ $vendor_details['vendor_address']->longitude }}">
+    </div>
+    <label>{{$vendor_details['vendor_address']->address}}</label>
+    <div class="row mt-4 mb-4" id="address_template_main_div">
+        <div class="col-12">
+            <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
+                <i class="fa fa-map-marker" aria-hidden="true"></i> View Location
+            </button>
         </div>
     </div>
+    @if(isset($vendor_details['vendor_tables']))
+        <div class="vendor_tables">
+            <h4>Book a table</h4>
+            @if($vendor_details['vendor_tables']->isNotEmpty())
+                <select name="vendor_table" data-id="{{ $vendor_details['vendor_address']->id }}" class="select2 form-control">
+                    @foreach($vendor_details['vendor_tables'] as $k => $table)
+                        <option value="{{$table->id}}">Category : {{ $table->category->title }} | Table : {{ $table->table_number }} | Seat Capacity : {{ $table->seating_number }}</option>
+                    @endforeach
+                </select>
+            @else
+                <div class="table-not-found">
+                    <p>{{__('Table not available.')}}</p>
+                </div>
+            @endif
+        </div>
+    @endif
 @else
     <div class="row mb-4" id="address_template_main_div">
         @forelse($addresses as $k => $address)
