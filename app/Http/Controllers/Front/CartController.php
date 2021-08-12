@@ -425,11 +425,14 @@ class CartController extends FrontController
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $pharmacy = ClientPreference::first();
+        $countries = Country::get();
         $cart->pharmacy_check = $pharmacy->pharmacy_check;
         $customerCurrency = ClientCurrency::where('currency_id', $curId)->first();
         $latitude = '';
         $longitude = '';
+        $user_allAddresses = collect();
         if($user){
+            $user_allAddresses = UserAddress::where('user_id', $user->id)->get();
             if($address_id > 0){
                 $address = UserAddress::where('user_id', $user->id)->where('id', $address_id)->first();
             }else{
@@ -496,29 +499,31 @@ class CartController extends FrontController
         $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if ($cartData) {
             $action = (Session::has('vendorType')) ? Session::get('vendorType') : 'delivery';
-            $vendor_details = collect();
+            $vendor_details = [];
             $delivery_status = 1;
             foreach ($cartData as $ven_key => $vendorData) {
                 $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
-                if($address_id > 0){
-                    $serviceArea = $vendorData->vendor->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                        $query->select('vendor_id')
-                        ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                    })->where('id', $vendorData->vendor_id)->get();
-                }
+                
                 if($action != 'delivery'){
-                    if(isset($serviceArea)){
-                        $vendor_details->put('service_area', $serviceArea);
-                    }
+                    $vendor_details['vendor_address'] = $vendorData->vendor->select('id','latitude','longitude','address')->where('id', $vendorData->vendor_id)->first();
                     if($action == 'dine_in'){
                         $vendor_tables = VendorDineinTable::where('vendor_id', $vendorData->vendor_id)->with('category')->get();
                         foreach ($vendor_tables as $vendor_table) {
                             $vendor_table->qr_url = url('/vendor/'.$vendorData->vendor->slug.'/?table='.$vendor_table->id);
                         }
-                        $vendor_details->put('vendor_tables', $vendor_tables);
+                        $vendor_details['vendor_tables'] = $vendor_tables;
                     }
                 }
+                else{
+                    if($address_id > 0){
+                        $serviceArea = $vendorData->vendor->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                            $query->select('vendor_id')
+                            ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                        })->where('id', $vendorData->vendor_id)->get();
+                    }
+                }
+                
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
@@ -651,8 +656,8 @@ class CartController extends FrontController
             $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2, '.', '');
             $cart->deliver_status = $delivery_status;
             $cart->action = $action;
-            // dd($vendor_details->toArray());
-            // $cart->left_section = view('frontend.order.cartnew-left')->with(['action' => $action,  'vendor_details' => $vendor_details])->render();
+            // dd($vendor_details['vendor_tables']->toArray());
+            $cart->left_section = view('frontend.order.cartnew-left')->with(['action' => $action,  'vendor_details' => $vendor_details, 'addresses'=> $user_allAddresses, 'countries'=> $countries])->render();
             $cart->products = $cartData->toArray();
         }
         return $cart;

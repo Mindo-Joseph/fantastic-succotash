@@ -863,6 +863,10 @@ $(document).ready(function() {
                             if($('#cart_main_page').length != 0){
                                 let cart_template = _.template($('#cart_template').html());
                                 $("#cart_table").append(cart_template({cart_details:cart_details}));
+
+                                $('#placeorder_form .left_box').html('');
+                                $('#placeorder_form .left_box').html(cart_details.left_section);
+
                                 if(cart_details.deliver_status == 0){
                                     $("#order_palced_btn").attr("disabled", true);
                                     $("#order_palced_btn").addClass("d-none");
