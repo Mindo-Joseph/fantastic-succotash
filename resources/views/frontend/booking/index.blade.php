@@ -136,7 +136,14 @@
                     </span>
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                 </h4>
-                <button class="btn btn-solid w-100" id="cab_booking_place_order" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" data-image="<%= result.image_url %>">Request <%= result.name %></button>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button class="btn btn-solid w-100" id="cab_booking_place_order" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" data-image="<%= result.image_url %>">Pickup Now</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button class="btn btn-solid w-100" id="cab_booking_place_order" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" data-image="<%= result.image_url %>">Pickup Later</button>
+                    </div>
+                </div>
             </div>
         </script>
         <script type="text/template" id="cab_booking_promo_code_template">

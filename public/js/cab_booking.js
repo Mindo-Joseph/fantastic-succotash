@@ -53,10 +53,20 @@ $(document).ready(function () {
                     $('#cab_detail_box').html('');
                     let order_success_template = _.template($('#order_success_template').html());
                     $("#cab_detail_box").append(order_success_template({result: response.data, product_image: product_image})).show();
+                    setInterval(function(){
+                        getDriverDetails(response.data.dispatch_traking_url)
+                    },3000);
                 }
             }
         });
     });
+    function getDriverDetails(dispatch_traking_url) {
+        var new_dispatch_traking_url = dispatch_traking_url.replace('/order/','/order-details/')
+        $.get(new_dispatch_traking_url, function( data ) {
+        console.log('i mmmmm here'+data);
+        });
+    }
+
     $(document).on("click", ".add-more-location",function() {
         let random_id = Date.now();
         let destination_location_template = _.template($('#destination_location_template').html());
