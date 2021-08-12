@@ -55,7 +55,7 @@ class CartController extends FrontController
                 }
             }
         }
-        $action = (Session::has('type')) ? Session::get('type') : 'delivery';
+        $action = (Session::has('vendorType')) ? Session::get('vendorType') : 'delivery';
         $data = array(
             'navCategories' => $navCategories,
             'cartData' => $cartData,
@@ -71,7 +71,7 @@ class CartController extends FrontController
 
     public function postAddToCart(Request $request, $domain = '')
     {
-        $luxury_option = LuxuryOption::where('title', Session::get('type'))->first();
+        $luxury_option = LuxuryOption::where('title', Session::get('vendorType'))->first();
         try {
             $cart_detail = [];
             $user = Auth::user();
@@ -495,9 +495,8 @@ class CartController extends FrontController
         }
         $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if ($cartData) {
-            $action = (Session::has('type')) ? Session::get('type') : 'delivery';
-            $vendor_tables = collect();
-            $vendor_address = collect();
+            $action = (Session::has('vendorType')) ? Session::get('vendorType') : 'delivery';
+            $vendor_details = collect();
             $delivery_status = 1;
             foreach ($cartData as $ven_key => $vendorData) {
                 $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
@@ -510,13 +509,14 @@ class CartController extends FrontController
                 }
                 if($action != 'delivery'){
                     if(isset($serviceArea)){
-                        $vendor_address = $serviceArea;
+                        $vendor_details->put('service_area', $serviceArea);
                     }
                     if($action == 'dine_in'){
                         $vendor_tables = VendorDineinTable::where('vendor_id', $vendorData->vendor_id)->with('category')->get();
                         foreach ($vendor_tables as $vendor_table) {
                             $vendor_table->qr_url = url('/vendor/'.$vendorData->vendor->slug.'/?table='.$vendor_table->id);
                         }
+                        $vendor_details->put('vendor_tables', $vendor_tables);
                     }
                 }
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
@@ -650,9 +650,9 @@ class CartController extends FrontController
             $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2, '.', '');
             $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2, '.', '');
             $cart->deliver_status = $delivery_status;
-            $cart->vendor_tables = $vendor_tables;
             $cart->action = $action;
-            $cart->vendor_address = $vendor_address;
+            // dd($vendor_details->toArray());
+            // $cart->left_section = view('frontend.order.cartnew-left')->with(['action' => $action,  'vendor_details' => $vendor_details])->render();
             $cart->products = $cartData->toArray();
         }
         return $cart;
