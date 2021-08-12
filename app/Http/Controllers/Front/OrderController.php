@@ -708,12 +708,12 @@ class OrderController extends FrontController
             'cvv' => $request->cvc
         ];
         $response = $gateway->purchase(
-            [
-                'amount' => $request->amount,
-                'currency' => 'INR',
-                'card' => $formData,
-                'token' => $token,
-            ]
+        [
+            'amount' => $request->amount,
+            'currency' => 'INR',
+            'card' => $formData,
+            'token' => $token,
+        ]
         )->send();
         if ($response->isSuccessful()) {
             $cart = Cart::where('user_id', Auth::user()->id)->first();
