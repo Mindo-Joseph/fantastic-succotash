@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, ClientPreference, Vendor, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, Order, LoyaltyCard};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, ClientPreference, Vendor, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, Order, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
 
 class CartController extends FrontController
 {
@@ -40,7 +40,6 @@ class CartController extends FrontController
         if ($cart) {
             $cartData = CartProduct::where('status', [0, 1])->where('cart_id', $cart->id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         }
-        // dd($cartData->toArray());
         $navCategories = $this->categoryNav($langId);
         $subscription_features = array();
         if ($user) {
@@ -56,7 +55,18 @@ class CartController extends FrontController
                 }
             }
         }
-        return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user]);
+        $action = (Session::has('type')) ? Session::get('type') : 'delivery';
+        $data = array(
+            'navCategories' => $navCategories,
+            'cartData' => $cartData,
+            'addresses' => $addresses,
+            'countries' => $countries,
+            'subscription_features' => $subscription_features,
+            'guest_user'=>$guest_user,
+            'action' => $action
+        );
+        return view('frontend.cartnew')->with($data);
+        // return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user]);
     }
 
     public function postAddToCart(Request $request, $domain = '')
@@ -207,7 +217,7 @@ class CartController extends FrontController
                 // }
                 // CartAddon::insert($create_cart_addons);
             // }
-            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
+            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!','cart_product_id' => $cartProduct->id]);
         } catch (Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
         }
@@ -312,7 +322,7 @@ class CartController extends FrontController
                     $cartAddOn->save();
                 }
             }
-            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!']);
+            return response()->json(['status' => 'success', 'message' => 'Product Added Successfully!','cart_product_id' => $cartProduct->id]);
         }
     }
 
@@ -484,6 +494,9 @@ class CartController extends FrontController
         }
         $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if ($cartData) {
+            $action = (Session::has('type')) ? Session::get('type') : 'delivery';
+            $vendor_tables = collect();
+            $vendor_address = collect();
             $delivery_status = 1;
             foreach ($cartData as $ven_key => $vendorData) {
                 $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
@@ -493,6 +506,17 @@ class CartController extends FrontController
                         $query->select('vendor_id')
                         ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
                     })->where('id', $vendorData->vendor_id)->get();
+                }
+                if($action != 'delivery'){
+                    if(isset($serviceArea)){
+                        $vendor_address = $serviceArea;
+                    }
+                    if($action == 'dine_in'){
+                        $vendor_tables = VendorDineinTable::where('vendor_id', $vendorData->vendor_id)->with('category')->get();
+                        foreach ($vendor_tables as $vendor_table) {
+                            $vendor_table->qr_url = url('/vendor/'.$vendorData->vendor->slug.'/?table='.$vendor_table->id);
+                        }
+                    }
                 }
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
                     $quantity_price = 0;
@@ -526,7 +550,7 @@ class CartController extends FrontController
                     foreach ($prod->addon as $ck => $addons) {
                         $opt_price_in_currency = $addons->option->price / $divider;
                         $opt_price_in_doller_compare = $opt_price_in_currency * $customerCurrency->doller_compare;
-                        $opt_quantity_price = number_format($opt_price_in_doller_compare * $prod->quantity, 2);
+                        $opt_quantity_price = number_format($opt_price_in_doller_compare * $prod->quantity, 2, '.', '');
                         $addons->option->price_in_cart = $addons->option->price;
                         $addons->option->price = $opt_price_in_currency;
                         $addons->option->multiplier = $customerCurrency->doller_compare;
@@ -542,7 +566,7 @@ class CartController extends FrontController
                         $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                         if (!empty($deliver_charge) && $delivery_count == 0) {
                             $delivery_count = 1;
-                            $prod->deliver_charge = number_format($deliver_charge, 2);
+                            $prod->deliver_charge = number_format($deliver_charge, 2, '.', '');
                             $payable_amount = $payable_amount + $deliver_charge;
                             $delivery_fee_charges = $deliver_charge;
                         }
@@ -553,7 +577,7 @@ class CartController extends FrontController
                         $total_discount_percent = $vendorData->coupon->promo->amount;
                         $payable_amount -= $total_discount_percent;
                     } else {
-                        $gross_amount = number_format(($payable_amount - $taxable_amount), 2);
+                        $gross_amount = number_format(($payable_amount - $taxable_amount), 2, '.', '');
                         $percentage_amount = ($gross_amount * $vendorData->coupon->promo->amount / 100);
                         $payable_amount -= $percentage_amount;
                     }
@@ -569,14 +593,14 @@ class CartController extends FrontController
                         $vendorData->isDeliverable = 1;
                     }
                 }
-                $vendorData->delivery_fee_charges = number_format($delivery_fee_charges, 2);
-                $vendorData->payable_amount = number_format($payable_amount, 2);
-                $vendorData->discount_amount = number_format($discount_amount, 2);
-                $vendorData->discount_percent = number_format($discount_percent, 2);
-                $vendorData->taxable_amount = number_format($taxable_amount, 2);
-                $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount), 2);
+                $vendorData->delivery_fee_charges = number_format($delivery_fee_charges, 2, '.', '');
+                $vendorData->payable_amount = number_format($payable_amount, 2, '.', '');
+                $vendorData->discount_amount = number_format($discount_amount, 2, '.', '');
+                $vendorData->discount_percent = number_format($discount_percent, 2, '.', '');
+                $vendorData->taxable_amount = number_format($taxable_amount, 2, '.', '');
+                $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount), 2, '.', '');
                 if (!empty($subscription_features)) {
-                    $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount - $subscription_discount), 2);
+                    $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount - $subscription_discount), 2, '.', '');
                 }
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
@@ -606,7 +630,7 @@ class CartController extends FrontController
             }
             if (!empty($subscription_features)) {
                 $total_discount_amount = $total_discount_amount + $total_subscription_discount;
-                $cart->total_subscription_discount = number_format($total_subscription_discount, 2);
+                $cart->total_subscription_discount = number_format($total_subscription_discount, 2, '.', '');
             }
             $total_payable_amount = $total_payable_amount - $total_discount_amount;
             if ($loyalty_amount_saved > 0) {
@@ -615,16 +639,19 @@ class CartController extends FrontController
                 }
                 $total_payable_amount = $total_payable_amount - $loyalty_amount_saved;
             }
-            $cart->loyalty_amount = number_format($loyalty_amount_saved, 2);
-            $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount + $loyalty_amount_saved - $total_taxable_amount), 2);
-            $cart->new_gross_amount = number_format(($total_payable_amount + $total_discount_amount), 2);
-            $cart->total_payable_amount = number_format($total_payable_amount, 2);
-            $cart->total_discount_amount = number_format($total_discount_amount, 2);
-            $cart->total_taxable_amount = number_format($total_taxable_amount, 2);
-            $cart->tip_5_percent = number_format((0.05 * $total_payable_amount), 2);
-            $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2);
-            $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2);
+            $cart->loyalty_amount = number_format($loyalty_amount_saved, 2, '.', '');
+            $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount + $loyalty_amount_saved - $total_taxable_amount), 2, '.', '');
+            $cart->new_gross_amount = number_format(($total_payable_amount + $total_discount_amount), 2, '.', '');
+            $cart->total_payable_amount = number_format($total_payable_amount, 2, '.', '');
+            $cart->total_discount_amount = number_format($total_discount_amount, 2, '.', '');
+            $cart->total_taxable_amount = number_format($total_taxable_amount, 2, '.', '');
+            $cart->tip_5_percent = number_format((0.05 * $total_payable_amount), 2, '.', '');
+            $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2, '.', '');
+            $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2, '.', '');
             $cart->deliver_status = $delivery_status;
+            $cart->vendor_tables = $vendor_tables;
+            $cart->action = $action;
+            $cart->vendor_address = $vendor_address;
             $cart->products = $cartData->toArray();
         }
         return $cart;

@@ -30,23 +30,23 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </div>
                             @endif
                         @endif
-                        @if($mod_count > 1)
+                        @if($mod_count >= 1)
                             <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mb-2 mb-lg-0 vendor_mods" id="top-tab" role="tablist">
                                 @if($client_preference_detail->delivery_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{$mod_count == 1 ? 'active' : 'active'}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('type') == 'delivery')) ? 'active' : ''}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
                                 </li>
                                 @endif
                                 @if($client_preference_detail->dinein_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{$client_preference_detail->dinein_check == 1 && $client_preference_detail->delivery_check != 1? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-controls="dinein_tab" aria-selected="false">{{ __('Dine-In') }}</a>
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('type') == 'dine_in')) ? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-controls="dinein_tab" aria-selected="false">{{ __('Dine-In') }}</a>
                                 </li>
                                 @endif
                                 @if($client_preference_detail->takeaway_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{$mod_count == 1 ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ __('Takeaway') }}</a>
-                                </li>                   
-                                @endif    
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('type') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ __('Takeaway') }}</a>
+                                </li>
+                                @endif
                                 <div class="navigation-tab-overlay"></div>
                             </ul>
                         @endif 
@@ -300,7 +300,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </button>
       </div>
       <div class="modal-body">
-        <h6 class="m-0">{{__('Change in location will remove all your cart products. Do you really want to continue ?')}}</h6>
+        <h6 class="m-0">{{__('This change will remove all your cart products. Do you really want to continue ?')}}</h6>
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">
         <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">{{__('Cancel')}}</button>

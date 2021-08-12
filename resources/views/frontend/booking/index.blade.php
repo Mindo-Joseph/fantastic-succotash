@@ -13,12 +13,12 @@
             <div class="location-box">
                 <ul class="location-inputs position-relative pl-2" id="location_input_main_div">
                     <li class="d-block mb-3 dots">
-                        <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Pick-Up Location')}}" id="pickup_location"/>
+                        <input class="form-control pickup-text" type="text" name="pickup_location_name[]" placeholder="{{__('Add A Pick-Up Location')}}" id="pickup_location"/>
                         <input type="hidden" name="pickup_location_latitude[]" value="" id="pickup_location_latitude"/>
                         <input type="hidden" name="pickup_location_longitude[]" value="" id="pickup_location_longitude" />
                     </li>
                     <li class="d-block mb-3 dots">
-                        <input class="form-control pickup-text" type="text" placeholder="{{__('Add A Stop')}}" id="destination_location" />
+                        <input class="form-control pickup-text" name="destination_location_name[]" type="text" placeholder="{{__('Add A Stop')}}" id="destination_location"/>
                         <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude" />
                         <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude" />
                         <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel="{{Carbon\Carbon::now()->timestamp}}"></i>
@@ -44,13 +44,9 @@
                 @endforelse
             </div>
             <div class="table-responsive style-4">
-                <div class="cab-button d-flex flex-nowrap align-items-center py-2" id="vendor_main_div">
-                    
-                </div>
+                <div class="cab-button d-flex flex-nowrap align-items-center py-2" id="vendor_main_div"></div>
             </div>
-            <div class="vehical-container style-4" style="height:calc(100vh - 397px !important" id="search_product_main_div">
-                
-            </div>
+            <div class="vehical-container style-4" style="height:calc(100vh - 397px !important" id="search_product_main_div"></div>
             <script type="text/template" id="vendors_template">
                 <% _.each(results, function(result, key){%>
                     <a class="btn btn-solid ml-2 vendor-list" href="javascript:void(0);" data-vendor="<%= result.id %>"><%= result.name %></a>
@@ -118,7 +114,7 @@
                     </span>
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                 </h4>
-                <button class="btn btn-solid w-100">Request <%= result.name %></button>
+                <button class="btn btn-solid w-100" id="cab_booking_place_order">Request <%= result.name %></button>
             </div>
         </script>
         <script type="text/template" id="cab_booking_promo_code_template">
@@ -142,9 +138,7 @@
                 </div>
             <% }); %>
         </script>
-        <div class="cab-detail-box style-4 d-none" id="cab_detail_box">
-                            
-        </div>
+        <div class="cab-detail-box style-4 d-none" id="cab_detail_box"></div>
         <div class="promo-box style-4 d-none">
             <a class="d-block mt-2 close-promo-code-detail-box" href="javascript:void(0)">✕</a>
             <div class="row" id="cab_booking_promo_code_list_main_div">
