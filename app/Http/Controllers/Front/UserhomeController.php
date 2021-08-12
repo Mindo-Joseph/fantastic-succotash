@@ -113,8 +113,8 @@ class UserhomeController extends FrontController{
         foreach ($brands as $brand) {
             $brand->redirect_url = route('brandDetail', $brand->id);
         }
-        Session::forget('type');
-        Session::put('type', $request->type);
+        Session::forget('vendorType');
+        Session::put('vendorType', $request->type);
         $vendors = Vendor::with('products')->select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1);
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){

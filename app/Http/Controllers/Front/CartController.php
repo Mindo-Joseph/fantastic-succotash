@@ -262,9 +262,10 @@ class CartController extends FrontController
         }
         $user_id = ' ';
         $cartInfo = ' ';
+        $user = Auth::user();
         $currency = ClientCurrency::where('is_primary', '=', 1)->first();
-        if (Auth::user()) {
-            $user_id = Auth::user()->id;
+        if ($user) {
+            $user_id = $user->id;
             $userFind = Cart::where('user_id', $user_id)->first();
             if (!$userFind) {
                 $cart = new Cart;
@@ -274,7 +275,7 @@ class CartController extends FrontController
                 $cart->user_id = $user_id;
                 $cart->created_by = $user_id;
                 $cart->currency_id = $currency->currency->id;
-                $cart->unique_identifier = Auth::user()->system_id;
+                $cart->unique_identifier = $user->system_id;
                 $cart->save();
                 $cartInfo = $cart;
             } else {
