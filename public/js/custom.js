@@ -107,9 +107,9 @@ $(document).ready(function() {
     if($('#cart_main_page').length > 0){
         let address_checked = $("input:radio[name='address_id']").is(":checked");
         if(address_checked){
-            $('#order_palced_btn').prop('disabled', false);
+            $('#order_placed_btn').prop('disabled', false);
         }else{
-            $('#order_palced_btn').prop('disabled', true);
+            $('#order_placed_btn').prop('disabled', true);
         }
         $("form").submit(function(e){
             let address_id = $("input:radio[name='address_id']").is(":checked");
@@ -329,7 +329,7 @@ $(document).ready(function() {
     
     $(document).on("change","input:radio[name='address_id']",function() {
         if($(this).val()){
-            $('#order_palced_btn').prop('disabled', false);
+            $('#order_placed_btn').prop('disabled', false);
             if($("#cart_table").length > 0){
                 $(".spinner-box").show();
                 $("#cart_table").hide();
@@ -337,7 +337,7 @@ $(document).ready(function() {
             cartHeader($(this).val());
         }
     });
-    $(document).on("click","#order_palced_btn",function() {
+    $(document).on("click","#order_placed_btn",function() {
         $('.alert-danger').html('');
         if((typeof guest_cart != undefined) && (guest_cart == 1)){
             window.location.href = login_url;
@@ -449,7 +449,7 @@ $(document).ready(function() {
                 }else{
                     if(path.indexOf("cart") !== -1){
                         success_error_alert('error', resp.message, "#stripe-payment-form .payment_response");
-                        $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                     }
                     else if(path.indexOf("wallet") !== -1){
                         success_error_alert('error', resp.message, "#wallet_topup_form .payment_response");
@@ -465,7 +465,7 @@ $(document).ready(function() {
                 var response = $.parseJSON(error.responseText);
                 if(path.indexOf("cart") !== -1){
                     success_error_alert('error', response.message, "#stripe-payment-form .payment_response");
-                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                 }
                 else if(path.indexOf("wallet") !== -1){
                     success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
@@ -507,7 +507,7 @@ $(document).ready(function() {
                 }else{
                     if(cartElement.length > 0){
                         success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                        $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                     }
                     else if(walletElement.length > 0){
                         success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
@@ -519,7 +519,7 @@ $(document).ready(function() {
                 var response = $.parseJSON(error.responseText);
                 if(cartElement.length > 0){
                     success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                 }
                 else if(walletElement.length > 0){
                     success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
@@ -531,9 +531,9 @@ $(document).ready(function() {
     function paymentSuccessViaPaypal(amount, token, payer_id, path, tip=0){
         let address_id = 0;
         if(path.indexOf("cart") !== -1){
-            $('#order_palced_btn').trigger('click');
+            $('#order_placed_btn').trigger('click');
             $('#v-pills-paypal-tab').trigger('click');
-            $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
+            $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
             address_id = $("input:radio[name='address_id']:checked").val();
         }
         else if(path.indexOf("wallet") !== -1){
@@ -557,7 +557,7 @@ $(document).ready(function() {
                 }else{
                     if(path.indexOf("cart") !== -1){
                         success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                        $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                     }
                     else if(path.indexOf("wallet") !== -1){
                         success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
@@ -569,7 +569,7 @@ $(document).ready(function() {
                 var response = $.parseJSON(error.responseText);
                 if(path.indexOf("cart") !== -1){
                     success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                 }
                 else if(path.indexOf("wallet") !== -1){
                     success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
@@ -588,18 +588,18 @@ $(document).ready(function() {
                 if (response.status == "Success") {
                     window.location.href = base_url+'/order/success/'+response.data.order.id;
                 }else{
-                    $("#order_palced_btn, .proceed_to_pay").attr("disabled", false);
+                    $("#order_placed_btn, .proceed_to_pay").attr("disabled", false);
                 }
             },
             error: function(error){
                 var response = $.parseJSON(error.responseText);
                 success_error_alert('error', response.message, ".payment_response");
-                $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
             }
         });
     }
     $(document).on("click", ".proceed_to_pay", function() {
-        $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
+        $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
         let address_id = $("input:radio[name='address_id']:checked").val();
         let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
         let tip = $("#cart_tip_amount").val();
@@ -609,7 +609,7 @@ $(document).ready(function() {
             stripe.createToken(card).then(function(result) {
                 if (result.error) {
                     $('#stripe_card_error').html(result.error.message);
-                    $("#order_palced_btn, .proceed_to_pay").attr("disabled", false);
+                    $("#order_placed_btn, .proceed_to_pay").attr("disabled", false);
                 } else {
                     paymentViaStripe(result.token.id, address_id, payment_option_id);
                 }
@@ -861,12 +861,16 @@ $(document).ready(function() {
                             if($('#cart_main_page').length != 0){
                                 let cart_template = _.template($('#cart_template').html());
                                 $("#cart_table").append(cart_template({cart_details:cart_details}));
+
+                                $('#placeorder_form .left_box').html('');
+                                $('#placeorder_form .left_box').html(cart_details.left_section);
+
                                 if(cart_details.deliver_status == 0){
-                                    $("#order_palced_btn").attr("disabled", true);
-                                    $("#order_palced_btn").addClass("d-none");
+                                    $("#order_placed_btn").attr("disabled", true);
+                                    $("#order_placed_btn").addClass("d-none");
                                 }else{
-                                    $("#order_palced_btn").removeAttr("disabled");
-                                    $("#order_palced_btn").removeClass("d-none");
+                                    $("#order_placed_btn").removeAttr("disabled");
+                                    $("#order_placed_btn").removeClass("d-none");
                                 }
                             }
                             cartTotalProductCount();
@@ -1051,7 +1055,7 @@ $(document).ready(function() {
                     $('#add_new_address_form').hide();
                     let address_template = _.template($('#address_template').html());
                     if(address.length > 0){
-                        $('#order_palced_btn').attr('disabled', false);
+                        $('#order_placed_btn').attr('disabled', false);
                         $("#address_template_main_div").append(address_template({address:response.address}));
                         cartHeader(response.address.id);
                     }

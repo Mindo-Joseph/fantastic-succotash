@@ -82,7 +82,7 @@ class StoreController extends Controller{
 			$order_list = Order::with('orderStatusVendor')->select('id','order_number','payable_amount','payment_option_id','user_id')
 						->whereHas('vendors', function($query) use ($is_selected_vendor_id){
 						   $query->where('vendor_id', $is_selected_vendor_id);
-						})->paginate($paginate);
+						})->orderBy('id', 'DESC')->paginate($paginate);
 			foreach ($order_list as $order) {
 				$order_status = [];
 				$product_details = [];

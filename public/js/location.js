@@ -14,28 +14,29 @@ jQuery(window).scroll(function () {
 $(document).ready(function () {
 
     if (window.location.pathname == '/') {
-        $(document).ready(function () {
-            $.ajax({
-                url: client_preferences_url,
-                type: "POST",
-                success: function (response) {
-                    if ($.cookie("age_restriction") != 1) {
-                        if (response.age_restriction == 1) {
-                            $('#age_restriction').modal({backdrop: 'static', keyboard: false});
-                        }
-                    }
-                    if (response.delivery_check == 1) {
-                        getHomePage("", "", "delivery");
-                    }
-                    else if (response.dinein_check == 1) {
-                        getHomePage("", "", "dine_in");
-                    }
-                    else {
-                        getHomePage("", "", "takeaway");
-                    }
-                },
-            });
-        });
+        getHomePage("", "");
+    //     $(document).ready(function () {
+    //         $.ajax({
+    //             url: client_preferences_url,
+    //             type: "POST",
+    //             success: function (response) {
+    //                 if ($.cookie("age_restriction") != 1) {
+    //                     if (response.age_restriction == 1) {
+    //                         $('#age_restriction').modal({backdrop: 'static', keyboard: false});
+    //                     }
+    //                 }
+    //                 if (response.delivery_check == 1) {
+    //                     getHomePage("", "", "delivery");
+    //                 }
+    //                 else if (response.dinein_check == 1) {
+    //                     getHomePage("", "", "dine_in");
+    //                 }
+    //                 else {
+    //                     getHomePage("", "", "takeaway");
+    //                 }
+    //             },
+    //         });
+    //     });
     }
 
     $(".age_restriction_no").click(function () {
@@ -276,8 +277,13 @@ $(document).ready(function () {
             type = "dine_in";
         }else if(id == "takeaway_tab"){
             type = "takeaway";
+        }else{
+            type = "delivery";
         }
-        vendorType(latitude, longitude, type);
+        // console.log()
+        if(!$.hasAjaxRunning()){
+            vendorType(latitude, longitude, type);
+        }
     });
 
     function vendorType(latitude, longitude, type = "delivery"){
@@ -291,6 +297,7 @@ $(document).ready(function () {
                     if (cartProducts != "") {
                         $("#remove_cart_modal").modal('show');
                         $("#remove_cart_modal #remove_cart_button").attr("data-cart_id", response.data.id);
+                        $(".nav-tabs.vendor_mods").attr("data-mod", type);
                     } else {
                         getHomePage(latitude, longitude, type);
                     }
@@ -315,11 +322,15 @@ $(document).ready(function () {
         getHomePage("", "", url);
     });*/
 
-    function getHomePage(latitude, longitude, url = "delivery") {
+    function getHomePage(latitude, longitude, vtype = "") {
+        if(vtype != ''){
+            vendor_type = vtype;
+        }
+        // console.log(vendor_type);
         let selected_address = $("#address-input").val();
         $("#location_search_wrapper .homepage-address span").text(selected_address).attr({ "title": selected_address, "data-original-title": selected_address });
         $("#edit-address").modal('hide');
-        let ajaxData = { type: url };
+        let ajaxData = { type: vendor_type };
         if ((latitude) && (longitude) && (selected_address)) {
             ajaxData.latitude = latitude;
             ajaxData.longitude = longitude;
@@ -467,7 +478,11 @@ $(document).ready(function () {
                 if (response.status == 'success') {
                     let latitude = $("#address-latitude").val();
                     let longitude = $("#address-longitude").val();
-                    getHomePage(latitude, longitude);
+                    let vendor_mod = "";
+                    if($(".nav-tabs.vendor_mods .nav-link").length > 0){
+                        vendor_mod = $(".nav-tabs.vendor_mods").attr("data-mod");
+                    }
+                    getHomePage(latitude, longitude, vendor_mod);
                 }
             }
         });
