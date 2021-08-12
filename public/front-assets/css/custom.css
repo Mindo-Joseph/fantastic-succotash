@@ -4268,7 +4268,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     width: 100%;
     position: absolute;
     top: 0;
-    background: rgb(0 0 0 / 50%);
+    /* background: rgb(0 0 0 / 50%); */
     display: flex;
     align-items: center;
     justify-content: center;
