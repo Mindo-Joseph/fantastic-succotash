@@ -313,6 +313,13 @@ $(document).ready(function() {
                     if($("[id^=cart_product_]").length == 0){
                         $(".shopping-cart").html('');
                     }
+
+                    if($('#show_plus_minus'+cartproduct_id).length != 0)
+                    {
+                       // $('#show_plus_minus'+cartproduct_id).next().val(0);
+                        $('#show_plus_minus'+cartproduct_id).hide();
+                        $('#add_button_href'+cartproduct_id).show();
+                    }
                 }
             }
         });
@@ -1067,25 +1074,7 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on("click",".add_on_demand",function() {
-        
-        let that = $(this);
-       
-        var ajaxCall = 'ToCancelPrevReq';
-        var vendor_id = that.data("vendor_id");
-        var product_id = that.data("product_id");
-        var add_to_cart_url = that.data("add_to_cart_url");
-        var variant_id = that.data("variant_id");
-        var addonids = [];
-        var addonoptids = [];
-        var show_plus_minus = "#show_plus_minus"+product_id;
-        if(!$.hasAjaxRunning()){
-            addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id,show_plus_minus);
-            $(this).hide();
-            $("#show_plus_minus"+product_id).show();
-        }
-        
-    });
+
 
     
 
@@ -1121,6 +1110,25 @@ $(document).ready(function() {
    
     // **********************************************   all function for ondemand services   *****************************************  ////////////////////////
 
+    $(document).on("click",".add_on_demand",function() {
+        
+        let that = $(this);
+       
+        var ajaxCall = 'ToCancelPrevReq';
+        var vendor_id = that.data("vendor_id");
+        var product_id = that.data("product_id");
+        var add_to_cart_url = that.data("add_to_cart_url");
+        var variant_id = that.data("variant_id");
+        var addonids = [];
+        var addonoptids = [];
+        var show_plus_minus = "#show_plus_minusa"+product_id;
+        if(!$.hasAjaxRunning()){
+            addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id,show_plus_minus,that);
+            $("#show_plus_minusa"+product_id).show();
+        }
+        
+    });
+
     $(document).on('click', '.qty-minus-ondemand', function() {
         let base_price = $(this).data('base_price');
         let cartproduct_id = $(this).attr("data-id");
@@ -1130,12 +1138,13 @@ $(document).ready(function() {
             $('#quantity_ondemand_'+cartproduct_id).val(--qty);
             updateQuantityOnDemand(cartproduct_id, qty, base_price);
         }else{
-            let parent_div_id = $(this).attr("data-parent_div_id");
             // alert('remove this product');
             $('#remove_item_modal').modal('show');
             let vendor_id = $(this).data('vendor_id');
             $('#remove_item_modal #vendor_id').val(vendor_id);
             $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
+           
+          
         }
     });
     $(document).on('click', '.qty-plus-ondemand', function() {
@@ -1173,7 +1182,7 @@ $(document).ready(function() {
     }
 
      // on demand add to cart 
-     function addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id,show_plus_minus) {
+     function addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id,show_plus_minus,that) {
         $.ajax({
             type: "post",
             dataType: "json",
@@ -1193,7 +1202,11 @@ $(document).ready(function() {
                      $(show_plus_minus+" .minus").attr('data-id',response.cart_product_id);
                      $(show_plus_minus+" .plus").attr('data-id',response.cart_product_id);
                      $(show_plus_minus+" .input_qty").attr('id',"quantity_ondemand_"+response.cart_product_id);
-                    
+                     $(show_plus_minus+" .qty-minus-ondemand").attr('data-parent_div_id',"show_plus_minusa"+response.cart_product_id);
+                     $(show_plus_minus).attr('id',"show_plus_minusa"+response.cart_product_id);
+                     $(that).attr('id',"add_button_href"+response.cart_product_id);
+                     $(that).hide();
+                     $(that).next().show();
                 }else{
                     alert(response.message);
                 }
