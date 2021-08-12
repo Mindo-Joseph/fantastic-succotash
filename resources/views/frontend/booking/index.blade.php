@@ -128,6 +128,10 @@
                     <a href="javascript:void(0)" class="ml-1" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" id="promo_code_list_btn_cab_booking">Apply</a>
                     <a class="remove-coupon" href="javascript:void(0)" id="remove_promo_code_cab_booking_btn" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" style="display:none;">Remove</a>
                 </div>
+                <div class="form-group pmd-textfield pmd-textfield-floating-label" style="display:none;" id="schedule_datetime_main_div">
+                    <label class="control-label" for="datetimepicker-default">Select Date and Time</label>
+                    <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="">
+                </div>
             </div>
             <div class="payment-promo-container p-2">
                 <h4 class="d-flex align-items-center justify-content-between mb-2">
@@ -136,7 +140,14 @@
                     </span>
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                 </h4>
-                <button class="btn btn-solid w-100" id="cab_booking_place_order" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" data-image="<%= result.image_url %>">Request <%= result.name %></button>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button class="btn btn-solid w-100" id="pickup_now" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_now" data-task_type="now">Pickup Now</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button class="btn btn-solid w-100" id="pickup_later" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_later">Pickup Later</button>
+                    </div>
+                </div>
             </div>
         </script>
         <script type="text/template" id="cab_booking_promo_code_template">
