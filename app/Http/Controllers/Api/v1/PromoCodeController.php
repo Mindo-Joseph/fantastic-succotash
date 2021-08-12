@@ -55,7 +55,7 @@ class PromoCodeController extends Controller{
                     $q->where('refrence_id', $vendor_id);
                 })->where('restriction_on', 1)->where('minimum_spend','<=',$total_minimum_spend)->where('maximum_spend','>=',$total_minimum_spend)->where('is_deleted', 0)->whereDate('expiry_date', '>=', $now)->get();
                 $promo_codes = $promo_codes->merge($result2);
-            }
+            } 
             return $this->successResponse($promo_codes, '', 200);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
