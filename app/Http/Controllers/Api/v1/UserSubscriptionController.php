@@ -147,7 +147,7 @@ class UserSubscriptionController extends BaseController
     {
         try{
             $validator = Validator::make($request->all(), [
-                'amount'            => 'required|not_in:0',
+                // 'amount'            => 'required|not_in:0',
                 'transaction_id'    => 'required',
                 'payment_option_id' => 'required',
             ]);
@@ -195,12 +195,12 @@ class UserSubscriptionController extends BaseController
                 $subscription_invoice->start_date = $start_date;
                 $subscription_invoice->next_date = $next_date;
                 $subscription_invoice->end_date = $end_date;
-                $subscription_invoice->subscription_amount = $request->amount;
+                $subscription_invoice->subscription_amount = $subscription_plan->price;
                 $subscription_invoice->save();
                 $subscription_invoice_id = $subscription_invoice->id;
                 if($subscription_invoice_id){
                     $payment = new Payment;
-                    $payment->balance_transaction = $request->amount;
+                    $payment->balance_transaction = $subscription_plan->price;
                     $payment->transaction_id = $request->transaction_id;
                     $payment->user_subscription_invoice_id = $subscription_invoice_id;
                     $payment->date = Carbon::now()->format('Y-m-d');

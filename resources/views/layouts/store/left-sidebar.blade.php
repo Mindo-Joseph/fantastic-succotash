@@ -34,17 +34,17 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mb-2 mb-lg-0 vendor_mods" id="top-tab" role="tablist">
                                 @if($client_preference_detail->delivery_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('type') == 'delivery')) ? 'active' : ''}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'delivery')) ? 'active' : ''}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
                                 </li>
                                 @endif
                                 @if($client_preference_detail->dinein_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('type') == 'dine_in')) ? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-controls="dinein_tab" aria-selected="false">{{ __('Dine-In') }}</a>
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'dine_in')) ? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-controls="dinein_tab" aria-selected="false">{{ __('Dine-In') }}</a>
                                 </li>
                                 @endif
                                 @if($client_preference_detail->takeaway_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('type') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ __('Takeaway') }}</a>
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ __('Takeaway') }}</a>
                                 </li>
                                 @endif
                                 <div class="navigation-tab-overlay"></div>

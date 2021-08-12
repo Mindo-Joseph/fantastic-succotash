@@ -20,6 +20,10 @@
 <script type="text/javascript">
     var is_hyperlocal = 0;
     var selected_address = 0;
+    var vendor_type = "delivery";
+    @if(Session::has('vendorType'))
+        vendor_type = "{{Session::get('vendorType')}}";
+    @endif
     var autocomplete_url = "{{ route('autocomplete') }}";
     let stripe_publishable_key = '{{ $stripe_publishable_key }}';
     var login_url = "{{ route('customer.login') }}";

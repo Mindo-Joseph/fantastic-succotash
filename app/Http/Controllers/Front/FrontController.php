@@ -308,4 +308,12 @@ class FrontController extends Controller
         $amount = number_format($amount, 2);
         return $amount;
     }
+
+    public function setVendorType($type = ''){
+        if(empty($type)){
+           $type = 'delivery';
+        }
+        Session::put('vendorType', $type);
+        return Session::get('vendorType');
+    }
 }
