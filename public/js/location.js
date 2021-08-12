@@ -111,8 +111,7 @@ $(document).ready(function () {
                     slidesToScroll: 1,
                     arrows: true
                 }
-            }
-            ]
+            }]
         });       
     }
 
@@ -141,8 +140,7 @@ $(document).ready(function () {
                     slidesToScroll: 1,
                     arrows: true
                 }
-            }
-            ]
+            } ]
         });
         
         $('.booking-time').slick({
@@ -169,8 +167,7 @@ $(document).ready(function () {
                     slidesToScroll: 1,
                     arrows: true
                 }
-            }
-            ]
+            }]
         });
 
         $('.hours-slot').slick({
@@ -197,8 +194,7 @@ $(document).ready(function () {
                     slidesToScroll: 1,
                     arrows: true
                 }
-            }
-            ]
+            }]
         });
         
         $('.materials-slide').slick({
@@ -225,8 +221,7 @@ $(document).ready(function () {
                     slidesToScroll: 1,
                     arrows: true
                 }
-            }
-            ]
+            }]
         });
 
         

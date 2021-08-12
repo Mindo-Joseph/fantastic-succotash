@@ -620,7 +620,7 @@
                 </div>
 
                 <div class="cab-detail-box style-4 ">
-                    <div class="cab-outer style-4">
+                    <div class="cab-outer style-4 d-none">
                         <div class="bg-white p-2">
                             <a href="#">✕</a>
                             <div class="w-100 h-100">
@@ -652,6 +652,43 @@
                             </label>
                         </div>
                     </div>
+
+                    <div class="cab-outer style-4">
+                        <div class="bg-white p-2">
+                            <a href="#">✕</a>
+                            <div class="w-100 h-100">
+                                <img src="https://d1a3f4spazzrp4.cloudfront.net/car-types/haloProductImages/IntercityXL.png" alt="">
+                            </div>
+                            <div class="cab-location-details">
+                                <h4><b>Searching for neardy drivers</b></h4>
+                                <p class="mb-0">Processing......</p>
+                            </div>
+                            <div class="cab-location-details">
+                               <div class="row align-items-center">
+                                   <div class="col-8">
+                                        <h4><b>Pankaj Rana</b></h4>
+                                        <p class="mb-0">+918521513254</p>
+                                   </div>
+                                   <div class="col-4">
+                                       <div class="taxi-img">
+                                           <img src="https://staticimg.vicky.in/cache/images/cars/hyundai/santro/hyundai_santro_4-100x100.jpg" alt="">
+                                       </div>
+                                   </div>
+                               </div>
+                            </div>
+                        </div>
+                        <div class="cab-amount-details px-2">
+                            <div class="row">
+                                <div class="col-6 mb-2">ETA</div>
+                                <div class="col-6 mb-2 text-right" id="distance">--</div>
+                                <div class="col-6 mb-2">Order ID</div>
+                                <div class="col-6 mb-2 text-right" id="">71583514</div>
+                                <div class="col-6 mb-2">Amount Paid</div>
+                                <div class="col-6 mb-2 text-right">$114.02</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="payment-promo-container p-2">
                         <h4 class="d-flex align-items-center justify-content-between mb-2" data-toggle="modal" data-target="#payment_modal"><span><i class="fa fa-money" aria-hidden="true"></i> Cash</span> <i class="fa fa-angle-down" aria-hidden="true"></i></h4>
                         <button class="btn btn-solid w-100">Request XL Intercity</button>
