@@ -4254,7 +4254,9 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     margin-left: 0;
 }
 
-
+.vehicle-icon .img-fluid {
+    width: 70px;
+}
 
 
 
