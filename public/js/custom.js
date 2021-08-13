@@ -578,7 +578,7 @@ $(document).ready(function() {
             }
         });
     }
-    function placeOrder(address_id, payment_option_id, transaction_id, tip = 0){
+    function placeOrder(address_id = 0, payment_option_id, transaction_id, tip = 0){
         $.ajax({
             type: "POST",
             dataType: 'json',

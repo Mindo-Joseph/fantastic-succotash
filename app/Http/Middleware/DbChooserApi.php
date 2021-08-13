@@ -28,13 +28,13 @@ class DbChooserApi
         $database_name = 'royoorders';
         $clientCode = '';
         if (!array_key_exists("code", $header)){
-            return response()->json(['error' => 'Invalid Code', 'message' => 'Invalid Code'], 401);
+            // return response()->json(['error' => 'Invalid Code', 'message' => 'Invalid Code'], 401);
         }
         $clientCode = $header['code'][0];
         $existRedis = Redis::get($clientCode);
         if(!$existRedis){
         $client = Client::select('name', 'email', 'phone_number', 'is_deleted', 'is_blocked', 'logo', 'company_name', 'company_address', 'status', 'code', 'database_name', 'database_host', 'database_port', 'database_username', 'database_password')
-                    ->where('code', $clientCode)
+                    ->where('code', '8115ce')
                     ->first();
           if (!$client){
               return response()->json(['error' => 'Invalid Code', 'message' => 'Invalid Code'], 404);

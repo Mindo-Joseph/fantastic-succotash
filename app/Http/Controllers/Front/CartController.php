@@ -131,18 +131,6 @@ class CartController extends FrontController
                     ], 400);
                 }
             }
-            if ($luxury_option) {
-                $checkCartLuxuryOption = CartProduct::where('luxury_option_id', '!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
-                if ($checkCartLuxuryOption) {
-                    CartProduct::where('cart_id', $cart_detail->id)->delete();
-                }
-                if ($luxury_option->id == 2 || $luxury_option->id == 3) {
-                    $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $request->vendor_id)->first();
-                    if ($checkVendorId) {
-                        CartProduct::where('cart_id', $cart_detail->id)->delete();
-                    }
-                }
-            }           
             $oldquantity = $isnew = 0;
             $cart_product_detail = [
                 'status'  => '0',
@@ -154,8 +142,25 @@ class CartController extends FrontController
                 'product_id' => $request->product_id,
                 'variant_id'  => $request->variant_id,
                 'currency_id' => $client_currency->currency_id,
-                'luxury_option_id' => ($luxury_option) ? $luxury_option->id : 0,
+                'luxury_option_id' => ($luxury_option) ? $luxury_option->id : 0
             ];
+
+            if ($luxury_option) {
+                $checkCartLuxuryOption = CartProduct::where('luxury_option_id', '!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
+                if ($checkCartLuxuryOption) {
+                    CartProduct::where('cart_id', $cart_detail->id)->delete();
+                }
+                if ($luxury_option->id == 2 || $luxury_option->id == 3) {
+                    $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $request->vendor_id)->first();
+                    if ($checkVendorId) {
+                        CartProduct::where('cart_id', $cart_detail->id)->delete();
+                    }else{
+                        $checkVendorTableAdded = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', $request->vendor_id)->whereNotNull('vendor_dinein_table_id')->first();
+                        $cart_product_detail['vendor_dinein_table_id'] = ($checkVendorTableAdded) ? $checkVendorTableAdded->vendor_dinein_table_id : NULL;
+                    }
+                }
+            }
+            
             $cartProduct = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cart_detail->id)->first();
             if(!$cartProduct){
                 $isnew = 1;
@@ -465,7 +470,7 @@ class CartController extends FrontController
             'vendorProducts.addon.option' => function ($qry) use ($langId) {
                 $qry->where('language_id', $langId);
             }, 'vendorProducts.product.taxCategory.taxRate',
-        ])->select('vendor_id', 'luxury_option_id')->where('status', [0, 1])->where('cart_id', $cart_id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
+        ])->select('vendor_id', 'luxury_option_id', 'vendor_dinein_table_id')->where('status', [0, 1])->where('cart_id', $cart_id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $loyalty_amount_saved = 0;
         $redeem_points_per_primary_currency = '';
         $loyalty_card = LoyaltyCard::where('status', '0')->first();
@@ -498,6 +503,7 @@ class CartController extends FrontController
         }
         $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         if ($cartData) {
+            $cart_dinein_table_id = NULL;
             $action = (Session::has('vendorType')) ? Session::get('vendorType') : 'delivery';
             $vendor_details = [];
             $delivery_status = 1;
@@ -505,6 +511,10 @@ class CartController extends FrontController
                 $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
                 
+                if(empty($cart_dinein_table_id)){
+                    $cart_dinein_table_id = $vendorData->vendor_dinein_table_id;
+                }
+
                 if($action != 'delivery'){
                     $vendor_details['vendor_address'] = $vendorData->vendor->select('id','latitude','longitude','address')->where('id', $vendorData->vendor_id)->first();
                     if($action == 'dine_in'){
@@ -656,8 +666,7 @@ class CartController extends FrontController
             $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2, '.', '');
             $cart->deliver_status = $delivery_status;
             $cart->action = $action;
-            // dd($vendor_details['vendor_tables']->toArray());
-            $cart->left_section = view('frontend.order.cartnew-left')->with(['action' => $action,  'vendor_details' => $vendor_details, 'addresses'=> $user_allAddresses, 'countries'=> $countries])->render();
+            $cart->left_section = view('frontend.order.cartnew-left')->with(['action' => $action,  'vendor_details' => $vendor_details, 'addresses'=> $user_allAddresses, 'countries'=> $countries, 'cart_dinein_table_id'=> $cart_dinein_table_id])->render();
             $cart->products = $cartData->toArray();
         }
         return $cart;
@@ -808,5 +817,25 @@ class CartController extends FrontController
             }
         }
         return response()->json(['status' => 'success', 'message' => "Uploaded Successfully"]);
+    }
+
+    public function addVendorTableToCart(Request $request, $domain = ''){
+        try{
+            $user = Auth::user();
+            if ($user) {
+                DB::beginTransaction();
+                $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->firstOrFail();
+                $cartData = CartProduct::where('cart_id', $cart->id)->where('vendor_id', $request->vendor)->update(['vendor_dinein_table_id' => $request->table]);
+                DB::commit();
+                return response()->json(['status'=>'Success', 'message'=>'Table has been selected']);
+            }
+            else{
+                return response()->json(['status'=>'Error', 'message'=>'Invalid user']);
+            }
+        }
+        catch(\Exception $ex){
+            DB::rollback();
+            return response()->json(['status'=>'Error', 'message'=>$ex->getMessage()]);
+        }
     }
 }

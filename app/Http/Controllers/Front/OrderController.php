@@ -413,7 +413,9 @@ class OrderController extends FrontController
             $order = new Order;
             $order->user_id = $user->id;
             $order->order_number = generateOrderNo();
-            $order->address_id = $request->address_id;
+            if( ($request->has('address_id')) && ($request->address_id > 0) ){
+                $order->address_id = $request->address_id;
+            }
             $order->payment_option_id = $request->payment_option_id;
             $order->save();
             $cart_prescriptions = CartProductPrescription::where('cart_id', $cart->id)->get();
@@ -463,6 +465,7 @@ class OrderController extends FrontController
                 $OrderVendor->user_id= $user->id;
                 $OrderVendor->order_id = $order->id;
                 $OrderVendor->vendor_id = $vendor_id;
+                $OrderVendor->vendor_dinein_table_id = $vendor_cart_products->unique('vendor_dinein_table_id')->first()->vendor_dinein_table_id;
                 $OrderVendor->save();
                 $vendorProductIds = array();
                 foreach ($vendor_cart_products as $vendor_cart_product) {
@@ -619,7 +622,7 @@ class OrderController extends FrontController
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $this->sendSuccessEmail($request, $order, $vendor_id);
             }
-            // $this->sendOrderNotification($user->id, $vendor_ids);
+            $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();
@@ -708,12 +711,12 @@ class OrderController extends FrontController
             'cvv' => $request->cvc
         ];
         $response = $gateway->purchase(
-            [
-                'amount' => $request->amount,
-                'currency' => 'INR',
-                'card' => $formData,
-                'token' => $token,
-            ]
+        [
+            'amount' => $request->amount,
+            'currency' => 'INR',
+            'card' => $formData,
+            'token' => $token,
+        ]
         )->send();
         if ($response->isSuccessful()) {
             $cart = Cart::where('user_id', Auth::user()->id)->first();

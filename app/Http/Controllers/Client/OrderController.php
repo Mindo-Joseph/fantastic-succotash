@@ -10,7 +10,7 @@ use App\Models\VendorOrderDispatcherStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus,ClientPreference,OrderProduct,OrderVendor,UserAddress,Vendor,OrderReturnRequest};
+use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus,ClientPreference, NotificationTemplate, OrderProduct,OrderVendor,UserAddress,Vendor,OrderReturnRequest, UserDevice, UserVendor};
 use DB;
 use GuzzleHttp\Client;
 use App\Models\Transaction;
@@ -225,6 +225,7 @@ class OrderController extends BaseController{
                 }
                 OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id]);
                 DB::commit();
+                $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
                 return response()->json([
                     'status' => 'success',
                     'created_date' => convertDateTimeInTimeZone($vendor_order_status->created_at, $timezone, 'l, F d, Y, H:i A'),
@@ -248,8 +249,56 @@ class OrderController extends BaseController{
         'order_id' =>  $request->order_id,
         'dispatcher_status_option_id' => 1,
         'vendor_id' =>  $request->vendor_id]);
+        
     }
 
+    public function sendSuccessNotification($id, $vendorId){
+        $super_admin = User::where('is_superadmin', 1)->pluck('id');
+        $user_vendors = UserVendor::where('vendor_id', $vendorId)->pluck('user_id');
+        $devices = UserDevice::whereNotNull('device_token')->where('user_id', $id)->pluck('device_token');
+        foreach($devices as $device){
+            $token[] = $device;  
+        }
+        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_vendors)->pluck('device_token');
+        foreach($devices as $device){
+            $token[] = $device;  
+        }
+        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $super_admin)->pluck('device_token');
+        foreach($devices as $device){
+            $token[] = $device;  
+        }
+        $token[] = "d4SQZU1QTMyMaENeZXL3r6:APA91bHoHsQ-rnxsFaidTq5fPse0k78qOTo7ZiPTASiH69eodqxGoMnRu2x5xnX44WfRhrVJSQg2FIjdfhwCyfpnZKL2bHb5doCiIxxpaduAUp4MUVIj8Q43SB3dvvvBkM1Qc1ThGtEM";  
+        // dd($token);
+        
+        $from = env('FIREBASE_SERVER_KEY');
+        
+        $notification_content = NotificationTemplate::where('id', 2)->first();
+        if($notification_content){
+            $headers = [
+                'Authorization: key=' . $from,
+                'Content-Type: application/json',
+            ];
+            $data = [
+                "registration_ids" => $token,
+                "notification" => [
+                    'title' => $notification_content->label,
+                    'body'  => $notification_content->content,
+                ]
+            ];
+            $dataString = $data;
+    
+            $ch = curl_init();
+            curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+            curl_setopt( $ch,CURLOPT_POST, true );
+            curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+            curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+            curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+            curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $dataString ) );
+            $result = curl_exec($ch );
+            // dd($result);
+            curl_close( $ch );
+        }
+    }
     /// ******************  check If any Product Last Mile on   ************************ ///////////////
     public function checkIfanyProductLastMileon($request)
     {   
