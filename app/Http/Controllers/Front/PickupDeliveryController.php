@@ -154,7 +154,6 @@ class PickupDeliveryController extends FrontController{
      /**     * Get Company ShortCode     *     */
      public function getListOfVehicles(Request $request, $cid = 0){
         try{
-           
             if($cid == 0){
                 return response()->json(['error' => 'No record found.'], 404);
             }
@@ -162,16 +161,11 @@ class PickupDeliveryController extends FrontController{
             $langId = Auth::user()->language;
             $category = Category::with(['tags','type'  => function($q){
                             $q->select('id', 'title as redirect_to');
-                        },
-                        'childs.translation'  => function($q) use($langId){
-                            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
-                            ->where('category_translations.language_id', $langId);
-                        },
-                        'translation' => function($q) use($langId){
-                            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
-                            ->where('category_translations.language_id', $langId);
-                        }])
-                        ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
+                        },'childs.translation'  => function($q) use($langId){
+                            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')->where('category_translations.language_id', $langId);
+                        },'translation' => function($q) use($langId){
+                            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')->where('category_translations.language_id', $langId);
+                        }])->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
                         ->where('id', $cid)->first();
             if(!$category){
                 return response()->json(['error' => 'No record found.'], 200);
@@ -201,8 +195,7 @@ class PickupDeliveryController extends FrontController{
                 );
             }
             return $category_details;
-        }
-        else{
+        }else{
             $arr = array();
             return $arr;
         }
@@ -212,25 +205,23 @@ class PickupDeliveryController extends FrontController{
      # get delivery fee from dispatcher 
      public function getDeliveryFeeDispatcher($request,$product=null){
         try {
-                $dispatch_domain = $this->checkIfPickupDeliveryOn();
-                if ($dispatch_domain && $dispatch_domain != false) {
-                            $all_location = array();
-                            $postdata =  ['locations' => $request->locations,'agent_tag' => $product->tags??''];
-                            $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,'content-type' => 'application/json']]);
-                            $url = $dispatch_domain->pickup_delivery_service_key_url;                      
-                            $res = $client->post($url.'/api/get-delivery-fee',
-                                ['form_params' => ($postdata)]
-                            );
-                            $response = json_decode($res->getBody(), true); 
-                            if($response && $response['message'] == 'success'){
-                                return $response['total'];
-                            }
-                    
+            $dispatch_domain = $this->checkIfPickupDeliveryOn();
+            if ($dispatch_domain && $dispatch_domain != false) {
+                $all_location = array();
+                $postdata =  ['locations' => $request->locations,'agent_tag' => $product->tags??''];
+                $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,'content-type' => 'application/json']]);
+                $url = $dispatch_domain->pickup_delivery_service_key_url;                      
+                $res = $client->post($url.'/api/get-delivery-fee',
+                    ['form_params' => ($postdata)]
+                );
+                $response = json_decode($res->getBody(), true); 
+                if($response && $response['message'] == 'success'){
+                    return $response['total'];
                 }
-            }    
-            catch(\Exception $e){
-              
             }
+        }catch(\Exception $e){
+              
+        }
     }
     # check if last mile delivery on 
     public function checkIfPickupDeliveryOn(){
@@ -240,10 +231,6 @@ class PickupDeliveryController extends FrontController{
         else
             return false;
     }
-
-
-
-    
     /**
      * create order for booking
     */

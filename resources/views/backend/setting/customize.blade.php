@@ -131,8 +131,11 @@
                         <div class="col-sm-4 mb-2">
                             <label for="languages">Primary Language</label>
                             <select class="form-control" id="primary_language" name="primary_language">
+                                @php
+                                   $primary_language_id =  $preference->primarylang ? $preference->primarylang->language_id : '';
+                                @endphp
                                 @foreach($languages as $lang)
-                                <option {{(isset($preference) && ($lang->id == $preference->primarylang->language_id))? "selected" : "" }} value="{{$lang->id}}"> {{$lang->name}} </option>
+                                    <option {{(isset($preference) && ($lang->id == $primary_language_id))? "selected" : "" }} value="{{$lang->id}}"> {{$lang->name}} </option>
                                 @endforeach
                             </select>
                         </div>
@@ -140,15 +143,14 @@
                             <label for="languages">Additional Languages</label>
                             <select class="form-control select2-multiple" id="languages" name="languages[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
                                 @foreach($languages as $lang)
-                                @if($lang->id != $preference->primarylang->language_id)
-                                <option value="{{$lang->id}}" {{ (isset($preference) && in_array($lang->id, $cli_langs))? "selected" : "" }}> {{$lang->name}} </option>
+                                @if($lang->id != $primary_language_id)
+                                    <option value="{{$lang->id}}" {{ (isset($preference) && in_array($lang->id, $cli_langs))? "selected" : "" }}> {{$lang->name}} </option>
                                 @endif
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-sm-4 mb-2">
                             <label for="primary_currency">Primary Currency</label>
-
                             <select class="form-control" id="primary_currency" name="primary_currency">
                                 @foreach($currencies as $currency)
                                 <option iso="{{$currency->iso_code.' '.$currency->symbol}}" {{ (isset($preference) && $preference->primary->currency->id == $currency->id) ? "selected" : ""}} value="{{$currency->id}}"> {{$currency->iso_code.' '.$currency->symbol}} </option>
