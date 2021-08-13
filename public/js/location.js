@@ -367,12 +367,12 @@ $(document).ready(function () {
                         let banner_template = _.template($('#banner_template').html());
                         let vendors_template = _.template($('#vendors_template').html());
                         let products_template = _.template($('#products_template').html());
-                        $("#brands").append(banner_template({ brands: response.data.brands, type: "Brands" }));
-                        $("#vendors").append(vendors_template({ vendors: response.data.vendors , type: "Vendors" }));
-                        $("#new_products").append(products_template({ products: response.data.new_products, type: "New Product" }));
-                        $("#best_sellers").append(products_template({ products: response.data.new_products, type: "Best Seller" }));
-                        $("#featured_products").append(products_template({ products: response.data.feature_products, type: "Featured Product" }));
-                        $("#on_sale").append(products_template({ products: response.data.on_sale_products, type: "On Sale" }));
+                        $("#brands").append(banner_template({ brands: response.data.brands, type: brand_language }));
+                        $("#vendors").append(vendors_template({ vendors: response.data.vendors , type: vendor_language}));
+                        $("#new_products").append(products_template({ products: response.data.new_products, type: new_product_language }));
+                        $("#best_sellers").append(products_template({ products: response.data.new_products, type: best_seller_product_language}));
+                        $("#featured_products").append(products_template({ products: response.data.feature_products, type: featured_product_language }));
+                        $("#on_sale").append(products_template({ products: response.data.on_sale_products, type: on_sale_product_language }));
                         if (response.data.new_products.length > 0) {
                             $('#new_products1').removeClass('d-none');
                         } else {

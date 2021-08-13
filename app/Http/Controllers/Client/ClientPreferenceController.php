@@ -242,9 +242,6 @@ class ClientPreferenceController extends BaseController{
             $preference->subscription_mode = ($request->has('subscription_mode') && $request->subscription_mode == 'on') ? 1 : 0;
         }
 
-        
-        
-        
         if($request->has('primary_language')){
             $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->where('is_primary', 1)->update(['is_active' => 0, 'is_primary' => 0]);
             $primary_change = ClientLanguage::where('client_code', Auth::user()->code)->where('language_id', $request->primary_language)->update(['is_active' => 1, 'is_primary' => 1]);
@@ -274,7 +271,6 @@ class ClientPreferenceController extends BaseController{
                 }
             }
             
-
             $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->whereNotIn('language_id', $existLanguage)->where('is_primary', 0)->update(['is_active' => 0]);
  
         }
