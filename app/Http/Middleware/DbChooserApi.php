@@ -21,8 +21,7 @@ class DbChooserApi
      */
     
 
-    public function handle($request, Closure $next)
-    {
+    public function handle($request, Closure $next){
         config(['auth.guards.api.provider' => 'users']);
         $header = $request->header();
         $database_name = 'royoorders';

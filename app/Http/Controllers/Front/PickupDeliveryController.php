@@ -15,10 +15,18 @@ use App\Http\Requests\OrderProductRatingRequest;
 use App\Models\{Category,ClientPreference,ClientCurrency,Vendor,ProductVariantSet,Product,LoyaltyCard,UserAddress,Order,OrderVendor,OrderProduct,VendorOrderStatus,Client,Promocode,PromoCodeDetail, VendorCategory};
 use App\Http\Traits\ApiResponser;
 use GuzzleHttp\Client as GCLIENT;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 class PickupDeliveryController extends FrontController{
 	
     use ApiResponser;
+    public function getOrderTrackingDetails(Request $request, $domain = ''){
+        $response = Http::get($request->new_dispatch_traking_url);
+        if($response->status() == 200){
+           return $this->successResponse($response->json()); 
+        }
+    }
+    
     public function postVendorListByCategoryId(Request $request, $domain = '',$category_id = 0){
         $vendor_ids = [];
         $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
