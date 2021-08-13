@@ -54,6 +54,9 @@
             <div class="page-title-box">
                 <h4 class="page-title text-uppercase">{{__('Cart')}}</h4>
             </div>
+            <div class="cart_response mt-3 mb-3">
+                <div class="alert" role="alert"></div>
+            </div>
         </div>
     </div>
 </div>

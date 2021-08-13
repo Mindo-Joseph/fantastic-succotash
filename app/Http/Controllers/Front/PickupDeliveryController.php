@@ -53,9 +53,11 @@ class PickupDeliveryController extends FrontController{
                         }])->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'products.category_id','products.tags')->where('products.id', $product_id)->where('products.is_live', 1)->firstOrFail(); 
         $image_url = $product->media->first() ? $product->media->first()->image->path['image_fit'].'360/360'.$product->media->first()->image->path['image_path'] : '';
         $product->image_url = $image_url;
+        $tags_price = $this->getDeliveryFeeDispatcher($request, $product);
+        $product->original_tags_price = $tags_price;
+        $product->tags_price = number_format($tags_price);
         $product->name = $product->translation->first() ? $product->translation->first()->title :'';
         $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';
-        $product->tags_price = number_format($this->getDeliveryFeeDispatcher($request, $product));
         $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
         foreach ($product->variant as $k => $v) {
             $product->variant[$k]->price = $product->tags_price;
@@ -113,11 +115,13 @@ class PickupDeliveryController extends FrontController{
                     ->where('products.is_live', 1)->distinct()->get(); 
             if(!empty($products)){
                 foreach ($products as $key => $product) {
+                    $tags_price = $this->getDeliveryFeeDispatcher($request, $product);
                     $image_url = $product->media->first() ? $product->media->first()->image->path['image_fit'].'93/93'.$product->media->first()->image->path['image_path'] : '';
                     $product->image_url = $image_url;
                     $product->name = $product->translation->first() ? $product->translation->first()->title :'';
                     $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';
-                    $product->tags_price = number_format($this->getDeliveryFeeDispatcher($request, $product));
+                    $product->original_tags_price = $tags_price;
+                    $product->tags_price = number_format($tags_price);
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                     foreach ($product->variant as $k => $v) {
                         $product->variant[$k]->price = $product->tags_price;
