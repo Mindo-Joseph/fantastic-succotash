@@ -13,25 +13,27 @@
     </div>
 </div>
 @if($action != 'delivery')
-    <div>
-        <input type="hidden" id="latitude" value="{{ $vendor_details['vendor_address']->latitude }}">
-        <input type="hidden" id="longitude" value="{{ $vendor_details['vendor_address']->longitude }}">
-    </div>
-    <label>{{$vendor_details['vendor_address']->address}}</label>
-    <div class="row mt-4 mb-4" id="address_template_main_div">
-        <div class="col-12">
-            <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
-                <i class="fa fa-map-marker" aria-hidden="true"></i> View Location
-            </button>
+    @if(isset($vendor_details['vendor_address']))
+        <div>
+            <input type="hidden" id="latitude" value="{{ $vendor_details['vendor_address']->latitude }}">
+            <input type="hidden" id="longitude" value="{{ $vendor_details['vendor_address']->longitude }}">
         </div>
-    </div>
+        <label>{{$vendor_details['vendor_address']->address}}</label>
+        <div class="row mt-4 mb-4" id="address_template_main_div">
+            <div class="col-12">
+                <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i> View Location
+                </button>
+            </div>
+        </div>
+    @endif
     @if(isset($vendor_details['vendor_tables']))
         <div class="vendor_tables">
             <h4>Book a table</h4>
             @if($vendor_details['vendor_tables']->isNotEmpty())
-                <select name="vendor_table" data-id="{{ $vendor_details['vendor_address']->id }}" class="select2 form-control">
+                <select name="vendor_table" id="vendor_table" data-id="{{ $vendor_details['vendor_address']->id }}" class="form-control">
                     @foreach($vendor_details['vendor_tables'] as $k => $table)
-                        <option value="{{$table->id}}">Category : {{ $table->category->title }} | Table : {{ $table->table_number }} | Seat Capacity : {{ $table->seating_number }}</option>
+                        <option value="{{$table->id}}" {{ ($cart_dinein_table_id == $table->id) ? 'selected' : '' }}>Category : {{ $table->category->title }} | Table : {{ $table->table_number }} | Seat Capacity : {{ $table->seating_number }}</option>
                     @endforeach
                 </select>
             @else

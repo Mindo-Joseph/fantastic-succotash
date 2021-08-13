@@ -110,7 +110,7 @@
                             <span class="minus qty-minus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                 <i class="fa fa-minus" aria-hidden="true"></i>
                             </span>
-                            <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>" readonly>
+                            <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>" >
                             <span class="plus qty-plus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </span>
@@ -747,6 +747,27 @@
             document.getElementById('longitude').value = event.latLng.lng();
         });
         $('#pick_address').modal('show');
+    });
+
+    $(document).delegate("#vendor_table", "change", function(){
+        var table = $(this).val();
+        var vendor = $(this).attr('data-id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "{{ route('addVendorTableToCart') }}",
+            data: {table:table, vendor:vendor},
+            success: function(response) {
+                if (response.status == "Success") {
+                }else{
+                    alert(response.message);
+                }
+            },
+            error: function(error){
+                var response = $.parseJSON(error.responseText);
+                success_error_alert('error', response.message, ".payment_response");
+            }
+        });
     });
 </script>
 @endsection
