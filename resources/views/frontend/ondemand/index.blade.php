@@ -177,6 +177,7 @@
                                 </div> 
                             </div>
                             <a href="?step=1"><span class="btn btn-solid"><</span></a>
+                            <a href="#" id="next-button-ondemand-3" style="display: none;"><span class="btn btn-solid">Continue</span></a>
                             @endif
                             <!--end step 2 html -->
                             <!-- Step Three Start From Here -->

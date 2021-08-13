@@ -319,8 +319,10 @@ $(document).ready(function() {
                         $('#show_plus_minus'+cartproduct_id).find('.input_qty').val(1);
                         $('#show_plus_minus'+cartproduct_id).hide();
                         $('#add_button_href'+cartproduct_id).show();
-                        $("#next-button-ondemand-2").hide();
                         
+                    }
+                    if($('#next-button-ondemand-2').length != 0){
+                        $("#next-button-ondemand-2").hide();
                     }
                 }
             }
@@ -1243,7 +1245,7 @@ $(document).ready(function() {
         let selected_time = $(this).html();
         $("#show_time").html(selected_time);
         $('#message_of_time').html("Your service will start between "+selected_time);
-        
+        $("#next-button-ondemand-3").show(); 
     });
 
     // on demand add to cart 
