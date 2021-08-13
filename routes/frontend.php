@@ -49,7 +49,6 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('page/{slug}','Front\UserhomeController@getExtraPage')->name('extrapage');
 	Route::post('/homePageData','Front\UserhomeController@postHomePageData')->name('homePageData');
 	Route::post('/theme','Front\UserhomeController@setTheme')->name('config.update');
-	Route::post('/homepage','Front\UserhomeController@homepage')->name('homepage');
 	Route::post('getClientPreferences', 'Front\UserhomeController@getClientPreferences')->name('getClientPreferences');
 	Route::post('validateEmail','Front\CustomerAuthController@validateEmail')->name('validateEmail');
 	Route::post('user/loginData','Front\CustomerAuthController@login')->name('customer.loginData');
@@ -66,6 +65,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
 	Route::post('add/product/cart','Front\CartController@postAddToCart')->name('addToCart');
 	Route::post('add/wishlist/cart','Front\CartController@addWishlistToCart')->name('addWishlistToCart');
+	Route::post('add/vendorTable/cart','Front\CartController@addVendorTableToCart')->name('addVendorTableToCart');
 	Route::post('add/product/prescription','Front\CartController@uploadPrescription')->name('cart.uploadPrescription');
 	Route::get('cartProducts','Front\CartController@getCartData')->name('getCartProducts');
 	Route::get('cartDetails','Front\CartController@getCartProducts')->name('cartDetails');
@@ -158,6 +158,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 		Route::post('get-list-of-vehicles-old/{id}', 'Front\PickupDeliveryController@getListOfVehicles');
 		Route::post('vendor/list/{category_id}', 'Front\PickupDeliveryController@postVendorListByCategoryId');
 		Route::post('get-list-of-vehicles/{id}', 'Front\PickupDeliveryController@productsByVendorInPickupDelivery');
+		Route::post('order-tracking-details', 'Front\BookingController@getOrderTrackingDetails')->name('bookingIndex');
 		Route::post('promo-code/verify', 'Front\PickupDeliveryController@postVerifyPromoCode')->name('verify.cab.booking.promo-code');
 	});
 	Route::post('upload-file', 'Front\RatingController@uploadFile')->name('uploadfile');

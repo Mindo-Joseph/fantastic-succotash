@@ -14,28 +14,29 @@ jQuery(window).scroll(function () {
 $(document).ready(function () {
 
     if (window.location.pathname == '/') {
-        $(document).ready(function () {
-            $.ajax({
-                url: client_preferences_url,
-                type: "POST",
-                success: function (response) {
-                    if ($.cookie("age_restriction") != 1) {
-                        if (response.age_restriction == 1) {
-                            $('#age_restriction').modal({backdrop: 'static', keyboard: false});
-                        }
-                    }
-                    if (response.delivery_check == 1) {
-                        getHomePage("", "", "delivery");
-                    }
-                    else if (response.dinein_check == 1) {
-                        getHomePage("", "", "dine_in");
-                    }
-                    else {
-                        getHomePage("", "", "takeaway");
-                    }
-                },
-            });
-        });
+        getHomePage("", "");
+    //     $(document).ready(function () {
+    //         $.ajax({
+    //             url: client_preferences_url,
+    //             type: "POST",
+    //             success: function (response) {
+    //                 if ($.cookie("age_restriction") != 1) {
+    //                     if (response.age_restriction == 1) {
+    //                         $('#age_restriction').modal({backdrop: 'static', keyboard: false});
+    //                     }
+    //                 }
+    //                 if (response.delivery_check == 1) {
+    //                     getHomePage("", "", "delivery");
+    //                 }
+    //                 else if (response.dinein_check == 1) {
+    //                     getHomePage("", "", "dine_in");
+    //                 }
+    //                 else {
+    //                     getHomePage("", "", "takeaway");
+    //                 }
+    //             },
+    //         });
+    //     });
     }
 
     $(".age_restriction_no").click(function () {
@@ -111,8 +112,7 @@ $(document).ready(function () {
                     slidesToScroll: 1,
                     arrows: true
                 }
-            }
-            ]
+            }]
         });       
     }
 
@@ -141,8 +141,7 @@ $(document).ready(function () {
                     slidesToScroll: 1,
                     arrows: true
                 }
-            }
-            ]
+            } ]
         });
         
         $('.booking-time').slick({
@@ -169,8 +168,7 @@ $(document).ready(function () {
                     slidesToScroll: 1,
                     arrows: true
                 }
-            }
-            ]
+            }]
         });
 
         $('.hours-slot').slick({
@@ -197,8 +195,7 @@ $(document).ready(function () {
                     slidesToScroll: 1,
                     arrows: true
                 }
-            }
-            ]
+            }]
         });
         
         $('.materials-slide').slick({
@@ -225,8 +222,7 @@ $(document).ready(function () {
                     slidesToScroll: 1,
                     arrows: true
                 }
-            }
-            ]
+            }]
         });
 
         
@@ -241,9 +237,78 @@ $(document).ready(function () {
         
     });
 
-   
+    if($(".vendor_mods .nav-link").hasClass('active')){
+        var tabs = $('.vendor_mods .nav-link.active').parent('.navigation-tab-item').prevAll().length;
+        if($('body').attr('dir') == 'rtl'){
+            $(".navigation-tab-overlay").css({
+                right: tabs * 130 + "px"
+            });
+        }else{
+            $(".navigation-tab-overlay").css({
+                left: tabs * 100 + "px"
+            });
+        }
+    }
 
-    $("#dinein_tab").click(function () {
+    $(".navigation-tab-item").click(function() {
+        $(".navigation-tab-item").removeClass("active");
+        $(this).addClass("active");
+        if($('body').attr('dir') == 'rtl'){
+            $(".navigation-tab-overlay").css({
+                right: $(this).prevAll().length * 130 + "px"
+            });
+        }else{
+            $(".navigation-tab-overlay").css({
+                left: $(this).prevAll().length * 100 + "px"
+            });
+        }
+
+        let latitude = "";
+        let longitude = "";
+        let type = "";
+        var id = $(this).find('.nav-link').attr('id');
+        if($("#address-latitude").length > 0){
+            latitude = $("#address-latitude").val();
+        }
+        if($("#address-longitude").length > 0){
+            longitude = $("#address-longitude").val();
+        }
+        if(id == "dinein_tab"){
+            type = "dine_in";
+        }else if(id == "takeaway_tab"){
+            type = "takeaway";
+        }else{
+            type = "delivery";
+        }
+        // console.log()
+        if(!$.hasAjaxRunning()){
+            vendorType(latitude, longitude, type);
+        }
+    });
+
+    function vendorType(latitude, longitude, type = "delivery"){
+        $.ajax({
+            type: "get",
+            dataType: 'json',
+            url: cart_details_url,
+            success: function (response) {
+                if (response.data != "") {
+                    let cartProducts = response.data.products;
+                    if (cartProducts != "") {
+                        $("#remove_cart_modal").modal('show');
+                        $("#remove_cart_modal #remove_cart_button").attr("data-cart_id", response.data.id);
+                        $(".nav-tabs.vendor_mods").attr("data-mod", type);
+                    } else {
+                        getHomePage(latitude, longitude, type);
+                    }
+                } else {
+                    getHomePage(latitude, longitude, type);
+                }
+            }
+        });
+    }
+
+    /*$("#dinein_tab").click(function () {
         var url = "dine_in";
         getHomePage("", "", url);
     });
@@ -255,13 +320,17 @@ $(document).ready(function () {
     $("#takeaway_tab").click(function () {
         var url = "takeaway";
         getHomePage("", "", url);
-    });
+    });*/
 
-    function getHomePage(latitude, longitude, url = "delivery") {
+    function getHomePage(latitude, longitude, vtype = "") {
+        if(vtype != ''){
+            vendor_type = vtype;
+        }
+        // console.log(vendor_type);
         let selected_address = $("#address-input").val();
         $("#location_search_wrapper .homepage-address span").text(selected_address).attr({ "title": selected_address, "data-original-title": selected_address });
         $("#edit-address").modal('hide');
-        let ajaxData = { type: url };
+        let ajaxData = { type: vendor_type };
         if ((latitude) && (longitude) && (selected_address)) {
             ajaxData.latitude = latitude;
             ajaxData.longitude = longitude;
@@ -409,7 +478,11 @@ $(document).ready(function () {
                 if (response.status == 'success') {
                     let latitude = $("#address-latitude").val();
                     let longitude = $("#address-longitude").val();
-                    getHomePage(latitude, longitude);
+                    let vendor_mod = "";
+                    if($(".nav-tabs.vendor_mods .nav-link").length > 0){
+                        vendor_mod = $(".nav-tabs.vendor_mods").attr("data-mod");
+                    }
+                    getHomePage(latitude, longitude, vendor_mod);
                 }
             }
         });

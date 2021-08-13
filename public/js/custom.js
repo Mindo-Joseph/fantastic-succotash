@@ -87,9 +87,10 @@ $(document).ready(function() {
     //         $('.vehical-container').attr('style', 'height:calc(100vh - '+minheight+' !important');
     //     });
     // // Cabbooking Js Code  
+
      
    // top Moveble Tabbar on top js code
-    $(".navigation-tab-item").click(function() {
+    /*$(".navigation-tab-item").click(function() {
         $(".navigation-tab-item").removeClass("active");
         $(this).addClass("active");
         if($('body').attr('dir') == 'rtl'){
@@ -101,14 +102,14 @@ $(document).ready(function() {
                 left: $(this).prevAll().length * 100 + "px"
             });
         }
-    });
+    });*/
   
     if($('#cart_main_page').length > 0){
         let address_checked = $("input:radio[name='address_id']").is(":checked");
         if(address_checked){
-            $('#order_palced_btn').prop('disabled', false);
+            $('#order_placed_btn').prop('disabled', false);
         }else{
-            $('#order_palced_btn').prop('disabled', true);
+            $('#order_placed_btn').prop('disabled', true);
         }
         $("form").submit(function(e){
             let address_id = $("input:radio[name='address_id']").is(":checked");
@@ -312,6 +313,13 @@ $(document).ready(function() {
                     if($("[id^=cart_product_]").length == 0){
                         $(".shopping-cart").html('');
                     }
+
+                    if($('#show_plus_minus'+cartproduct_id).length != 0)
+                    {
+                       // $('#show_plus_minus'+cartproduct_id).next().val(0);
+                        $('#show_plus_minus'+cartproduct_id).hide();
+                        $('#add_button_href'+cartproduct_id).show();
+                    }
                 }
             }
         });
@@ -319,7 +327,7 @@ $(document).ready(function() {
     
     $(document).on("change","input:radio[name='address_id']",function() {
         if($(this).val()){
-            $('#order_palced_btn').prop('disabled', false);
+            $('#order_placed_btn').prop('disabled', false);
             if($("#cart_table").length > 0){
                 $(".spinner-box").show();
                 $("#cart_table").hide();
@@ -327,7 +335,7 @@ $(document).ready(function() {
             cartHeader($(this).val());
         }
     });
-    $(document).on("click","#order_palced_btn",function() {
+    $(document).on("click","#order_placed_btn",function() {
         $('.alert-danger').html('');
         if((typeof guest_cart != undefined) && (guest_cart == 1)){
             window.location.href = login_url;
@@ -439,7 +447,7 @@ $(document).ready(function() {
                 }else{
                     if(path.indexOf("cart") !== -1){
                         success_error_alert('error', resp.message, "#stripe-payment-form .payment_response");
-                        $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                     }
                     else if(path.indexOf("wallet") !== -1){
                         success_error_alert('error', resp.message, "#wallet_topup_form .payment_response");
@@ -455,7 +463,7 @@ $(document).ready(function() {
                 var response = $.parseJSON(error.responseText);
                 if(path.indexOf("cart") !== -1){
                     success_error_alert('error', response.message, "#stripe-payment-form .payment_response");
-                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                 }
                 else if(path.indexOf("wallet") !== -1){
                     success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
@@ -497,7 +505,7 @@ $(document).ready(function() {
                 }else{
                     if(cartElement.length > 0){
                         success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                        $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                     }
                     else if(walletElement.length > 0){
                         success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
@@ -509,7 +517,7 @@ $(document).ready(function() {
                 var response = $.parseJSON(error.responseText);
                 if(cartElement.length > 0){
                     success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                 }
                 else if(walletElement.length > 0){
                     success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
@@ -521,9 +529,9 @@ $(document).ready(function() {
     function paymentSuccessViaPaypal(amount, token, payer_id, path, tip=0){
         let address_id = 0;
         if(path.indexOf("cart") !== -1){
-            $('#order_palced_btn').trigger('click');
+            $('#order_placed_btn').trigger('click');
             $('#v-pills-paypal-tab').trigger('click');
-            $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
+            $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
             address_id = $("input:radio[name='address_id']:checked").val();
         }
         else if(path.indexOf("wallet") !== -1){
@@ -547,7 +555,7 @@ $(document).ready(function() {
                 }else{
                     if(path.indexOf("cart") !== -1){
                         success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                        $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                     }
                     else if(path.indexOf("wallet") !== -1){
                         success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
@@ -559,7 +567,7 @@ $(document).ready(function() {
                 var response = $.parseJSON(error.responseText);
                 if(path.indexOf("cart") !== -1){
                     success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
-                    $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                 }
                 else if(path.indexOf("wallet") !== -1){
                     success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
@@ -568,7 +576,7 @@ $(document).ready(function() {
             }
         });
     }
-    function placeOrder(address_id, payment_option_id, transaction_id, tip = 0){
+    function placeOrder(address_id = 0, payment_option_id, transaction_id, tip = 0){
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -578,18 +586,18 @@ $(document).ready(function() {
                 if (response.status == "Success") {
                     window.location.href = base_url+'/order/success/'+response.data.order.id;
                 }else{
-                    $("#order_palced_btn, .proceed_to_pay").attr("disabled", false);
+                    $("#order_placed_btn, .proceed_to_pay").attr("disabled", false);
                 }
             },
             error: function(error){
                 var response = $.parseJSON(error.responseText);
                 success_error_alert('error', response.message, ".payment_response");
-                $("#order_palced_btn, .proceed_to_pay").removeAttr("disabled");
+                $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
             }
         });
     }
     $(document).on("click", ".proceed_to_pay", function() {
-        $("#order_palced_btn, .proceed_to_pay").attr("disabled", true);
+        $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
         let address_id = $("input:radio[name='address_id']:checked").val();
         let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
         let tip = $("#cart_tip_amount").val();
@@ -599,7 +607,7 @@ $(document).ready(function() {
             stripe.createToken(card).then(function(result) {
                 if (result.error) {
                     $('#stripe_card_error').html(result.error.message);
-                    $("#order_palced_btn, .proceed_to_pay").attr("disabled", false);
+                    $("#order_placed_btn, .proceed_to_pay").attr("disabled", false);
                 } else {
                     paymentViaStripe(result.token.id, address_id, payment_option_id);
                 }
@@ -855,12 +863,16 @@ $(document).ready(function() {
                             if($('#cart_main_page').length != 0){
                                 let cart_template = _.template($('#cart_template').html());
                                 $("#cart_table").append(cart_template({cart_details:cart_details}));
+
+                                $('#placeorder_form .left_box').html('');
+                                $('#placeorder_form .left_box').html(cart_details.left_section);
+
                                 if(cart_details.deliver_status == 0){
-                                    $("#order_palced_btn").attr("disabled", true);
-                                    $("#order_palced_btn").addClass("d-none");
+                                    $("#order_placed_btn").attr("disabled", true);
+                                    $("#order_placed_btn").addClass("d-none");
                                 }else{
-                                    $("#order_palced_btn").removeAttr("disabled");
-                                    $("#order_palced_btn").removeClass("d-none");
+                                    $("#order_placed_btn").removeAttr("disabled");
+                                    $("#order_placed_btn").removeClass("d-none");
                                 }
                             }
                             cartTotalProductCount();
@@ -879,9 +891,18 @@ $(document).ready(function() {
                     $(".spinner-box").hide();
                     $("#cart_table").show();
                 }
+
+                if($("#header_cart_main_ul_ondemand").length > 0){
+                    $(".spinner-box").hide();
+                    $("#header_cart_main_ul_ondemand").show();
+                    $(".number .qty-minus-ondemand .fa").removeAttr("class").addClass("fa fa-minus");
+                    $(".number .qty-plus-ondemand .fa").removeAttr("class").addClass("fa fa-plus");
+                }
+                
                 if($(".number .fa-spinner fa-pulse").length > 0){
                     $(".number .qty-minus .fa").removeAttr("class").addClass("fa fa-minus");
                     $(".number .qty-plus .fa").removeAttr("class").addClass("fa fa-plus");
+                    
                 }
             }
         });
@@ -1030,7 +1051,7 @@ $(document).ready(function() {
                     $('#add_new_address_form').hide();
                     let address_template = _.template($('#address_template').html());
                     if(address.length > 0){
-                        $('#order_palced_btn').attr('disabled', false);
+                        $('#order_placed_btn').attr('disabled', false);
                         $("#address_template_main_div").append(address_template({address:response.address}));
                         cartHeader(response.address.id);
                     }
@@ -1057,22 +1078,7 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on("click",".add_on_demand",function() {
-        
-        let that = $(this);
-       
-        var ajaxCall = 'ToCancelPrevReq';
-        var vendor_id = that.data("vendor_id");
-        var product_id = that.data("product_id");
-        var add_to_cart_url = that.data("add_to_cart_url");
-        var variant_id = that.data("variant_id");
-        var addonids = [];
-        var addonoptids = [];
-        if(!$.hasAjaxRunning()){
-            addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id);
-        }
-        
-    });
+
 
     
 
@@ -1105,8 +1111,82 @@ $(document).ready(function() {
         });
     }
 
-    // on demand add to cart 
-    function addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id) {
+   
+    // **********************************************   all function for ondemand services   *****************************************  ////////////////////////
+
+    $(document).on("click",".add_on_demand",function() {
+        
+        let that = $(this);
+       
+        var ajaxCall = 'ToCancelPrevReq';
+        var vendor_id = that.data("vendor_id");
+        var product_id = that.data("product_id");
+        var add_to_cart_url = that.data("add_to_cart_url");
+        var variant_id = that.data("variant_id");
+        var addonids = [];
+        var addonoptids = [];
+        var show_plus_minus = "#show_plus_minusa"+product_id;
+        if(!$.hasAjaxRunning()){
+            addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id,show_plus_minus,that);
+            $("#show_plus_minusa"+product_id).show();
+        }
+        
+    });
+
+    $(document).on('click', '.qty-minus-ondemand', function() {
+        let base_price = $(this).data('base_price');
+        let cartproduct_id = $(this).attr("data-id");
+        let qty = $('#quantity_ondemand_'+cartproduct_id).val();
+        $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
+        if (qty > 1) {
+            $('#quantity_ondemand_'+cartproduct_id).val(--qty);
+            updateQuantityOnDemand(cartproduct_id, qty, base_price);
+        }else{
+            // alert('remove this product');
+            $('#remove_item_modal').modal('show');
+            let vendor_id = $(this).data('vendor_id');
+            $('#remove_item_modal #vendor_id').val(vendor_id);
+            $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
+           
+          
+        }
+    });
+    $(document).on('click', '.qty-plus-ondemand', function() {
+        let base_price = $(this).data('base_price');
+        let cartproduct_id = $(this).attr("data-id");
+        let qty = $('#quantity_ondemand_'+cartproduct_id).val();
+        $('#quantity_ondemand_'+cartproduct_id).val(++qty);
+        $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
+        updateQuantityOnDemand(cartproduct_id, qty, base_price);
+    });
+
+
+    function updateQuantityOnDemand(cartproduct_id, quantity, base_price, iconElem='') {
+        if(iconElem != ''){
+            let elemClasses = $(iconElem).attr("class"); 
+            $(iconElem).removeAttr("class").addClass("fa fa-spinner fa-pulse");
+        }
+        ajaxCall = $.ajax({
+            type: "post",
+            dataType: "json",
+            url: update_qty_url,
+            data: {"quantity": quantity, "cartproduct_id": cartproduct_id},
+            success: function(response) {
+                var latest_price = parseInt(base_price) * parseInt(quantity);
+                $('#product_total_amount_'+cartproduct_id).html('$'+latest_price);
+                cartHeader();
+            },
+            error: function(err){
+                if($(".number .fa-spinner fa-pulse").length > 0){
+                    $(".number .qty-minus .fa").removeAttr("class").addClass("fa fa-minus");
+                    $(".number .qty-plus .fa").removeAttr("class").addClass("fa fa-plus");
+                }
+            }
+        });
+    }
+
+     // on demand add to cart 
+     function addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id,show_plus_minus,that) {
         $.ajax({
             type: "post",
             dataType: "json",
@@ -1123,7 +1203,14 @@ $(document).ready(function() {
                 if(response.status == 'success'){
                     $(".shake-effect").effect( "shake", {times:3}, 1200 );
                     cartHeader();
-                   
+                     $(show_plus_minus+" .minus").attr('data-id',response.cart_product_id);
+                     $(show_plus_minus+" .plus").attr('data-id',response.cart_product_id);
+                     $(show_plus_minus+" .input_qty").attr('id',"quantity_ondemand_"+response.cart_product_id);
+                     $(show_plus_minus+" .qty-minus-ondemand").attr('data-parent_div_id',"show_plus_minusa"+response.cart_product_id);
+                     $(show_plus_minus).attr('id',"show_plus_minusa"+response.cart_product_id);
+                     $(that).attr('id',"add_button_href"+response.cart_product_id);
+                     $(that).hide();
+                     $(that).next().show();
                 }else{
                     alert(response.message);
                 }
@@ -1137,9 +1224,8 @@ $(document).ready(function() {
     }
 
 
-    // show cart data for on demand services 
-   
-    /// END show cart data for on demand services
+
+    /// ***************************************       END show cart data for on demand services    ***************************************************************///////////////// 
 
 
 

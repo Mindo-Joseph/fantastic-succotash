@@ -4,6 +4,89 @@ $(document).ready(function () {
     $(document).on("click","#show_dir",function() {
         initMap2();
     });
+    $(document).on("click", "#pickup_now, #pickup_later",function() {
+        var schedule_datetime = '';
+        if($(this).data('rel') =='pickup_later'){
+            let temp_schedule_datetime = $('#schedule_datetime').val();
+            if(!temp_schedule_datetime){
+                $('#schedule_datetime_main_div').show();
+                return false;
+            }
+            schedule_datetime = moment(temp_schedule_datetime).format('YYYY-MM-DD HH:MM')
+        }
+        var tasks = [];
+        $('#pickup_now').attr('disabled', true);
+        $('#pickup_later').attr('disabled', true);
+        var pickup_location_names = $('input[name="pickup_location_name[]"]').map(function(){return this.value;}).get();
+        var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){return this.value;}).get();
+        var pickup_location_latitudes = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
+        var pickup_location_longitudes = $('input[name="pickup_location_longitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_latitudes = $('input[name="destination_location_latitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_longitudes = $('input[name="destination_location_longitude[]"]').map(function(){return this.value;}).get();
+        $(pickup_location_latitudes).each(function(index, latitude) {
+            var sample_array = {};
+            sample_array.barcode = null;
+            sample_array.task_type_id = 1;
+            sample_array.post_code = null;
+            sample_array.short_name = null;
+            sample_array.latitude = latitude;
+            sample_array.appointment_duration = null;
+            sample_array.address = pickup_location_names[index];
+            sample_array.longitude = pickup_location_longitudes[index];
+            tasks.push(sample_array);
+        });
+        $(destination_location_latitudes).each(function(index, latitude) {
+            var sample_array = {};
+            sample_array.barcode = null;
+            sample_array.task_type_id = 1;
+            sample_array.post_code = null;
+            sample_array.short_name = null;
+            sample_array.latitude = latitude;
+            sample_array.appointment_duration = null;
+            sample_array.address = destination_location_names[index];
+            sample_array.longitude = destination_location_longitudes[index];
+            tasks.push(sample_array);
+        });
+        let amount = $(this).data('amount');
+        let product_image = $(this).data('image');
+        let vendor_id = $(this).data('vendor_id');
+        let coupon_id = $(this).data('coupon_id');
+        let task_type = $(this).data('task_type');
+        let product_id = $(this).data('product_id');
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: cab_booking_create_order,
+            data: {payment_option_id: 1, vendor_id: vendor_id, product_id: product_id,coupon_id: coupon_id, amount: amount, tasks: tasks, task_type:task_type, schedule_datetime:schedule_datetime},
+            success: function(response) {
+                $('#pickup_now').attr('disabled', false);
+                $('#pickup_later').attr('disabled', false);
+                if(response.status == '200'){
+                    $('#cab_detail_box').html('');
+                    let order_success_template = _.template($('#order_success_template').html());
+                    $("#cab_detail_box").append(order_success_template({result: response.data, product_image: product_image})).show();
+                    setInterval(function(){
+                        getDriverDetails(response.data.dispatch_traking_url)
+                    },3000);
+                }
+            }
+        });
+    });
+    function getDriverDetails(dispatch_traking_url) {
+        var new_dispatch_traking_url = dispatch_traking_url.replace('/order/','/order-details/')
+        $.ajax({
+            url: new_dispatch_traking_url,
+            dataType: "jsonp",
+            crossDomain: true,
+            success: function( response ) {
+                console.log( response ); // server response
+            }
+        });
+        // $.get(new_dispatch_traking_url, function( data ) {
+        //     console.log('i mmmmm here'+data);
+        // });
+    }
+
     $(document).on("click", ".add-more-location",function() {
         let random_id = Date.now();
         let destination_location_template = _.template($('#destination_location_template').html());
@@ -17,7 +100,7 @@ $(document).ready(function () {
         }
     });
     $(document).on("click", ".location-inputs .apremove",function() {
-        if('#dots_'+$(this).data('rel')){
+        if($('#dots_'+$(this).data('rel')).length != 0){
             $('#dots_'+$(this).data('rel')).remove();
             var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
                return this.value;
@@ -49,58 +132,84 @@ $(document).ready(function () {
         displayLocation(latitude, longitude);
     });
     function getVendorList(){
-      let pickup_location = $('#pickup_location').val();
-      let destination_location = $('#destination_location').val();
-      if(pickup_location && destination_location){
-        $('.location-list').hide();
-        $.ajax({
-            data: {},
-            type: "POST",
-            dataType: 'json',
-            url: autocomplete_urls,
-            success: function(response) {
-                if(response.status == 'Success'){
-                    $('#vendor_main_div').html('');
-                    if(response.data.length != 0){
-                        let vendors_template = _.template($('#vendors_template').html());
-                        $("#vendor_main_div").append(vendors_template({results: response.data})).show();
-                        if(response.data.length == 1){
-                            $('.vendor-list').trigger('click');
-                            $('.table-responsive').remove();
-                        }else{
-                            $('.vendor-list').first().trigger('click');
-                        }
-                    }else{
-                        $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
-                    }
-                }
-            }
-        });
-      }
-    }
-    $(document).on("click",".vendor-list",function() {
         var locations = [];
         let vendor_id = $(this).data('vendor');
-        var latitudes = $('input[name="latitude[]"]').map(function(){
-           return this.value;
-        }).get();
-        var longitudes = $('input[name="longitude[]"]').map(function(){
-           return this.value;
-        }).get();
-        $(latitudes).each(function(index, latitude) {
+        var pickup_location_latitude = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
+        var pickup_location_longitude = $('input[name="pickup_location_longitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_latitudes = $('input[name="destination_location_latitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_longitudes = $('input[name="destination_location_longitude[]"]').map(function(){return this.value;}).get();
+        $(pickup_location_latitude).each(function(index, latitude) {
             var data = {};
             data.latitude = latitude;
-            data.longitude = longitudes[index];
+            data.longitude = pickup_location_longitude[index];
+            locations.push(data);
+        });
+        $(destination_location_latitudes).each(function(index, destination_location_latitude) {
+            var data = {};
+            data.latitude = destination_location_latitude;
+            data.longitude = destination_location_longitudes[index];
             locations.push(data);
         });
         var post_data = JSON.stringify(locations);
+        let pickup_location = $('#pickup_location').val();
+        let destination_location = $('#destination_location').val();
+        if(pickup_location && destination_location){
+            $('.location-list').hide();
+            $('.cab-booking-main-loader').show();
+            $.ajax({
+                data: {locations: post_data},
+                type: "POST",
+                dataType: 'json',
+                url: autocomplete_urls,
+                success: function(response) {
+                    if(response.status == 'Success'){
+                        $('.cab-booking-main-loader').hide();
+                        $('#vendor_main_div').html('');
+                        if(response.data.length != 0){
+                            let vendors_template = _.template($('#vendors_template').html());
+                            $("#vendor_main_div").append(vendors_template({results: response.data})).show();
+                            if(response.data.length == 1){
+                                $('.vendor-list').trigger('click');
+                                $('.table-responsive').remove();
+                            }else{
+                                $('.vendor-list').first().trigger('click');
+                            }
+                        }else{
+                            $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                        }
+                    }
+                }
+            });
+        }
+    }
+    $(document).on("click",".vendor-list",function() {
+        $('.cab-booking-main-loader').show();
+        var locations = [];
+        let vendor_id = $(this).data('vendor');
+        var pickup_location_latitude = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
+        var pickup_location_longitude = $('input[name="pickup_location_longitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_latitudes = $('input[name="destination_location_latitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_longitudes = $('input[name="destination_location_longitude[]"]').map(function(){return this.value;}).get();
+        $(pickup_location_latitude).each(function(index, latitude) {
+            var data = {};
+            data.latitude = latitude;
+            data.longitude = pickup_location_longitude[index];
+            locations.push(data);
+        });
+        $(destination_location_latitudes).each(function(index, destination_location_latitude) {
+            var data = {};
+            data.latitude = destination_location_latitude;
+            data.longitude = destination_location_longitudes[index];
+            locations.push(data);
+        });
         $.ajax({
             type: "POST",
             dataType: 'json',
-            data: {locations:post_data},
+            data: {locations:locations},
             url: get_vehicle_list+'/'+vendor_id,
             success: function(response) {
                 if(response.status == 'Success'){
+                    $('.cab-booking-main-loader').hide();
                     $('#search_product_main_div').html('');
                     if(response.data.length != 0){
                         let products_template = _.template($('#products_template').html());
@@ -189,11 +298,28 @@ $(document).ready(function () {
         $('.address-form').removeClass('d-none');
     });
     $(document).on("click",".vehical-view-box",function() {
+        var locations = [];
         let product_id = $(this).data('product_id');
+        var pickup_location_latitude = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
+        var pickup_location_longitude = $('input[name="pickup_location_longitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_latitudes = $('input[name="destination_location_latitude[]"]').map(function(){return this.value;}).get();
+        var destination_location_longitudes = $('input[name="destination_location_longitude[]"]').map(function(){return this.value;}).get();
+        $(pickup_location_latitude).each(function(index, latitude) {
+            var data = {};
+            data.latitude = latitude;
+            data.longitude = pickup_location_longitude[index];
+            locations.push(data);
+        });
+        $(destination_location_latitudes).each(function(index, destination_location_latitude) {
+            var data = {};
+            data.latitude = destination_location_latitude;
+            data.longitude = destination_location_longitudes[index];
+            locations.push(data);
+        });
         $.ajax({
-            data: {},
             type: "POST",
             dataType: 'json',
+            data: {locations:locations},
             url: get_product_detail+'/'+product_id,
             success: function(response) {
                 if(response.status == 'Success'){

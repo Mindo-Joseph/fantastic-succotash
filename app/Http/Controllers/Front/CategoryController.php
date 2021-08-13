@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{Currency, Banner, Category, Brand, Product, Celebrity, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea, UserAddress,Country,Cart,CartProduct,SubscriptionInvoicesUser,ClientPreference,LoyaltyCard,Order};
-class CategoryController extends FrontController
-{
+
+class CategoryController extends FrontController{
     private $field_status = 2;
     
     /** 
@@ -208,6 +208,15 @@ class CategoryController extends FrontController
             $celebs = Celebrity::orderBy('name', 'asc')->paginate($pagiNate);
             return $celebs;
         }else{
+            $user = Auth::user();
+            if ($user) {
+                $column = 'user_id';
+                $value = $user->id;
+            } else {
+                $column = 'unique_identifier';
+                $value = session()->get('_token');
+            }
+      
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
             $vendors = array();
             if(Session::has('vendors')){
@@ -217,10 +226,14 @@ class CategoryController extends FrontController
                         'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
-                        'variant' => function($q) use($langId){
+                        'variant' => function($q) use($langId,$column,$value){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode','id');
-                            $q->groupBy('product_id');
-                        },
+                            $q->groupBy('product_id')->with(['checkIfInCart' => function($q1) use($column,$value){
+                                $q1->whereHas('cart',function($qset)use($column,$value){$qset->where($column,$value);});
+                            }]);
+                        },'variant.checkIfInCart' => function($q1) use($column,$value){
+                                $q1->whereHas('cart',function($qset)use($column,$value){$qset->where($column,$value);});
+                                }
                     ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating', 'products.inquiry_only')->where('products.is_live', 1)->where('category_id', $category_id);
             if(count($vendors) > 0){
                 $products = $products->whereIn('products.vendor_id', $vendors);

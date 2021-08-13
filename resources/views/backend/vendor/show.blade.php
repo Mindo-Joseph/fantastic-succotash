@@ -509,7 +509,7 @@
                             </select>
                         </div>
                         <div class="col-sm-2 mb-2">
-                            {!! Form::label('title', 'Seating Number',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'Seat Capacity',['class' => 'control-label']) !!}
                             {!! Form::number('seating_number', '1',['class' => 'form-control', 'min' => '1', 'onkeypress' => 'return isNumberKey(event)', 'placeholder' => 'Seating Number', 'required'=>'required']) !!}
                         </div>
                         <input type="hidden" name="vendor_id" value="{{ $vendor->id }}" />
@@ -695,7 +695,6 @@
             },
             url: "{{ route('vendor_table_edit') }}",
             success: function(response) {
-                console.log(response);
                 if (response.status = 'Success') {
                     var image = response.data.image.image_fit + "100/100" + response.data.image.image_path;
                     $("#edit_table_form .dropify-preview .dropify-render").html("<img src='" + image + "'/>").show();

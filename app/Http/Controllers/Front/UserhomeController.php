@@ -113,8 +113,8 @@ class UserhomeController extends FrontController{
         foreach ($brands as $brand) {
             $brand->redirect_url = route('brandDetail', $brand->id);
         }
-        Session::forget('type');
-        Session::put('type', $request->type);
+        Session::forget('vendorType');
+        Session::put('vendorType', $request->type);
         $vendors = Vendor::with('products')->select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo','slug')->where($request->type, 1);
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
@@ -201,53 +201,6 @@ class UserhomeController extends FrontController{
             'on_sale_products' => $on_sale_products, 
         ];
         return $this->successResponse($data);
-    }
-    public function homepage(Request $request)
-    {
-        try{
-            $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id', 'pharmacy_check')->first();
-            Session::put('deliveryAddress', $request->selectedAddress);
-            Session::put('latitude', $request->latitude);
-            Session::put('longitude', $request->longitude);
-            $curId = Session::get('customerCurrency');
-            $latitude = $request->latitude;
-            $longitude = $request->longitude;
-            $user_geo[] = $latitude;
-            $user_geo[] = $longitude;
-            $vendors = array();
-            $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'logo');
-            if( ($preferences->is_hyperlocal == 1) && (!empty($latitude)) && (!empty($longitude)) ){
-                $vendorData = $vendorData->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                        $query->select('vendor_id')
-                        ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                });
-            }
-            $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
-            $isVendorArea = 0;
-            $langId = (isset(Auth::user()->language)) ? Auth::user()->language : Session::get('customerLanguage');
-            $homeData = array();
-            $homeData['reqData'] = $request->all();
-            $homeData['vendors'] = $vendorData;
-            $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
-                            $q->select('brand_id', 'title')->where('language_id', $langId);
-                            }])->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
-            foreach($vendorData as $key => $data){
-                $vendors[] = $data->id;
-            }
-            Session::put('vendors', $vendors);
-            $navCategories = $this->categoryNav($langId);
-            Session::put('navCategories', $navCategories);
-            $homeData['navCategories'] = $navCategories;
-            $fp = $this->vendorProducts($vendors, $langId, $curId, 'is_featured', 'delivery');
-            $np = $this->vendorProducts($vendors, $langId, $curId, 'is_new', 'delivery');
-            $onSP = $this->vendorProducts($vendors, $langId, 'USD', "", 'delivery');
-            $homeData['featuredProducts'] = ($fp->count() > 0) ? array_chunk($fp->toArray(), ceil(count($fp) / 2)) : $fp;
-            $homeData['newProducts'] = ($np->count() > 0) ? array_chunk($np->toArray(), ceil(count($np) / 2)) : $np;
-            $homeData['onSaleProducts'] = ($onSP->count() > 0) ? array_chunk($onSP->toArray(), ceil(count($onSP) / 2)) : $onSP;
-            return $this->successResponse($homeData);
-        } catch (Exception $e) {
-            return $this->errorResponse($e->getMessage(), $e->getCode());
-        }
     }
 
     public function vendorProducts($venderIds, $langId, $currency = 'USD', $where = '', $type)

@@ -20,15 +20,15 @@
 <script type="text/javascript">
     var is_hyperlocal = 0;
     var selected_address = 0;
+    var vendor_type = "delivery";
+    @if(Session::has('vendorType'))
+        vendor_type = "{{Session::get('vendorType')}}";
+    @endif
     var autocomplete_url = "{{ route('autocomplete') }}";
     let stripe_publishable_key = '{{ $stripe_publishable_key }}';
     var login_url = "{{ route('customer.login') }}";
     var home_page_url = "{{ route('userHome') }}";
     let home_page_url2 = home_page_url.concat("/");
-    if((home_page_url != window.location.href) && (home_page_url2 != window.location.href)){
-        $('.vendor_mods').hide();}
-    else{
-        $('.vendor_mods').show();}
     var add_to_whishlist_url = "{{ route('addWishlist') }}";
     var show_cart_url = "{{ route('showCart') }}";
     var home_page_data_url = "{{ route('homePageData') }}";
@@ -41,6 +41,11 @@
     var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
     var change_primary_data_url = "{{ route('changePrimaryData') }}";
     var url1 = "{{ route('config.update') }}";
+    // if((home_page_url != window.location.href) && (home_page_url2 != window.location.href)){
+    //     $('.vendor_mods').hide();}
+    // else{
+    //     $('.vendor_mods').show();}
+        
     @if(Session::has('selectedAddress'))
         selected_address = 1;
     @endif
