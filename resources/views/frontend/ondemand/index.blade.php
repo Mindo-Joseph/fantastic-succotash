@@ -4,7 +4,7 @@
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
-
+ 
 <section class="home-serivces">
     <div class="container">
         <div class="row mb-5">
@@ -38,9 +38,11 @@
                         <div class="card-box">
                             <ul>
                                  @if(!empty($category->childs) && count($category->childs) > 0)
-                                    <li><a class="btn btn-solid" href="#">{{$cate['translation_name']}}</a></li>
-
-                                @endif
+                                    @foreach ($category->childs as $childs)
+                                        <li><a class="btn btn-solid" href="#">{{ $childs['translation_name'] ?? ''}}</a></li>
+                                    @endforeach
+                                    
+                                 @endif
                             </ul>
                             
                             @if(app('request')->input('step') == '1' || empty(app('request')->input('step')))

@@ -132,7 +132,7 @@ class CategoryController extends FrontController{
                 $user_addresses = UserAddress::get();
                 return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories]);
             }
-        }elseif($page == 'on demand service'){ 
+        }elseif($page == 'on demand service'){
             $cartDataGet = $this->getCartOnDemand($request);
             return view('frontend.ondemand.index')->with(['time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }else{
@@ -142,7 +142,6 @@ class CategoryController extends FrontController{
                 abort(404);
             }
         }
-        
     }
     
 
