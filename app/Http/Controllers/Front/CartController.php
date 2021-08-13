@@ -155,8 +155,8 @@ class CartController extends FrontController
                     if ($checkVendorId) {
                         CartProduct::where('cart_id', $cart_detail->id)->delete();
                     }else{
-                        $cartVendor = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', $request->vendor_id)->first();
-                        $cart_product_detail['vendor_dinein_table_id'] = ($cartVendor) ? $cartVendor->vendor_dinein_table_id : NULL;
+                        $checkVendorTableAdded = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', $request->vendor_id)->whereNotNull('vendor_dinein_table_id')->first();
+                        $cart_product_detail['vendor_dinein_table_id'] = ($checkVendorTableAdded) ? $checkVendorTableAdded->vendor_dinein_table_id : NULL;
                     }
                 }
             }

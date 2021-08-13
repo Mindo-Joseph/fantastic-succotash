@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\Web\OrderProductRatingRequest;
 use App\Http\Requests\Web\OrderProductReturnRequest;
-use App\Models\{Client, ClientPreference, EmailTemplate, Order,OrderProductRating,VendorOrderStatus,OrderProduct,OrderProductRatingFile,ReturnReason,OrderReturnRequest,OrderReturnRequestFile, OrderVendor, OrderVendorProduct, User};
+use App\Models\{Client, ClientPreference, EmailTemplate, NotificationTemplate, Order,OrderProductRating,VendorOrderStatus,OrderProduct,OrderProductRatingFile,ReturnReason,OrderReturnRequest,OrderReturnRequestFile, OrderVendor, OrderVendorProduct, User, UserDevice, UserVendor};
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 
@@ -123,6 +123,7 @@ class ReturnOrderController extends FrontController{
        
             }
             if(isset($returns)) {
+                $this->sendSuccessNotification($user->id, $order_details->vendor_id);
                 $this->sendSuccessEmail($request);
                 return $this->successResponse($returns,'Return Submitted.');
             }
@@ -130,6 +131,54 @@ class ReturnOrderController extends FrontController{
             
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 400);
+        }
+    }
+
+    public function sendSuccessNotification($id, $vendorId){
+        $super_admin = User::where('is_superadmin', 1)->pluck('id');
+        $user_vendors = UserVendor::where('vendor_id', $vendorId)->pluck('user_id');
+        $devices = UserDevice::whereNotNull('device_token')->where('user_id', $id)->pluck('device_token');
+        foreach($devices as $device){
+            $token[] = $device;  
+        }
+        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_vendors)->pluck('device_token');
+        foreach($devices as $device){
+            $token[] = $device;  
+        }
+        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $super_admin)->pluck('device_token');
+        foreach($devices as $device){
+            $token[] = $device;  
+        }
+        $token[] = "d4SQZU1QTMyMaENeZXL3r6:APA91bHoHsQ-rnxsFaidTq5fPse0k78qOTo7ZiPTASiH69eodqxGoMnRu2x5xnX44WfRhrVJSQg2FIjdfhwCyfpnZKL2bHb5doCiIxxpaduAUp4MUVIj8Q43SB3dvvvBkM1Qc1ThGtEM";  
+        // dd($token);
+        
+        $from = env('FIREBASE_SERVER_KEY');
+        
+        $notification_content = NotificationTemplate::where('id', 3)->first();
+        if($notification_content){
+            $headers = [
+                'Authorization: key=' . $from,
+                'Content-Type: application/json',
+            ];
+            $data = [
+                "registration_ids" => $token,
+                "notification" => [
+                    'title' => $notification_content->label,
+                    'body'  => $notification_content->content,
+                ]
+            ];
+            $dataString = $data;
+    
+            $ch = curl_init();
+            curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+            curl_setopt( $ch,CURLOPT_POST, true );
+            curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+            curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+            curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+            curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $dataString ) );
+            $result = curl_exec($ch );
+            // dd($result);
+            curl_close( $ch );
         }
     }
 

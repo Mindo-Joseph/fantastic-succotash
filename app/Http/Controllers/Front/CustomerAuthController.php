@@ -38,8 +38,11 @@ class CustomerAuthController extends FrontController
     }
 
     public function sendNotification(){
-        $token = ["ep6RrGVuT2-1MU6l1KHdIr:APA91bHVYY9GO--vjKfZNUKJuo0L-GH7KPaHi3xCZjoIkNqjxd8mKrBIsuChZngeIkJq9l3KgMhfzqRaFrHBY_w90ScBfSXTu-YHWLMl6QspOSDlMUrsNFPiDQ1V52F4A1kIjcJta_R6"];  
-        $from = env('FIREBASE_SERVER_KEY');
+        // $token = ["fXC1tzHiywg:APA91bGj3YXxPXuiBjCSAhlt0leikG2eq2gIJm3EFtSjkfp4c6akzpeDOqq2XfvUxxX99i36aCPf8gFsJIZrU7Ywcx6ZCIMh9vAPJctpxyU0_pagKF-wgVURZ2Z6C6XMaWAFZCDlas3L"];  
+        $token = ["SYyGlsuFhM:APA91bHT-EWdEXBqn9hqpTLObtI8VNf49QTatYDSFaYeI4OZG6vGrxKyfPZUe2b8h0KMhwS-pZCC1stmHlqCqMKdLD5baCjnCusdHZys9Z31gpykmUg2fS5PwmcfAYHB11EAZi_dHHqq"];  
+       //previous
+    //    $from = 'AAAA-gxQcf4:APA91bF2-7wHcDDUpdnOAjPkRECMcMqZyto1g3CloNTSvp4tvaM6yX2H1H3FFWQj3mHE_t0LkKKu5M_ASTjIaKvvuLDTrXe9eO7Xi7k8YbH6M355gz7x0GTbK7E9F7I7CAQS3AILs4J_';
+        $from = 'AAAA8Aea-wU:APA91bEKYAjmXEjMg4u-fdxZuDtmwtM_rdkJ8d06mQfGtAiZnZIBYrH5LvYLTWh9VJjMD3pAHaJzjbvL-ckV43xJBHXrLxBvop0SAOwUSQ6Un7_OAEmuzbrHbjBpq045nyWYz4d5zP6b';
         
         $notification_content = NotificationTemplate::where('id', 3)->first();
         if($notification_content){

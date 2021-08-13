@@ -667,9 +667,7 @@ class OrderController extends FrontController
             $token[] = $device;  
         }
         $token[] = "d4SQZU1QTMyMaENeZXL3r6:APA91bHoHsQ-rnxsFaidTq5fPse0k78qOTo7ZiPTASiH69eodqxGoMnRu2x5xnX44WfRhrVJSQg2FIjdfhwCyfpnZKL2bHb5doCiIxxpaduAUp4MUVIj8Q43SB3dvvvBkM1Qc1ThGtEM";  
-        // dd($token);
         $from = env('FIREBASE_SERVER_KEY');
-        
         $notification_content = NotificationTemplate::where('id', 1)->first();
         if($notification_content){
             $headers = [
@@ -710,12 +708,12 @@ class OrderController extends FrontController
             'cvv' => $request->cvc
         ];
         $response = $gateway->purchase(
-            [
-                'amount' => $request->amount,
-                'currency' => 'INR',
-                'card' => $formData,
-                'token' => $token,
-            ]
+        [
+            'amount' => $request->amount,
+            'currency' => 'INR',
+            'card' => $formData,
+            'token' => $token,
+        ]
         )->send();
         if ($response->isSuccessful()) {
             $cart = Cart::where('user_id', Auth::user()->id)->first();
