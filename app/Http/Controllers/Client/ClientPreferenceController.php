@@ -7,10 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency, Nomenclature, ReferAndEarn,SocialMedia, VendorRegistrationDocument};
+use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency, Nomenclature, ReferAndEarn,SocialMedia, VendorRegistrationDocument, PageTranslation, BrandTranslation, VariantTranslation, ProductTranslation, Category_translation, AddonOptionTranslation, VariantOptionTranslation};
 use GuzzleHttp\Client as GCLIENT;
 class ClientPreferenceController extends BaseController{
-
     public function index(){
         $client = Auth::user();
         $mapTypes = MapProvider::where('status', '1')->get();
@@ -36,12 +35,11 @@ class ClientPreferenceController extends BaseController{
         }
 
         $last_mile_teams = [];
-        if(isset($preference) && $preference->need_delivery_service == '1') # if last mile on
-        {
+        # if last mile on
+        if(isset($preference) && $preference->need_delivery_service == '1') {
             $last_mile_teams = $this->getLastMileTeams(); 
             
         }
-
         return view('backend/setting/config')->with(['last_mile_teams' => $last_mile_teams,'client' => $client, 'preference' => $preference, 'mapTypes'=> $mapTypes, 'smsTypes' => $smsTypes, 'client_languages' => $client_languages, 'file_types' => $file_types, 'vendor_registration_documents' => $vendor_registration_documents, 'reffer_by' => $reffer_by, 'reffer_to' => $reffer_to,]);
     }
 
@@ -97,60 +95,37 @@ class ClientPreferenceController extends BaseController{
     public function update(Request $request, $code){
 
 
-        if(isset($request->need_delivery_service) && !empty($request->need_delivery_service))
-        {   
+        if(isset($request->need_delivery_service) && !empty($request->need_delivery_service)){   
             try {
-            // $checkn = substr($request->delivery_service_key_url, -1);
-            // if($checkn == '/')
-            // $request->delivery_service_key_url = substr_replace($request->delivery_service_key_url, "", -1);
-
-            $client = new GClient(['headers' => ['personaltoken' => $request->delivery_service_key,
-                                                        'shortcode' => $request->delivery_service_key_code,
-                                                        'content-type' => 'application/json']
-                                                            ]);
-            $url = $request->delivery_service_key_url;                                                   
-            $res = $client->post($url.'/api/check-dispatcher-keys');
-            $response = json_decode($res->getBody(), true);
-            if($response && $response['status'] == 400){
-                return redirect()->route('configure.index')->with('error', 'Last Mile Delivery Keys incorrect !'); 
-            }
-            }
-            catch(\Exception $e){
+                $client = new GClient(['headers' => ['personaltoken' => $request->delivery_service_key,'shortcode' => $request->delivery_service_key_code,'content-type' => 'application/json']]);
+                $url = $request->delivery_service_key_url;                                                   
+                $res = $client->post($url.'/api/check-dispatcher-keys');
+                $response = json_decode($res->getBody(), true);
+                if($response && $response['status'] == 400){
+                    return redirect()->route('configure.index')->with('error', 'Last Mile Delivery Keys incorrect !'); 
+                }
+            }catch(\Exception $e){
                 return redirect()->route('configure.index')->with('error', 'Invalid Last Mile Delivery Dispatcher URL !'); 
             }                                                
         }
 
-        if(isset($request->need_dispacher_ride) && !empty($request->need_dispacher_ride))
-        {
+        if(isset($request->need_dispacher_ride) && !empty($request->need_dispacher_ride)){
             try {
-                // $checkp = substr($request->pickup_delivery_service_key_url, -1);
-                // if($checkp == '/')
-                // $request->pickup_delivery_service_key_url = substr_replace($request->pickup_delivery_service_key_url, "", -1);
-
-                $client = new GClient(['headers' => ['personaltoken' => $request->pickup_delivery_service_key,
-                                                            'shortcode' => $request->pickup_delivery_service_key_code,
-                                                            'content-type' => 'application/json']
-                                                                ]);
+                $client = new GClient(['headers' => ['personaltoken' => $request->pickup_delivery_service_key,'shortcode' => $request->pickup_delivery_service_key_code,'content-type' => 'application/json']]);
                 $url = $request->pickup_delivery_service_key_url;                                                   
                 $res = $client->post($url.'/api/check-dispatcher-keys');
                 $response = json_decode($res->getBody(), true);
                 if($response && $response['status'] == 400){
                     return redirect()->route('configure.index')->with('error', 'Pickup & Delivery Keys incorrect !'); 
                 }
-                }
-                catch(\Exception $e){
-                    return redirect()->route('configure.index')->with('error', 'Invalid Pickup & Delivery Dispatcher URL !'); 
-                } 
-                
+            }catch(\Exception $e){
+                return redirect()->route('configure.index')->with('error', 'Invalid Pickup & Delivery Dispatcher URL !'); 
+            } 
         }
 
         if(isset($request->need_dispacher_home_other_service) && !empty($request->need_dispacher_home_other_service))
         {
             try {
-                // $checkd = substr($request->dispacher_home_other_service_key_url, -1);
-                // if($checkd == '/')
-                // $request->dispacher_home_other_service_key_url = substr_replace($request->dispacher_home_other_service_key_url, "", -1);
-
                 $client = new GClient(['headers' => ['personaltoken' => $request->dispacher_home_other_service_key,
                                                             'shortcode' => $request->dispacher_home_other_service_key_code,
                                                             'content-type' => 'application/json']
@@ -161,11 +136,9 @@ class ClientPreferenceController extends BaseController{
                 if($response && $response['status'] == 400){
                     return redirect()->route('configure.index')->with('error', 'On Demand Services Keys incorrect !'); 
                 }
-                }
-                catch(\Exception $e){
+            }catch(\Exception $e){
                     return redirect()->route('configure.index')->with('error', 'Invalid On Demand Services Dispatcher URL !'); 
-                } 
-            
+            } 
         }
         
      
@@ -241,42 +214,45 @@ class ClientPreferenceController extends BaseController{
             $preference->celebrity_check = ($request->has('celebrity_check') && $request->celebrity_check == 'on') ? 1 : 0;
             $preference->subscription_mode = ($request->has('subscription_mode') && $request->subscription_mode == 'on') ? 1 : 0;
         }
-
-        
-        
-        
         if($request->has('primary_language')){
-            $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->where('is_primary', 1)->update(['is_active' => 0, 'is_primary' => 0]);
+            $deactivate_language = ClientLanguage::where('client_code',Auth::user()->code)->where('is_primary', 1)->first();
+            if($deactivate_language){
+                $deactivate_language->is_active = '0';
+                $deactivate_language->is_primary = '0';
+                $deactivate_language->save();
+            }
             $primary_change = ClientLanguage::where('client_code', Auth::user()->code)->where('language_id', $request->primary_language)->update(['is_active' => 1, 'is_primary' => 1]);
             if(!$primary_change){
-                $primary_lang[] = [
+                ClientLanguage::insert([
+                    'is_active'=> 1,
+                    'is_primary'=> 1,
                     'client_code'=> Auth::user()->code,
                     'language_id'=> $request->primary_language,
-                    'is_primary'=> 1,
-                    'is_active'=> 1
-                ];
-                ClientLanguage::insert($primary_lang);
+                ]);
             }
-
-            $existLanguage = array();
+            PageTranslation::where('language_id', $deactivate_language->language_id)->update(['language_id' => $request->primary_language]);
+            BrandTranslation::where('language_id', $deactivate_language->language_id)->update(['language_id' => $request->primary_language]);
+            VariantTranslation::where('language_id', $deactivate_language->language_id)->update(['language_id' => $request->primary_language]);
+            ProductTranslation::where('language_id', $deactivate_language->language_id)->update(['language_id' => $request->primary_language]);
+            Category_translation::where('language_id', $deactivate_language->language_id)->update(['language_id' => $request->primary_language]);
+            AddonOptionTranslation::where('language_id', $deactivate_language->language_id)->update(['language_id' => $request->primary_language]);
+            VariantOptionTranslation::where('language_id', $deactivate_language->language_id)->update(['language_id' => $request->primary_language]);
+            $exist_language_id = array();
             if($request->has('languages')){
                 foreach ($request->languages as $lan) {
-                    $lang = ClientLanguage::where('client_code',Auth::user()->code)->where('language_id', $lan)->first();
-                    if(!$lang){
-                        $lang = new ClientLanguage();
-                        $lang->client_code = Auth::user()->code;
+                    $client_language = ClientLanguage::where('client_code',Auth::user()->code)->where('language_id', $lan)->first();
+                    if(!$client_language){
+                        $client_language = new ClientLanguage();
+                        $client_language->client_code = Auth::user()->code;
                     }
-                    $lang->is_primary = 0;
-                    $lang->language_id = $lan;
-                    $lang->is_active = 1;
-                    $lang->save();
-                    $existLanguage[] = $lan;
+                    $client_language->is_primary = 0;
+                    $client_language->language_id = $lan;
+                    $client_language->is_active = 1;
+                    $client_language->save();
+                    $exist_language_id[] = $client_language;
                 }
             }
-            
-
-            $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->whereNotIn('language_id', $existLanguage)->where('is_primary', 0)->update(['is_active' => 0]);
- 
+            $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->whereNotIn('language_id', $exist_language_id)->where('is_primary', 0)->update(['is_active' => 0]);
         }
         
         if($request->has('primary_currency')){
