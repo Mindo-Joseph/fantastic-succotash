@@ -160,7 +160,6 @@ class CartController extends FrontController
                     }
                 }
             }
-            // dd($cart_product_detail);
             
             $cartProduct = CartProduct::where('product_id', $request->product_id)->where('variant_id', $request->variant_id)->where('cart_id', $cart_detail->id)->first();
             if(!$cartProduct){
