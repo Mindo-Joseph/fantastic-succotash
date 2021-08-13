@@ -214,10 +214,6 @@ class ClientPreferenceController extends BaseController{
             $preference->celebrity_check = ($request->has('celebrity_check') && $request->celebrity_check == 'on') ? 1 : 0;
             $preference->subscription_mode = ($request->has('subscription_mode') && $request->subscription_mode == 'on') ? 1 : 0;
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> 870dbb7845e5765a4c900a512e53187abf28c8d3
         if($request->has('primary_language')){
             $deactivate_language = ClientLanguage::where('client_code',Auth::user()->code)->where('is_primary', 1)->first();
             if($deactivate_language){
