@@ -320,6 +320,11 @@ class CartController extends BaseController{
         if(!$cart){
             return false;
         }
+        $address = [];
+        $latitude = '';
+        $longitude = '';
+        $address_id = 0;
+        $delivery_status = 1;
         $cartID = $cart->id;
         $cartData = CartProduct::with(['vendor', 'coupon'=> function($qry) use($cartID){
                         $qry->where('cart_id', $cartID);
@@ -358,12 +363,22 @@ class CartController extends BaseController{
                     $subscription_features[] = $feature->feature_id;
                 }
             }
+            $address = UserAddress::where('user_id', $cart->user_id)->where('is_primary', 1)->first();
+            $address_id = ($address) ? $address->id : 0;
         }
+        $latitude = ($address) ? $address->latitude : '';
+        $longitude = ($address) ? $address->longitude : '';
         $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
         $total_tax = $total_paying = $total_disc_amount = 0.00; $item_count = 0; $total_delivery_amount = 0;
         if($cartData){
             $tax_details = [];
             foreach ($cartData as $ven_key => $vendorData) {
+                if($address_id > 0){
+                    $serviceArea = $vendorData->vendor->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                        $query->select('vendor_id')
+                        ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                    })->where('id', $vendorData->vendor_id)->get();
+                }
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
                 $ttAddon = $payable_amount = $is_coupon_applied = $coupon_removed = 0; $coupon_removed_msg = '';$deliver_charge = 0;
@@ -472,7 +487,7 @@ class CartController extends BaseController{
                             if(!empty($deliver_charge) && $delivery_count == 0)
                             {
                                 $delivery_count = 1;
-                                $prod->deliver_charge = number_format($deliver_charge, 2);
+                                $prod->deliver_charge = number_format($deliver_charge, 2, '.', '');
                                 $payable_amount = $payable_amount + $deliver_charge;
                                 $delivery_fee_charges = $deliver_charge;
                             }
@@ -557,6 +572,14 @@ class CartController extends BaseController{
                     $subscription_discount = $subscription_discount + $deliver_charge;
                 }
                 $total_subscription_discount = $total_subscription_discount + $subscription_discount;
+                if(isset($serviceArea)){
+                    if($serviceArea->isEmpty()){
+                        $vendorData->isDeliverable = 0;
+                        $delivery_status = 0;
+                    }else{
+                        $vendorData->isDeliverable = 1;
+                    }
+                }
             }
         }
         $cart_product_luxury_id = CartProduct::where('cart_id', $cartID)->select('luxury_option_id', 'vendor_id')->first();
@@ -590,6 +613,7 @@ class CartController extends BaseController{
         }else{
             $cart->total_payable_amount = $total_paying  + $total_tax - $total_disc_amount - $loyalty_amount_saved;
         }
+        $cart->deliver_status = $delivery_status;
         $cart->loyalty_amount = $loyalty_amount_saved;
         $cart->tip = array(
             ['label'=>'5%', 'value' => number_format((0.05 * $cart->total_payable_amount), 2, '.', '')],
