@@ -75,16 +75,20 @@ $(document).ready(function () {
     function getDriverDetails(dispatch_traking_url) {
         var new_dispatch_traking_url = dispatch_traking_url.replace('/order/','/order-details/')
         $.ajax({
-            url: new_dispatch_traking_url,
-            dataType: "jsonp",
-            crossDomain: true,
+            type:"POST",
+            dataType: "json",
+            url: order_tracking_details_url,
+            data:{new_dispatch_traking_url:new_dispatch_traking_url},
             success: function( response ) {
-                console.log( response ); // server response
+                if(response.data.agent_location != null){
+                    $('#searching_main_div').remove();
+                    $('#driver_details_main_div').show();
+                    $('#driver_name').html(response.data.order.name).show();
+                    $('#driver_image').attr('src', response.data.agent_image).show();
+                    $('#driver_phone_number').html(response.data.order.phone_number).show();
+                }
             }
         });
-        // $.get(new_dispatch_traking_url, function( data ) {
-        //     console.log('i mmmmm here'+data);
-        // });
     }
 
     $(document).on("click", ".add-more-location",function() {
@@ -374,6 +378,7 @@ $(document).ready(function () {
                   directionsDisplay.setDirections(response);
                 } else {
                   window.alert('Directions request failed due to ' + status);
+                  return false;
                 }
             });
         }
