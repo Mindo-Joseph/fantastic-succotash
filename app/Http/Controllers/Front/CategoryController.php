@@ -132,7 +132,7 @@ class CategoryController extends FrontController{
                 $user_addresses = UserAddress::get();
                 return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories]);
             }
-        }elseif($page == 'on demand service'){
+        }elseif($page == 'on demand service'){ 
             $cartDataGet = $this->getCartOnDemand($request);
             return view('frontend.ondemand.index')->with(['time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }else{
@@ -144,80 +144,10 @@ class CategoryController extends FrontController{
         }
         
     }
-    // get cart data in on demand product listing page 
-    public function getCartOnDemand($request)
-    {
-        $cartData = [];
-        $user = Auth::user();
-        $countries = Country::get();
-        $langId = Session::get('customerLanguage');
-        $guest_user = true;
-        if ($user) {
-            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
-            $addresses = UserAddress::where('user_id', $user->id)->get();
-            $guest_user = false;
-        } else {
-            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
-            $addresses = collect();
-        }
-        if ($cart) {
-            $cartData = CartProduct::where('status', [0, 1])->where('cart_id', $cart->id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
-        }
-        // dd($cartData->toArray());
-        $navCategories = $this->categoryNav($langId);
-        $subscription_features = array();
-        if ($user) {
-            $now = Carbon::now()->toDateTimeString();
-            $user_subscription = SubscriptionInvoicesUser::with('features')
-                ->select('id', 'user_id', 'subscription_id')
-                ->where('user_id', $user->id)
-                ->where('end_date', '>', $now)
-                ->orderBy('end_date', 'desc')->first();
-            if ($user_subscription) {
-                foreach ($user_subscription->features as $feature) {
-                    $subscription_features[] = $feature->feature_id;
-                }
-            }
-        }
-
-        $user = Auth::user();
-        $timezone = $user->timezone ?? 'Asia/Kolkata';
-        
-        $start_date = new DateTime("now", new  DateTimeZone($timezone) );
-        $start_date =  $start_date->format('Y-m-d');
-        $end_date = Date('Y-m-d', strtotime('+13 days'));
-
-        $start_time = new DateTime("now", new  DateTimeZone($timezone) );
-        $start_time = $start_time->format('Y-m-d H:m');
-        $end_time = date('Y-m-d 23:59');
-        $period = CarbonPeriod::create($start_date, $end_date);
-        $time_slots = $this->SplitTime($start_time, $end_time, "60");
-        return ['time_slots' => $time_slots,'period' => $period,'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user];
-    }
+    
 
 
-    function SplitTime($StartTime, $EndTime, $Duration="30"){
-       
-       
-        $ReturnArray = array ();// Define output
-        if(date ("i", strtotime($StartTime)) > 30)
-        $startwith = 00;
-        else
-        $startwith = 30;
-        $StartTime = date ("Y-m-d G", strtotime($StartTime));
-        $StartTime = $StartTime.":".$startwith;
-        $StartTime    = strtotime ($StartTime); //Get Timestamp
-        $EndTime      = strtotime ($EndTime); //Get Timestamp
-        $AddMins  = $Duration * 30;
-       
-        
-        while ($StartTime <= $EndTime) //Run loop
-        {   
-            $ReturnArray[] = date ("G:i", $StartTime);
-            $StartTime += $AddMins; //Endtime check
-        }
-        return $ReturnArray;
-    }
+   
 
 
     public function listData($langId, $category_id, $type = ''){
