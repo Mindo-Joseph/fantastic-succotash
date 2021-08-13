@@ -75,9 +75,10 @@ $(document).ready(function () {
     function getDriverDetails(dispatch_traking_url) {
         var new_dispatch_traking_url = dispatch_traking_url.replace('/order/','/order-details/')
         $.ajax({
-            url: new_dispatch_traking_url,
             dataType: "jsonp",
             crossDomain: true,
+            url: new_dispatch_traking_url,
+            contentType:"application/javascript",
             success: function( response ) {
                 console.log( response ); // server response
             }
@@ -374,6 +375,7 @@ $(document).ready(function () {
                   directionsDisplay.setDirections(response);
                 } else {
                   window.alert('Directions request failed due to ' + status);
+                  return false;
                 }
             });
         }
