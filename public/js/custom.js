@@ -858,15 +858,12 @@ $(document).ready(function() {
                         if(response.cart_details.products.length != 0){
                             let header_cart_template = _.template($('#header_cart_template').html());
                             $("#header_cart_main_ul").append(header_cart_template({cart_details:cart_details, show_cart_url:show_cart_url}));
-                         
-                             
                             if($('#cart_main_page').length != 0){
                                 let cart_template = _.template($('#cart_template').html());
                                 $("#cart_table").append(cart_template({cart_details:cart_details}));
-
                                 $('#placeorder_form .left_box').html('');
                                 $('#placeorder_form .left_box').html(cart_details.left_section);
-
+                                initialize();
                                 if(cart_details.deliver_status == 0){
                                     $("#order_placed_btn").attr("disabled", true);
                                     $("#order_placed_btn").addClass("d-none");
