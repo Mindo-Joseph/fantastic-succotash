@@ -316,9 +316,13 @@ $(document).ready(function() {
 
                     if($('#show_plus_minus'+cartproduct_id).length != 0)
                     {
-                       // $('#show_plus_minus'+cartproduct_id).next().val(0);
+                        $('#show_plus_minus'+cartproduct_id).find('.input_qty').val(1);
                         $('#show_plus_minus'+cartproduct_id).hide();
                         $('#add_button_href'+cartproduct_id).show();
+                        
+                    }
+                    if($('#next-button-ondemand-2').length != 0){
+                        $("#next-button-ondemand-2").hide();
                     }
                 }
             }
@@ -854,19 +858,12 @@ $(document).ready(function() {
                         if(response.cart_details.products.length != 0){
                             let header_cart_template = _.template($('#header_cart_template').html());
                             $("#header_cart_main_ul").append(header_cart_template({cart_details:cart_details, show_cart_url:show_cart_url}));
-                         
-                            if($("#header_cart_template_ondemand").length != 0) {
-                                    let header_cart_template_ondemand = _.template($('#header_cart_template_ondemand').html());
-                                    $("#header_cart_main_ul_ondemand").append(header_cart_template_ondemand({cart_details:cart_details, show_cart_url:show_cart_url}));
-                            }
-                            
                             if($('#cart_main_page').length != 0){
                                 let cart_template = _.template($('#cart_template').html());
                                 $("#cart_table").append(cart_template({cart_details:cart_details}));
-
                                 $('#placeorder_form .left_box').html('');
                                 $('#placeorder_form .left_box').html(cart_details.left_section);
-
+                                initialize();
                                 if(cart_details.deliver_status == 0){
                                     $("#order_placed_btn").attr("disabled", true);
                                     $("#order_placed_btn").addClass("d-none");
@@ -876,6 +873,12 @@ $(document).ready(function() {
                                 }
                             }
                             cartTotalProductCount();
+                            if($("#header_cart_template_ondemand").length != 0) {
+                                let header_cart_template_ondemand = _.template($('#header_cart_template_ondemand').html());
+                                $("#header_cart_main_ul_ondemand").append(header_cart_template_ondemand({cart_details:cart_details, show_cart_url:show_cart_url}));
+                                $("#next-button-ondemand-2").show();
+                            }
+                      
                         }else{
                             if($('#cart_main_page').length != 0){
                                 $('#cart_main_page').html('');
@@ -1125,10 +1128,10 @@ $(document).ready(function() {
         var variant_id = that.data("variant_id");
         var addonids = [];
         var addonoptids = [];
-        var show_plus_minus = "#show_plus_minusa"+product_id;
+        var show_plus_minus = "#show_plus_minus"+product_id;
         if(!$.hasAjaxRunning()){
             addToCartOnDemand(ajaxCall,vendor_id,product_id,addonids,addonoptids,add_to_cart_url,variant_id,show_plus_minus,that);
-            $("#show_plus_minusa"+product_id).show();
+           
         }
         
     });
@@ -1203,11 +1206,13 @@ $(document).ready(function() {
                 if(response.status == 'success'){
                     $(".shake-effect").effect( "shake", {times:3}, 1200 );
                     cartHeader();
-                     $(show_plus_minus+" .minus").attr('data-id',response.cart_product_id);
-                     $(show_plus_minus+" .plus").attr('data-id',response.cart_product_id);
-                     $(show_plus_minus+" .input_qty").attr('id',"quantity_ondemand_"+response.cart_product_id);
-                     $(show_plus_minus+" .qty-minus-ondemand").attr('data-parent_div_id',"show_plus_minusa"+response.cart_product_id);
-                     $(show_plus_minus).attr('id',"show_plus_minusa"+response.cart_product_id);
+                     $(that).next().show();
+                     $(that).next().find('.minus').attr('data-id',response.cart_product_id);
+                     $(that).next().find('.plus').attr('data-id',response.cart_product_id);
+                     $(that).next().find('.input_qty').attr('id',"quantity_ondemand_"+response.cart_product_id);
+                     $(that).next().find('.qty-minus-ondemand').attr('data-parent_div_id',"show_plus_minus"+response.cart_product_id);
+                     $(that).next().attr('id',"show_plus_minus"+response.cart_product_id);
+
                      $(that).attr('id',"add_button_href"+response.cart_product_id);
                      $(that).hide();
                      $(that).next().show();
@@ -1224,6 +1229,65 @@ $(document).ready(function() {
     }
 
 
+
+
+    // get time slots according to date 
+    $(document).on('click', '.check-time-slots', function() {
+        let cur_date = $(this).val();
+        getTimeSlots(cur_date);
+        
+    });
+
+    $(document).on('click', '.selected-time', function() {
+        let selected_time = $(this).html();
+        $("#show_time").html(selected_time);
+        $('#message_of_time').html("Your service will start between "+selected_time);
+        $("#next-button-ondemand-3").show(); 
+    });
+
+    // on demand add to cart 
+    function getTimeSlots(cur_date) {
+        $("#show_date").html(cur_date);
+        
+                     
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: getTimeSlotsForOndemand,
+            data: {
+                "cur_date" : cur_date
+            },
+            success: function(response) {
+                $(".booking-time").slick('destroy');
+                $("#show-all-time-slots").show();
+                $("#show-all-time-slots").html('');
+                $('#show-all-time-slots').html(response);
+                initializeSlider();
+            },
+            error: function(error) {
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.message;
+                alert(error_messages);
+            },
+        });
+    }
+
+    function initializeSlider() {
+        $(".booking-time").slick({
+            dots: !1,
+            infinite: !0,
+            speed: 300,
+            slidesToShow: 4,
+            slidesToScroll: 6,
+            responsive: [
+                { breakpoint: 1367, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
+                { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
+                { breakpoint: 767, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 3, infinite: !0 } },
+                { breakpoint: 480, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
+            ],
+        });
+         
+    }
 
     /// ***************************************       END show cart data for on demand services    ***************************************************************///////////////// 
 

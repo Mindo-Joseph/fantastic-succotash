@@ -9,39 +9,42 @@
     <div class="container">
         <div class="row mb-5">
             <div class="col-md-8 offset-md-2">
-                {{-- <div class="step-indicator">
-                    <div class="step step1 active">
+                <div class="step-indicator">
+                    
+                    <div class="step step1 @if(app('request')->input('step') >= '1' || empty(app('request')->input('step'))) active @endif">
                         <div class="step-icon">1</div>
                         <p>Service Details</p>
                     </div>
-                    <div class="indicator-line active"></div>
-                    <div class="step step2">
+
+                    <div class="indicator-line  @if(app('request')->input('step') >= '1' || !empty(app('request')->input('step'))) active @endif"></div>
+
+                    <div class="step step2  @if(app('request')->input('step') >= '2' || !empty(app('request')->input('step'))) active @endif">
                         <div class="step-icon">2</div>
                         <p>Date & Time</p>
                     </div>
-                    <div class="indicator-line"></div>
+
+                    <div class="indicator-line  @if(app('request')->input('step') >= '2' || !empty(app('request')->input('step'))) active @endif""></div>
+
                     <div class="step step3">
                         <div class="step-icon">3</div>
                         <p>Payment</p>
                     </div>
-                </div> --}}
+
+                </div>
 
                 <div class="row mt-4">
 
                     <div class="col-md-8">
                         <div class="card-box">
                             <ul>
-
-                                @if(!empty($category->childs) && count($category->childs) > 0)
+                                 @if(!empty($category->childs) && count($category->childs) > 0)
                                     <li><a class="btn btn-solid" href="#">{{$cate['translation_name']}}</a></li>
 
                                 @endif
-
-                               
                             </ul>
                             
-                            <div class="service-data-wrapper mb-5">
-                               
+                            @if(app('request')->input('step') == '1' || empty(app('request')->input('step')))
+                            <div class="service-data-wrapper mb-5" id="step-1-ondemand">
                                 <div class="service-data mt-4">
                                     <h4><b>{{ $category->translation_name }}</b></h4>
 
@@ -51,7 +54,6 @@
                                         <img class="img-fluid" src="{{$category->image['proxy_url'] . '1000/200' . $category->image['image_path']}}" alt="">
                                     </div>
                                     @endif
-
                                     @if($listData->isNotEmpty())
                                     @foreach($listData as $key => $data)
                                     {{-- new product design  --}}
@@ -66,6 +68,9 @@
                                                 
 
                                                 @if(isset($data->variant[0]->checkIfInCart) && count($data->variant[0]->checkIfInCart) > 0)
+                                                @php
+                                                    $cartcount = 1;
+                                                @endphp
                                                 <a class="btn btn-solid add_on_demand" style="display:none;" id="add_button_href{{$data->variant[0]->checkIfInCart['0']['id']}}" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
                                                 <div class="number" id="show_plus_minus{{$data->variant[0]->checkIfInCart['0']['id']}}">
                                                     <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus{{$data->variant[0]->checkIfInCart['0']['id']}}" data-id="{{$data->variant[0]->checkIfInCart['0']['id']}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
@@ -77,8 +82,8 @@
                                                     </span>
                                                 </div>
                                                 @else
-                                                <a class="btn btn-solid add_on_demand" id="add_button_href{{$data->id}}" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
-                                                <div class="number" style="display:none;" id="show_plus_minus{{$data->id}}">
+                                                <a class="btn btn-solid add_on_demand" id="aadd_button_href{{$data->id}}" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
+                                                <div class="number" style="display:none;" id="ashow_plus_minus{{$data->id}}">
                                                     <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus{{$data->id}}" readonly data-id="{{$data->id}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
                                                         <i class="fa fa-minus" aria-hidden="true"></i>
                                                     </span>
@@ -123,136 +128,60 @@
                                   
 
                                 </div>
-                               
-
                             </div>
+                            <a href="?step=2" id="next-button-ondemand-2" style="display: none;"><span class="btn btn-solid">Next</span></a>
+                            @endif
+                            
+                           
+                             <!-- Step Two Html -->
+                           
+                            @if(app('request')->input('step') == '2')
+                            <div id="step-2-ondemand">
+                                <h4 class="mb-2"><b>When would you like your service?</b></h4>
+                                <div class="date-items radio-btns">
+                                    
+                                    @foreach ($period as $key => $date)
+                                        <div>
+                                            <div class="radios">
+                                                <p>{{date('D', strtotime($date))}}</p>
+                                                <input type="radio" class="check-time-slots" value='{{date('Y-m-d', strtotime($date))}}' name='booking_date' id='radio{{$key}}' @if($key == 0) checked @endif/>
+                                                <label for='radio{{$key}}'>
+                                                    <span class="customCheckbox" aria-hidden="true">{{date('d', strtotime($date))}}</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                   
+                                </div>
 
-                            <!-- Step Two Html -->
-                            {{-- <h4 class="mb-2"><b>When would you like your service?</b></h4>
-                            <div class="date-items radio-btns">
-                                <div>
-                                    <div class="radios">
-                                        <p>Mon</p>
-                                        <input type="radio" value='1' name='date-time' id='radio1'/>
-                                        <label for='radio1'>
-                                            <span class="customCheckbox" aria-hidden="true">9</span>
-                                        </label>
+                                <div class="booking-time-wrapper" id="show-all-time-slots" style="display: none;">
+                                    <h4 class="mt-4 mb-2"><b>What time would you like us to start?</b></h4>
+                                    <div class="booking-time radio-btns long-radio">
+                                        @foreach ($time_slots as $key => $date)
+                                        @if($key+1 < count($time_slots))
+                                        <div>
+                                            <div class="radios">
+                                                <input type="radio" value='{{$date}}'  name='booking_time' id='time{{$key+1}}'/>
+                                                <label for='time{{$key+1}}'><span class="customCheckbox selected-time" aria-hidden="true">{{$date}} - {{@$time_slots[$key+1]}}</span></label>
+                                            </div>
+                                        </div>
+                                        @endif
+                                        @endforeach
                                     </div>
+                                    <P id="message_of_time"></P>
                                 </div>
-                                <div>
-                                    <div class="radios">
-                                        <p>Tus</p>
-                                        <input type="radio" value='1' name='date-time' id='radio2'/>
-                                        <label for='radio2'><span class="customCheckbox" aria-hidden="true">10</span></label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="radios">
-                                        <p>Wed</p>
-                                        <input type="radio" value='1' name='date-time' id='radio3'/>
-                                        <label for='radio3'><span class="customCheckbox" aria-hidden="true">11</span></label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="radios">
-                                        <p>Thu</p>
-                                        <input type="radio" value='1' name='date-time' id='radio4'/>
-                                        <label for='radio4'><span class="customCheckbox" aria-hidden="true">12</span></label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="radios">
-                                        <p>Fri</p>
-                                        <input type="radio" value='1' name='date-time' id='radio5'/>
-                                        <label for='radio5'><span class="customCheckbox" aria-hidden="true">13</span></label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="radios">
-                                        <p>Sat</p>
-                                        <input type="radio" value='1' name='date-time' id='radio6'/>
-                                        <label for='radio6'><span class="customCheckbox" aria-hidden="true">14</span></label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="radios">
-                                        <p>Sun</p>
-                                        <input type="radio" value='1' name='date-time' id='radio8'/>
-                                        <label for='radio8'><span class="customCheckbox" aria-hidden="true">15</span></label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="radios">
-                                        <p>Sun</p>
-                                        <input type="radio" value='1' name='date-time' id='radio9'/>
-                                        <label for='radio9'><span class="customCheckbox" aria-hidden="true">15</span></label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="radios">
-                                        <p>Sun</p>
-                                        <input type="radio" value='1' name='date-time' id='radio10'/>
-                                        <label for='radio10'><span class="customCheckbox" aria-hidden="true">15</span></label>
-                                    </div>
-                                </div>
+
+                                <div class="booking-time-wrapper">
+                                    <h4 class="mt-4 mb-2"><b>When would you like your service?</b></h4>
+                                    <textarea class="form-control" name="" id="" cols="30" rows="7"></textarea>
+                                </div> 
                             </div>
-
-                            <div class="booking-time-wrapper">
-                                <h4 class="mt-4 mb-2"><b>When would you like your service?</b></h4>
-                                <div class="booking-time radio-btns long-radio">
-                                    <div>
-                                        <div class="radios">
-                                            <input type="radio" value='1' name='booking-radio' id='time1'/>
-                                            <label for='time1'><span class="customCheckbox" aria-hidden="true">09:00 - 10:00</span></label>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="radios">
-                                            <input type="radio" value='1' name='booking-radio' id='time2'/>
-                                            <label for='time2'><span class="customCheckbox" aria-hidden="true">10:00 - 11:00</span></label>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="radios">
-                                            <input type="radio" value='1' name='booking-radio' id='time3'/>
-                                            <label for='time3'><span class="customCheckbox" aria-hidden="true">11:00 - 12:00</span></label>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="radios">
-                                            <input type="radio" value='1' name='booking-radio' id='time4'/>
-                                            <label for='time4'><span class="customCheckbox" aria-hidden="true">12:00 - 01:00</span></label>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="radios">
-                                            <input type="radio" value='1' name='booking-radio' id='time5'/>
-                                            <label for='time5'><span class="customCheckbox" aria-hidden="true">02:00 - 03:00</span></label>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="radios">
-                                            <input type="radio" value='1' name='booking-radio' id='time6'/>
-                                            <label for='time6'><span class="customCheckbox" aria-hidden="true">04:00 - 05:00</span></label>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="radios">
-                                            <input type="radio" value='1' name='booking-radio' id='time7'/>
-                                            <label for='time7'><span class="customCheckbox" aria-hidden="true">05:00 - 06:00</span></label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <P>Your service will start between 09:00-10:00</P>
-                            </div>
-
-                            <div class="booking-time-wrapper">
-                                <h4 class="mt-4 mb-2"><b>When would you like your service?</b></h4>
-                                <textarea class="form-control" name="" id="" cols="30" rows="7"></textarea>
-                            </div> --}}
-
-
+                            <a href="?step=1"><span class="btn btn-solid"><</span></a>
+                            <a href="#" id="next-button-ondemand-3" style="display: none;"><span class="btn btn-solid">Continue</span></a>
+                            @endif
+                            <!--end step 2 html -->
                             <!-- Step Three Start From Here -->
+
                             {{-- <div class="step-three">
                                 <h4 class="mt-4 mb-2"><b>How many hours do you need your professional to stay? <i class="fa fa-info-circle" aria-hidden="true"></i></b></h4>
                                 <div class="hours-slot radio-btns">
@@ -376,7 +305,7 @@
                                 <script type="text/template" id="header_cart_template_ondemand">
                                         <% _.each(cart_details.products, function(product, key){%>
                                         <% _.each(product.vendor_products, function(vendor_product, vp){%>
-                                            <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
+                                             <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
                                                 <a class='media' href='<%= show_cart_url %>'>
                                                      <div class='media-body'>                                                                
                                                         <h6 class="d-flex align-items-center justify-content-between">
@@ -393,6 +322,25 @@
                                             </li>
                                         <% }); %>
                                         <% }); %>
+
+                                        <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('DATE & TIME')}} </h5>
+                                        <li>
+                                            <div class='media-body'>                                                                
+                                                <h6 class="d-flex align-items-center justify-content-between">
+                                                    <span class="ellips">{{__('Date')}}</span>
+                                                    <span id="show_date">--</span>
+                                                </h6>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class='media-body'>                                                                
+                                                <h6 class="d-flex align-items-center justify-content-between">
+                                                    <span class="ellips">{{__('Start Time')}}</span>
+                                                    <span id="show_time">--</span>
+                                                </h6>
+                                            </div>
+                                        </li>
+
 
                                         <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('PRICE DETAILS')}} </h5>
                                         <li>
@@ -491,5 +439,7 @@
     var payment_option_list_url = "{{route('payment.option.list')}}";
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
+    var getTimeSlotsForOndemand = "{{route('getTimeSlotsForOndemand')}}";
+    
 </script>
 @endsection

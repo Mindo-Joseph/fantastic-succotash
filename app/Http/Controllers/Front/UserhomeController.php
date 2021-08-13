@@ -132,7 +132,7 @@ class UserhomeController extends FrontController{
                 });
             }
         }
-        $vendors = $vendors->where('status', '!=', $this->field_status)->inRandomOrder()->get();
+        $vendors = $vendors->where('status', 1)->inRandomOrder()->get();
         foreach ($vendors as $key => $value) {
             $vendor_ids[] = $value->id;
             $value->vendorRating = $this->vendorRating($value->products);
