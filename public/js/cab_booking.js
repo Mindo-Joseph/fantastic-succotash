@@ -376,6 +376,7 @@ $(document).ready(function () {
                 if (status == google.maps.DirectionsStatus.OK) {
                   var point = response.routes[0].legs[0];
                   directionsDisplay.setDirections(response);
+                  getVendorList();
                 } else {
                   window.alert('Directions request failed due to ' + status);
                   return false;
@@ -395,14 +396,12 @@ $(document).ready(function () {
            $('#pickup_location_latitude').val(place.geometry.location.lat());
            $('#pickup_location_longitude').val(place.geometry.location.lng());
            initMap2();
-           getVendorList();
         });
         google.maps.event.addListener(autocomplete2, 'place_changed', function () {
             var place2 = autocomplete2.getPlace();
             $('#destination_location_latitude').val(place2.geometry.location.lat());
             $('#destination_location_longitude').val(place2.geometry.location.lng());
             initMap2();
-            getVendorList();
         });
       }
     }
