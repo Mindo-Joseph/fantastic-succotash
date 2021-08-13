@@ -5,10 +5,10 @@
     <div>
         <div class="radios">
             <input type="radio" value='{{$date}}' name='booking-radio' id='time{{$key+1}}'/>
-            <label for='time{{$key+1}}'><span class="customCheckbox" aria-hidden="true">{{$date}} - {{@$time_slots[$key+1]}}</span></label>
+            <label for='time{{$key+1}}'><span class="customCheckbox selected-time" aria-hidden="true">{{$date}} - {{@$time_slots[$key+1]}}</span></label>
         </div>
     </div>
     @endif
     @endforeach
 </div>
-<P>Your service will start between 09:00-10:00</P>
+<P id="message_of_time"></P>

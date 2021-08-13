@@ -144,7 +144,7 @@
                                         <div>
                                             <div class="radios">
                                                 <p>{{date('D', strtotime($date))}}</p>
-                                                <input type="radio" class="check-time-slots" value='{{date('Y-m-d', strtotime($date))}}' name='date-time' id='radio{{$key}}' @if($key == 0) checked @endif/>
+                                                <input type="radio" class="check-time-slots" value='{{date('Y-m-d', strtotime($date))}}' name='booking_date' id='radio{{$key}}' @if($key == 0) checked @endif/>
                                                 <label for='radio{{$key}}'>
                                                     <span class="customCheckbox" aria-hidden="true">{{date('d', strtotime($date))}}</span>
                                                 </label>
@@ -154,21 +154,21 @@
                                    
                                 </div>
 
-                                <div class="booking-time-wrapper" id="show-all-time-slots">
+                                <div class="booking-time-wrapper" id="show-all-time-slots" style="display: none;">
                                     <h4 class="mt-4 mb-2"><b>What time would you like us to start?</b></h4>
                                     <div class="booking-time radio-btns long-radio">
                                         @foreach ($time_slots as $key => $date)
                                         @if($key+1 < count($time_slots))
                                         <div>
                                             <div class="radios">
-                                                <input type="radio" value='{{$date}}' name='booking-radio' id='time{{$key+1}}'/>
-                                                <label for='time{{$key+1}}'><span class="customCheckbox" aria-hidden="true">{{$date}} - {{@$time_slots[$key+1]}}</span></label>
+                                                <input type="radio" value='{{$date}}'  name='booking_time' id='time{{$key+1}}'/>
+                                                <label for='time{{$key+1}}'><span class="customCheckbox selected-time" aria-hidden="true">{{$date}} - {{@$time_slots[$key+1]}}</span></label>
                                             </div>
                                         </div>
                                         @endif
                                         @endforeach
                                     </div>
-                                    <P>Your service will start between 09:00-10:00</P>
+                                    <P id="message_of_time"></P>
                                 </div>
 
                                 <div class="booking-time-wrapper">
@@ -321,6 +321,25 @@
                                             </li>
                                         <% }); %>
                                         <% }); %>
+
+                                        <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('DATE & TIME')}} </h5>
+                                        <li>
+                                            <div class='media-body'>                                                                
+                                                <h6 class="d-flex align-items-center justify-content-between">
+                                                    <span class="ellips">{{__('Date')}}</span>
+                                                    <span id="show_date">--</span>
+                                                </h6>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class='media-body'>                                                                
+                                                <h6 class="d-flex align-items-center justify-content-between">
+                                                    <span class="ellips">{{__('Start Time')}}</span>
+                                                    <span id="show_time">--</span>
+                                                </h6>
+                                            </div>
+                                        </li>
+
 
                                         <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('PRICE DETAILS')}} </h5>
                                         <li>

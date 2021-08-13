@@ -1239,8 +1239,18 @@ $(document).ready(function() {
         
     });
 
+    $(document).on('click', '.selected-time', function() {
+        let selected_time = $(this).html();
+        $("#show_time").html(selected_time);
+        $('#message_of_time').html("Your service will start between "+selected_time);
+        
+    });
+
     // on demand add to cart 
     function getTimeSlots(cur_date) {
+        $("#show_date").html(cur_date);
+        
+                     
         $.ajax({
             type: "post",
             dataType: "json",
@@ -1249,7 +1259,11 @@ $(document).ready(function() {
                 "cur_date" : cur_date
             },
             success: function(response) {
+                $(".booking-time").slick('destroy');
+                $("#show-all-time-slots").show();
+                $("#show-all-time-slots").html('');
                 $('#show-all-time-slots').html(response);
+                initializeSlider();
             },
             error: function(error) {
                 var response = $.parseJSON(error.responseText);
@@ -1257,6 +1271,23 @@ $(document).ready(function() {
                 alert(error_messages);
             },
         });
+    }
+
+    function initializeSlider() {
+        $(".booking-time").slick({
+            dots: !1,
+            infinite: !0,
+            speed: 300,
+            slidesToShow: 4,
+            slidesToScroll: 6,
+            responsive: [
+                { breakpoint: 1367, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
+                { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
+                { breakpoint: 767, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 3, infinite: !0 } },
+                { breakpoint: 480, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
+            ],
+        });
+         
     }
 
     /// ***************************************       END show cart data for on demand services    ***************************************************************///////////////// 
