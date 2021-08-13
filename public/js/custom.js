@@ -344,6 +344,11 @@ $(document).ready(function() {
         if((typeof guest_cart != undefined) && (guest_cart == 1)){
             window.location.href = login_url;
         }
+        var address = $("input[name='address_id']").val();
+        if( (vendor_type == 'delivery') && ( (address == '') || (address < 1)) ){
+            success_error_alert('error', 'Please add a valid address to continue', ".cart_response");
+            return false;
+        }
         $.ajax({
             data: {},
             type: "POST",
@@ -1331,6 +1336,9 @@ $(document).ready(function() {
         }else if(responseClass == 'error'){
             $(element).find(".alert").html("<div class='alert-danger p-1'>"+message+"</div>").show();
         }
+        $('html, body').animate({
+            scrollTop: $(element).offset().top
+        }, 500);
         setTimeout(function(){
             $(element).find(".alert").hide();
         }, 8000);
