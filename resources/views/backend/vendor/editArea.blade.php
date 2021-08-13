@@ -1,6 +1,6 @@
 <div class="row">
 
-    <input type="hidden" name="latlongs_edit" value="$area->geo_array" id="latlongs_edit" />
+    <input type="hidden" name="latlongs_edit" value="{{$area->geo_array}}" id="latlongs_edit" />
     <input type="hidden" name="zoom_level_edit" value="13" id="zoom_level_edit" />
 
     <div class="col-lg-12 mb-2">

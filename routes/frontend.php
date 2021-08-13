@@ -8,6 +8,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('dispatch-order-status-update/{id?}', 'Front\DispatcherController@dispatchOrderStatusUpdate')->name('dispatch-order-update'); // Order Status update Dispatch
 	Route::get('dispatch-pickup-delivery/{id?}', 'Front\DispatcherController@dispatchPickupDeliveryUpdate')->name('dispatch-pickup-delivery'); // pickup delivery update from dispatch
 	Route::get('demo', 'Front\CustomerAuthController@getTestHtmlPage');
+	Route::get('cabbooking', 'Front\CustomerAuthController@getTestHtmlPage');
 	Route::get('fcm', 'Front\CustomerAuthController@fcm');
 	Route::get('send-notification', 'Front\CustomerAuthController@sendNotification');
 	Route::get('test/email', function(){
@@ -159,7 +160,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 		Route::post('get-list-of-vehicles-old/{id}', 'Front\PickupDeliveryController@getListOfVehicles');
 		Route::post('vendor/list/{category_id}', 'Front\PickupDeliveryController@postVendorListByCategoryId');
 		Route::post('get-list-of-vehicles/{id}', 'Front\PickupDeliveryController@productsByVendorInPickupDelivery');
-		Route::post('order-tracking-details', 'Front\BookingController@getOrderTrackingDetails')->name('bookingIndex');
+		Route::post('order-tracking-details', 'Front\PickupDeliveryController@getOrderTrackingDetails')->name('bookingIndex');
 		Route::post('promo-code/verify', 'Front\PickupDeliveryController@postVerifyPromoCode')->name('verify.cab.booking.promo-code');
 	});
 	Route::post('upload-file', 'Front\RatingController@uploadFile')->name('uploadfile');
