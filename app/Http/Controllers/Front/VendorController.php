@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Http\Controllers\Front\FrontController;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ProductVariantSet};
-use Illuminate\Http\Request;
+use Auth;
 use Session;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
+use App\Http\Controllers\Front\FrontController;
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, ClientCurrency, ProductVariantSet};
 
 class VendorController extends FrontController
 {
@@ -32,6 +33,18 @@ class VendorController extends FrontController
     public function vendorProducts(Request $request, $domain = '', $slug = 0){
         $preferences = Session::get('preferences');
         $vendor = Vendor::select('id','email', 'name', 'slug', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id', 'is_show_vendor_details', 'website')->where('slug', $slug)->where('status', 1)->firstOrFail();
+        if( $request->has('table') ){
+            if(!Auth::user()){
+                session(['url.intended' => url()->full()]);
+                return redirect()->route('customer.login');
+            }else{
+                if(!Session::has('vendorTable')){
+                    Session::put('vendorTable', $request->table);
+                    Session::put('vendorTableVendorId', $vendor->id);
+                    Session::put('vendorType', 'dine_in');
+                }
+            }
+        }
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');

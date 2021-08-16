@@ -23,9 +23,9 @@
                         <p>Date & Time</p>
                     </div>
 
-                    <div class="indicator-line  @if(app('request')->input('step') >= '2' || !empty(app('request')->input('step'))) active @endif""></div>
+                    <div class="indicator-line  @if(app('request')->input('step') >= '2' || !empty(app('request')->input('step'))) active @endif"></div>
 
-                    <div class="step step3">
+                    <div class="step step3   @if(app('request')->input('step') >= '3' || !empty(app('request')->input('step'))) active @endif"">
                         <div class="step-icon">3</div>
                         <p>Payment</p>
                     </div>
@@ -182,6 +182,48 @@
                             <a href="#" id="next-button-ondemand-3" style="display: none;"><span class="btn btn-solid">Continue</span></a>
                             @endif
                             <!--end step 2 html -->
+
+
+
+                            @if(app('request')->input('step') == '3')
+                            <!-- step 3 payment page -->
+                            <form method="post" action="" id="placeorder_form_ondemand">
+                                    @csrf
+                                    <div class="card-box">
+                                        <div class="row d-flex justify-space-around">
+                                            @if(!$guest_user)
+                                                <div class="col-lg-8 left_box">
+                                                    
+                                                </div>
+                                            @endif
+                                            <div class="{{ $guest_user ? 'col-md-12' : 'col-lg-8' }}">
+                                                <div class="spinner-box">
+                                                    <div class="circle-border">
+                                                        <div class="circle-core"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="table table-centered table-nowrap mb-0 h-100" id="cart_table">
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-4">
+                                            <div class="col-sm-6 text-md-right">
+                                                <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Continue')}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </form>
+                               
+                            @endif    
+                            <!-- end step 3 payment page -->
                             <!-- Step Three Start From Here -->
 
                             {{-- <div class="step-three">
@@ -429,7 +471,7 @@
 @section('script')
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
-    var guest_cart = {{ $guest_user ? 1 : 0 }};
+     var guest_cart = {{ $guest_user ? 1 : 0 }};
     var base_url = "{{url('/')}}";
     var place_order_url = "{{route('user.placeorder')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
@@ -442,6 +484,36 @@
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
     var getTimeSlotsForOndemand = "{{route('getTimeSlotsForOndemand')}}";
+
+    $(document).on('click', '.showMapHeader', function(){
+        var lats = document.getElementById('latitude').value;
+        var lngs = document.getElementById('longitude').value;
+
+        var myLatlng = new google.maps.LatLng(lats, lngs);
+        var mapProp = {
+            center:myLatlng,
+            zoom:13,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+            
+        };
+        var map=new google.maps.Map(document.getElementById("pick-address-map"), mapProp);
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            draggable:true  
+        });
+        // marker drag event
+        google.maps.event.addListener(marker,'drag',function(event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+        //marker drag event end
+        google.maps.event.addListener(marker,'dragend',function(event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+        $('#pick_address').modal('show');
+    });
     
 </script>
 @endsection
