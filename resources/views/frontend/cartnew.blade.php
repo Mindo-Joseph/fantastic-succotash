@@ -375,7 +375,7 @@
 
 
                     <!-- Cart Page New Design Lauout -->
-                    <div class="cart-page-layout d-none">
+                    {{-- <div class="cart-page-layout d-none">
                         <div class="row">
                             <div class="col-12">
                                 <h5 class="m-0">
@@ -516,7 +516,7 @@
                                 
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
 

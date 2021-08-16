@@ -891,7 +891,7 @@ $(document).ready(function() {
                             if($('#cart_main_page').length != 0){
                                 let cart_template = _.template($('#cart_template').html());
                                 $("#cart_table").append(cart_template({cart_details:cart_details}));
-                                $('#placeorder_form .left_box').html('');
+                                $('#placeorder_form .left_box').html(''); 
                                 $('#placeorder_form .left_box').html(cart_details.left_section);
                                 if(vendor_type != 'delivery'){
                                     var latitude = $('#latitude').val();
@@ -908,10 +908,17 @@ $(document).ready(function() {
                                 }
                             }
                             cartTotalProductCount();
-                            if($("#header_cart_template_ondemand").length != 0) {
+                            
+                              
+                            if($("#header_cart_template_ondemand").length != 0) { 
+                          
                                 let header_cart_template_ondemand = _.template($('#header_cart_template_ondemand').html());
                                 $("#header_cart_main_ul_ondemand").append(header_cart_template_ondemand({cart_details:cart_details, show_cart_url:show_cart_url}));
                                 $("#next-button-ondemand-2").show();
+                                $('#placeorder_form_ondemand .left_box').html(''); 
+                                $('#placeorder_form_ondemand .left_box').html(cart_details.left_section);
+                                initialize();
+                           
                             }
                       
                         }else{
