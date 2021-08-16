@@ -149,7 +149,9 @@ class CustomerAuthController extends FrontController
                 Cart::where('unique_identifier', session()->get('_token'))->update(['user_id' => $userid, 'created_by' => $userid, 'unique_identifier' => '']);
             }
             if(session()->has('url.intended')){
-                return redirect(session()->get('url.intended'));
+                $url = session()->get('url.intended');
+                session()->forget('url.intended');
+                return redirect($url);
             }else{
                 return redirect()->route('user.verify');
             }

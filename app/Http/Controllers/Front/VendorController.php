@@ -36,8 +36,9 @@ class VendorController extends FrontController
                 session(['url.intended' => url()->full()]);
                 return redirect()->route('customer.login');
             }else{
-                if(!Session::has('table')){
-                    Session::put('table', $request->table);
+                if(!Session::has('vendorTable')){
+                    Session::put('vendorTable', $request->table);
+                    Session::put('vendorType', 'dine_in');
                 }
             }
         }
