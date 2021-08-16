@@ -918,7 +918,13 @@ $(document).ready(function() {
                                 $('#placeorder_form_ondemand .left_box').html(''); 
                                 $('#placeorder_form_ondemand .left_box').html(cart_details.left_section);
                                 initialize();
-                           
+                                if(cart_details.deliver_status == 0){
+                                    $("#order_placed_btn").attr("disabled", true);
+                                    $("#order_placed_btn").addClass("d-none");
+                                }else{
+                                    $("#order_placed_btn").removeAttr("disabled");
+                                    $("#order_placed_btn").removeClass("d-none");
+                                }
                             }
                       
                         }else{
@@ -1094,10 +1100,10 @@ $(document).ready(function() {
                 }
                 else{
                     $('#add_new_address_form').hide();
-                    let address_template = _.template($('#address_template').html());
+                   // let address_template = _.template($('#address_template').html());
                     if(address.length > 0){
-                        $('#order_placed_btn').attr('disabled', false);
-                        $("#address_template_main_div").append(address_template({address:response.address}));
+                     //   $('#order_placed_btn').attr('disabled', false);
+                     //   $("#address_template_main_div").append(address_template({address:response.address}));
                         cartHeader(response.address.id);
                     }
                 }
