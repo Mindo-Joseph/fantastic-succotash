@@ -118,22 +118,8 @@
             let ip_address = result;
             let socket_port = "3100";
             let socket = io(ip_address + ':' + socket_port);
-
-            // let chatInput = $('#chatInput');
-
-            // chatInput.keypress(function(e) {
-                let message = "jhlh";
-                // console.log(message);
-                // if(e.which === 13 && !e.shiftKey) {
-                    socket.emit('sendChatToServer', message);
-                    // chatInput.html('');
-                    // return false;
-                // }
-            // });
-
-            // socket.on('sendChatToClient', (message) => {
-            //     $('.chat-content').append(`<li>${message}</li>`);
-            // });
+            let message = "jhlh";
+            socket.emit('sendChatToServer', message);
         });
     </script>
 @endsection

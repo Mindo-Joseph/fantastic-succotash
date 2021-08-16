@@ -255,26 +255,12 @@
             let ip_address = result;
             let socket_port = "3100";
             let socket = io(ip_address + ':' + socket_port);
-
-            // let chatInput = $('#chatInput');
-
-            // chatInput.keypress(function(e) {
-            //     let message = $(this).html();
-            //     console.log(message);
-            //     if(e.which === 13 && !e.shiftKey) {
-            //         socket.emit('sendChatToServer', message);
-            //         chatInput.html('');
-            //         return false;
-            //     }
-            // });
-
             socket.on('sendChatToClient', (message) => {
                 $('#order_list_order').show();
                 var rel = "pending_orders";
                 var url = "{{ route('orders.filter') }}";
                 $(".tab-pane").html('');
                 init(rel, url);
-                // location.reload();
             });
         });
 

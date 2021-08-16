@@ -64,6 +64,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             </div>
                         </div>
                         <script type="text/template" id="search_box_main_div_template">
+                            <a class="text-right d-block mr-2 mb-3" id="search_viewall" href="#">View All</a>
                             <div class="row mx-0">
                                 <% _.each(results, function(result, k){ %>
                                     <a class="col-md-4 text-center list-items mb-2" href="<%= result.redirect_url %>">
