@@ -187,8 +187,8 @@ $(document).ready(function () {
         }
     }
     $(document).on("click",".vendor-list",function() {
-        $('.cab-booking-main-loader').show();
         var locations = [];
+        $('.cab-booking-main-loader').show();
         let vendor_id = $(this).data('vendor');
         var pickup_location_latitude = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
         var pickup_location_longitude = $('input[name="pickup_location_longitude[]"]').map(function(){return this.value;}).get();

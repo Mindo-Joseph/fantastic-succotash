@@ -344,6 +344,11 @@ $(document).ready(function() {
         if((typeof guest_cart != undefined) && (guest_cart == 1)){
             window.location.href = login_url;
         }
+        var address = $("input[name='address_id']").val();
+        if( (vendor_type == 'delivery') && ( (address == '') || (address < 1)) ){
+            success_error_alert('error', 'Please add a valid address to continue', ".cart_response");
+            return false;
+        }
         $.ajax({
             data: {},
             type: "POST",
@@ -840,7 +845,32 @@ $(document).ready(function() {
             $('#cart_qty_span, .cart_qty_cls').html(cart_qty_total).hide();
         }
     }
+    function displayMapLocation(latitude, longitude, elementID) {
+        var geocoder;
+        geocoder = new google.maps.Geocoder();
+        var latlng = new google.maps.LatLng(latitude, longitude);
 
+        const map = new google.maps.Map(document.getElementById(elementID), {
+            center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+            zoom: 13
+        });
+
+        const marker = new google.maps.Marker({
+            map: map,
+            position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+        });
+
+        // geocoder.geocode(
+        //     { 'latLng': latlng },
+        //     function (results, status) {
+        //         if (status == google.maps.GeocoderStatus.OK) {
+        //         }
+        //         else {
+        //             $("#address-input").val("Geocoder failed due to: " + status);
+        //         }
+        //     }
+        // );
+    }
     function cartHeader(address_id) {
         $(".shopping-cart").html("");
         $(".spinner-box").show();
@@ -863,6 +893,11 @@ $(document).ready(function() {
                                 $("#cart_table").append(cart_template({cart_details:cart_details}));
                                 $('#placeorder_form .left_box').html('');
                                 $('#placeorder_form .left_box').html(cart_details.left_section);
+                                if(vendor_type != 'delivery'){
+                                    var latitude = $('#latitude').val();
+                                    var longitude = $('#longitude').val();
+                                    displayMapLocation(latitude, longitude, 'vendor-address-map');
+                                }
                                 initialize();
                                 if(cart_details.deliver_status == 0){
                                     $("#order_placed_btn").attr("disabled", true);
@@ -1331,6 +1366,9 @@ $(document).ready(function() {
         }else if(responseClass == 'error'){
             $(element).find(".alert").html("<div class='alert-danger p-1'>"+message+"</div>").show();
         }
+        $('html, body').animate({
+            scrollTop: $(element).offset().top
+        }, 500);
         setTimeout(function(){
             $(element).find(".alert").hide();
         }, 8000);

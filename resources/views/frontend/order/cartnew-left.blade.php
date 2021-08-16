@@ -19,11 +19,11 @@
             <input type="hidden" id="longitude" value="{{ $vendor_details['vendor_address']->longitude }}">
         </div>
         <label>{{$vendor_details['vendor_address']->address}}</label>
-        <div class="row mt-4 mb-4" id="address_template_main_div">
+        <div class="row mt-3 mb-3" id="address_template_main_div">
             <div class="col-12">
-                <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
-                    <i class="fa fa-map-marker" aria-hidden="true"></i> View Location
-                </button>
+                <div id="vendor-address-map-container" style="height: 200px;">
+                    <div id="vendor-address-map" style="height:100%"></div>
+                </div>
             </div>
         </div>
     @endif
