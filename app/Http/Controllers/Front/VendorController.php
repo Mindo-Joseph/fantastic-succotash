@@ -31,6 +31,8 @@ class VendorController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function vendorProducts(Request $request, $domain = '', $slug = 0){
+        $preferences = Session::get('preferences');
+        $vendor = Vendor::select('id','email', 'name', 'slug', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id', 'is_show_vendor_details', 'website')->where('slug', $slug)->where('status', 1)->firstOrFail();
         if( $request->has('table') ){
             if(!Auth::user()){
                 session(['url.intended' => url()->full()]);
@@ -38,12 +40,11 @@ class VendorController extends FrontController
             }else{
                 if(!Session::has('vendorTable')){
                     Session::put('vendorTable', $request->table);
+                    Session::put('vendorTableVendorId', $vendor->id);
                     Session::put('vendorType', 'dine_in');
                 }
             }
         }
-        $preferences = Session::get('preferences');
-        $vendor = Vendor::select('id','email', 'name', 'slug', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id', 'is_show_vendor_details', 'website')->where('slug', $slug)->where('status', 1)->firstOrFail();
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
