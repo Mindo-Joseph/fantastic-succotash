@@ -7,7 +7,7 @@ use Auth;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category, Vendor};
 class ProductController extends FrontController{
     private $field_status = 2;
     /**
@@ -136,10 +136,18 @@ class ProductController extends FrontController{
 
            
             return view('frontend.ondemand.index')->with(['time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
-     
         }
-      
-        return view('frontend.product')->with(['sets' => $sets, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn]);
+        $vendor_info = Vendor::where('id', $product->vendor_id)->with('slot')->first();
+        if($vendor_info){
+            if($vendor_info->show_slot == 1){
+                $vendor_info->show_slot_option = 1;
+            }elseif ($vendor_info->slot->count() > 0) {
+                $vendor_info->show_slot_option = 1;
+            }else{
+                $vendor_info->show_slot_option = 0;
+            }
+        }
+        return view('frontend.product')->with(['sets' => $sets, 'vendor_info' => $vendor_info, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn]);
     }
     public function metaProduct($langId, $multiplier, $for = 'relate', $productArray = []){
         if(empty($productArray)){

@@ -665,8 +665,19 @@ class CartController extends FrontController
                 }
                 $total_payable_amount = $total_payable_amount - $loyalty_amount_saved;
             }
+            $wallet_amount_used = 0;
+            if($user){
+                if($user->balanceFloat > 0){
+                    $wallet_amount_used = $user->balanceFloat * $customerCurrency->doller_compare;
+                    if($wallet_amount_used > $total_payable_amount){
+                        $wallet_amount_used = $total_payable_amount;
+                    }
+                    $total_payable_amount = $total_payable_amount - $wallet_amount_used;
+                    $cart->wallet_amount_used = $wallet_amount_used;
+                }
+            }
             $cart->loyalty_amount = number_format($loyalty_amount_saved, 2, '.', '');
-            $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount + $loyalty_amount_saved - $total_taxable_amount), 2, '.', '');
+            $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount + $loyalty_amount_saved + $wallet_amount_used - $total_taxable_amount), 2, '.', '');
             $cart->new_gross_amount = number_format(($total_payable_amount + $total_discount_amount), 2, '.', '');
             $cart->total_payable_amount = number_format($total_payable_amount, 2, '.', '');
             $cart->total_discount_amount = number_format($total_discount_amount, 2, '.', '');
