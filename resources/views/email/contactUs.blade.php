@@ -54,14 +54,14 @@
             <table style="width: 100%;">
               <thead>
                  <tr>
-                    <th style="text-align: center;">
+                    <th>
                         <a style="display: block;" href="#">
                            <img src="{{ $mailData['logo']}}" height="50px" alt="">
                         </a>
                     </th>
                  </tr>
               </thead>
-              <tbody style="text-align: center;">
+              <tbody>
                  <tr>
                     <td style="padding-top: 0;">
                      <div style="background: #fff;box-shadow: 0 3px 4px #ddd;border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;padding: 15px 40px 30px;">

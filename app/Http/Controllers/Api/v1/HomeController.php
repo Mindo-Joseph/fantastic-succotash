@@ -298,13 +298,13 @@ class HomeController extends BaseController{
                     'logo' => $client->logo['original'],
                     'superadmin_name' => $superAdmin->name,
                     'customer_name' => $customer_name,
-                    'customer_email' => $request->email,
+                    'customer_email' => $mail_from,
                     'customer_phone_number' => $request->phone_number,
                     'customer_message' => $request->message,
                 ];
                 Mail::send('email.contactUs', ['mailData'=>$data],
                 function ($message) use($sendto, $customer_name, $mail_from) {
-                    $message->from($mail_from, $client_name);
+                    $message->from($mail_from, $customer_name);
                     $message->to($sendto)->subject('Customer Request for Contact');
                 });
                 return $this->successResponse('', 'Thank you for contacting us. We will get to you shortly');
