@@ -316,6 +316,7 @@ class CartController extends BaseController{
 
     /**         *       Empty cart       *          */
     public function getCart($cart, $langId = '1', $currency = '1'){
+        $preferences = ClientPreference::first();
         $clientCurrency = ClientCurrency::where('currency_id', $currency)->first();
         if(!$cart){
             return false;
@@ -373,11 +374,13 @@ class CartController extends BaseController{
         if($cartData){
             $tax_details = [];
             foreach ($cartData as $ven_key => $vendorData) {
-                if($address_id > 0){
-                    $serviceArea = $vendorData->vendor->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                        $query->select('vendor_id')
-                        ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                    })->where('id', $vendorData->vendor_id)->get();
+                if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+                    if($address_id > 0){
+                        $serviceArea = $vendorData->vendor->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                            $query->select('vendor_id')
+                            ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                        })->where('id', $vendorData->vendor_id)->get();
+                    }
                 }
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
