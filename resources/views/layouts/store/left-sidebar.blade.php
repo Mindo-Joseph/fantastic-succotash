@@ -30,7 +30,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </div>
                             @endif
                         @endif
-                        @if($mod_count >= 1)
+                        @if($mod_count > 1)
                             <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mb-2 mb-lg-0 vendor_mods" id="top-tab" role="tablist">
                                 @if($client_preference_detail->delivery_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
@@ -64,6 +64,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             </div>
                         </div>
                         <script type="text/template" id="search_box_main_div_template">
+                            <a class="text-right d-block mr-2 mb-3" id="search_viewall" href="#">View All</a>
                             <div class="row mx-0">
                                 <% _.each(results, function(result, k){ %>
                                     <a class="col-md-4 text-center list-items mb-2" href="<%= result.redirect_url %>">

@@ -25,7 +25,6 @@ class CheckAuth
         $header = $request->header();
         
         $user = new User();
-
         if (isset($header['authorization']) && Token::check($header['authorization'][0], 'royoorders-jwt')){
             $token = $header['authorization'][0];
             $tokenBlock = BlockedToken::where('token', $token)->first();
