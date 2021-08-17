@@ -3573,6 +3573,7 @@ header .homepage-address h2 {
 
 /* Cab Booking Css */
 .booking-experience {
+    box-shadow: 0px 4px 16px rgb(0 0 0 / 15%);
     overflow: hidden;
     background: #fff;
     position: relative;
@@ -3582,7 +3583,194 @@ header .homepage-address h2 {
 .location-box {
     background-color: var(--theme-deafult);
     position: relative;
-    padding: 30px;
+    padding: 60px 24px 42px;
+}
+
+.title{
+    color: #fff;
+}
+
+.title-36{
+    font-size: 36px;
+    line-height: 44px;
+    font-weight: 600;
+}
+.title-24{
+    font-size: 24px;
+    line-height: 36px;
+    font-weight: 600;
+}
+.location-search {
+    padding: 16px 24px 0;
+}
+
+.location-search i {
+    position: absolute;
+    padding: 16px 4px 16px 8px;
+    width: 36px;
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.location-search .form-control {
+    border: 0;
+    border-bottom: 2px solid #f6f6f6;
+    height: 56px;
+    padding-left: 50px;
+    background-color: #f6f6f6;
+    font-size: 18px;
+    border-radius: 0 !important;
+}
+
+.location-search .form-control:focus {
+    border-color: var(--theme-deafult);
+}
+
+.location-search .form-control::placeholder,.location-search .form-control::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, 0.829);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.scheduled-ride{
+    padding: 16px 24px;
+}
+
+.scheduled-ride button i{
+    font-weight: 600;
+}
+
+.scheduled-ride button {
+    background-color: #EEEEEE;
+    padding: 10px 12px;
+    border-radius: 50px;
+    line-height: 16px;
+    font-size: 14px;
+    border: 0;
+    font-weight: 600;
+}
+
+.round-shape {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgb(119, 121, 122);
+    color: #fff;
+    line-height: 36px;
+}
+.active-location{
+    background-color: var(--theme-deafult);
+}
+.current-location{
+    color: #000;
+}
+.text-color{
+    color: var(--theme-deafult) !important;
+}
+
+.select-location:hover{
+    background-color: #F7F7F7;
+}
+
+.select-location h4{
+    margin-bottom: 2px;
+}
+
+.list-container {
+    height: calc(100vh - 480px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.cab-list-container {
+    height: calc(100vh - 372px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* .scroll {
+    width: 100%;
+    height: 4px;
+    background: var(--theme-deafult);
+    background: -webkit-radial-gradient(center, var(--theme-deafult), #d5dfe2);
+    background: -moz-radial-gradient(center, var(--theme-deafult), #d5dfe2);
+    background: radial-gradient(ellipse at center, var(--theme-deafult), #d5dfe2);
+    animation: animate 1s infinite linear;
+}
+@keyframes animate {
+0% {
+    transform-origin: left;
+    transform: scaleX(0);
+}
+49% {
+    transform-origin: left;
+    transform: scaleX(1);
+}
+50% {
+    transform-origin: right;
+    transform: scaleX(1);
+}
+100% {
+    transform-origin: right;
+    transform: scaleX(0);
+}
+} */
+
+
+.loader {
+    position: relative;
+    width: 100%;
+    min-height: 4px;
+}
+
+  
+@keyframes load {
+    0% {
+        left: 0;
+        width: 0px;
+    }
+    50% {
+        left: 100%;
+        width: 200px;
+    }
+    100% {
+        left: 100%;
+        width: 0px;
+    }
+}
+
+.loader::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 4px;
+    background-color: transparent;
+}
+
+.loader::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 30px;
+    min-height: 4px;
+    background-color: #ef6e52;
+    animation: load 2s linear infinite;
+}
+  
+
+
+
+.down-arrow::after{
+    font-family: FontAwesome;
+    content: "\f107";
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #fff;
+    font-size: 22px;
 }
 
 .location-inputs li {
@@ -3590,7 +3778,7 @@ header .homepage-address h2 {
 }
 
 .location-inputs li::before {
-    height: calc(100% + 8px);
+    height: calc(100% - 3px);
     background: transparent;
     border-left: 2px dashed #fff;
     position: absolute;
@@ -3603,7 +3791,7 @@ header .homepage-address h2 {
 }
 
 .location-inputs li:last-child::before {
-    height: calc(100% - 2px);
+    height: calc(100% - 13px);
 }
 
 .dots::after {

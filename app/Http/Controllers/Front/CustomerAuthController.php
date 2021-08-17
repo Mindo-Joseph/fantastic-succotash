@@ -32,6 +32,11 @@ class CustomerAuthController extends FrontController
         return view('test');
     }
 
+    public function getDemoCabBookingPage()
+    {
+        return view('cabdemo');
+    }
+
     public function fcm()
     {
         return view('firebase');
