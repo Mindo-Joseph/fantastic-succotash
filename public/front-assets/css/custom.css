@@ -1,3 +1,7 @@
+html{
+    scroll-behavior: smooth;
+}
+    
 body {
     font-size: 16px;
 }
@@ -4464,9 +4468,67 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 
 .loader-outer .spinner-border {width: 150px;height: 150px;}
 
+/* Main Nav */
+#main-nav {
+    position: absolute;
+    width: 600px;
+    max-width: 100%;
+    z-index: 1;
+    top: 24px;
+    padding: 15px 20px;
+    margin-left: 0;
+    
+}
 
+#main-nav.fixed	{ position: fixed; top:0;background: #fff;box-shadow: 0 4px 4px 0 rgb(0 0 0 / 6%);}
+#main-nav li{
+    margin-right: 10px;
+}
+#main-nav li:last-child{
+    margin-right: 0;
+}
+#main-nav .current a { background: var(--theme-deafult); color: #fff;}
+#main-nav a {
+    padding: 0 11px;
+    display: block;
+    color: #777777;
+    text-decoration: none;
+    min-width: 2.5rem;
+    line-height: 38px;
+    border-radius: 1.25rem;
+    background-color: transparent;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    font-weight: 700;
+}
+#main-nav a:hover { background: #ddd;}
 
+/* Main Content */
+#main-wrapper { width: 100%; margin: 70px auto 0;}
 
+.wrapper { height: 375px; text-align: center; font-weight: bold; padding: 150px 0 0 0;} /* Height of nav bar added to total height: 300 */
+
+/* Section Background Colors */
+#main-header,
+#main-footer { background: #f1c40f;}
+#section01 { background: #2ecc71;}
+#section02 { background: #e74c3c;}
+#section03 { background: #16a085;}
+#section04 { background: #2c3e50;}
+
+.footer-card {
+    background: #fff;
+    padding: 20px;
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    z-index: 30;
+    background-color: #fff;
+    justify-content: flex-end;
+    -webkit-box-align: center;
+    align-items: center;
+    display: flex;
+}
 
 
 
@@ -5076,6 +5138,31 @@ body[dir="rtl"] .inner_spacing h3 {
     }
     .search_bar .onhover-div.pl-0.shake-effect {
         display: none;
+    }
+     .main-menu .menu-right .icon-nav .mobile-search {
+        right: 86% !important;
+    }
+    .top-header .header-dropdown .mobile-wishlist {
+        right: 64% !important;
+    }
+    .top-header .header-dropdown .mobile-wishlist {
+        right: 10%;
+        bottom: 7px !important;
+    }
+    .main-menu .menu-right .icon-nav .mobile-cart {
+        right: 27% !important;
+    }
+    .top-header .header-dropdown .mobile-account{
+        right: 66% !important;
+    }
+    .top-header .header-dropdown .mobile-wishlist {
+        right: 8% !important;
+    }
+    .main-menu .menu-right .icon-nav .mobile-setting {
+        right: 47%;
+    }
+    .top-header .header-dropdown .mobile-account .onhover-show-div, .top-header .header-dropdown .mobile-wishlist .onhover-show-div {
+        left: 0;
     }
 }
 
