@@ -105,3 +105,21 @@
     </div>
 </section>
 @endsection
+@section('script')
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script> -->
+
+    <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous"></script>
+    
+    <script>
+        var url = window.location.href;
+        var arr = url.split("/");
+        var result = arr[2];
+        $(function(){
+            let ip_address = result;
+            let socket_port = "3100";
+            let socket = io(ip_address + ':' + socket_port);
+            let message = "jhlh";
+            socket.emit('sendChatToServer', message);
+        });
+    </script>
+@endsection

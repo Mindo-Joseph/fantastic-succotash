@@ -153,7 +153,13 @@ class CustomerAuthController extends FrontController
             } else {
                 Cart::where('unique_identifier', session()->get('_token'))->update(['user_id' => $userid, 'created_by' => $userid, 'unique_identifier' => '']);
             }
-            return redirect()->route('user.verify');
+            if(session()->has('url.intended')){
+                $url = session()->get('url.intended');
+                session()->forget('url.intended');
+                return redirect($url);
+            }else{
+                return redirect()->route('user.verify');
+            }
         }
         $checkEmail = User::where('email', $req->email)->first();
         if ($checkEmail) {

@@ -429,9 +429,9 @@ class CartController extends FrontController
         $user = Auth::user();
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
-        $pharmacy = ClientPreference::first();
+        $preferences = ClientPreference::first();
         $countries = Country::get();
-        $cart->pharmacy_check = $pharmacy->pharmacy_check;
+        $cart->pharmacy_check = $preferences->pharmacy_check;
         $customerCurrency = ClientCurrency::where('currency_id', $curId)->first();
         $latitude = '';
         $longitude = '';
@@ -511,7 +511,12 @@ class CartController extends FrontController
                 $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
                 
-                if(empty($cart_dinein_table_id)){
+                if(Session::has('vendorTable')){
+                    if((Session::has('vendorTableVendorId')) && (Session::get('vendorTableVendorId') == $vendorData->vendor_id)){
+                        $cart_dinein_table_id = Session::get('vendorTable');
+                    }
+                    Session::forget(['vendorTable', 'vendorTableVendorId']);
+                }else{
                     $cart_dinein_table_id = $vendorData->vendor_dinein_table_id;
                 }
 
@@ -526,15 +531,20 @@ class CartController extends FrontController
                     }
                 }
                 else{
-                    if($address_id > 0){
-                        $serviceArea = $vendorData->vendor->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                            $query->select('vendor_id')
-                            ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                        })->where('id', $vendorData->vendor_id)->get();
+                    if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+                        if($address_id > 0){
+                            $serviceArea = $vendorData->vendor->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                                $query->select('vendor_id')
+                                ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                            })->where('id', $vendorData->vendor_id)->get();
+                        }
                     }
                 }
                 
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
+                    if($cart_dinein_table_id > 0){
+                        $prod->update(['vendor_dinein_table_id' => $cart_dinein_table_id]);
+                    }
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
                     $price_in_currency = $prod->pvariant->price / $divider;

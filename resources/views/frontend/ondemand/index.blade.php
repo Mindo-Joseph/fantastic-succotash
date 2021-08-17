@@ -23,9 +23,9 @@
                         <p>Date & Time</p>
                     </div>
 
-                    <div class="indicator-line  @if(app('request')->input('step') >= '2' || !empty(app('request')->input('step'))) active @endif""></div>
+                    <div class="indicator-line  @if(app('request')->input('step') >= '2' || !empty(app('request')->input('step'))) active @endif"></div>
 
-                    <div class="step step3">
+                    <div class="step step3   @if(app('request')->input('step') >= '3' || !empty(app('request')->input('step'))) active @endif"">
                         <div class="step-icon">3</div>
                         <p>Payment</p>
                     </div>
@@ -178,10 +178,42 @@
                                     <textarea class="form-control" name="" id="" cols="30" rows="7"></textarea>
                                 </div> 
                             </div>
-                            <a href="?step=1"><span class="btn btn-solid"><</span></a>
-                            <a href="#" id="next-button-ondemand-3" style="display: none;"><span class="btn btn-solid">Continue</span></a>
+                            <a href="?step=2"><span class="btn btn-solid"><</span></a>
+                            <a href="?step=3" id="next-button-ondemand-3" style="display: none;"><span class="btn btn-solid">Continue</span></a>
                             @endif
                             <!--end step 2 html -->
+
+
+
+                            @if(app('request')->input('step') == '3')
+                            <!-- step 3 payment page -->
+                            <form method="post" action="" id="placeorder_form_ondemand">
+                                    @csrf
+                                    <div class="card-box">
+                                        <div class="row d-flex justify-space-around">
+                                            @if(!$guest_user)
+                                                <div class="col-lg-8 left_box">
+                                                    
+                                                </div>
+                                            @endif
+                                           
+                                        </div>
+
+                                        <div class="row mb-4">
+                                            <div class="col-sm-6 text-md-right">
+                                                <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Continue')}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                                <div class="col-sm-6 text-md-right">
+                                    <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Continue')}}</button>
+                                </div>
+                               
+                            @endif    
+                            <!-- end step 3 payment page -->
                             <!-- Step Three Start From Here -->
 
                             {{-- <div class="step-three">
@@ -306,7 +338,22 @@
                             
                                 <script type="text/template" id="header_cart_template_ondemand">
                                         <% _.each(cart_details.products, function(product, key){%>
+                                            <li>
+                                                <h6 class="d-flex align-items-center justify-content-between"> <%= product.vendor.name %> </h6>
+                                            </li>
+
+                                            <% if( (product.isDeliverable != undefined) && (product.isDeliverable == 0) ) { %>
+                                                <li class="border_0">
+                                                    <th colspan="7">
+                                                        <div class="text-danger">
+                                                            Products for this vendor are not deliverable at your area. Please change address or remove product.
+                                                        </div>
+                                                    </th>
+                                                </li>
+                                                <% } %>
                                         <% _.each(product.vendor_products, function(vendor_product, vp){%>
+                                                
+
                                              <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
                                                 <a class='media' href='<%= show_cart_url %>'>
                                                      <div class='media-body'>                                                                
@@ -424,12 +471,80 @@
     </div>
 </div>
 <!-- end remove_item_modal -->
+
+<!-- payment section ----->
+
+<script type="text/template" id="payment_method_template">
+    <% _.each(payment_options, function(payment_option, k){%>
+        <a class="nav-link <%= payment_option.slug == 'cash_on_delivery' ? 'active': ''%>" id="v-pills-<%= payment_option.slug %>-tab" data-toggle="pill" href="#v-pills-<%= payment_option.slug %>" role="tab" aria-controls="v-pills-wallet" aria-selected="true" data-payment_option_id="<%= payment_option.id %>"><%= payment_option.title %></a>
+    <% }); %>
+</script>
+<script type="text/template" id="payment_method_tab_pane_template">
+    <% _.each(payment_options, function(payment_option, k){%>
+        <div class="tab-pane fade <%= payment_option.slug == 'cash_on_delivery' ? 'active show': ''%>" id="v-pills-<%= payment_option.slug %>" role="tabpanel" aria-labelledby="v-pills-<%= payment_option.slug %>-tab">
+            <form method="POST" id="<%= payment_option.slug %>-payment-form">
+            @csrf
+            @method('POST')
+                <div class="payment_response mb-3">
+                    <div class="alert p-0" role="alert"></div>
+                </div>
+                <div class="form_fields">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <% if(payment_option.slug == 'stripe') { %>
+                                <div class="form-control">
+                                    <label class="d-flex flex-row pt-1 pb-1 mb-0">
+                                        <div id="stripe-card-element"></div>
+                                    </label>
+                                </div>
+                                <span class="error text-danger" id="stripe_card_error"></span>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12 text-md-right">
+                            <button type="button" class="btn btn-solid" data-dismiss="modal">{{ __('Cancel') }}</button>
+                            <button type="button" class="btn btn-solid ml-1 proceed_to_pay">{{__('Place Order')}}</button>
+                            <!-- <button type="button" class="btn btn-solid ml-1 proceed_to_pay">Scheduled Now</button> -->
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    <% }); %>
+</script>
+<div class="modal fade" id="proceed_to_pay_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="pay-billLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="row no-gutters">
+                    <div class="col-4">
+                        <div class="nav flex-column nav-pills" id="v_pills_tab" role="tablist" aria-orientation="vertical"></div>
+                    </div>
+                    <div class="col-8">
+                        <div class="tab-content-box px-3">
+                            <div class="d-flex align-items-center justify-content-between pt-3">
+                                <h5 class="modal-title" id="pay-billLabel">{{__('Total Amount')}}: <span id="total_amt"></span></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="tab-content h-100" id="v_pills_tabContent">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!----- end payment section ------------->
 @endsection
 
 @section('script')
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
-    var guest_cart = {{ $guest_user ? 1 : 0 }};
+     var guest_cart = {{ $guest_user ? 1 : 0 }};
     var base_url = "{{url('/')}}";
     var place_order_url = "{{route('user.placeorder')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
@@ -442,6 +557,36 @@
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
     var getTimeSlotsForOndemand = "{{route('getTimeSlotsForOndemand')}}";
+
+    $(document).on('click', '.showMapHeader', function(){
+        var lats = document.getElementById('latitude').value;
+        var lngs = document.getElementById('longitude').value;
+
+        var myLatlng = new google.maps.LatLng(lats, lngs);
+        var mapProp = {
+            center:myLatlng,
+            zoom:13,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+            
+        };
+        var map=new google.maps.Map(document.getElementById("pick-address-map"), mapProp);
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            draggable:true  
+        });
+        // marker drag event
+        google.maps.event.addListener(marker,'drag',function(event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+        //marker drag event end
+        google.maps.event.addListener(marker,'dragend',function(event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+        $('#pick_address').modal('show');
+    });
     
 </script>
 @endsection
