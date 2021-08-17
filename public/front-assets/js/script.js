@@ -582,7 +582,6 @@ body_event.on("click", ".theme-layout-version", function () {
 
     $(window).on("load", function () {
         $('[data-toggle="tooltip"]').tooltip();
-        console.log(localStorage['theme_color']);
         if(localStorage['theme_color'] == "dark"){
             $(".theme-layout-version").text("Light");
         }
