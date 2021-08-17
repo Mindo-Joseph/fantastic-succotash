@@ -545,7 +545,7 @@ function closeCart() {
     document.getElementById("cart_side").classList.remove("open-side");
 }
 body_event.on("click", ".theme-layout-version", function () {
-    if ($(".theme-layout-version").text() == 'Dark') {
+    if ($(".theme-layout-version").text() == 'DarkDark') {
         localStorage['theme_color'] = 'dark';
         $("body").addClass("dark"),
         window.sessionStorage.setItem("theme", "dark");
