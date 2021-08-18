@@ -7,6 +7,10 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
+    .btn-disabled{
+        opacity:0.5;
+        pointer-events: none;
+    }
 </style>
 
 @endsection
@@ -264,7 +268,10 @@
                                         </button>
                                         @endif
                                         @if($product->inquiry_only == 0)
-                                            <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart">{{__('Add To Cart')}}</a>
+                                            <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart {{$vendor_info->show_slot_option == 0 ? 'btn-disabled' : '' }}">{{__('Add To Cart')}}</a>
+                                            @if($vendor_info->show_slot_option == 0)
+                                            <p class="text-danger">Vendor is not accepting orders right now.</p>
+                                            @endif
                                         @else
                                             <a href="#" data-toggle="modal" data-target="#inquiry_form" class="btn btn-solid inquiry_mode">{{ __('Inquire Now')}}</a>
                                         @endif
