@@ -290,7 +290,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-7 datenow align-items-center justify-content-between" id="schedule_div" style="display:flex!important">
+                <div class="col-md-7 datenow align-items-center justify-content-between" id="schedule_div" style="display:none!important">
                         <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value=" ">
                     <!-- <button type="button" class="btn btn-solid"><i class="fa fa-check" aria-hidden="true"></i></button> -->
                 </div>
