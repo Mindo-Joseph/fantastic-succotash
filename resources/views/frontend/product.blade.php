@@ -146,6 +146,9 @@
                                     <h2 class="mb-0">
                                         {{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}
                                     </h2>
+                                    <h6 class="sold-by">
+                                        <b> <img src="https://imgproxy.royoorders.com/insecure/fill/200/200/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/vendor/TtVoPPVWhs38KjqKd4j8hzoWUZeekoP1YcwDJOWq.png" alt=""></b> <a href="#"><b> mrsingh-cabs® </b></a>
+                                    </h6>
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->rating_check == 1)  
                                             @if($product->averageRating > 0)
@@ -201,7 +204,7 @@
                                     </div>
                                     <div id="product_variant_quantity_wrapper">
                                         @if($product->inquiry_only == 0)
-                                        <div class="product-description border-product">
+                                        <div class="product-description border-product pb-0">
                                             <h6 class="product-title mt-0">{{__('Quantity')}}:
                                                 @if(!$product->variant[0]->quantity > 0)
                                                     <span id="outofstock" style="color: red;">{{__('Out of Stock')}}</span>
@@ -227,6 +230,7 @@
                                             @endif
                                         </div>
                                         @endif
+                                       
                                     </div>
                                     
                                     @if(!empty($product->addOn) && $product->addOn->count() > 0)
