@@ -733,9 +733,6 @@ form .btn {
     line-height: 35px;
 } */
 
-.mobile-account{
-    top: 3px;
-}
 
 .remove-item-modal .btn {
     width: 50%;
@@ -4524,7 +4521,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 /* Main Content */
 #main-wrapper { width: 100%; margin: 70px auto 0;}
 
-.wrapper { height: 375px; text-align: center; font-weight: bold; padding: 150px 0 0 0;} /* Height of nav bar added to total height: 300 */
+#main-wrapper .wrapper { height: 375px; text-align: center; font-weight: bold; padding: 150px 0 0 0;} /* Height of nav bar added to total height: 300 */
 
 /* Section Background Colors */
 #main-header,
