@@ -95,19 +95,19 @@
                     </div>
                     <div class="col-8 col-md-10">
                         <div class="row align-items-md-center">
-                            <div class="col-md-3">
-                                <h4 class="mt-0"><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
+                            <div class="col-md-3 order-0">
+                                <h4 class="mt-0 mb-1"><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
                                 <% _.each(vendor_product.pvariant.vset, function(vset, vs){%>
                                     <% if(vset.variant_detail.trans) { %>
                                         <label><span><b><%= vset.variant_detail.trans.title %>:</b></span> <%= vset.option_data.trans.title %></label>
                                     <% } %>
                                 <% }); %>
                             </div>
-                            <div class="col-md-2 text-md-center">
+                            <div class="col-md-2 text-md-center order-1 mb-1 mb-md-0">
                                 <div class="items-price">{{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %></div>
                             </div>
-                            <div class="col-md-4 text-md-center">
-                                <div class="number d-flex justify-content-center">
+                            <div class="col-8 col-md-4 text-md-center order-3 order-md-2">
+                                <div class="number d-flex justify-content-md-center">
                                     <div class="counter-container d-flex align-items-center">
                                         <span class="minus qty-minus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                             <i class="fa fa-minus" aria-hidden="true"></i>
@@ -124,12 +124,12 @@
                                     <% } %>
                                 <% } %>
                             </div>
-                            <div class="col-md-1 text-right text-md-center p-in">
+                            <div class="col-md-1 text-right text-md-center p-in order-2 order-md-3">
                                 <a class="action-icon d-block remove_product_via_cart" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                                 </a>
                             </div>
-                            <div class="col-md-2 text-md-right">
+                            <div class="col-4 col-md-2 text-right order-4">
                                 <div class="items-price">{{Session::get('currencySymbol')}}<%= vendor_product.pvariant.quantity_price %></div>
                             </div>
                         </div>

@@ -398,16 +398,16 @@ td.items-details h4 {
     vertical-align: middle;
     text-align: center; */
     display: inline-block;
-    height: 34px;
+    height: 30px;
     text-align: center;
-    line-height: 35px;
-    padding: 0 10px;
+    line-height: 30px;
+    padding: 0 8px;
     cursor: pointer;
     color: var(--theme-deafult);
 }
 
 .number input {
-    height: 34px;
+    height: 30px;
     min-width: 30px;
     max-width: fit-content;
     width: 100%;
