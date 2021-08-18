@@ -673,7 +673,7 @@
             height: 120,
             toolbar: [
                 ['style', ['style']],
-                ['color', ['color']],
+                // ['color', ['color']],
                 ['table', ['table']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['font', ['bold', 'underline', 'clear']],
