@@ -107,14 +107,16 @@
                                 <div class="items-price">{{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %></div>
                             </div>
                             <div class="col-md-4 text-md-center">
-                                <div class="number">
-                                    <span class="minus qty-minus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>" data-vendor_id="<%= vendor_product.vendor_id %>">
-                                        <i class="fa fa-minus" aria-hidden="true"></i>
-                                    </span>
-                                    <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>">
-                                    <span class="plus qty-plus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
-                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                    </span>
+                                <div class="number d-flex justify-content-center">
+                                    <div class="counter-container d-flex align-items-center">
+                                        <span class="minus qty-minus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>" data-vendor_id="<%= vendor_product.vendor_id %>">
+                                            <i class="fa fa-minus" aria-hidden="true"></i>
+                                        </span>
+                                        <input placeholder="1" type="text" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>" readonly>
+                                        <span class="plus qty-plus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </span>
+                                    </div>
                                 </div>
                                 <% if(cart_details.pharmacy_check == 1){ %>
                                     <% if(vendor_product.product.pharmacy_check == 1){ %>
