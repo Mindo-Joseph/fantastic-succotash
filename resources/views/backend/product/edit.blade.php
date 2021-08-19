@@ -199,11 +199,7 @@
                         </div>
                         @endif
 
-                        <div class="col-sm-8 check_inventory {{$product->has_inventory == 0
-Key
-Value
-Description
- ? 'd-none' : ''}}">
+                        <div class="col-sm-8 check_inventory {{$product->has_inventory == 0 ? 'd-none' : ''}}">
                             <div class="row">
                                 @if($product->category->categoryDetail->type_id != 8)
                                 @if($product->has_variant == 0)
