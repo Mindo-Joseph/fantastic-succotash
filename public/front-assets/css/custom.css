@@ -4363,6 +4363,11 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 
   
 /* Classes Page Css */
+.product-order span.ellips {
+    width: 170px;
+    max-width: 100%;
+}
+
 .class_img {
     height: 120px;
     width: 100%;
