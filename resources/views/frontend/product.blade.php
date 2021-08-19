@@ -289,12 +289,13 @@
                                     <div class="border-product">
                                         <h6 class="product-title">{{__('Share It')}}</h6>
                                         <div class="product-icon w-100">
-                                            <ul class="product-social">
-                                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                                            </ul>
+                                            <!-- <ul class="product-social"> -->
+                                                {!! $shareComponent !!}
+                                                <!-- <li><a href="#"><i class="fa fa-twitter"></i></a></li> -->
+                                                <!-- <li><a href="#"><i class="fa fa-facebook"></i></a></li> -->
+                                                <!-- <li><a href="#"><i class="fa fa-google-plus"></i></a></li> -->
+                                                <!-- <li><a href="#"><i class="fa fa-instagram"></i></a></li> -->
+                                            <!-- </ul>   -->
                                         </div>
                                     </div>
                                 </div>
@@ -575,6 +576,8 @@
 </div>
 @endsection
 @section('script')
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script> -->
+<script src="{{ asset('js/share.js') }}"></script>
 <script>
     $(document).on('click', '.submitInquiryForm', function(e) {
         e.preventDefault();

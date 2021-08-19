@@ -41,6 +41,7 @@
     var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
     var change_primary_data_url = "{{ route('changePrimaryData') }}";
     var url1 = "{{ route('config.update') }}";
+    var url2 = "{{ route('config.get') }}";
     var featured_product_language = "{{ __('Featured Product') }}";
     var new_product_language = "{{ __('New Product') }}";
     var on_sale_product_language = "{{ __('On Sale') }}";

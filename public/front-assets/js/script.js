@@ -523,8 +523,8 @@
     }),
     $(".color-box li").click(function () {
         $(this).addClass("active").siblings().removeClass("active");
-    }),
-    $('<div class="sidebar-btn dark-light-btn"><div class="dark-light"><div class="theme-layout-version">Dark</div></div></div>').appendTo($("body"));
+    })
+    
 var body_event = $("body");
 function openNav() {
     document.getElementById("mySidenav").classList.add("open-side");
@@ -585,4 +585,24 @@ body_event.on("click", ".theme-layout-version", function () {
         if(localStorage['theme_color'] == "dark"){
             $(".theme-layout-version").text("Light");
         }
+        $.ajax({
+            url: url2,
+            type: "GET",
+            dataType: 'json',
+            // data: { 'theme_color': localStorage['theme_color'] },
+            success: function (data) {
+                if(data.client_preferences.show_dark_mode == 0){
+                    localStorage['theme_color'] = '';
+                    $("body").removeClass("dark"),
+                    window.sessionStorage.setItem("theme", "light");
+                    $(".theme-layout-version").text("Dark");
+                    $("#dark-light-btn-toggle").addClass('d-none');
+
+                }
+                else{
+                    $('<div class="sidebar-btn dark-light-btn" id="dark-light-btn-toggle"><div class="dark-light"><div class="theme-layout-version">Dark</div></div></div>').appendTo($("body"));
+                    $("#dark-light-btn-toggle").removeClass('d-none');
+                }
+            }
+        });
     });

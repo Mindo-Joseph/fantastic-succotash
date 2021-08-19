@@ -26,6 +26,11 @@ class UserhomeController extends FrontController{
             Session::forget('config_theme'); 
         }
     }
+    public function getConfig(){
+        $client_preferences = ClientPreference::first();
+        return response()->json(['success'=>true, 'client_preferences' => $client_preferences]);
+       dd("neskjbf");
+    }
     /**
      * Display a listing of the resource.
      *
