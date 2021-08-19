@@ -513,16 +513,15 @@ $(document).ready(function () {
                 if (status == google.maps.GeocoderStatus.OK) {
                     if (results[0]) {
                         var add = results[0].formatted_address;
-                        console.log(results);
                         var value = add.split(",");
 
                         count = value.length;
                         country = value[count - 1];
                         state = value[count - 2];
                         city = value[count - 3];
-                        $("#address-input").val(add);
-                        $(".homepage-address span").text(value).attr({ "title": value, "data-original-title": value });
                         if (!selected_address) {
+                            $("#address-input").val(add);
+                            $(".homepage-address span").text(value).attr({ "title": value, "data-original-title": value });
                             getHomePage(latitude, longitude);
                         }
                     }

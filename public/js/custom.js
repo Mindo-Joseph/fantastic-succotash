@@ -376,30 +376,51 @@ $(document).ready(function () {
             success_error_alert('error', 'Please add a valid address to continue', ".cart_response");
             return false;
         }
+        var task_type = $("input[name='task_type']:checked").val();
+        var schedule_dt = $("#schedule_datetime").val();
+        if( (task_type == 'schedule') && (schedule_dt == '') ){
+            success_error_alert('error', 'Schedule date time is required', ".cart_response");
+            return false;
+        }
         $.ajax({
-            data: {},
             type: "POST",
-            async: false,
             dataType: 'json',
-            url: payment_option_list_url,
+            url: update_cart_schedule,
+            data: { task_type: task_type, schedule_dt: schedule_dt },
             success: function (response) {
                 if (response.status == "Success") {
-                    $('#v_pills_tab').html('');
-                    $('#v_pills_tabContent').html('');
-                    let payment_method_template = _.template($('#payment_method_template').html());
-                    $("#v_pills_tab").append(payment_method_template({ payment_options: response.data }));
-                    let payment_method_tab_pane_template = _.template($('#payment_method_tab_pane_template').html());
-                    $("#v_pills_tabContent").append(payment_method_tab_pane_template({ payment_options: response.data }));
-                    $('#proceed_to_pay_modal').modal('show');
-                    $('#proceed_to_pay_modal #total_amt').html($('#cart_total_payable_amount').html());
-                    stripeInitialize();
+                    $.ajax({
+                        data: {},
+                        type: "POST",
+                        async: false,
+                        dataType: 'json',
+                        url: payment_option_list_url,
+                        success: function (response) {
+                            if (response.status == "Success") {
+                                $('#v_pills_tab').html('');
+                                $('#v_pills_tabContent').html('');
+                                let payment_method_template = _.template($('#payment_method_template').html());
+                                $("#v_pills_tab").append(payment_method_template({ payment_options: response.data }));
+                                let payment_method_tab_pane_template = _.template($('#payment_method_tab_pane_template').html());
+                                $("#v_pills_tabContent").append(payment_method_tab_pane_template({ payment_options: response.data }));
+                                $('#proceed_to_pay_modal').modal('show');
+                                $('#proceed_to_pay_modal #total_amt').html($('#cart_total_payable_amount').html());
+                                stripeInitialize();
+                            }
+                        }, error: function (error) {
+                            var response = $.parseJSON(error.responseText);
+                            let error_messages = response.message;
+                            $.each(error_messages, function (key, error_message) {
+                                $('#min_order_validation_error_' + error_message.vendor_id).html(error_message.message).show();
+                            });
+                        }
+                    });
                 }
-            }, error: function (error) {
+            },
+            error: function (error) {
                 var response = $.parseJSON(error.responseText);
-                let error_messages = response.message;
-                $.each(error_messages, function (key, error_message) {
-                    $('#min_order_validation_error_' + error_message.vendor_id).html(error_message.message).show();
-                });
+                success_error_alert('error', response.message, ".cart_response");
+                $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
             }
         });
     });
@@ -613,11 +634,19 @@ $(document).ready(function () {
         });
     }
     function placeOrder(address_id = 0, payment_option_id, transaction_id, tip = 0) {
+        var task_type = $("input[name='task_type']:checked").val();
+        var schedule_dt = $("#schedule_datetime").val();
+        if( (task_type == 'schedule') && (schedule_dt == '') ){
+            $("#proceed_to_pay_modal").modal('hide');
+            $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+            success_error_alert('error', 'Schedule date time is required', ".cart_response");
+            return false;
+        }
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: place_order_url,
-            data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip },
+            data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt },
             success: function (response) {
                 if (response.status == "Success") {
                     window.location.href = base_url+'/order/success/'+response.data.id;
@@ -1401,6 +1430,7 @@ $(document).ready(function () {
 
     function success_error_alert(responseClass, message, element) {
         $(element).find(".alert").html('');
+        $(element).removeClass('d-none');
         if (responseClass == 'success') {
             $(element).find(".alert").html("<div class='alert-success p-1'>" + message + "</div>").show();
         } else if (responseClass == 'error') {
@@ -1410,6 +1440,7 @@ $(document).ready(function () {
             scrollTop: $(element).offset().top
         }, 500);
         setTimeout(function () {
+            $(element).addClass('d-none');
             $(element).find(".alert").hide();
         }, 8000);
     }
