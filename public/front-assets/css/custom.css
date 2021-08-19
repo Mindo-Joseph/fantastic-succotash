@@ -2285,7 +2285,6 @@ footer .form-control {
 }
 
 .text-36 {
-    color: #1F2431;
     font-size: 30px;
     font-weight: 800;
     letter-spacing: 0;
@@ -4558,8 +4557,13 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 }
 
 
+#social-links li {
+    margin-right: 20px;
+}
 
-
+#social-links li:last-child {
+    margin-right: 0;
+}
 
 
 

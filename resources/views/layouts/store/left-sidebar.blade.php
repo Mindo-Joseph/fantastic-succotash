@@ -12,7 +12,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
   @endif
         <div class="container main-menu d-block">
             <div class="row align-items-center py-md-2 position-initial">
-                <div class="col-lg-1 col-3">
+                <div class="col-lg-2 col-3">
                     <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                 </div>
                 <div class="col-lg-5 main-menu d-block order-lg-1 order-2">
@@ -52,7 +52,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif 
                     </div>
                 </div>
-                <div class="col-lg-6 col-9 order-lg-2 order-1 position-initial">                
+                <div class="col-lg-5 col-9 order-lg-2 order-1 position-initial">                
                     <div class="search_bar menu-right d-flex align-items-center justify-content-end justify-content-lg-between w-100 ">
                         <div class="radius-bar">
                             <div class="search_form d-flex align-items-center justify-content-between">
@@ -171,9 +171,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             <li><a href="#">doller</a></li>
                                         </ul>
                                         <h6>Change Theme</h6>
+                                        @if($client_preference_detail->show_dark_mode == 1)
                                         <ul class="list-inline">
                                             <li><a class="theme-layout-version" href="javascript:void(0)">Dark</a></li>
                                         </ul>
+                                        @endif
                                     </div>
                                 </li>
                                 <li class="onhover-div mobile-cart">
