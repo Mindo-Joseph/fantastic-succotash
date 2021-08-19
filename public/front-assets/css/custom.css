@@ -392,21 +392,39 @@ td.items-details h4 {
 
 .minus,
 .plus {
-    width: 20px;
+    /* width: 20px;
     height: 20px;
     display: inline-block;
     vertical-align: middle;
+    text-align: center; */
+    display: inline-block;
+    height: 30px;
     text-align: center;
+    line-height: 30px;
+    padding: 0 8px;
+    cursor: pointer;
+    color: var(--theme-deafult);
 }
 
 .number input {
-    height: 34px;
-    width: 50px;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    height: 30px;
+    min-width: 30px;
+    max-width: fit-content;
+    width: 100%;
     display: inline-block;
-    vertical-align: middle;
+    /* width: 50px; */
+    text-align: center;
+    border: none;
+    border-left: 1px solid var(--theme-deafult);
+    border-right: 1px solid var(--theme-deafult);
+    /* border-radius: 4px; */
+    /* display: inline-block; */
+    /* vertical-align: middle; */
+}
+.number .counter-container{
+    border: 1px solid var(--theme-deafult);
+    border-radius: 1rem;
+    width: fit-content;
 }
 
 .left_box .checkround {
@@ -698,15 +716,22 @@ form .btn {
 
 .remove-item-modal .modal-dialog {
     max-width: 300px;
+    margin: auto;
 }
 
-.remove-item-modal .close {
+.sold-by img {
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+/* .remove-item-modal .close {
     position: absolute;
     right: -25px;
     top: -20px;
     color: #fff;
     opacity: 4;
-}
+} */
 
 /* .remove-item-modal .btn {
     width: 50%;
@@ -715,9 +740,6 @@ form .btn {
     line-height: 35px;
 } */
 
-.mobile-account{
-    top: 3px;
-}
 
 .remove-item-modal .btn {
     width: 50%;
@@ -952,7 +974,7 @@ label:hover~input:checked~.rate label
     background: white;
     border: 1px solid var(--theme-deafult);
     border-radius: 5px;
-    padding: 5px 20px;
+    padding: 5px 10px;
     margin-bottom: 1rem;
     text-align: center;
     /* box-shadow: 0px 3px 10px -2px var(--theme-deafult); */
@@ -4341,6 +4363,11 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 
   
 /* Classes Page Css */
+.product-order span.ellips {
+    width: 170px;
+    max-width: 100%;
+}
+
 .class_img {
     height: 120px;
     width: 100%;
@@ -4506,7 +4533,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 /* Main Content */
 #main-wrapper { width: 100%; margin: 70px auto 0;}
 
-.wrapper { height: 375px; text-align: center; font-weight: bold; padding: 150px 0 0 0;} /* Height of nav bar added to total height: 300 */
+#main-wrapper .wrapper { height: 375px; text-align: center; font-weight: bold; padding: 150px 0 0 0;} /* Height of nav bar added to total height: 300 */
 
 /* Section Background Colors */
 #main-header,

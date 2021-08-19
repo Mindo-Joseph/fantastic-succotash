@@ -134,7 +134,8 @@ class CategoryController extends FrontController{
             }
         }elseif($page == 'on demand service'){
             $cartDataGet = $this->getCartOnDemand($request);
-            return view('frontend.ondemand.index')->with(['time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
+            $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
+            return view('frontend.ondemand.index')->with(['clientCurrency' => $clientCurrency,'time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }else{
             if(view()->exists('frontend/cate-'.$page.'s')){
                 return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
@@ -198,10 +199,7 @@ class CategoryController extends FrontController{
                             $q->groupBy('product_id')->with(['checkIfInCart' => function($q1) use($column,$value){
                                 $q1->whereHas('cart',function($qset)use($column,$value){$qset->where($column,$value);});
                             }]);
-                        },'variant.checkIfInCart' => function($q1) use($column,$value){
-                                $q1->whereHas('cart',function($qset)use($column,$value){$qset->where($column,$value);});
-                                }
-                    ])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating', 'products.inquiry_only')->where('products.is_live', 1)->where('category_id', $category_id);
+                        },'variant.checkIfInCart'])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating', 'products.inquiry_only')->where('products.is_live', 1)->where('category_id', $category_id);
             if(count($vendors) > 0){
                 $products = $products->whereIn('products.vendor_id', $vendors);
             }

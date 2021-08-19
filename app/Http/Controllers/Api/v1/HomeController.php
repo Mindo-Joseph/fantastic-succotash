@@ -97,12 +97,12 @@ class HomeController extends BaseController{
             $user_geo[] = $longitude;
             if($request->has('type') ){
                 if($request->type == ''){
-                    $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
+                    $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id');
                 }else{
-                    $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount')->where($request->type, 1);
+                    $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id')->where($request->type, 1);
                 }
             }else{
-                $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount');
+                $vendorData = Vendor::select('id', 'name', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id');
             }
             if($preferences->is_hyperlocal == 1){
                 if( (empty($latitude)) && (empty($longitude)) ){
@@ -119,7 +119,7 @@ class HomeController extends BaseController{
             $vendorData = $vendorData->where('status', '!=', $this->field_status)->get();
             foreach ($vendorData as $vendor) {
                 unset($vendor->products);
-                $vendor->is_show_category = ($vendor->vendor_templete_id == 1) ? 0 : 1;
+                $vendor->is_show_category = ($vendor->vendor_templete_id == 2 || $vendor->vendor_templete_id == 4 ) ? 0 : 1;
             }
             foreach ($vendorData as $key => $value) {
                 $vends[] = $value->id;
@@ -298,13 +298,13 @@ class HomeController extends BaseController{
                     'logo' => $client->logo['original'],
                     'superadmin_name' => $superAdmin->name,
                     'customer_name' => $customer_name,
-                    'customer_email' => $request->email,
+                    'customer_email' => $mail_from,
                     'customer_phone_number' => $request->phone_number,
                     'customer_message' => $request->message,
                 ];
                 Mail::send('email.contactUs', ['mailData'=>$data],
                 function ($message) use($sendto, $customer_name, $mail_from) {
-                    $message->from($mail_from, $client_name);
+                    $message->from($mail_from, $customer_name);
                     $message->to($sendto)->subject('Customer Request for Contact');
                 });
                 return $this->successResponse('', 'Thank you for contacting us. We will get to you shortly');

@@ -280,6 +280,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{session('selectedAddress')}}">
                     <input type="hidden" name="address_latitude" id="address-latitude" value="{{session('latitude')}}" />
                     <input type="hidden" name="address_longitude" id="address-longitude" value="{{session('longitude')}}" />
+                    <input type="hidden" name="address_place_id" id="address-place-id" value="{{session('selectedPlaceId')}}" />
                 </div>
             </div>
             <div class="text-center">
