@@ -719,6 +719,12 @@ form .btn {
     margin: auto;
 }
 
+.sold-by img {
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
 /* .remove-item-modal .close {
     position: absolute;
     right: -25px;
@@ -4357,6 +4363,11 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 
   
 /* Classes Page Css */
+.product-order span.ellips {
+    width: 170px;
+    max-width: 100%;
+}
+
 .class_img {
     height: 120px;
     width: 100%;
