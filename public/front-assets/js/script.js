@@ -545,7 +545,7 @@ function closeCart() {
     document.getElementById("cart_side").classList.remove("open-side");
 }
 body_event.on("click", ".theme-layout-version", function () {
-    if ($(".theme-layout-version").text() == 'DarkDark') {
+    if ($(".theme-layout-version").text() == 'Dark') {
         localStorage['theme_color'] = 'dark';
         $("body").addClass("dark"),
         window.sessionStorage.setItem("theme", "dark");
@@ -591,17 +591,21 @@ body_event.on("click", ".theme-layout-version", function () {
             dataType: 'json',
             // data: { 'theme_color': localStorage['theme_color'] },
             success: function (data) {
-                if(data.client_preferences.show_dark_mode == 0){
-                    localStorage['theme_color'] = '';
-                    $("body").removeClass("dark"),
-                    window.sessionStorage.setItem("theme", "light");
-                    $(".theme-layout-version").text("Dark");
-                    $("#dark-light-btn-toggle").addClass('d-none');
-
+                if(data.client_preferences.show_dark_mode == 2){
+                    if(localStorage['theme_color'] == 'dark'){
+                        $('<div class="sidebar-btn dark-light-btn" id="dark-light-btn-toggle"><div class="dark-light"><div class="theme-layout-version">Light</div></div></div>').appendTo($("body"));
+                    }
+                    else{
+                        $('<div class="sidebar-btn dark-light-btn" id="dark-light-btn-toggle"><div class="dark-light"><div class="theme-layout-version">Dark</div></div></div>').appendTo($("body"));
+                    }
+                    $("#dark-light-btn-toggle").removeClass('d-none');
                 }
                 else{
-                    $('<div class="sidebar-btn dark-light-btn" id="dark-light-btn-toggle"><div class="dark-light"><div class="theme-layout-version">Dark</div></div></div>').appendTo($("body"));
-                    $("#dark-light-btn-toggle").removeClass('d-none');
+                    // localStorage['theme_color'] = '';
+                    // $("body").removeClass("dark"),
+                    // window.sessionStorage.setItem("theme", "light");
+                    // $(".theme-layout-version").text("Dark");
+                    $("#dark-light-btn-toggle").addClass('d-none');
                 }
             }
         });

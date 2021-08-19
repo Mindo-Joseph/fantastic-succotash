@@ -14,7 +14,7 @@ class AddDarkModeToggleToClientPreferencesTable extends Migration
     public function up()
     {
         Schema::table('client_preferences', function (Blueprint $table) {
-            $table->tinyInteger('show_dark_mode')->after('enquire_mode')->default(0);
+            $table->tinyInteger('show_dark_mode')->after('enquire_mode')->default(2);
         });
     }
 
