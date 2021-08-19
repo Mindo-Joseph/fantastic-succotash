@@ -32,14 +32,22 @@ class CustomerAuthController extends FrontController
         return view('test');
     }
 
+    public function getDemoCabBookingPage()
+    {
+        return view('cabdemo');
+    }
+
     public function fcm()
     {
         return view('firebase');
     }
 
     public function sendNotification(){
-        $token = ["ep6RrGVuT2-1MU6l1KHdIr:APA91bHVYY9GO--vjKfZNUKJuo0L-GH7KPaHi3xCZjoIkNqjxd8mKrBIsuChZngeIkJq9l3KgMhfzqRaFrHBY_w90ScBfSXTu-YHWLMl6QspOSDlMUrsNFPiDQ1V52F4A1kIjcJta_R6"];  
-        $from = env('FIREBASE_SERVER_KEY');
+        // $token = ["fXC1tzHiywg:APA91bGj3YXxPXuiBjCSAhlt0leikG2eq2gIJm3EFtSjkfp4c6akzpeDOqq2XfvUxxX99i36aCPf8gFsJIZrU7Ywcx6ZCIMh9vAPJctpxyU0_pagKF-wgVURZ2Z6C6XMaWAFZCDlas3L"];  
+        $token = ["SYyGlsuFhM:APA91bHT-EWdEXBqn9hqpTLObtI8VNf49QTatYDSFaYeI4OZG6vGrxKyfPZUe2b8h0KMhwS-pZCC1stmHlqCqMKdLD5baCjnCusdHZys9Z31gpykmUg2fS5PwmcfAYHB11EAZi_dHHqq"];  
+       //previous
+    //    $from = 'AAAA-gxQcf4:APA91bF2-7wHcDDUpdnOAjPkRECMcMqZyto1g3CloNTSvp4tvaM6yX2H1H3FFWQj3mHE_t0LkKKu5M_ASTjIaKvvuLDTrXe9eO7Xi7k8YbH6M355gz7x0GTbK7E9F7I7CAQS3AILs4J_';
+        $from = 'AAAA8Aea-wU:APA91bEKYAjmXEjMg4u-fdxZuDtmwtM_rdkJ8d06mQfGtAiZnZIBYrH5LvYLTWh9VJjMD3pAHaJzjbvL-ckV43xJBHXrLxBvop0SAOwUSQ6Un7_OAEmuzbrHbjBpq045nyWYz4d5zP6b';
         
         $notification_content = NotificationTemplate::where('id', 3)->first();
         if($notification_content){
@@ -145,7 +153,13 @@ class CustomerAuthController extends FrontController
             } else {
                 Cart::where('unique_identifier', session()->get('_token'))->update(['user_id' => $userid, 'created_by' => $userid, 'unique_identifier' => '']);
             }
-            return redirect()->route('user.verify');
+            if(session()->has('url.intended')){
+                $url = session()->get('url.intended');
+                session()->forget('url.intended');
+                return redirect($url);
+            }else{
+                return redirect()->route('user.verify');
+            }
         }
         $checkEmail = User::where('email', $req->email)->first();
         if ($checkEmail) {
@@ -325,9 +339,22 @@ class CustomerAuthController extends FrontController
                 $user->save();
             }
             $vendor = new Vendor();
-            $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0;
-            $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0;
-            $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
+            $count = 0;
+            if($client_preference){
+                if($client_preference->dinein_check == 1){$count++;}
+                if($client_preference->takeaway_check == 1){$count++;}
+                if($client_preference->delivery_check == 1){$count++;}
+            }
+            if($count > 1){
+                $vendor->dine_in = ($request->has('dine_in') && $request->dine_in == 'on') ? 1 : 0;
+                $vendor->takeaway = ($request->has('takeaway') && $request->takeaway == 'on') ? 1 : 0;
+                $vendor->delivery = ($request->has('delivery') && $request->delivery == 'on') ? 1 : 0;
+            }
+            else{
+                $vendor->dine_in = $client_preference->dinein_check == 1 ? 1 : 0;
+                $vendor->takeaway = $client_preference->takeaway_check == 1 ? 1 : 0;
+                $vendor->delivery = $client_preference->delivery_check == 1 ? 1 : 0;
+            }
             $vendor->logo = 'default/default_logo.png';
             $vendor->banner = 'default/default_image.png';
             if ($request->hasFile('upload_logo')) {

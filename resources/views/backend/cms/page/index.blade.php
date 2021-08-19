@@ -36,7 +36,7 @@
                                 @forelse($pages as $page)
                                     <tr class="page-title active-page page-detail" data-page_id="{{$page->id}}" data-show_url="{{route('cms.page.show', ['id'=> $page->id])}}">
                                         <td>
-                                            <a class="text-body" href="javascript:void(0)" id="text_body_{{$page->id}}">{{$page->primary->title}}</a>
+                                            <a class="text-body" href="javascript:void(0)" id="text_body_{{$page->id}}">{{$page->primary ? $page->primary->title : ''}}</a>
                                         </td>
                                         <td align="right">
                                         <a href="{{route('extrapage',['slug' => $page->slug])}}" target="_BLANK">

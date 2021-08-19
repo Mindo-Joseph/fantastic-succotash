@@ -132,7 +132,7 @@ class UserhomeController extends FrontController{
                 });
             }
         }
-        $vendors = $vendors->where('status', '!=', $this->field_status)->inRandomOrder()->get();
+        $vendors = $vendors->where('status', 1)->inRandomOrder()->get();
         foreach ($vendors as $key => $value) {
             $vendor_ids[] = $value->id;
             $value->vendorRating = $this->vendorRating($value->products);
@@ -222,8 +222,12 @@ class UserhomeController extends FrontController{
         if($where !== ''){
             $products = $products->where($where, 1);
         }
+        $pndCategories = Category::where('type_id', 7)->pluck('id');
         if(is_array($venderIds)){
             $products = $products->whereIn('vendor_id', $venderIds);
+        }
+        if($pndCategories){
+            $products = $products->whereNotIn('category_id', $pndCategories);
         }
         $products = $products->where('is_live', 1)->take(10)->inRandomOrder()->get();
         if(!empty($products)){

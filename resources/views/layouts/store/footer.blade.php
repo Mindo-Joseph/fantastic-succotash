@@ -41,6 +41,12 @@
     var delete_cart_product_url= "{{ route('deleteCartProduct') }}";
     var change_primary_data_url = "{{ route('changePrimaryData') }}";
     var url1 = "{{ route('config.update') }}";
+    var featured_product_language = "{{ __('Featured Product') }}";
+    var new_product_language = "{{ __('New Product') }}";
+    var on_sale_product_language = "{{ __('On Sale') }}";
+    var best_seller_product_language = "{{ __('Best Seller') }}";
+    var vendor_language = "{{ __('Vendors') }}";
+    var brand_language = "{{ __('Brands') }}";
     // if((home_page_url != window.location.href) && (home_page_url2 != window.location.href)){
     //     $('.vendor_mods').hide();}
     // else{

@@ -30,14 +30,26 @@
 
     <script>
         var firebaseConfig = {
-            apiKey: "AIzaSyBtE2uCaikxgUDbn5SqmzW2fGcGOpUlkqc",
-            authDomain: "royo-order-version2.firebaseapp.com",
-            projectId: "royo-order-version2",
-            storageBucket: "royo-order-version2.appspot.com",
-            messagingSenderId: "1073948422654",
-            appId: "1:1073948422654:web:4dd137a854484fa3c410af",
-            measurementId: "G-59QSSL4RQ1"
+            apiKey: "AIzaSyBppfct1EwlyUSAT9QKbiuo4e6HiMvV4Fs",
+            authDomain: "royo-apps-1624361718359.firebaseapp.com",
+            // databaseURL: "https://royo-apps-1624361718359-default-rtdb.firebaseio.com",
+            projectId: "royo-apps-1624361718359",
+            storageBucket: "royo-apps-1624361718359.appspot.com",
+            messagingSenderId: "1030919748357",
+            appId: "1:1030919748357:web:9c29df0aca70b4f508156c",
+            measurementId: "G-EFBPR3ZDKE"
         };
+
+        // var firebaseConfig = {
+        //     apiKey: "AIzaSyBtE2uCaikxgUDbn5SqmzW2fGcGOpUlkqc",
+        //     authDomain: "royo-order-version2.firebaseapp.com",
+        //     projectId: "royo-order-version2",
+        //     storageBucket: "royo-order-version2.appspot.com",
+        //     messagingSenderId: "1073948422654",
+        //     appId: "1:1073948422654:web:4dd137a854484fa3c410af",
+        //     measurementId: "G-59QSSL4RQ1"
+        // };
+
         firebase.initializeApp(firebaseConfig);
         const messaging = firebase.messaging();
         messaging

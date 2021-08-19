@@ -8,6 +8,8 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('dispatch-order-status-update/{id?}', 'Front\DispatcherController@dispatchOrderStatusUpdate')->name('dispatch-order-update'); // Order Status update Dispatch
 	Route::get('dispatch-pickup-delivery/{id?}', 'Front\DispatcherController@dispatchPickupDeliveryUpdate')->name('dispatch-pickup-delivery'); // pickup delivery update from dispatch
 	Route::get('demo', 'Front\CustomerAuthController@getTestHtmlPage');
+	Route::get('cabbooking', 'Front\CustomerAuthController@getTestHtmlPage');
+	Route::get('demo/cabBooking', 'Front\CustomerAuthController@getDemoCabBookingPage');
 	Route::get('fcm', 'Front\CustomerAuthController@fcm');
 	Route::get('send-notification', 'Front\CustomerAuthController@sendNotification');
 	Route::get('test/email', function(){
@@ -45,6 +47,7 @@ Route::group(['middleware' => ['domain']], function () {
 		'uses' => 'Front\CustomerAuthController@resetPasswordForm'
 	]);
 	Route::get('/autocomplete-search','Front\SearchController@postAutocompleteSearch')->name('autocomplete');
+	Route::get('/search-all/{keyword}','Front\SearchController@showSearchResults')->name('showSearchResults');
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
 	Route::get('page/{slug}','Front\UserhomeController@getExtraPage')->name('extrapage');
 	Route::post('/homePageData','Front\UserhomeController@postHomePageData')->name('homePageData');
@@ -89,6 +92,7 @@ Route::group(['middleware' => ['domain']], function () {
     Route::post('stripe/make', 'Front\PaymentController@makePayment')->name('stripe.makePayment');
 	Route::post('inquiryMode/store', 'Front\ProductInquiryController@store')->name('inquiryMode.store');
 	Route::get('viewcart','Front\CartController@showCart')->name('showCart');
+	Route::post('/getTimeSlotsForOndemand','Front\CategoryController@getTimeSlotsForOndemand')->name('getTimeSlotsForOndemand');
 });
 Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/orders', 'Front\OrderController@orders')->name('user.orders');
@@ -158,7 +162,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 		Route::post('get-list-of-vehicles-old/{id}', 'Front\PickupDeliveryController@getListOfVehicles');
 		Route::post('vendor/list/{category_id}', 'Front\PickupDeliveryController@postVendorListByCategoryId');
 		Route::post('get-list-of-vehicles/{id}', 'Front\PickupDeliveryController@productsByVendorInPickupDelivery');
-		Route::post('order-tracking-details', 'Front\BookingController@getOrderTrackingDetails')->name('bookingIndex');
+		Route::post('order-tracking-details', 'Front\PickupDeliveryController@getOrderTrackingDetails')->name('bookingIndex');
 		Route::post('promo-code/verify', 'Front\PickupDeliveryController@postVerifyPromoCode')->name('verify.cab.booking.promo-code');
 	});
 	Route::post('upload-file', 'Front\RatingController@uploadFile')->name('uploadfile');

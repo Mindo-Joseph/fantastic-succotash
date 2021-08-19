@@ -81,16 +81,6 @@ class OrderController extends FrontController
         $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
         return view('frontend.order.success', compact('order', 'navCategories', 'clientCurrency'));
     }
-    public function placeOrder(Request $request, $domain = '')
-    {
-        // if ($request->input("payment-group") == '1') {
-        //     $langId = Session::get('customerLanguage');
-        //     $navCategories = $this->categoryNav($langId);
-        //     return view('frontend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone, 'total_amount' => $request->total_amount, 'address_id' => $request->address_id]);
-        // }
-        $order = $this->orderSave($request, "1");
-        return $this->successResponse(['status' => 'success', 'order' => $order, 'message' => 'Order placed successfully.']);
-    }
     public function sendSuccessEmail($request, $order, $vendor_id=''){
         if( (isset($request->auth_token)) && (!empty($request->auth_token)) ){
             $user = User::where('auth_token', $request->auth_token)->first();
@@ -380,6 +370,21 @@ class OrderController extends FrontController
         }
         return $cart;
     }
+    public function placeOrder(Request $request, $domain = '')
+    {
+        // if ($request->input("payment-group") == '1') {
+        //     $langId = Session::get('customerLanguage');
+        //     $navCategories = $this->categoryNav($langId);
+        //     return view('frontend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone, 'total_amount' => $request->total_amount, 'address_id' => $request->address_id]);
+        // }
+        $order_response = $this->orderSave($request, "1");
+        $response = $order_response->getData();
+        if($response->status == 'Success'){
+            return $this->successResponse($response->data, 'Order placed successfully.', 201);
+        }else{
+            return $this->errorResponse($response->message, 402);
+        }
+    }
     public function orderSave($request, $paymentStatus)
     {
         try {
@@ -599,25 +604,43 @@ class OrderController extends FrontController
             $order->total_amount = $total_amount;
             $order->total_discount = $total_discount;
             $order->taxable_amount = $taxable_amount;
+            $payable_amount = $payable_amount + $total_delivery_fee - $total_discount;
             if ($loyalty_amount_saved > 0) {
                 if ($loyalty_amount_saved > $payable_amount) {
                     $loyalty_amount_saved = $payable_amount;
                     $loyalty_points_used = $payable_amount * $redeem_points_per_primary_currency;
                 }
             }
+            $payable_amount = $payable_amount - $loyalty_amount_saved;
+            $wallet_amount_used = 0;
+            if($user){
+                if($user->balanceFloat > 0){
+                    $wallet = $user->wallet;
+                    $wallet_amount_used = $user->balanceFloat;
+                    if($wallet_amount_used > $payable_amount){
+                        $wallet_amount_used = $payable_amount;
+                    }
+                    $order->wallet_amount_used = $wallet_amount_used;
+                    if($wallet_amount_used > 0){
+                        $wallet->withdrawFloat($order->wallet_amount_used, ['Wallet has been <b>debited</b> for order number <b>'.$order->order_number.'</b>']);
+                    }
+                }
+            }
+            $payable_amount = $payable_amount - $wallet_amount_used;
             $tip_amount = 0;
             if ( (isset($request->tip)) && ($request->tip != '') && ($request->tip > 0) ) {
                 $tip_amount = $request->tip;
                 $tip_amount = ($tip_amount / $customerCurrency->doller_compare) * $clientCurrency->doller_compare;
                 $order->tip_amount = number_format($tip_amount, 2);
             }
+            $payable_amount = $payable_amount + $tip_amount;
             $order->total_delivery_fee = $total_delivery_fee;
             $order->loyalty_points_used = $loyalty_points_used;
             $order->loyalty_amount_saved = $loyalty_amount_saved;
             $order->subscription_discount = $total_subscription_discount;
             $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
             $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
-            $order->payable_amount = $total_delivery_fee + $payable_amount + $tip_amount - $total_discount - $loyalty_amount_saved;
+            $order->payable_amount = $payable_amount;
             $order->save();
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $this->sendSuccessEmail($request, $order, $vendor_id);
@@ -636,7 +659,7 @@ class OrderController extends FrontController
                     $order_tax->save();
                 }
             }
-            if ( ($request->payment_option_id != 1) && ($request->payment_option_id != 2) ) {
+            if ( ($request->payment_option_id != 1) && ($request->payment_option_id != 2) && ($request->payment_option_id != 5) ) {
                 Payment::insert([
                     'date' => date('Y-m-d'),
                     'order_id' => $order->id,
@@ -644,10 +667,12 @@ class OrderController extends FrontController
                     'balance_transaction' => $order->payable_amount,
                 ]);
             }
+            $order = $order->with('paymentOption')->where('order_number', $order->order_number)->first();
             DB::commit();
-            return $order;
+            return $this->successResponse($order);
         } catch (Exception $e) {
             DB::rollback();
+            return $this->errorResponse($e->getMessage, 402);
         }
     }
 
@@ -667,9 +692,7 @@ class OrderController extends FrontController
             $token[] = $device;  
         }
         $token[] = "d4SQZU1QTMyMaENeZXL3r6:APA91bHoHsQ-rnxsFaidTq5fPse0k78qOTo7ZiPTASiH69eodqxGoMnRu2x5xnX44WfRhrVJSQg2FIjdfhwCyfpnZKL2bHb5doCiIxxpaduAUp4MUVIj8Q43SB3dvvvBkM1Qc1ThGtEM";  
-        // dd($token);
         $from = env('FIREBASE_SERVER_KEY');
-        
         $notification_content = NotificationTemplate::where('id', 1)->first();
         if($notification_content){
             $headers = [
@@ -710,12 +733,12 @@ class OrderController extends FrontController
             'cvv' => $request->cvc
         ];
         $response = $gateway->purchase(
-            [
-                'amount' => $request->amount,
-                'currency' => 'INR',
-                'card' => $formData,
-                'token' => $token,
-            ]
+        [
+            'amount' => $request->amount,
+            'currency' => 'INR',
+            'card' => $formData,
+            'token' => $token,
+        ]
         )->send();
         if ($response->isSuccessful()) {
             $cart = Cart::where('user_id', Auth::user()->id)->first();

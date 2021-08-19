@@ -15,10 +15,18 @@ use App\Http\Requests\OrderProductRatingRequest;
 use App\Models\{Category,ClientPreference,ClientCurrency,Vendor,ProductVariantSet,Product,LoyaltyCard,UserAddress,Order,OrderVendor,OrderProduct,VendorOrderStatus,Client,Promocode,PromoCodeDetail, VendorCategory};
 use App\Http\Traits\ApiResponser;
 use GuzzleHttp\Client as GCLIENT;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 class PickupDeliveryController extends FrontController{
 	
     use ApiResponser;
+    public function getOrderTrackingDetails(Request $request, $domain = ''){
+        $response = Http::get($request->new_dispatch_traking_url);
+        if($response->status() == 200){
+           return $this->successResponse($response->json()); 
+        }
+    }
+    
     public function postVendorListByCategoryId(Request $request, $domain = '',$category_id = 0){
         $vendor_ids = [];
         $vendor_categories = VendorCategory::where('category_id', $category_id)->where('status', 1)->get();
@@ -45,9 +53,11 @@ class PickupDeliveryController extends FrontController{
                         }])->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'products.category_id','products.tags')->where('products.id', $product_id)->where('products.is_live', 1)->firstOrFail(); 
         $image_url = $product->media->first() ? $product->media->first()->image->path['image_fit'].'360/360'.$product->media->first()->image->path['image_path'] : '';
         $product->image_url = $image_url;
+        $tags_price = $this->getDeliveryFeeDispatcher($request, $product);
+        $product->original_tags_price = $tags_price;
+        $product->tags_price = number_format($tags_price);
         $product->name = $product->translation->first() ? $product->translation->first()->title :'';
         $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';
-        $product->tags_price = number_format($this->getDeliveryFeeDispatcher($request, $product));
         $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
         foreach ($product->variant as $k => $v) {
             $product->variant[$k]->price = $product->tags_price;
@@ -105,11 +115,13 @@ class PickupDeliveryController extends FrontController{
                     ->where('products.is_live', 1)->distinct()->get(); 
             if(!empty($products)){
                 foreach ($products as $key => $product) {
+                    $tags_price = $this->getDeliveryFeeDispatcher($request, $product);
                     $image_url = $product->media->first() ? $product->media->first()->image->path['image_fit'].'93/93'.$product->media->first()->image->path['image_path'] : '';
                     $product->image_url = $image_url;
                     $product->name = $product->translation->first() ? $product->translation->first()->title :'';
                     $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';
-                    $product->tags_price = number_format($this->getDeliveryFeeDispatcher($request, $product));
+                    $product->original_tags_price = $tags_price;
+                    $product->tags_price = number_format($tags_price);
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                     foreach ($product->variant as $k => $v) {
                         $product->variant[$k]->price = $product->tags_price;
@@ -146,7 +158,6 @@ class PickupDeliveryController extends FrontController{
      /**     * Get Company ShortCode     *     */
      public function getListOfVehicles(Request $request, $cid = 0){
         try{
-           
             if($cid == 0){
                 return response()->json(['error' => 'No record found.'], 404);
             }
@@ -154,16 +165,11 @@ class PickupDeliveryController extends FrontController{
             $langId = Auth::user()->language;
             $category = Category::with(['tags','type'  => function($q){
                             $q->select('id', 'title as redirect_to');
-                        },
-                        'childs.translation'  => function($q) use($langId){
-                            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
-                            ->where('category_translations.language_id', $langId);
-                        },
-                        'translation' => function($q) use($langId){
-                            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
-                            ->where('category_translations.language_id', $langId);
-                        }])
-                        ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
+                        },'childs.translation'  => function($q) use($langId){
+                            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')->where('category_translations.language_id', $langId);
+                        },'translation' => function($q) use($langId){
+                            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')->where('category_translations.language_id', $langId);
+                        }])->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
                         ->where('id', $cid)->first();
             if(!$category){
                 return response()->json(['error' => 'No record found.'], 200);
@@ -193,8 +199,7 @@ class PickupDeliveryController extends FrontController{
                 );
             }
             return $category_details;
-        }
-        else{
+        }else{
             $arr = array();
             return $arr;
         }
@@ -204,25 +209,23 @@ class PickupDeliveryController extends FrontController{
      # get delivery fee from dispatcher 
      public function getDeliveryFeeDispatcher($request,$product=null){
         try {
-                $dispatch_domain = $this->checkIfPickupDeliveryOn();
-                if ($dispatch_domain && $dispatch_domain != false) {
-                            $all_location = array();
-                            $postdata =  ['locations' => $request->locations,'agent_tag' => $product->tags??''];
-                            $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,'content-type' => 'application/json']]);
-                            $url = $dispatch_domain->pickup_delivery_service_key_url;                      
-                            $res = $client->post($url.'/api/get-delivery-fee',
-                                ['form_params' => ($postdata)]
-                            );
-                            $response = json_decode($res->getBody(), true); 
-                            if($response && $response['message'] == 'success'){
-                                return $response['total'];
-                            }
-                    
+            $dispatch_domain = $this->checkIfPickupDeliveryOn();
+            if ($dispatch_domain && $dispatch_domain != false) {
+                $all_location = array();
+                $postdata =  ['locations' => $request->locations,'agent_tag' => $product->tags??''];
+                $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key,'shortcode' => $dispatch_domain->pickup_delivery_service_key_code,'content-type' => 'application/json']]);
+                $url = $dispatch_domain->pickup_delivery_service_key_url;                      
+                $res = $client->post($url.'/api/get-delivery-fee',
+                    ['form_params' => ($postdata)]
+                );
+                $response = json_decode($res->getBody(), true); 
+                if($response && $response['message'] == 'success'){
+                    return $response['total'];
                 }
-            }    
-            catch(\Exception $e){
-              
             }
+        }catch(\Exception $e){
+              
+        }
     }
     # check if last mile delivery on 
     public function checkIfPickupDeliveryOn(){
@@ -232,10 +235,6 @@ class PickupDeliveryController extends FrontController{
         else
             return false;
     }
-
-
-
-    
     /**
      * create order for booking
     */

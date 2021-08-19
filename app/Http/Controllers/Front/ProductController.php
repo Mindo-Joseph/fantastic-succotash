@@ -7,7 +7,7 @@ use Auth;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category, Vendor};
 class ProductController extends FrontController{
     private $field_status = 2;
     /**
@@ -118,8 +118,36 @@ class ProductController extends FrontController{
                 $variant_option_id[] = $avSet->variant_option_id;
             }
             $sets[] = ['variant_types' => $variant_type_id, 'variant_options' => $variant_option_id];
+        } 
+        if($product->category->categoryDetail->type_id == 8){
+            $cartDataGet = $this->getCartOnDemand($request);
+            $nlistData = clone $product;
+            $nlistData = $nlistData->where('url_slug', $url_slug)->paginate(10);
+            if(!empty($nlistData)){
+                foreach ($nlistData as $key => $value) {
+                    $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
+                    $value->translation_description = (!empty($value->translation->first())) ? $value->translation->first()->body_html : $value->sku;
+                    $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                    $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
+                 }
+            }
+            $listData = $nlistData;
+            $category = $category_detail;
+
+           
+            return view('frontend.ondemand.index')->with(['time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }
-        return view('frontend.product')->with(['sets' => $sets, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn]);
+        $vendor_info = Vendor::where('id', $product->vendor_id)->with('slot')->first();
+        if($vendor_info){
+            if($vendor_info->show_slot == 1){
+                $vendor_info->show_slot_option = 1;
+            }elseif ($vendor_info->slot->count() > 0) {
+                $vendor_info->show_slot_option = 1;
+            }else{
+                $vendor_info->show_slot_option = 0;
+            }
+        }
+        return view('frontend.product')->with(['sets' => $sets, 'vendor_info' => $vendor_info, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn]);
     }
     public function metaProduct($langId, $multiplier, $for = 'relate', $productArray = []){
         if(empty($productArray)){

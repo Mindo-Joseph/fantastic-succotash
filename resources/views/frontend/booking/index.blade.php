@@ -1,9 +1,7 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
 <style type="text/css">
-.cab-location-details img {
-    height: 30px;
-}
+
 .cabbooking-loader {
   width: 30px;
   height: 30px;
@@ -144,10 +142,10 @@
                 </h4>
                 <div class="row">
                     <div class="col-sm-6">
-                        <button class="btn btn-solid w-100" id="pickup_now" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_now" data-task_type="now">Pickup Now</button>
+                        <button class="btn btn-solid w-100" id="pickup_now" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_now" data-task_type="now">Pickup Now</button>
                     </div>
                     <div class="col-sm-6">
-                        <button class="btn btn-solid w-100" id="pickup_later" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_later">Pickup Later</button>
+                        <button class="btn btn-solid w-100" id="pickup_later" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_later">Pickup Later</button>
                     </div>
                 </div>
             </div>
@@ -178,11 +176,11 @@
                 <div class="w-100 h-100">
                     <img src="<%= product_image %>" alt="">
                 </div>
-                <div class="cab-location-details">
+                <div class="cab-location-details" id="searching_main_div">
                     <h4><b>Searching For Nearby Drivers</b></h4>
                     <img src="{{url('images/cabbooking-loader.gif')}}">
                 </div>
-                <div class="cab-location-details" id="driver_details" style="display:none;">
+                <div class="cab-location-details" id="driver_details_main_div" style="display:none;">
                    <div class="row align-items-center">
                        <div class="col-8" >
                             <h4 id="driver_name"><b><%= result.user_name %></b></h4>
@@ -190,7 +188,7 @@
                        </div>
                        <div class="col-4">
                            <div class="taxi-img">
-                               <img src="">
+                               <img src="" id="driver_image">
                            </div>
                        </div>
                    </div>
@@ -224,9 +222,9 @@ var promo_code_list_url = "{{route('verify.promocode.list')}}";
 var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";
 var cab_booking_create_order = "{{url('looking/create-order')}}";
 var live_location = "{{ URL::asset('/images/live_location.gif') }}";
-var order_tracking_details_url = "{{url('order-tracking-details')}}";
+var no_coupon_available_message = "{{__('No Other Coupons Available.')}}";
+var order_tracking_details_url = "{{url('looking/order-tracking-details')}}";
 var cab_booking_promo_code_remove_url = "{{url('looking/promo-code/remove')}}";
 var apply_cab_booking_promocode_coupon_url = "{{ route('verify.cab.booking.promo-code') }}";
-var no_coupon_available_message = "{{__('No Other Coupons Available.')}}";
 </script>
 @endsection
