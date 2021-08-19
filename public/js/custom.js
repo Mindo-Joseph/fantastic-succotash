@@ -324,23 +324,23 @@ $(document).ready(function () {
                     $('#cart_product_' + cartproduct_id).remove();
                     $('#shopping_cart1_' + cartproduct_id).remove();
                     $('#tr_vendor_products_' + cartproduct_id).remove();
-                    cartTotalProductCount();
-                    cartHeader();
-                    if ($("#tbody_" + vendor_id + " > tr.vendor_products_tr").length == 0) {
+                    if ($("#tbody_" + vendor_id + " > vendor_products_tr").length == 0) {
                         $('#tbody_' + vendor_id).remove();
                         $('#thead_' + vendor_id).remove();
                     }
-                    if ($("[id^=tr_vendor_products_]").length == 0) {
-                        if ($("#cart_main_page").length) {
-                            $("#cart_main_page").html('');
-                            $('#tbody_' + vendor_id).remove()
-                            let empty_cart_template = _.template($('#empty_cart_template').html());
-                            $("#cart_main_page").append(empty_cart_template());
-                        }
-                    }
+                    // if ($("[id^=tr_vendor_products_]").length == 0) {
+                    //     if ($("#cart_main_page").length) {
+                    //         $("#cart_main_page").html('');
+                    //         $('#tbody_' + vendor_id).remove()
+                    //         let empty_cart_template = _.template($('#empty_cart_template').html());
+                    //         $("#cart_main_page").append(empty_cart_template());
+                    //     }
+                    // }
                     if ($("[id^=cart_product_]").length == 0) {
                         $(".shopping-cart").html('');
                     }
+                    cartTotalProductCount();
+                    cartHeader();
 
                     if ($('#show_plus_minus' + cartproduct_id).length != 0) {
                         $('#show_plus_minus' + cartproduct_id).find('.input_qty').val(1);
