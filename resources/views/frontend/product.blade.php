@@ -147,7 +147,7 @@
                                         {{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}
                                     </h2>
                                     <h6 class="sold-by">
-                                        <b> <img src="https://imgproxy.royoorders.com/insecure/fill/200/200/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/vendor/TtVoPPVWhs38KjqKd4j8hzoWUZeekoP1YcwDJOWq.png" alt=""></b> <a href="#"><b> mrsingh-cabs® </b></a>
+                                        <b> <img src="{{$product->vendor->logo['proxy_url']}}200/200{{$product->vendor->logo['image_path']}}" alt="{{$product->vendor->Name}}"></b> <a href="#"><b> {{$product->vendor->name}} </b></a>
                                     </h6>
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->rating_check == 1)  
@@ -289,12 +289,13 @@
                                     <div class="border-product">
                                         <h6 class="product-title">{{__('Share It')}}</h6>
                                         <div class="product-icon w-100">
-                                            <ul class="product-social">
-                                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                                            </ul>
+                                            <!-- <ul class="product-social"> -->
+                                                {!! $shareComponent !!}
+                                                <!-- <li><a href="#"><i class="fa fa-twitter"></i></a></li> -->
+                                                <!-- <li><a href="#"><i class="fa fa-facebook"></i></a></li> -->
+                                                <!-- <li><a href="#"><i class="fa fa-google-plus"></i></a></li> -->
+                                                <!-- <li><a href="#"><i class="fa fa-instagram"></i></a></li> -->
+                                            <!-- </ul>   -->
                                         </div>
                                     </div>
                                 </div>
@@ -575,6 +576,8 @@
 </div>
 @endsection
 @section('script')
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script> -->
+<script src="{{ asset('js/share.js') }}"></script>
 <script>
     $(document).on('click', '.submitInquiryForm', function(e) {
         e.preventDefault();
