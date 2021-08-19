@@ -617,8 +617,8 @@ $(document).ready(function () {
             data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip },
             success: function (response) {
                 if (response.status == "Success") {
-                    window.location.href = base_url + '/order/success/' + response.data.order.id;
-                } else {
+                    window.location.href = base_url+'/order/success/'+response.data.id;
+                }else{
                     $("#order_placed_btn, .proceed_to_pay").attr("disabled", false);
                 }
             },

@@ -240,6 +240,19 @@
             </td>
         </tr>
         <% } %>
+        <% if(cart_details.wallet_amount_used != undefined) { %>
+            <tr class="border_0">
+                <td colspan="3"></td>
+                <td class="pr-0 pb-0">
+                <p class="mb-1"></p>{{__('Wallet Amount')}} 
+                <hr class="mt-2 mb-0">
+                </td>
+                <td class="text-right pl-0 pb-0" colspan="3">
+                <p class="mb-1"></p> {{Session::get('currencySymbol')}}<%= cart_details.wallet_amount_used %>
+                <hr class="mt-2 mb-0">
+                </td>
+            </tr>
+        <% } %>
         <tr class="border_0">
             <td colspan="3"></td>
             <td colspan="4" class="pr-0 pb-0">

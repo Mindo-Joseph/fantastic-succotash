@@ -61,8 +61,12 @@
                     <div class="total-sec">
                         <ul>
                             <li>{{__('Subtotal')}}<span>{{Session::get('currencySymbol')}}@money($order->total_amount * $clientCurrency->doller_compare)</span></li>
-                            <li>{{__('Tax')}} <span>{{Session::get('currencySymbol')}}@money($order->taxable_amount * $clientCurrency->doller_compare)</span></li>
-                            <li>{{__('Delivery Fee')}} <span>{{Session::get('currencySymbol')}}@money($order->total_delivery_fee * $clientCurrency->doller_compare)</span></li>
+                            @if($order->taxable_amount > 0)
+                                <li>{{__('Tax')}} <span>{{Session::get('currencySymbol')}}@money($order->taxable_amount * $clientCurrency->doller_compare)</span></li>
+                            @endif
+                            @if($order->total_delivery_fee > 0)
+                                <li>{{__('Delivery Fee')}} <span>{{Session::get('currencySymbol')}}@money($order->total_delivery_fee * $clientCurrency->doller_compare)</span></li>
+                            @endif
                             @if($order->tip_amount > 0)
                                 <li>{{__('Tip Amount')}} <span>{{Session::get('currencySymbol')}}@money($order->tip_amount * $clientCurrency->doller_compare)</span></li>
                             @endif
@@ -71,6 +75,9 @@
                             @endif
                             @if($order->loyalty_amount_saved > 0)
                                 <li>{{__('Loyalty Amount')}} <span>{{Session::get('currencySymbol')}}@money($order->loyalty_amount_saved * $clientCurrency->doller_compare)</span></li>
+                            @endif
+                            @if($order->wallet_amount_used > 0)
+                                <li>{{__('Wallet Amount')}} <span>{{Session::get('currencySymbol')}}@money($order->wallet_amount_used * $clientCurrency->doller_compare)</span></li>
                             @endif
                         </ul>
                     </div>
