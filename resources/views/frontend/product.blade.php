@@ -147,7 +147,7 @@
                                         {{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}
                                     </h2>
                                     <h6 class="sold-by">
-                                        <b> <img src="https://imgproxy.royoorders.com/insecure/fill/200/200/sm/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/vendor/TtVoPPVWhs38KjqKd4j8hzoWUZeekoP1YcwDJOWq.png" alt=""></b> <a href="#"><b> mrsingh-cabs® </b></a>
+                                        <b> <img src="{{$product->vendor->logo['proxy_url']}}200/200{{$product->vendor->logo['image_path']}}" alt="{{$product->vendor->Name}}"></b> <a href="#"><b> {{$product->vendor->name}} </b></a>
                                     </h6>
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->rating_check == 1)  
