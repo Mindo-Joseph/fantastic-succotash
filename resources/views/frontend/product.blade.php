@@ -94,8 +94,8 @@
                                             $arr = [
                                                 'image' => (object)[
                                                     'path' => [
-                                                        'proxy_url' => env('IMG_URL1'),
-                                                        'image_path' => env('IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png')
+                                                        'proxy_url' => \Config::get('app.IMG_URL1'),
+                                                        'image_path' => \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png')
                                                     ]
                                                 ]
                                             ];
@@ -213,7 +213,7 @@
                                                 @endif
                                             </h6>
                                             @if($product->variant[0]->quantity > 0)
-                                            <div class="qty-box">
+                                            <div class="qty-box mb-3">
                                                 <div class="input-group">
                                                     <span class="input-group-prepend">
                                                         <button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i>
@@ -243,7 +243,13 @@
                                                     <td>
                                                         <h4 addon_id="{{$addon->addon_id}}" class="header-title productAddonSet">{{$addon->title}} 
                                                             @if($addon->max_select > 0)
-                                                                <small>(You can choose max {{$addon->max_select}} options)</small>
+                                                                @php
+                                                                    $min_select = '';
+                                                                    if($addon->min_select > 0){
+                                                                        $min_select = 'Minimun '.$addon->min_select.' and ';
+                                                                    }
+                                                                @endphp
+                                                                <small>({{$min_select}}Maximum {{$addon->max_select}} Selections allowed)</small>
                                                             @endif
                                                         </h4>
                                                     </td>
@@ -394,7 +400,9 @@
         </div>
     <% }else{ %>
         <div class="product-slick" style="min-height: 200px; display: table; width: 100%;">
-            <div class="image_mask" style="vertical-align: middle; display: table-cell; text-align: center">Image Not Available</div>
+            <div class="image_mask" style="vertical-align: middle; display: table-cell; text-align: center">
+                <img class="img-fluid blur-up lazyload" src="{{ \Config::get('app.IMG_URL1') .'600/800'. \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png') }}">
+            </div>
         </div>
     <% } %>
 </script>
@@ -439,7 +447,7 @@
             <% } %>
         </h6>
         <% if(variant.quantity > 0) { %>
-        <div class="qty-box">
+        <div class="qty-box mb-3">
             <div class="input-group">
                 <span class="input-group-prepend">
                     <button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i>
