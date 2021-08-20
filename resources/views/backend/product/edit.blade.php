@@ -628,13 +628,13 @@
         var product_variant_id = $(this).data('varient_id');
         var rowCount = $('#product_tbody_' + product_id + ' tr').length;
         if (rowCount == 1) {
-            var is_product_delete = true;
+            var is_product_delete = 1;
             if (confirm("Are you sure? You want to delete this variant.")) {
                 removeVariant(product_id, product_variant_id, is_product_delete);
             }
         } else {
-            var is_product_delete = false;
-            if (confirm("Are you sure? You want to delete this brand.")) {
+            var is_product_delete = 0;
+            if (confirm("Are you sure? You want to delete this variant.")) {
                 removeVariant(product_id, product_variant_id, is_product_delete);
             }
         }

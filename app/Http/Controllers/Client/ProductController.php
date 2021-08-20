@@ -580,7 +580,7 @@ class ProductController extends BaseController
         $product_variant = ProductVariant::where('id', $request->product_variant_id)->where('product_id', $request->product_id)->first();
         $product_variant->status = 0;
         $product_variant->save();
-        if ($request->is_product_delete) {
+        if ($request->is_product_delete > 0) {
             Product::where('id', $request->product_id)->delete();
         }
         return response()->json(array('success' => true, 'msg' => 'Product variant deleted successfully.'));
