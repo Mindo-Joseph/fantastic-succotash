@@ -241,20 +241,27 @@
                                                 @foreach($product->addOn as $row => $addon)
                                                 <tr>
                                                     <td>
-                                                        <h4 addon_id="{{$addon->addon_id}}" class="header-title productAddonSet">{{$addon->title}} 
-                                                            @if($addon->max_select > 0)
-                                                                @php
-                                                                    $min_select = '';
-                                                                    if($addon->min_select > 0){
-                                                                        $min_select = 'Minimun '.$addon->min_select.' and ';
-                                                                    }
-                                                                @endphp
-                                                                <small>({{$min_select}}Maximum {{$addon->max_select}} Selections allowed)</small>
+                                                        <h4 addon_id="{{$addon->addon_id}}" class="header-title productAddonSet">{{$addon->title}}
+                                                            @php
+                                                                $min_select = '';
+                                                                if($addon->min_select > 0){
+                                                                    $min_select = 'Minimun '.$addon->min_select;
+                                                                }
+                                                                $max_select = '';
+                                                                if($addon->max_select > 0){
+                                                                    $max_select = 'Maximum '.$addon->max_select;
+                                                                }
+                                                                if( ($min_select != '') && ($max_select != '') ){
+                                                                    $min_select = $min_select.' and ';
+                                                                }
+                                                            @endphp
+                                                            @if( ($min_select != '') || ($max_select != '') )
+                                                                <small>({{$min_select.$max_select}} Selections allowed)</small>
                                                             @endif
                                                         </h4>
                                                     </td>
                                                 </tr>
-                                                <tr class="productAddonSetOptions" data-min="{{$addon->min_select}}" data-max="{{$addon->max_select}}">
+                                                <tr class="productAddonSetOptions" data-min="{{$addon->min_select}}" data-max="{{$addon->max_select}}" data-addonset-title="{{$addon->title}}">
                                                     <td>
                                                         @foreach($addon->setoptions as $k => $option)
                                                         <div class="checkbox checkbox-success form-check-inline">
