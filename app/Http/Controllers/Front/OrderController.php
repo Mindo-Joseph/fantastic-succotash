@@ -389,6 +389,7 @@ class OrderController extends FrontController
     {
         try {
             DB::beginTransaction();
+            $action = (Session::has('vendorType')) ? Session::get('vendorType') : 'delivery';
             $delivery_on_vendors = array();
             if( (isset($request->auth_token)) && (!empty($request->auth_token)) ){
                 $user = User::whereHas('device',function  ($qu) use ($request){
@@ -494,17 +495,18 @@ class OrderController extends FrontController
                             $payable_amount = $payable_amount + $product_tax;
                         }
                     }
-                    if ( (!empty($vendor_cart_product->product->Requires_last_mile)) && ($vendor_cart_product->product->Requires_last_mile == 1) ) {
-                       $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
-                        if(!empty($delivery_fee) && $delivery_count == 0)
-                        {
-                            $delivery_count = 1;
-                            $vendor_cart_product->delivery_fee = number_format($delivery_fee, 2);
-                            // $payable_amount = $payable_amount + $delivery_fee;
-                            $delivery_fee_charges = $delivery_fee;
+                    if($action == 'delivery'){
+                        if ( (!empty($vendor_cart_product->product->Requires_last_mile)) && ($vendor_cart_product->product->Requires_last_mile == 1) ) {
+                            $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
+                            if(!empty($delivery_fee) && $delivery_count == 0)
+                            {
+                                $delivery_count = 1;
+                                $vendor_cart_product->delivery_fee = number_format($delivery_fee, 2);
+                                // $payable_amount = $payable_amount + $delivery_fee;
+                                $delivery_fee_charges = $delivery_fee;
+                            }
                         }
-
-                    } 
+                    }
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
                     $order_product->order_id = $order->id;
@@ -640,6 +642,7 @@ class OrderController extends FrontController
             $order->subscription_discount = $total_subscription_discount;
             $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
             $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
+            $order->scheduled_date_time = $cart->scheduled_date_time;
             $order->payable_amount = $payable_amount;
             $order->save();
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
@@ -647,6 +650,7 @@ class OrderController extends FrontController
             }
             // $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
+            Cart::where('id', $cart->id)->update(['schedule_type'=>NULL, 'scheduled_date_time'=>NULL]);
             CartAddon::where('cart_id', $cart->id)->delete();
             CartCoupon::where('cart_id', $cart->id)->delete();
             CartProduct::where('cart_id', $cart->id)->delete();
