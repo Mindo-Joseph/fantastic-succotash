@@ -5,6 +5,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.css">
 @endsection
 @section('content')
+
 <div class="row">
     <div class="col-12">
         <div class="page-title-box">
@@ -12,9 +13,10 @@
         </div>
     </div>
 </div>
+
 <form id="favicon-form" method="post" enctype="multipart/form-data">
     <div class="row">
-        <div class="col-md-4 col-xl-3">
+        <div class="col-md-6 col-xl-3">
             <div class="card card-box">
                 <div class="row">
                     <div class="col-5">
@@ -39,9 +41,36 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-4 col-xl-3">
+            <div class="card card-box">
+                <ul class="pl-0 mb-0">
+                    <li class="d-flex flex-column justify-content-start mt-2">
+                        <h4 class="header-title mb-2">Show Dark Mode</h4>
+                        <div class="form-group">
+                            <ul class="list-inline">
+                                <li class="d-inline-block ml-3 mr-2">
+                                    <input type="radio" class="custom-control-input check" onchange="submitDarkMmode('0')" id="option1" name="show_dark_mode" {{$client_preferences->show_dark_mode == 0 ? 'checked' : ''}}>
+                                    <label class="custom-control-label" for="option1">Day</label>
+                                </li>
+                                <li class="d-inline-block ml-3 mr-2 mb-2 mb-lg-0">
+                                    <input type="radio" class="custom-control-input check" onchange="submitDarkMmode('1')" id="option2" name="show_dark_mode" {{$client_preferences->show_dark_mode == 1 ? 'checked' : ''}}>
+                                    <label class="custom-control-label" for="option2">Night</label>
+                                </li>
+                                <li class="d-inline-block ml-3">
+                                    <input type="radio" class="custom-control-input check" onchange="submitDarkMmode('2')" id="option3" name="show_dark_mode" {{$client_preferences->show_dark_mode == 2 ? 'checked' : ''}}>
+                                    <label class="custom-control-label" for="option3">Day with Toggle</label>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- <div class="mb-0">
+                            <input type="checkbox" id="show_dark_mode" data-plugin="switchery" name="show_dark_mode" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_dark_mode == 1 ? 'checked' : ''}}>
+                        </div> -->
+                    </li>
+                </ul>
+            </div>
+        </div>        
+
+        <div class="col-md-6 col-xl-3">
             <div class="card card-box">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <h4 class="header-title mb-0">Age Restriction Popup</h4>
@@ -54,7 +83,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 col-xl-3">
+        <div class="col-md-6 col-xl-3">
             <div class="card card-box">
                 <ul class="pl-0 mb-0">
                     <li class="d-flex align-items-center justify-content-between">
@@ -96,7 +125,8 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div>   
+
     <div class="row">
         <div class="col-xl-8">
             <div class="card-box home-options-list">
@@ -117,7 +147,11 @@
                         @foreach($home_page_labels as $home_page_label)
                         <li class="dd-item dd3-item d-flex align-items-center" data-id="1" data-row-id="{{$home_page_label->id}}">
                             <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                                @if($home_page_label->slug == "vendors")
+                                {{getNomenclatureName('Vendors', true)}}
+                                @else
                                 {{$home_page_label->title}}
+                                @endif
                             </a>
                             <div class="language-inputs style-4">
                                 <div class="row no-gutters flex-nowrap align-items-center my-2">
@@ -200,6 +234,33 @@
     $("#image").change(function() {
         submitData();
     });
+
+    function submitDarkMmode(id) {
+        var data_uri = "{{route('styling.updateDarkMode')}}";
+        console.log(id);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: data_uri,
+            data: {
+                show_dark_mode: id
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status == 'success') {
+                    console.log(response.message);
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                }
+            }
+        });
+    }
 
     function submitData() {
         var form = document.getElementById('favicon-form');

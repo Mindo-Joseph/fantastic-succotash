@@ -195,11 +195,11 @@
                         @if($product->category->categoryDetail->type_id != 8)
                         <div class="col-sm-4">
                             {!! Form::label('title', 'Track Inventory') !!} <br>
-                            <input type="checkbox" bid="" id="has_inventory" data-plugin="switchery" name="has_inventory" class="chk_box" data-color="#43bee1" checked>
+                            <input type="checkbox" bid="" id="has_inventory" data-plugin="switchery" name="has_inventory" class="chk_box" data-color="#43bee1" {{$product->has_inventory == 1 ? 'checked' : ''}}>
                         </div>
                         @endif
 
-                        <div class="col-sm-8 check_inventory">
+                        <div class="col-sm-8 check_inventory {{$product->has_inventory == 0 ? 'd-none' : ''}}">
                             <div class="row">
                                 @if($product->category->categoryDetail->type_id != 8)
                                 @if($product->has_variant == 0)
@@ -516,7 +516,7 @@
                             {!! Form::label('title', 'Up Cell Products',['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="up_cell[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)
-                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $upSell_ids)) selected @endif>{{$otherProduct->sku}}</option>
+                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $upSell_ids)) selected @endif>{{$otherProduct->primary->title}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -525,7 +525,7 @@
                             {!! Form::label('title', 'Cross Cell Products',['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="cross_cell[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)
-                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $crossSell_ids)) selected @endif>{{$otherProduct->sku}}</option>
+                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $crossSell_ids)) selected @endif>{{$otherProduct->primary->title}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -628,13 +628,13 @@
         var product_variant_id = $(this).data('varient_id');
         var rowCount = $('#product_tbody_' + product_id + ' tr').length;
         if (rowCount == 1) {
-            var is_product_delete = true;
+            var is_product_delete = 1;
             if (confirm("Are you sure? You want to delete this variant.")) {
                 removeVariant(product_id, product_variant_id, is_product_delete);
             }
         } else {
-            var is_product_delete = false;
-            if (confirm("Are you sure? You want to delete this brand.")) {
+            var is_product_delete = 0;
+            if (confirm("Are you sure? You want to delete this variant.")) {
                 removeVariant(product_id, product_variant_id, is_product_delete);
             }
         }
@@ -673,7 +673,7 @@
             height: 120,
             toolbar: [
                 ['style', ['style']],
-                ['color', ['color']],
+                // ['color', ['color']],
                 ['table', ['table']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['font', ['bold', 'underline', 'clear']],
