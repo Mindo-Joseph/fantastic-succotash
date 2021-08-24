@@ -71,6 +71,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('add/wishlist/cart','Front\CartController@addWishlistToCart')->name('addWishlistToCart');
 	Route::post('add/vendorTable/cart','Front\CartController@addVendorTableToCart')->name('addVendorTableToCart');
 	Route::post('add/product/prescription','Front\CartController@uploadPrescription')->name('cart.uploadPrescription');
+	Route::post('cart/schedule/update','Front\CartController@updateSchedule')->name('cart.updateSchedule');
 	Route::get('cartProducts','Front\CartController@getCartData')->name('getCartProducts');
 	Route::get('cartDetails','Front\CartController@getCartProducts')->name('cartDetails');
 	Route::post('cartDelete','Front\CartController@emptyCartData')->name('emptyCartData');
@@ -153,8 +154,12 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
 		Route::post('update-product-return', 'Front\ReturnOrderController@updateProductReturn')->name('update.order.return');
 	});
 	// Return product 
-	Route::group(['prefix' => 'looking'], function () {
+	Route::group(['prefix' => 'looking'], function () {	
 		Route::get('/', 'Front\BookingController@index')->name('bookingIndex');
+		Route::get('details/{id}', 'Front\BookingController@bookingDetails')->name('front.booking.details');
+		Route::post('orderPlaceDetails/{id}', 'Front\BookingController@orderPlaceDetails')->name('front.booking.orderplacedetails');
+		
+		
 		Route::post('create-order', 'Front\PickupDeliveryController@createOrder');
 		Route::post('cart/updateQuantity', 'Front\CartController@updateQuantity');
 		Route::post('promo-code/list', 'Front\PickupDeliveryController@postPromoCodeList');
