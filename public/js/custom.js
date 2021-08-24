@@ -1190,6 +1190,19 @@ $(document).ready(function () {
 
 
     function addToCart() {
+        $( ".productAddonSetOptions" ).each(function( index ) {
+            var min_select = $(this).attr("data-min");
+            var max_select = $(this).attr("data-max");
+            var addon_set_title = $(this).attr("data-addonset-title");
+            if( (min_select > 0) && ($(this).find(".productAddonOption:checked").length < min_select) ){
+                alert("Minimum "+min_select+" "+addon_set_title+" required");
+                return false;
+            }
+            if( (max_select > 0) && ($(this).find(".productAddonOption:checked").length > max_select) ){
+                alert("You can select maximum "+max_select+" "+addon_set_title);
+                return false;
+            }
+        });
         $.ajax({
             type: "post",
             dataType: "json",
