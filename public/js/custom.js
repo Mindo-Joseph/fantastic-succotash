@@ -1190,45 +1190,50 @@ $(document).ready(function () {
 
 
     function addToCart() {
+        var breakOut = false;
         $( ".productAddonSetOptions" ).each(function( index ) {
             var min_select = $(this).attr("data-min");
             var max_select = $(this).attr("data-max");
             var addon_set_title = $(this).attr("data-addonset-title");
             if( (min_select > 0) && ($(this).find(".productAddonOption:checked").length < min_select) ){
                 alert("Minimum "+min_select+" "+addon_set_title+" required");
+                breakOut = true;
                 return false;
             }
             if( (max_select > 0) && ($(this).find(".productAddonOption:checked").length > max_select) ){
                 alert("You can select maximum "+max_select+" "+addon_set_title);
+                breakOut = true;
                 return false;
             }
         });
-        $.ajax({
-            type: "post",
-            dataType: "json",
-            url: add_to_cart_url,
-            data: {
-                "addonID": addonids,
-                "vendor_id": vendor_id,
-                "product_id": product_id,
-                "addonoptID": addonoptids,
-                "quantity": $('.quantity_count').val(),
-                "variant_id": $('#prod_variant_id').val(),
-            },
-            success: function (response) {
-                if (response.status == 'success') {
-                    $(".shake-effect").effect("shake", { times: 3 }, 1200);
-                    cartHeader();
-                } else {
-                    alert(response.message);
-                }
-            },
-            error: function (error) {
-                var response = $.parseJSON(error.responseText);
-                let error_messages = response.message;
-                alert(error_messages);
-            },
-        });
+        if(!breakOut){
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: add_to_cart_url,
+                data: {
+                    "addonID": addonids,
+                    "vendor_id": vendor_id,
+                    "product_id": product_id,
+                    "addonoptID": addonoptids,
+                    "quantity": $('.quantity_count').val(),
+                    "variant_id": $('#prod_variant_id').val(),
+                },
+                success: function (response) {
+                    if (response.status == 'success') {
+                        $(".shake-effect").effect("shake", { times: 3 }, 1200);
+                        cartHeader();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function (error) {
+                    var response = $.parseJSON(error.responseText);
+                    let error_messages = response.message;
+                    alert(error_messages);
+                },
+            });
+        }
     }
 
 
