@@ -19,13 +19,17 @@ class BaseController extends Controller
     {
         $branch = array();
         foreach ($elements as $element) {
-            if ($element['parent_id'] == $parentId) {
-                $children = $this->buildTree($elements, $element['id']);
-                if ($children) {
-                    $element['children'] = $children;
+            if(isset($element['parent_id']) && !empty($element['parent_id'])){
+                if ($element['parent_id'] == $parentId) {
+                    $children = $this->buildTree($elements, $element['id']);
+                    if ($children) {
+                        $element['children'] = $children;
+                    }
+                    $branch[] = $element;
                 }
-                $branch[] = $element;
-            }
+            }   
+            
+
         }
         return $branch;
     }
@@ -107,6 +111,34 @@ class BaseController extends Controller
             $this->htmlData .= '</ol>';
         }
         return $this->htmlData;
+    }
+
+    /*      Category options heirarchy      */
+    public function printCategoryOptionsHeirarchy($tree, $parentCategory = [])
+    {
+        $this->optionData = '';
+        if (!is_null($tree) && count($tree) > 0) {
+            foreach ($tree as $node) {
+                // type_id 1 means product in type table
+                if (isset($node['children']) && count($node['children']) > 0) {
+                    $parentCategory[] = $node['translation_one']['name'];
+                    $this->printCategoryOptionsHeirarchy($node['children'], $parentCategory);
+                }else{
+                    if ($node['type_id'] == 1 || $node['type_id'] == 3 || $node['type_id'] == 7) {
+                        $category = (isset($node['translation_one']['name'])) ? $node['translation_one']['name'] : $node['slug'];
+                        if($node['parent_id'] == 1){
+                            $parentCategory = [];
+                            $heirarchyName = $category;
+                        }else{
+                            $heirarchyName = implode(' > ', $parentCategory);
+                            $heirarchyName = $heirarchyName.' > '.$category;
+                        }
+                        $this->optionData .= '<option value="'.$node['id'].'">'.$heirarchyName.'</option>';
+                    }
+                }
+            }
+        }
+        return $this->optionData;
     }
 
     /*      Category tree for vendor to enable & disable category      */
