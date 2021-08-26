@@ -447,6 +447,9 @@ class CartController extends FrontController
         }
         $latitude = ($address) ? $address->latitude : '';
         $longitude = ($address) ? $address->longitude : '';
+
+        $delifproductnotexist = CartProduct::where('cart_id', $cart_id)->doesntHave('product')->delete();
+      
         $cartData = CartProduct::with([
             'vendor', 'coupon' => function ($qry) use ($cart_id) {
                 $qry->where('cart_id', $cart_id);
