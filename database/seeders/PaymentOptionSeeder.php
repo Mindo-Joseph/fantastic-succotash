@@ -11,7 +11,9 @@ class PaymentOptionSeeder extends Seeder
      * @return void
      */
     public function run(){ 
+      DB::statement('SET FOREIGN_KEY_CHECKS=0;');
       DB::table('payment_options')->truncate();
+      DB::statement('SET FOREIGN_KEY_CHECKS=1;');
       $payment_options = array(
         array('id' => '1','code' => 'cod','path' => '','title' => 'Cash On Delivery', 'off_site' => '0', 'status' => '0'),
         // array('id' => '2','code' => 'loyalty-points','path' => '','title' => 'loyalty Points', 'offsite' => '0', 'status' => '1'),
