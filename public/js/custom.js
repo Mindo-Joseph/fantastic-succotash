@@ -385,7 +385,6 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             dataType: 'json',
-            async: false,
             url: update_cart_schedule,
             data: { task_type: task_type, schedule_dt: schedule_dt },
             success: function (response) {
@@ -393,7 +392,6 @@ $(document).ready(function () {
                     $.ajax({
                         data: {},
                         type: "POST",
-                        async: false,
                         dataType: 'json',
                         url: payment_option_list_url,
                         success: function (response) {
@@ -458,7 +456,9 @@ $(document).ready(function () {
         if (urlParams.has('tip')) {
             tipAmount = urlParams.get('tip');
         }
-        paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount);
+        $(document).ajaxStop(function () {
+            paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount);
+        });
     }
 
     function paymentViaStripe(stripe_token, address_id, payment_option_id) {
@@ -684,6 +684,9 @@ $(document).ready(function () {
         }
         else if (payment_option_id == 5) {
             paymentViaPaystack(address_id, payment_option_id);
+        }
+        else if (payment_option_id == 6) {
+            paymentViaPayfast(address_id, payment_option_id);
         }
     });
     function creditWallet(amount, payment_option_id, transaction_id) {
@@ -939,7 +942,6 @@ $(document).ready(function () {
             data: { address_id: address_id },
             type: "get",
             dataType: 'json',
-            async: false,
             url: cart_product_url,
             success: function (response) {
                 if (response.status == "success") {
