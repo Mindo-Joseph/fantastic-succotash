@@ -692,7 +692,7 @@ class CartController extends FrontController
                         $wallet_amount_used = $total_payable_amount;
                     }
                     $total_payable_amount = $total_payable_amount - $wallet_amount_used;
-                    $cart->wallet_amount_used = $wallet_amount_used;
+                    $cart->wallet_amount_used = number_format($wallet_amount_used, 2, '.', '');
                 }
             }
             $cart->loyalty_amount = number_format($loyalty_amount_saved, 2, '.', '');
