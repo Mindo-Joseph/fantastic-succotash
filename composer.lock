@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d080631285d6823ab70ac2202fc46807",
+    "content-hash": "b4d9bdd30a2d07679c98f61ca9a144d0",
     "packages": [
         {
             "name": "99designs/phumbor",
@@ -5931,6 +5931,71 @@
                 }
             ],
             "time": "2021-06-05T11:36:12+00:00"
+        },
+        {
+            "name": "omnipay/payfast",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/omnipay-payfast.git",
+                "reference": "64fc450cbca608cbb3f6e9f99be39fa05600dc23"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/omnipay-payfast/zipball/64fc450cbca608cbb3f6e9f99be39fa05600dc23",
+                "reference": "64fc450cbca608cbb3f6e9f99be39fa05600dc23",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3|^7.0",
+                "league/omnipay": "^3",
+                "omnipay/common": "^3.0"
+            },
+            "require-dev": {
+                "omnipay/tests": "^3.1",
+                "squizlabs/php_codesniffer": "^3"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Omnipay\\PayFast\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adrian Macneil",
+                    "email": "adrian@adrianmacneil.com"
+                },
+                {
+                    "name": "Omnipay Contributors",
+                    "homepage": "https://github.com/thephpleague/omnipay-payfast/contributors"
+                }
+            ],
+            "description": "PayFast driver for the Omnipay payment processing library",
+            "homepage": "https://github.com/thephpleague/omnipay-payfast",
+            "keywords": [
+                "gateway",
+                "merchant",
+                "omnipay",
+                "pay",
+                "payfast",
+                "payment"
+            ],
+            "support": {
+                "issues": "https://github.com/thephpleague/omnipay-payfast/issues",
+                "source": "https://github.com/thephpleague/omnipay-payfast/tree/master"
+            },
+            "time": "2021-01-08T07:33:09+00:00"
         },
         {
             "name": "omnipay/paypal",
