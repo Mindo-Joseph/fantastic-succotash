@@ -3,7 +3,7 @@
 var maplat  = 30.7046;
 var maplong = 76.7179;
 var map = '';
-
+var product_image = '';
 themeType = [
     {
         featureType: "poi",
@@ -44,7 +44,8 @@ function initMap() {
                 let order_success_template = _.template($('#order_success_template').html());
                 $("#cab_detail_box").append(order_success_template({result: response.data, product_image: response.data.product_image})).show();
                 setInterval(function(){
-                    getOrderDriverDetails(response.data.dispatch_traking_url,response.data.id)
+                    product_image = response.data.product_image;
+                    getOrderDriverDetails(response.data.dispatch_traking_url,response.data.id,product_image)
                 },3000);
             }
         }
@@ -54,7 +55,7 @@ function initMap() {
 
 
 
-function getOrderDriverDetails(dispatch_traking_url,order_id) {
+function getOrderDriverDetails(dispatch_traking_url,order_id,product_image) {
     var new_dispatch_traking_url = dispatch_traking_url.replace('/order/','/order-details/');
     $.ajax({
         type:"POST",
@@ -65,7 +66,7 @@ function getOrderDriverDetails(dispatch_traking_url,order_id) {
 
             var alltask = response.data.tasks;
             var agent_location = response.data.agent_location;
-            showroute(alltask,agent_location,map);
+            showroute(alltask,agent_location,map,product_image);
             if(response.data.agent_location != null){
                 $('#searching_main_div').remove();
                 $('#driver_details_main_div').show();
@@ -80,7 +81,7 @@ function getOrderDriverDetails(dispatch_traking_url,order_id) {
 
 
 
-function showroute(alltask,agent_location,map){
+function showroute(alltask,agent_location,map,product_image){
 
     var url = window.location.origin;
 
@@ -98,7 +99,7 @@ function showroute(alltask,agent_location,map){
 
     directionsRenderer.setMap(map);
     calculateAndDisplayRoute(directionsService, directionsRenderer,map);
-    addMarker(agent_location,map);
+    addMarker(agent_location,map,product_image);
 
     function calculateAndDisplayRoute(directionsService, directionsRenderer,map) {
         const waypts = [];
@@ -153,7 +154,7 @@ function showroute(alltask,agent_location,map){
     }
 
     // Adds a marker to the map.
-    function addMarker(agent_location,map) {
+    function addMarker(agent_location,map,product_image) {
      // Add the marker at the clicked location, and add the next-available label
      // from the array of alphabetical characters.
 
