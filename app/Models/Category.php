@@ -89,4 +89,10 @@ class Category extends Model
     public function parent(){
       return $this->belongsTo('App\Models\Category','parent_id','id'); 
    }
+
+  public function allParentsAccount()
+  {
+    return $this->parent()->select('id', 'slug', 'parent_id')->with('allParentsAccount');
+  }
+
 }
