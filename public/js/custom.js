@@ -1282,16 +1282,39 @@ $(document).ready(function () {
 
 
     $(document).on("click", ".add_on_demand", function () {
-
+        var addonids = [];
+        var addonoptids = [];
         let that = $(this);
+
+        //  add addons data 
+        let parentdiv = $(this).parents('.classes_wrapper');
+        let addon_elem =  parentdiv.find('.productAddonSetOptions');
+    
+
+
+        addon_elem.find('.productAddonOption').each(function( index ,value) {
+            var min_select = $(value).attr("data-min");
+            var max_select = $(value).attr("data-max");
+            var addon_set_title = $(value).attr("data-addonset-title");
+            var addonId = $(value).attr("addonId");
+            var addonOptId = $(value).attr("addonOptId");
+            if ($(value).is(":checked")) {
+                addonids.push(addonId);
+                addonoptids.push(addonOptId);
+            } else {
+                addonids.splice(addonids.indexOf(addonId), 1);
+                addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
+            }
+           
+        });
+
+        // end addons data
 
         var ajaxCall = 'ToCancelPrevReq';
         var vendor_id = that.data("vendor_id");
         var product_id = that.data("product_id");
         var add_to_cart_url = that.data("add_to_cart_url");
         var variant_id = that.data("variant_id");
-        var addonids = [];
-        var addonoptids = [];
         var show_plus_minus = "#show_plus_minus" + product_id;
         if (!$.hasAjaxRunning()) {
             addToCartOnDemand(ajaxCall, vendor_id, product_id, addonids, addonoptids, add_to_cart_url, variant_id, show_plus_minus, that);

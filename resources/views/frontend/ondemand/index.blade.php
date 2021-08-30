@@ -176,7 +176,45 @@
                                                             <h5 class="my-sm-0 my-3">@if($data->inquiry_only == 0)
                                                                 {{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}
                                                             @endif</h5>
-                                                            
+                                                            <!-- show add ons -->
+                                                            @if(!empty($data->addOn) && $data->addOn->count() > 0)
+                                                            <div class="border-product">
+                                                                <h6 class="product-title">Addon List</h6>
+                                                                  @foreach($data->addOn as $row => $addon)
+                                                                       
+                                                                                <h4 addon_id="{{$addon->addon_id}}" class="header-title productAddonSet">{{$addon->title}}
+                                                                                    @php
+                                                                                        $min_select = '';
+                                                                                        if($addon->min_select > 0){
+                                                                                            $min_select = 'Minimun '.$addon->min_select;
+                                                                                        }
+                                                                                        $max_select = '';
+                                                                                        if($addon->max_select > 0){
+                                                                                            $max_select = 'Maximum '.$addon->max_select;
+                                                                                        }
+                                                                                        if( ($min_select != '') && ($max_select != '') ){
+                                                                                            $min_select = $min_select.' and ';
+                                                                                        }
+                                                                                    @endphp
+                                                                                    @if( ($min_select != '') || ($max_select != '') )
+                                                                                        <small>({{$min_select.$max_select}} Selections allowed)</small>
+                                                                                    @endif
+                                                                                </h4>
+                                                                            
+                                                                        <span class="productAddonSetOptions" data-min="{{$addon->min_select}}" data-max="{{$addon->max_select}}" data-addonset-title="{{$addon->title}}">
+                                                                           @foreach($addon->setoptions as $k => $option)
+                                                                                <div class="checkbox checkbox-success form-check-inline">
+                                                                                    <input type="checkbox" id="inlineCheckbox_{{$key}}{{$row.'_'.$k}}" class="productAddonOption" name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}">
+                                                                                    <label class="pl-2" for="inlineCheckbox_{{$key}}{{$row.'_'.$k}}">
+                                                                                        {{$option->title .' ($'.$option->price.')' }}</label>
+                                                                                </div>
+                                                                                @endforeach
+                                                                            </span>
+                                                                        @endforeach
+                                                                   
+                                                            </div>
+                                                            @endif
+                                                            <!-- end show add ons -->
 
                                                             @if(isset($data->variant[0]->checkIfInCart) && count($data->variant[0]->checkIfInCart) > 0)
                                                             @php
@@ -841,4 +879,6 @@
         
       })( jQuery, window , document );
     </script>
+
+    
 @endsection
