@@ -378,9 +378,16 @@ $(document).ready(function () {
         }
         var task_type = $("input[name='task_type']:checked").val();
         var schedule_dt = $("#schedule_datetime").val();
-        if( (task_type == 'schedule') && (schedule_dt == '') ){
-            success_error_alert('error', 'Schedule date time is required', ".cart_response");
-            return false;
+        var now = new Date().toISOString();
+        if( task_type == 'schedule' ){
+            if(schedule_dt == ''){
+                success_error_alert('error', 'Schedule date time is required', ".cart_response");
+                return false;
+            }
+            else if(schedule_dt < now){
+                success_error_alert('error', 'Invalid schedule date time', ".cart_response");
+                return false;
+            }
         }
         $.ajax({
             type: "POST",
