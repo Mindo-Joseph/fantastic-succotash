@@ -182,7 +182,7 @@
                                                         <div class="file file--upload">
                                                             <label>
                                                                 <span class="update_pic border-0">
-                                                                <img src="{{$vendor->logo['proxy_url'] . '1000/200' . $vendor->logo['image_path']}}" alt="">
+                                                                <img src="{{$vendor->logo['image_fit'] . '1000/200' . $vendor->logo['image_path']}}" alt="">
                                                                 </span>
                                                             </label>
                                                         </div>
