@@ -316,10 +316,10 @@
     $('.js-range-slider').ionRangeSlider({
         type: 'double',
         grid: false,
-        min: "{{$range_products->last() ? $range_products->last()->price : 0}}",
-        max: "{{$range_products->first() ? $range_products->first()->price : 1000}}",
-        from: "{{$range_products->last() ? $range_products->last()->price : 0}}",
-        to: "{{$range_products->first() ? $range_products->first()->price : 1000}}",
+        min: "{{$range_products->last() ? $range_products->last()->price * (!empty(Session::get('currencyMultiplier'))?Session::get('currencyMultiplier'):1) : 0}}",
+        max: "{{$range_products->first() ? $range_products->first()->price * (!empty(Session::get('currencyMultiplier'))?Session::get('currencyMultiplier'):1) : 1000}}",
+        from: "{{$range_products->last() ? $range_products->last()->price * (!empty(Session::get('currencyMultiplier'))?Session::get('currencyMultiplier'):1) : 0}}",
+        to: "{{$range_products->first() ? $range_products->first()->price * (!empty(Session::get('currencyMultiplier'))?Session::get('currencyMultiplier'):1) : 1000}}",
         prefix: ""
     });
 
