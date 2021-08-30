@@ -1,11 +1,11 @@
 @php
-$clientData = \App\Models\Client::select('id', 'logo', 'code')->where('id', '>', 0)->first();
+$clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
 
 $urlImg = $clientData->logo['proxy_url'].'200/80'.$clientData->logo['image_path'];
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
-<div class="top-header" style="background-color:{{$clientData->preferences->site_top_header_color??'#4c4c4c'}}">
+<div class="top-header">
     <div class="container">
         <div class="row">
             <div class="col-lg-7">
