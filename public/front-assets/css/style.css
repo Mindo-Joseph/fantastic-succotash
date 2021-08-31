@@ -18785,9 +18785,19 @@ header.stickycls {
     padding-right: 0;
 }
 
-.breadcrumb-section .breadcrumb a {
+.breadcrumb-section .breadcrumb a,.breadcrumb-section .breadcrumb {
     color: #555555;
-    font-weight: 600;
+    font-weight: 400;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+    padding-right: .3rem;
+}
+
+.breadcrumb-item+.breadcrumb-item {
+    padding-left: .3rem;
 }
 
 .about-head {
