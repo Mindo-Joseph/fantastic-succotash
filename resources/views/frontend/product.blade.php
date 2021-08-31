@@ -24,6 +24,9 @@
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
 </header>
+@if(!empty($category))
+@include('frontend.included_files.products_breadcrumb')
+@endif
 <style type="text/css">
     .productVariants .firstChild {
         min-width: 150px;
