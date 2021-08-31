@@ -4495,8 +4495,37 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     top: 24px;
     padding: 15px 20px;
     margin-left: 0;
-    
+    overflow: auto;
 }
+
+ul#main-nav-list {
+    display: flex;
+    align-items: center;
+    overflow: auto;
+    width: max-content;
+}
+
+
+
+#main-nav::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+#main-nav::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+	height:2px
+}
+
+#main-nav::-webkit-scrollbar-thumb
+{
+	background-color: #000000;
+	border: 2px solid #555555;
+}
+
 
 #main-nav.fixed	{ position: fixed; top:0;background: #fff;box-shadow: 0 4px 4px 0 rgb(0 0 0 / 6%);}
 #main-nav li{
@@ -4522,7 +4551,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 #main-nav a:hover { background: #ddd;}
 
 /* Main Content */
-#main-wrapper { width: 100%; margin: 70px auto 0;}
+#main-wrapper { width: 100%; margin: 100px auto 0;}
 
 #main-wrapper .wrapper { height: 375px; text-align: center; font-weight: bold; padding: 150px 0 0 0;} /* Height of nav bar added to total height: 300 */
 

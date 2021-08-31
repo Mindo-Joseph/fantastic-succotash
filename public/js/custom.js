@@ -347,6 +347,9 @@ $(document).ready(function () {
                         $('#show_plus_minus' + cartproduct_id).hide();
                         $('#add_button_href' + cartproduct_id).show();
 
+                        let parentdiv = $('#show_plus_minus' + cartproduct_id).parents('.classes_wrapper');
+                        let addons_div = parentdiv.find('.addons-div');
+                        addons_div.show();
                     }
                     if ($('#next-button-ondemand-2').length != 0) {
                         $("#next-button-ondemand-2").hide();
@@ -1308,13 +1311,18 @@ $(document).ready(function () {
             if ($(value).is(":checked")) {
                 addonids.push(addonId);
                 addonoptids.push(addonOptId);
-            } else {
-                addonids.splice(addonids.indexOf(addonId), 1);
-                addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
+                $(value).prop('checked', false);
             }
+            //  else {
+            //     addonids.splice(addonids.indexOf(addonId), 1);
+            //     addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
+            // }
+            
            
         });
 
+       
+       
         // end addons data
 
         var ajaxCall = 'ToCancelPrevReq';
@@ -1323,6 +1331,8 @@ $(document).ready(function () {
         var add_to_cart_url = that.data("add_to_cart_url");
         var variant_id = that.data("variant_id");
         var show_plus_minus = "#show_plus_minus" + product_id;
+
+        
         if (!$.hasAjaxRunning()) {
             addToCartOnDemand(ajaxCall, vendor_id, product_id, addonids, addonoptids, add_to_cart_url, variant_id, show_plus_minus, that);
 
@@ -1410,6 +1420,14 @@ $(document).ready(function () {
                     $(that).attr('id', "add_button_href" + response.cart_product_id);
                     $(that).hide();
                     $(that).next().show();
+
+                    let parentdiv = $(that).parents('.classes_wrapper');
+                    let addons_div = parentdiv.find('.addons-div');
+                    if(addonoptids.length >= 0){
+
+                        let addons_div = parentdiv.find('.addons-div');
+                        addons_div.hide();
+                     }
                 } else {
                     alert(response.message);
                 }
