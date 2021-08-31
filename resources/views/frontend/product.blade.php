@@ -319,7 +319,7 @@
                             </div>
                         </div>
                     </div>
-                    <section class="tab-product m-0">
+                 {{--   <section class="tab-product m-0">
                         <div class="row">
                             <div class="col-sm-12 col-lg-12">
                                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
@@ -383,7 +383,7 @@
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </section>--}}
                 </div>
             </div>
         </div>
