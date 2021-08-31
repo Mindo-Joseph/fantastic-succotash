@@ -4426,6 +4426,49 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     color: #fff;
 }
 
+
+.radio-btns input[type="radio"] {
+    z-index: -1;
+    position: absolute;
+    display: none;
+}
+
+.radio-btns input[type="checkbox"] {
+    z-index: -1;
+    position: absolute;
+    display: none;
+}
+
+.radio-btns input[type="checkbox"]+label .customCheckbox {
+    display: inline-block;
+    box-sizing: border-box;
+    position: relative;
+    width: 49px;
+    height: 49px;
+    line-height: 49px;
+    text-align: center;
+    padding: 0;
+    border-radius: 50%;
+    z-index: 1;
+    color: #1F2431;
+    background: #F3F3F3;
+    overflow: hidden;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+
+.radio-btns input[type="checkbox"]:checked+label .customCheckbox {
+    background-color: var(--theme-deafult);
+    color: #fff;
+}
+
+.radio-btns input[type="checkbox"] {
+    z-index: -1;
+    position: absolute;
+    display: none;
+}
+
 .radios{
     text-align: center;
 }
@@ -4459,6 +4502,16 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     line-height: normal;
     padding: 10px 14px;
 }
+
+.radio-btns.long-radio input[type="checkbox"]+label .customCheckbox {
+    width: auto;
+    border-radius: 50px;
+    height: auto;
+    line-height: normal;
+    padding: 10px 14px;
+}
+
+
 
 .hours-slot .slick-track,.materials-slide .slick-track{
     margin-left: 0;

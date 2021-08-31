@@ -55,11 +55,12 @@
                         
                         <div class="card-box">
                                      <!-- static html -->
-                               
+                                
+                                @if(app('request')->input('step') == '1' || empty(app('request')->input('step')))
+                                     @if(!empty($category->childs) && count($category->childs) > 0)
+                             
                                     <!-- Start Conent Wrapper -->
                                     <div id='main-wrapper'>
-                                        @if(app('request')->input('step') == '1' || empty(app('request')->input('step')))
-                                            @if(!empty($category->childs) && count($category->childs) > 0)
                                                 @foreach ($category->childs as $key => $childs)
                                                 @if($childs->type_id == 8)
 
@@ -75,7 +76,7 @@
                                                             @foreach ($childs->products as $data)
 
                                                             @php
-                                                            $data->translation_title = (!empty($data->translation->first())) ? $data->translation->first()->title : $data->sku;
+                                                                $data->translation_title = (!empty($data->translation->first())) ? $data->translation->first()->title : $data->sku;
                                                                 $data->translation_description = (!empty($data->translation->first())) ? $data->translation->first()->body_html : $data->sku;
                                                                 $data->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                                                                 $data->variant_price = (!empty($data->variant->first())) ? $data->variant->first()->price : 0;
@@ -186,12 +187,13 @@
                                                         </div>
                                                 @endif
                                                 @endforeach
-                                            @endif
-
-                                        @endif                
-                                        
+                                         
                                     </div>
                                     <!-- End Content Wrapper -->
+                                    @endif 
+                                @endif                
+                                
+
                             
                             <!-- end statis html -->
                                     
@@ -327,9 +329,67 @@
                             @endif
                             <!-- end single level category -->
 
-                            
+                             <!-- Step if addons avilable  Html -->
                            
-                             <!-- Step Two Html -->
+                            @if(app('request')->input('step') == '4')
+                             <div id="step-4-ondemand">
+                                @foreach ($cartData as $key => $cart_data)
+                               
+                                     <!-- show add ons -->
+                                     @if(!empty($cart_data->product->addOn) && $cart_data->product->addOn->count() > 0)
+                                        <div class="border-product">
+                                            <h4 class="mb-2"><b>{!! (!empty($cart_data->product->translation->first())) ? $cart_data->product->translation->first()->title : $cart_data->product->sku !!}</b></h4>
+                                        @foreach($cart_data->product->addOn as $row => $addon)
+                                        <h6 class="product-title">{{ $addon->addOnName->title }}
+                                                    @php
+                                                        $min_select = '';
+                                                        if($addon->addOnName->min_select > 0){
+                                                            $min_select = 'Minimun '.$addon->addOnName->min_select;
+                                                        }
+                                                        $max_select = '';
+                                                        $type_input = 'checkbox';
+                                                        if($addon->addOnName->max_select > 0){
+                                                            $max_select = 'Maximum '.$addon->addOnName->max_select;
+
+                                                            if($addon->addOnName->max_select > 1)
+                                                            $type_input = 'checkbox';
+                                                            else
+                                                            $type_input = 'radio';
+                                                        }
+                                                        if( ($min_select != '') && ($max_select != '') ){
+                                                            $min_select = $min_select.' and ';
+                                                        }
+                                                    @endphp
+                                            </h6>
+                                            <span class="productAddonSetOptions" data-min="{{$addon->addOnName->min_select}}" data-max="{{$addon->addOnName->max_select}}" data-addonset-title="{{$addon->addOnName->title}}">
+                                                
+                                            <div class="booking-time radio-btns long-radio">
+                                                     @foreach($addon->setoptions as $k => $option)
+                                                         <div>
+                                                            <div class="radios">
+                                                               
+                                                                <input type="{{$type_input}}" class="productAddonOption" id="inlineCheckbox_{{$key}}{{$row.'_'.$k}}" class="productAddonOption"  name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}"/>
+                                                                <label for='inlineCheckbox_{{$key}}{{$row.'_'.$k}}'>
+                                                                    <span class="customCheckbox" aria-hidden="true">{{$option->title .' ($'.$option->price.')' }}</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                            </div>
+                                            </span>
+                                           
+                                        @endforeach
+                                        </div>
+                                        
+                                     @endif
+                                     <!-- end show add ons -->
+                                @endforeach
+                                  </div>
+                            @endif
+                             <!--Step if addons avilable  Html -->
+
+                           
+                            <!-- Step Two Html -->
                            
                             @if(app('request')->input('step') == '2')
                             <div id="step-2-ondemand">
