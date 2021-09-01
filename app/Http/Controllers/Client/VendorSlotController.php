@@ -114,7 +114,7 @@ class VendorSlotController extends BaseController
             $sday->save();
 
         }else{
-            $dateSlot = VendorSlotDate::whereDate('specific_date', $request->slot_date)->where('id', $request->edit_type_id)->first();
+            $dateSlot = VendorSlotDate::where('id', $request->edit_type_id)->first();
             if(!$dateSlot){
                 $dateSlot = new VendorSlotDate();
             }else{
