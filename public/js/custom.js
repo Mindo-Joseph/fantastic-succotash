@@ -347,6 +347,9 @@ $(document).ready(function () {
                         $('#show_plus_minus' + cartproduct_id).hide();
                         $('#add_button_href' + cartproduct_id).show();
 
+                        let parentdiv = $('#show_plus_minus' + cartproduct_id).parents('.classes_wrapper');
+                        let addons_div = parentdiv.find('.addons-div');
+                        addons_div.show();
                     }
                     if ($('#next-button-ondemand-2').length != 0) {
                         $("#next-button-ondemand-2").hide();
@@ -378,14 +381,20 @@ $(document).ready(function () {
         }
         var task_type = $("input[name='task_type']:checked").val();
         var schedule_dt = $("#schedule_datetime").val();
-        if( (task_type == 'schedule') && (schedule_dt == '') ){
-            success_error_alert('error', 'Schedule date time is required', ".cart_response");
-            return false;
+        var now = new Date().toISOString();
+        if( task_type == 'schedule' ){
+            if(schedule_dt == ''){
+                success_error_alert('error', 'Schedule date time is required', ".cart_response");
+                return false;
+            }
+            else if(schedule_dt < now){
+                success_error_alert('error', 'Invalid schedule date time', ".cart_response");
+                return false;
+            }
         }
         $.ajax({
             type: "POST",
             dataType: 'json',
-            async: false,
             url: update_cart_schedule,
             data: { task_type: task_type, schedule_dt: schedule_dt },
             success: function (response) {
@@ -393,7 +402,6 @@ $(document).ready(function () {
                     $.ajax({
                         data: {},
                         type: "POST",
-                        async: false,
                         dataType: 'json',
                         url: payment_option_list_url,
                         success: function (response) {
@@ -458,7 +466,9 @@ $(document).ready(function () {
         if (urlParams.has('tip')) {
             tipAmount = urlParams.get('tip');
         }
-        paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount);
+        $(document).ajaxStop(function () {
+            paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount);
+        });
     }
 
     function paymentViaStripe(stripe_token, address_id, payment_option_id) {
@@ -685,6 +695,9 @@ $(document).ready(function () {
         else if (payment_option_id == 5) {
             paymentViaPaystack(address_id, payment_option_id);
         }
+        else if (payment_option_id == 6) {
+            paymentViaPayfast(address_id, payment_option_id);
+        }
     });
     function creditWallet(amount, payment_option_id, transaction_id) {
         $.ajax({
@@ -741,7 +754,7 @@ $(document).ready(function () {
         }
     }
     $(document).on("click", ".topup_wallet_confirm", function () {
-        // $(".topup_wallet_confirm").attr("disabled", true);
+        $(".topup_wallet_confirm").attr("disabled", true);
         let payment_option_id = $('#wallet_payment_methods input[name="wallet_payment_method"]:checked').data('payment_option_id');
         if (payment_option_id == 4) {
             stripe.createToken(card).then(function (result) {
@@ -749,8 +762,7 @@ $(document).ready(function () {
                     $('#stripe_card_error').html(result.error.message);
                     $(".topup_wallet_confirm").attr("disabled", false);
                 } else {
-                    console.log(result.token.id);
-                    // paymentViaStripe(result.token.id, '', payment_option_id);
+                    paymentViaStripe(result.token.id, '', payment_option_id);
                 }
             });
         } else if (payment_option_id == 3) {
@@ -939,7 +951,6 @@ $(document).ready(function () {
             data: { address_id: address_id },
             type: "get",
             dataType: 'json',
-            async: false,
             url: cart_product_url,
             success: function (response) {
                 if (response.status == "success") {
@@ -1280,17 +1291,47 @@ $(document).ready(function () {
 
 
     $(document).on("click", ".add_on_demand", function () {
-
+        var addonids = [];
+        var addonoptids = [];
         let that = $(this);
+
+        //  add addons data 
+        let parentdiv = $(this).parents('.classes_wrapper');
+        let addon_elem =  parentdiv.find('.productAddonSetOptions');
+    
+
+
+        addon_elem.find('.productAddonOption').each(function( index ,value) {
+            var min_select = $(value).attr("data-min");
+            var max_select = $(value).attr("data-max");
+            var addon_set_title = $(value).attr("data-addonset-title");
+            var addonId = $(value).attr("addonId");
+            var addonOptId = $(value).attr("addonOptId");
+            if ($(value).is(":checked")) {
+                addonids.push(addonId);
+                addonoptids.push(addonOptId);
+                $(value).prop('checked', false);
+            }
+            //  else {
+            //     addonids.splice(addonids.indexOf(addonId), 1);
+            //     addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
+            // }
+            
+           
+        });
+
+       
+       
+        // end addons data
 
         var ajaxCall = 'ToCancelPrevReq';
         var vendor_id = that.data("vendor_id");
         var product_id = that.data("product_id");
         var add_to_cart_url = that.data("add_to_cart_url");
         var variant_id = that.data("variant_id");
-        var addonids = [];
-        var addonoptids = [];
         var show_plus_minus = "#show_plus_minus" + product_id;
+
+        
         if (!$.hasAjaxRunning()) {
             addToCartOnDemand(ajaxCall, vendor_id, product_id, addonids, addonoptids, add_to_cart_url, variant_id, show_plus_minus, that);
 
@@ -1378,6 +1419,14 @@ $(document).ready(function () {
                     $(that).attr('id', "add_button_href" + response.cart_product_id);
                     $(that).hide();
                     $(that).next().show();
+
+                    let parentdiv = $(that).parents('.classes_wrapper');
+                    let addons_div = parentdiv.find('.addons-div');
+                    if(addonoptids.length >= 0){
+
+                        let addons_div = parentdiv.find('.addons-div');
+                        addons_div.hide();
+                     }
                 } else {
                     alert(response.message);
                 }

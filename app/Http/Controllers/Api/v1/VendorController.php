@@ -22,6 +22,7 @@ class VendorController extends BaseController{
             $category_details = [];
             $vendor_id = $request->vendor_id;
             $type = Type::where('title' ,'Vendor')->first();
+            $vendor = Vendor::select('name')->where('id', $vendor_id)->first();
             $vendor_products = Product::with('category.categoryDetail')->where('vendor_id', $vendor_id)->where('is_live', 1)->get(['id']);
             foreach ($vendor_products as $vendor_product) {
                 if(!in_array($vendor_product->category->categoryDetail->id, $vendor_ids)){

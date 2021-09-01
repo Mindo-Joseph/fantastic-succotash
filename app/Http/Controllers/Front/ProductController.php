@@ -7,6 +7,7 @@ use Auth;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
+use Redirect;
 use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category, Vendor};
 class ProductController extends FrontController{
     private $field_status = 2;
@@ -69,6 +70,7 @@ class ProductController extends FrontController{
                 $q2->select('addon_options.id', 'addon_options.title', 'addon_options.price', 'apt.title', 'addon_options.addon_id');
                 $q2->where('apt.language_id', $langId);
             },
+            'category.categoryDetail.allParentsAccount'
         ]);
         if($user){
             $product = $product->with('inwishlist', function ($query) use($user) {
@@ -137,40 +139,48 @@ class ProductController extends FrontController{
            
             return view('frontend.ondemand.index')->with(['time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }
-        $vendor_info = Vendor::where('id', $product->vendor_id)->with('slot')->first();
-        if($vendor_info){
-            if($vendor_info->show_slot == 1){
-                $vendor_info->show_slot_option = 1;
-            }elseif ($vendor_info->slot->count() > 0) {
-                $vendor_info->show_slot_option = 1;
-            }else{
-                $vendor_info->show_slot_option = 0;
-            }
+        elseif($product->category->categoryDetail->type_id == 7)
+        {
+            return Redirect::route('categoryDetail','cabservice');
         }
-        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
-                $url = "https://";   
-        else  
-                $url = "http://";   
-        // Append the host(domain name, ip) to the URL.   
-        $url.= $_SERVER['HTTP_HOST'];   
-        
-        // Append the requested resource location to the URL   
-        $url.= $_SERVER['REQUEST_URI'];    
+        else{
+            $vendor_info = Vendor::where('id', $product->vendor_id)->with('slot')->first();
+            if($vendor_info){
+                if($vendor_info->show_slot == 1){
+                    $vendor_info->show_slot_option = 1;
+                }elseif ($vendor_info->slot->count() > 0) {
+                    $vendor_info->show_slot_option = 1;
+                }else{
+                    $vendor_info->show_slot_option = 0;
+                }
+            }
+            if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
+                    $url = "https://";   
+            else  
+                    $url = "http://";   
+            // Append the host(domain name, ip) to the URL.   
+            $url.= $_SERVER['HTTP_HOST'];   
             
-        $shareComponent = \Share::page(
-            $url,
-            'Your share text comes here',
-        )
-        ->facebook()
-        ->twitter()
-        // ->linkedin()
-        // ->telegram()
-        ->whatsapp();      
-        // ->reddit();
-
-        // dd($shareComponent);
-        return view('frontend.product')->with(['shareComponent' => $shareComponent, 'sets' => $sets, 'vendor_info' => $vendor_info, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn]);
-    }
+            // Append the requested resource location to the URL   
+            $url.= $_SERVER['REQUEST_URI'];    
+                
+            $shareComponent = \Share::page(
+                $url,
+                'Your share text comes here',
+            )
+            ->facebook()
+            ->twitter()
+            // ->linkedin()
+            // ->telegram()
+            ->whatsapp();      
+            // ->reddit();
+    
+            // dd($shareComponent);
+            $category = $product->category->categoryDetail;
+            return view('frontend.product')->with(['shareComponent' => $shareComponent, 'sets' => $sets, 'vendor_info' => $vendor_info, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn, 'category' => $category]);
+        
+        }
+   }
     public function metaProduct($langId, $multiplier, $for = 'relate', $productArray = []){
         if(empty($productArray)){
             return $productArray;

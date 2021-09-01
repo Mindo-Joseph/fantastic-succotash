@@ -1,5 +1,9 @@
 $(document).ready(function () {
-    
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        }
+    });
     let queryString = window.location.search;
     let path = window.location.pathname;
     let urlParams = new URLSearchParams(queryString);
@@ -8,7 +12,9 @@ $(document).ready(function () {
         if (urlParams.has('tip')) {
             tipAmount = urlParams.get('tip');
         }
-        paymentSuccessViaPaystack(urlParams.get('amount'), urlParams.get('trxref'), path, tipAmount);
+        $(document).ajaxStop(function () {
+            paymentSuccessViaPaystack(urlParams.get('amount'), urlParams.get('trxref'), path, tipAmount);
+        });
     }
 
     window.paymentViaPaystack = function paymentViaPaystack() {
@@ -111,4 +117,67 @@ $(document).ready(function () {
             }
         });
     }
+
+    window.paymentViaPayfast = function paymentViaPayfast() {
+        let total_amount = 0;
+        let tip = 0;
+        let tipElement = $("#cart_tip_amount");
+        let cartElement = $("input[name='cart_total_payable_amount']");
+        let walletElement = $("input[name='wallet_amount']");
+        let ajaxData = {};
+        if (cartElement.length > 0) {
+            total_amount = cartElement.val();
+            tip = tipElement.val();
+            ajaxData.tip = tip;
+            ajaxData.address_id = $("input:radio[name='address_id']:checked").val();
+        }
+        else if (walletElement.length > 0) {
+            total_amount = walletElement.val();
+        }
+        ajaxData.amount = total_amount;
+        ajaxData.returnUrl = path;
+        ajaxData.cancelUrl = path;
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: payment_payfast_url,
+            data: ajaxData,
+            success: function (response) {
+                if (response.status == "Success") {
+                    var res = response.data;
+                    if(res.formData != ''){
+                        $("#payfast_offsite_form").remove();
+                        var form = '';
+                        $.each( res.formData, function( key, value ) {
+                            form += '<input type="hidden" name="'+key+'" value="'+value+'">';
+                        });
+                        form = $('<form id="payfast_offsite_form" action="' + res.redirectUrl + '" method="post">'+ form + '</form>');
+                        $('#v-pills-payfast').append(form);
+                        form.submit();
+                    }
+                } else {
+                    if (cartElement.length > 0) {
+                        success_error_alert('error', response.message, "#payfast-payment-form .payment_response");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                    }
+                    else if (walletElement.length > 0) {
+                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                        $(".topup_wallet_confirm").removeAttr("disabled");
+                    }
+                }
+            },
+            error: function (error) {
+                var response = $.parseJSON(error.responseText);
+                if (cartElement.length > 0) {
+                    success_error_alert('error', response.message, "#payfast-payment-form .payment_response");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                }
+                else if (walletElement.length > 0) {
+                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                    $(".topup_wallet_confirm").removeAttr("disabled");
+                }
+            }
+        });
+    }
+
 });

@@ -330,7 +330,7 @@
     </div>
 </div>
 <div id="import-product" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h4 class="modal-title">Add Product</h4>
@@ -339,9 +339,15 @@
             
                 <div class="modal-body">
                     <div class="row">
+                    
+                    
                         <div class="col-md-12 text-center">
-                            <div class="row align-items-center mb-3">
-                                <div class="col-md-4">
+
+                            <div id="import_csv" class="row align-items-center mb-3">
+                                <div class="col-12 text-right mb-2">
+                                    <button class="btn btn-info button" id="csv_button" type="button">Import form Woocommerce</button>
+                                </div>
+                                <div class="col-md-12">
                                     <form method="post" enctype="multipart/form-data" id="save_imported_products">
                                         @csrf
                                         <a href="{{url('file-download'.'/sample_product.csv')}}">Download Sample file here!</a>
@@ -349,7 +355,13 @@
                                         <input type="file" accept=".csv" onchange="submitProductImportForm()" data-plugins="dropify" name="product_excel" class="dropify" />
                                     </form>
                                 </div>
-                                <div class="col-md-8">
+                            </div>
+
+                            <div id="import_woocommerce" class="row align-items-center mb-3">
+                                <div class="col-12 text-right mb-2">
+                                    <button class="btn btn-info button" id="woocommerce_button" type="button">Import CSV</button>
+                                </div>
+                                <div class="col-md-12">
                                     <form id="woocommerces_form">
                                         <div class="form-group">
                                             <input class="form-control" type="url" name="domain_name" placeholder="Domain Name" value="{{$woocommerce_detail ? $woocommerce_detail->url : ''}}">
@@ -370,45 +382,47 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <table class="table table-centered table-nowrap table-striped" id="">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>File Name</th>
-                                        <th colspan="2">Status</th>
-                                        <th>Link</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="post_list">
-                                    @foreach($csvProducts as $csv)
-                                    <tr data-row-id="{{$csv->id}}">
-                                        <td> {{ $loop->iteration }}</td>
-                                        <td> {{ $csv->name }}</td>
-                                        @if($csv->status == 1)
-                                        <td>Pending</td>
-                                        <td></td>
-                                        @elseif($csv->status == 2)
-                                        <td>Success</td>
-                                        <td></td>
-                                        @else
-                                        <td>Errors</td>
-                                        <td class="position-relative text-center">
-                                            <i class="mdi mdi-exclamation-thick"></i>
-                                            <ul class="tooltip_error">
-                                                <?php $error_csv = json_decode($csv->error); ?>
-                                                @foreach($error_csv as $err)
-                                                <li>
-                                                    {{$err}}
-                                                </li>
-                                                @endforeach
-                                            </ul>
-                                        </td>
-                                        @endif
-                                        <td> <a href="{{ $csv->path }}">Download</a> </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-centered table-nowrap table-striped" id="">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>File Name</th>
+                                            <th colspan="2">Status</th>
+                                            <th>Link</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="post_list">
+                                        @foreach($csvProducts as $csv)
+                                        <tr data-row-id="{{$csv->id}}">
+                                            <td> {{ $loop->iteration }}</td>
+                                            <td> {{ $csv->name }}</td>
+                                            @if($csv->status == 1)
+                                            <td>Pending</td>
+                                            <td></td>
+                                            @elseif($csv->status == 2)
+                                            <td>Success</td>
+                                            <td></td>
+                                            @else
+                                            <td>Errors</td>
+                                            <td class="position-relative text-center">
+                                                <i class="mdi mdi-exclamation-thick"></i>
+                                                <ul class="tooltip_error">
+                                                    <?php $error_csv = json_decode($csv->error); ?>
+                                                    @foreach($error_csv as $err)
+                                                    <li>
+                                                        {{$err}}
+                                                    </li>
+                                                    @endforeach
+                                                </ul>
+                                            </td>
+                                            @endif
+                                            <td> <a href="{{ $csv->path }}">Download</a> </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -427,6 +441,18 @@
             keyboard: false
         });
     });
+
+    $("#csv_button").click(function(){
+        $("#import_woocommerce").show();
+        $("#import_csv").hide();
+    });
+
+    $("#import_woocommerce").hide();
+    $("#woocommerce_button").click(function(){
+        $("#import_csv").show();
+        $("#import_woocommerce").hide();
+    });
+
     var regexp = /^[a-zA-Z0-9-_]+$/;
     function alplaNumeric() {
         var n1 = $('#sku').val();
