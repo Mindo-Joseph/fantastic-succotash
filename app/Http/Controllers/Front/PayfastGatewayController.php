@@ -75,11 +75,11 @@ class PayfastGatewayController extends FrontController
                 'merchant_key' => $this->gateway->getMerchantKey(),
                 'return_url' => url('order/return/success'),
                 'cancel_url' => url($request->cancelUrl),
-                'notify_url' => url("payment/payfast/notify"),
+                'notify_url' => url("https://e6e7-103-72-170-243.ngrok.io/payment/payfast/notify"),
                 'amount' => $amount,
                 'item_name' => 'test item',
                 'custom_int1' => $user->id, // user id
-                'custom_int2' => intval($address_id), // address id
+                'custom_int2' => $address_id, // address id
                 'custom_int3' => 6, //payment option id
                 'custom_str1' => $tip, // tip amount
                 'currency' => 'ZAR',
@@ -127,11 +127,13 @@ class PayfastGatewayController extends FrontController
         {
         case 'COMPLETE':
             // If complete, update your application, email the buyer and process the transaction as paid
-            $pfData->user_id = $pfData->custom_int1;
-            $pfData->address_id = $pfData->custom_int2;
-            $pfData->payment_option_id = $pfData->custom_int3;
-            $pfData->tip = $pfData->custom_str1;
-            $pfData->transaction_id = $pfData->pf_payment_id;
+            $pfData->request->add([
+                'user_id' => $pfData->custom_int1,
+                'address_id' => $pfData->custom_int2,
+                'payment_option_id' => $pfData->custom_int3,
+                'transaction_id' => $pfData->pf_payment_id,
+                'tip' => $pfData->custom_str1,
+            ]);
             $order = new OrderController();
             $placeOrder = $order->placeOrder($pfData);
             $response = $placeOrder->getData();
