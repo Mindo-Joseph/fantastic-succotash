@@ -58,8 +58,8 @@ class AppAuth{
                 $currency_id = $checkCur->currency_id;
             }
         }
-        if(isset($header['timezone']) && !empty($header['timezone'])){
-            $timezone = $header['timezone'];
+        if(isset($header['timezone'][0]) && !empty($header['timezone'][0])){
+            $timezone = $header['timezone'][0];
         }
         $user->language = $language_id;
         $user->currency = $currency_id;
