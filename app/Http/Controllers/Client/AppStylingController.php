@@ -23,6 +23,7 @@ class AppStylingController extends BaseController
         $primary_color_options = [];
         $secondary_color_options = [];
         $tertiary_color_options = [];
+        $signup_tag_line_text = [];
         $regular_fonts = AppStyling::where('name', 'Regular Font')->first();
         if ($regular_fonts) {
             $regular_font_options = AppStylingOption::where('app_styling_id', $regular_fonts->id)->get();
