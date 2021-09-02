@@ -1911,6 +1911,9 @@ label {
     background-color: #EEEEEE;
     padding: 0 10px;
     position: relative;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
 }
 
 .search_form,
@@ -1924,7 +1927,7 @@ label {
 .search_form input.form-control {
     font-size: 18px;
     height: 50px;
-    background: #EEEEEE;
+    background: transparent;
     padding: 0;
 }
 
@@ -4651,22 +4654,9 @@ ul#main-nav-list {
     padding: 10px 10px;
 }
 
-
-.modal-open {
-    overflow: hidden;
-    width: calc(100% - 17px); /*for chrome/safari*/
-    width: -moz-calc(100% - 16px); /*for firefox*/
-    width: -ms-calc(100% - XXpx); /* where "XX" equals the width of the scrollbar in IE)*/
+span.icon-ic_lang, span.icon-ic_currency {
+    font-size: 18px;
 }
-
-body.modal-open{
-    padding-right: 0 !important;
-    overflow-y: auto;
-  }
-
-
-
-
 
 
 
