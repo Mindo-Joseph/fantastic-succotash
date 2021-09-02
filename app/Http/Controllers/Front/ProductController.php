@@ -197,7 +197,7 @@ class ProductController extends FrontController{
                 $productIds[] = $value->cross_product_id;
             }
         }
-        $products = Product::with(['media' => function($q){
+        $products = Product::with(['vendor', 'media' => function($q){
                             $q->groupBy('product_id');
                         }, 'media.image',
                         'translation' => function($q) use($langId){
@@ -207,14 +207,20 @@ class ProductController extends FrontController{
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                         },
-                    ])->select('id', 'sku', 'averageRating', 'url_slug')
+                    ])->select('id', 'sku', 'averageRating', 'url_slug', 'is_new', 'is_featured', 'vendor_id')
                     ->whereIn('id', $productIds);
         $products = $products->get();
         if(!empty($products)){
             foreach ($products as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant[$k]->multiplier = $multiplier;
-                }
+                $value->vendor_name = $value->vendor ? $value->vendor->name : '';
+                $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
+                $value->translation_description = (!empty($value->translation->first())) ? $value->translation->first()->body_html : $value->sku;
+                $value->variant_multiplier = $multiplier ? $multiplier : 1;
+                $value->variant_price = (!empty($value->variant->first())) ? number_format(($value->variant->first()->price * $multiplier),2,'.','') : 0;
+                $value->averageRating = number_format($value->averageRating, 1, '.', '');
+                // foreach ($value->variant as $k => $v) {
+                //     $value->variant[$k]->multiplier = $multiplier;
+                // }
             }
         }
         return $products;

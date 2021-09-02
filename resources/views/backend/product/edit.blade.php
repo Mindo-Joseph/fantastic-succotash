@@ -542,7 +542,7 @@
                             {!! Form::label('title', 'Related Products',['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="releted_product[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)
-                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $related_ids)) selected @endif>{{$otherProduct->sku}}</option>
+                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $related_ids)) selected @endif>{{$otherProduct->primary->title}}</option>
                                 @endforeach
                             </select>
                         </div>
