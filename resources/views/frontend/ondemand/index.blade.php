@@ -287,8 +287,8 @@
                                             <span class="productAddonSetOptions" data-min="{{$addon->addOnName->min_select}}" data-cart_id="{{$cart_data->cart_id}}" data-cart_product_id="{{$cart_data->id}}" data-max="{{$addon->addOnName->max_select}}" data-addonset-title="{{$addon->addOnName->title}}">
                                                 
                                             <div class="booking-time radio-btns long-radio">
-                                                     @foreach($addon->setoptions as $k => $option)
-                                                     @php $checked = ''; @endphp
+                                                    @foreach($addon->setoptions as $k => $option)
+                                                        @php $checked = ''; @endphp
                                                         @foreach ($cart_data->addon as $value)
                                                             @if($addon->addOnName->id == $value->addon_id && $value->option_id == $option->id)
                                                             @php $checked = ''; @endphp
@@ -299,7 +299,7 @@
                                                           <div>
                                                             <div class="radios">
                                                                
-                                                                <input type="{{$type_input}}" class="productAddonOption" {{ $checked }} id="inlineCheckbox_{{$key}}{{$row.'_'.$k}}" class="productAddonOption"  name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}")/>
+                                                                <input type="{{$type_input}}" class="productAddonOption" {{ $checked }} id="inlineCheckbox_{{$key}}{{$row.'_'.$k}}" class="productAddonOption"  name="addonData[{{$cart_data->id}}][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}"/>
                                                                 <label for='inlineCheckbox_{{$key}}{{$row.'_'.$k}}'>
                                                                     <span class="customCheckbox" aria-hidden="true">{{$option->title .' ($'.$option->price.')' }} </span>
                                                                 </label>
