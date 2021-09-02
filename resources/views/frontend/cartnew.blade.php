@@ -63,7 +63,7 @@
                 <h4 class="page-title text-uppercase">{{__('Cart')}}</h4>
             </div>
             <div class="cart_response mt-3 mb-3 d-none">
-                <div class="alert" role="alert"></div>
+                <div class="alert p-0" role="alert"></div>
             </div>
         </div>
     </div>
@@ -555,7 +555,6 @@
     var payment_paystack_url = "{{route('payment.paystackPurchase')}}";
     var payment_success_paystack_url = "{{route('payment.paystackCompletePurchase')}}";
     var payment_payfast_url = "{{route('payment.payfastPurchase')}}";
-    var payment_success_payfast_url = "{{route('payment.payfastCompletePurchase')}}";;
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
     var payment_option_list_url = "{{route('payment.option.list')}}";
