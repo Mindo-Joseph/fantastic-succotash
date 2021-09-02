@@ -290,7 +290,7 @@
                 success: function(response) {
                     $('#order_list_order').hide();
                     if (response.status == 'Success') {
-                        if (isOnload) {
+                        if (!isOnload) {
                             $(".tab-pane").html('');
                         }
                         if (response.data.orders.data.length != 0) {
