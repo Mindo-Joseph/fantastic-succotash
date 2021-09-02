@@ -773,6 +773,8 @@
                     addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
                 }
             }
+
+            console.log(addonoptids);
         });
     });
 </script>
