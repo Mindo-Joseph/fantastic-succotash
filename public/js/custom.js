@@ -1346,7 +1346,6 @@ $(document).ready(function () {
             data: { "addonID": addonids, "addonoptID": addonoptids,"cart_id":cart_id,"cart_product_id":cart_product_id},
             success: function (response) {
                 if (response.status == 'success') {
-                    $(".shake-effect").effect("shake", { times: 3 }, 1200);
                     cartHeader();
                     addonids = [];
                     addonoptids = [];
