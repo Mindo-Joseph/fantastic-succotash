@@ -347,10 +347,9 @@ $(document).ready(function () {
                         $('#show_plus_minus' + cartproduct_id).find('.input_qty').val(1);
                         $('#show_plus_minus' + cartproduct_id).hide();
                         $('#add_button_href' + cartproduct_id).show();
-
-                        let parentdiv = $('#show_plus_minus' + cartproduct_id).parents('.classes_wrapper');
-                        let addons_div = parentdiv.find('.addons-div');
-                        addons_div.show();
+                        
+                        let addons_div = $('#addon_div' + cartproduct_id);
+                        addons_div.hide();
                     }
                     if ($('#next-button-ondemand-2').length != 0) {
                         $("#next-button-ondemand-2").hide();

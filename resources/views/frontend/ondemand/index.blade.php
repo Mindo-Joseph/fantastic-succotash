@@ -258,7 +258,7 @@
                                 @foreach ($cartData as $key => $cart_data)
                                     <!-- show add ons -->
                                      @if(!empty($cart_data->product->addOn) && $cart_data->product->addOn->count() > 0)
-                                        <div class="border-product">
+                                        <div class="border-product" id="addon_div{{$cart_data->id}}">
                                             <h4 class="mb-2"><b>{!! (!empty($cart_data->product->translation->first())) ? $cart_data->product->translation->first()->title : $cart_data->product->sku !!}</b></h4>
                                             @foreach($cart_data->product->addOn as $row => $addon)
                                             <div class="add-on-main-div">
@@ -309,11 +309,12 @@
                                             </span>
                                         </div>
                                         @endforeach
+                                        <hr>
                                         </div>
                                         
                                      @endif
                                      <!-- end show add ons -->
-                                     <hr>
+                                   
                                 @endforeach
                                   </div>
                             @endif
