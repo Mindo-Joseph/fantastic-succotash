@@ -256,14 +256,13 @@
                             @if(app('request')->input('addons') == '1' && app('request')->input('dateset') != '1')
                              <div id="step-4-ondemand">
                                 @foreach ($cartData as $key => $cart_data)
-                               
-                                     <!-- show add ons -->
+                                    <!-- show add ons -->
                                      @if(!empty($cart_data->product->addOn) && $cart_data->product->addOn->count() > 0)
                                         <div class="border-product">
                                             <h4 class="mb-2"><b>{!! (!empty($cart_data->product->translation->first())) ? $cart_data->product->translation->first()->title : $cart_data->product->sku !!}</b></h4>
-                                        @foreach($cart_data->product->addOn as $row => $addon)
-                                        <div class="add-on-main-div">
-                                        <h6 class="product-title">{{ $addon->addOnName->title }}
+                                            @foreach($cart_data->product->addOn as $row => $addon)
+                                            <div class="add-on-main-div">
+                                            <h6 class="product-title">{{ $addon->addOnName->title }}
                                                     @php
                                                         $min_select = '';
                                                         if($addon->addOnName->min_select > 0){
@@ -314,6 +313,7 @@
                                         
                                      @endif
                                      <!-- end show add ons -->
+                                     <hr>
                                 @endforeach
                                   </div>
                             @endif
