@@ -786,10 +786,11 @@ class ProductController extends BaseController
                             if($response && $response['message'] == 'success'){
                                 return $response['tags'];
                             }
+                            Log::info($response);
                 }
             }    
             catch(\Exception $e){
-                
+                Log::info($e->getMessage());
             }
     }
     # check if last mile delivery on 
