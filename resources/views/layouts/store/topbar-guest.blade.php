@@ -7,7 +7,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 @endphp
 <div class="top-header">
     <div class="container">
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-lg-7">
             @if($client_preference_detail->show_contact_us == 1)
                 <div class="header-contact">
@@ -22,7 +22,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <ul class="header-dropdown">
                     <li class="onhover-dropdown change-language">
                         <a href="javascript:void(0)">{{session()->get('locale')}} 
-                            <img src="{{asset('front-assets/images/icon/translation.png')}}" class="img-fluid">
+                        <span class="icon-ic_lang align-middle"></span>
+                        <span class="language ml-1 align-middle">language</span>
                         </a>
                         <ul class="onhover-show-div">
                             @foreach($languageList as $key => $listl)
@@ -34,7 +35,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     </li>
                     <li class="onhover-dropdown change-currency">
                         <a href="javascript:void(0)">{{session()->get('iso_code')}}
-                            <img src="{{asset('front-assets/images/icon/exchange.png')}}" class="img-fluid">
+                        <span class="icon-ic_currency align-middle"></span>
+                        <span class="currency ml-1 align-middle">currency</span>
                         </a>
                         <ul class="onhover-show-div">
                             @foreach($currencyList as $key => $listc)
@@ -61,4 +63,76 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             </div>
         </div>
     </div>
+
+    <div class="mobile-menu main-menu d-block d-sm-none">
+        <div class="menu-right">
+            <ul class="header-dropdown icon-nav">                    
+                <li class="mobile-wishlist d-inline d-sm-none">
+                    <a href="{{route('user.wishlists')}}">
+                        <i class="fa fa-heart" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li class="onhover-dropdown mobile-account  d-inline d-sm-none"> <i class="fa fa-user" aria-hidden="true"></i>
+                    {{__('My Account')}}
+                    <ul class="onhover-show-div">
+                        <li>
+                            <a href="{{route('login')}}" data-lng="en">{{__('Login')}}</a>
+                        </li>
+                        
+                    </ul>
+                </li>
+                <li class="onhover-div mobile-search">
+                    <a href="javascript:void(0);" id="mobile_search_box_btn"><i class="ti-search"></i></a>
+                    <div id="search-overlay" class="search-overlay">
+                        <div> <span class="closebtn" onclick="closeSearch()" title="Close Overlay">×</span>
+                            <div class="overlay-content">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <form>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Search a Product">
+                                                </div>
+                                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="onhover-div mobile-setting">
+                    <div><i class="ti-settings"></i></div>
+                    <div class="show-div setting">
+                        <h6>language</h6>
+                        <ul>
+                            <li><a href="#">english</a></li>
+                            <li><a href="#">french</a></li>
+                        </ul>
+                        <h6>currency</h6>
+                        <ul class="list-inline">
+                            <li><a href="#">euro</a></li>
+                            <li><a href="#">rupees</a></li>
+                            <li><a href="#">pound</a></li>
+                            <li><a href="#">doller</a></li>
+                        </ul>
+                        <h6>Change Theme</h6>
+                        @if($client_preference_detail->show_dark_mode == 1)
+                        <ul class="list-inline">
+                            <li><a class="theme-layout-version" href="javascript:void(0)">Dark</a></li>
+                        </ul>
+                        @endif
+                    </div>
+                </li>
+                <li class="onhover-div mobile-cart">
+                    <a href="{{route('showCart')}}"><i class="ti-shopping-cart"></i></a>
+                    <span class="cart_qty_cls" style="display:none"></span>
+                    <ul class="show-div shopping-cart">
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
 </div>
