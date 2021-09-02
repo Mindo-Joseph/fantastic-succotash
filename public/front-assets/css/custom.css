@@ -1022,18 +1022,37 @@ label:hover~input:checked~.rate label
     opacity: .5;
     z-index: 999;
 }
-
-.spinner-overlay .spinner-box .circle-border {
+.spinner-overlay .page-spinner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+.spinner-overlay .page-spinner .circle-border {
     margin: auto;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
     position: fixed;
+    width: 50px;
+    height: 50px;
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: var(--theme-deafult);
+    background: linear-gradient(0deg, rgba(0,0,0,0.5) 33%, var(--theme-deafult) 100%);
+    animation: spin .8s linear 0s infinite;
 }
-
-.spinner-overlay .spinner-box .circle-core {
+.spinner-overlay .page-spinner .circle-core {
     background: black;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
 }
 
 .spinner-box {
@@ -1910,9 +1929,10 @@ label {
     width: 70%;
     background-color: #EEEEEE;
     padding: 0 10px;
-    border-radius: 50px;
     position: relative;
-    overflow: hidden;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
 }
 
 .search_form,
@@ -1926,7 +1946,7 @@ label {
 .search_form input.form-control {
     font-size: 18px;
     height: 50px;
-    background: #EEEEEE;
+    background: transparent;
     padding: 0;
 }
 

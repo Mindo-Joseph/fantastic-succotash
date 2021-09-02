@@ -462,13 +462,12 @@ $(document).ready(function () {
     let path = window.location.pathname;
     let urlParams = new URLSearchParams(queryString);
     if ((urlParams.has('PayerID')) && (urlParams.has('token'))) {
+        $('.spinner-overlay').show();
         let tipAmount = 0;
         if (urlParams.has('tip')) {
             tipAmount = urlParams.get('tip');
         }
-        $(document).ajaxStop(function () {
-            paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount);
-        });
+        paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount);
     }
 
     function paymentViaStripe(stripe_token, address_id, payment_option_id) {
@@ -597,15 +596,15 @@ $(document).ready(function () {
     function paymentSuccessViaPaypal(amount, token, payer_id, path, tip = 0) {
         let address_id = 0;
         if (path.indexOf("cart") !== -1) {
-            $('#order_placed_btn').trigger('click');
-            $('#v-pills-paypal-tab').trigger('click');
+            // $('#order_placed_btn').trigger('click');
+            // $('#v-pills-paypal-tab').trigger('click');
             $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
             address_id = $("input:radio[name='address_id']:checked").val();
         }
         else if (path.indexOf("wallet") !== -1) {
-            $('#topup_wallet_btn').trigger('click');
-            $('#wallet_topup_form #radio-paypal').prop("checked", true);
-            $(".topup_wallet_confirm").attr("disabled", true);
+            // $('#topup_wallet_btn').trigger('click');
+            // $('#wallet_topup_form #radio-paypal').prop("checked", true);
+            $("#topup_wallet_btn, .topup_wallet_confirm").attr("disabled", true);
         }
         $.ajax({
             type: "GET",
@@ -621,25 +620,35 @@ $(document).ready(function () {
                         creditWallet(amount, 3, response.data);
                     }
                 } else {
+                    $('.spinner-overlay').hide();
                     if (path.indexOf("cart") !== -1) {
-                        success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                        // success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                        $(".cart_response").removeClass('d-none');
+                        success_error_alert('error', response.message, ".cart_response");
                         $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                     }
                     else if (path.indexOf("wallet") !== -1) {
-                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                        $(".topup_wallet_confirm").removeAttr("disabled");
+                        // success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                        ("#wallet_response .message").removeClass('d-none');
+                        success_error_alert('error', response.message, "#wallet_response .message");
+                        $("#topup_wallet_btn, .topup_wallet_confirm").removeAttr("disabled");
                     }
                 }
             },
             error: function (error) {
+                $('.spinner-overlay').hide();
                 var response = $.parseJSON(error.responseText);
                 if (path.indexOf("cart") !== -1) {
-                    success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                    // success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                    $(".cart_response").removeClass('d-none');
+                    success_error_alert('error', response.message, ".cart_response");
                     $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                 }
                 else if (path.indexOf("wallet") !== -1) {
-                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                    $(".topup_wallet_confirm").removeAttr("disabled");
+                    // success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                    ("#wallet_response .message").removeClass('d-none');
+                    success_error_alert('error', response.message, "#wallet_response .message");
+                    $("#topup_wallet_btn, .topup_wallet_confirm").removeAttr("disabled");
                 }
             }
         });
@@ -663,13 +672,24 @@ $(document).ready(function () {
                 if (response.status == "Success") {
                     window.location.href = base_url+'/order/success/'+response.data.id;
                 }else{
-                    $("#order_placed_btn, .proceed_to_pay").attr("disabled", false);
+                    if($('.cart_response').length > 0){
+                        $(".cart_response").removeClass('d-none');
+                        success_error_alert('error', response.message, ".cart_response");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                    }
                 }
             },
             error: function (error) {
                 var response = $.parseJSON(error.responseText);
-                success_error_alert('error', response.message, ".payment_response");
-                $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                // success_error_alert('error', response.message, ".payment_response");
+                if($('.cart_response').length > 0){
+                    $(".cart_response").removeClass('d-none');
+                    success_error_alert('error', response.message, ".cart_response");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                }
+            },
+            complete: function(data){
+                $('.spinner-overlay').hide();
             }
         });
     }
@@ -699,15 +719,15 @@ $(document).ready(function () {
             paymentViaPayfast(address_id, payment_option_id);
         }
     });
-    function creditWallet(amount, payment_option_id, transaction_id) {
+    window.creditWallet = function creditWallet(amount, payment_option_id, transaction_id) {
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: credit_wallet_url,
             data: { wallet_amount: amount, payment_option_id: payment_option_id, transaction_id: transaction_id },
             success: function (response) {
+                location.href = path;
                 if (response.status == "Success") {
-                    location.href = path;
                     // $("#topup_wallet").modal("hide");
                     // $(".table.wallet-transactions table-body").html('');
                     $(".wallet_balance").text(response.data.wallet_balance);
@@ -715,14 +735,19 @@ $(document).ready(function () {
                     // let wallet_transactions_template = _.template($('#wallet_transactions_template').html());
                     // $(".table.wallet-transactions table-body").append(wallet_transactions_template({wallet_transactions:response.data.transactions}));
                 } else {
-                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                    $(".topup_wallet_confirm").attr("disabled", false);
+                    $("#wallet_response .message").removeClass('d-none');
+                    success_error_alert('error', response.message, "#wallet_response .message");
+                    $("#topup_wallet_btn, .topup_wallet_confirm").attr("disabled", false);
                 }
             },
             error: function (error) {
                 var response = $.parseJSON(error.responseText);
-                success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                $(".topup_wallet_confirm").removeAttr("disabled");
+                $("#wallet_response .message").removeClass('d-none');
+                success_error_alert('error', response.message, "#wallet_response .message");
+                $("#topup_wallet_btn, .topup_wallet_confirm").removeAttr("disabled");
+            },
+            complete: function(data){
+                $('.spinner-overlay').hide();
             }
         });
     }
@@ -767,6 +792,10 @@ $(document).ready(function () {
             });
         } else if (payment_option_id == 3) {
             paymentViaPaypal('', payment_option_id);
+        } else if (payment_option_id == 5) {
+            paymentViaPaystack();
+        } else if (payment_option_id == 6) {
+            paymentViaPayfast();
         }
     });
     $(document).on("click", ".remove_promo_code_btn", function () {
