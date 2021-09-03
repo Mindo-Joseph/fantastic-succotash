@@ -98,7 +98,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6 d-none">
+                            <div class="col-lg-6">
                                 <div id="product-slick-wrapper">
                                     @php
                                         if($product->variant->first()->media->isNotEmpty()){
@@ -156,7 +156,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 d-none">
                             <div class="product__carousel">
 
                                 <div class="gallery-parent">
