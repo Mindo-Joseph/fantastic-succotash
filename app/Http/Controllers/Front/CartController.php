@@ -436,6 +436,8 @@ class CartController extends FrontController
         $latitude = '';
         $longitude = '';
         $user_allAddresses = collect();
+        $upSell_products = collect();
+        $crossSell_products = collect();
         if($user){
             $user_allAddresses = UserAddress::where('user_id', $user->id)->get();
             if($address_id > 0){
@@ -612,6 +614,26 @@ class CartController extends FrontController
                             }
                         }
                     }
+
+                    $product = Product::with([
+                        'variant' => function ($sel) {
+                            $sel->groupBy('product_id');
+                        },
+                        'variant.media.pimage.image', 'upSell', 'crossSell', 'vendor', 'media.image', 'translation' => function ($q) use ($langId) {
+                            $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                            $q->where('language_id', $langId);
+                        }])->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating')
+                        ->where('url_slug', $prod->product->url_slug)
+                        ->first();
+                    $doller_compare = ($customerCurrency) ? $customerCurrency->doller_compare : 1;
+                    $up_prods = $this->metaProduct($langId, $doller_compare, 'upSell', $product->upSell);
+                    if($up_prods){
+                        $upSell_products->push($up_prods);
+                    }
+                    $cross_prods = $this->metaProduct($langId, $doller_compare, 'crossSell', $product->crossSell);
+                    if($cross_prods){
+                        $crossSell_products->push($cross_prods);
+                    }
                 }
                 if ($vendorData->coupon) {
                     if ($vendorData->coupon->promo->promo_type_id == 2) {
@@ -707,6 +729,11 @@ class CartController extends FrontController
             $cart->deliver_status = $delivery_status;
             $cart->action = $action;
             $cart->left_section = view('frontend.cartnew-left')->with(['action' => $action,  'vendor_details' => $vendor_details, 'addresses'=> $user_allAddresses, 'countries'=> $countries, 'cart_dinein_table_id'=> $cart_dinein_table_id])->render();
+
+            $cart->upSell_products = ($upSell_products) ? $upSell_products->first() : collect();
+            $cart->crossSell_products = ($crossSell_products) ? $crossSell_products->first() : collect();
+            
+            // dd($cart->toArray());
             $cart->products = $cartData->toArray();
         }
         return $cart;
@@ -903,6 +930,81 @@ class CartController extends FrontController
         catch(\Exception $ex){
             DB::rollback();
             return response()->json(['status'=>'Error', 'message'=>$ex->getMessage()]);
+        }
+    }
+
+
+
+    // add ones add in cart for ondemand 
+
+    public function postAddToCartAddons(Request $request, $domain = '')
+    {
+      
+        try {
+           
+            $user = Auth::user();
+             $addon_ids = $request->addonID;
+             $addon_options_ids = $request->addonoptID;
+             $langId = Session::get('customerLanguage');
+
+           $addonSets = $addon_ids = $addon_options = array();
+            if($request->has('addonID')){
+                $addon_ids = $request->addonID;
+            }
+            if($request->has('addonoptID')){
+                $addon_options = $request->addonoptID;
+            }
+            foreach($addon_options as $key => $opt){
+                $addonSets[$addon_ids[$key]][] = $opt;
+            }
+
+            if($request->has('addonoptID')){
+                $addon = AddonSet::join('addon_set_translations as ast', 'ast.addon_id', 'addon_sets.id')
+                ->select('addon_sets.id', 'addon_sets.min_select', 'addon_sets.max_select', 'ast.title')
+                ->where('ast.language_id', $langId)
+                ->where('addon_sets.status', '!=', '2')
+                ->where('addon_sets.id', $request->addonID[0])->first();
+             if (!$addon) {
+                return response()->json(['error' => 'Invalid addon or delete by admin. Try again with remove some.'], 404);
+            }
+            if ($addon->min_select > count($request->addonID)) {
+                return response()->json([
+                    'error' => 'Select minimum ' . $addon->min_select . ' options of ' . $addon->title,
+                    'data' => $addon
+                ], 404);
+            }
+            if ($addon->max_select < count($request->addonID)) {
+                return response()->json([
+                    'error' => 'You can select maximum ' . $addon->max_select . ' options of ' . $addon->title,
+                    'data' => $addon
+                ], 404);
+            }
+        
+            }
+               
+           
+              
+                    CartAddon::where('cart_id',$request->cart_id)->where('cart_product_id',$request->cart_product_id)->delete();
+                    if (count($addon_options) > 0) {
+                        $saveAddons = array();
+                        foreach ($addon_options as $key => $opts) {
+                            $saveAddons[] = [
+                            'option_id' => $opts,
+                            'cart_id' => $request->cart_id,
+                            'addon_id' => $addon_ids[$key],
+                            'cart_product_id' => $request->cart_product_id,
+                        ];
+                        }
+                        CartAddon::insert($saveAddons);
+                    }
+                   
+                
+        
+
+           
+            return response()->json(['status' => 'success', 'message' => 'Addons Added Successfully!']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
         }
     }
 }

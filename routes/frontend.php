@@ -78,6 +78,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('/product/{id?}','Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}','Front\ProductController@getVariantData')->name('productVariant');
 	Route::post('add/product/cart','Front\CartController@postAddToCart')->name('addToCart');
+	Route::post('add/product/cart-addons','Front\CartController@postAddToCartAddons')->name('addToCartAddons');
 	Route::post('add/wishlist/cart','Front\CartController@addWishlistToCart')->name('addWishlistToCart');
 	Route::post('add/vendorTable/cart','Front\CartController@addVendorTableToCart')->name('addVendorTableToCart');
 	Route::post('add/product/prescription','Front\CartController@uploadPrescription')->name('cart.uploadPrescription');
@@ -128,6 +129,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function() {
     Route::get('user/addressBook', 'Front\AddressController@index')->name('user.addressBook');
 	Route::get('user/wallet', 'Front\WalletController@index')->name('user.wallet');
 	Route::post('user/wallet/credit', 'Front\WalletController@creditWallet')->name('user.creditWallet');
+	Route::get('user/loyalty', 'Front\LoyaltyController@index')->name('user.loyalty');
 	Route::post('wallet/payment/option/list', 'Front\WalletController@paymentOptions')->name('wallet.payment.option.list');
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
 	Route::post('user/updateAccount', 'Front\ProfileController@updateAccount')->name('user.updateAccount');
