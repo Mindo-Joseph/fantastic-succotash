@@ -32,7 +32,7 @@
                         <div class="page-title">
                             <h2>{{ __('My Loyalty') }}</h2>
                         </div>
-                        <div class="card-box">
+                        <div class="card-box loyalty-page">
                             <div class="row">
                                 <div class="offset-md-3 col-md-6">
                                     <div class="card-box">
@@ -82,7 +82,7 @@
                                         <div class="col-12 mt-3">
                                             <h2>Upcoming</h2>
                                         </div>
-                                        <div class="col-md-6 mt-3 text-center">
+                                        <div class="col-sm-6 mt-3 text-center">
                                             <div class="card-box">
                                                 <div class="point-img-box">
                                                     <img src="{{asset('front-assets/images/ic_silver@2x.png')}}" alt="">
@@ -90,7 +90,7 @@
                                                 <h3 class="mb-0 mt-3"><b>100.00 points to Silver</b></h3>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-3 text-center">
+                                        <div class="col-sm-6 mt-3 text-center">
                                             <div class="card-box">
                                                 <div class="point-img-box">
                                                     <img src="{{asset('front-assets/images/ic_gold@2x.png')}}" alt="">
