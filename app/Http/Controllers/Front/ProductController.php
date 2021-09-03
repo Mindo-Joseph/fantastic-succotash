@@ -86,7 +86,7 @@ class ProductController extends FrontController{
         if($clientCurrency){
             $doller_compare = $clientCurrency->doller_compare;
         }
-        $product->related_products = $this->metaProduct($langId, $doller_compare, 'relate', $product->related);
+        $product->related_products = $this->metaProduct($langId, $doller_compare, 'related', $product->related);
         foreach ($product->variant as $key => $value) {
             if(isset($product->variant[$key])){
             $product->variant[$key]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : '1.00';
@@ -181,50 +181,7 @@ class ProductController extends FrontController{
         
         }
    }
-    public function metaProduct($langId, $multiplier, $for = 'relate', $productArray = []){
-        if(empty($productArray)){
-            return $productArray;
-        }
-        $productIds = array();
-        foreach ($productArray as $key => $value) {
-            if($for == 'relate'){
-                $productIds[] = $value->related_product_id;
-            }
-            if($for == 'upSell'){
-                $productIds[] = $value->upsell_product_id;
-            }
-            if($for == 'cross'){
-                $productIds[] = $value->cross_product_id;
-            }
-        }
-        $products = Product::with(['vendor', 'media' => function($q){
-                            $q->groupBy('product_id');
-                        }, 'media.image',
-                        'translation' => function($q) use($langId){
-                        $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
-                        },
-                        'variant' => function($q) use($langId){
-                            $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
-                            $q->groupBy('product_id');
-                        },
-                    ])->select('id', 'sku', 'averageRating', 'url_slug', 'is_new', 'is_featured', 'vendor_id')
-                    ->whereIn('id', $productIds);
-        $products = $products->get();
-        if(!empty($products)){
-            foreach ($products as $key => $value) {
-                $value->vendor_name = $value->vendor ? $value->vendor->name : '';
-                $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
-                $value->translation_description = (!empty($value->translation->first())) ? $value->translation->first()->body_html : $value->sku;
-                $value->variant_multiplier = $multiplier ? $multiplier : 1;
-                $value->variant_price = (!empty($value->variant->first())) ? number_format(($value->variant->first()->price * $multiplier),2,'.','') : 0;
-                $value->averageRating = number_format($value->averageRating, 1, '.', '');
-                // foreach ($value->variant as $k => $v) {
-                //     $value->variant[$k]->multiplier = $multiplier;
-                // }
-            }
-        }
-        return $products;
-    }
+    
     /**
      * Display product variant data
      *
