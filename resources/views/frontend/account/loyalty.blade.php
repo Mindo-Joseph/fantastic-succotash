@@ -32,73 +32,73 @@
                         <div class="page-title">
                             <h2>{{ __('My Loyalty') }}</h2>
                         </div>
-                        <div class="card-box loyalty-page">
-                            <div class="row">
-                                <div class="offset-md-3 col-md-6">
-                                    <div class="card-box">
-                                        <div class="row align-items-center">
-                                            <div class="col-4">
-                                                <div class="medal-img">
-                                                    <img src="{{asset('front-assets/images/ic_bronze@2x.png')}}" alt="">
+                        <div class="card-box">
+                            @if($current_loyalty)
+                                <div class="row">
+                                    <div class="offset-md-3 col-md-6">
+                                        <div class="card-box">
+                                            <div class="row align-items-center">
+                                                <div class="col-4">
+                                                    <div class="medal-img">
+                                                        <img src="{{ $current_loyalty->image['proxy_url'] .'120/120'. $current_loyalty->image['image_path'] }}" alt="">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-8">
-                                                <h3 class="mt-0"><b>You are not</b></h3>
-                                                <div class="loalty-title">
-                                                    Bronze
+                                                <div class="col-8">
+                                                    <h3 class="mt-0"><b>You are on</b></h3>
+                                                    <div class="loalty-title">
+                                                        {{ $current_loyalty->name }}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="row">
-                                        <div class="col-md-6 text-center">
-                                            <div class="card-box earn-points p-2">
-                                                <div class="points-title">
-                                                    0
+                                        <div class="row">
+                                            <div class="col-md-6 text-center">
+                                                <div class="card-box earn-points p-2">
+                                                    <div class="points-title">
+                                                        {{ $loyalty_points_earned }}
+                                                    </div>
+                                                    <div class="ponits-heading">
+                                                        Total Earned Points
+                                                    </div>                                                    
                                                 </div>
-                                                <div class="ponits-heading">
-                                                    Total Earned Points
-                                                </div>                                                    
                                             </div>
-                                        </div>
-                                        <div class="col-md-6 text-center">
-                                            <div class="card-box spend-points p-2">
-                                                <div class="points-title">
-                                                    0
-                                                </div>
-                                                <div class="ponits-heading">
-                                                    Spendable Points
+                                            <div class="col-md-6 text-center">
+                                                <div class="card-box spend-points p-2">
+                                                    <div class="points-title">
+                                                        {{ $loyalty_points_used }}
+                                                    </div>
+                                                    <div class="ponits-heading">
+                                                        Spendable Points
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @else
+                                <div class="text-center">Not Available</div>
+                            @endif
 
                            <div class="row">
                                 <div class="offset-lg-1 col-lg-10">
+                                    @if($upcoming_loyalty->isNotEmpty())
                                     <div class="row">
                                         <div class="col-12 mt-3">
                                             <h2>Upcoming</h2>
                                         </div>
-                                        <div class="col-sm-6 mt-3 text-center">
+                                        @foreach($upcoming_loyalty as $loyalty)
+                                        <div class="col-md-6 mt-3 text-center">
                                             <div class="card-box">
                                                 <div class="point-img-box">
-                                                    <img src="{{asset('front-assets/images/ic_silver@2x.png')}}" alt="">
+                                                    <img src="{{ $loyalty->image['proxy_url'] .'200/200'. $loyalty->image['image_path'] }}" alt="">
                                                 </div>
-                                                <h3 class="mb-0 mt-3"><b>100.00 points to Silver</b></h3>
+                                                <h3 class="mb-0 mt-3"><b>{{$loyalty->points_to_reach}} points to {{$loyalty->name}}</b></h3>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 mt-3 text-center">
-                                            <div class="card-box">
-                                                <div class="point-img-box">
-                                                    <img src="{{asset('front-assets/images/ic_gold@2x.png')}}" alt="">
-                                                </div>
-                                                <h3 class="mb-0 mt-3"><b>100.00 points to Silver</b></h3>
-                                            </div>
-                                        </div>
+                                        @endforeach
                                     </div>
+                                    @endif
                                </div>
                            </div>
                         </div>
