@@ -519,14 +519,14 @@
 @if($product->related_products->count() > 0)
 <section class="">
     <div class="container">
-        <div class="row">
+        <div class="row m-0">
             <div class="col-12 ">
-                <h3>Related products</h3>
+                <h3>{{__('Related products')}}</h3>
             </div>
         </div>
     </div>
 </section>
-@endif
+
 {{--<section class="section-b-space ratio_asos">--}}
     <div class="container mt-3 mb-5">
         <div class="product-4 product-m no-arrow">
@@ -534,15 +534,7 @@
                 {{--<div class="col-xl-2 col-md-4 col-sm-6">--}}
                 <div>
                     <a class="card scale-effect text-center" href="{{route('productDetail')}}/{{ $related_product->url_slug }}">
-                        @php
-                            $product_type = 'On Sale';
-                            if($related_product->is_new == 1){
-                                $product_type = 'New Product';
-                            }elseif($related_product->is_featured == 1){
-                                $product_type = 'Featured Product';
-                            }
-                        @endphp
-                        <label class="product-tag">{{ __($product_type) }}</label>
+                        <label class="product-tag">{{ __($related_product->product_type) }}</label>
                         <div class="product-image">
                             <img src="{{ $related_product->media ? $related_product->media->first()->image->path['proxy_url'].'600/800'.$related_product->media->first()->image->path['image_path'] : '' }}" alt="">
                         </div>
@@ -602,6 +594,7 @@
         </div>
     </div>
 {{--</section>--}}
+@endif
 <div class="modal fade product-rating" id="product_rating" tabindex="-1" aria-labelledby="product_ratingLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
