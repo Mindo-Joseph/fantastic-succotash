@@ -311,8 +311,8 @@
                </div>
                <div class="product-bottom-bar">
                   <div class="row">
-                     <div class="col-md-4">
-                        <div class="card-box vendor-details-left">
+                     <div class="col-sm-8 col-lg-5 order-0">
+                        <div class="card-box vendor-details-left px-2 py-3">
                            <h3>Dominic Pizza</h3>
                            <ul class="vendor-info">
                               <li class="d-block food-items">
@@ -331,7 +331,7 @@
                            </ul>
                         </div>
                      </div>
-                     <div class="col-md-5 col-xl-6">
+                     <div class="col-lg-4 col-xl-5 order-lg-1 order-2">
                         <div class="vendor-search-bar">
                            <div class="radius-bar w-100">
                               <div class="search_form d-flex align-items-center justify-content-between">
@@ -343,11 +343,11 @@
                            </div>
                         </div>
                      </div>
-                     <div class="col-md-3 col-xl-2">
+                     <div class="col-sm-4 col-lg-3 col-xl-2 order-xl-2 order-1">
                         <div class="vendor-reviwes">
                            <div class="row">                             
                               <div class="col-12 d-flex align-items-center">
-                                 <div class="rating-text-box ml-auto">
+                                 <div class="rating-text-box ml-sm-auto">
                                     <span>4.1</span>
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                  </div>
@@ -371,7 +371,7 @@
                   <div class="col-12">
                     <hr>
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-lg-3">
                             <nav class="scrollspy-menu">
                                 <ul>
                                     <li><a href="#one">Best in Pizza (10)</a></li>
@@ -381,7 +381,7 @@
                                 </ul>
                             </nav>
                         </div>
-                        <div class="col-9 border-left">
+                        <div class="col-md-8 col-lg-6 border-left">
                             <section class="scrolling_section mb-4" id="one">
                                 <h2 class="category-head mt-0 mb-3">Best in Pizza (10)</h2>
                                 <div class="row classes_wrapper no-gutters mb-2">
@@ -392,7 +392,7 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                         <div class="row price_head pl-md-3 pl-2">
-                                            <div class="col-sm-8 pl-2">
+                                            <div class="col-sm-9 pl-2">
                                                 <h5 class="mt-0">Veg Supreme Pizza </h5>
                                                 <div class="rating-text-box">
                                                     <span>4.1</span>
@@ -401,7 +401,7 @@
                                                 <p class="mb-1">₹209</p>
                                                 <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                             </div>
-                                            <div class="col-sm-4 text-right">
+                                            <div class="col-sm-3 text-right">
                                                 <a href="#" class="add-cart-btn">Add</a>
                                             </div>
                                         </div>
@@ -414,7 +414,7 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                         <div class="row price_head pl-md-3 pl-2">
-                                            <div class="col-sm-8 pl-2">
+                                            <div class="col-sm-9 pl-2">
                                                 <h5 class="mt-0">Veg Supreme Pizza </h5>
                                                 <div class="rating-text-box">
                                                     <span>4.1</span>
@@ -423,7 +423,7 @@
                                                 <p class="mb-1">₹209</p>
                                                 <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                             </div>
-                                            <div class="col-sm-4 text-right">
+                                            <div class="col-sm-3 text-right">
                                                 <a href="#" class="add-cart-btn">Add</a>
                                             </div>
                                         </div>
@@ -437,7 +437,7 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                         <div class="row price_head pl-md-3 pl-2">
-                                            <div class="col-sm-8 pl-2">
+                                            <div class="col-sm-9 pl-2">
                                                 <h5 class="mt-0">Veg Supreme Pizza </h5>
                                                 <div class="rating-text-box">
                                                     <span>4.1</span>
@@ -446,7 +446,7 @@
                                                 <p class="mb-1">₹209</p>
                                                 <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                             </div>
-                                            <div class="col-sm-4 text-right">
+                                            <div class="col-sm-3 text-right">
                                                 <a href="#" class="add-cart-btn">Add</a>
                                             </div>
                                         </div>
@@ -460,7 +460,7 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                         <div class="row price_head pl-md-3 pl-2">
-                                            <div class="col-sm-8 pl-2">
+                                            <div class="col-sm-9 pl-2">
                                                 <h5 class="mt-0">Veg Supreme Pizza </h5>
                                                 <div class="rating-text-box">
                                                     <span>4.1</span>
@@ -469,7 +469,7 @@
                                                 <p class="mb-1">₹209</p>
                                                 <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                             </div>
-                                            <div class="col-sm-4 text-right">
+                                            <div class="col-sm-3 text-right">
                                                 <a href="#" class="add-cart-btn">Add</a>
                                             </div>
                                         </div>
@@ -483,7 +483,7 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                         <div class="row price_head pl-md-3 pl-2">
-                                            <div class="col-sm-8 pl-2">
+                                            <div class="col-sm-9 pl-2">
                                                 <h5 class="mt-0">Veg Supreme Pizza </h5>
                                                 <div class="rating-text-box">
                                                     <span>4.1</span>
@@ -492,7 +492,7 @@
                                                 <p class="mb-1">₹209</p>
                                                 <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                             </div>
-                                            <div class="col-sm-4 text-right">
+                                            <div class="col-sm-3 text-right">
                                                 <a href="#" class="add-cart-btn">Add</a>
                                             </div>
                                         </div>
@@ -506,7 +506,7 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                         <div class="row price_head pl-md-3 pl-2">
-                                            <div class="col-sm-8 pl-2">
+                                            <div class="col-sm-9 pl-2">
                                                 <h5 class="mt-0">Veg Supreme Pizza </h5>
                                                 <div class="rating-text-box">
                                                     <span>4.1</span>
@@ -515,7 +515,7 @@
                                                 <p class="mb-1">₹209</p>
                                                 <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                             </div>
-                                            <div class="col-sm-4 text-right">
+                                            <div class="col-sm-3 text-right">
                                                 <a href="#" class="add-cart-btn">Add</a>
                                             </div>
                                         </div>
@@ -532,15 +532,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -554,15 +554,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -576,15 +576,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -598,15 +598,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -620,15 +620,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -642,15 +642,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -664,15 +664,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -689,15 +689,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -711,15 +711,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -733,15 +733,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -755,15 +755,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -777,15 +777,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -799,15 +799,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -821,15 +821,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -846,15 +846,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -868,15 +868,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -890,15 +890,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -912,15 +912,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -934,15 +934,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -956,15 +956,15 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
@@ -978,21 +978,51 @@
                                     </div>
                                     <div class="col-md-10 col-sm-9">
                                     <div class="row price_head pl-md-3 pl-2">
-                                        <div class="col-sm-8 pl-2">
-                                            <h5>Veg Supreme Pizza </h5>
-                                             <p>₹209</p><div class="rating-text-box">
+                                        <div class="col-sm-9 pl-2">
+                                            <h5 class="mt-0 mb-1">Veg Supreme Pizza </h5>
+                                             <p class="mb-1">₹209</p><div class="rating-text-box">
                                                     <span>4.1</span>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                 </div>
                                             <label class="member_no d-block mb-0">Onion capsicum, tomato, mushroom, jalapenos sweet corn and extra cheese.</label>
                                         </div>
-                                        <div class="col-sm-4 text-right">
+                                        <div class="col-sm-3 text-right">
                                             <a href="#" class="add-cart-btn">Add</a>
                                         </div>
                                     </div>
                                     </div>
                                 </div>
                             </section>
+                        </div>
+                        <div class="col-4 col-lg-3 d-md-inline-block d-none">
+                            <div class="card-box p-0 cart-main-box">
+                                <div class="p-2 d-flex align-items-center justify-content-between">
+                                    <h4 class="right-card-title">Basket</h4>
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </div>
+                                <div class="p-2 border-top">
+                                    <h5>Cottonworth Classic Cuvée 75cl</h5>
+                                    <div class="qty-box mt-3 mb-2">
+                                        <div class="input-group">
+                                            <span class="input-group-prepend">
+                                                <button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i>
+                                                </button>
+                                            </span>
+                                            <input type="text" name="quantity" id="quantity" class="form-control input-qty-number quantity_count" value="1">
+                                            <span class="input-group-prepend quant-plus">
+                                                <button type="button" class="btn quantity-right-plus " data-type="plus" data-field="">
+                                                    <i class="ti-angle-right"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cart-sub-total d-flex align-items-center justify-content-between">
+                                    <span>Subtotalll</span>
+                                    <span>£ 10.50</span>
+                                </div>
+                                <a class="checkout-btn text-center d-block" href="#">Checkout</a>
+                            </div>
                         </div>
                     </div>
                     <hr>
