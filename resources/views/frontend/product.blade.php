@@ -128,7 +128,7 @@
                                                 }
                                             @endphp
                                             <div class="image_mask">
-                                                <img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" src="{{$img->path['proxy_url'].'600/800'.$img->path['image_path']}}">
+                                                <img class="img-fluid blur-up lazyload image_zoom_cls-{{$k}}" src="{{$img->path['image_fit'].'600/800'.$img->path['image_path']}}">
                                             </div>
                                             @endforeach
                                         @endif
@@ -146,7 +146,7 @@
                                                         }
                                                     @endphp
                                                     <div>
-                                                        <img class="img-fluid blur-up lazyload" src="{{$img->path['proxy_url'].'300/300'.$img->path['image_path']}}">
+                                                        <img class="img-fluid blur-up lazyload" src="{{$img->path['image_fit'].'300/300'.$img->path['image_path']}}">
                                                     </div>
                                                     @endforeach
                                                 @endif
@@ -167,7 +167,7 @@
                                                 $arr = [
                                                     'image' => (object)[
                                                         'path' => [
-                                                            'proxy_url' => \Config::get('app.IMG_URL1'),
+                                                            'image_fit' => \Config::get('app.FIT_URl'),
                                                             'image_path' => \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png')
                                                         ]
                                                     ]
@@ -189,8 +189,8 @@
                                                         }
                                                     @endphp
                                                     <div class="swiper-slide easyzoom easyzoom--overlay">
-                                                        <a href="{{$img->path['proxy_url'].'600/800'.$img->path['image_path']}}">
-                                                        <img src="{{$img->path['proxy_url'].'600/800'.$img->path['image_path']}}" alt="">
+                                                        <a href="{{$img->path['image_fit'].'600/600'.$img->path['image_path']}}">
+                                                        <img src="{{$img->path['image_fit'].'600/600'.$img->path['image_path']}}" alt="">
                                                         </a>
                                                     </div>
                                                 @endforeach
@@ -212,7 +212,7 @@
                                                         }
                                                     @endphp
                                                     <div class="swiper-slide">
-                                                        <img src="{{$img->path['proxy_url'].'300/300'.$img->path['image_path']}}" alt="">
+                                                        <img src="{{$img->path['image_fit'].'300/300'.$img->path['image_path']}}" alt="">
                                                     </div>
                                                     @endforeach
                                                 @endif
@@ -229,7 +229,7 @@
                                         {{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}
                                     </h2>
                                     <h6 class="sold-by">
-                                        <b> <img src="{{$product->vendor->logo['proxy_url']}}200/200{{$product->vendor->logo['image_path']}}" alt="{{$product->vendor->Name}}"></b> <a href="{{ route('vendorDetail', $product->vendor->slug) }}"><b> {{$product->vendor->name}} </b></a>
+                                        <b> <img src="{{$product->vendor->logo['image_fit']}}200/200{{$product->vendor->logo['image_path']}}" alt="{{$product->vendor->Name}}"></b> <a href="{{ route('vendorDetail', $product->vendor->slug) }}"><b> {{$product->vendor->name}} </b></a>
                                     </h6>
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->rating_check == 1)  
@@ -482,8 +482,8 @@
                                                 <div class="row review-wrapper">
                                                     @if(isset($rating->reviewFiles))
                                                     @foreach ($rating->reviewFiles as $files)
-                                                    <a target="_blank" href="{{$files->file['proxy_url'].'900/900'.$files->file['image_path']}}" class="col review-photo mt-2 lightBoxGallery" data-gallery="">
-                                                        <img src="{{$files->file['proxy_url'].'300/300'.$files->file['image_path']}}">
+                                                    <a target="_blank" href="{{$files->file['image_fit'].'900/900'.$files->file['image_path']}}" class="col review-photo mt-2 lightBoxGallery" data-gallery="">
+                                                        <img src="{{$files->file['image_fit'].'300/300'.$files->file['image_path']}}">
                                                     </a>
                                                     @endforeach
                                                     @endif
@@ -510,8 +510,8 @@
             <div class="swiper-wrapper">
                 <% _.each(media, function(img, key){ %>
                     <div class="swiper-slide easyzoom easyzoom--overlay">
-                        <a href="<%= img.pimage.image.path['proxy_url'] %>600/800<%= img.pimage.image.path['image_path'] %>">
-                        <img src="<%= img.pimage.image.path['proxy_url'] %>600/800<%= img.pimage.image.path['image_path'] %>" alt="">
+                        <a href="<%= img.pimage.image.path['image_fit'] %>600/600<%= img.pimage.image.path['image_path'] %>">
+                        <img src="<%= img.pimage.image.path['image_fit'] %>600/600<%= img.pimage.image.path['image_path'] %>" alt="">
                         </a>
                     </div>
                 <% }); %>
@@ -524,7 +524,7 @@
             <div class="swiper-wrapper">
                 <% _.each(media, function(img, key){ %>
                     <div class="swiper-slide">
-                        <img src="<%= img.pimage.image.path['proxy_url'] %>300/300<%= img.pimage.image.path['image_path'] %>" alt="">
+                        <img src="<%= img.pimage.image.path['image_fit'] %>300/300<%= img.pimage.image.path['image_path'] %>" alt="">
                     </div>
                 <% }); %>
             </div>
@@ -646,7 +646,7 @@
                     <a class="card scale-effect text-center" href="{{route('productDetail')}}/{{ $related_product->url_slug }}">
                         <label class="product-tag">{{ __($related_product->product_type) }}</label>
                         <div class="product-image">
-                            <img src="{{ $related_product->media ? $related_product->media->first()->image->path['proxy_url'].'600/800'.$related_product->media->first()->image->path['image_path'] : '' }}" alt="">
+                            <img src="{{ $related_product->media ? $related_product->media->first()->image->path['image_fit'].'600/600'.$related_product->media->first()->image->path['image_path'] : '' }}" alt="">
                         </div>
                         <div class="media-body align-self-center">
                             <div class="inner_spacing">
@@ -675,7 +675,7 @@
                         <div class="img-wrapper">
                             <div class="front">
                                 <a href="{{route('productDetail')}}/{{$related_product->url_slug}}">
-                                    <img src="{{$related_product->media ? $related_product->media->first()->image->path['proxy_url'].'600/800'.$related_product->media->first()->image->path['image_path'] : ''}}" class="img-fluid blur-up lazyload bg-img" alt="">
+                                    <img src="{{$related_product->media ? $related_product->media->first()->image->path['image_fit'].'600/600'.$related_product->media->first()->image->path['image_path'] : ''}}" class="img-fluid blur-up lazyload bg-img" alt="">
                                 </a>
                             </div>
                         </div>
