@@ -186,9 +186,22 @@ $(document).ready(function () {
       }
     }
     $(document).on("click",".search-location-result",function() {
-        $('#pickup_location').val($(this).data('address'));
-        var latitude = $(this).data('latitude');
-        var longitude = $(this).data('longitude');
+        var latitude             = $(this).data('latitude');
+        var longitude            = $(this).data('longitude');
+        var pickup_location      = $('#pickup_location_latitude').val();
+        var destination_location = $('#destination_location_latitude').val();
+        if(pickup_location == ''){
+            $('#pickup_location').val($(this).data('address'));
+            $('#pickup_location_latitude').val(latitude);
+            $('#pickup_location_longitude').val(longitude);
+        }else if(destination_location == ''){
+            $('#destination_location').val($(this).data('address'));
+            $('#destination_location_latitude').val(latitude);
+            $('#destination_location_longitude').val(longitude);
+        }
+
+
+        
         displayLocationCab(latitude, longitude);
     });
     function getVendorList(){
@@ -222,22 +235,22 @@ $(document).ready(function () {
                 dataType: 'json',
                 url: autocomplete_urls,
                 success: function(response) {
-                    if(response.status == 'Success'){
-                        $('.cab-booking-main-loader').hide();
-                        $('#vendor_main_div').html('');
-                        if(response.data.length != 0){
-                            let vendors_template = _.template($('#vendors_template').html());
-                            $("#vendor_main_div").append(vendors_template({results: response.data})).show();
-                            if(response.data.length == 1){
-                                $('.vendor-list').trigger('click');
-                                $('.table-responsive').remove();
-                            }else{
-                                $('.vendor-list').first().trigger('click');
-                            }
-                        }else{
-                            $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
-                        }
-                    }
+                    // if(response.status == 'Success'){
+                    //     $('.cab-booking-main-loader').hide();
+                    //     $('#vendor_main_div').html('');
+                    //     if(response.data.length != 0){
+                    //         let vendors_template = _.template($('#vendors_template').html());
+                    //         $("#vendor_main_div").append(vendors_template({results: response.data})).show();
+                    //         if(response.data.length == 1){
+                    //             $('.vendor-list').trigger('click');
+                    //             $('.table-responsive').remove();
+                    //         }else{
+                    //             $('.vendor-list').first().trigger('click');
+                    //         }
+                    //     }else{
+                    //         $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                    //     }
+                    // }
                 }
             });
         }
@@ -397,9 +410,26 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(document).on("click",".edit-pickup",function() {
+        $('#pickup_location').val("");
+        $(".check-pick-first").css("display", "block");
+        $(".check-dropoff-secpond").css("display", "none");
+        $('.check-pickup').attr("style", "display: block !important");
+        $('.check-dropoff').attr("style", "display: none !important");
+    });
+
+    $(document).on("click",".edit-pickup",function() {
+        $('#pickup_location').val("");
+        $(".check-pick-first").css("display", "block");
+        $(".check-dropoff-secpond").css("display", "none");
+        $('.check-pickup').attr("style", "display: block !important");
+        $('.check-dropoff').attr("style", "display: none !important");
+    });
+
     function initMap2() {
         var locations = [];
-        let pickup_location_latitude = $('#pickup_location_latitude').val();
+        let pickup_location_latitude  = $('#pickup_location_latitude').val();
         let pickup_location_longitude = $('#pickup_location_longitude').val();
         var pointA = new google.maps.LatLng(pickup_location_latitude, pickup_location_longitude);
         map = new google.maps.Map(document.getElementById('booking-map'), {zoom: 7,center: pointA});
@@ -449,22 +479,90 @@ $(document).ready(function () {
         var autocomplete2 = new google.maps.places.Autocomplete(input2);
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
             var place = autocomplete.getPlace();
-           $('#pickup_location_latitude').val(place.geometry.location.lat());
-           $('#pickup_location_longitude').val(place.geometry.location.lng());
-           initMap2();
+            $('#pickup_location_latitude').val(place.geometry.location.lat());
+            $('#pickup_location_longitude').val(place.geometry.location.lng());
+            initMap2();
+            
+            var pickup_location = $("#pickup_location").val();
+            if(pickup_location != ""){
+
+                var currentUrl  = window.location.href;
+                var queryString = removeURLParameter(currentUrl, 'pickup_location');
+                var perm        = "?pickup_location=" + pickup_location + (queryString != '' ? "&" + queryString : '');
+                window.history.replaceState(null, null, perm);
+
+                $(".check-pick-first").css("display", "none");
+                $("#pickup-where-from").html(" "+pickup_location);
+                $(".check-dropoff-secpond").css("display", "block");
+                $('.check-pickup').attr("style", "display: none !important");
+                $(".check-dropoff").css("display", "block");
+            }
+            
         });
         google.maps.event.addListener(autocomplete2, 'place_changed', function () {
             var place2 = autocomplete2.getPlace();
             $('#destination_location_latitude').val(place2.geometry.location.lat());
             $('#destination_location_longitude').val(place2.geometry.location.lng());
             initMap2();
+
+            var pickup_location      = $("#pickup_location").val();
+            var destination_location = $("#destination_location").val();
+            if(pickup_location != '' && destination_location != ''){
+                
+                var currentUrl  = window.location.href;
+                var queryString = removeURLParameter(currentUrl, 'destination_location');
+                var perm        = "?" + (queryString != '' ? queryString : '') + "&destination_location=" + destination_location;
+                window.history.replaceState(null, null, perm);
+                
+                $("#dropoff-where-to").html(" "+destination_location);
+                $('.where-to-first').attr("style", "display: none !important");
+                $('.check-dropoff').attr("style", "display: none !important");
+                $(".where-to-second").css("display", "block");
+                $('.add-more-location').attr("style", "display: block !important");
+            }
+            
         });
       }
     }
+
+
+    function removeURLParameter(url, parameter) {
+        //prefer to use l.search if you have a location/link object
+        var urlparts = url.split('?');   
+        if (urlparts.length >= 2) {
+    
+            var prefix = encodeURIComponent(parameter) + '=';
+            var pars = urlparts[1].split(/[&;]/g);
+    
+            //reverse iteration as may be destructive
+            for (var i = pars.length; i-- > 0;) {    
+                //idiom for string.startsWith
+                if (pars[i].lastIndexOf(prefix, 0) !== -1) {  
+                    pars.splice(i, 1);
+                }
+            }
+            return (pars.length > 0 ? pars.join('&') : '');
+        }
+        return false;
+    }
+
+    function getQueryStringVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split('&');
+        for (var i=0; i<vars.length; i++) {
+            var pair = vars[i].split('=');
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+    
+        return false;
+   }
+
     function getDistance(){
-     //Find the distance
-     var distanceService = new google.maps.DistanceMatrixService();
-     distanceService.getDistanceMatrix({
+        //Find the distance
+        var distanceService = new google.maps.DistanceMatrixService();
+        distanceService.getDistanceMatrix({
         origins: [$("#pickup_location").val()],
         destinations: [$("#destination_location").val()],
         travelMode: google.maps.TravelMode.WALKING,
