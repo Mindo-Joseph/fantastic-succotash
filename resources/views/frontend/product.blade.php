@@ -98,7 +98,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6">
+                            {{--<div class="col-lg-6 d-none">
                                 <div id="product-slick-wrapper">
                                     @php
                                         if($product->variant->first()->media->isNotEmpty()){
@@ -154,66 +154,72 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>--}}
 
-                            <div class="col-lg-6 d-none">
-                            <div class="product__carousel">
-
-                                <div class="gallery-parent">
-                                <!-- SwiperJs and EasyZoom plugins start -->
-                                <div class="swiper-container gallery-top">
-                                    <div class="swiper-wrapper">
-                                    <div class="swiper-slide easyzoom easyzoom--overlay">
-                                        <a href="{{asset('front-assets/images/nature-1.jpg')}}">
-                                        <img src="{{asset('front-assets/images/nature-1.jpg')}}" alt="">
-                                        </a>
+                            <div class="col-lg-6">
+                                <div class="product__carousel">
+                                    <div class="gallery-parent">
+                                        @php
+                                            if($product->variant->first()->media->isNotEmpty()){
+                                                $product->media = $product->variant->first()->media;
+                                            }
+                                            if($product->media->isEmpty()){
+                                                $arr = [
+                                                    'image' => (object)[
+                                                        'path' => [
+                                                            'proxy_url' => \Config::get('app.IMG_URL1'),
+                                                            'image_path' => \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png')
+                                                        ]
+                                                    ]
+                                                ];
+                                                $coll = (object)collect($arr)->all();
+                                                $product->media[] = $coll;
+                                            }
+                                        @endphp
+                                        <!-- SwiperJs and EasyZoom plugins start -->
+                                        <div class="swiper-container gallery-top">
+                                            <div class="swiper-wrapper">
+                                            @if(!empty($product->media))
+                                                @foreach($product->media as $k => $image)
+                                                    @php
+                                                        if(isset($image->pimage)){
+                                                            $img = $image->pimage->image;
+                                                        }else{
+                                                            $img = $image->image;
+                                                        }
+                                                    @endphp
+                                                    <div class="swiper-slide easyzoom easyzoom--overlay">
+                                                        <a href="{{$img->path['proxy_url'].'600/800'.$img->path['image_path']}}">
+                                                        <img src="{{$img->path['proxy_url'].'600/800'.$img->path['image_path']}}" alt="">
+                                                        </a>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                            </div>
+                                            <!-- Add Arrows -->
+                                            <div class="swiper-button-next swiper-button-white"></div>
+                                            <div class="swiper-button-prev swiper-button-white"></div>
+                                        </div>
+                                        <div class="swiper-container gallery-thumbs">
+                                            <div class="swiper-wrapper">
+                                                @if(!empty($product->media))
+                                                    @foreach($product->media as $k => $image)
+                                                    @php
+                                                        if(isset($image->pimage)){
+                                                            $img = $image->pimage->image;
+                                                        }else{
+                                                            $img = $image->image;
+                                                        }
+                                                    @endphp
+                                                    <div class="swiper-slide">
+                                                        <img src="{{$img->path['proxy_url'].'300/300'.$img->path['image_path']}}" alt="">
+                                                    </div>
+                                                    @endforeach
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <!-- SwiperJs and EasyZoom plugins end -->
                                     </div>
-                                    <div class="swiper-slide easyzoom easyzoom--overlay">
-                                        <a href="{{asset('front-assets/images/nature-2.jpg')}}">
-                                        <img src="{{asset('front-assets/images/nature-2.jpg')}}" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide easyzoom easyzoom--overlay">
-                                        <a href="{{asset('front-assets/images/nature-3.jpg')}}">
-                                        <img src="{{asset('front-assets/images/nature-3.jpg')}}" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide easyzoom easyzoom--overlay">
-                                        <a href="{{asset('front-assets/images/nature-4.jpg')}}">
-                                        <img src="{{asset('front-assets/images/nature-4.jpg')}}" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="swiper-slide easyzoom easyzoom--overlay">
-                                        <a href="{{asset('front-assets/images/nature-5.jpeg')}}">
-                                            <img src="{{asset('front-assets/images/nature-5.jpeg')}}" alt="">
-                                        </a>
-                                    </div>
-                                    </div>
-                                    <!-- Add Arrows -->
-                                    <div class="swiper-button-next swiper-button-white"></div>
-                                    <div class="swiper-button-prev swiper-button-white"></div>
-                                </div>
-                                <div class="swiper-container gallery-thumbs">
-                                    <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                        <img src="{{asset('front-assets/images/nature-1.jpg')}}" alt="">
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="{{asset('front-assets/images/nature-2.jpg')}}" alt="">
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="{{asset('front-assets/images/nature-3.jpg')}}" alt="">
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="{{asset('front-assets/images/nature-4.jpg')}}" alt="">
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="{{asset('front-assets/images/nature-5.jpeg')}}" alt="">
-                                    </div>
-                                    </div>
-                                </div>
-                                <!-- SwiperJs and EasyZoom plugins end -->
-                                </div>
                                 </div>
                             </div>
 
@@ -500,7 +506,30 @@
 </section>
 <script type="text/template" id="variant_image_template">
     <% if(media != '') { %>
-        <div class="product-slick">
+        <div class="swiper-container gallery-top">
+            <div class="swiper-wrapper">
+                <% _.each(media, function(img, key){ %>
+                    <div class="swiper-slide easyzoom easyzoom--overlay">
+                        <a href="<%= img.pimage.image.path['proxy_url'] %>600/800<%= img.pimage.image.path['image_path'] %>">
+                        <img src="<%= img.pimage.image.path['proxy_url'] %>600/800<%= img.pimage.image.path['image_path'] %>" alt="">
+                        </a>
+                    </div>
+                <% }); %>
+            </div>
+            <!-- Add Arrows -->
+            <div class="swiper-button-next swiper-button-white"></div>
+            <div class="swiper-button-prev swiper-button-white"></div>
+        </div>
+        <div class="swiper-container gallery-thumbs">
+            <div class="swiper-wrapper">
+                <% _.each(media, function(img, key){ %>
+                    <div class="swiper-slide">
+                        <img src="<%= img.pimage.image.path['proxy_url'] %>300/300<%= img.pimage.image.path['image_path'] %>" alt="">
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+        <!--<div class="product-slick">
             <% _.each(media, function(img, key){ %>
                 <div class="image_mask">
                     <img class="img-fluid blur-up lazyload image_zoom_cls-<%= key %>" src="<%= img.pimage.image.path['proxy_url'] %>600/800<%= img.pimage.image.path['image_path'] %>">
@@ -517,13 +546,25 @@
                     <% }); %>
                 </div>
             </div>
-        </div>
+        </div>-->
     <% }else{ %>
-        <div class="product-slick" style="min-height: 200px; display: table; width: 100%;">
+        <div class="swiper-container gallery-top">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide easyzoom easyzoom--overlay">
+                    <a href="{{ \Config::get('app.IMG_URL1') .'600/800'. \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png') }}">
+                    <img src="{{ \Config::get('app.IMG_URL1') .'600/800'. \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png') }}" alt="">
+                    </a>
+                </div>
+            </div>
+            <!-- Add Arrows -->
+            <div class="swiper-button-next swiper-button-white"></div>
+            <div class="swiper-button-prev swiper-button-white"></div>
+        </div>
+        <!--<div class="product-slick" style="min-height: 200px; display: table; width: 100%;">
             <div class="image_mask" style="vertical-align: middle; display: table-cell; text-align: center">
                 <img class="img-fluid blur-up lazyload" src="{{ \Config::get('app.IMG_URL1') .'600/800'. \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png') }}">
             </div>
-        </div>
+        </div>-->
     <% } %>
 </script>
 <script type="text/template" id="variant_template">
@@ -870,9 +911,14 @@
                             $(".addToCart, #addon-table").show();
                         }
 
-                        $('#product-slick-wrapper').html('');
+                        // $('#product-slick-wrapper').html('');
                         let variant_image_template = _.template($('#variant_image_template').html());
-                        $("#product-slick-wrapper").append(variant_image_template({media:response.variant.media}));
+                        // $("#product-slick-wrapper").append(variant_image_template({media:response.variant.media}));
+
+                        $(".product__carousel .gallery-parent").html('');
+                        $(".product__carousel .gallery-parent").append(variant_image_template({media:response.variant.media}));
+                        easyZoomInitialize();
+                        $('.easyzoom').easyZoom();
 
                         if(response.variant.media != ''){
                             $(".product-slick").slick({ slidesToShow: 1, slidesToScroll: 1, arrows: !0, fade: !0, asNavFor: ".slider-nav" });
