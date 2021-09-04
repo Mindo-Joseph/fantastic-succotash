@@ -211,10 +211,7 @@
                         <div class="col-4 col-lg-3 d-md-inline-block d-none">
                             <div class="card-box p-0 cart-main-box">
 
-                                <div class="p-2 d-flex align-items-center justify-content-between">
-                                    <h4 class="right-card-title">Basket</h4>
-                                    {{--<i class="fa fa-trash" aria-hidden="true"></i>--}}
-                                </div>
+                                
                                 <!-- <div class="p-2 border-top">
                                     <h5>Cottonworth Classic Cuvée 75cl</h5>
                                     <div class="qty-box mt-3 mb-2">
@@ -237,14 +234,19 @@
                                     <span>£ 10.50</span>
                                 </div> -->
                                 
-                                <div class="p-2">
-                                    <div class="spinner-box">
-                                        <div class="circle-border">
-                                            <div class="circle-core"></div>
-                                        </div>
-                                    </div>
+                                
                                 
                                     <script type="text/template" id="header_cart_template_ondemand">
+                                    <div class="p-2">
+                                        <div class="spinner-box">
+                                            <div class="circle-border">
+                                                <div class="circle-core"></div>
+                                            </div>
+                                        </div>
+                                        <div class="p-2 d-flex align-items-center justify-content-between">
+                                            <h4 class="right-card-title">Cart</h4>
+                                            {{--<i class="fa fa-trash" aria-hidden="true"></i>--}}
+                                        </div>
                                         <% _.each(cart_details.products, function(product, key){%>
                                             <li>
                                                 <h6 class="d-flex align-items-center justify-content-between"> <%= product.vendor.name %> </h6>
@@ -340,14 +342,12 @@
                                                 </h6>
                                             </div>
                                         </li>
-
+                                        <a class="checkout-btn text-center d-block" href="{{route('showCart')}}">Checkout</a>
+                                    </div>
                                     </script>
                                     <ul class="show-div shopping-cart" id="header_cart_main_ul_ondemand">
                                     </ul>
-                                </div>
-
-                                <a class="checkout-btn text-center d-block" href="{{route('showCart')}}">Checkout</a>
-                                
+                                                                
                             </div>
                         </div>
                     </div>
