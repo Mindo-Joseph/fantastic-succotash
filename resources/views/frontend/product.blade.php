@@ -1,6 +1,13 @@
 @extends('layouts.store', ['title' => (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''])
 
 @section('css')
+<link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+    <link rel="stylesheet" href="{{ asset('front-assets/css/swiper.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('front-assets/css/easyzoom.css') }}" />
+    <link rel="stylesheet" href="{{ asset('front-assets/css/main.css') }}" />
 <style type="text/css">
     .main-menu .brand-logo {
         display: inline-block;
@@ -148,6 +155,68 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-lg-6 d-none">
+                            <div class="product__carousel">
+
+                                <div class="gallery-parent">
+                                <!-- SwiperJs and EasyZoom plugins start -->
+                                <div class="swiper-container gallery-top">
+                                    <div class="swiper-wrapper">
+                                    <div class="swiper-slide easyzoom easyzoom--overlay">
+                                        <a href="{{asset('front-assets/images/nature-1.jpg')}}">
+                                        <img src="{{asset('front-assets/images/nature-1.jpg')}}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide easyzoom easyzoom--overlay">
+                                        <a href="{{asset('front-assets/images/nature-2.jpg')}}">
+                                        <img src="{{asset('front-assets/images/nature-2.jpg')}}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide easyzoom easyzoom--overlay">
+                                        <a href="{{asset('front-assets/images/nature-3.jpg')}}">
+                                        <img src="{{asset('front-assets/images/nature-3.jpg')}}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide easyzoom easyzoom--overlay">
+                                        <a href="{{asset('front-assets/images/nature-4.jpg')}}">
+                                        <img src="{{asset('front-assets/images/nature-4.jpg')}}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="swiper-slide easyzoom easyzoom--overlay">
+                                        <a href="{{asset('front-assets/images/nature-5.jpeg')}}">
+                                            <img src="{{asset('front-assets/images/nature-5.jpeg')}}" alt="">
+                                        </a>
+                                    </div>
+                                    </div>
+                                    <!-- Add Arrows -->
+                                    <div class="swiper-button-next swiper-button-white"></div>
+                                    <div class="swiper-button-prev swiper-button-white"></div>
+                                </div>
+                                <div class="swiper-container gallery-thumbs">
+                                    <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <img src="{{asset('front-assets/images/nature-1.jpg')}}" alt="">
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img src="{{asset('front-assets/images/nature-2.jpg')}}" alt="">
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img src="{{asset('front-assets/images/nature-3.jpg')}}" alt="">
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img src="{{asset('front-assets/images/nature-4.jpg')}}" alt="">
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img src="{{asset('front-assets/images/nature-5.jpeg')}}" alt="">
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- SwiperJs and EasyZoom plugins end -->
+                                </div>
+                                </div>
+                            </div>
+
                             <div class="col-lg-6 rtl-text">
                                 <div class="product-right inner_spacing">
                                     <h2 class="mb-0">
@@ -666,6 +735,9 @@
 @section('script')
 <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script> -->
 <script src="{{ asset('js/share.js') }}"></script>
+<script src="{{ asset('front-assets/js/swiper.min.js') }}"></script>
+<script src="{{ asset('front-assets/js/easyzoom.js') }}"></script>
+<script src="{{ asset('front-assets/js/zoom-main.js') }}"></script>
 <script>
     $(document).on('click', '.submitInquiryForm', function(e) {
         e.preventDefault();

@@ -11,6 +11,26 @@ $(function () {
     });
 });
 
+$(window).scroll(function() {
+    var windscroll = $(window).scrollTop();
+    if (windscroll >= 400) {
+        $('section.scrolling_section').each(function(i) {
+    // The number at the end of the next line is how pany pixels you from the top you want it to activate.
+            if ($(this).position().top <= windscroll - 0) {
+                $('.scrollspy-menu li.active').removeClass('active');
+                $('.scrollspy-menu li').eq(i).addClass('active');
+            }
+        });
+
+    } else {
+
+        $('.scrollspy-menu li.active').removeClass('active');
+        $('.scrollspy-menu li:first').addClass('active');
+    }
+
+    }).scroll();
+
+
 window.initializeSlider = function initializeSlider() {
     $(".slide-6").slick({
         dots: !1,
