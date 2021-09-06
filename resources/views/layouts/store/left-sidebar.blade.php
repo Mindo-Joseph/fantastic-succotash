@@ -44,7 +44,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 @endif
                                 @if($client_preference_detail->takeaway_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ __('Takeaway') }}</a>
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{getNomenclatureName('Takeaway', true)}}</a>
                                 </li>
                                 @endif
                                 <div class="navigation-tab-overlay"></div>
