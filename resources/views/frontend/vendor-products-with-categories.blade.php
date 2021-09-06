@@ -15,36 +15,42 @@
    @include('layouts.store/left-sidebar')
 </header>
 <style type="text/css">
-   .productVariants .firstChild {
-   min-width: 150px;
-   text-align: left !important;
-   border-radius: 0% !important;
-   margin-right: 10px;
-   cursor: default;
-   border: none !important;
-   }
-   .product-right .color-variant li,
-   .productVariants .otherChild {
-   height: 35px;
-   width: 35px;
-   border-radius: 50%;
-   margin-right: 10px;
-   cursor: pointer;
-   border: 1px solid #f7f7f7;
-   text-align: center;
-   }
-   .productVariants .otherSize {
-   height: auto !important;
-   width: auto !important;
-   border: none !important;
-   border-radius: 0%;
-   }
-   .product-right .size-box ul li.active {
-   background-color: inherit;
-   }
-   .product-box .product-detail h4, .product-box .product-info h4{
-   font-size: 16px;
-   }
+    .productVariants .firstChild {
+        min-width: 150px;
+        text-align: left !important;
+        border-radius: 0% !important;
+        margin-right: 10px;
+        cursor: default;
+        border: none !important;
+    }
+    .product-right .color-variant li,
+    .productVariants .otherChild {
+        height: 35px;
+        width: 35px;
+        border-radius: 50%;
+        margin-right: 10px;
+        cursor: pointer;
+        border: 1px solid #f7f7f7;
+        text-align: center;
+    }
+    .productVariants .otherSize {
+        height: auto !important;
+        width: auto !important;
+        border: none !important;
+        border-radius: 0%;
+    }
+    .product-right .size-box ul li.active {
+        background-color: inherit;
+    }
+    .product-box .product-detail h4, .product-box .product-info h4{
+        font-size: 16px;
+    }
+    select.changeVariant {
+        color: #343a40;
+        border: 1px solid #bbb;
+        border-radius: 5px;
+        font-size: 14px;
+    }
 </style>
 <!-- section start -->
 <section class="section-b-space ratio_asos">
@@ -151,22 +157,66 @@
                                     <div class="row classes_wrapper no-gutters mb-2">
                                         <div class="col-md-2 col-sm-3 mb-3">
                                             <div class="class_img">
-                                                <img src="{{ $prod['product_image'] }}" alt="">
+                                                <img src="{{ $prod->product_image }}" alt="">
                                             </div>
                                         </div>
                                         <div class="col-md-10 col-sm-9">
                                             <div class="row price_head pl-2">
                                                 <div class="col-sm-8 pl-2">
-                                                    <h5 class="mt-0">{{$prod['translation_title']}} </h5>
-                                                    @if($prod['averageRating'] > 0)
+                                                    <h5 class="mt-0">{{$prod->translation_title}} </h5>
+                                                    @if($prod->averageRating > 0)
                                                         <div class="rating-text-box">
-                                                            <span>{{$prod['averageRating']}} </span>
+                                                            <span>{{$prod->averageRating}} </span>
                                                             
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                         </div>
                                                     @endif
                                                     <p class="mb-1">{{Session::get('currencySymbol').(number_format($prod->variant_price * $prod->variant_multiplier,2))}}</p>
                                                     <div class="member_no d-block mb-0">{!! $prod->translation_description !!}</div>
+                                                    <div id="product_variant_options_wrapper">
+                                                        @if(!empty($prod->variantSet))
+                                                            @php
+                                                                $selectedVariant = isset($prod->variant[0]) ? $prod->variant[0]->id : 0;
+                                                            @endphp
+                                                            @foreach($prod->variantSet as $key => $variant)
+                                                                @if($variant->type == 1 || $variant->type == 2)
+                                                                <?php $var_id = $variant->variant_type_id; ?>
+                                                                <select name="{{'var_'.$var_id}}" vid="{{$var_id}}" class="changeVariant dataVar{{$var_id}}">
+                                                                    <option value="" disabled>{{$variant->title}}</option>
+                                                                    @foreach($variant->option2 as $k => $optn)
+                                                                        <?php
+                                                                        $opt_id = $optn->variant_option_id;
+                                                                        $checked = ($selectedVariant == $optn->product_variant_id) ? 'checked' : '';
+                                                                        ?>
+                                                                        <option value="{{$opt_id}}" {{$checked}}>{{$optn->title}}</option>
+                                                                        @endforeach
+                                                                </select>
+
+                                                                {{--<div class="size-box">
+                                                                    <ul class="productVariants">
+                                                                        <li class="firstChild">{{$variant->title}}</li>
+                                                                        <li class="otherSize">
+                                                                            @foreach($variant->option2 as $k => $optn)
+                                                                            <?php $var_id = $variant->variant_type_id;
+                                                                            $opt_id = $optn->variant_option_id;
+                                                                            $checked = ($selectedVariant == $optn->product_variant_id) ? 'checked' : '';
+                                                                            ?>
+                                                                            <label class="radio d-inline-block txt-14 mr-2">{{$optn->title}}
+                                                                                <input id="lineRadio-{{$opt_id}}" name="{{'var_'.$var_id}}" vid="{{$var_id}}" optid="{{$opt_id}}" value="{{$opt_id}}" type="radio" class="changeVariant dataVar{{$var_id}}" {{$checked}}>
+                                                                                <span class="checkround"></span>
+                                                                            </label>
+                                                                            @endforeach
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>--}}
+                                                                @else
+                                                                @endif
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                    <div id="variant_response">
+                                                        <span class="text-danger mb-2 mt-2"></span>
+                                                    </div>
                                                 </div>
                                                 <div class="col-sm-4 text-right">
                                                     <!-- <a href="#" class="add-cart-btn">Add</a> -->
@@ -429,7 +479,72 @@
     var addonids = [];
     var addonoptids = [];
 
- 
+    $(document).delegate('.changeVariant', 'change', function() {
+        var variants = [];
+        var options = [];
+        $('.changeVariant').each(function() {
+            var that = this;
+            if (this.checked == true) {
+                variants.push($(that).attr('vid'));
+                options.push($(that).attr('optid'));
+            }
+        });
+        console.log(variants);
+        console.log(options);
+        return 0;
+        ajaxCall = $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "variants": variants,
+                "options": options,
+            },
+            beforeSend: function() {
+                if (ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
+                    ajaxCall.abort();
+                }
+            },
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $("#variant_response span").html('');
+                    if(response.variant != ''){
+                        $('#product_variant_wrapper').html('');
+                        let variant_template = _.template($('#variant_template').html());
+                        $("#product_variant_wrapper").append(variant_template({variant:response.variant}));
+                    
+                        $('#product_variant_quantity_wrapper').html('');
+                        let variant_quantity_template = _.template($('#variant_quantity_template').html());
+                        $("#product_variant_quantity_wrapper").append(variant_quantity_template({variant:response.variant}));
+                        if(response.variant.quantity < 1){
+                            $(".addToCart, #addon-table").hide();
+                        }else{
+                            $(".addToCart, #addon-table").show();
+                        }
+
+                        let variant_image_template = _.template($('#variant_image_template').html());
+
+                        $(".product__carousel .gallery-parent").html('');
+                        $(".product__carousel .gallery-parent").append(variant_image_template({media:response.variant.media}));
+                        easyZoomInitialize();
+                        $('.easyzoom').easyZoom();
+
+                        if(response.variant.media != ''){
+                            $(".product-slick").slick({ slidesToShow: 1, slidesToScroll: 1, arrows: !0, fade: !0, asNavFor: ".slider-nav" });
+                            $(".slider-nav").slick({ vertical: !1, slidesToShow: 3, slidesToScroll: 1, asNavFor: ".product-slick", arrows: !1, dots: !1, focusOnSelect: !0 });
+                        }
+                    }
+                }else{
+                    $("#variant_response span").html(response.message);
+                    $(".addToCart, #addon-table").hide();
+                }
+            },
+            error: function(data) {
+
+            },
+        });
+    });
    
 </script>
 @endsection
