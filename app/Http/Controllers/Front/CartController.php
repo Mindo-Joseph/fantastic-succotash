@@ -769,6 +769,14 @@ class CartController extends FrontController
     public function updateQuantity($domain = '', Request $request)
     {
         $cartProduct = CartProduct::find($request->cartproduct_id);
+        $productDetail = Product::with([
+            'variant' => function ($sel) {
+                $sel->groupBy('product_id');
+            }
+        ])->find($cartProduct->product_id);
+        if($productDetail->variant[0]->quantity < $request->quantity){
+            return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart')]);
+        }
         $cartProduct->quantity = $request->quantity;
         $cartProduct->save();
        
