@@ -1091,6 +1091,10 @@ label:hover~input:checked~.rate label
 body.dark .spinner-box .circle-core {
     background-color: #303841;
 }
+body.dark .inner_spacing {
+        background: transparent;
+    }
+}
 
 /* Spinner End */
 
@@ -3535,7 +3539,11 @@ header .homepage-address h2 {
 .dark .product-box .img-wrapper,
 .dark .product-wrap .img-wrapper {
     box-shadow: none;
-    background: rgb(255 255 255 / 10%);
+    background: transparent;
+}
+
+.dark .product__carousel .gallery-top,.dark .product__carousel .gallery-thumbs .swiper-slide {
+    border: none;
 }
 
 .dark .radio,
@@ -5000,6 +5008,73 @@ html {
     font-weight: 700;
 }
 
+.related-products .slick-track {
+    margin: 0;
+}
+
+.product__carousel .gallery-thumbs .swiper-slide.swiper-slide-thumb-active {
+    border-color: #ebebeb !important;
+}
+
+.productAddonSetOptions .checkbox {
+    width: 33%;
+    margin-right: 0;
+}
+
+.productAddonSetOptions .checkbox label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -5632,6 +5707,10 @@ body[dir="rtl"] .inner_spacing h3 {
         font-size: 30px;
     }
 
+    .footer-theme .footer-social {
+        margin: 0;
+    }
+
 }
 
 @media(max-width: 576px) {
@@ -5722,7 +5801,10 @@ body[dir="rtl"] .inner_spacing h3 {
     .top-header .header-dropdown .mobile-wishlist .onhover-show-div {
         top: unset;
         bottom: 100%;
-        right: 0;
+        right: auto;
         left: 0;
+    }
+    .main-menu .menu-right .icon-nav .onhover-div .show-div.setting {
+        right: 10px;
     }
 }

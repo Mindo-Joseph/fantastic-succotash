@@ -2303,9 +2303,13 @@ span.copied_txt {
     font-size: 14px;
 }
 
+h3 .fas.fa-money-check-alt{
+    font-size: 18px;
+}
 
-
-
+.copy_link {
+    cursor: pointer;
+}
 
 
 
