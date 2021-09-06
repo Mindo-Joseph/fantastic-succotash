@@ -144,8 +144,8 @@
                         </div>
                         <div class="col-md-8 col-lg-6 border-left">
                             @forelse($listData as $key => $data)
-                            <section class="scrolling_section mb-4" id="{{$data->category->slug}}">
-                                <h2 class="category-head mt-0 mb-3">{{$data->category->translation_one->name}} ({{$data->products_count}})</h2>
+                            <section class="scrolling_section" id="{{$data->category->slug}}">
+                                <h2 class="category-head mt-0 mb-2">{{$data->category->translation_one->name}} ({{$data->products_count}})</h2>
                                 @if(!empty($data->products))
                                     @forelse($data->products as $prod)
                                     <div class="row classes_wrapper no-gutters mb-2">
@@ -155,7 +155,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-10 col-sm-9">
-                                            <div class="row price_head pl-md-3 pl-2">
+                                            <div class="row price_head pl-2">
                                                 <div class="col-sm-8 pl-2">
                                                     <h5 class="mt-0">{{$prod['translation_title']}} </h5>
                                                     @if($prod['averageRating'] > 0)
@@ -166,7 +166,7 @@
                                                         </div>
                                                     @endif
                                                     <p class="mb-1">{{Session::get('currencySymbol').(number_format($prod->variant_price * $prod->variant_multiplier,2))}}</p>
-                                                    <label class="member_no d-block mb-0">{!! $prod->translation_description !!}</label>
+                                                    <div class="member_no d-block mb-0">{!! $prod->translation_description !!}</div>
                                                 </div>
                                                 <div class="col-sm-4 text-right">
                                                     <!-- <a href="#" class="add-cart-btn">Add</a> -->
@@ -177,7 +177,7 @@
                                                     @endphp
 
                                                     @if(isset($data->variant[0]->checkIfInCart) && count($data->variant[0]->checkIfInCart) > 0)
-                                                        <a class="btn btn-solid add_on_demand" style="display:none;" id="add_button_href{{$data->variant[0]->checkIfInCart['0']['id']}}" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
+                                                        <a class="add-cart-btn add_on_demand" style="display:none;" id="add_button_href{{$data->variant[0]->checkIfInCart['0']['id']}}" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add</a>
                                                         <div class="number" id="show_plus_minus{{$data->variant[0]->checkIfInCart['0']['id']}}">
                                                             <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus{{$data->variant[0]->checkIfInCart['0']['id']}}" data-id="{{$data->variant[0]->checkIfInCart['0']['id']}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
                                                                 <i class="fa fa-minus" aria-hidden="true"></i>
@@ -189,7 +189,7 @@
                                                         </div>
                                                     @else
                                                         
-                                                        <a class="btn btn-solid add_on_demand" id="aadd_button_href{{$data->id}}" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add <i class="fa fa-plus"></i></a>
+                                                        <a class="add-cart-btn add_on_demand" id="aadd_button_href{{$data->id}}" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add</a>
                                                         <div class="number" style="display:none;" id="ashow_plus_minus{{$data->id}}">
                                                             <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus{{$data->id}}" readonly data-id="{{$data->id}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
                                                                 <i class="fa fa-minus" aria-hidden="true"></i>
@@ -404,7 +404,7 @@
    jQuery(window).scroll(function() {    
    var scroll = jQuery(window).scrollTop();
    
-   if(scroll >= 720) {
+   if(scroll >= 900) {
    jQuery(".categories-product-list").addClass("fixed-bar");
    } else {
    jQuery(".categories-product-list").removeClass("fixed-bar");
