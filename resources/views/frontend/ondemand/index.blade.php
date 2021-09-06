@@ -420,20 +420,20 @@
                             @elseif(app('request')->input('step') == '2' && empty(app('request')->input('addons')))
                             <a href="?step=1"><span class="btn btn-solid float-left"><</span></a> 
                                 @if(Auth::guest())
-                                <a href="{{route('customer.login')}}" id="next-button-ondemand-3" style="display: none;"><span class="btn btn-solid">Continue</span></a>
+                                <a href="{{route('customer.login')}}" id="next-button-ondemand-3"><span class="btn btn-solid">Continue</span></a>
                                 @else
-                                <a href="#" id="next-button-ondemand-3" style="display: none;"><span class="btn btn-solid">Continue</span></a>
+                                <a href="#" id="next-button-ondemand-3"><span class="btn btn-solid">Continue</span></a>
                                 @endif
                             @elseif(app('request')->input('step') == '2' && !empty(app('request')->input('dateset')))
                                 <a href="?step=1"><span class="btn btn-solid float-left"><</span></a> 
                                     @if(Auth::guest())
-                                    <a href="{{route('customer.login')}}" id="next-button-ondemand-3" style="display: none;"><span class="btn btn-solid">Continue</span></a>
+                                    <a href="{{route('customer.login')}}" id="next-button-ondemand-3" ><span class="btn btn-solid">Continue</span></a>
                                     @else
-                                    <a href="#" id="next-button-ondemand-3" style="display: none;"><span class="btn btn-solid">Continue</span></a>
+                                    <a href="#" id="next-button-ondemand-3"><span class="btn btn-solid">Continue</span></a>
                                     @endif    
                             @elseif(app('request')->input('step') == '3')
                             <a href="?step=2"><span class="btn btn-solid"><</span></a>
-                            <a href="?step=3" id="next-button-ondemand-4" style="display: none;"><span class="btn btn-solid">Continue</span></a>
+                            <a href="?step=3" id="next-button-ondemand-4"><span class="btn btn-solid">Continue</span></a>
                             @else
                            
                             @endif
@@ -473,14 +473,13 @@
                                                 <% } %>
                                             <% _.each(product.vendor_products, function(vendor_product, vp){%>  
                                                 <li id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
-                                                    <a class='media' href='<%= show_cart_url %>'>
                                                         <div class='media-body'>                                                                
                                                             <h6 class="d-flex align-items-center justify-content-between">
                                                                 <span class="ellips"><%= vendor_product.quantity %>x <%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></span>
                                                                 <span>{{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %></span>
                                                             </h6>
                                                         </div>
-                                                    </a>
+                                                    
                                                     <div class='close-circle'>
                                                         <a  class="action-icon d-block mb-3 remove_product_via_cart" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                                             <i class="fa fa-trash-o" aria-hidden="true"></i>
