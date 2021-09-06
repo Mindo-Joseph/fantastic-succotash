@@ -232,6 +232,8 @@
                 </div>
                 <hr class="my-2">
             <% } %>
+
+            <% if(client_preference_detail.tip_before_order == 1) { %>
             <div class="row">
                 <div class="col-12">
                     <div class="mb-2">{{__('Do you want to give a tip?')}}</div>
@@ -267,6 +269,10 @@
                 </div>
             </div>
             <hr class="my-2">
+          
+            <% } %>
+
+
             <div class="row">
                 <div class="col-6">
                     <p class="total_amt m-0">{{__('Amount Payable')}}</p>
