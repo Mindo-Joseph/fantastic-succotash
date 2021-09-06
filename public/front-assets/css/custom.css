@@ -4980,17 +4980,22 @@ html {
 
 .cart-main-box{
     min-width: 325px;
+    position: sticky;
+    top: 0;
 }
-.cart-main-box ul{
+.cart-main-box-inside{
+    min-height: 250px;
+}
+.cart-main-box-inside ul{
     overflow-y: auto;
     max-height: 600px;
 }
 
-.fixed-bar .cart-main-box{
+/* .fixed-bar .cart-main-box{
     position: fixed;
     width: 325px;
     top: 0;
-}
+} */
 
 .cart-sub-total {
     background-color: #1b1b1b;
