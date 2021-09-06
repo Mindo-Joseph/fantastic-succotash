@@ -15,7 +15,6 @@ use App\Models\{Currency, Banner, Category, Brand, Product, ProductCategory, Cli
 class VendorController extends FrontController
 {
     private $field_status = 2;
-    private $vendor_rating = 0;
     
     public function viewAll(){
         $langId = Session::get('customerLanguage');
@@ -122,6 +121,8 @@ class VendorController extends FrontController
             $page = 'categories';
         }elseif($vendor->vendor_templete_id == 5){
             $page = 'products-with-categories';
+            $products = Product::select('averageRating')->where('is_live', 1)->where('vendor_id', $vendor->id)->get();
+            $vendor->vendorRating = $this->vendorRating($products);
         }else{
             $page = 'products';
         }
@@ -197,9 +198,8 @@ class VendorController extends FrontController
             $page = 'categories';
         }elseif($vendor->vendor_templete_id == 5){
             $page = 'products-with-categories';
-            $products = Product::select('averageRating')->where('is_live', 1)->where('vendor_id', $vid)->get();
+            $products = Product::select('averageRating')->where('is_live', 1)->where('vendor_id', $vendor->id)->get();
             $vendor->vendorRating = $this->vendorRating($products);
-
         }else{
             $page = 'products';
         }
