@@ -958,7 +958,31 @@ class CartController extends FrontController
         }
     }
 
-
+    # update schedule for home services basis on services
+    public function updateProductSchedule(Request $request, $domain = '')
+    {
+        DB::beginTransaction();
+        try{
+            $user = Auth::user();
+            if ($user) {
+                if($request->task_type == 'now'){
+                    $request->schedule_dt = Carbon::now()->format('Y-m-d H:i:s');
+                }else{
+                    $request->schedule_dt = Carbon::parse($request->schedule_dt, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
+                }
+                CartProduct::where('id', $request->cart_product_id)->update(['schedule_type' => $request->task_type, 'scheduled_date_time' => $request->schedule_dt]);
+                DB::commit();
+                return response()->json(['status'=>'Success', 'message'=>'Cart has been scheduled']);
+            }
+            else{
+                return response()->json(['status'=>'Error', 'message'=>'Invalid user']);
+            }
+        }
+        catch(\Exception $ex){
+            DB::rollback();
+            return response()->json(['status'=>'Error', 'message'=>$ex->getMessage()]);
+        }
+    }
 
     // add ones add in cart for ondemand 
 
