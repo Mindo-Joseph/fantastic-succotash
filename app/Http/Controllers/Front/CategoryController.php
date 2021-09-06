@@ -71,7 +71,12 @@ class CategoryController extends FrontController{
                 }
             }
                 
+<<<<<<< HEAD
             if(count($vendors) > 0){
+=======
+            // if(Session::has('vendors')){
+            if( (isset($vendors)) && (count($vendors) > 0) ){
+>>>>>>> 2b8649534859067cc2c0a652f16fdf1b9171b714
                 Session::put('vendors', $vendors);
                 //remake child categories array
                 if($category->childs->isNotEmpty()){

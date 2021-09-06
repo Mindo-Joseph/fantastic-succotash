@@ -710,7 +710,7 @@ form .btn {
 .theme-card .offer-slider img {
     height: 100%;
     max-width: initial !important;
-    object-fit: cover;
+    object-fit: contain;
     padding: 15px;
     width: 100%;
 }

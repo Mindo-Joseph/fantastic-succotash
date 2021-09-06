@@ -50,7 +50,7 @@ class UserController extends BaseController{
     }
     public function getFilterData(Request $request){
         $current_user = Auth::user();
-        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->get();
+        $users = User::withCount(['orders', 'currentlyWorkingOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->get();
         foreach ($users as  $user) {
             $user->edit_url = route('customer.new.edit', $user->id);
             $user->delete_url = route('customer.account.action', [$user->id, 3]);
@@ -246,7 +246,7 @@ class UserController extends BaseController{
         $client = Client::where('code', $user->code)->firstOrFail();
         $rules = array(
             'name' => 'required|string|max:50',
-            'phone_number' => 'required|digits:10',
+            'phone_number' => 'required|min:10|max:15',
             'company_name' => 'required',
             'company_address' => 'required',
             'country_id' => 'required',
