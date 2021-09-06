@@ -71,10 +71,13 @@ class CategoryController extends FrontController{
                 }
             }
                 
+<<<<<<< HEAD
+            if(count($vendors) > 0){
+=======
             // if(Session::has('vendors')){
             if( (isset($vendors)) && (count($vendors) > 0) ){
+>>>>>>> 2b8649534859067cc2c0a652f16fdf1b9171b714
                 Session::put('vendors', $vendors);
-                // $vendors = Session::get('vendors');
                 //remake child categories array
                 if($category->childs->isNotEmpty()){
                     $childArray = array();
@@ -155,7 +158,7 @@ class CategoryController extends FrontController{
                 $user_addresses = UserAddress::get();
                 return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories]);
             }
-        }elseif($page == 'on demand service'){
+        }elseif($page == 'on demand service'){ 
             $cartDataGet = $this->getCartOnDemand($request);
             if($request->step == 2 && empty($request->addons) && empty($request->dataset)){
                 $addos = 0;
@@ -436,9 +439,9 @@ class CategoryController extends FrontController{
         $start_time = $date." ".$curr_time;
         $end_time = $date." 23:59";
         $time_slots = $this->SplitTime($start_time, $end_time, "60");
-      
+        $cart_product_id = $request->cart_product_id??0;
         if ($request->ajax()) {
-           return \Response::json(\View::make('frontend.ondemand.time-slots-for-date', array('time_slots' => $time_slots))->render());
+           return \Response::json(\View::make('frontend.ondemand.time-slots-for-date', array('time_slots' => $time_slots,'cart_product_id'=> $cart_product_id))->render());
         }
     }
 

@@ -418,6 +418,16 @@
                             </div>
                         @endif
 
+                        @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 8)
+                            <div class="col-md-6 d-flex justify-content-between mb-2">
+                                {!! Form::label('title', __('Mode Of Service'),['class' => 'control-label']) !!}
+                                <select class="selectize-select1 form-control"  name="mode_of_service" required>
+                                   <option value="instant" @if($product->mode_of_service == 'instant') selected="selected" @endif>{{ __('Instant') }}</option>
+                                   <option value="schedule" @if($product->mode_of_service == 'schedule') selected="selected" @endif>{{ __('Schedule') }}</option>
+                                 </select>
+                            </div>
+                        @endif
+
 
 
                     </div>

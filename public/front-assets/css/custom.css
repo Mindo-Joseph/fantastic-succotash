@@ -4299,7 +4299,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 #header_cart_main_ul_ondemand .close-circle {
     position: absolute;
     right: 0;
-    top: 10px;
+    top: 0px;
 }
 
 .ling-throgh {
@@ -4397,7 +4397,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 
 /* Classes Page Css */
 .product-order span.ellips {
-    width: 170px;
+    width: 160px;
     max-width: 100%;
 }
 
