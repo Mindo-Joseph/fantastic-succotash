@@ -1435,34 +1435,35 @@ $(document).ready(function () {
 
     $(document).on("click", "#next-button-ondemand-3", function () {
         $('.alert-danger').html('');
+        window.location.href = showCart;
+
+        // var task_type = 'schedule';
+        // var schedule_date = $("input[name='booking_date']:checked").val();
+        // var schedule_time = $("input[name='booking_time']:checked").val();
+        // var specific_instructions = $("#specific_instructions").val();
         
-        var task_type = 'schedule';
-        var schedule_date = $("input[name='booking_date']:checked").val();
-        var schedule_time = $("input[name='booking_time']:checked").val();
-        var specific_instructions = $("#specific_instructions").val();
-        
-        var schedule_dt = schedule_date +' '+schedule_time;
-        if( (task_type == 'schedule') && (schedule_dt == '') ){
-            success_error_alert('error', 'Schedule date time is required', ".cart_response");
-            return false;
-        }
+        // var schedule_dt = schedule_date +' '+schedule_time;
+        // if( (task_type == 'schedule') && (schedule_dt == '') ){
+        //     success_error_alert('error', 'Schedule date time is required', ".cart_response");
+        //     return false;
+        // }
        
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: update_cart_schedule,
-            data: { task_type: task_type, schedule_dt: schedule_dt ,specific_instructions:specific_instructions},
-            success: function (response) {
-                if (response.status == "Success") {
-                    window.location.href = showCart;
-                }
-            },
-            error: function (error) {
-                var response = $.parseJSON(error.responseText);
-                success_error_alert('error', response.message, ".cart_response");
+        // $.ajax({
+        //     type: "POST",
+        //     dataType: 'json',
+        //     url: update_cart_schedule,
+        //     data: { task_type: task_type, schedule_dt: schedule_dt ,specific_instructions:specific_instructions},
+        //     success: function (response) {
+        //         if (response.status == "Success") {
+        //             window.location.href = showCart;
+        //         }
+        //     },
+        //     error: function (error) {
+        //         var response = $.parseJSON(error.responseText);
+        //         success_error_alert('error', response.message, ".cart_response");
                
-            }
-        });
+        //     }
+        // });
     });
 
 
@@ -1650,35 +1651,79 @@ $(document).ready(function () {
     // get time slots according to date 
     $(document).on('click', '.check-time-slots', function () {
         let cur_date = $(this).val();
-        getTimeSlots(cur_date);
+        let cart_product_id =$(this).data("cart_product_id");
+        getTimeSlots(cur_date,cart_product_id);
 
     });
 
     $(document).on('click', '.selected-time', function () {
         let selected_time = $(this).html();
-        $("#show_time").html(selected_time);
-        $('#message_of_time').html("Your service will start between " + selected_time);
+        let cart_product_id = $(this).data("cart_product_id");
+         $("#show_time"+cart_product_id).html(selected_time);
+        $("#message_of_time"+cart_product_id).html("Your service will start between " + selected_time);
         $("#next-button-ondemand-3").show();
+
+        var task_type = 'schedule';
+        var schedule_date = $("#date_time_set_div"+cart_product_id+" input[name='booking_date"+ cart_product_id +"']:checked").val();
+        var schedule_time = $(this).data("value");
+        var specific_instructions = $("#specific_instructions").val();
+        
+        var schedule_dt = schedule_date +' '+schedule_time;
+        if( (task_type == 'schedule') && (schedule_dt == '') ){
+            success_error_alert('error', 'Schedule date time is required', ".cart_response");
+            return false;
+        }
+       
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: update_cart_product_schedule,
+            data: { task_type: task_type, schedule_dt: schedule_dt ,specific_instructions:specific_instructions,cart_product_id:cart_product_id},
+            success: function (response) {
+                if (response.status == "Success") {
+                    console.log(success);
+                }
+            },
+            error: function (error) {
+                var response = $.parseJSON(error.responseText);
+                success_error_alert('error', response.message, ".cart_response");
+               
+            }
+        });
+
     });
 
     // on demand add to cart 
-    function getTimeSlots(cur_date) {
-        $("#show_date").html(cur_date);
-
-
-        $.ajax({
+    function getTimeSlots(cur_date,cart_product_id) {
+        $("#show_date"+cart_product_id).html(cur_date);
+         $.ajax({
             type: "post",
             dataType: "json",
             url: getTimeSlotsForOndemand,
             data: {
-                "cur_date": cur_date
+                "cur_date": cur_date,
+                "cart_product_id": cart_product_id
             },
             success: function (response) {
-                $(".booking-time").slick('destroy');
-                $("#show-all-time-slots").show();
-                $("#show-all-time-slots").html('');
-                $('#show-all-time-slots').html(response);
-                initializeSlider();
+                var booking_time_slick = $("#show-all-time-slots"+cart_product_id).find('.booking-time');
+                if(booking_time_slick.length > 0){
+                    booking_time_slick.slick('unslick');
+                }
+                $("#show-all-time-slots"+cart_product_id).show();
+                $('#show-all-time-slots'+cart_product_id).html(response);
+                $("#show-all-time-slots"+cart_product_id+" .booking-time").slick({
+                    dots: !1,
+                    infinite: !0,
+                    speed: 300,
+                    slidesToShow: 4,
+                    slidesToScroll: 6,
+                    responsive: [
+                        { breakpoint: 1367, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
+                        { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
+                        { breakpoint: 767, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 3, infinite: !0 } },
+                        { breakpoint: 480, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
+                    ],
+                });
             },
             error: function (error) {
                 var response = $.parseJSON(error.responseText);
