@@ -256,9 +256,7 @@ class VendorController extends FrontController
                         },
                         'variant' => function($q) use($langId,$column,$value){
                             $q->select('id','sku', 'product_id', 'quantity', 'price', 'barcode');
-                            $q->groupBy('product_id')->with(['checkIfInCart' => function($q1) use($column,$value){
-                                $q1->whereHas('cart',function($qset)use($column,$value){$qset->where($column,$value);});
-                            }]);
+                            $q->groupBy('product_id');
                         },'variant.checkIfInCart'
                     ])->select('id', 'sku', 'description', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating', 'inquiry_only');
                 $products = $products->where('is_live', 1)->where('category_id', $category->category_id)->where('vendor_id', $vid)->get();
@@ -274,7 +272,7 @@ class VendorController extends FrontController
                 $category->products = $products;
                 $category->products_count = $products->count();
             }
-             //dd($vendor_categories->toArray());
+            //  dd($vendor_categories->toArray());
             $listData = $vendor_categories;
             return $listData;
         }
