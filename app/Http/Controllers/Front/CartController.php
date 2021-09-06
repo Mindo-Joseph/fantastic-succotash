@@ -65,7 +65,8 @@ class CartController extends FrontController
             'guest_user'=>$guest_user,
             'action' => $action
         );
-        return view('frontend.cartnew')->with($data);
+        $client_preference_detail = ClientPreference::first();
+        return view('frontend.cartnew')->with($data,$client_preference_detail);
         // return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user]);
     }
 
@@ -851,7 +852,9 @@ class CartController extends FrontController
         if ($cart) {
             $cart_details = $this->getCart($cart, $address_id);
         }
-        return response()->json(['status' => 'success', 'cart_details' => $cart_details]);
+
+        $client_preference_detail = ClientPreference::first();
+        return response()->json(['status' => 'success', 'cart_details' => $cart_details, 'client_preference_detail' => $client_preference_detail]);
     }
 
 

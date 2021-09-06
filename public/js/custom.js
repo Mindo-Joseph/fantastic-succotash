@@ -154,6 +154,15 @@ window.initializeSlider = function initializeSlider() {
 }
 
 $(document).ready(function () {
+
+    $("#side_menu_toggle").click(function(){
+        $(".manu-bars").toggleClass("menu-btn");
+        $(".scrollspy-menu").toggleClass("side-menu-open");
+    });
+    
+
+
+
     $('#myModal').on('show.bs.modal', function (e) {	
         document.querySelector('meta[name="viewport"]').content = 'width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0';	
     });
@@ -1131,16 +1140,17 @@ $(document).ready(function () {
                     $("#cart_table").html('');
                     $(".spinner-box").hide();
                     var cart_details = response.cart_details;
+                    var client_preference_detail = response.client_preference_detail;
                     if (response.cart_details.length != 0) {
                         if (response.cart_details.products.length != 0) {
                             let header_cart_template = _.template($('#header_cart_template').html());
-                            $("#header_cart_main_ul").append(header_cart_template({ cart_details: cart_details, show_cart_url: show_cart_url }));
+                            $("#header_cart_main_ul").append(header_cart_template({ cart_details: cart_details, show_cart_url: show_cart_url , client_preference_detail: client_preference_detail }));
                             if ($('#cart_main_page').length != 0) {
                                 let cart_template = _.template($('#cart_template').html());
-                                $("#cart_table").append(cart_template({cart_details:cart_details}));
+                                $("#cart_table").append(cart_template({cart_details:cart_details, client_preference_detail: client_preference_detail }));
                                 $(".other_cart_products").html('');
                                 let other_cart_products_template = _.template($('#other_cart_products_template').html());
-                                $(".other_cart_products").append(other_cart_products_template({cart_details:cart_details}));
+                                $(".other_cart_products").append(other_cart_products_template({cart_details:cart_details, client_preference_detail: client_preference_detail }));
                                 initializeSlider();
                                 $('#placeorder_form .left_box').html(''); 
                                 $('#placeorder_form .left_box').html(cart_details.left_section);
