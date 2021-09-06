@@ -264,7 +264,7 @@ class VendorController extends FrontController
                     foreach ($products as $key => $value) {
                         $value->product_image = (!empty($value->media->first())) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : '';
                         $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
-                        $value->translation_description = (!empty($value->translation->first())) ? $value->translation->first()->body_html : '';
+                        $value->translation_description = (!empty($value->translation->first())) ? strip_tags($value->translation->first()->body_html) : '';
                         $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                         $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
                     }
