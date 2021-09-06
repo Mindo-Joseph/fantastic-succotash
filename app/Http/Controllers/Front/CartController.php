@@ -104,17 +104,23 @@ class CartController extends FrontController
                     $sel->groupBy('product_id');
                 }
             ])->find($request->product_id);
-            if(!empty($already_added_product_in_cart)){
-                if($productDetail->variant[0]->quantity <= $already_added_product_in_cart->quantity){
-                    return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart')]);
+
+            # if product type is not equal to on demand 
+            if($productDetail->category->categoryDetail->type_id != 8){
+                if(!empty($already_added_product_in_cart)){
+                    if($productDetail->variant[0]->quantity <= $already_added_product_in_cart->quantity){
+                        return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart')]);
+                    }
+                    if($productDetail->variant[0]->quantity <= ($already_added_product_in_cart->quantity + $request->quantity)){
+                        $request->quantity = $productDetail->variant[0]->quantity - $already_added_product_in_cart->quantity;
+                    }
                 }
-                if($productDetail->variant[0]->quantity <= ($already_added_product_in_cart->quantity + $request->quantity)){
-                    $request->quantity = $productDetail->variant[0]->quantity - $already_added_product_in_cart->quantity;
+                if($productDetail->variant[0]->quantity < $request->quantity){
+                    $request->quantity = $productDetail->variant[0]->quantity;
                 }
             }
-            if($productDetail->variant[0]->quantity < $request->quantity){
-                $request->quantity = $productDetail->variant[0]->quantity;
-            }
+          
+
             $addonSets = $addon_ids = $addon_options = array();
             if($request->has('addonID')){
                 $addon_ids = $request->addonID;
@@ -774,10 +780,15 @@ class CartController extends FrontController
                 $sel->groupBy('product_id');
             }
         ])->find($cartProduct->product_id);
-        if($productDetail->variant[0]->quantity < $request->quantity){
-            return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart')]);
+
+        if($productDetail->category->categoryDetail->type_id != 8){
+            if($productDetail->variant[0]->quantity < $request->quantity){
+                return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart')]);
+            }
+         
         }
-        $cartProduct->quantity = $request->quantity;
+
+         $cartProduct->quantity = $request->quantity;
         $cartProduct->save();
        
         return response()->json("Successfully Updated");
