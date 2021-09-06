@@ -4964,6 +4964,14 @@ html {
     padding: 0;
 }
 
+.cart-main-box{
+    min-width: 325px;
+}
+.cart-main-box ul{
+    overflow-y: auto;
+    max-height: 600px;
+}
+
 .fixed-bar .cart-main-box{
     position: fixed;
     top: 0;
