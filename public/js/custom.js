@@ -1184,6 +1184,11 @@ $(document).ready(function () {
                                 let empty_cart_template = _.template($('#empty_cart_template').html());
                                 $("#cart_main_page").append(empty_cart_template());
                             }
+                            if($('.categories-product-list').length > 0){
+                                $('#header_cart_main_ul_ondemand').html('');
+                                let empty_cart_template = _.template($('#empty_cart_template').html());
+                                $("#header_cart_main_ul_ondemand").append(empty_cart_template());
+                            }
                         }
                     }
                 }
