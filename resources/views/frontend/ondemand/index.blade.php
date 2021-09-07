@@ -289,11 +289,14 @@
                                                         @foreach($addon->setoptions as $k => $option)
                                                             @php $checked = ''; @endphp
                                                             @foreach ($cart_data->addon as $value)
-                                                                @if($addon->addOnName->id == $value->addon_id && $value->option_id == $option->id)
-                                                                @php $checked = 'checked'; @endphp
-                                                                @else
-                                                                @php $checked = ''; @endphp
-                                                                @endif
+                                                               @if($checked != 'checked') 
+                                                                    @if($addon->addOnName->id == $value->addon_id && $value->option_id == $option->id  && $value->cart_product_id  == $cart_data->id)
+                                                                    @php $checked = 'checked'; @endphp
+                                                                    @else
+                                                                    @php $checked = ''; @endphp
+                                                                    @endif
+                                                               @endif 
+
                                                             @endforeach
                                                             <div>
                                                                 <div class="radios">

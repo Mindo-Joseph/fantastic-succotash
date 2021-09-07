@@ -1535,6 +1535,7 @@ $(document).ready(function () {
             var addonId = $(value).attr("addonId");
             var addonOptId = $(value).attr("addonOptId");
             if ($(value).is(":checked")) {
+                console.log(addonoptids);
                 addonids.push(addonId);
                 addonoptids.push(addonOptId);
             }
