@@ -4925,10 +4925,6 @@ span.icon-ic_currency {
     left: 5px;
 }
 
-.cart-main-box-inside .flex-fill {
-    width: 100%;
-}
-
 .scrolling_section .price_head h5 {
     width: calc(100% - 150px);
 }
@@ -5061,7 +5057,7 @@ html {
     margin: 0;
 }
 
-.cart-box-outer .col-2 {
+/* .cart-box-outer .col-2 {
     flex: 0 0 130px;
     max-width: 130px;
     position: absolute !important;
@@ -5073,7 +5069,7 @@ html {
     flex: 0 0 100%;
     max-width: 100%;
     padding-left: 120px;
-}
+} */
 
 .price_head .member_no span {
     opacity: 0.5;
