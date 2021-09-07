@@ -1092,8 +1092,7 @@ body.dark .spinner-box .circle-core {
     background-color: #303841;
 }
 body.dark .inner_spacing {
-        background: transparent;
-    }
+    background: transparent;
 }
 
 /* Spinner End */
@@ -5167,6 +5166,14 @@ html {
     transform: rotate(-45deg);
 }
 
+#user_datatable_processing {
+    width: auto;
+    position: absolute;
+    top: 0;
+    padding: 9px 0;
+    box-shadow: none !important;
+}
+
 .row.cart-box-outer.classes_wrapper {
     position: relative;
     z-index: 2;
@@ -5850,6 +5857,10 @@ body[dir="rtl"] .inner_spacing h3 {
     }
     .mobile-cart-button .number input {
         width: 35px !important;
+    }
+
+    .fixed-bar .scrollspy-menu{
+        position: fixed;
     }
 
     .scrollspy-menu {

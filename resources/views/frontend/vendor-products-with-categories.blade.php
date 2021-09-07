@@ -65,13 +65,13 @@
                 </div>
                 <div class="product-bottom-bar">
                   <div class="row">
-                    <div class="col-sm-8 col-lg-5 order-0">
+                    <div class="col-md-8 col-lg-5 order-0">
                         <div class="card-box vendor-details-left px-2 py-3">
-                            <div class="d-flex">
-                                <div class="mr-1">
+                            <div class="d-sm-flex">
+                                <div class="mr-sm-1 text-center text-sm-left mb-2 mb-sm-0">
                                     <img src="{{$vendor->logo['image_fit'] . '120/120' . $vendor->logo['image_path']}}" class="rounded-circle avatar-lg" alt="profile-image" style="mini-width:120px">
                                 </div>
-                                <div class="ml-1">
+                                <div class="ml-sm-1">
                                     <h3>{{$vendor->name}}</h3>
                                     <ul class="vendor-info">
                                         <li class="d-block food-items">
@@ -108,7 +108,7 @@
                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-4 col-lg-3 col-xl-2 order-xl-2 order-1">
+                    <div class="col-md-4 col-lg-3 col-xl-2 order-xl-2 order-1">
                         <div class="vendor-reviwes">
                            <div class="row">                             
                               <div class="col-12 d-flex align-items-center">
