@@ -165,7 +165,7 @@
                                 @if(!empty($data->products))
                                     @forelse($data->products as $prod)
                                     <div class="row cart-box-outer classes_wrapper no-gutters mb-3">
-                                        <div class="col-2 mb-3">
+                                        <div class="col-2">
                                             <div class="class_img">
                                                 <img src="{{ $prod->product_image }}" alt="">
                                             </div>
@@ -218,7 +218,10 @@
                                                         </div>
                                                     @endif
                                                     <p class="mb-1">{{Session::get('currencySymbol').(number_format($prod->variant_price * $prod->variant_multiplier,2))}}</p>
-                                                    <div class="member_no d-block mb-0"><span>{!! $prod->translation_description !!}</span></div>
+                                                    <div class="member_no d-block mb-0">
+                                                        <span>{!! $prod->translation_description !!}</span>
+                                                        <a href='#' class='read_more_link' style="display: none">Read more</a>
+                                                    </div>
                                                     <div id="product_variant_options_wrapper">
                                                         @if(!empty($prod->variantSet))
                                                             @php
@@ -506,9 +509,14 @@
    }); //
 
    var desc = $('.price_head .member_no span').text();
-    if (desc.length > 120) {
-        var shortname = desc.substring(0, 120) + " ...<a href='#' class='read_desc'>Read more</a>";
-        $('.price_head .member_no span').replaceWith(shortname);
+    if (desc.length > 50) {
+        $('.price_head .member_no span').css('text-overflow', 'ellipsis');
+        $('.read_more_link').show();
+        // var shortname = desc.substring(0, 120) + " ...<a href='#' class='read_desc'>Read more</a>";
+        // $('.price_head .member_no span').replaceWith(shortname);
+    }else{
+        $('.price_head .member_no span').css('text-overflow', 'none');
+        $('.read_more_link').hide();
     }
 
     $(document).delegate(".read_desc", "click", function(){
