@@ -508,16 +508,17 @@
    }
    }); //
 
-   var desc = $('.price_head .member_no span').text();
-    if (desc.length > 50) {
-        $('.price_head .member_no span').css('text-overflow', 'ellipsis');
-        $('.read_more_link').show();
-        // var shortname = desc.substring(0, 120) + " ...<a href='#' class='read_desc'>Read more</a>";
-        // $('.price_head .member_no span').replaceWith(shortname);
-    }else{
-        $('.price_head .member_no span').css('text-overflow', 'none');
-        $('.read_more_link').hide();
-    }
+//    var desc = $('.price_head .member_no span').text();
+   $('.price_head .member_no span').each(function() {
+		var content = $(this).text();
+        if (desc.length > 80) {
+            $(this).addClass('text-ellipsis');
+            $(this).next().show();
+        }else{
+            $(this).removeClass('text-ellipsis');
+            $(this).next().hide();
+        }
+   });
 
     $(document).delegate(".read_desc", "click", function(){
         // $(this).parent('.member_no').find('span').

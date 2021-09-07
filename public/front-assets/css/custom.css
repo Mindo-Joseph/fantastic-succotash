@@ -5082,6 +5082,14 @@ html {
     min-height: 100px;
 }
 
+.text-ellipsis{
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+
 .price_head .member_no span {
     opacity: 0.5;
     color: #1F2431;
