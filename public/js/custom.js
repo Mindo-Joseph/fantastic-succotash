@@ -158,6 +158,7 @@ $(document).ready(function () {
     $("#side_menu_toggle").click(function(){
         $(".manu-bars").toggleClass("menu-btn");
         $(".scrollspy-menu").toggleClass("side-menu-open");
+        $("body").toggleClass("overflow-hidden");
     });
     
 

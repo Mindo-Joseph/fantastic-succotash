@@ -43,13 +43,13 @@
             </div>
             <div class="location-box check-dropoff-secpond" style="display:none">
                 <ul class="location-inputs position-relative pl-2" id="location_input_main_div">
-                    <li class="d-flex mb-2 dots">
+                    <li class="d-flex dots">
                         <div class="title title-24 down-arrow pr-3 position-relative edit-pickup">  {{__('From')}} - <span id="pickup-where-from"></span></div>
                     </li>
-                    <li class="d-flex mb-2 dots where-to-first">
+                    <li class="d-flex dots where-to-first">
                         <div class="title title-36 pr-3 position-relative">{{__('Where To?')}}</div>
                     </li>
-                    <li class="d-flex mb-2 dots where-to-second" style="display:none !important;">
+                    <li class="d-flex dots where-to-second" style="display:none !important;">
                         <div class="title title-24 down-arrow pr-3 position-relative edit-dropoff">  {{__('To')}} - <span id="dropoff-where-to"></span></div>
                     </li>
                 </ul>
