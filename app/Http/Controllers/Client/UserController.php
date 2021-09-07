@@ -19,6 +19,8 @@ use App\Http\Traits\ToasterResponser;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CustomerExport;
 use App\Models\{Payment, User, Client, Country, Currency, Language, UserVerification, Role, Transaction};
 
 class UserController extends BaseController{
@@ -50,7 +52,7 @@ class UserController extends BaseController{
     }
     public function getFilterData(Request $request){
         $current_user = Auth::user();
-        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->get();
+        $users = User::withCount(['orders', 'currentlyWorkingOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->get();
         foreach ($users as  $user) {
             $user->edit_url = route('customer.new.edit', $user->id);
             $user->delete_url = route('customer.account.action', [$user->id, 3]);
@@ -327,5 +329,9 @@ class UserController extends BaseController{
                 });
             }
         })->make(true);
+    }
+
+    public function export() {
+        return Excel::download(new CustomerExport, 'users.xlsx');
     }
 }
