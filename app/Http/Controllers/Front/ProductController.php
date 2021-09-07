@@ -306,7 +306,7 @@ class ProductController extends FrontController{
                 }
                 if(count($variantData) <= 1){
                     $variantData = $variantData->first()->toArray();
-                    if(!empty($variantData->media)){
+                    if(!empty($variantData['media'])){
                         $image_fit = $variantData['media'][0]['pimage']['image']['path']['image_fit'];
                         $image_path = $variantData['media'][0]['pimage']['image']['path']['image_path'];
                     }else{
