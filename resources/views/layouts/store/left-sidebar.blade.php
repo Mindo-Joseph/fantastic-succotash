@@ -4,12 +4,43 @@ $urlImg =  $clientData ? $clientData->logo['image_fit'].'200/80'.$clientData->lo
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
+
+<style>
+    .cab-booking-header{
+        display: none;
+    }
+</style>
+
 <header class="site-header">
 @if (Auth::check())
    @include('layouts.store/topbar-auth')
   @else
     @include('layouts.store/topbar-guest')
   @endif
+
+        <div class="cab-booking-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-2">
+                        <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
+                    </div>
+                    <div class="col-10 d-flex align-items-center justify-content-end">
+                        <ul class="cab-menu-nav">
+                            <li>
+                                <a href="#"><span class="icon-ic_lang align-middle mr-1"></span> <span>EN</span></a>
+                            </li>
+                            <li class="cab-login-btn">
+                                <a href="#">login</a>
+                            </li>
+                            <li class="cab-signup-btn">
+                                <a href="#">Sign Up </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="container main-menu d-block">
             <div class="row align-items-center py-md-2 position-initial">
                 <div class="col-lg-2 col-3">
@@ -71,7 +102,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <div class="radius-bar d-none d-lg-inline">
                             <div class="search_form d-flex align-items-center justify-content-between">
                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                <input class="form-control border-0 typeahead" type="search" placeholder="{{__('Search')}}" id="main_search_box">
+                                <input class="form-control border-0 typeahead" type="search" placeholder="{{getNomenclatureName('Search', true)}}" id="main_search_box">
                             </div>
                             <div class="list-box style-4" style="display:none;" id="search_box_main_div">
                                 

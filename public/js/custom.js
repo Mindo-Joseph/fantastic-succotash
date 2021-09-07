@@ -138,11 +138,12 @@ window.initializeSlider = function initializeSlider() {
         }]
     });   
     
+    
     $(".booking-time").slick({
         dots: !1,
         infinite: !0,
         speed: 300,
-        slidesToShow: 4,
+        slidesToShow: 3,
         slidesToScroll: 6,
         responsive: [
             { breakpoint: 1367, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
@@ -154,6 +155,16 @@ window.initializeSlider = function initializeSlider() {
 }
 
 $(document).ready(function () {
+
+    $("#side_menu_toggle").click(function(){
+        $(".manu-bars").toggleClass("menu-btn");
+        $(".scrollspy-menu").toggleClass("side-menu-open");
+        $("body").toggleClass("overflow-hidden");
+    });
+    
+
+
+
     $('#myModal').on('show.bs.modal', function (e) {	
         document.querySelector('meta[name="viewport"]').content = 'width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0';	
     });
@@ -1525,6 +1536,7 @@ $(document).ready(function () {
             var addonId = $(value).attr("addonId");
             var addonOptId = $(value).attr("addonOptId");
             if ($(value).is(":checked")) {
+                console.log(addonoptids);
                 addonids.push(addonId);
                 addonoptids.push(addonOptId);
             }

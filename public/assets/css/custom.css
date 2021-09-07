@@ -1863,6 +1863,10 @@
       top: 25px;
   }
 
+  .main-customer-page .dt-buttons.btn-group.flex-wrap {
+    top: 36px;
+  }   
+
   .dt-buttons.btn-group.flex-wrap button,
   #clear_filter_btn_icon {
       border-radius: 0.2rem;
@@ -2315,7 +2319,13 @@ h3 .fas.fa-money-check-alt{
     cursor: pointer;
 }
 
-
+#user_datatable_processing {
+    width: auto;
+    position: absolute;
+    top: 0;
+    padding: 9px 0;
+    box-shadow: none !important;
+}
 
 
 

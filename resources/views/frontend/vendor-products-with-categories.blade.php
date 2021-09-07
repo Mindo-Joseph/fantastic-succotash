@@ -15,36 +15,42 @@
    @include('layouts.store/left-sidebar')
 </header>
 <style type="text/css">
-   .productVariants .firstChild {
-   min-width: 150px;
-   text-align: left !important;
-   border-radius: 0% !important;
-   margin-right: 10px;
-   cursor: default;
-   border: none !important;
-   }
-   .product-right .color-variant li,
-   .productVariants .otherChild {
-   height: 35px;
-   width: 35px;
-   border-radius: 50%;
-   margin-right: 10px;
-   cursor: pointer;
-   border: 1px solid #f7f7f7;
-   text-align: center;
-   }
-   .productVariants .otherSize {
-   height: auto !important;
-   width: auto !important;
-   border: none !important;
-   border-radius: 0%;
-   }
-   .product-right .size-box ul li.active {
-   background-color: inherit;
-   }
-   .product-box .product-detail h4, .product-box .product-info h4{
-   font-size: 16px;
-   }
+    .productVariants .firstChild {
+        min-width: 150px;
+        text-align: left !important;
+        border-radius: 0% !important;
+        margin-right: 10px;
+        cursor: default;
+        border: none !important;
+    }
+    .product-right .color-variant li,
+    .productVariants .otherChild {
+        height: 35px;
+        width: 35px;
+        border-radius: 50%;
+        margin-right: 10px;
+        cursor: pointer;
+        border: 1px solid #f7f7f7;
+        text-align: center;
+    }
+    .productVariants .otherSize {
+        height: auto !important;
+        width: auto !important;
+        border: none !important;
+        border-radius: 0%;
+    }
+    .product-right .size-box ul li.active {
+        background-color: inherit;
+    }
+    .product-box .product-detail h4, .product-box .product-info h4{
+        font-size: 16px;
+    }
+    select.changeVariant {
+        color: #343a40;
+        border: 1px solid #bbb;
+        border-radius: 5px;
+        font-size: 14px;
+    }
 </style>
 <!-- section start -->
 <section class="section-b-space ratio_asos">
@@ -59,13 +65,13 @@
                 </div>
                 <div class="product-bottom-bar">
                   <div class="row">
-                    <div class="col-sm-8 col-lg-5 order-0">
+                    <div class="col-md-8 col-lg-5 order-0">
                         <div class="card-box vendor-details-left px-2 py-3">
-                            <div class="d-flex">
-                                <div class="mr-1">
+                            <div class="d-sm-flex">
+                                <div class="mr-sm-1 text-center text-sm-left mb-2 mb-sm-0">
                                     <img src="{{$vendor->logo['image_fit'] . '120/120' . $vendor->logo['image_path']}}" class="rounded-circle avatar-lg" alt="profile-image" style="mini-width:120px">
                                 </div>
-                                <div class="ml-1">
+                                <div class="ml-sm-1">
                                     <h3>{{$vendor->name}}</h3>
                                     <ul class="vendor-info">
                                         <li class="d-block food-items">
@@ -102,7 +108,7 @@
                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-4 col-lg-3 col-xl-2 order-xl-2 order-1">
+                    <div class="col-md-4 col-lg-3 col-xl-2 order-xl-2 order-1">
                         <div class="vendor-reviwes">
                            <div class="row">                             
                               <div class="col-12 d-flex align-items-center">
@@ -126,13 +132,23 @@
         </div>
         <div class="position-relative">
             <div class="categories-product-list">
+               
+                <a id="side_menu_toggle" class="d-md-none d-flex" href="javascript:void(0)">
+                   <div class="manu-bars">
+                       <span class="bar-line"></span>
+                       <span class="bar-line"></span>
+                       <span class="bar-line"></span>
+                   </div>
+                    <span>Menu</span>
+                </a>
+                                                    
                <div class="row">
                   <div class="col-md-4"></div>
                   <div class="col-md-8"></div>
                   <div class="col-12">
                     <hr>
                     <div class="row">
-                        <div class="col-lg-3">
+                        <div class="col-sm-4 col-lg-3 border-right">
                             <nav class="scrollspy-menu">
                                 <ul>
                                     @forelse($listData as $key => $data)
@@ -142,36 +158,126 @@
                                 </ul>
                             </nav>
                         </div>
-                        <div class="col-md-8 col-lg-6 border-left">
+                        <div class="col-md-8 col-lg-6">
                             @forelse($listData as $key => $data)
                             <section class="scrolling_section" id="{{$data->category->slug}}">
-                                <h2 class="category-head mt-0 mb-2">{{$data->category->translation_one->name}} ({{$data->products_count}})</h2>
+                                <h2 class="category-head mt-0 mb-3">{{$data->category->translation_one->name}} ({{$data->products_count}})</h2>
                                 @if(!empty($data->products))
                                     @forelse($data->products as $prod)
-                                    <div class="row classes_wrapper no-gutters mb-2">
-                                        <div class="col-md-2 col-sm-3 mb-3">
-                                            <div class="class_img">
-                                                <img src="{{ $prod['product_image'] }}" alt="">
+                                    <div class="row cart-box-outer product_row classes_wrapper no-gutters mb-3" data-p_sku="{{ $prod->sku }}">
+                                        <div class="col-2">
+                                            <div class="class_img product_image">
+                                                <img src="{{ $prod->product_image }}" alt="{{ $prod->translation_title }}">
                                             </div>
                                         </div>
-                                        <div class="col-md-10 col-sm-9">
+                                        <div class="col-10">
                                             <div class="row price_head pl-2">
-                                                <div class="col-sm-8 pl-2">
-                                                    <h5 class="mt-0">{{$prod['translation_title']}} </h5>
-                                                    @if($prod['averageRating'] > 0)
+                                                <div class="col-sm-12 pl-2">
+                                                    <div class="d-flex align-items-start justify-content-between">    
+                                                        <h5 class="mt-0">
+                                                            {{$prod->translation_title}} 
+                                                        </h5>
+                                                        <div class="product_variant_quantity_wrapper">
+                                                        @php
+                                                            $data = $prod;
+                                                            $productVariantInCart = 0;
+                                                            $productVariantIdInCart = 0;
+                                                            $cartProductId = 0;
+                                                            $vendor_id = 0;
+                                                            $product_id = 0;
+                                                            $variant_price = 0;
+                                                            $variant_quantity = 0;
+                                                        @endphp
+
+                                                        @foreach($data->variant as $var)
+                                                            @if(isset($var->checkIfInCart) && (count($var->checkIfInCart) > 0))
+                                                                @php
+                                                                    $productVariantInCart = 1;
+                                                                    $productVariantIdInCart = $var->checkIfInCart['0']['variant_id'];
+                                                                    $cartProductId = $var->checkIfInCart['0']['id'];
+                                                                    $variant_quantity = $var->checkIfInCart['0']['quantity'];
+                                                                    $vendor_id = $data->vendor_id;
+                                                                    $product_id = $data->id;
+                                                                    $variant_price = $var->price * $data->variant_multiplier;
+                                                                @endphp
+                                                                @break;
+                                                            @endif
+                                                        @endforeach
+                                                        {{--@if(isset($data->variant[0]->checkIfInCart) && count($data->variant[0]->checkIfInCart) > 0)--}}
+                                                        @if($productVariantInCart > 0)
+                                                            <a class="add-cart-btn add_on_demand" style="display:none;" id="add_button_href{{$cartProductId}}" data-variant_id="{{$productVariantIdInCart}}" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="{{$vendor_id}}" data-product_id="{{$product_id}}" href="javascript:void(0)">Add</a>
+                                                            <div class="number" id="show_plus_minus{{$cartProductId}}">
+                                                                <span class="minus qty-minus-ondemand" data-parent_div_id="show_plus_minus{{$cartProductId}}" data-id="{{$cartProductId}}" data-base_price="{{$variant_price}}" data-vendor_id="{{$vendor_id}}">
+                                                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                                                </span>
+                                                                <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="{{$variant_quantity}}" class="input-number" step="0.01" id="quantity_ondemand_{{$cartProductId}}" readonly>
+                                                                <span class="plus qty-plus-ondemand"  data-id="{{$cartProductId}}" data-base_price="{{$variant_price}}" data-vendor_id="{{$vendor_id}}">
+                                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                </span>
+                                                            </div>
+                                                        @else
+                                                        
+                                                            <a class="add-cart-btn add_on_demand" id="aadd_button_href{{$data->id}}" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add</a>
+                                                            <div class="number" style="display:none;" id="ashow_plus_minus{{$data->id}}">
+                                                                <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus{{$data->id}}" readonly data-id="{{$data->id}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                                                </span>
+                                                                <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" id="quantity_ondemand_d{{$data->id}}" readonly placeholder="1" type="text" value="1" class="input-number input_qty" step="0.01">
+                                                                <span class="plus qty-plus-ondemand"  data-id="" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                </span>
+                                                            </div>
+                                                        
+                                                        @endif
+                                                        </div>
+                                                    </div>
+                                                    @if($prod->averageRating > 0)
                                                         <div class="rating-text-box">
-                                                            <span>{{$prod['averageRating']}} </span>
+                                                            <span>{{$prod->averageRating}} </span>
                                                             
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                         </div>
                                                     @endif
-                                                    <p class="mb-1">{{Session::get('currencySymbol').(number_format($prod->variant_price * $prod->variant_multiplier,2))}}</p>
-                                                    <div class="member_no d-block mb-0">{!! $prod->translation_description !!}</div>
+                                                    <p class="mb-1 product_price">
+                                                        {{Session::get('currencySymbol').(number_format($prod->variant_price * $prod->variant_multiplier, 2, '.', ''))}} 
+                                                        @if($prod->variant[0]->compare_at_price > 0 )
+                                                            <span class="org_price ml-1 font-14">{{Session::get('currencySymbol').(number_format($prod->variant[0]->compare_at_price * $prod->variant_multiplier, 2, '.', ''))}}</span>
+                                                        @endif
+                                                    </p>
+                                                    <div class="member_no d-block mb-0">
+                                                        <span>{!! $prod->translation_description !!}</span>
+                                                    </div>
+                                                    <div id="product_variant_options_wrapper">
+                                                        @if(!empty($prod->variantSet))
+                                                            @php
+                                                                $selectedVariant = $productVariantIdInCart;
+                                                            @endphp
+                                                            @foreach($prod->variantSet as $key => $variant)
+                                                                @if($variant->type == 1 || $variant->type == 2)
+                                                                <?php $var_id = $variant->variant_type_id; ?>
+                                                                <select name="{{'var_'.$var_id}}" vid="{{$var_id}}" class="changeVariant dataVar{{$var_id}}">
+                                                                    <option value="" disabled>{{$variant->title}}</option>
+                                                                        @foreach($variant->option2 as $k => $optn)
+                                                                            <?php
+                                                                                $opt_id = $optn->variant_option_id;
+                                                                                $selected = ($selectedVariant == $optn->product_variant_id) ? 'selected' : '';
+                                                                            ?>
+                                                                            <option value="{{$opt_id}}" {{$selected}}>{{$optn->title}}</option>
+                                                                        @endforeach
+                                                                </select>
+                                                                @else
+                                                                @endif
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                    <div id="variant_response">
+                                                        <span class="text-danger mb-2 mt-2 font-14"></span>
+                                                    </div>
                                                 </div>
                                                 <div class="col-sm-4 text-right">
                                                     <!-- <a href="#" class="add-cart-btn">Add</a> -->
 
-                                                    <!--add to cart page -->  
+                                                    <!--add to cart page 
                                                     @php
                                                         $data = $prod;
                                                     @endphp
@@ -201,7 +307,7 @@
                                                         </div>
                                                         
                                                     @endif
-                                                    <!-- end add to cart page -->
+                                                    end add to cart page -->
 
 
                                                 </div>
@@ -215,7 +321,7 @@
                             @empty
                             @endforelse
                         </div>
-                        <div class="col-4 col-lg-3 d-md-inline-block d-none">
+                        <div class="col-12 col-lg-3 d-md-inline-block d-none">
                             <div class="card-box p-0 cart-main-box">                                
                                 <div class="p-2 d-flex align-items-center justify-content-between border-bottom">
                                     <h4 class="right-card-title">Cart</h4>
@@ -373,6 +479,46 @@
       </div>
    </div>
 </section>
+<script type="text/template" id="variant_image_template">
+    <img src="<%= media.image_fit %>300/300<%= media.image_path %>" alt="">
+</script>
+<script type="text/template" id="variant_template">
+    <% if(variant.product.inquiry_only == 0) { %>
+        <%= variant.productPrice %>
+        <% if(variant.compare_at_price > 0 ) { %>
+            <span class="org_price ml-1 font-14">{{Session::get('currencySymbol')}}<%= variant.compare_at_price %></span>
+        <% } %>
+    <% } %>
+</script>
+<script type="text/template" id="variant_quantity_template">
+    <% if(variant.quantity > 0){ %>
+        <% if(variant.check_if_in_cart != '') { %>
+            <a class="add-cart-btn add_on_demand" style="display:none;" id="add_button_href<%= variant.check_if_in_cart.id %>" data-variant_id="<%= variant.id %>" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" href="javascript:void(0)">Add</a>
+            <div class="number" id="show_plus_minus<%= variant.check_if_in_cart.id %>">
+                <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus<%= variant.check_if_in_cart.id %>" data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>">
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                </span>
+                <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="<%= variant.check_if_in_cart.quantity %>" class="input-number" step="0.01" id="quantity_ondemand_<%= variant.check_if_in_cart.id %>" readonly>
+                <span class="plus qty-plus-ondemand"  data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </span>
+            </div>
+        <% }else{ %>
+            <a class="add-cart-btn add_on_demand" id="aadd_button_href<%= variant.product_id %>" data-variant_id="<%= variant.id %>" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="<%= variant.product.vendor_id %>" data-product_id="<%= variant.product_id %>" href="javascript:void(0)">Add</a>
+            <div class="number" style="display:none;" id="ashow_plus_minus<%= variant.product_id %>">
+                <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus<%= variant.product_id %>" readonly data-id="<%= variant.product_id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.product.vendor_id %>">
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                </span>
+                <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" id="quantity_ondemand_d<%= variant.product_id %>" readonly placeholder="1" type="text" value="1" class="input-number input_qty" step="0.01">
+                <span class="plus qty-plus-ondemand"  data-id="" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.product.vendor_id %>">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </span>
+            </div>
+        <% } %>
+    <% }else{ %>
+        <span class="text-danger">Out of stock</span>
+    <% } %>
+</script>
 <div class="modal fade remove-item-modal" id="remove_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_itemLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -394,6 +540,23 @@
         </div>
     </div>
 </div>
+<div class="modal fade product-addon-modal" id="product_addon_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="product_addonLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="product_addonLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+                
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('script')
 <script src="{{asset('front-assets/js/rangeSlider.min.js')}}"></script>
@@ -407,7 +570,39 @@
    } else {
    jQuery(".categories-product-list").removeClass("fixed-bar");
    }
-   }); //
+   });
+
+    var showChar = 140;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "Read less";
+	$('.price_head .member_no span').each(function() {
+		var content = $(this).html();
+		if(content.length > showChar) {
+
+			var firstContent = content.substr(0, showChar);
+			var lastContent = content.substr(showChar, content.length - showChar);
+
+			var html = firstContent + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + lastContent + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+
+	$(".morelink").click(function(){
+		if($(this).hasClass("less")) {
+			$(this).removeClass("less");
+			$(this).html(moretext);
+		} else {
+			$(this).addClass("less");
+			$(this).html(lesstext);
+		}
+		$(this).parent().prev().toggle();
+		$(this).prev().toggle();
+		return false;
+	});
+
 </script>
 <script>
     
@@ -428,8 +623,68 @@
     var update_addons_in_cart = "{{route('addToCartAddons')}}";
     var addonids = [];
     var addonoptids = [];
+    var ajaxCall = 'ToCancelPrevReq';
 
- 
+    $(document).delegate('.changeVariant', 'change', function() {
+        var variants = [];
+        var options = [];
+        var product_variant_url = "{{ route('productVariant', ':sku') }}";
+        var sku = $(this).parents('.product_row').attr('data-p_sku');
+        var that = this;
+        $(that).parents('.product_row').find('.changeVariant').each(function() {
+            if (this.val != '') {
+                variants.push($(this).attr('vid'));
+                options.push($(this).val());
+            }
+        });
+        // console.log(variants);
+        // console.log(options);
+        // return 0;
+        ajaxCall = $.ajax({
+            type: "post",
+            dataType: "json",
+            url: product_variant_url.replace(":sku", sku),
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "variants": variants,
+                "options": options,
+            },
+            beforeSend: function() {
+                if (ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
+                    ajaxCall.abort();
+                }
+            },
+            success: function(response) {
+                if(response.status == 'Success'){
+                    $(that).parents('.product_row').find("#variant_response span").html('');
+                    if(response.variant != ''){
+
+                        $(that).parents('.product_row').find(".add-cart-btn").attr('data-variant_id', response.variant.id);
+
+                        $(that).parents('.product_row').find('.product_price').html('');
+                        let variant_template = _.template($('#variant_template').html());
+                        $(that).parents('.product_row').find('.product_price').append(variant_template({variant:response.variant}));
+                    
+                        $(that).parents('.product_row').find('.product_variant_quantity_wrapper').html('');
+                        let variant_quantity_template = _.template($('#variant_quantity_template').html());
+                        $(that).parents('.product_row').find('.product_variant_quantity_wrapper').append(variant_quantity_template({variant:response.variant}));
+
+                        let variant_image_template = _.template($('#variant_image_template').html());
+
+                        $(that).parents('.product_row').find('.product_image').html('');
+                        $(that).parents('.product_row').find('.product_image').append(variant_image_template({media:response.variant}));
+                    }
+                }else{
+                    $(that).parents('.product_row').find("#variant_response span").html(response.message);
+                    $(that).parents('.product_row').find(".add-cart-btn").hide();
+                    $(that).parents('.product_row').find(".product_variant_quantity_wrapper .text-danger").remove();
+                }
+            },
+            error: function(data) {
+
+            },
+        });
+    });
    
 </script>
 @endsection
