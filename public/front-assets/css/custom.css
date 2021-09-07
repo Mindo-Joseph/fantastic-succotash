@@ -5939,6 +5939,11 @@ body[dir="rtl"] .inner_spacing h3 {
     .product-bottom-bar {
         margin-bottom: 0;
     }
+    .category-head {
+        font-size: 18px;
+        padding: 10px 0 !important;
+        margin-bottom: 10px !important;
+    }
 
 }
 
@@ -6003,6 +6008,7 @@ body[dir="rtl"] .inner_spacing h3 {
         box-shadow: 0 2px 5px 0 #a8a8a8;
         width: 100%;
         padding: 0 10px;
+        z-index: 11111;
     }
 
     .main-menu .menu-right .icon-nav {
@@ -6039,7 +6045,8 @@ body[dir="rtl"] .inner_spacing h3 {
         left: 0;
     }
     .main-menu .menu-right .icon-nav .onhover-div .show-div.setting {
-        right: 10px;
+        right: auto;
+        left: 0;
     }
     .price_head h5 {
         font-size: 13px;
