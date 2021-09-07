@@ -4410,11 +4410,12 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 }
 
 .class_img {
-    height: 120px;
+    height: 100px;
     width: 100%;
     border-radius: 4px;
     overflow: hidden;
     max-width: 100%;
+    object-fit: cover;
 }
 
 .class_img img {
@@ -5070,18 +5071,19 @@ html {
 .cart-box-outer .col-10 {
     flex: 0 0 100%;
     max-width: 100%;
-    padding-left: 120px;
+    padding-left: 130px;
+    min-height: 100px;
 }
 
 .price_head .member_no span {
     opacity: 0.5;
     color: #1F2431;
     font-size: 14px;
-    text-overflow: ellipsis;
+    /* text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    overflow: hidden;
+    overflow: hidden; */
 }
 
 #side_menu_toggle {
@@ -5157,7 +5159,10 @@ html {
     transform: rotate(-45deg);
 }
 
-
+.row.cart-box-outer.classes_wrapper {
+    position: relative;
+    z-index: 2;
+}
 
 
 
