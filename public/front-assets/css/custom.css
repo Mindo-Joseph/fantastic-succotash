@@ -5961,4 +5961,13 @@ body[dir="rtl"] .inner_spacing h3 {
     .main-menu .menu-right .icon-nav .onhover-div .show-div.setting {
         right: 10px;
     }
+    .price_head h5 {
+        font-size: 13px;
+        line-height: 18px;
+    }
+    .add-cart-btn {
+        width: 70px;
+        height: 26px;
+        line-height: 24px;
+    }
 }
