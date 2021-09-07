@@ -569,10 +569,6 @@
 
     $(document).delegate(".read_more_link", "click", function(){
         $(this).prev().toggleClass('text-ellipsis');
-    })
-
-    $("#side_menu_toggle").click(function(){
-        $(".manu-bars").toggleClass("menu-btn");
     });
 </script>
 <script>
