@@ -142,7 +142,7 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !0,
         speed: 300,
-        slidesToShow: 4,
+        slidesToShow: 3,
         slidesToScroll: 6,
         responsive: [
             { breakpoint: 1367, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },

@@ -4717,10 +4717,16 @@ ul#main-nav-list {
     bottom: 0;
     z-index: 30;
     background-color: #fff;
-    justify-content: flex-end;
-    -webkit-box-align: center;
-    align-items: center;
-    display: flex;
+    float: left;
+    clear: left;
+    width: 100%;
+}
+.booking-time .radios {
+    width: 95%;
+}
+
+.footer-card .btn.btn-solid.float-left {
+    padding: 6.7px 10px;
 }
 
 
