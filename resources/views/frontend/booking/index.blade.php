@@ -133,7 +133,7 @@
             <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude_<%= random_id %>" data-rel="<%= random_id %>"/>
         </script>
         <script type="text/template" id="destination_location_template_li">
-            <li class="d-block mb-2 dots" id="dots_<%= random_id %>">
+            <li class="d-block dots" id="dots_<%= random_id %>">
                 <div class="title title-24 down-arrow pr-3 position-relative edit-other-stop" id="<%= random_id %>">  {{__('To')}} - <span id="dropoff-where-to-<%= random_id %>"></span></div>
             </li>
         </script>
