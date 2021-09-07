@@ -66,12 +66,14 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
     <div class="mobile-menu main-menu d-block d-sm-none">
         <div class="menu-right">
-            <ul class="header-dropdown icon-nav">                    
+            <ul class="header-dropdown icon-nav">
+                @if($client_preference_detail->show_wishlist == 1)
                 <li class="mobile-wishlist d-inline d-sm-none">
                     <a href="{{route('user.wishlists')}}">
                         <i class="fa fa-heart" aria-hidden="true"></i>
                     </a>
                 </li>
+                @endif
                 <li class="onhover-dropdown mobile-account  d-inline d-sm-none"> <i class="fa fa-user" aria-hidden="true"></i>
                     {{__('My Account')}}
                     <ul class="onhover-show-div">
@@ -126,6 +128,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif
                     </div>
                 </li>
+                @if($client_preference_detail->cart_enable == 1)
                 <li class="onhover-div mobile-cart">
                     <a href="{{route('showCart')}}" style="position: relative">
                         <i class="ti-shopping-cart"></i>
@@ -135,6 +138,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <ul class="show-div shopping-cart">
                     </ul>
                 </li>
+                @endif
             </ul>
         </div>
     </div>
