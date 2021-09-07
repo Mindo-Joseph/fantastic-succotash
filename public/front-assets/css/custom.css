@@ -2130,9 +2130,13 @@ div#test {
 .inner_spacing p {
     font-size: 14px;
     margin: 5px 0 0;
-    white-space: nowrap;
+    /* white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis; */
+}
+
+h3#productPriceValue {
+    margin-top: 5px;
 }
 
 .inner_spacing h4 {
