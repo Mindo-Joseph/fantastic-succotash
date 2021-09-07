@@ -246,7 +246,6 @@
                                                     </p>
                                                     <div class="member_no d-block mb-0">
                                                         <span>{!! $prod->translation_description !!}</span>
-                                                        <a href='javascript:void(0)' class='read_more_link font-14' style="display: none">Read more</a>
                                                     </div>
                                                     <div id="product_variant_options_wrapper">
                                                         @if(!empty($prod->variantSet))
@@ -272,7 +271,7 @@
                                                         @endif
                                                     </div>
                                                     <div id="variant_response">
-                                                        <span class="text-danger mb-2 mt-2"></span>
+                                                        <span class="text-danger mb-2 mt-2 font-14"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4 text-right">
@@ -541,6 +540,23 @@
         </div>
     </div>
 </div>
+<div class="modal fade product-addon-modal" id="product_addon_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="product_addonLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="product_addonLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer flex-nowrap justify-content-center align-items-center">
+                
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('script')
 <script src="{{asset('front-assets/js/rangeSlider.min.js')}}"></script>
@@ -556,20 +572,37 @@
    }
    });
 
-   $('.price_head .member_no span').each(function() {
-		var desc = $(this).text();
-        if (desc.length > 80) {
-            $(this).addClass('text-ellipsis');
-            $(this).next().show();
-        }else{
-            $(this).removeClass('text-ellipsis');
-            $(this).next().hide();
-        }
-   });
+    var showChar = 140;
+	var ellipsestext = "...";
+	var moretext = "Read more";
+	var lesstext = "Read less";
+	$('.price_head .member_no span').each(function() {
+		var content = $(this).html();
+		if(content.length > showChar) {
 
-    $(document).delegate(".read_more_link", "click", function(){
-        $(this).prev().toggleClass('text-ellipsis');
-    });
+			var firstContent = content.substr(0, showChar);
+			var lastContent = content.substr(showChar, content.length - showChar);
+
+			var html = firstContent + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + lastContent + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+
+			$(this).html(html);
+		}
+
+	});
+
+	$(".morelink").click(function(){
+		if($(this).hasClass("less")) {
+			$(this).removeClass("less");
+			$(this).html(moretext);
+		} else {
+			$(this).addClass("less");
+			$(this).html(lesstext);
+		}
+		$(this).parent().prev().toggle();
+		$(this).prev().toggle();
+		return false;
+	});
+
 </script>
 <script>
     

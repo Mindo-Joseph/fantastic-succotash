@@ -5132,14 +5132,17 @@ html {
 }
 
 .price_head .member_no span {
-    opacity: 0.5;
-    color: #1F2431;
+    color: #777777;
     font-size: 14px;
     /* text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden; */
+}
+
+.morecontent span{
+    display: none;
 }
 
 #side_menu_toggle {
