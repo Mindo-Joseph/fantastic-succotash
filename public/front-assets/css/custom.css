@@ -4934,7 +4934,7 @@ html {
 }
 
 .fixed-bar .scrollspy-menu {
-    position: fixed;
+    position: sticky;
     top: 0;
     width: 300px;
     padding: 10px 0;
@@ -4952,6 +4952,8 @@ html {
     text-align: center;
     margin: 0;
     padding: 0;
+    position: sticky;
+    top: 0;
 }
 
 .scrollspy-menu li {
@@ -5057,7 +5059,7 @@ html {
     margin: 0;
 }
 
-/* .cart-box-outer .col-2 {
+.cart-box-outer .col-2 {
     flex: 0 0 130px;
     max-width: 130px;
     position: absolute !important;
@@ -5069,7 +5071,7 @@ html {
     flex: 0 0 100%;
     max-width: 100%;
     padding-left: 120px;
-} */
+}
 
 .price_head .member_no span {
     opacity: 0.5;

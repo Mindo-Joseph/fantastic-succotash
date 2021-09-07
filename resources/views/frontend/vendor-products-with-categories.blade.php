@@ -148,7 +148,7 @@
                   <div class="col-12">
                     <hr>
                     <div class="row">
-                        <div class="col-sm-4 col-lg-3">
+                        <div class="col-sm-4 col-lg-3 border-right">
                             <nav class="scrollspy-menu">
                                 <ul>
                                     @forelse($listData as $key => $data)
@@ -158,7 +158,7 @@
                                 </ul>
                             </nav>
                         </div>
-                        <div class="col-md-8 col-lg-6 border-left">
+                        <div class="col-md-8 col-lg-6">
                             @forelse($listData as $key => $data)
                             <section class="scrolling_section" id="{{$data->category->slug}}">
                                 <h2 class="category-head mt-0 mb-3">{{$data->category->translation_one->name}} ({{$data->products_count}})</h2>
@@ -172,8 +172,44 @@
                                         </div>
                                         <div class="col-10">
                                             <div class="row price_head pl-2">
-                                                <div class="col-sm-8 pl-2">
-                                                    <h5 class="mt-0">{{$prod->translation_title}} </h5>
+                                                <div class="col-sm-12 pl-2">
+                                                <div class="d-flex align-items-start justify-content-between">    
+                                                    <h5 class="mt-0">
+                                                        {{$prod->translation_title}} 
+                                                    </h5>
+
+
+                                                    @php
+                                                        $data = $prod;
+                                                    @endphp
+
+                                                    @if(isset($data->variant[0]->checkIfInCart) && count($data->variant[0]->checkIfInCart) > 0)
+                                                        <a class="add-cart-btn add_on_demand" style="display:none;" id="add_button_href{{$data->variant[0]->checkIfInCart['0']['id']}}" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add</a>
+                                                        <div class="number" id="show_plus_minus{{$data->variant[0]->checkIfInCart['0']['id']}}">
+                                                            <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus{{$data->variant[0]->checkIfInCart['0']['id']}}" data-id="{{$data->variant[0]->checkIfInCart['0']['id']}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                                <i class="fa fa-minus" aria-hidden="true"></i>
+                                                            </span>
+                                                            <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="{{$data->variant[0]->checkIfInCart['0']['quantity']}}" class="input-number" step="0.01" id="quantity_ondemand_{{$data->variant[0]->checkIfInCart['0']['id']}}" readonly>
+                                                            <span class="plus qty-plus-ondemand"  data-id="{{$data->variant[0]->checkIfInCart['0']['id']}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                            </span>
+                                                        </div>
+                                                    @else
+                                                        
+                                                        <a class="add-cart-btn add_on_demand" id="aadd_button_href{{$data->id}}" data-variant_id = {{$data->variant[0]->id}} data-add_to_cart_url = "{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" href="javascript:void(0)">Add</a>
+                                                        <div class="number" style="display:none;" id="ashow_plus_minus{{$data->id}}">
+                                                            <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus{{$data->id}}" readonly data-id="{{$data->id}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                                <i class="fa fa-minus" aria-hidden="true"></i>
+                                                            </span>
+                                                            <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" id="quantity_ondemand_d{{$data->id}}" readonly placeholder="1" type="text" value="1" class="input-number input_qty" step="0.01">
+                                                            <span class="plus qty-plus-ondemand"  data-id="" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                            </span>
+                                                        </div>
+                                                        
+                                                    @endif
+
+                                                    </div>
                                                     @if($prod->averageRating > 0)
                                                         <div class="rating-text-box">
                                                             <span>{{$prod->averageRating}} </span>
@@ -231,7 +267,7 @@
                                                 <div class="col-sm-4 text-right">
                                                     <!-- <a href="#" class="add-cart-btn">Add</a> -->
 
-                                                    <!--add to cart page -->
+                                                    <!--add to cart page 
                                                     @php
                                                         $data = $prod;
                                                     @endphp
@@ -261,8 +297,7 @@
                                                         </div>
                                                         
                                                     @endif
-                                                    
-                                                    <!-- end add to cart page -->
+                                                    end add to cart page -->
 
 
                                                 </div>
