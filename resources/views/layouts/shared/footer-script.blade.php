@@ -33,6 +33,7 @@ if (Session::has('toaster')) {
 <script src="{{asset('assets/libs/jquery-toast-plugin/jquery-toast-plugin.min.js')}}"></script>
 <script src="{{asset('assets/js/pages/toastr.init.js')}}"></script>
 <script src="{{asset('assets/libs/datatables/datatables.min.js')}}"></script>
+<script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous"></script>
 <script>
     let stripe_publishable_key = "{{ $stripe_publishable_key }}";
     let is_hyperlocal = 0;
@@ -42,6 +43,7 @@ if (Session::has('toaster')) {
     @endif;
     @endif;
     var base_url = "{{ url('/')}}";
+
     function gm_authFailure() {
         $('.excetion_keys').append('<span><i class="mdi mdi-block-helper mr-2"></i> <strong>Google Map</strong> key is not valid</span><br/>');
         $('.displaySettingsError').show();
@@ -82,7 +84,22 @@ if (Session::has('toaster')) {
         // close the loader
         $(element).waitMe("hide");
     }
-
 </script>
-
+@if((!empty(Auth::user())))
+<script>
+    var ip_address = window.location.host;
+    var host_arr = ip_address.split(".");
+    let socket = io(constants.socket_domain + ":" + constants.socket_port, {
+        query: {
+            "user_id": host_arr[0] + "_" + "{{ Auth::user()->id }}"
+        }
+    });
+    socket.on('createOrderByCustomer_'+host_arr[0] + "_" + "{{ (!empty(Auth::user()))?Auth::user()->id:0 }}", (message) => {
+        var x = document.getElementById("orderAudio"); 
+        x.play();
+        alert("New order received");
+        console.log(message);
+    });
+</script>
+@endif
 @yield('script-bottom')

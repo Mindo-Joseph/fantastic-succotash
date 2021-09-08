@@ -9,17 +9,27 @@ const io = require('socket.io')(server, {
 });
 
 io.on('connection', (socket) => {
-    console.log('connection');
+    socket.join(socket.handshake.query.user_id)
+    console.log(socket.handshake.query.user_id+' user connected');
 
     socket.on('sendChatToServer', (message) => {
         console.log(message);
         io.sockets.emit('sendChatToClient', message);
     });
+
+    socket.on('createOrder', (orderData) => {
+        console.log("order created");
+        console.log(orderData);
+        (orderData.user_vendor).forEach(element => {
+            io.sockets.emit('createOrderByCustomer_'+socket.handshake.query.subdomain+"_"+element.user_id, orderData);
+        })
+        // io.sockets.emit('createOrderByCustomer', orderData);
+    });
     
-    socket.on('disconnect', (socket) => {
-        console.log('Disconnect');
+    socket.on('disconnect', () => {
+        console.log(socket.handshake.query.user_id+' user disconnected');
     });
 })
-server.listen(3000, () => {
+server.listen(3100, () => {
     console.log('Server is running');
 })

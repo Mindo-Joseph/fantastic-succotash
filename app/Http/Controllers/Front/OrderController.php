@@ -693,7 +693,7 @@ class OrderController extends FrontController
                     'balance_transaction' => $order->payable_amount,
                 ]);
             }
-            $order = $order->with('paymentOption')->where('order_number', $order->order_number)->first();
+            $order = $order->with(['paymentOption', 'user_vendor'])->where('order_number', $order->order_number)->first();
             DB::commit();
             return $this->successResponse($order);
         } catch (Exception $e) {
@@ -843,4 +843,5 @@ class OrderController extends FrontController
             return $this->errorResponse('Invalid User', 402);
         }
     }
+
 }

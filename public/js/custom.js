@@ -824,12 +824,28 @@ $(document).ready(function () {
             data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt },
             success: function (response) {
                 if (response.status == "Success") {
-                    window.location.href = base_url+'/order/success/'+response.data.id;
-                }else{
-                    if($('.cart_response').length > 0){
-                        $(".cart_response").removeClass('d-none');
-                        success_error_alert('error', response.message, ".cart_response");
-                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                    var ip_address = window.location.host;
+                    var host_arr = ip_address.split(".");
+                    // var result = arr[2];
+                    // let ip_address = result;
+                    let socket = io(constants.socket_domain + ":" + constants.socket_port, {
+                          query: {"user_id": host_arr[0]+"_cus", "subdomain":host_arr[0]}
+                        });
+                    socket.emit("createOrder", response.data );
+                    setTimeout(function(){
+                        window.location.href = base_url + "/order/success/" + response.data.id;
+                    },100)
+                } else {
+                    if ($(".cart_response").length > 0) {
+                        $(".cart_response").removeClass("d-none");
+                        success_error_alert(
+                            "error",
+                            response.message,
+                            ".cart_response"
+                        );
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr(
+                            "disabled"
+                        );
                     }
                 }
             },
