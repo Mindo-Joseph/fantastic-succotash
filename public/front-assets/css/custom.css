@@ -4978,8 +4978,6 @@ span.icon-ic_currency {
     left: 5px;
 }
 
-.product_variant_quantity_wrapper:after {content: "Custmized";position: absolute;bottom: -12px;left: 0;color: red;right: 0;margin: auto;font-size: 13px;}
-
 .product_variant_quantity_wrapper {
     position: relative;
     text-align: center;
