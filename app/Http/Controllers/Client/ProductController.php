@@ -394,6 +394,7 @@ class ProductController extends BaseController
             $product = Product::find($id);
             $dynamic = time();
             Product::where('id', $id)->update(['sku' => $product->sku.$dynamic ,'url_slug' => $product->url_slug.$dynamic]);
+            ProductVariant::where('product_id', $id)->update(['sku' => $product->sku.$dynamic]);
             Product::where('id', $id)->delete();
             CartProduct::where('product_id', $id)->delete();
            UserWishlist::where('product_id', $id)->delete();
