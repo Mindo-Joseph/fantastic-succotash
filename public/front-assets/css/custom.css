@@ -3949,7 +3949,8 @@ form .location-box .form-control::placeholder {
 }
 
 .location-list {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     height: calc(100vh - 346px);
     padding: 0 0 20px;
 }
@@ -4001,7 +4002,8 @@ a.vehical-view-box.row.no-gutters {
 }
 
 .vehical-container {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     height: calc(100vh - 396px);
     padding: 0 0 20px;
 }
@@ -5250,8 +5252,6 @@ html {
     transform: rotate(-45deg);
 }
 
-
-
 .row.cart-box-outer.classes_wrapper {
     position: relative;
     z-index: 2;
@@ -5262,24 +5262,193 @@ html {
 }
 
 
+/* Cab booking Page Css */
+.cab-banner-area{
+    background: url(https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_1903,h_644/v1613521692/assets/d9/ce6c00-32b0-4b93-9f0d-6f927d93da08/original/Rider_Home_bg_desktop2x.png) no-repeat center center;
+    background-size: cover;
+}
+.p-64{
+    padding: 64px !important;
+}
 
+.cab-banner-area .card-box {
+    padding: 48px;
+    border-radius: 0;
+}
 
+.cab-banner-area h1 {
+    font-size: 52px;
+    text-transform: initial !important;
+    font-weight: 600;
+    margin: 0;
+    line-height: 64px;
+}
 
+.cab-input {
+    margin: 31px 0 13px;
+    position: relative;
+}
 
+.cab-input input.form-control {
+    background-color: #F6F6F6;
+    padding: 11px 30px 11px 40px;
+    height: auto;
+    min-height: 52px;
+    border: 0;
+    border-radius: 0 !important;
+    font-size: 16px;
+}
 
+.cab-input .form-control::-webkit-input-placeholder {
+    /* Edge */
+    color: rgb(0 0 0 / 0.9);
+}
 
+.cab-input .form-control::-ms-input-placeholder {
+    /* Edge */
+    color: rgb(0 0 0 / 0.9);
+}
 
+.cab-input .form-control::placeholder {
+    /* Edge */
+    color: rgb(0 0 0 / 0.9);
+}
 
+.input-line {
+    width: 1px;
+    height: 46px;
+    background: #000;
+    position: absolute;
+    top: 33px;
+    left: 22px;
+}
 
+.input-line:after {
+    width: 7px;
+    height: 7px;
+    border: 1px solid #000;
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: -3px;
+}
 
+.input-line:before {content: "";width: 7px;height: 7px;border: 1px solid #000;border-radius: 50%;position: absolute;top: -10px;left: -3px;}
 
+.location-btn {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
 
+.cab-footer {
+    margin: 19px 0 0;
+}
 
+.btn.btn-solid.new-btn {
+    min-height: 48px;
+    line-height: 48px;
+    border-radius: 0;
+    padding: 0 17px;
+    margin-top: 12px;
+}
 
+.cab-footer .btn.btn-solid {
+    margin: 12px 22px 0 0;
+}
 
+.cab-footer .btn.btn-solid:last-child {
+    margin-right: 0;
+}
 
+section.royo-business {
+    background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url(https://www.uber-assets.com/image/upload/v1613106985/assets/0e/47aa71-35cb-459a-a975-78c61ea300e2/original/HP-U4B-NYC-bkg.png);
+    background-image: -moz-linear-gradient(0deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url(https://www.uber-assets.com/image/upload/v1613106985/assets/0e/47aa71-35cb-459a-a975-78c61ea300e2/original/HP-U4B-NYC-bkg.png);
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url(https://www.uber-assets.com/image/upload/v1613106985/assets/0e/47aa71-35cb-459a-a975-78c61ea300e2/original/HP-U4B-NYC-bkg.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
 
+.title-36{
+    font-size: 36px;
+    line-height: 44px;
+    font-weight: 500;
+}
 
+section.royo-business .title-36{
+    margin-bottom: 24px;
+}
+
+.description-text{
+    margin-bottom: 20px;
+}
+
+.royo-business .btn.btn-solid.new-btn {
+    min-width: 112px;
+}
+
+.title-52 {
+    font-size: 52px;
+    line-height: 64px;
+    margin: 0;
+}
+
+.royo-rental .title-52 {
+    margin-bottom: 32px;
+}
+
+.learn-more{
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+
+.safety-img {
+    margin-bottom: 20px;
+}
+
+.safety-content h3 {
+    font-size: 18px;line-height: 24px;margin-bottom: 12px;
+    color: #000;
+}
+
+.safety-text {
+    margin: 0 0 20px;
+}
+
+.safety-text p:last-child {
+    margin: 0;
+}
+
+.safety-links a {
+    line-height: 32px;
+    position: relative;
+    border-bottom: 1px solid #cbcbcb;
+    padding: 0 0 5px;
+    margin-right: 24px;
+}
+
+.safety-links a:last-child{
+    margin-right: 0;
+}
+
+.bottom-line:after {
+    content: "";
+    width: 0;
+    height: 1px;
+    display: block;
+    position: absolute;
+    left: 0;
+    background: #838383;
+    bottom: -1px;
+    transition: all 0.5s;
+    z-index: 1;
+}
+
+.safety-links .bottom-line:hover:after{
+    width: 100%;
+}
 
 
 
@@ -5702,11 +5871,9 @@ body[dir="rtl"] .inner_spacing h3 {
     .pixelstrap a:active {
         font-size: 13px;
     }
-
     .pixelstrap a .sub-arrow {
         right: 5px;
     }
-
     .common_card .card {
         width: calc(100% - 20px);
     }
@@ -5743,108 +5910,96 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(max-width:991px) {
-
     .location-bar{
         width: 90%;
     }
-
     .radius-bar {
         width: 61%;
     }
-
     .pixelstrap li a img {
         display: none;
     }
-
     .pixelstrap>li>a>.sub-arrow {
         display: block;
     }
-
     .pixelstrap li a:hover {
         font-size: 13px;
         padding: 10px 15px;
     }
-
     .pixelstrap>li>a:hover,
     .pixelstrap>li>a:focus,
     .pixelstrap>li>a:active,
     .new-tag {
         font-weight: 400;
     }
-
     .wrapper-main .border-right,
     .wrapper-main .border-left {
         border: 0 !important;
     }
-
     .dashboard-right .dashboard {
         padding: 0;
     }
-
     .product-box .blur-up.lazyloaded {
         margin: auto;
     }
-
     .cab-booking {
         height: auto;
     }
-
     .cab-booking iframe {
         height: 40vh;
     }
-
-    .location-list {
-        height: 400px;
-        overflow: auto;
+    body.cab-booking-header,.location-box{
+        display: none !important;
     }
-
+    .cab-booking #booking-map {
+        height: 50vh !important;
+        position: fixed !important;
+        top: 0;
+    }
+    .booking-experience {
+        top: 284px;
+    }
+    .location-list,.list-container{
+        height: auto;
+    }
     .list-view .product-image,
     .list-view .product-image img {
         height: auto !important;
     }
-
     .fixed-bar .scrollspy-menu {
         width: 100%;
         z-index: 111;
         background: #fff;
         height: auto;
     }
-
     .scrollspy-menu {
         overflow: auto;
     }
-
     .scrollspy-menu ul {
         width: max-content;
     }
-
     .fixed-bar .scrollspy-menu {
         max-width: 240px;
         margin: auto;
         left: 10px;
     }
-
     .class_img {
         height: auto;
     }
     .class_img img{
         width: 100%;
     }
-
     .fixed-bar .cart-main-box{
         top: 110px;
     }
-
     .price_head h5 {
         width: calc(100% - 90px);
     }
-
     .col-sm-3.text-right {
         position: absolute !important;
         top: 0;
         right: 0;
     }
-
     .vendor-search-bar, .vendor-reviwes{
         padding: 20px 0 0;
     }
@@ -5854,7 +6009,6 @@ body[dir="rtl"] .inner_spacing h3 {
     .cart-box-outer .number input {
         width: 50px !important;
     }
-
 }
 
 @media(min-width:576px) {
