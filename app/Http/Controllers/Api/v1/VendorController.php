@@ -120,9 +120,11 @@ class VendorController extends BaseController{
             $paginate = $request->has('limit') ? $request->limit : 12;
             // $preferences = Session::get('preferences');
             $vendor = Vendor::select('id', 'name', 'slug', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id')->where('slug', $slug1)->where('status', 1)->firstOrFail();
-            $code = $request->header('code');
-            $client = Client::where('code',$code)->first();
-            $vendor->share_link = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/vendor/".$vendor->slug;
+            if(!empty($vendor)){
+                $code = $request->header('code');
+                $client = Client::where('code',$code)->first();
+                $vendor->share_link = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/vendor/".$vendor->slug;
+            }
             $user = Auth::user();
             $userid = $user->id;
             $langId = $user->language;
