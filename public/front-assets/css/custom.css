@@ -4978,6 +4978,23 @@ span.icon-ic_currency {
     left: 5px;
 }
 
+.product_variant_quantity_wrapper:after {content: "Custmized";position: absolute;bottom: -12px;left: 0;color: red;right: 0;margin: auto;font-size: 13px;}
+
+.product_variant_quantity_wrapper {
+    position: relative;
+    text-align: center;
+}
+
+
+.categories-product-list .number {
+    border: 0.5px solid rgb(237, 90, 107);
+    border-radius: 8px;
+}
+
+.categories-product-list .number input {
+    width: 40px !important;
+}
+
 .scrolling_section .price_head h5 {
     width: calc(100% - 150px);
 }
@@ -5102,6 +5119,7 @@ html {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    cursor: pointer;
 }
 
 .inner_spacing h3.d-flex.align-items-center.justify-content-between {
