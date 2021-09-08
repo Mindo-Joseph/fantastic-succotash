@@ -138,11 +138,12 @@ window.initializeSlider = function initializeSlider() {
         }]
     });   
     
+    
     $(".booking-time").slick({
         dots: !1,
         infinite: !0,
         speed: 300,
-        slidesToShow: 4,
+        slidesToShow: 3,
         slidesToScroll: 6,
         responsive: [
             { breakpoint: 1367, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
@@ -158,6 +159,7 @@ $(document).ready(function () {
     $("#side_menu_toggle").click(function(){
         $(".manu-bars").toggleClass("menu-btn");
         $(".scrollspy-menu").toggleClass("side-menu-open");
+        $("body").toggleClass("overflow-hidden");
     });
     
 
@@ -1516,6 +1518,56 @@ $(document).ready(function () {
 
     });
 
+    $(document).on("click", ".add_vendor_product", function () {
+        let that = $(this);
+        let check_addon = $(that).attr('data-addon');
+        if(check_addon > 0){
+            let slug = $(that).parents('.product_row').attr('data-slug');
+            getProductAddons(slug);
+            return false;
+        }
+     
+       // end addons data
+
+       var ajaxCall = 'ToCancelPrevReq';
+       var vendor_id = that.data("vendor_id");
+       var product_id = that.data("product_id");
+       var add_to_cart_url = that.data("add_to_cart_url");
+       var variant_id = that.data("variant_id");
+       var show_plus_minus = "#show_plus_minus" + product_id;
+
+       
+       if (!$.hasAjaxRunning()) {
+           addToCartOnDemand(ajaxCall, vendor_id, product_id, addonids, addonoptids, add_to_cart_url, variant_id, show_plus_minus, that);
+
+       }
+
+   });
+
+    window.getProductAddons = function getProductAddons(slug){
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: get_product_addon_url.replace(":slug", slug),
+            data: {"slug": slug},
+            success: function (response) {
+                if (response.status == 'Success') {
+                    $("#product_addon_modal .modal-content").html('');
+                    let addon_template = _.template($('#addon_template').html());
+                    $("#product_addon_modal .modal-content").append(addon_template({addOnData: response.data}));
+                    $("#product_addon_modal").modal('show');
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (error) {
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.message;
+                alert(error_messages);
+            },
+        });
+    }
+
 
    
     $(document).on("click", ".productAddonOption", function () {
@@ -1534,6 +1586,7 @@ $(document).ready(function () {
             var addonId = $(value).attr("addonId");
             var addonOptId = $(value).attr("addonOptId");
             if ($(value).is(":checked")) {
+                console.log(addonoptids);
                 addonids.push(addonId);
                 addonoptids.push(addonOptId);
             }
