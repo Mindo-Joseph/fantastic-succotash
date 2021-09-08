@@ -233,6 +233,8 @@
                                                             </div>
                                                         
                                                         @endif
+                                                        
+                                                        <div class="customizable-text">customizable</div>
                                                         </div>
                                                     </div>
                                                     @if($prod->averageRating > 0)

@@ -4954,9 +4954,9 @@ span.icon-ic_currency {
 }
 
 .add-cart-btn {
-    width: 82px;
-    height: 32px;
-    line-height: 32px;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
     border: 0.5px solid rgb(237, 90, 107);
     border-radius: 8px;
     overflow: hidden;
@@ -4981,6 +4981,18 @@ span.icon-ic_currency {
 .product_variant_quantity_wrapper {
     position: relative;
     text-align: center;
+}
+
+.customizable-text {
+    position: absolute;
+    color: red;
+    font-size: 12px;
+    text-align: center;
+    bottom: -11px;
+    left: 0;
+    right: 0;
+    font-weight: 100;
+    opacity: 0.5;
 }
 
 
