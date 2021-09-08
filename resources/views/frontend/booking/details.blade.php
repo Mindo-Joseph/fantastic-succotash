@@ -2,24 +2,40 @@
 @section('content')
 <style type="text/css">
 
-.cabbooking-loader {
-  width: 30px;
-  height: 30px;
-  animation: loading 1s infinite ease-out;
-  margin: auto;
-  border-radius: 50%;
-  background-color: red;
-}
-@keyframes loading {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(8);
-    opacity: 0;
-  }
-}
-</style>
+    .cabbooking-loader {
+      width: 30px;
+      height: 30px;
+      animation: loading 1s infinite ease-out;
+      margin: auto;
+      border-radius: 50%;
+      background-color: red;
+    }
+    @keyframes loading {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(8);
+        opacity: 0;
+      }
+    }
+    .top-header,.main-menu.d-block{
+        display: none !important;
+    }
+    
+    .cab-booking-header img.img-fluid {
+        height: 50px;
+    }
+    .cab-booking-header{
+        display: block !important;
+    }
+    </style>
+<style>
+    .container .main-menu .d-block{
+         display: none !important;
+     }
+ </style>
+
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
