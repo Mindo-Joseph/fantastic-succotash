@@ -1511,6 +1511,8 @@ $(document).ready(function () {
         let addonVariantPriceVal = $("#addonVariantPriceVal").val();
         let addon_variant_qty = $(".addon-input-number").val();
         let total_addon_price = 0;
+        addonids = [];
+        addonoptids = [];
     
         addon_elem.find('.product_addon_option').each(function( index ,value) {
             var addonId = $(value).attr("addonId");
@@ -1549,6 +1551,10 @@ $(document).ready(function () {
 
     // add to cart on new page
     function addToCartProductsAddons(that, quantity=1) {
+        var isAddonSection = false;
+        if(that.hasClass('add_vendor_addon_product')){
+            isAddonSection = true;
+        }
         var ajaxCall = 'ToCancelPrevReq';
         var vendor_id = that.data("vendor_id");
         var product_id = that.data("product_id");
@@ -1571,24 +1577,30 @@ $(document).ready(function () {
                 if (response.status == 'success') {
                     $(".shake-effect").effect("shake", { times: 3 }, 1200);
                     cartHeader();
-                    $(that).next().show();
-                    $(that).next().find('.minus').attr('data-id', response.cart_product_id);
-                    $(that).next().find('.plus').attr('data-id', response.cart_product_id);
-                    $(that).next().find('.input_qty').attr('id', "quantity_ondemand_" + response.cart_product_id);
-                    $(that).next().find('.qty-minus-ondemand').attr('data-parent_div_id', "show_plus_minus" + response.cart_product_id);
-                    $(that).next().attr('id', "show_plus_minus" + response.cart_product_id);
+                    if(isAddonSection){
+                        that.parents('.modal').modal('hide');
+                        window.location.reload();
+                    }
+                    else{
+                        $(that).next().show();
+                        $(that).next().find('.minus').attr('data-id', response.cart_product_id);
+                        $(that).next().find('.plus').attr('data-id', response.cart_product_id);
+                        $(that).next().find('.input_qty').attr('id', "quantity_ondemand_" + response.cart_product_id);
+                        $(that).next().find('.qty-minus-ondemand').attr('data-parent_div_id', "show_plus_minus" + response.cart_product_id);
+                        $(that).next().attr('id', "show_plus_minus" + response.cart_product_id);
 
-                    $(that).attr('id', "add_button_href" + response.cart_product_id);
-                    $(that).hide();
-                    $(that).next().show();
+                        $(that).attr('id', "add_button_href" + response.cart_product_id);
+                        $(that).hide();
+                        $(that).next().show();
 
-                    let parentdiv = $(that).parents('.classes_wrapper');
-                    let addons_div = parentdiv.find('.addons-div');
-                    if(addonoptids.length >= 0){
-
+                        let parentdiv = $(that).parents('.classes_wrapper');
                         let addons_div = parentdiv.find('.addons-div');
-                        addons_div.hide();
-                     }
+                        if(addonoptids.length >= 0){
+
+                            let addons_div = parentdiv.find('.addons-div');
+                            addons_div.hide();
+                        }
+                    }
                 } else {
                     alert(response.message);
                 }
