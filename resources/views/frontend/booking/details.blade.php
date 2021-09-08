@@ -213,8 +213,14 @@
 
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{asset('js/js-toast-master/toast.min.js') }}"></script>
 <script src="{{asset('js/cab_booking_details.js') }}"></script>
+
 <script>
+  
+
+
+    
 var autocomplete_urls = "{{url('looking/vendor/list/14')}}";
 var get_product_detail = "{{url('looking/product-detail')}}";
 var promo_code_list_url = "{{route('verify.promocode.list')}}";
