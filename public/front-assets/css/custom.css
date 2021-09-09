@@ -1844,7 +1844,7 @@ label {
 }
 
 #proceed_to_pay_modal .modal-content {
-    height: 380px;
+    /* height: 380px; */
     border-radius: 12px;
 }
 
@@ -4953,7 +4953,7 @@ span.icon-ic_currency {
     padding: 20px 0;
 }
 
-.add-cart-btn {
+.add-cart-btn:not(.btn-solid) {
     width: 80px;
     height: 30px;
     line-height: 30px;
@@ -4971,7 +4971,7 @@ span.icon-ic_currency {
     position: relative;
 }
 
-.add-cart-btn:after {
+.add-cart-btn:not(.btn-solid):after {
     font: normal normal normal 12px/1 FontAwesome;
     content: "\f067";
     position: relative;
@@ -5871,7 +5871,7 @@ body[dir="rtl"] .inner_spacing h3 {
         max-width: 1000px;
     }
 
-    #proceed_to_pay_modal .modal-dialog,
+    /* #proceed_to_pay_modal .modal-dialog, */
     .return-order .modal-dialog {
         max-width: 800px;
     }
