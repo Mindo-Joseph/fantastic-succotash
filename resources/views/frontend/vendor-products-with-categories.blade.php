@@ -214,7 +214,7 @@
                                                         @endforeach
 
                                                         @if($productVariantInCart > 0)
-                                                            <a class="add-cart-btn add_vendor_product" style="display:none;" id="add_button_href{{$cartProductId}}" data-variant_id="{{$productVariantIdInCart}}" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="{{$vendor_id}}" data-product_id="{{$product_id}}" href="javascript:void(0)">Add</a>
+                                                            <a class="add-cart-btn add_vendor_product" style="display:none;" id="add_button_href{{$cartProductId}}" data-variant_id="{{$productVariantIdInCart}}" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="{{$vendor_id}}" data-product_id="{{$product_id}}" data-addon="{{$isAddonExist}}" href="javascript:void(0)">Add</a>
                                                             <div class="number" id="show_plus_minus{{$cartProductId}}">
                                                                 <span class="minus qty-minus-ondemand" data-parent_div_id="show_plus_minus{{$cartProductId}}" data-id="{{$cartProductId}}" data-base_price="{{$variant_price}}" data-vendor_id="{{$vendor_id}}">
                                                                     <i class="fa fa-minus" aria-hidden="true"></i>
@@ -366,14 +366,14 @@
                                                     </div>
                                                     <% _.each(vendor_product.addon, function(addon, ad){%>
                                                     <div class="row">
-                                                        <div class="col-md-3 col-sm-4 items-details text-left">
-                                                            <p class="p-0 m-0"><%= addon.option.title %></p>
+                                                        <div class="col-md-6 col-sm-4 items-details text-left">
+                                                            <p class="p-0 m-0 font-14"><%= vendor_product.quantity %>x <%= addon.option.title %></p>
                                                         </div>
-                                                        <div class="col-md-2 col-sm-4 text-center">
-                                                            <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= addon.option.price_in_cart %></div>
+                                                        <div class="col-md-3 col-sm-4 text-center">
+                                                            <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= addon.option.price_in_cart %></div>
                                                         </div>
-                                                        <div class="col-md-7 col-sm-4 text-right">
-                                                            <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= addon.option.quantity_price %></div>
+                                                        <div class="col-md-3 col-sm-4 text-right">
+                                                            <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= addon.option.quantity_price %></div>
                                                         </div>
                                                     </div>
                                                     <% }); %>
@@ -385,7 +385,7 @@
                                         <% }); %>
 
                                         <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('PRICE DETAILS')}} </h5>
-                                        <li>
+                                        <li class="p-0">
                                             <div class='media-body'>                                                                
                                                 <h6 class="d-flex align-items-center justify-content-between">
                                                     <span class="ellips">{{__('Price')}}</span>
@@ -394,7 +394,7 @@
                                             </div>
                                         </li>
 
-                                        <li>
+                                        <li class="p-0">
                                             <div class='media-body'>                                                                
                                                 <h6 class="d-flex align-items-center justify-content-between">
                                                     <span class="ellips">{{__('Tax')}}</span>
@@ -404,7 +404,7 @@
                                         </li>
 
                                         <% if(cart_details.loyalty_amount > 0) { %>
-                                        <li>
+                                        <li class="p-0">
                                             <div class='media-body'>                                                                
                                                 <h6 class="d-flex align-items-center justify-content-between">
                                                     <span class="ellips">{{__('Loyalty Amount')}} </span>
@@ -415,7 +415,7 @@
                                         <% } %>
 
                                         <% if(cart_details.wallet_amount_used > 0) { %>
-                                        <li>
+                                        <li class="p-0">
                                             <div class='media-body'>                                                                
                                                 <h6 class="d-flex align-items-center justify-content-between">
                                                     <span class="ellips">{{__('Wallet Amount')}} </span>
@@ -548,7 +548,7 @@
                 </span>
             </div>
             <input type="hidden" id="addonVariantPriceVal" value="<%= addOnData.variant_price %>">
-            <a class="btn btn-solid add-cart-btn flex-fill add_vendor_addon_product" id="add_button_href" href="javascript:void(0)" data-variant_id="<%= addOnData.variant[0].id %>" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="<%= addOnData.vendor_id %>" data-product_id="<%= addOnData.id %>">Add {{ Session::get('currencySymbol') }}<span class="addon_variant_price"><%= addOnData.variant_price %></span></a>
+            <a class="btn btn-solid add-cart-btn flex-fill add_vendor_addon_product" href="javascript:void(0)" data-variant_id="<%= addOnData.variant[0].id %>" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="<%= addOnData.vendor_id %>" data-product_id="<%= addOnData.id %>">Add {{ Session::get('currencySymbol') }}<span class="addon_variant_price"><%= addOnData.variant_price %></span></a>
         </div>
     <% } %>
 </script>
