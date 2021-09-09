@@ -505,17 +505,40 @@ ul.social-links {
 
 ul.social-links li {
     padding: 0 10px;
+    text-align: center;
+}
+
+ul.social-links li:last-child{
+    padding-right: 0;
 }
 
 ul.social-links li a {
-    width: 55px;
-    height: 55px;
-    background: #fff;
+    width: 40px;
+    height: 40px;
+    color: #fff;
+    background: #000;
     border-radius: 50%;
     box-shadow: 0 4px 7px 0 rgba(0, 0, 0, 0.05);
     display: block;
-    line-height: 55px;
-    font-size: 26px;
+    line-height: 40px;
+    font-size: 20px;
+}
+
+ul.social-links li:hover a,ul.social-links li:focus a,ul.social-links li:active a {
+    background: var(--theme-deafult);
+    color: #fff;
+}
+
+.footer-theme .sub-title .contact-list img {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.footer-theme .sub-title li{
+    padding-top: 0;
+    margin-bottom: 10px;
 }
 
 .divider_line {
@@ -2145,6 +2168,10 @@ h3#productPriceValue {
     color: rgb(0 0 0 / 41%);
     line-height: 24px;
     margin: 0;
+}
+
+.displayProducts .inner_spacing h4 {
+    text-align: center;
 }
 
 .common_card .card:hover .btn-solid {
@@ -5433,6 +5460,12 @@ section.royo-business .title-36{
     margin-right: 0;
 }
 
+.bottom-line {
+    position: relative;
+    border-bottom: 1px solid #cbcbcb;
+    padding: 0 0 5px;
+}
+
 .bottom-line:after {
     content: "";
     width: 0;
@@ -5446,7 +5479,7 @@ section.royo-business .title-36{
     z-index: 1;
 }
 
-.safety-links .bottom-line:hover:after{
+.bottom-line:hover:after{
     width: 100%;
 }
 

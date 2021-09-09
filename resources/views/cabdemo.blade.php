@@ -774,8 +774,25 @@
 
         <!-- Royo Business Start From Here -->
         <section class="royo-rental p-0">
-            <div class="container">
-                
+            <div class="container">                
+               
+                <div class="row align-items-center p-64">
+                    <div class="col-sm-6">
+                        <div class="cab-img-box">
+                            <img class="img-fluid" src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_1116,h_744/v1624484990/assets/fa/f20c42-425a-4243-866b-b480d3bd68b4/original/gettyimages-1139275491-2048x2048_With-Mask.png" alt="">
+                        </div>
+                    </div>
+                    <div class="offset-md-1 col-sm-6 col-md-5 pl-lg-4">
+                        <div class="">
+                            <h2 class="title-52">Royo for Business</h2>
+                            <div class="description-text">
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem nisi officiis numquam!</p>
+                            </div>
+                            <a class="learn-more bottom-line" href="#">Learn more</a>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row align-items-center p-64">
                     <div class="col-sm-6 order-md-1">
                         <div class="cab-img-box">
@@ -792,22 +809,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row align-items-center p-64">
-                    <div class="col-sm-6">
-                        <div class="cab-img-box">
-                            <img class="img-fluid" src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_1116,h_744/v1624484990/assets/fa/f20c42-425a-4243-866b-b480d3bd68b4/original/gettyimages-1139275491-2048x2048_With-Mask.png" alt="">
-                        </div>
-                    </div>
-                    <div class="offset-md-1 col-sm-6 col-md-5 pl-lg-4">
-                        <div class="">
-                            <h2 class="title-52">Royo for Business</h2>
-                            <div class="description-text">
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem nisi officiis numquam!</p>
-                            </div>
-                            <a class="learn-more" href="#">Learn more</a>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </section>
 
