@@ -328,10 +328,10 @@
                                     </div> -->
                                     
                                     <script type="text/template" id="header_cart_template_ondemand">
-                                        <ul class="p-2">
+                                        <ul class="pl-2 pr-2 pb-2 pt-0">
                                         <% _.each(cart_details.products, function(product, key){%>
-                                            <li>
-                                                <h6 class="d-flex align-items-center justify-content-between"><b> <%= product.vendor.name %> </b></h6>
+                                            <li class="p-0">
+                                                <h6 class="d-flex justify-content-center badge badge-light font-14"><b><%= product.vendor.name %></b></h6>
                                             </li>
 
                                             <% if( (product.isDeliverable != undefined) && (product.isDeliverable == 0) ) { %>
@@ -365,7 +365,7 @@
                                                         </div>
                                                     </div>
                                                     <% _.each(vendor_product.addon, function(addon, ad){%>
-                                                    <div class="row">
+                                                    <div class="row mb-1">
                                                         <div class="col-md-6 col-sm-4 items-details text-left">
                                                             <p class="p-0 m-0 font-14"><%= vendor_product.quantity %>x <%= addon.option.title %></p>
                                                         </div>
@@ -378,20 +378,19 @@
                                                     </div>
                                                     <% }); %>
                                                 <% } %>
-                                                <% if(product.delivery_fee_charges > 0) { %>
-                                                    <div class="row justify-content-between">
-                                                        <div class="col-md-6 col-sm-6 text-left">
-                                                            <h6 class="p-0 m-0 font-14"><b>{{__('Delivery fee')}}</b></h6>
-                                                        </div>
-                                                        <div class="col-md-3 col-sm-6 text-right">
-                                                            <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= product.delivery_fee_charges %></div>
-                                                        </div>
-                                                    </div>
-                                                <% } %>
-                                                <hr class="my-2">
-                                                    
 
                                             <% }); %>
+                                            <% if(product.delivery_fee_charges > 0) { %>
+                                                <div class="row justify-content-between">
+                                                    <div class="col-md-6 col-sm-6 text-left">
+                                                        <h6 class="p-0 m-0 font-14"><b>{{__('Delivery fee')}}</b></h6>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-6 text-right">
+                                                        <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= product.delivery_fee_charges %></div>
+                                                    </div>
+                                                </div>
+                                            <% } %>
+                                            <hr class="my-2">
                                         <% }); %>
 
                                         <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('PRICE DETAILS')}} </h5>
