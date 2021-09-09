@@ -562,10 +562,10 @@ $(document).ready(function () {
                         url: payment_option_list_url,
                         success: function (response) {
                             if (response.status == "Success") {
-                                $('#v_pills_tab').html('');
+                                // $('#v_pills_tab').html('');
                                 $('#v_pills_tabContent').html('');
-                                let payment_method_template = _.template($('#payment_method_template').html());
-                                $("#v_pills_tab").append(payment_method_template({ payment_options: response.data }));
+                                // let payment_method_template = _.template($('#payment_method_template').html());
+                                // $("#v_pills_tab").append(payment_method_template({ payment_options: response.data }));
                                 let payment_method_tab_pane_template = _.template($('#payment_method_tab_pane_template').html());
                                 $("#v_pills_tabContent").append(payment_method_tab_pane_template({ payment_options: response.data }));
                                 $('#proceed_to_pay_modal').modal('show');
@@ -669,7 +669,7 @@ $(document).ready(function () {
                     }
                 } else {
                     if (path.indexOf("cart") !== -1) {
-                        success_error_alert('error', resp.message, "#stripe-payment-form .payment_response");
+                        success_error_alert('error', resp.message, ".payment_response");
                         $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                     }
                     else if (path.indexOf("wallet") !== -1) {
@@ -685,7 +685,7 @@ $(document).ready(function () {
             error: function (error) {
                 var response = $.parseJSON(error.responseText);
                 if (path.indexOf("cart") !== -1) {
-                    success_error_alert('error', response.message, "#stripe-payment-form .payment_response");
+                    success_error_alert('error', response.message, ".payment_response");
                     $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                 }
                 else if (path.indexOf("wallet") !== -1) {
@@ -727,7 +727,7 @@ $(document).ready(function () {
                     window.location.href = response.data;
                 } else {
                     if (cartElement.length > 0) {
-                        success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                        success_error_alert('error', response.message, ".payment_response");
                         $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                     }
                     else if (walletElement.length > 0) {
@@ -739,7 +739,7 @@ $(document).ready(function () {
             error: function (error) {
                 var response = $.parseJSON(error.responseText);
                 if (cartElement.length > 0) {
-                    success_error_alert('error', response.message, "#paypal-payment-form .payment_response");
+                    success_error_alert('error', response.message, ".payment_response");
                     $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                 }
                 else if (walletElement.length > 0) {
@@ -852,7 +852,8 @@ $(document).ready(function () {
     $(document).on("click", ".proceed_to_pay", function () {
         $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
         let address_id = $("input:radio[name='address_id']:checked").val();
-        let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
+        // let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
+        let payment_option_id = $("#cart-payment-form input[name='cart_payment_method']:checked").val();
         let tip = $("#cart_tip_amount").val();
         if (payment_option_id == 1) {
             placeOrder(address_id, payment_option_id, '', tip);

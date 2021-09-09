@@ -328,10 +328,10 @@
                                     </div> -->
                                     
                                     <script type="text/template" id="header_cart_template_ondemand">
-                                        <ul class="p-2">
+                                        <ul class="pl-2 pr-2 pb-2 pt-0">
                                         <% _.each(cart_details.products, function(product, key){%>
-                                            <li>
-                                                <h6 class="d-flex align-items-center justify-content-between"><b> <%= product.vendor.name %> </b></h6>
+                                            <li class="p-0">
+                                                <h6 class="d-flex justify-content-center badge badge-light font-14"><b><%= product.vendor.name %></b></h6>
                                             </li>
 
                                             <% if( (product.isDeliverable != undefined) && (product.isDeliverable == 0) ) { %>
@@ -349,10 +349,10 @@
                                                         <h6 class="d-flex align-items-center justify-content-between">
                                                             <span class="ellips"><%= vendor_product.quantity %>x <%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></span>
                                                             <span>
-                                                                {{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %>
-                                                                <a  class="action-icon ml-1 remove_product_via_cart" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
+                                                                <a class="action-icon mr-2 remove_product_via_cart text-danger" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                                                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                                 </a>
+                                                                {{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %>
                                                             </span>
                                                         </h6>
                                                     </div>
@@ -365,7 +365,7 @@
                                                         </div>
                                                     </div>
                                                     <% _.each(vendor_product.addon, function(addon, ad){%>
-                                                    <div class="row">
+                                                    <div class="row mb-1">
                                                         <div class="col-md-6 col-sm-4 items-details text-left">
                                                             <p class="p-0 m-0 font-14"><%= vendor_product.quantity %>x <%= addon.option.title %></p>
                                                         </div>
@@ -378,10 +378,19 @@
                                                     </div>
                                                     <% }); %>
                                                 <% } %>
-                                                <hr class="my-2">
-                                                    
 
                                             <% }); %>
+                                            <% if(product.delivery_fee_charges > 0) { %>
+                                                <div class="row justify-content-between">
+                                                    <div class="col-md-6 col-sm-6 text-left">
+                                                        <h6 class="p-0 m-0 font-14"><b>{{__('Delivery fee')}}</b></h6>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-6 text-right">
+                                                        <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= product.delivery_fee_charges %></div>
+                                                    </div>
+                                                </div>
+                                            <% } %>
+                                            <hr class="my-2">
                                         <% }); %>
 
                                         <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('PRICE DETAILS')}} </h5>
