@@ -105,6 +105,8 @@ $(document).ready(function () {
         let coupon_id = $(this).data('coupon_id');
         let task_type = $(this).data('task_type');
         let product_id = $(this).data('product_id');
+
+       
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -428,7 +430,7 @@ $(document).ready(function () {
             type: "POST",
             dataType: 'json',
             url:  apply_cab_booking_promocode_coupon_url,
-            data: {amount:amount, vendor_id:vendor_id, product_id:product_id, coupon_id},
+            data: {amount:amount, vendor_id:vendor_id, product_id:product_id, coupon_id:coupon_id},
             success: function(response) {
                 if(response.status == 'Success'){
                     $('.promo-box').addClass('d-none');
@@ -438,7 +440,9 @@ $(document).ready(function () {
                     let real_amount = $('.cab-detail-box #real_amount').text();
                     $('.cab-detail-box #discount_amount').text(real_amount).show();
                     $('.cab-detail-box .code-text').text('Code '+response.data.name+' applied').show();
-                    $('.cab-detail-box #real_amount').text(response.data.currency_symbol+''+response.data.new_amount);
+                    $('#pickup_now').attr("data-coupon_id",coupon_id);
+                    var current_amount = amount - response.data.new_amount;
+                    $('.cab-detail-box #real_amount').text(response.data.currency_symbol+''+current_amount);
                 }
             }
         });
@@ -521,6 +525,7 @@ $(document).ready(function () {
     });
 
     $(document).on("click",".scheduled-ride",function() {
+        return false;
         $('.location-list').attr("style", "display: none !important");
         $('.scheduled-ride-list').attr("style", "display: block !important");
         var fromDate = moment();

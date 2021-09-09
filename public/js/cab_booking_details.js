@@ -7,6 +7,7 @@ var product_image = '';
 var marker='';
 var order_status = '';
 var order_status_new = '';
+var direction_set = 0;
 themeType = [
     {
         featureType: "poi",
@@ -118,8 +119,10 @@ function showroute(alltask,agent_location,map,product_image){
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
    
-
-    directionsRenderer.setMap(map);
+    if(direction_set == 0){
+        directionsRenderer.setMap(map);
+        direction_set = 1; 
+   }
     calculateAndDisplayRoute(directionsService, directionsRenderer,map);
     addMarker(agent_location,map,product_image);
 
