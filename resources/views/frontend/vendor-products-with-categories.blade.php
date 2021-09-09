@@ -383,13 +383,22 @@
 
                                             <% }); %>
                                         <% }); %>
-
+                                        
+                                        <% 
+                                        var gross_amount = cart_details.gross_amount;
+                                        var total_payable_amount = cart_details.total_payable_amount;
+                                        if(cart_details.total_delivery_fee > 0){
+                                            gross_amount = (gross_amount - cart_details.total_delivery_fee).toFixed(2);
+                                            total_payable_amount = (total_payable_amount - cart_details.total_delivery_fee).toFixed(2);
+                                        }
+                                        %>
                                         <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('PRICE DETAILS')}} </h5>
                                         <li class="p-0">
                                             <div class='media-body'>                                                                
                                                 <h6 class="d-flex align-items-center justify-content-between">
                                                     <span class="ellips">{{__('Price')}}</span>
-                                                    <span>{{Session::get('currencySymbol')}}<%= cart_details.gross_amount %></span>
+                                                    <span>{{Session::get('currencySymbol')}}<%= gross_amount %>
+                                                    </span>
                                                 </h6>
                                             </div>
                                         </li>
@@ -427,7 +436,7 @@
                                         </ul>
                                         <div class="cart-sub-total d-flex align-items-center justify-content-between">
                                             <span>{{__('Total')}}</span>
-                                            <span>{{Session::get('currencySymbol')}}<%= cart_details.total_payable_amount %></span>
+                                            <span>{{Session::get('currencySymbol')}}<%= total_payable_amount %></span>
                                         </div>
                                         <a class="checkout-btn text-center d-block" href="{{route('showCart')}}">Checkout</a>
                                     </script>
