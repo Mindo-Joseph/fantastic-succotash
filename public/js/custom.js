@@ -834,7 +834,7 @@ $(document).ready(function () {
                     socket.emit("createOrder", response.data );
                     setTimeout(function(){
                         window.location.href = base_url + "/order/success/" + response.data.id;
-                    },100)
+                    },200)
                 } else {
                     if ($(".cart_response").length > 0) {
                         $(".cart_response").removeClass("d-none");

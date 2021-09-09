@@ -22,7 +22,10 @@ io.on('connection', (socket) => {
         console.log(orderData);
         (orderData.user_vendor).forEach(element => {
             io.sockets.emit('createOrderByCustomer_'+socket.handshake.query.subdomain+"_"+element.user_id, orderData);
-        })
+        });
+        (orderData.admins).forEach(element => {
+            io.sockets.emit('createOrderByCustomer_'+socket.handshake.query.subdomain+"_"+element.id, orderData);
+        });
         // io.sockets.emit('createOrderByCustomer', orderData);
     });
     

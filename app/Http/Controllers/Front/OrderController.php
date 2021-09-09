@@ -694,6 +694,10 @@ class OrderController extends FrontController
                 ]);
             }
             $order = $order->with(['paymentOption', 'user_vendor'])->where('order_number', $order->order_number)->first();
+            $order->admins = User::select('id')->where(function($query){
+                $query->where(['is_admin' => 1])
+                ->orWhere(['is_superadmin' => 1]);
+            })->get();
             DB::commit();
             return $this->successResponse($order);
         } catch (Exception $e) {
