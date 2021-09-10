@@ -182,12 +182,13 @@ function showroute(alltask,agent_location,map,product_image){
     function addMarker(agent_location,map,product_image) {
      // Add the marker at the clicked location, and add the next-available label
      // from the array of alphabetical characters.
-
+     product_image = url+'/images/cab.svg';
      var image = {
-     url: location_icon, // url
-     scaledSize: new google.maps.Size(50, 50), // scaled size
+     url: product_image, // url
+     scaledSize: new google.maps.Size(30, 30), // scaled size
      origin: new google.maps.Point(0,0), // origin
-     anchor: new google.maps.Point(22,22) // anchor
+     anchor: new google.maps.Point(22,22), // anchor
+     rotation: 5
     }; 
     if (marker && marker.setMap) {
         marker.setMap(null);
