@@ -125,9 +125,11 @@ class VendorController extends BaseController{
                         $z->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title');
                         $z->where('vt.language_id', $langId);
                         $z->where('product_variant_sets.product_id', $p_id)->orderBy('product_variant_sets.variant_type_id', 'asc');
-                    },'variantSet.option2'=> function ($zx) use ($langId, $p_id) {
-                        $zx->where('vt.language_id', $langId)
-                        ->where('product_variant_sets.product_id', $p_id);
+                    },'variantSet.options'=> function($zx) use($langId, $p_id){
+                        $zx->join('variant_option_translations as vt','vt.variant_option_id','variant_options.id')
+                        ->select('variant_options.*', 'vt.title', 'pvs.product_variant_id', 'pvs.variant_type_id')
+                        ->where('pvs.product_id', $p_id)
+                        ->where('vt.language_id', $langId);
                     }])->where('id', $p_id)->first();
                     $product->variantSet = $variantData->variantSet;
                     $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
