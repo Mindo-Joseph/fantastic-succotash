@@ -694,6 +694,7 @@
 @endsection
 
 @section('script')
+<script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous"></script>
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
     var guest_cart = {{ $guest_user ? 1 : 0 }};
