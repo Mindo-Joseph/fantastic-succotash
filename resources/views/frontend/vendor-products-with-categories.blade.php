@@ -723,30 +723,31 @@
         });
     });
 
-    $("#vendor_search_box").keyup(function () {
+    $(document).delegate("#vendor_search_box", "keyup", function () {
         let keyword = $(this).val();
         vendorProductsSearchResults(keyword);
     });
     function vendorProductsSearchResults(keyword){
-        // if (keyword.length <= 2) {
-        //     $('#search_box_main_div').html('').hide();
-        // }
-        if (keyword.length > 2 || keyword.length == 0) {
-            $.ajax({
+        // if (keyword.length > 2 || keyword.length == 0) {
+            ajaxCall = $.ajax({
                 type: "post",
                 dataType: 'json',
                 url: vendor_products_page_search_url,
                 data: { keyword: keyword, vendor: "{{$vendor->id}}" },
+                beforeSend: function() {
+                    if (ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
+                        ajaxCall.abort();
+                    }
+                },
                 success: function (response) {
                     if (response.status == 'Success') {
                         var cart_html = $('.vendor-products-wrapper #header_cart_main_ul_ondemand').html();
                         $('.vendor-products-wrapper').html(response.html);
                         $('.vendor-products-wrapper #header_cart_main_ul_ondemand').html(cart_html);
-                        // cartHeader();
                     }
                 }
             });
-        }
+        // }
     }
    
 </script>
