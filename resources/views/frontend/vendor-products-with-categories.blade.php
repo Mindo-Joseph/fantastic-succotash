@@ -723,7 +723,7 @@
         });
     });
 
-    $(document).delegate("#vendor_search_box", "keyup", function () {
+    $(document).delegate("#vendor_search_box", "input", function () {
         let keyword = $(this).val();
         vendorProductsSearchResults(keyword);
     });
