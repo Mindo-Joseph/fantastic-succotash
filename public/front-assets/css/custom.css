@@ -4012,7 +4012,7 @@ header .homepage-address h2 {
     /* transform: translateY(calc(-50% - 4px)); */
 }
 
-.location-inputs .dots.where-to-second::after {
+.location-inputs .dots:last-child::after {
     border-radius: 0;
 }
 

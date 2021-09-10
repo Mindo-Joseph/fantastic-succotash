@@ -100,6 +100,7 @@ if (strpos($url,'cabservice') !== false) {?>
                     <input class="form-control pickup-text" name="destination_location_name[]" type="text" placeholder="{{__('Add A Stop')}}" id="destination_location"/>
                 </div>
                 <div class="location-search d-flex align-items-center" style="display:none !important;" id="destination_location_add_temp">
+                    <i class="fa fa-search" aria-hidden="true"></i>
                 </div>
                 <div class="scheduled-ride">
                     <button><i class="fa fa-clock-o" aria-hidden="true"></i> <span class="mx-2 scheduleDateTimeApnd">Now</span> <i class="fa fa-angle-down" aria-hidden="true"></i></button>
