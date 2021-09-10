@@ -166,7 +166,7 @@
                     <% }else { %>
                     <h4><b>Searching For Nearby Drivers</b></h4>
                     <% } %> 
-                    <img src="{{url('images/cabbooking-loader.gif')}}">
+                    <div class="new-loader"></div>
                 </div>
                 <div class="cab-location-details" id="driver_details_main_div" style="display:none;">
                    <div class="row align-items-center">

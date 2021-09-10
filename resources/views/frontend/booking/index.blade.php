@@ -72,13 +72,13 @@ if (strpos($url,'cabservice') !== false) {?>
             <div class="location-box check-dropoff-secpond" style="display:none">
                 <ul class="location-inputs position-relative pl-2" id="location_input_main_div">
                     <li class="d-flex dots">
-                        <div class="title title-24 down-arrow pr-3 position-relative edit-pickup">  {{__('From')}} - <span id="pickup-where-from"></span></div>
+                        <div class="title title-24 position-relative edit-pickup">  {{__('From')}} - <span id="pickup-where-from"></span><i class="fa fa-angle-down" aria-hidden="true"></i></div>
                     </li>
                     <li class="d-flex dots where-to-first">
                         <div class="title title-36 pr-3 position-relative">{{__('Where To?')}}</div>
                     </li>
                     <li class="d-flex dots where-to-second" style="display:none !important;">
-                        <div class="title title-24 down-arrow pr-3 position-relative edit-dropoff">  {{__('To')}} - <span id="dropoff-where-to"></span></div>
+                        <div class="title title-24 position-relative edit-dropoff">  {{__('To')}} - <span id="dropoff-where-to"></span><i class="fa fa-angle-down" aria-hidden="true"></i></div>
                         <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel=""></i>
                     </li>
                 </ul>
@@ -88,7 +88,7 @@ if (strpos($url,'cabservice') !== false) {?>
             <input type="hidden" name="pickup_location_longitude[]" value="" id="pickup_location_longitude">
             <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude"/>
             <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude"/>
-            <div class="location-container">
+            <div class="location-container style-4">
                 <div class="location-search d-flex align-items-center check-pickup">
                     <i class="fa fa-search" aria-hidden="true"></i>
                     <input class="form-control pickup-text pac-target-input" type="text" name="pickup_location_name[]" placeholder="Add A Pick-Up Location" id="pickup_location" autocomplete="off">
@@ -96,6 +96,7 @@ if (strpos($url,'cabservice') !== false) {?>
                 <div class="location-search d-flex align-items-center" style="display:none !important;" id="destination_location_add_more">
                 </div>
                 <div class="location-search d-flex align-items-center check-dropoff" style="display:none !important;">
+                    <i class="fa fa-search" aria-hidden="true"></i>
                     <input class="form-control pickup-text" name="destination_location_name[]" type="text" placeholder="{{__('Add A Stop')}}" id="destination_location"/>
                 </div>
                 <div class="location-search d-flex align-items-center" style="display:none !important;" id="destination_location_add_temp">
@@ -118,20 +119,45 @@ if (strpos($url,'cabservice') !== false) {?>
                             </div>
                         </a>
                     @forelse($user_addresses as $user_address)
-                        <a class="search-location-result position-relative d-block" href="javascript:void(0);" data-address="{{$user_address->address}}" data-latitude="{{$user_address->latitude}}" data-longitude="{{$user_address->longitude}}">
+                        <!-- <a class="search-location-result position-relative d-block" href="javascript:void(0);" data-address="{{$user_address->address}}" data-latitude="{{$user_address->latitude}}" data-longitude="{{$user_address->longitude}}">
                             <h4 class="mt-0 mb-1"><b>{{$user_address->address}}</b></h4>
                             <p class="ellips mb-0">{{$user_address->city}}, {{$user_address->state}}, {{$user_address->country}}</p>
+                        </a> -->
+                        <a class="search-location-result position-relative row align-items-center mt-2" href="javascript:void(0);" data-address="{{$user_address->address}}" data-latitude="{{$user_address->latitude}}" data-longitude="{{$user_address->longitude}}">
+                            <div class="col-2 text-center pl-3">
+                                <div class="round-shape">
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                            <div class="col-10 pl-3">
+                                <h4 class="mt-0 mb-1"><b>{{$user_address->address}}</b></h4>
+                                <div class="current-location ellips mb-2">{{$user_address->city}}, {{$user_address->state}}, {{$user_address->country}}</div>
+                                <hr class="m-0">
+                            </div>
                         </a>
                     @empty
                     @endforelse
                 </div>
-                <div class="scheduled-ride-list d-flex align-items-center"> 
-                    
+                <div class="scheduled-ride-list"> 
+                    <div class="scheduled-ride-list-heading d-flex align-items-center justify-content-between"> 
+                        <h3>Choose Date And Time</h3>
+                        <span class="skip-clear">
+                            Skip
+                        </span>
+                    </div>
+
+                    <div class="date-radio-list style-4">
+
+                    </div>
+
+                    <div class="scheduled-footer">
+
+                    </div>
                 </div>
                 <div class="table-responsive style-4">
                     <div class="cab-button d-flex flex-nowrap align-items-center py-2" id="vendor_main_div"></div>
                 </div>
-                <div class="vehical-container style-4" style="height:calc(100vh - 397px !important" id="search_product_main_div"></div>
+                <div class="vehical-container style-4" style="height:calc(100vh - 397px) !important" id="search_product_main_div"></div>
             </div>
         </div>
         <script type="text/template" id="vendors_template">
@@ -172,8 +198,8 @@ if (strpos($url,'cabservice') !== false) {?>
             <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude_<%= random_id %>" data-rel="<%= random_id %>"/>
         </script>
         <script type="text/template" id="destination_location_template_li">
-            <li class="d-block dots" id="dots_<%= random_id %>">
-                <div class="title title-24 down-arrow pr-3 position-relative edit-other-stop" id="<%= random_id %>">  {{__('To')}} - <span id="dropoff-where-to-<%= random_id %>"></span></div>
+            <li class="d-flex dots" id="dots_<%= random_id %>">
+                <div class="title title-24 pr-3 position-relative edit-other-stop" id="<%= random_id %>">  {{__('To')}} - <span id="dropoff-where-to-<%= random_id %>"></span><i class="fa fa-angle-down" aria-hidden="true"></i></div>
                 <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel="<%= random_id %>"></i>
             </li>
         </script>
@@ -262,7 +288,7 @@ if (strpos($url,'cabservice') !== false) {?>
                 </div>
                 <div class="cab-location-details" id="searching_main_div">
                     <h4><b>Searching For Nearby Drivers</b></h4>
-                    <img src="{{url('images/cabbooking-loader.gif')}}">
+                    <div class="new-loader"></div>
                 </div>
                 <div class="cab-location-details" id="driver_details_main_div" style="display:none;">
                    <div class="row align-items-center">
