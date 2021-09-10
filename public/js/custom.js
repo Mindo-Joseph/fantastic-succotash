@@ -835,7 +835,7 @@ $(document).ready(function () {
                         });
                     socket.emit("createOrder", response.data );
                     setTimeout(function(){
-                        window.location.href = base_url + "/order/success/" + response.data.id;
+                        window.location.href = `${base_url}/order/success/${response.data.id}`;
                     },1000)
                 } else {
                     if ($(".cart_response").length > 0) {
