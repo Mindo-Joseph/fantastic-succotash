@@ -191,7 +191,7 @@
                                                             $vendor_id = 0;
                                                             $product_id = 0;
                                                             $variant_price = 0;
-                                                            $variant_quantity = 0;
+                                                            $variant_quantity = $prod->variant_quantity;
                                                             $isAddonExist = 0;
                                                             if(count($data->addOn) > 0){
                                                                 $isAddonExist = 1;
@@ -216,26 +216,29 @@
                                                         @if($productVariantInCart > 0)
                                                             <a class="add-cart-btn add_vendor_product" style="display:none;" id="add_button_href{{$cartProductId}}" data-variant_id="{{$productVariantIdInCart}}" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="{{$vendor_id}}" data-product_id="{{$product_id}}" data-addon="{{$isAddonExist}}" href="javascript:void(0)">Add</a>
                                                             <div class="number" id="show_plus_minus{{$cartProductId}}">
-                                                                <span class="minus qty-minus-ondemand" data-parent_div_id="show_plus_minus{{$cartProductId}}" data-id="{{$cartProductId}}" data-base_price="{{$variant_price}}" data-vendor_id="{{$vendor_id}}">
+                                                                <span class="minus qty-minus-product" data-parent_div_id="show_plus_minus{{$cartProductId}}" data-id="{{$cartProductId}}" data-base_price="{{$variant_price}}" data-vendor_id="{{$vendor_id}}">
                                                                     <i class="fa fa-minus" aria-hidden="true"></i>
                                                                 </span>
                                                                 <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="{{$variant_quantity}}" class="input-number" step="0.01" id="quantity_ondemand_{{$cartProductId}}" readonly>
-                                                                <span class="plus qty-plus-ondemand"  data-id="{{$cartProductId}}" data-base_price="{{$variant_price}}" data-vendor_id="{{$vendor_id}}">
+                                                                <span class="plus qty-plus-product"  data-id="{{$cartProductId}}" data-base_price="{{$variant_price}}" data-vendor_id="{{$vendor_id}}">
                                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                                 </span>
                                                             </div>
                                                         @else
+                                                            @if($variant_quantity > 0)
                                                             <a class="add-cart-btn add_vendor_product" id="aadd_button_href{{$data->id}}" data-variant_id="{{$data->variant[0]->id}}" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" data-addon="{{$isAddonExist}}" href="javascript:void(0)">Add</a>
                                                             <div class="number" style="display:none;" id="ashow_plus_minus{{$data->id}}">
-                                                                <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus{{$data->id}}" readonly data-id="{{$data->id}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                                <span class="minus qty-minus-product"  data-parent_div_id="show_plus_minus{{$data->id}}" readonly data-id="{{$data->id}}" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
                                                                     <i class="fa fa-minus" aria-hidden="true"></i>
                                                                 </span>
                                                                 <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" id="quantity_ondemand_d{{$data->id}}" readonly placeholder="1" type="text" value="1" class="input-number input_qty" step="0.01">
-                                                                <span class="plus qty-plus-ondemand"  data-id="" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
+                                                                <span class="plus qty-plus-product"  data-id="" data-base_price="{{$data->variant_price * $data->variant_multiplier}}" data-vendor_id="{{$data->vendor_id}}">
                                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                                 </span>
                                                             </div>
-                                                        
+                                                            @else
+                                                            <span class="text-danger">Out of stock</span>
+                                                            @endif
                                                         @endif
                                                         @if($isAddonExist > 0)
                                                             <div class="customizable-text">customizable</div>
@@ -260,7 +263,7 @@
                                                     <div id="product_variant_options_wrapper">
                                                         @if(!empty($prod->variantSet))
                                                             @php
-                                                                $selectedVariant = $productVariantIdInCart;
+                                                                $selectedVariant = ($productVariantIdInCart > 0) ? $productVariantIdInCart : $prod->variant_id;
                                                             @endphp
                                                             @foreach($prod->variantSet as $key => $variant)
                                                                 @if($variant->type == 1 || $variant->type == 2)
@@ -477,22 +480,22 @@
         <% if(variant.check_if_in_cart != '') { %>
             <a class="add-cart-btn add_vendor_product" style="display:none;" id="add_button_href<%= variant.check_if_in_cart.id %>" data-variant_id="<%= variant.id %>" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" href="javascript:void(0)">Add</a>
             <div class="number" id="show_plus_minus<%= variant.check_if_in_cart.id %>">
-                <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus<%= variant.check_if_in_cart.id %>" data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>">
+                <span class="minus qty-minus-product"  data-parent_div_id="show_plus_minus<%= variant.check_if_in_cart.id %>" data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>">
                     <i class="fa fa-minus" aria-hidden="true"></i>
                 </span>
                 <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="<%= variant.check_if_in_cart.quantity %>" class="input-number" step="0.01" id="quantity_ondemand_<%= variant.check_if_in_cart.id %>" readonly>
-                <span class="plus qty-plus-ondemand"  data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>">
+                <span class="plus qty-plus-product"  data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                 </span>
             </div>
         <% }else{ %>
             <a class="add-cart-btn add_vendor_product" id="aadd_button_href<%= variant.product_id %>" data-variant_id="<%= variant.id %>" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="<%= variant.product.vendor_id %>" data-product_id="<%= variant.product_id %>" data-addon="<%= variant.isAddonExist %>" href="javascript:void(0)">Add</a>
             <div class="number" style="display:none;" id="ashow_plus_minus<%= variant.product_id %>">
-                <span class="minus qty-minus-ondemand"  data-parent_div_id="show_plus_minus<%= variant.product_id %>" readonly data-id="<%= variant.product_id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.product.vendor_id %>">
+                <span class="minus qty-minus-product"  data-parent_div_id="show_plus_minus<%= variant.product_id %>" readonly data-id="<%= variant.product_id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.product.vendor_id %>">
                     <i class="fa fa-minus" aria-hidden="true"></i>
                 </span>
                 <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" id="quantity_ondemand_d<%= variant.product_id %>" readonly placeholder="1" type="text" value="1" class="input-number input_qty" step="0.01">
-                <span class="plus qty-plus-ondemand"  data-id="" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.product.vendor_id %>">
+                <span class="plus qty-plus-product"  data-id="" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.product.vendor_id %>">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                 </span>
             </div>
