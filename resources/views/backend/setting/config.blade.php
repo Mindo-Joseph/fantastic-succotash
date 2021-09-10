@@ -930,26 +930,32 @@
                      </div>
                      <div class="col-md-4">
                         <div class="form-group mb-3">
-                           <label for="enquire_mode" class="mr-3 mb-0">Subscription Mod</label>
+                           <label for="subscription_mode" class="mr-3 mb-0">Subscription Mod</label>
                            <input type="checkbox" data-plugin="switchery" name="subscription_mode" id="subscription_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->subscription_mode == '1')) checked='checked' @endif>
                         </div>
                      </div>
                      <div class="col-md-4">
                         <div class="form-group mb-3">
-                           <label for="enquire_mode" class="mr-3 mb-0">{{__('Tip Before Order')}}</label>
+                           <label for="tip_before_order" class="mr-3 mb-0">{{__('Tip Before Order')}}</label>
                            <input type="checkbox" data-plugin="switchery" name="tip_before_order" id="tip_before_order" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->tip_before_order == '1')) checked='checked' @endif>
                         </div>
                      </div>
                      <div class="col-md-4">
                         <div class="form-group mb-3">
-                           <label for="enquire_mode" class="mr-3 mb-0">{{__('Tip After Order')}}</label>
+                           <label for="tip_after_order" class="mr-3 mb-0">{{__('Tip After Order')}}</label>
                            <input type="checkbox" data-plugin="switchery" name="tip_after_order" id="tip_after_order" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->tip_after_order == '1')) checked='checked' @endif>
                         </div>
                      </div>
                      <div class="col-md-4">
                         <div class="form-group mb-3">
-                           <label for="enquire_mode" class="mr-3 mb-0">{{__('Off Scheduling  Order')}}</label>
+                           <label for="off_scheduling_at_cart" class="mr-3 mb-0">{{__('Off Scheduling  Order')}}</label>
                            <input type="checkbox" data-plugin="switchery" name="off_scheduling_at_cart" id="off_scheduling_at_cart" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->off_scheduling_at_cart == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="form-group mb-3">
+                           <label for="isolate_single_vendor_order" class="mr-3 mb-0">{{__('Isolate Single Vendor Order')}}</label>
+                           <input type="checkbox" data-plugin="switchery" name="isolate_single_vendor_order" id="isolate_single_vendor_order" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->isolate_single_vendor_order == '1')) checked='checked' @endif>
                         </div>
                      </div>
                      <div class="col-md-12">
