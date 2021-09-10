@@ -1,3 +1,4 @@
+@if($listData->isNotEmpty())
 <div class="col-sm-4 col-lg-3 border-right">
     <nav class="scrollspy-menu">
         <ul>
@@ -139,6 +140,11 @@
     @empty
     @endforelse
 </div>
+@else
+<div class="col-12 col-lg-9 d-md-inline-block">
+    <h4 class="mt-3 mb-3 text-center">No result found</h4>
+</div>
+@endif
 <div class="col-12 col-lg-3 d-md-inline-block d-none">
     <div class="card-box p-0 cart-main-box">                                
         <div class="p-2 d-flex align-items-center justify-content-between border-bottom">
