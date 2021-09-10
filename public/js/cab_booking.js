@@ -64,7 +64,7 @@ $(document).ready(function () {
                 $('#schedule_datetime_main_div').show();
                 return false;
             }
-            schedule_datetime = moment(temp_schedule_datetime).format('YYYY-MM-DD HH:MM')
+            schedule_datetime = moment(temp_schedule_datetime).format('YYYY-MM-DD HH:mm')
         }
         var tasks = [];
         $('#pickup_now').attr('disabled', true);
@@ -417,6 +417,8 @@ $(document).ready(function () {
                     $('.cab-detail-box #discount_amount').text('').hide();
                     $('.cab-detail-box .code-text').text("Select A Promo Code").show();
                     $('.cab-detail-box #real_amount').text(response.data.currency_symbol+' '+amount);
+                    $('#pickup_now').attr("data-coupon_id",'');
+                    $('#pickup_later').attr("data-coupon_id",'');
                 }
             }
         });
@@ -441,6 +443,7 @@ $(document).ready(function () {
                     $('.cab-detail-box #discount_amount').text(real_amount).show();
                     $('.cab-detail-box .code-text').text('Code '+response.data.name+' applied').show();
                     $('#pickup_now').attr("data-coupon_id",coupon_id);
+                    $('#pickup_later').attr("data-coupon_id",coupon_id);
                     var current_amount = amount - response.data.new_amount;
                     $('.cab-detail-box #real_amount').text(response.data.currency_symbol+''+current_amount);
                 }
