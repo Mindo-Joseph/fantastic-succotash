@@ -8,6 +8,7 @@ var marker='';
 var order_status = '';
 var order_status_new = '';
 var direction_set = 0;
+var completed_ride = 0;
 themeType = [
     {
         featureType: "poi",
@@ -95,6 +96,15 @@ function getOrderDriverDetails(dispatch_traking_url,order_id,product_image) {
                     order_status = order_status_new;
                     iqwerty.toast.toast(response.data.order_details.dispatcher_status);
                 }
+
+                if(completed_ride == 0){
+                    if(response.data.order_details.dispatcher_status_option_id == 5){
+                        completed_ride = 1;
+                        $('#rating_of_cab').show();
+                        $('.rating-star .add_edit_review').attr("data-dispatch_order_id",response.data.order.id);
+                    }
+                }
+                rating_of_cab
                 
 
             }
