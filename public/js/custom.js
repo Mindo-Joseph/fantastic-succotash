@@ -834,9 +834,9 @@ $(document).ready(function () {
                           query: {"user_id": host_arr[0]+"_cus", "subdomain":host_arr[0]}
                         });
                     socket.emit("createOrder", response.data );
-                    // setTimeout(function(){
-                        // window.location.href = base_url + "/order/success/" + response.data.id;
-                    // },200)
+                    setTimeout(function(){
+                        window.location.href = base_url + "/order/success/" + response.data.id;
+                    },200)
                 } else {
                     if ($(".cart_response").length > 0) {
                         $(".cart_response").removeClass("d-none");
