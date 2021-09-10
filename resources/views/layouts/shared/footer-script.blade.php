@@ -94,7 +94,7 @@ if (Session::has('toaster')) {
     });
     var ip_address = window.location.host;
     var host_arr = ip_address.split(".");
-    let socket = io(constants.socket_domain + ":" + constants.socket_port, {
+    let socket = io(constants.socket_domain, {
         query: {
             "user_id": host_arr[0] + "_" + "{{ Auth::user()->id }}"
         }

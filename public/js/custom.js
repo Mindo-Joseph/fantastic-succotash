@@ -830,7 +830,7 @@ $(document).ready(function () {
                     var host_arr = ip_address.split(".");
                     // var result = arr[2];
                     // let ip_address = result;
-                    let socket = io(constants.socket_domain + ":" + constants.socket_port, {
+                    let socket = io(constants.socket_domain, {
                           query: {"user_id": host_arr[0]+"_cus", "subdomain":host_arr[0]}
                         });
                     socket.emit("createOrder", response.data );
