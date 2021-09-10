@@ -64,7 +64,7 @@ $(document).ready(function () {
                 $('#schedule_datetime_main_div').show();
                 return false;
             }
-            schedule_datetime = moment(temp_schedule_datetime).format('YYYY-MM-DD HH:MM')
+            schedule_datetime = moment(temp_schedule_datetime).format('YYYY-MM-DD HH:mm')
         }
         var tasks = [];
         $('#pickup_now').attr('disabled', true);
@@ -105,6 +105,8 @@ $(document).ready(function () {
         let coupon_id = $(this).data('coupon_id');
         let task_type = $(this).data('task_type');
         let product_id = $(this).data('product_id');
+
+       
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -330,7 +332,7 @@ $(document).ready(function () {
                         }else{
                             $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
                         }
-                        $('.cab-booking-main-loader').hide();
+                       // $('.cab-booking-main-loader').hide();
                     }
                 }
             });
@@ -376,6 +378,7 @@ $(document).ready(function () {
         });
     });
     $(document).on("click","#promo_code_list_btn_cab_booking",function() {
+        
         let amount = $(this).data('amount');
         let vendor_id = $(this).data('vendor_id');
         let product_id = $(this).data('product_id');
@@ -415,6 +418,8 @@ $(document).ready(function () {
                     $('.cab-detail-box #discount_amount').text('').hide();
                     $('.cab-detail-box .code-text').text("Select A Promo Code").show();
                     $('.cab-detail-box #real_amount').text(response.data.currency_symbol+' '+amount);
+                    $('#pickup_now').attr("data-coupon_id",'');
+                    $('#pickup_later').attr("data-coupon_id",'');
                 }
             }
         });
@@ -428,7 +433,7 @@ $(document).ready(function () {
             type: "POST",
             dataType: 'json',
             url:  apply_cab_booking_promocode_coupon_url,
-            data: {amount:amount, vendor_id:vendor_id, product_id:product_id, coupon_id},
+            data: {amount:amount, vendor_id:vendor_id, product_id:product_id, coupon_id:coupon_id},
             success: function(response) {
                 if(response.status == 'Success'){
                     $('.promo-box').addClass('d-none');
@@ -438,7 +443,10 @@ $(document).ready(function () {
                     let real_amount = $('.cab-detail-box #real_amount').text();
                     $('.cab-detail-box #discount_amount').text(real_amount).show();
                     $('.cab-detail-box .code-text').text('Code '+response.data.name+' applied').show();
-                    $('.cab-detail-box #real_amount').text(response.data.currency_symbol+''+response.data.new_amount);
+                    $('#pickup_now').attr("data-coupon_id",coupon_id);
+                    $('#pickup_later').attr("data-coupon_id",coupon_id);
+                    var current_amount = amount - response.data.new_amount;
+                    $('.cab-detail-box #real_amount').text(response.data.currency_symbol+''+current_amount);
                 }
             }
         });
@@ -452,6 +460,7 @@ $(document).ready(function () {
         $('.address-form').removeClass('d-none');
     });
     $(document).on("click",".vehical-view-box",function() {
+        $('.cab-booking-main-loader').show();
         var locations = [];
         let product_id = $(this).data('product_id');
         var pickup_location_latitude = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
@@ -478,6 +487,7 @@ $(document).ready(function () {
             success: function(response) {
                 if(response.status == 'Success'){
                     $('#cab_detail_box').html('');
+                    $('.cab-booking-main-loader').hide();
                     if(response.data.length != 0){
                         $('.address-form').addClass('d-none');
                         $('.cab-detail-box').removeClass('d-none');
@@ -521,6 +531,7 @@ $(document).ready(function () {
     });
 
     $(document).on("click",".scheduled-ride",function() {
+        return false;
         $('.location-list').attr("style", "display: none !important");
         $('.scheduled-ride-list').attr("style", "display: block !important");
         var fromDate = moment();

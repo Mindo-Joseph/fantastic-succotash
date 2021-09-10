@@ -7,6 +7,8 @@ var product_image = '';
 var marker='';
 var order_status = '';
 var order_status_new = '';
+var direction_set = 0;
+var completed_ride = 0;
 themeType = [
     {
         featureType: "poi",
@@ -94,6 +96,15 @@ function getOrderDriverDetails(dispatch_traking_url,order_id,product_image) {
                     order_status = order_status_new;
                     iqwerty.toast.toast(response.data.order_details.dispatcher_status);
                 }
+
+                if(completed_ride == 0){
+                    if(response.data.order_details.dispatcher_status_option_id == 5){
+                        completed_ride = 1;
+                        $('#rating_of_cab').show();
+                        $('.rating-star .add_edit_review').attr("data-dispatch_order_id",response.data.order.id);
+                    }
+                }
+                rating_of_cab
                 
 
             }
@@ -118,8 +129,10 @@ function showroute(alltask,agent_location,map,product_image){
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
    
-
-    directionsRenderer.setMap(map);
+    if(direction_set == 0){
+        directionsRenderer.setMap(map);
+        direction_set = 1; 
+   }
     calculateAndDisplayRoute(directionsService, directionsRenderer,map);
     addMarker(agent_location,map,product_image);
 
@@ -179,12 +192,13 @@ function showroute(alltask,agent_location,map,product_image){
     function addMarker(agent_location,map,product_image) {
      // Add the marker at the clicked location, and add the next-available label
      // from the array of alphabetical characters.
-
+     product_image = url+'/images/cab.svg';
      var image = {
-     url: location_icon, // url
-     scaledSize: new google.maps.Size(50, 50), // scaled size
+     url: product_image, // url
+     scaledSize: new google.maps.Size(30, 30), // scaled size
      origin: new google.maps.Point(0,0), // origin
-     anchor: new google.maps.Point(22,22) // anchor
+     anchor: new google.maps.Point(22,22), // anchor
+     rotation: 5
     }; 
     if (marker && marker.setMap) {
         marker.setMap(null);

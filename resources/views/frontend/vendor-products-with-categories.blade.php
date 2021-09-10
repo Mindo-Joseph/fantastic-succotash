@@ -106,7 +106,7 @@
                            <div class="radius-bar w-100">
                               <div class="search_form d-flex align-items-center justify-content-between">
                                  <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                 <input class="form-control border-0 typeahead" type="search" placeholder="{{__('Search')}}" id="main_search_box">
+                                 <input class="form-control border-0 typeahead" type="search" placeholder="{{__('Search')}}" id="vendor_search_box">
                               </div>
                               <div class="list-box style-4" style="display:none;" id="search_box_main_div">
                               </div>
@@ -152,7 +152,7 @@
                   <div class="col-md-8"></div>
                   <div class="col-12">
                     <hr>
-                    <div class="row">
+                    <div class="row vendor-products-wrapper">
                         <div class="col-sm-4 col-lg-3 border-right">
                             <nav class="scrollspy-menu">
                                 <ul>
@@ -327,118 +327,6 @@
                                         <span>£ 10.50</span>
                                     </div> -->
                                     
-                                    <script type="text/template" id="header_cart_template_ondemand">
-                                        <ul class="p-2">
-                                        <% _.each(cart_details.products, function(product, key){%>
-                                            <li>
-                                                <h6 class="d-flex align-items-center justify-content-between"><b> <%= product.vendor.name %> </b></h6>
-                                            </li>
-
-                                            <% if( (product.isDeliverable != undefined) && (product.isDeliverable == 0) ) { %>
-                                                <li class="border_0">
-                                                    <th colspan="7">
-                                                        <div class="text-danger">
-                                                            Products for this vendor are not deliverable at your area. Please change address or remove product.
-                                                        </div>
-                                                    </th>
-                                                </li>
-                                                <% } %>
-                                            <% _.each(product.vendor_products, function(vendor_product, vp){%>  
-                                                <li class="p-0" id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
-                                                    <div class='media-body'>                                                                
-                                                        <h6 class="d-flex align-items-center justify-content-between">
-                                                            <span class="ellips"><%= vendor_product.quantity %>x <%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></span>
-                                                            <span>
-                                                                {{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %>
-                                                                <a  class="action-icon ml-1 remove_product_via_cart" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
-                                                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </span>
-                                                        </h6>
-                                                    </div>
-                                                </li>
-
-                                                <% if(vendor_product.addon.length != 0) { %>
-                                                    <div class="row align-items-md-center">
-                                                        <div class="col-12">
-                                                            <h6 class="m-0 pl-0"><b>{{__('Add Ons')}}</b></h6>
-                                                        </div>
-                                                    </div>
-                                                    <% _.each(vendor_product.addon, function(addon, ad){%>
-                                                    <div class="row">
-                                                        <div class="col-md-6 col-sm-4 items-details text-left">
-                                                            <p class="p-0 m-0 font-14"><%= vendor_product.quantity %>x <%= addon.option.title %></p>
-                                                        </div>
-                                                        <div class="col-md-3 col-sm-4 text-center">
-                                                            <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= addon.option.price_in_cart %></div>
-                                                        </div>
-                                                        <div class="col-md-3 col-sm-4 text-right">
-                                                            <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= addon.option.quantity_price %></div>
-                                                        </div>
-                                                    </div>
-                                                    <% }); %>
-                                                <% } %>
-                                                <hr class="my-2">
-                                                    
-
-                                            <% }); %>
-                                        <% }); %>
-
-                                        <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('PRICE DETAILS')}} </h5>
-                                        <li class="p-0">
-                                            <div class='media-body'>                                                                
-                                                <h6 class="d-flex align-items-center justify-content-between">
-                                                    <span class="ellips">{{__('Price')}}</span>
-                                                    <span>{{Session::get('currencySymbol')}}<%= cart_details.gross_amount %></span>
-                                                </h6>
-                                            </div>
-                                        </li>
-
-                                        <li class="p-0">
-                                            <div class='media-body'>                                                                
-                                                <h6 class="d-flex align-items-center justify-content-between">
-                                                    <span class="ellips">{{__('Tax')}}</span>
-                                                    <span>{{Session::get('currencySymbol')}}<%= cart_details.total_taxable_amount %></span>
-                                                </h6>
-                                            </div>
-                                        </li>
-
-                                        <% if(cart_details.loyalty_amount > 0) { %>
-                                        <li class="p-0">
-                                            <div class='media-body'>                                                                
-                                                <h6 class="d-flex align-items-center justify-content-between">
-                                                    <span class="ellips">{{__('Loyalty Amount')}} </span>
-                                                    <span>{{Session::get('currencySymbol')}}<%= cart_details.loyalty_amount %></span>
-                                                </h6>
-                                            </div>
-                                        </li>
-                                        <% } %>
-
-                                        <% if(cart_details.wallet_amount_used > 0) { %>
-                                        <li class="p-0">
-                                            <div class='media-body'>                                                                
-                                                <h6 class="d-flex align-items-center justify-content-between">
-                                                    <span class="ellips">{{__('Wallet Amount')}} </span>
-                                                    <span>{{Session::get('currencySymbol')}}<%= cart_details.wallet_amount_used %></span>
-                                                </h6>
-                                            </div>
-                                        </li>
-                                        <% } %>
-                                        </ul>
-                                        <div class="cart-sub-total d-flex align-items-center justify-content-between">
-                                            <span>{{__('Total')}}</span>
-                                            <span>{{Session::get('currencySymbol')}}<%= cart_details.total_payable_amount %></span>
-                                        </div>
-                                        <a class="checkout-btn text-center d-block" href="{{route('showCart')}}">Checkout</a>
-                                    </script>
-                                    <script type="text/template" id="empty_cart_template">
-                                        <div class="row">
-                                            <div class="col-12 text-center pb-3">
-                                                <img class="w-50 pt-3 pb-1" src="{{ asset('front-assets/images/ic_emptycart.svg') }}" alt="">
-                                                <h5>Your cart is empty<br/>Add an item to begin</h5>
-                                            </div>
-                                        </div>
-                                    </script>
                                     <div class="show-div shopping-cart flex-fill" id="header_cart_main_ul_ondemand"></div>
                                 </div>
                             </div>
@@ -452,6 +340,127 @@
       </div>
    </div>
 </section>
+<script type="text/template" id="header_cart_template_ondemand">
+    <ul class="pl-2 pr-2 pb-2 pt-0">
+    <% _.each(cart_details.products, function(product, key){%>
+        <li class="p-0">
+            <h6 class="d-flex justify-content-center badge badge-light font-14"><b><%= product.vendor.name %></b></h6>
+        </li>
+
+        <% if( (product.isDeliverable != undefined) && (product.isDeliverable == 0) ) { %>
+            <li class="border_0">
+                <th colspan="7">
+                    <div class="text-danger">
+                        Products for this vendor are not deliverable at your area. Please change address or remove product.
+                    </div>
+                </th>
+            </li>
+            <% } %>
+        <% _.each(product.vendor_products, function(vendor_product, vp){%>  
+            <li class="p-0" id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
+                <div class='media-body'>                                                                
+                    <h6 class="d-flex align-items-center justify-content-between">
+                        <span class="ellips"><%= vendor_product.quantity %>x <%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></span>
+                        <span>
+                            <a class="action-icon mr-2 remove_product_via_cart text-danger" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </a>
+                            {{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %>
+                        </span>
+                    </h6>
+                </div>
+            </li>
+
+            <% if(vendor_product.addon.length != 0) { %>
+                <div class="row align-items-md-center">
+                    <div class="col-12">
+                        <h6 class="m-0 pl-0"><b>{{__('Add Ons')}}</b></h6>
+                    </div>
+                </div>
+                <% _.each(vendor_product.addon, function(addon, ad){%>
+                <div class="row mb-1">
+                    <div class="col-md-6 col-sm-4 items-details text-left">
+                        <p class="p-0 m-0 font-14"><%= vendor_product.quantity %>x <%= addon.option.title %></p>
+                    </div>
+                    <div class="col-md-3 col-sm-4 text-center">
+                        <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= addon.option.price_in_cart %></div>
+                    </div>
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= addon.option.quantity_price %></div>
+                    </div>
+                </div>
+                <% }); %>
+            <% } %>
+
+        <% }); %>
+        <% if(product.delivery_fee_charges > 0) { %>
+            <div class="row justify-content-between">
+                <div class="col-md-6 col-sm-6 text-left">
+                    <h6 class="p-0 m-0 font-14"><b>{{__('Delivery fee')}}</b></h6>
+                </div>
+                <div class="col-md-3 col-sm-6 text-right">
+                    <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= product.delivery_fee_charges %></div>
+                </div>
+            </div>
+        <% } %>
+        <hr class="my-2">
+    <% }); %>
+
+    <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('PRICE DETAILS')}} </h5>
+    <li class="p-0">
+        <div class='media-body'>                                                                
+            <h6 class="d-flex align-items-center justify-content-between">
+                <span class="ellips">{{__('Price')}}</span>
+                <span>{{Session::get('currencySymbol')}}<%= cart_details.gross_amount %></span>
+            </h6>
+        </div>
+    </li>
+
+    <li class="p-0">
+        <div class='media-body'>                                                                
+            <h6 class="d-flex align-items-center justify-content-between">
+                <span class="ellips">{{__('Tax')}}</span>
+                <span>{{Session::get('currencySymbol')}}<%= cart_details.total_taxable_amount %></span>
+            </h6>
+        </div>
+    </li>
+
+    <% if(cart_details.loyalty_amount > 0) { %>
+    <li class="p-0">
+        <div class='media-body'>                                                                
+            <h6 class="d-flex align-items-center justify-content-between">
+                <span class="ellips">{{__('Loyalty Amount')}} </span>
+                <span>{{Session::get('currencySymbol')}}<%= cart_details.loyalty_amount %></span>
+            </h6>
+        </div>
+    </li>
+    <% } %>
+
+    <% if(cart_details.wallet_amount_used > 0) { %>
+    <li class="p-0">
+        <div class='media-body'>                                                                
+            <h6 class="d-flex align-items-center justify-content-between">
+                <span class="ellips">{{__('Wallet Amount')}} </span>
+                <span>{{Session::get('currencySymbol')}}<%= cart_details.wallet_amount_used %></span>
+            </h6>
+        </div>
+    </li>
+    <% } %>
+    </ul>
+    <div class="cart-sub-total d-flex align-items-center justify-content-between">
+        <span>{{__('Total')}}</span>
+        <span>{{Session::get('currencySymbol')}}<%= cart_details.total_payable_amount %></span>
+    </div>
+    <a class="checkout-btn text-center d-block" href="{{route('showCart')}}">Checkout</a>
+</script>
+<script type="text/template" id="empty_cart_template">
+    <div class="row">
+        <div class="col-12 text-center pb-3">
+            <img class="w-50 pt-3 pb-1" src="{{ asset('front-assets/images/ic_emptycart.svg') }}" alt="">
+            <h5>Your cart is empty<br/>Add an item to begin</h5>
+        </div>
+    </div>
+</script>
 <script type="text/template" id="variant_image_template">
     <img src="<%= media.image_fit %>300/300<%= media.image_path %>" alt="">
 </script>
@@ -648,6 +657,7 @@
     var update_cart_schedule = "{{route('cart.updateSchedule')}}";
     var showCart = "{{route('showCart')}}";
     var update_addons_in_cart = "{{route('addToCartAddons')}}";
+    var vendor_products_page_search_url = "{{ route('vendorProductsSearchResults') }}";
     var addonids = [];
     var addonoptids = [];
     var ajaxCall = 'ToCancelPrevReq';
@@ -712,6 +722,32 @@
             },
         });
     });
+
+    $("#vendor_search_box").keyup(function () {
+        let keyword = $(this).val();
+        vendorProductsSearchResults(keyword);
+    });
+    function vendorProductsSearchResults(keyword){
+        // if (keyword.length <= 2) {
+        //     $('#search_box_main_div').html('').hide();
+        // }
+        if (keyword.length > 2 || keyword.length == 0) {
+            $.ajax({
+                type: "post",
+                dataType: 'json',
+                url: vendor_products_page_search_url,
+                data: { keyword: keyword, vendor: "{{$vendor->id}}" },
+                success: function (response) {
+                    if (response.status == 'Success') {
+                        var cart_html = $('.vendor-products-wrapper #header_cart_main_ul_ondemand').html();
+                        $('.vendor-products-wrapper').html(response.html);
+                        $('.vendor-products-wrapper #header_cart_main_ul_ondemand').html(cart_html);
+                        // cartHeader();
+                    }
+                }
+            });
+        }
+    }
    
 </script>
 @endsection
