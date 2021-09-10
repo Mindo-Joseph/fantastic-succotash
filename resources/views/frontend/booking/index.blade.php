@@ -205,7 +205,7 @@ if (strpos($url,'cabservice') !== false) {?>
                 <div class="coupon_box d-flex w-100 py-2 align-items-center justify-content-between">
                     <label class="mb-0 ml-1">   
                         <img src="{{asset('assets/images/discount_icon.svg')}}">
-                        <span class="code-text">Select a promo code</span>
+                        <span class="code-text">{{__('Select a promo code')}}</span>
                     </label>
                     <a href="javascript:void(0)" class="ml-1" data-product_id="<%= result.id %>"  data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" id="promo_code_list_btn_cab_booking">Apply</a>
                     <a class="remove-coupon" href="javascript:void(0)" id="remove_promo_code_cab_booking_btn" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" style="display:none;">Remove</a>

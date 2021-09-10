@@ -196,6 +196,9 @@
             </div>
         </script>
 
+      
+       
+
         <div class="cab-detail-box style-4 d-none" id="cab_detail_box"></div>
         <div class="promo-box style-4 d-none">
             <a class="d-block mt-2 close-promo-code-detail-box" href="javascript:void(0)">✕</a>
@@ -203,12 +206,44 @@
                 
             </div>    
         </div>
+
+        <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0" style="display:none !important;" id="rating_of_cab">
+            @foreach($vendor->products as $product)
+                @if($vendor->vendor_id == $product->vendor_id)
+                @php
+                $pro_rating = $product->productRating->rating??0;
+            @endphp
+            <li class="text-center">
+                <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
+                 <label class="rating-star add_edit_review" data-id="{{$product->productRating->id??0}}"  data-dispatch_order_id ='' data-order_vendor_product_id="{{$product->id??0}}">
+                    <i class="fa fa-star{{ $pro_rating >= 1 ? '' : '-o' }}" ></i>
+                    <i class="fa fa-star{{ $pro_rating >= 2 ? '' : '-o' }}" ></i>
+                    <i class="fa fa-star{{ $pro_rating >= 3 ? '' : '-o' }}" ></i>
+                    <i class="fa fa-star{{ $pro_rating >= 4 ? '' : '-o' }}" ></i>
+                    <i class="fa fa-star{{ $pro_rating >= 5 ? '' : '-o' }}" ></i>
+                </label>
+                 @endif
+            @endforeach
+        </ul>
+
     </div>
 
 
    
 </section>
-
+<div class="modal fade product-rating" id="product_rating" tabindex="-1" aria-labelledby="product_ratingLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div id="review-rating-form-modal">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @section('script')
@@ -236,5 +271,19 @@ var location_icon = "{{asset("demo/images/location.png")}}";
 $(document).ready(function (){
     setOrderDetailsPage();
 });
+
+$('body').on('click', '.add_edit_review', function (event) {
+        event.preventDefault();
+        var id = $(this).data('id');
+        var order_vendor_product_id = $(this).data('order_vendor_product_id');
+        $.get('/rating/get-product-rating?id=' + id +'&order_vendor_product_id=' + order_vendor_product_id, function(markup)
+        {
+            $('#product_rating').modal('show'); 
+            $('#review-rating-form-modal').html(markup);
+            $('#review-upload-form').append('<br/><input type="hiden" name="rating_for_dispatch" value=""> ');
+           
+        });
+    });
+
 </script>
 @endsection

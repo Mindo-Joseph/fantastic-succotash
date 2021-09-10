@@ -332,7 +332,7 @@ $(document).ready(function () {
                         }else{
                             $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
                         }
-                        $('.cab-booking-main-loader').hide();
+                       // $('.cab-booking-main-loader').hide();
                     }
                 }
             });
@@ -378,6 +378,7 @@ $(document).ready(function () {
         });
     });
     $(document).on("click","#promo_code_list_btn_cab_booking",function() {
+        
         let amount = $(this).data('amount');
         let vendor_id = $(this).data('vendor_id');
         let product_id = $(this).data('product_id');
@@ -459,6 +460,7 @@ $(document).ready(function () {
         $('.address-form').removeClass('d-none');
     });
     $(document).on("click",".vehical-view-box",function() {
+        $('.cab-booking-main-loader').show();
         var locations = [];
         let product_id = $(this).data('product_id');
         var pickup_location_latitude = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
@@ -485,6 +487,7 @@ $(document).ready(function () {
             success: function(response) {
                 if(response.status == 'Success'){
                     $('#cab_detail_box').html('');
+                    $('.cab-booking-main-loader').hide();
                     if(response.data.length != 0){
                         $('.address-form').addClass('d-none');
                         $('.cab-detail-box').removeClass('d-none');
