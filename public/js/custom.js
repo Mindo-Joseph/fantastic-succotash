@@ -555,31 +555,40 @@ $(document).ready(function () {
             data: { task_type: task_type, schedule_dt: schedule_dt },
             success: function (response) {
                 if (response.status == "Success") {
-                    $.ajax({
-                        data: {},
-                        type: "POST",
-                        dataType: 'json',
-                        url: payment_option_list_url,
-                        success: function (response) {
-                            if (response.status == "Success") {
-                                // $('#v_pills_tab').html('');
-                                $('#v_pills_tabContent').html('');
-                                // let payment_method_template = _.template($('#payment_method_template').html());
-                                // $("#v_pills_tab").append(payment_method_template({ payment_options: response.data }));
-                                let payment_method_tab_pane_template = _.template($('#payment_method_tab_pane_template').html());
-                                $("#v_pills_tabContent").append(payment_method_tab_pane_template({ payment_options: response.data }));
-                                $('#proceed_to_pay_modal').modal('show');
-                                $('#proceed_to_pay_modal #total_amt').html($('#cart_total_payable_amount').html());
-                                stripeInitialize();
+
+                    let cartAmount = $("input[name='cart_total_payable_amount']").val();
+                    let tip = $("#cart_tip_amount").val();
+                    if ( cartAmount == 0 ) {
+                        placeOrder(address, 1, '', tip);
+                        return false;
+                    }
+                    else{
+                        $.ajax({
+                            data: {},
+                            type: "POST",
+                            dataType: 'json',
+                            url: payment_option_list_url,
+                            success: function (response) {
+                                if (response.status == "Success") {
+                                    // $('#v_pills_tab').html('');
+                                    $('#v_pills_tabContent').html('');
+                                    // let payment_method_template = _.template($('#payment_method_template').html());
+                                    // $("#v_pills_tab").append(payment_method_template({ payment_options: response.data }));
+                                    let payment_method_tab_pane_template = _.template($('#payment_method_tab_pane_template').html());
+                                    $("#v_pills_tabContent").append(payment_method_tab_pane_template({ payment_options: response.data }));
+                                    $('#proceed_to_pay_modal').modal('show');
+                                    $('#proceed_to_pay_modal #total_amt').html($('#cart_total_payable_amount').html());
+                                    stripeInitialize();
+                                }
+                            }, error: function (error) {
+                                var response = $.parseJSON(error.responseText);
+                                let error_messages = response.message;
+                                $.each(error_messages, function (key, error_message) {
+                                    $('#min_order_validation_error_' + error_message.vendor_id).html(error_message.message).show();
+                                });
                             }
-                        }, error: function (error) {
-                            var response = $.parseJSON(error.responseText);
-                            let error_messages = response.message;
-                            $.each(error_messages, function (key, error_message) {
-                                $('#min_order_validation_error_' + error_message.vendor_id).html(error_message.message).show();
-                            });
-                        }
-                    });
+                        });
+                    }
                 }
             },
             error: function (error) {
@@ -836,7 +845,7 @@ $(document).ready(function () {
                     socket.emit("createOrder", response.data );
                     setTimeout(function(){
                         window.location.href = `${base_url}/order/success/${response.data.id}`;
-                    },1000)
+                    },2000)
                 } else {
                     if ($(".cart_response").length > 0) {
                         $(".cart_response").removeClass("d-none");
@@ -1547,9 +1556,12 @@ $(document).ready(function () {
                 cartHeader();
             },
             complete: function (data) {
-                if ($(this).find(".fa-spinner fa-pulse").length > 0) {
-                    $(".product_variant_quantity_wrapper .fa").removeAttr("class").addClass("fa fa-minus");
-                    $(".product_variant_quantity_wrapper .fa").removeAttr("class").addClass("fa fa-plus");
+                if ($(iconElem).find(".fa-spinner.fa-pulse").length > 0) {
+                    if($(iconElem).hasClass('qty-plus-product')){
+                        $(iconElem).find(".fa").removeAttr("class").addClass("fa fa-plus");
+                    }else{
+                        $(iconElem).find(".fa").removeAttr("class").addClass("fa fa-minus");
+                    }                    
                 }
             }
         });
