@@ -697,10 +697,15 @@ class OrderController extends FrontController
                 ]);
             }
             $order = $order->with(['paymentOption', 'user_vendor'])->where('order_number', $order->order_number)->first();
-            $order->admins = User::select('id')->where(function($query){
+            $user_admins = User::where(function($query){
                 $query->where(['is_admin' => 1])
                 ->orWhere(['is_superadmin' => 1]);
-            })->get();
+            })->pluck('id')->toArray();
+            $user_vendors = [];
+            if(!empty($order->user_vendor) && count($order->user_vendor) > 0){
+                $user_vendors = $order->user_vendor->pluck('user_id')->toArray();
+            }
+            $order->admins = array_unique(array_merge($user_admins, $user_vendors));
             DB::commit();
             return $this->successResponse($order);
         } catch (Exception $e) {

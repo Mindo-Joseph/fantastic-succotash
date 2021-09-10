@@ -20,13 +20,9 @@ io.on('connection', (socket) => {
     socket.on('createOrder', (orderData) => {
         console.log("order created");
         console.log(orderData);
-        (orderData.user_vendor).forEach(element => {
-            io.sockets.emit('createOrderByCustomer_'+socket.handshake.query.subdomain+"_"+element.user_id, orderData);
-        });
         (orderData.admins).forEach(element => {
-            io.sockets.emit('createOrderByCustomer_'+socket.handshake.query.subdomain+"_"+element.id, orderData);
+            io.sockets.emit('createOrderByCustomer_'+socket.handshake.query.subdomain+"_"+element, orderData);
         });
-        // io.sockets.emit('createOrderByCustomer', orderData);
     });
     
     socket.on('disconnect', () => {
