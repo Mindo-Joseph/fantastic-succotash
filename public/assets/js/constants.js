@@ -1,3 +1,3 @@
 var constants = {
-    socket_domain : window.location.host+":"+3100
+    socket_domain : "socket.alerthire.com"
 }
