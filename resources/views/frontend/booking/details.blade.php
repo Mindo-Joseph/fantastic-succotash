@@ -280,7 +280,7 @@ $('body').on('click', '.add_edit_review', function (event) {
         {
             $('#product_rating').modal('show'); 
             $('#review-rating-form-modal').html(markup);
-            $('#review-upload-form').append('<br/><input type="hiden" name="rating_for_dispatch" value=""> ');
+            $('#review-upload-form').append('<input type="hidden" name="rating_for_dispatch" value="1">');
            
         });
     });
