@@ -1553,65 +1553,83 @@ $(document).ready(function () {
     // add to cart on new page
     function addToCartProductsAddons(that, quantity=1) {
         var isAddonSection = false;
+        var breakOut = false;
         if(that.hasClass('add_vendor_addon_product')){
             isAddonSection = true;
-        }
-        var ajaxCall = 'ToCancelPrevReq';
-        var vendor_id = that.data("vendor_id");
-        var product_id = that.data("product_id");
-        var add_to_cart_url = that.data("add_to_cart_url");
-        var variant_id = that.data("variant_id");
-        var show_plus_minus = "#show_plus_minus" + product_id;
-        $.ajax({
-            type: "post",
-            dataType: "json",
-            url: add_to_cart_url,
-            data: {
-                "addonID": addonids,
-                "vendor_id": vendor_id,
-                "product_id": product_id,
-                "addonoptID": addonoptids,
-                "quantity": quantity,
-                "variant_id": variant_id,
-            },
-            success: function (response) {
-                if (response.status == 'success') {
-                    $(".shake-effect").effect("shake", { times: 3 }, 1200);
-                    cartHeader();
-                    if(isAddonSection){
-                        that.parents('.modal').modal('hide');
-                        window.location.reload();
-                    }
-                    else{
-                        $(that).next().show();
-                        $(that).next().find('.minus').attr('data-id', response.cart_product_id);
-                        $(that).next().find('.plus').attr('data-id', response.cart_product_id);
-                        $(that).next().find('.input_qty').attr('id', "quantity_ondemand_" + response.cart_product_id);
-                        $(that).next().find('.qty-minus-ondemand').attr('data-parent_div_id', "show_plus_minus" + response.cart_product_id);
-                        $(that).next().attr('id', "show_plus_minus" + response.cart_product_id);
-
-                        $(that).attr('id', "add_button_href" + response.cart_product_id);
-                        $(that).hide();
-                        $(that).next().show();
-
-                        let parentdiv = $(that).parents('.classes_wrapper');
-                        let addons_div = parentdiv.find('.addons-div');
-                        if(addonoptids.length >= 0){
-
-                            let addons_div = parentdiv.find('.addons-div');
-                            addons_div.hide();
-                        }
-                    }
-                } else {
-                    alert(response.message);
+            that.parents('.modal').find( ".productAddonSetOptions" ).each(function( index ) {
+                var min_select = $(this).attr("data-min");
+                var max_select = $(this).attr("data-max");
+                var addon_set_title = $(this).attr("data-addonset-title");
+                if( (min_select > 0) && ($(this).find(".product_addon_option:checked").length < min_select) ){
+                    alert("Minimum "+min_select+" "+addon_set_title+" required");
+                    breakOut = true;
+                    return false;
                 }
-            },
-            error: function (error) {
-                var response = $.parseJSON(error.responseText);
-                let error_messages = response.message;
-                alert(error_messages);
-            },
-        });
+                if( (max_select > 0) && ($(this).find(".product_addon_option:checked").length > max_select) ){
+                    alert("You can select maximum "+max_select+" "+addon_set_title);
+                    breakOut = true;
+                    return false;
+                }
+            });
+        }
+        if(!breakOut){
+            var ajaxCall = 'ToCancelPrevReq';
+            var vendor_id = that.data("vendor_id");
+            var product_id = that.data("product_id");
+            var add_to_cart_url = that.data("add_to_cart_url");
+            var variant_id = that.data("variant_id");
+            var show_plus_minus = "#show_plus_minus" + product_id;
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: add_to_cart_url,
+                data: {
+                    "addonID": addonids,
+                    "vendor_id": vendor_id,
+                    "product_id": product_id,
+                    "addonoptID": addonoptids,
+                    "quantity": quantity,
+                    "variant_id": variant_id,
+                },
+                success: function (response) {
+                    if (response.status == 'success') {
+                        $(".shake-effect").effect("shake", { times: 3 }, 1200);
+                        cartHeader();
+                        if(isAddonSection){
+                            that.parents('.modal').modal('hide');
+                            window.location.reload();
+                        }
+                        else{
+                            $(that).next().show();
+                            $(that).next().find('.minus').attr('data-id', response.cart_product_id);
+                            $(that).next().find('.plus').attr('data-id', response.cart_product_id);
+                            $(that).next().find('.input_qty').attr('id', "quantity_ondemand_" + response.cart_product_id);
+                            $(that).next().find('.qty-minus-ondemand').attr('data-parent_div_id', "show_plus_minus" + response.cart_product_id);
+                            $(that).next().attr('id', "show_plus_minus" + response.cart_product_id);
+
+                            $(that).attr('id', "add_button_href" + response.cart_product_id);
+                            $(that).hide();
+                            $(that).next().show();
+
+                            let parentdiv = $(that).parents('.classes_wrapper');
+                            let addons_div = parentdiv.find('.addons-div');
+                            if(addonoptids.length >= 0){
+
+                                let addons_div = parentdiv.find('.addons-div');
+                                addons_div.hide();
+                            }
+                        }
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function (error) {
+                    var response = $.parseJSON(error.responseText);
+                    let error_messages = response.message;
+                    alert(error_messages);
+                },
+            });
+        }
     }
     
     // ********************************************* End vendor product new page ************************************** //

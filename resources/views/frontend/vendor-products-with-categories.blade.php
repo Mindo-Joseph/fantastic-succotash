@@ -359,14 +359,14 @@
         <% _.each(product.vendor_products, function(vendor_product, vp){%>  
             <li class="p-0" id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
                 <div class='media-body'>                                                                
-                    <h6 class="d-flex align-items-center justify-content-between">
-                        <span class="ellips"><%= vendor_product.quantity %>x <%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></span>
-                        <span>
-                            <a class="action-icon mr-2 remove_product_via_cart text-danger" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
+                    <h6 class="d-flex align-items-center justify-content-between m-0">
+                        <span class="ellips">
+                            <a class="action-icon remove_product_via_cart text-danger" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </a>
-                            {{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %>
+                            <%= vendor_product.quantity %>x <%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %>
                         </span>
+                        <span>{{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %></span>
                     </h6>
                 </div>
             </li>
@@ -374,13 +374,13 @@
             <% if(vendor_product.addon.length != 0) { %>
                 <div class="row align-items-md-center">
                     <div class="col-12">
-                        <h6 class="m-0 pl-0"><b>{{__('Add Ons')}}</b></h6>
+                        <h6 class="m-0 pl-3 font-12"><b>{{__('Add Ons')}}</b></h6>
                     </div>
                 </div>
                 <% _.each(vendor_product.addon, function(addon, ad){%>
                 <div class="row mb-1">
                     <div class="col-md-6 col-sm-4 items-details text-left">
-                        <p class="p-0 m-0 font-14"><%= vendor_product.quantity %>x <%= addon.option.title %></p>
+                        <p class="pl-3 m-0 font-14"><%= vendor_product.quantity %>x <%= addon.option.title %></p>
                     </div>
                     <div class="col-md-3 col-sm-4 text-center">
                         <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= addon.option.price_in_cart %></div>
@@ -396,7 +396,7 @@
         <% if(product.delivery_fee_charges > 0) { %>
             <div class="row justify-content-between">
                 <div class="col-md-6 col-sm-6 text-left">
-                    <h6 class="p-0 m-0 font-14"><b>{{__('Delivery fee')}}</b></h6>
+                    <h6 class="pl-3 m-0 font-14"><b>{{__('Delivery fee')}}</b></h6>
                 </div>
                 <div class="col-md-3 col-sm-6 text-right">
                     <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= product.delivery_fee_charges %></div>
@@ -527,8 +527,25 @@
             <% _.each(addOnData.add_on, function(addon, key1){ %>
                 <div class="border-product border-top">
                     <div class="addon-product" style="padding: 16px;">
-                        <h4 addon_id="<%= addon.addon_id %>" class="header-title productAddonSet mb-2"><%= addon.title %></h4>
-                        <div class="addonSetMinMax"><small></small></div>
+                        <h4 addon_id="<%= addon.addon_id %>" class="header-title productAddonSet mb-0"><%= addon.title %></h4>
+                        <div class="addonSetMinMax mb-2">
+                            <%
+                                var min_select = '';
+                                if(addon.min_select > 0){
+                                    min_select = 'Minimun ' + addon.min_select;
+                                }
+                                var max_select = '';
+                                if(addon.max_select > 0){
+                                    max_select = 'Maximum ' + addon.max_select;
+                                }
+                                if( (min_select != '') && (max_select != '') ){
+                                    min_select = min_select + ' and ';
+                                }
+                            %>
+                            <% if( (min_select != '') || (max_select != '') ) { %>
+                                <small><%=min_select + max_select %> Selections allowed</small>
+                            <% } %>
+                        </div>
                         <div class="productAddonSetOptions" data-min="<%= addon.min_select %>" data-max="<%= addon.max_select %>" data-addonset-title="<%= addon.title %>">
                             <% _.each(addon.setoptions, function(option, key2){ %>
                                 <div class="checkbox-success d-flex mb-1">
