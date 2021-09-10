@@ -541,13 +541,26 @@ $(document).ready(function () {
 
     var enumerateDaysBetweenDates = function(startDate, endDate) {
         var now = startDate, dates = [];
-        $(".scheduled-ride-list").append('<button id="check-schedule-date-time" onclick="getScheduleDateTime(this)" disabled>Select</button>');
+        var i = 1;
         while (now.isSameOrBefore(endDate)) {
-            var scheduledDate = '<div class="form-check align-items-center" id="schedule-date-'+now.format('MMDDYYYY')+'"><input class="form-check-input" type="radio" onclick="appendScheduleTime(this)" name="scheduledDate" data-mdi="schedule-date-'+now.format('MMDDYYYY')+'" value="'+now.format('MM-DD-YYYY')+'"><label class="form-check-label" id="lable-schedule-date-'+now.format('MMDDYYYY')+'" for="">'+now.format('ddd, D MMM')+'</label></div>';
-            $(".scheduled-ride-list").append(scheduledDate);
+            i++;
+            if(now.format('MMDDYYYY') == moment().format('MMDDYYYY')){
+                var lableText = 'Today';
+            }else{
+                var lableText = now.format('ddd, D MMM');
+            }
+            var scheduledDate = '<div class="form-check radio check-active" id="schedule-date-'+now.format('MMDDYYYY')+'" ><input class="form-check-input" id="'+now.format('MMDDYYYY')+'" type="radio"'+ ((now.format('MMDDYYYY') == moment().format('MMDDYYYY')) ? 'checked': '') +' onclick="appendScheduleTime(this)" name="scheduledDate" data-mdi="schedule-date-'+now.format('MMDDYYYY')+'" value="'+now.format('MM-DD-YYYY')+'"><label class="radio-label" id="lable-schedule-date-'+now.format('MMDDYYYY')+'" for="'+now.format('MMDDYYYY')+'">'+lableText+'</label></div>';
+            $(".date-radio-list").append(scheduledDate);
+            if(now.format('MMDDYYYY') == moment().format('MMDDYYYY')){
+                $('.scheduled-ride-list').find('.scheduleTime').remove();
+                let scheduleTime_template = _.template($('#scheduleTime_template').html());
+                var mainDivId = 'schedule-date-'+now.format('MMDDYYYY');
+                $("#"+mainDivId).append(scheduleTime_template).show();
+            }
             now.add(1, 'days');
         }
-
+        
+        $(".scheduled-footer").append('<button id="check-schedule-date-time" onclick="getScheduleDateTime(this)" disabled>Select</button>');
     };
 
     
