@@ -13,6 +13,7 @@ use App\Http\Controllers\Client\Accounting\VendorController;
 use App\Http\Controllers\Client\Accounting\LoyaltyController;
 use App\Http\Controllers\Client\Accounting\PromoCodeController;
 use App\Http\Controllers\Client\VendorRegistrationDocumentController;
+use App\Http\Controllers\Client\DriverRegistrationDocumentController;
 
 Route::get('email-test', function(){
     $details['email'] = 'pankaj@yopmail.com';
@@ -103,6 +104,11 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('vendorregistrationdocument/create', [VendorRegistrationDocumentController::class, 'store'])->name('vendor.registration.document.create');
     Route::post('vendorregistrationdocument/update', [VendorRegistrationDocumentController::class, 'update'])->name('vendor.registration.document.update');
     Route::post('vendor/registration/document/delete', [VendorRegistrationDocumentController::class, 'destroy'])->name('vendor.registration.document.delete');
+    Route::resource('driverregistrationdocument', 'Client\DriverRegistrationDocumentController');
+    Route::get('driver/registration/document/edit', [DriverRegistrationDocumentController::class, 'show'])->name('driver.registration.document.edit');
+   Route::post('driverregistrationdocument/create', [DriverRegistrationDocumentController::class, 'store'])->name('driver.registration.document.create');
+   Route::post('driverregistrationdocument/update', [DriverRegistrationDocumentController::class, 'update'])->name('driver.registration.document.update');
+   Route::post('driver/registration/document/delete', [DriverRegistrationDocumentController::class, 'destroy'])->name('driver.registration.document.delete');
     Route::resource('tax', 'Client\TaxCategoryController');
     Route::resource('taxRate', 'Client\TaxRateController');
     Route::resource('addon', 'Client\AddonSetController');
