@@ -100,8 +100,10 @@ if (Session::has('toaster')) {
         }
     });
     socket.on('createOrderByCustomer_'+host_arr[0] + "_" + "{{ (!empty(Auth::user()))?Auth::user()->id:0 }}", (message) => {
-        var x = document.getElementById("orderAudio"); 
-        x.play();
+       
+        document.getElementById('orderAudio').muted = false;
+        document.getElementById('orderAudio').play();
+
         $.ajax({
             url: "{{ route('orders.filter') }}",
             type: "POST",

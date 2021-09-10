@@ -1,5 +1,5 @@
 <!-- Topbar Start -->
-<audio id="orderAudio">
+<audio id="orderAudio" muted>
   <source src="{{ asset('assets/sounds/notification.ogg')}}" type="audio/ogg">
   <source src="{{ asset('assets/sounds/notification.mp3')}}" type="audio/mpeg">
   Your browser does not support the audio element.
