@@ -3232,7 +3232,7 @@ img.h-45 {
     height: 42px;
 }
 
-.update_pic + .fa.fa-trash.local-img-del {
+.update_pic + .fa.fa-trash.local-img-del,.update_pic + .fa.fa-trash.server-img-del {
     position: absolute;
     top: 5px;
     right: 16px;
