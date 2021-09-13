@@ -513,6 +513,17 @@ ul.social-links li:last-child {
 }
 
 ul.social-links li a {
+    width: 55px;
+    height: 55px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 4px 7px 0 rgba(0, 0, 0, 0.05);
+    display: block;
+    line-height: 55px;
+    font-size: 26px;
+}
+
+footer ul.social-links li a {
     width: 40px;
     height: 40px;
     color: #fff;
@@ -563,7 +574,7 @@ ul.social-links li:active a {
     border-radius: 50%;
     text-align: center;
     display: block;
-    margin: -13px auto;
+    margin: -13px auto; 
     background: #fff;
 }
 
@@ -2726,7 +2737,7 @@ body .rating-form .btn-reset {
     width: 100%;
     display: inline-block;
     position: relative;
-    height: 170px;
+    height: 100px;
     border: 1px dashed #ddd;
 }
 
@@ -3508,9 +3519,33 @@ header .homepage-address h2 {
 }
 
 .taxi-img img {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
+}
+
+.taxi-img {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.driver-profile-box {
+    padding: 10px 0 10px 80px;
+}
+
+h4#driver_name {
+    margin: 0;
+}
+
+.product-rating-star li{
+    margin-left: 2px;
+}
+
+.product-rating-star i{
+    color: #fdcc0d;
+    font-size: 14px;
 }
 
 
@@ -3533,10 +3568,19 @@ header .homepage-address h2 {
 
 
 
-
-
-
 /* Website Dark Mood Css Start Form Here */
+.dark .cab-banner-area .card-box {
+    background: rgb(0 0 0 / 50%);
+}
+
+.dark section.royo-business .title-36 {
+    color: #000;
+}
+
+.dark .safety-content h3 {
+    color: #fff;
+}
+
 .dark .menu-navigation {
     background: #232323;
 }
@@ -3602,10 +3646,62 @@ header .homepage-address h2 {
 .dark .dashboard-left .block-content ul li.active a,
 .dark .dashboard-left .block-content ul li:hover a,
 .dark .top-header .header-dropdown .onhover-dropdown .onhover-show-div li:hover a,
-.dark .category-list li:hover a {
+.dark .category-list li:hover a,.dark .scrollspy-menu .active a {
     border-color: var(--theme-deafult);
     background: linear-gradient(90deg, rgb(85 68 69) 0%, rgba(251, 246, 247, 0) 92.47%);
 }
+
+
+
+.dark .product-bottom-bar .card-box {
+    background-color: rgb(0 0 0 / 50%);
+}
+
+.dark .scrollspy-menu a{
+    color: #fff;
+}
+
+.dark .category-head {
+    background: rgb(255 255 255 / 62%);
+    padding: 10px;
+    color: #000;
+}
+
+.dark .vendor-details-left h3{
+    color: #fff;
+}
+
+.dark .fixed-bar .category-head{
+    padding: 10px;
+}
+
+.dark .cart-box-outer .price_head h5 {
+    color: #fff;
+}
+
+.dark .categories-product-list .number input {
+    background: transparent;
+    color: #fff;
+    border-color: #fff;
+}
+
+.dark .categories-product-list .number {border-color: #fff;}
+
+.dark .categories-product-list .minus, .dark .categories-product-list .plus {
+    color: #fff;
+}
+.dark .add-cart-btn:not(.btn-solid) {
+    border-color: #fff;
+    background-color: transparent;
+}   
+.cart-box-outer .product_image {
+    background: #fff;
+}
+
+
+
+
+
 
 .dark .card-box {
     background-color: rgb(255 255 255 / 5%);
@@ -3698,8 +3794,9 @@ header .homepage-address h2 {
 }
 
 .location-container {
-    height: calc(100vh - 420px);
+    height: calc(100vh - 340px);
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .location-inputs .title-24 {
@@ -3980,6 +4077,10 @@ header .homepage-address h2 {
     top: 26px;
 }
 
+.location-inputs li.where-to-first::before {
+    content: none;
+}
+
 .location-inputs li:last-child::before {
     height: calc(100% - 13px);
 }
@@ -4013,7 +4114,7 @@ header .homepage-address h2 {
     /* transform: translateY(calc(-50% - 4px)); */
 }
 
-.location-inputs .dots:last-child::after {
+.location-inputs .dots:last-child::after,.location-inputs li.where-to-first::after {
     border-radius: 0;
 }
 
@@ -4043,6 +4144,10 @@ header .homepage-address h2 {
     transform: translateY(-50%);
     color: #fff;
     font-size: 20px;
+}
+
+.destination-icon {
+    display: none;
 }
 
 .location-inputs li .form-control {
@@ -4080,11 +4185,14 @@ form .location-box .form-control::placeholder {
     text-overflow: ellipsis;
 }
 
-.location-list {
+/* .location-list {
     overflow-y: auto;
     overflow-x: hidden;
     height: calc(100vh - 346px);
     padding: 0 0 20px;
+} */
+.location-list {
+    overflow-x: hidden;
 }
 
 .search-location-result {
@@ -4125,7 +4233,7 @@ a.vehical-view-box.row.no-gutters {
 .vehical-container {
     overflow-y: auto;
     overflow-x: hidden;
-    height: calc(100vh - 396px);
+    height: calc(100vh - 397px);
     padding: 0 0 20px;
 }
 
@@ -6324,7 +6432,9 @@ body[dir="rtl"] .inner_spacing h3 {
     .location-bar {
         width: 90%;
     }
-
+    .vehical-container,.location-container{
+        height: auto;
+    }
     .radius-bar {
         width: 61%;
     }
@@ -6382,7 +6492,17 @@ body[dir="rtl"] .inner_spacing h3 {
     }
 
     .booking-experience {
-        top: 284px;
+        top: calc(50% + 250px);
+        width: 100%;
+        height: 100vh;
+        position: absolute;
+        overflow-y: auto;
+    }
+
+    .cab-outer {
+        height: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .location-list,
@@ -6469,10 +6589,6 @@ body[dir="rtl"] .inner_spacing h3 {
     /* #proceed_to_pay_modal .modal-dialog, */
     .return-order .modal-dialog {
         max-width: 800px;
-    }
-
-    .product-rating .modal-dialog {
-        max-width: 1000px;
     }
 }
 

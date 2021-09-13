@@ -66,7 +66,7 @@
         <div class="col-12">
             <h4>Upload Images</h4>
         </div>
-        <div class="col-6 col-md-3 col-lg-2">
+        <div class="col-6 col-md-3">
             <div class="file file--upload">
                 <label for="input-file">
                     <span class="plus_icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
@@ -79,7 +79,7 @@
             <span class="row show-multiple-image-preview" id="thumb-output">
                 @if(isset($rating_details->reviewFiles))
                 @foreach ($rating_details->reviewFiles as $files)
-                    <img class="col-6 col-md-3 col-lg-2 update_pic" src="{{$files->file['proxy_url'].'300/300'.$files->file['image_path']}}">
+                    <img class="col-6 col-md-3 update_pic" src="{{$files->file['proxy_url'].'300/300'.$files->file['image_path']}}">
                     <i class="fa fa-trash server-img-del" aria-hidden="true" data-id={{$files->id}}></i>
                 @endforeach
                 @endif
