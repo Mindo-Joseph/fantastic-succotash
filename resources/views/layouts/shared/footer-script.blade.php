@@ -179,7 +179,7 @@ $(document).on("click", ".update_order_status", function() {
                     that.replaceWith("<button class='update-status btn-warning' data-full_div='" + full_div + "' data-single_div='" + single_div + "'  data-count='" + count + "'  data-order_id='" + order_id + "'  data-vendor_id='" + vendor_id + "'  data-status_option_id='" + status_option_id_next + "' data-order_vendor_id=" + order_vendor_id + ">" + next_status + "</button>");
                     return false;
                 } else {
-                    $(single_div).slideUp(1000, function() {
+                    $(that).parents(single_div).slideUp(1000, function() {
                         $(this).remove();
                     });
                     setTimeout(function(){

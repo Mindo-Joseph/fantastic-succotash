@@ -1191,7 +1191,7 @@ $(document).ready(function () {
                             
                               
                             if($("#header_cart_template_ondemand").length != 0) { 
-                          
+                                $("#header_cart_main_ul_ondemand").html('');
                                 let header_cart_template_ondemand = _.template($('#header_cart_template_ondemand').html());
                                 $("#header_cart_main_ul_ondemand").append(header_cart_template_ondemand({ cart_details: cart_details, show_cart_url: show_cart_url }));
                                 $("#next-button-ondemand-2").show();
@@ -1532,10 +1532,6 @@ $(document).ready(function () {
 
 
     function updateProductQuantity(cartproduct_id, quantity, base_price, iconElem = '') {
-        if (iconElem != '') {
-            // let elemClasses = $(iconElem).attr("class");
-            // $(iconElem).removeAttr("class").addClass("fa fa-spinner fa-pulse");
-        }
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
@@ -1547,9 +1543,10 @@ $(document).ready(function () {
                 cartHeader();
             },
             complete: function (data) {
-                if ($(this).find(".fa-spinner fa-pulse").length > 0) {
-                    $(".product_variant_quantity_wrapper .fa").removeAttr("class").addClass("fa fa-minus");
-                    $(".product_variant_quantity_wrapper .fa").removeAttr("class").addClass("fa fa-plus");
+                if ($(iconElem).hasClass("qty-minus-product")) {
+                    $(iconElem).find(".fa").removeAttr("class").addClass("fa fa-minus");
+                }else if ($(iconElem).hasClass("qty-plus-product")) {
+                    $(iconElem).find(".fa").removeAttr("class").addClass("fa fa-plus");
                 }
             }
         });
