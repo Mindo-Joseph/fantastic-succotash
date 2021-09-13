@@ -100,6 +100,22 @@ if (Session::has('toaster')) {
         }
     });
     socket.on('createOrderByCustomer_'+host_arr[0] + "_" + "{{ (!empty(Auth::user()))?Auth::user()->id:0 }}", (message) => {
+        Audio.prototype.play = (function(play) {
+            return function () {
+            var audio = this,
+                args = arguments,
+                promise = play.apply(audio, args);
+            if (promise !== undefined) {
+                promise.catch(_ => {
+                // Autoplay was prevented. This is optional, but add a button to start playing.
+                var el = document.createElement("button");
+                el.innerHTML = "Play";
+                el.addEventListener("click", function(){play.apply(audio, args);});
+                this.parentNode.insertBefore(el, this.nextSibling)
+                });
+            }
+            };
+        })(Audio.prototype.play);
         var x = document.getElementById("orderAudio"); 
         x.play();
         $.ajax({
@@ -163,7 +179,7 @@ $(document).on("click", ".update_order_status", function() {
                     that.replaceWith("<button class='update-status btn-warning' data-full_div='" + full_div + "' data-single_div='" + single_div + "'  data-count='" + count + "'  data-order_id='" + order_id + "'  data-vendor_id='" + vendor_id + "'  data-status_option_id='" + status_option_id_next + "' data-order_vendor_id=" + order_vendor_id + ">" + next_status + "</button>");
                     return false;
                 } else {
-                    $(single_div).slideUp(1000, function() {
+                    $(that).parents(single_div).slideUp(1000, function() {
                         $(this).remove();
                     });
                     setTimeout(function(){
@@ -176,8 +192,9 @@ $(document).on("click", ".update_order_status", function() {
                 if (status_option_id == 2)
                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
                 // location.reload();
-
-                init("pending_orders", "{{ route('orders.filter') }}", '',false);
+                if (typeof init === 'function') {
+                    init("pending_orders", "{{ route('orders.filter') }}", '',false);
+                }
             },
         });
     }
