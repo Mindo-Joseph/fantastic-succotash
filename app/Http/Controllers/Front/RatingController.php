@@ -68,7 +68,7 @@ class RatingController extends FrontController{
             if(isset($request->rating_for_dispatch) && !empty($request->rating_for_dispatch))
             {
                 $staus = $this->setRatingOnDispatch($request);
-                dd($staus);
+               
             }   
             
             if(isset($ratings)) {
