@@ -85,6 +85,7 @@ if (Session::has('toaster')) {
         $(element).waitMe("hide");
     }
 </script>
+@if(!str_contains(url()->current(), '/godpanel'))
 @if((!empty(Auth::user())))
 <script>
     $.ajaxSetup({
@@ -145,7 +146,6 @@ if (Session::has('toaster')) {
 </script>
 @endif
 <script>
-console.log('1');
 $(document).on("click", ".update_order_status", function() {
     if (confirm("Are you Sure?")) {
         let that = $(this);
@@ -200,4 +200,5 @@ $(document).on("click", ".update_order_status", function() {
     }
 });
 </script>
+@endif
 @yield('script-bottom')
