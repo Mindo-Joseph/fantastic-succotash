@@ -693,7 +693,16 @@ class OrderController extends FrontController
                     'balance_transaction' => $order->payable_amount,
                 ]);
             }
-            $order = $order->with('paymentOption')->where('order_number', $order->order_number)->first();
+            $order = $order->with(['paymentOption', 'user_vendor'])->where('order_number', $order->order_number)->first();
+            $user_admins = User::where(function($query){
+                $query->where(['is_admin' => 1])
+                ->orWhere(['is_superadmin' => 1]);
+            })->pluck('id')->toArray();
+            $user_vendors = [];
+            if(!empty($order->user_vendor) && count($order->user_vendor) > 0){
+                $user_vendors = $order->user_vendor->pluck('user_id')->toArray();
+            }
+            $order->admins = array_unique(array_merge($user_admins, $user_vendors));
             DB::commit();
             return $this->successResponse($order);
         } catch (Exception $e) {
@@ -842,7 +851,6 @@ class OrderController extends FrontController
             return $this->errorResponse('Invalid User', 402);
         }
     }
-
 
     # if vendor selected auto accepted order 
     public function autoAcceptOrderIfOn($order_id)

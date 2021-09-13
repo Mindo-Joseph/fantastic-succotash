@@ -378,7 +378,6 @@ $(document).ready(function () {
         });
     });
     $(document).on("click","#promo_code_list_btn_cab_booking",function() {
-        
         let amount = $(this).data('amount');
         let vendor_id = $(this).data('vendor_id');
         let product_id = $(this).data('product_id');

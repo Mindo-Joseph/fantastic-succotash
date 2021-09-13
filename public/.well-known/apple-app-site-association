@@ -3,9 +3,9 @@
       "apps":[],
       "details": [
            {
-             "appID": "7R445S22PK.com.codebrew.royoordersreactnative,
-                "paths":["*"]           
-            }
+             "appIDs": ["6FXUMT5X23.com.codebrew.royoordersreactnative","7R445S22PK.com.codebrew.royoordersreactnative",  "6FXUMT5X23.com.codiner"],
+              "paths":["*"] 
+           }
        ]
    }
 }
