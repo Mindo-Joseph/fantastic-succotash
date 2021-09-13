@@ -100,7 +100,7 @@ if (strpos($url,'cabservice') !== false) {?>
                     <input class="form-control pickup-text" name="destination_location_name[]" type="text" placeholder="{{__('Add A Stop')}}" id="destination_location"/>
                 </div>
                 <div class="location-search d-flex align-items-center" style="display:none !important;" id="destination_location_add_temp">
-                    <i class="fa fa-search" aria-hidden="true"></i>
+
                 </div>
                 <div class="scheduled-ride">
                     <button><i class="fa fa-clock-o" aria-hidden="true"></i> <span class="mx-2 scheduleDateTimeApnd">Now</span> <i class="fa fa-angle-down" aria-hidden="true"></i></button>
@@ -208,7 +208,7 @@ if (strpos($url,'cabservice') !== false) {?>
             <div class="cab-outer style-4">
                 <div class="bg-white p-2">
                     <a class="close-cab-detail-box" href="javascript:void()">✕</a>
-                    <div class="w-100 h-100">
+                    <div class="cab-image-box w-100 d-flex align-items-center justify-content-center">
                         <img src="<%= result.image_url %>">
                     </div>
                     <div class="cab-location-details">
@@ -318,13 +318,13 @@ if (strpos($url,'cabservice') !== false) {?>
         </script>
 
         <div class="cab-detail-box style-4 d-none" id="cab_detail_box"></div>
-        <div class="promo-box style-4 d-none">
-            <a class="d-block mt-2 close-promo-code-detail-box" href="javascript:void(0)">✕</a>
-            <div class="row" id="cab_booking_promo_code_list_main_div">
-                
-            </div>    
+            <div class="promo-box style-4 d-none">
+                <a class="d-block mt-2 close-promo-code-detail-box" href="javascript:void(0)">✕</a>
+                <div class="row" id="cab_booking_promo_code_list_main_div">
+                    
+                </div>    
+            </div>
         </div>
-    </div>
 
 
    

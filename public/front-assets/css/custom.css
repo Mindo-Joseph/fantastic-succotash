@@ -2173,9 +2173,9 @@ h3#productPriceValue {
     margin: 0;
 }
 
-.displayProducts .inner_spacing h4 {
+/* .displayProducts .inner_spacing h4{
     text-align: center;
-}
+} */
 
 .common_card .card:hover .btn-solid {
     background-position: 100%;
@@ -3984,8 +3984,9 @@ header .homepage-address h2 {
     height: calc(100% - 13px);
 }
 
-.w-100.h-100 img {
-    width: 100%;
+.cab-image-box {
+    height: 300px;
+
 }
 
 .cab-location-details h4+img {
@@ -5420,9 +5421,9 @@ html {
     cursor: pointer;
 }
 
-.inner_spacing h3.d-flex.align-items-center.justify-content-between {
+/* .inner_spacing h3.d-flex.align-items-center.justify-content-between {
     justify-content: center !important;
-}
+} */
 
 .other_cart_products .slick-track {
     margin: 0;
@@ -6294,7 +6295,7 @@ body[dir="rtl"] .inner_spacing h3 {
         height: calc(100vh - 150px);
         position: absolute;
         width: 400px;
-        top: 100px;
+        top: 120px;
     }
 
     .fh {
