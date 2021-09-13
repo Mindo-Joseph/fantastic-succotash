@@ -31,6 +31,9 @@ class DispatcherController extends FrontController
                 $dispatch_status = $request->dispatcher_status_option_id;
 
                     switch ($dispatch_status) {
+                        case 2:
+                            $request->status_option_id = 2;
+                            break;
                       case 3:
                         $request->status_option_id = 4;
                         break;
@@ -92,6 +95,9 @@ class DispatcherController extends FrontController
                 $dispatch_status = $request->dispatcher_status_option_id;
 
                 switch ($dispatch_status) {
+                  case 2:
+                        $request->status_option_id = 2;
+                        break;
                   case 3:
                     $request->status_option_id = 4;
                     break;
