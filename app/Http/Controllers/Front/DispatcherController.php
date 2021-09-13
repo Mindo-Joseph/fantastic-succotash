@@ -47,7 +47,7 @@ class DispatcherController extends FrontController
                         
                         $update_vendor = VendorOrderStatus::updateOrCreate([
                         'order_id' =>  $checkiftokenExist->order_id,
-                        'status_option_id' =>  $request->status_option_id,
+                        'order_status_option_id' =>  $request->status_option_id,
                         'vendor_id' =>  $checkiftokenExist->vendor_id,
                         'order_vendor_id' =>  $checkiftokenExist->id ]);   
 
@@ -108,7 +108,7 @@ class DispatcherController extends FrontController
                     
                     $update_vendor = VendorOrderStatus::updateOrCreate([
                     'order_id' =>  $checkiftokenExist->order_id,
-                    'status_option_id' =>  $request->status_option_id,
+                    'order_status_option_id' =>  $request->status_option_id,
                     'vendor_id' =>  $checkiftokenExist->vendor_id,
                     'order_vendor_id' =>  $checkiftokenExist->id ]);   
 
