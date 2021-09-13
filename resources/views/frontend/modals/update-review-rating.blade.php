@@ -75,12 +75,17 @@
             </div>
         </div>
 
-        <div class="col-10">
+        <div class="col-9">
             <span class="row show-multiple-image-preview" id="thumb-output">
                 @if(isset($rating_details->reviewFiles))
                 @foreach ($rating_details->reviewFiles as $files)
+<<<<<<< HEAD
                     <img class="col-6 col-md-3 update_pic" src="{{$files->file['proxy_url'].'300/300'.$files->file['image_path']}}">
                     <i class="fa fa-trash server-img-del" aria-hidden="true" data-id={{$files->id}}></i>
+=======
+                    <div class="col-6 col-md-4"><img class="update_pic" src="{{$files->file['proxy_url'].'300/300'.$files->file['image_path']}}">
+                    <i class="fa fa-trash server-img-del" aria-hidden="true" data-id={{$files->id}}></i></div>
+>>>>>>> b180b7b460f906b1630f98c2783b3987603f34c4
                 @endforeach
                 @endif
                 
@@ -146,8 +151,8 @@ for (i = 0; i < filesAmount; i++) {
 var reader = new FileReader();
 reader.onload = function(event) {
 var file = event.target;
-$("#thumb-output").append("<img class=\"col-6 col-md-3 col-lg-2 update_pic\" src=\"" + event.target.result + "\" title=\"" + file.name + "\"/>" +
-            "<i class='fa fa-trash local-img-del' aria-hidden='true' data-id='"+ i +"'></i>");
+$("#thumb-output").append("<div class='col-6 col-md-4'> <img class=\"update_pic\" src=\"" + event.target.result + "\" title=\"" + file.name + "\"/>" +
+            "<i class='fa fa-trash local-img-del' aria-hidden='true' data-id='"+ i +"'></i></div>");
 //$($.parseHTML('<img>')).addClass('col-6 col-md-3 col-lg-2 update_pic').attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
 }
 reader.readAsDataURL(input.files[i]);
@@ -180,7 +185,7 @@ let TotalImages = $('#input-file')[0].files.length; //Total Images
 let review = $('#exampleFormControlTextarea1').val();
 if(TotalImages > 0)
 {
-    
+   console.log(1); 
 let images = $('#input-file')[0];
 for (let i = 0; i < TotalImages; i++) {
 formData.append('images' + i, images.files[i]);
@@ -205,9 +210,9 @@ if(data.status == 'Success')
         $("#input-file").val('');
         for(var i = 0; i < data.data.length; i++) {
             console.log(data.data[i]['name']);
-            $("#remove_files").append("<input type='hidden' name='add_files[]' id='"+ data.data[i]['ids'] +"' = value='"+ data.data[i]['name'] +"'>");
-            $("#thumb-output").append("<img class=\"col-6 col-md-3 col-lg-2 update_pic\" src=\"" + data.data[i]['img_path'] + "\" />" +
-            "<i class='fa fa-trash local-img-del' aria-hidden='true' data-id='"+ data.data[i]['ids'] +"'></i>");
+            $("#remove_files").append("<input type='hidden' name='add_files[]' id='"+ data.data[i]['ids'] +"'  value='"+ data.data[i]['name'] +"'>");
+            $("#thumb-output").append("<div class='col-6 col-md-4'> <img class=\"update_pic\" src=\"" + data.data[i]['img_path'] + "\" />" +
+            "<i class='fa fa-trash local-img-del' aria-hidden='true' data-id='"+ data.data[i]['ids'] +"'></i></div>");
         }
 
         $("#review_form_button").html('Submit Your Review').prop('disabled', false);
@@ -224,6 +229,7 @@ error: function(data){
 }
 else
 {
+  
 $.ajax({
 type:'POST',
 url: "{{ route('update.order.rating')}}",
