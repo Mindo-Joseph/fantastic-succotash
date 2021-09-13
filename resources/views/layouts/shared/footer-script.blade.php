@@ -192,8 +192,9 @@ $(document).on("click", ".update_order_status", function() {
                 if (status_option_id == 2)
                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
                 // location.reload();
-
-                init("pending_orders", "{{ route('orders.filter') }}", '',false);
+                if (typeof init === 'function') {
+                    init("pending_orders", "{{ route('orders.filter') }}", '',false);
+                }
             },
         });
     }
