@@ -2518,6 +2518,7 @@ footer .form-control {
     padding: 10px;
     border-radius: 50px;
     min-width: 120px;
+    text-transform: capitalize;
 }
 
 .pixelstrap ul a:before {
