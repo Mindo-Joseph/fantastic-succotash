@@ -14,7 +14,15 @@ jQuery(window).scroll(function () {
 $(document).ready(function () {
 
     if (window.location.pathname == '/') {
-        getHomePage("", "");
+        let latitude = "";
+        let longitude = "";
+        if($("#address-latitude").length > 0){
+            latitude = $("#address-latitude").val();
+        }
+        if($("#address-longitude").length > 0){
+            longitude = $("#address-longitude").val();
+        }
+        getHomePage(latitude, longitude);
     //     $(document).ready(function () {
     //         $.ajax({
     //             url: client_preferences_url,
@@ -557,3 +565,31 @@ function setLocationCoordinates(key, lat, lng) {
     longitudeField.value = lng;
 }
 google.maps.event.addDomListener(window, 'load', initMap);
+
+
+////   cab booking section 
+
+$(document).on("click",".edit-other-stop",function() {
+    var random_id = $(this).attr("id");
+    var rel = $(this).attr("data-rel");
+     initializeNewCabHome(random_id,rel);
+});
+
+
+
+  function initializeNewCabHome(random_id,rel) {
+    var input = document.getElementById(random_id);
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+      var place = autocomplete.getPlace();
+      document.getElementById('destination_location_latitude_home_'+rel).value = place.geometry.location.lat();
+      document.getElementById('destination_location_longitude_home_'+rel).value = place.geometry.location.lng();
+
+      
+       
+     
+    });
+  }
+
+
+
