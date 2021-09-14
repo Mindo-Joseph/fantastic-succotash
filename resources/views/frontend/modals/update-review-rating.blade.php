@@ -79,13 +79,8 @@
             <span class="row show-multiple-image-preview" id="thumb-output">
                 @if(isset($rating_details->reviewFiles))
                 @foreach ($rating_details->reviewFiles as $files)
-<<<<<<< HEAD
-                    <img class="col-6 col-md-3 update_pic" src="{{$files->file['proxy_url'].'300/300'.$files->file['image_path']}}">
-                    <i class="fa fa-trash server-img-del" aria-hidden="true" data-id={{$files->id}}></i>
-=======
                     <div class="col-6 col-md-4"><img class="update_pic" src="{{$files->file['proxy_url'].'300/300'.$files->file['image_path']}}">
                     <i class="fa fa-trash server-img-del" aria-hidden="true" data-id={{$files->id}}></i></div>
->>>>>>> b180b7b460f906b1630f98c2783b3987603f34c4
                 @endforeach
                 @endif
                 
