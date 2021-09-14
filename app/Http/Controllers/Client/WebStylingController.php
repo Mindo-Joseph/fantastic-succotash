@@ -80,8 +80,8 @@ class WebStylingController extends BaseController{
         }
         $cab_booking = HomePageLabel::where('slug', 'cab_booking')->first();
         if($cab_booking){
-            $best_sellers->is_active = $request->has('cab_booking') && $request->cab_booking == "on" ? 1 : 0;
-            $best_sellers->save(); 
+            $cab_booking->is_active = $request->has('cab_booking') && $request->cab_booking == "on" ? 1 : 0;
+            $cab_booking->save(); 
         }
         $client_preferences = ClientPreference::first();
         if($client_preferences){
