@@ -19,7 +19,7 @@
     opacity: 0;
   }
 }
-.top-header,.main-menu.d-block{
+.site-topbar,.main-menu.d-block{
     display: none !important;
 }
 
