@@ -77,14 +77,12 @@ class HomePageLabelSeeder extends Seeder
 
         $already = HomePageLabel::where('slug', 'cab_booking')->count();
 
-        if($already == 0 || 1 == 1)
-        $home_page = HomePageLabel::where('slug', 'cab_booking')->update([
+        if($already == 0)
+        $home_page = HomePageLabel::insertGetId([
             'title' => 'Cab Booking',
             'slug' => 'cab_booking',
             'order_by' => 7,
             'is_active' => 0
         ]);
-        
-
     }
 }
