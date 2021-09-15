@@ -428,6 +428,17 @@
         </div>
     </li>
 
+    <% if(cart_details.total_subscription_discount != undefined) { %>
+     <li class="p-0">
+        <div class='media-body'>                                                                
+            <h6 class="d-flex align-items-center justify-content-between">
+                <span class="ellips">{{__('Subscription Discount')}}</span>
+                <span>{{Session::get('currencySymbol')}}<%= cart_details.total_subscription_discount %></span>
+            </h6>
+        </div>
+    </li>
+    <% } %>
+
     <% if(cart_details.loyalty_amount > 0) { %>
     <li class="p-0">
         <div class='media-body'>                                                                
@@ -580,7 +591,7 @@
                 </span>
             </div>
             <input type="hidden" id="addonVariantPriceVal" value="<%= addOnData.variant_price %>">
-            <a class="btn btn-solid add-cart-btn flex-fill add_vendor_addon_product" href="javascript:void(0)" data-variant_id="<%= addOnData.variant[0].id %>" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="<%= addOnData.vendor_id %>" data-product_id="<%= addOnData.id %>">Add {{ Session::get('currencySymbol') }}<span class="addon_variant_price"><%= addOnData.variant_price %></span></a>
+            <a class="btn btn-solid add-cart-btn flex-fill add_vendor_addon_product" id="add_vendor_addon_product" href="javascript:void(0)" data-variant_id="<%= addOnData.variant[0].id %>" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="<%= addOnData.vendor_id %>" data-product_id="<%= addOnData.id %>">Add {{ Session::get('currencySymbol') }}<span class="addon_variant_price"><%= addOnData.variant_price %></span></a>
         </div>
     <% } %>
 </script>

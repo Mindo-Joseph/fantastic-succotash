@@ -15,7 +15,7 @@
                 <p>{!!$page_detail->translations->first() ? $page_detail->translations->first()->description : $page_detail->primary->description !!}</p>
             </div>
         </div>
-        @if($page_detail->id == 3)
+        @if($page_detail->slug == 'vendor-registration')
             <form class="vendor-signup" id="vendor_signup_form">
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
@@ -260,6 +260,7 @@
             separateDialCode: true,
             hiddenInput: "full_number",
             utilsScript: "{{asset('assets/js/utils.js')}}",
+            initialCountry: "{{ Session::get('default_country_code','US') }}",
         });
         function initialize() {
             var input = document.getElementById('address');

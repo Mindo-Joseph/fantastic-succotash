@@ -1,5 +1,10 @@
    ////////   **************  cab details page  *****************  ////////
 
+   $(document).on("click", ".select_cab_payment_method",function() {
+      $("#payment_modal").modal('toggle');
+   });
+
+
    function setOrderDetailsPage() {
     $('.address-form').addClass('d-none');
     $('.cab-detail-box').removeClass('d-none');
@@ -895,7 +900,7 @@ $(document).ready(function () {
             distanceService.getDistanceMatrix({
             origins: [$("#pickup_location").val()],
             destinations: [$("#destination_location").val()],
-            travelMode: google.maps.TravelMode.WALKING,
+            travelMode: google.maps.TravelMode.DRIVING,
             unitSystem: google.maps.UnitSystem.METRIC,
             durationInTraffic: true,
             avoidHighways: false,

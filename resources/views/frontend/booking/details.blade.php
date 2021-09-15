@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Product'])
+@extends('layouts.store', ['title' => 'Booking Details'])
 @section('content')
 <style type="text/css">
 
@@ -19,7 +19,7 @@
         opacity: 0;
       }
     }
-    .top-header,.main-menu.d-block{
+    .site-topbar,.main-menu.d-block{
         display: none !important;
     }
     
@@ -30,12 +30,24 @@
         display: block !important;
     }
     </style>
-<style>
-    .container .main-menu .d-block{
-         display: none !important;
-     }
- </style>
-
+    
+    <?php
+    $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+    if (strpos($url,'/looking/details/') !== false) {?>
+    <style>
+        .container .main-menu .d-block{
+             display: none;
+         }
+     </style>
+    <?php
+    } else { ?>
+        <style>
+            .cab-booking-header{
+                 display: none;
+             }
+         </style>
+    <?php }
+    ?>
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -157,10 +169,10 @@
 
         <script type="text/template" id="order_success_template">
             <div class="bg-white p-2">
-                <div class="w-100 h-100">
+                <div class="w-100 h-100 text-center">
                     <img src="<%= product_image %>" alt="">
                 </div>
-                <div class="cab-location-details" id="searching_main_div">
+                <div class="cab-location-details mt-2" id="searching_main_div">
                     <% if(result.user_name !== null) { %>
                     <h4><b></b></h4>
                     <% }else { %>
@@ -168,16 +180,23 @@
                     <% } %> 
                     <div class="new-loader"></div>
                 </div>
-                <div class="cab-location-details" id="driver_details_main_div" style="display:none;">
+                <div class="cab-location-details mt-2" id="driver_details_main_div" style="display:none;">
                    <div class="row align-items-center">
-                       <div class="col-8" >
-                            <h4 id="driver_name"><b><%= result.user_name %></b></h4>
-                            <p class="mb-0" id="driver_phone_number"><%= result.phone_number %></p>
-                       </div>
-                       <div class="col-4">
-                           <div class="taxi-img">
+                       
+                       <div class="col-12 driver-profile-box">
+                            <div class="taxi-img">
                                <img src="" id="driver_image">
                            </div>
+                            <h4 id="driver_name"><b><%= result.user_name %></b></h4>
+                            <ul class="product-rating-star d-flex align-items-center">
+                                <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                                <li><span class="rating-count">(<%= result.total_order_by_agent %> )</span></li>
+                            </ul>
+                            <p class="mb-0" id="driver_phone_number"><%= result.phone_number %></p>
                        </div>
                    </div>
                 </div>
