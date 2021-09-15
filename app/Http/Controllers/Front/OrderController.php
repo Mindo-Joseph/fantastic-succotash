@@ -1251,6 +1251,9 @@ class OrderController extends FrontController
                     'color' => $request->color,
                     'extra_keys' => $files
                 ];
+                //dd($dispatch_domain->delivery_service_key_code);
+                $dispatch_domain->delivery_service_key_code = '649a9a';
+                $dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
                 $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
                 $url = $dispatch_domain->delivery_service_key_url;
                 foreach ($files as $key => $file) {
@@ -1269,7 +1272,7 @@ class OrderController extends FrontController
                     }
                 }
                 //dd($filedata);
-                $res = $client->post($url .'/api/agent/create', [                  
+                $res = $client->post('http://192.168.99.177:8005/api/agent/create', [                  
                     'multipart' => [                      
                         [
                             'Content-type' => 'multipart/form-data',
@@ -1280,6 +1283,10 @@ class OrderController extends FrontController
                         [
                             'name' => 'upload_photo',
                             'contents' => json_encode($request->upload_photo)
+                        ],
+                        [
+                            'name' => 'count',
+                            'contents' => count($files)
                         ],
                         [
                             'name' => 'name',
