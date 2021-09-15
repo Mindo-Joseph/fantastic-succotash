@@ -1268,6 +1268,7 @@ class OrderController extends FrontController
                         ];
                     }
                 }
+                //dd($filedata);
                 $res = $client->post($url .'/api/agent/create', [                  
                     'multipart' => [                      
                         [
