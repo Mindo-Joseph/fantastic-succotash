@@ -29,7 +29,7 @@ class ProductInquiryController extends FrontController
                 'number.required' => __('The number field is required.'),
                 'message.required' => __('The message field is required.'),
             ]);
-            ProductInquiry::create(['name' => $request->name, 'email' => $request->email, 'phone_number' => $request->number, 'company_name' => $request->company_name, 'message' => $request->message, 'product_id' => $request->product_id, 'vendor_id' => $request->vendor_id, 'product_variant_id' => $request->variant_id]);
+            ProductInquiry::create(['name' => $request->name, 'email' => $request->email, 'phone_number' => $request->number1, 'company_name' => $request->company_name, 'message' => $request->message, 'product_id' => $request->product_id, 'vendor_id' => $request->vendor_id, 'product_variant_id' => $request->variant_id]);
             return response()->json(['success', 'Inquiry Submitted Successfully.']);
         } catch (Exception $e) {
             return response()->json(['error', $e->getMessage()]);
