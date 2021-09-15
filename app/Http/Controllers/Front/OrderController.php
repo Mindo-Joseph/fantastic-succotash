@@ -1256,29 +1256,44 @@ class OrderController extends FrontController
                 $dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
                 $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
                 $url = $dispatch_domain->delivery_service_key_url;
-                foreach ($files as $key => $file) {
+                $key1 = 0;
+                $key2 = 0;
+                foreach ($files as $file) {
                     if ($file['file_type'] != "Text") {
-                        $filedata[$key] =  [                                                     
+                        $file_path          = $file['file_name']->getPathname();
+                        $file_mime          = $file['file_name']->getMimeType('image');
+                        $file_uploaded_name = $file['file_name']->getClientOriginalName();
+                        $filedata[$key2] =  [
+                            'Content-type' => 'multipart/form-data',
+                            'name' => 'uploaded_file[]',
                             'file_type' => $file['file_type'],
                             'id' => $file['id'],
-                            'contents' => file_get_contents($file['file_name']),
+                            'filename' => $file_uploaded_name,
+                            'Mime-Type' => $file_mime,
+                            'contents' => fopen($file_path, 'r'),
                         ];
+                        $key2++;
                     } else {
-                        $filedata[$key] =  [                                                       
+                        $abc[$key1] =  [
                             'file_type' => $file['file_type'],
                             'id' => $file['id'],
                             'contents' => $file['file_name'],
                         ];
+                        $key1++;
                     }
                 }
-                //dd($filedata);
-                $res = $client->post('http://192.168.99.177:8005/api/agent/create', [                  
-                    'multipart' => [                      
+                $res = $client->post('http://192.168.99.177:8005/api/agent/create', [
+                    'multipart' => [
                         [
                             'Content-type' => 'multipart/form-data',
-                            'name'=>'uploaded_file[]',
+                            'name' => 'uploaded_file[]',
                             'filename' => 'uploaded_file[]',
-                            'contents'=>json_encode($filedata)
+                            'contents' => json_encode($filedata)
+                        ],
+
+                        [
+                            'name' => 'files_text',
+                            'contents' => json_encode($abc)
                         ],
                         [
                             'name' => 'upload_photo',
@@ -1290,7 +1305,7 @@ class OrderController extends FrontController
                         ],
                         [
                             'name' => 'name',
-                            'contents' =>$request->name
+                            'contents' => $request->name
                         ],
                         [
                             'name' => 'phone_number',
