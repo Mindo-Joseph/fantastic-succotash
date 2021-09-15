@@ -1252,13 +1252,15 @@ class OrderController extends FrontController
                     'extra_keys' => $files
                 ];
                 //dd($dispatch_domain->delivery_service_key_code);
-                $dispatch_domain->delivery_service_key_code = '649a9a';
-                $dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
+                //$dispatch_domain->delivery_service_key_code = '649a9a';
+                //$dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
                 $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
                 $url = $dispatch_domain->delivery_service_key_url;
                 $key1 = 0;
                 $key2 = 0;
+
                 foreach ($files as $file) {
+
                     if ($file['file_type'] != "Text") {
                         $file_path          = $file['file_name']->getPathname();
                         $file_mime          = $file['file_name']->getMimeType('image');
@@ -1270,7 +1272,16 @@ class OrderController extends FrontController
                             'id' => $file['id'],
                             'filename' => $file_uploaded_name,
                             'Mime-Type' => $file_mime,
-                            'contents' => fopen($file_path, 'r'),
+                            'contents' =>
+                            json_encode([
+                                'file_type' => $file['file_type'],
+                                'id' => $file['id'],
+                                'contents' => fopen($file_path, 'r')
+                            ]),
+                        ];
+                        $other[$key2]=[
+                            'file_type' => $file['file_type'],
+                            'id' => $file['id'],  
                         ];
                         $key2++;
                     } else {
@@ -1282,15 +1293,15 @@ class OrderController extends FrontController
                         $key1++;
                     }
                 }
-                $res = $client->post('http://192.168.99.177:8005/api/agent/create', [
-                    'multipart' => [
-                        [
-                            'Content-type' => 'multipart/form-data',
-                            'name' => 'uploaded_file[]',
-                            'filename' => 'uploaded_file[]',
-                            'contents' => json_encode($filedata)
-                        ],
+                $res = $client->post($url.'/api/agent/create', [
 
+                    'multipart' => [
+                        $filedata[0],
+                        $filedata[1],
+                        [
+                            'name' => 'other',
+                            'contents' => json_encode($other)
+                        ],
                         [
                             'name' => 'files_text',
                             'contents' => json_encode($abc)
