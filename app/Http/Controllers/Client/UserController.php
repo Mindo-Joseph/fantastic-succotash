@@ -19,6 +19,8 @@ use App\Http\Traits\ToasterResponser;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CustomerExport;
 use App\Models\{Payment, User, Client, Country, Currency, Language, UserVerification, Role, Transaction};
 
 class UserController extends BaseController{
@@ -50,7 +52,7 @@ class UserController extends BaseController{
     }
     public function getFilterData(Request $request){
         $current_user = Auth::user();
-        $users = User::withCount(['orders', 'activeOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->get();
+        $users = User::withCount(['orders', 'currentlyWorkingOrders'])->where('status', '!=', 3)->where('is_superadmin', '!=', 1)->orderBy('id', 'desc')->get();
         foreach ($users as  $user) {
             $user->edit_url = route('customer.new.edit', $user->id);
             $user->delete_url = route('customer.account.action', [$user->id, 3]);
@@ -246,7 +248,7 @@ class UserController extends BaseController{
         $client = Client::where('code', $user->code)->firstOrFail();
         $rules = array(
             'name' => 'required|string|max:50',
-            'phone_number' => 'required|digits:10',
+            'phone_number' => 'required|min:10|max:15',
             'company_name' => 'required',
             'company_address' => 'required',
             'country_id' => 'required',
@@ -307,7 +309,7 @@ class UserController extends BaseController{
             $trans->date = Carbon::parse($trans->created_at)->format('M d, Y, H:i A');
             // $trans->date = convertDateTimeInTimeZone($trans->created_at, $user->timezone, 'l, F d, Y, H:i A');
             $trans->description = json_decode($trans->meta)[0];
-            $trans->amount = '$' . sprintf("%.2f",$trans->amount);
+            $trans->amount = '$' . sprintf("%.2f", ($trans->amount / 100));
             $trans->type = $trans->type;
         }
         return Datatables::of($user_transactions)
@@ -327,5 +329,9 @@ class UserController extends BaseController{
                 });
             }
         })->make(true);
+    }
+
+    public function export() {
+        return Excel::download(new CustomerExport, 'users.xlsx');
     }
 }

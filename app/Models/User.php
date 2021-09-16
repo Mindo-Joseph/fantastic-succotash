@@ -22,7 +22,7 @@ class User extends Authenticatable implements Wallet, WalletFloat
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'description', 'phone_number', 'image', 'email_verified_at', 'is_verified_phone', 'type', 'status', 'device_type', 'device_token', 'country_id', 'role_id', 'auth_token', 'remember_token'
+        'name', 'email', 'password', 'description', 'phone_number', 'image', 'email_verified_at', 'is_verified_phone', 'type', 'status', 'device_type', 'device_token', 'country_id', 'role_id', 'auth_token', 'remember_token', 'timezone'
     ];
 
     /**
@@ -124,5 +124,12 @@ class User extends Authenticatable implements Wallet, WalletFloat
     { 
      $value = Client::first();
      return $value->code;
+    }
+
+    public function currentlyWorkingOrders(){
+        return $this->hasMany('App\Models\Order', 'user_id', 'id')->select('id', 'user_id')
+               ->where('is_deleted', '!=', 1)->whereHas('orderStatusVendor', function($query){
+                   $query->whereIn('order_status_option_id',[2,4,5]);
+               }); 
     }
 }

@@ -71,7 +71,7 @@
                                     @if(!empty($vendor->banner))
                                         <div class="common-banner text-center"><img alt="" src="{{$vendor->banner['proxy_url'] . '1000/200' . $vendor->banner['image_path']}}" class="img-fluid blur-up lazyload"></div>
                                     @endif
-                                    <div class="row mt-n5">
+                                    <div class="row mt-n4">
                                         <div class="col-12">
                                             <form action="">
                                                 <div class="row">
@@ -128,15 +128,15 @@
                                                             <li><i class="fa fa-list-ul list-layout-view"></i></li>
                                                         </ul>
                                                     </div>
-                                                    <div class="collection-grid-view">
+                                                    {{-- <div class="collection-grid-view">
                                                         <ul>
                                                             <li><img src="{{asset('front-assets/images/icon/2.png')}}" alt="" class="product-2-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/3.png')}}" alt="" class="product-3-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/4.png')}}" alt="" class="product-4-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/6.png')}}" alt="" class="product-6-layout-view"></li>
                                                         </ul>
-                                                    </div>
-                                                    <div class="product-page-per-view">
+                                                    </div> --}}
+                                                    {{-- <div class="product-page-per-view">
                                                         <?php $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 8; ?>
                                                         <select class="customerPaginate">
                                                             <option value="8" @if($pagiNate == 8) selected @endif>Show 8 
@@ -148,7 +148,7 @@
                                                             <option value="48" @if($pagiNate == 48) selected @endif>Show 48
                                                             </option>
                                                         </select>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div>

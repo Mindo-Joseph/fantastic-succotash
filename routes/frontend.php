@@ -87,6 +87,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('add/vendorTable/cart','Front\CartController@addVendorTableToCart')->name('addVendorTableToCart');
 	Route::post('add/product/prescription','Front\CartController@uploadPrescription')->name('cart.uploadPrescription');
 	Route::post('cart/schedule/update','Front\CartController@updateSchedule')->name('cart.updateSchedule');
+	Route::post('cart/product-schedule/update','Front\CartController@updateProductSchedule')->name('cart.updateProductSchedule');
 	Route::get('cartProducts','Front\CartController@getCartData')->name('getCartProducts');
 	Route::get('cartDetails','Front\CartController@getCartProducts')->name('cartDetails');
 	Route::post('cartDelete','Front\CartController@emptyCartData')->name('emptyCartData');
@@ -99,6 +100,8 @@ Route::group(['middleware' => ['domain']], function () {
     Route::get('vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
 	Route::get('vendor/{slug1}/{slug2}', 'Front\VendorController@vendorCategoryProducts')->name('vendorCategoryProducts');
     Route::post('vendor/filters/{id}', 'Front\VendorController@vendorFilters')->name('vendorProductFilters');
+	Route::post('vendor/products/searchResults', 'Front\VendorController@vendorProductsSearchResults')->name('vendorProductsSearchResults');
+	Route::post('vendor/product/addons', 'Front\VendorController@vendorProductAddons')->name('vendorProductAddons');
     Route::get('brand/{id?}', 'Front\BrandController@brandProducts')->name('brandDetail');
     Route::post('brand/filters/{id}', 'Front\BrandController@brandFilters')->name('brandProductFilters');
 	Route::get('celebrity/{slug?}', 'Front\CelebrityController@celebrityProducts')->name('celebrityProducts');
@@ -110,6 +113,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('inquiryMode/store', 'Front\ProductInquiryController@store')->name('inquiryMode.store');
 	Route::get('viewcart','Front\CartController@showCart')->name('showCart');
 	Route::post('/getTimeSlotsForOndemand','Front\CategoryController@getTimeSlotsForOndemand')->name('getTimeSlotsForOndemand');
+	Route::post('checkIsolateSingleVendor','Front\CartController@checkIsolateSingleVendor')->name('checkIsolateSingleVendor');
 });
 Route::group(['middleware' => ['domain', 'webAuth']], function() {
 	Route::get('user/orders', 'Front\OrderController@orders')->name('user.orders');

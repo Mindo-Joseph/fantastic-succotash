@@ -1,25 +1,53 @@
-@extends('layouts.store', ['title' => 'Product'])
+@extends('layouts.store', ['title' => 'Booking Details'])
 @section('content')
 <style type="text/css">
 
-.cabbooking-loader {
-  width: 30px;
-  height: 30px;
-  animation: loading 1s infinite ease-out;
-  margin: auto;
-  border-radius: 50%;
-  background-color: red;
-}
-@keyframes loading {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(8);
-    opacity: 0;
-  }
-}
-</style>
+    .cabbooking-loader {
+      width: 30px;
+      height: 30px;
+      animation: loading 1s infinite ease-out;
+      margin: auto;
+      border-radius: 50%;
+      background-color: red;
+    }
+    @keyframes loading {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(8);
+        opacity: 0;
+      }
+    }
+    .site-topbar,.main-menu.d-block{
+        display: none !important;
+    }
+    
+    .cab-booking-header img.img-fluid {
+        height: 50px;
+    }
+    .cab-booking-header{
+        display: block !important;
+    }
+    </style>
+    
+    <?php
+    $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+    if (strpos($url,'/looking/details/') !== false) {?>
+    <style>
+        .container .main-menu .d-block{
+             display: none;
+         }
+     </style>
+    <?php
+    } else { ?>
+        <style>
+            .cab-booking-header{
+                 display: none;
+             }
+         </style>
+    <?php }
+    ?>
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -141,27 +169,34 @@
 
         <script type="text/template" id="order_success_template">
             <div class="bg-white p-2">
-                <div class="w-100 h-100">
+                <div class="w-100 h-100 text-center">
                     <img src="<%= product_image %>" alt="">
                 </div>
-                <div class="cab-location-details" id="searching_main_div">
+                <div class="cab-location-details mt-2" id="searching_main_div">
                     <% if(result.user_name !== null) { %>
                     <h4><b></b></h4>
                     <% }else { %>
                     <h4><b>Searching For Nearby Drivers</b></h4>
                     <% } %> 
-                    <img src="{{url('images/cabbooking-loader.gif')}}">
+                    <div class="new-loader"></div>
                 </div>
-                <div class="cab-location-details" id="driver_details_main_div" style="display:none;">
+                <div class="cab-location-details mt-2" id="driver_details_main_div" style="display:none;">
                    <div class="row align-items-center">
-                       <div class="col-8" >
-                            <h4 id="driver_name"><b><%= result.user_name %></b></h4>
-                            <p class="mb-0" id="driver_phone_number"><%= result.phone_number %></p>
-                       </div>
-                       <div class="col-4">
-                           <div class="taxi-img">
+                       
+                       <div class="col-12 driver-profile-box">
+                            <div class="taxi-img">
                                <img src="" id="driver_image">
                            </div>
+                            <h4 id="driver_name"><b><%= result.user_name %></b></h4>
+                            <ul class="product-rating-star d-flex align-items-center">
+                                <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                                <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                                <li><span class="rating-count">(<%= result.total_order_by_agent %> )</span></li>
+                            </ul>
+                            <p class="mb-0" id="driver_phone_number"><%= result.phone_number %></p>
                        </div>
                    </div>
                 </div>
@@ -173,12 +208,15 @@
                     <div class="col-6 mb-2">Order ID</div>
                     <div class="col-6 mb-2 text-right" id=""><%= result.order_number %></div>
                     <div class="col-6 mb-2">Amount Paid</div>
-                    <div class="col-6 mb-2 text-right">$<%= result.total_amount %></div>
+                    <div class="col-6 mb-2 text-right">$<%= result.payable_amount %></div>
                     <div class="col-6 mb-2">Status</div>
                     <div class="col-6 mb-2 text-right" id="dispatcher_status_show"></div>
                 </div>
             </div>
         </script>
+
+      
+       
 
         <div class="cab-detail-box style-4 d-none" id="cab_detail_box"></div>
         <div class="promo-box style-4 d-none">
@@ -187,18 +225,56 @@
                 
             </div>    
         </div>
+
+        <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0" style="display:none !important;" id="rating_of_cab">
+            @foreach($vendor->products as $product)
+                @if($vendor->vendor_id == $product->vendor_id)
+                @php
+                $pro_rating = $product->productRating->rating??0;
+            @endphp
+            <li class="text-center">
+                <img src="{{ $product->image['proxy_url'].'74/100'.$product->image['image_path'] }}" alt="">
+                 <label class="rating-star add_edit_review" data-id="{{$product->productRating->id??0}}"  data-dispatch_order_id ='' data-order_vendor_product_id="{{$product->id??0}}">
+                    <i class="fa fa-star{{ $pro_rating >= 1 ? '' : '-o' }}" ></i>
+                    <i class="fa fa-star{{ $pro_rating >= 2 ? '' : '-o' }}" ></i>
+                    <i class="fa fa-star{{ $pro_rating >= 3 ? '' : '-o' }}" ></i>
+                    <i class="fa fa-star{{ $pro_rating >= 4 ? '' : '-o' }}" ></i>
+                    <i class="fa fa-star{{ $pro_rating >= 5 ? '' : '-o' }}" ></i>
+                </label>
+                 @endif
+            @endforeach
+        </ul>
+
     </div>
 
 
    
 </section>
-
+<div class="modal fade product-rating" id="product_rating" tabindex="-1" aria-labelledby="product_ratingLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div id="review-rating-form-modal">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{asset('js/js-toast-master/toast.min.js') }}"></script>
 <script src="{{asset('js/cab_booking_details.js') }}"></script>
+
 <script>
+  
+
+
+    
 var autocomplete_urls = "{{url('looking/vendor/list/14')}}";
 var get_product_detail = "{{url('looking/product-detail')}}";
 var promo_code_list_url = "{{route('verify.promocode.list')}}";
@@ -214,5 +290,20 @@ var location_icon = "{{asset("demo/images/location.png")}}";
 $(document).ready(function (){
     setOrderDetailsPage();
 });
+
+$('body').on('click', '.add_edit_review', function (event) {
+        event.preventDefault();
+        var id = $(this).data('id');
+        var dispatch_order_id = $(this).data('dispatch_order_id');
+        var order_vendor_product_id = $(this).data('order_vendor_product_id');
+        $.get('/rating/get-product-rating?id=' + id +'&order_vendor_product_id=' + order_vendor_product_id, function(markup)
+        {
+            $('#product_rating').modal('show'); 
+            $('#review-rating-form-modal').html(markup);
+            $('#review-upload-form').append('<input type="hidden" name="rating_for_dispatch" value="'+dispatch_order_id+'" id="rating_for_dispatch">');
+           
+        });
+    });
+
 </script>
 @endsection

@@ -22,6 +22,9 @@
         font: normal normal normal 14px/1 FontAwesome;
         font-size: inherit;
     }
+    #number{
+        display:block;
+    }
 </style>
 
 @endsection
@@ -163,6 +166,7 @@
                                             if($product->variant->first()->media->isNotEmpty()){
                                                 $product->media = $product->variant->first()->media;
                                             }
+                                            
                                             if($product->media->isEmpty()){
                                                 $arr = [
                                                     'image' => (object)[
@@ -291,7 +295,10 @@
                                                 @if(!$product->variant[0]->quantity > 0)
                                                     <span id="outofstock" style="color: red;">{{__('Out of Stock')}}</span>
                                                 @else
-                                                    <input type="hidden" id="instock" value="{{$product->variant[0]->quantity}}">
+                                                @php
+                                                $product_quantity_in_cart = $product_in_cart->quantity??0;
+                                                @endphp
+                                                    <input type="hidden" id="instock" value="{{ ($product->variant[0]->quantity - $product_quantity_in_cart)}}">
                                                 @endif
                                             </h6>
                                             @if($product->variant[0]->quantity > 0)
@@ -344,7 +351,7 @@
                                                     <div class="productAddonSetOptions" data-min="{{$addon->min_select}}" data-max="{{$addon->max_select}}" data-addonset-title="{{$addon->title}}">
                                                         @foreach($addon->setoptions as $k => $option)
                                                         <div class="checkbox checkbox-success form-check-inline mb-1">
-                                                            <input type="checkbox" id="inlineCheckbox_{{$row.'_'.$k}}" class="productAddonOption" name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}">
+                                                            <input type="checkbox" id="inlineCheckbox_{{$row.'_'.$k}}" class="productDetailAddonOption" name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}">
                                                             <label class="pl-2 mb-0" for="inlineCheckbox_{{$row.'_'.$k}}">
                                                                 {{$option->title .' ($'.$option->price.')' }}</label>
                                                         </div>
@@ -355,7 +362,7 @@
                                         </div>                
 
 
-                                        <table class="table table-centered table-nowrap table-striped d-none" id="addon-table">
+                                        {{--<table class="table table-centered table-nowrap table-striped d-none" id="addon-table">
                                             <tbody>
                                                 @foreach($product->addOn as $row => $addon)
                                                 <tr>
@@ -384,7 +391,7 @@
                                                     <td>
                                                         @foreach($addon->setoptions as $k => $option)
                                                         <div class="checkbox checkbox-success form-check-inline">
-                                                            <input type="checkbox" id="inlineCheckbox_{{$row.'_'.$k}}" class="productAddonOption" name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}">
+                                                            <input type="checkbox" id="inlineCheckbox_{{$row.'_'.$k}}" class="productDetailAddonOption" name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}">
                                                             <label class="pl-2" for="inlineCheckbox_{{$row.'_'.$k}}">
                                                                 {{$option->title .' ($'.$option->price.')' }}</label>
                                                         </div>
@@ -393,7 +400,7 @@
                                                 </tr>
                                                 @endforeach
                                             </tbody>
-                                        </table>
+                                        </table>--}}
                                     </div>
                                     @endif
                                     <div class="product-buttons">
@@ -404,7 +411,10 @@
                                         </button>
                                         @endif
                                         @if($product->inquiry_only == 0)
-                                            <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart {{$vendor_info->show_slot_option == 0 ? 'btn-disabled' : '' }}">{{__('Add To Cart')}}</a>
+                                        @php    
+                                        $product_quantity_in_cart = $product_in_cart->quantity??0;
+                                        @endphp
+                                            <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart {{ ($vendor_info->show_slot_option == 0 || ($product->variant[0]->quantity <= $product_quantity_in_cart)) ? 'btn-disabled' : '' }}">{{__('Add To Cart')}}</a>
                                             @if($vendor_info->show_slot_option == 0)
                                             <p class="text-danger">Vendor is not accepting orders right now.</p>
                                             @endif
@@ -505,10 +515,10 @@
     </div>
 </section>
 <script type="text/template" id="variant_image_template">
-    <% if(media != '') { %>
+    <% if(variant.media != '') { %>
         <div class="swiper-container gallery-top">
             <div class="swiper-wrapper">
-                <% _.each(media, function(img, key){ %>
+                <% _.each(variant.media, function(img, key){ %>
                     <div class="swiper-slide easyzoom easyzoom--overlay">
                         <a href="<%= img.pimage.image.path['image_fit'] %>600/600<%= img.pimage.image.path['image_path'] %>">
                         <img src="<%= img.pimage.image.path['image_fit'] %>600/600<%= img.pimage.image.path['image_path'] %>" alt="">
@@ -522,33 +532,38 @@
         </div>
         <div class="swiper-container gallery-thumbs">
             <div class="swiper-wrapper">
-                <% _.each(media, function(img, key){ %>
+                <% _.each(variant.media, function(img, key){ %>
                     <div class="swiper-slide">
                         <img src="<%= img.pimage.image.path['image_fit'] %>300/300<%= img.pimage.image.path['image_path'] %>" alt="">
                     </div>
                 <% }); %>
             </div>
         </div>
-        <!--<div class="product-slick">
-            <% _.each(media, function(img, key){ %>
-                <div class="image_mask">
-                    <img class="img-fluid blur-up lazyload image_zoom_cls-<%= key %>" src="<%= img.pimage.image.path['proxy_url'] %>600/800<%= img.pimage.image.path['image_path'] %>">
-                </div>
-            <% }); %>
-        </div>
-        <div class="row">
-            <div class="col-12 p-0">
-                <div class="slider-nav">
-                    <% _.each(media, function(img, key){ %>
-                        <div>
-                            <img class="img-fluid blur-up lazyload" src="<%= img.pimage.image.path['proxy_url'] %>300/300<%= img.pimage.image.path['image_path'] %>">
-                        </div>
-                    <% }); %>
-                </div>
-            </div>
-        </div>-->
     <% }else{ %>
         <div class="swiper-container gallery-top">
+            <div class="swiper-wrapper">
+                <% _.each(variant.product.media, function(img, key){ %>
+                    <div class="swiper-slide easyzoom easyzoom--overlay">
+                        <a href="<%= img.image.path['image_fit'] %>600/600<%= img.image.path['image_path'] %>">
+                        <img src="<%= img.image.path['image_fit'] %>600/600<%= img.image.path['image_path'] %>" alt="">
+                        </a>
+                    </div>
+                <% }); %>
+            </div>
+            <!-- Add Arrows -->
+            <div class="swiper-button-next swiper-button-white"></div>
+            <div class="swiper-button-prev swiper-button-white"></div>
+        </div>
+        <div class="swiper-container gallery-thumbs">
+            <div class="swiper-wrapper">
+                <% _.each(variant.product.media, function(img, key){ %>
+                    <div class="swiper-slide">
+                        <img src="<%= img.image.path['image_fit'] %>300/300<%= img.image.path['image_path'] %>" alt="">
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+        <!--<div class="swiper-container gallery-top">
             <div class="swiper-wrapper">
                 <div class="swiper-slide easyzoom easyzoom--overlay">
                     <a href="{{ \Config::get('app.IMG_URL1') .'600/800'. \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png') }}">
@@ -556,10 +571,9 @@
                     </a>
                 </div>
             </div>
-            <!-- Add Arrows -->
             <div class="swiper-button-next swiper-button-white"></div>
             <div class="swiper-button-prev swiper-button-white"></div>
-        </div>
+        </div>-->
         <!--<div class="product-slick" style="min-height: 200px; display: table; width: 100%;">
             <div class="image_mask" style="vertical-align: middle; display: table-cell; text-align: center">
                 <img class="img-fluid blur-up lazyload" src="{{ \Config::get('app.IMG_URL1') .'600/800'. \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png') }}">
@@ -639,7 +653,7 @@
 
 {{--<section class="section-b-space ratio_asos">--}}
     <div class="container mt-3 mb-5">
-        <div class="product-4 product-m no-arrow">
+        <div class="product-4 product-m no-arrow related-products">
             @forelse($product->related_products as $related_product)
                 {{--<div class="col-xl-2 col-md-4 col-sm-6">--}}
                 <div>
@@ -746,7 +760,7 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label>{{__('Phone Number')}}</label>
-                            <input class="form-control" name="number" id="number" value="{{$user ? $user->phone_number : '' }}" type="text" placeholder="{{__('Phone Number')}}">
+                            <input class="form-control" name="number1" id="number1" value="{{$user ? $user->phone_number : '' }}" type="text" placeholder="{{__('Phone Number')}}" style="display:inline-block;">
                             <span class="text-danger error-text numberError"></span>
                         </div>
                         <div class="col-md-6 form-group">
@@ -905,18 +919,16 @@
                         $('#product_variant_quantity_wrapper').html('');
                         let variant_quantity_template = _.template($('#variant_quantity_template').html());
                         $("#product_variant_quantity_wrapper").append(variant_quantity_template({variant:response.variant}));
+                        console.log(response.variant.quantity);
                         if(response.variant.quantity < 1){
                             $(".addToCart, #addon-table").hide();
                         }else{
                             $(".addToCart, #addon-table").show();
                         }
 
-                        // $('#product-slick-wrapper').html('');
                         let variant_image_template = _.template($('#variant_image_template').html());
-                        // $("#product-slick-wrapper").append(variant_image_template({media:response.variant.media}));
-
                         $(".product__carousel .gallery-parent").html('');
-                        $(".product__carousel .gallery-parent").append(variant_image_template({media:response.variant.media}));
+                        $(".product__carousel .gallery-parent").append(variant_image_template({variant:response.variant}));
                         easyZoomInitialize();
                         $('.easyzoom').easyZoom();
 
@@ -940,11 +952,11 @@
     var addonids = [];
     var addonoptids = [];
     $(function() {
-        $(".productAddonOption").click(function(e) {
+        $(".productDetailAddonOption").click(function(e) {
             var addon_elem = $(this).closest('tr');
             var addon_minlimit = addon_elem.data('min');
             var addon_maxlimit = addon_elem.data('max');
-            if(addon_elem.find(".productAddonOption:checked").length > addon_maxlimit) {
+            if(addon_elem.find(".productDetailAddonOption:checked").length > addon_maxlimit) {
                 this.checked = false;
             }else{
                 var addonId = $(this).attr("addonId");
@@ -957,8 +969,6 @@
                     addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
                 }
             }
-
-            console.log(addonoptids);
         });
     });
 </script>

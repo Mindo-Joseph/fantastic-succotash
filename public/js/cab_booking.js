@@ -1,5 +1,10 @@
    ////////   **************  cab details page  *****************  ////////
 
+   $(document).on("click", ".select_cab_payment_method",function() {
+      $("#payment_modal").modal('toggle');
+   });
+
+
    function setOrderDetailsPage() {
     $('.address-form').addClass('d-none');
     $('.cab-detail-box').removeClass('d-none');
@@ -50,6 +55,7 @@ function getOrderDriverDetails(dispatch_traking_url,order_id) {
 
 
 $(document).ready(function () {
+    $('.cab-booking-main-loader').hide();
     var selected_address = '';
     const styles = [{"stylers":[{"visibility":"on"},{"saturation":-100},{"gamma":0.54}]},{"featureType":"road","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"water","stylers":[{"color":"#4d4946"}]},{"featureType":"poi","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels.text","stylers":[{"visibility":"simplified"}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","elementType":"labels.text","stylers":[{"visibility":"simplified"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"gamma":0.48}]},{"featureType":"transit.station","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"gamma":7.18}]}];
     $(document).on("click","#show_dir",function() {
@@ -63,7 +69,7 @@ $(document).ready(function () {
                 $('#schedule_datetime_main_div').show();
                 return false;
             }
-            schedule_datetime = moment(temp_schedule_datetime).format('YYYY-MM-DD HH:MM')
+            schedule_datetime = moment(temp_schedule_datetime).format('YYYY-MM-DD HH:mm')
         }
         var tasks = [];
         $('#pickup_now').attr('disabled', true);
@@ -104,6 +110,8 @@ $(document).ready(function () {
         let coupon_id = $(this).data('coupon_id');
         let task_type = $(this).data('task_type');
         let product_id = $(this).data('product_id');
+
+       
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -149,30 +157,42 @@ $(document).ready(function () {
 
     $(document).on("click", ".add-more-location",function() {
         let random_id = Date.now();
-        let destination_location_template = _.template($('#destination_location_template').html());
-        $("#location_input_main_div").append(destination_location_template({random_id:random_id})).show();
-        initializeNew(random_id);
-        var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
-           return this.value;
+
+        var destination_location_names = $('#destination_location_add_temp').find('input[name="destination_location_name[]"]').map(function(){
+            if(this.value == ''){
+                return "empty";
+            }
         }).get();
-        if(destination_location_names.length == 5){
+
+        if(destination_location_names[0] == 'empty'){
+            return false;
+        }
+
+        var destination_location_add_temp = $('#destination_location_add_temp').find('input[name="destination_location_name[]"]').length;
+        if(destination_location_add_temp == 4){
             $('.add-more-location').hide();
         }
+        $('#search_product_main_div').attr("style", "display: none !important");
+        $('.location-list').attr("style", "display: block !important");
+        // check-dropoff
+        let destination_location_template = _.template($('#destination_location_template').html());
+        $("#destination_location_add_temp").append(destination_location_template({random_id:random_id})).show();
+        initializeNew(random_id);
     });
-    $(document).on("click", ".location-inputs .apremove",function() {
-        if($('#dots_'+$(this).data('rel')).length != 0){
-            $('#dots_'+$(this).data('rel')).remove();
-            var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
-               return this.value;
-            }).get();
-            if(destination_location_names.length < 5){
-                $('.add-more-location').show();
-            }else{
-                $('.add-more-location').hide();
-            }
-            initMap2();
-        }
-    });
+    // $(document).on("click", ".location-inputs .apremove",function() {
+    //     if($('#dots_'+$(this).data('rel')).length != 0){
+    //         $('#dots_'+$(this).data('rel')).remove();
+    //         var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
+    //            return this.value;
+    //         }).get();
+    //         if(destination_location_names.length < 5){
+    //             $('.add-more-location').show();
+    //         }else{
+    //             $('.add-more-location').hide();
+    //         }
+    //         initMap2();
+    //     }
+    // });
     function initializeNew(random_id) {
       var input2 = document.getElementById('destination_location_'+random_id);
       if(input2){
@@ -181,15 +201,95 @@ $(document).ready(function () {
             var place2 = autocomplete.getPlace();
             $('#destination_location_latitude_'+random_id).val(place2.geometry.location.lat());
             $('#destination_location_longitude_'+random_id).val(place2.geometry.location.lng());
-            initMap2();
+            initMap2(random_id);
+
+            if(random_id != ''){
+                $('#search_product_main_div').attr("style", "display: block !important");
+                $('.location-list').attr("style", "display: none !important");
+                $('#destination_location_'+random_id).attr("style", "display: none !important");
+
+                var currentUrl                   = window.location.href;
+                var queryString                  = removeURLParameter(currentUrl, 'destination_location_'+random_id);
+                var destination_location         = $("#destination_location_"+random_id).val();
+                var destinationLocationLatitude  = $("#destination_location_latitude_"+random_id).val();
+                var destinationLocationLongitude = $("#destination_location_longitude_"+random_id).val();
+                var perm = "?" + (queryString != '' ? queryString : '') + "&destination_location_"+random_id+"=" + destination_location  + "&destination_location_latitude_"+random_id+"=" + destinationLocationLatitude + "&destination_location_longitude_"+random_id+"=" + destinationLocationLongitude;
+                window.history.replaceState(null, null, perm);
+            }
         });
       }
     }
     $(document).on("click",".search-location-result",function() {
-        $('#pickup_location').val($(this).data('address'));
-        var latitude = $(this).data('latitude');
-        var longitude = $(this).data('longitude');
+        var latitude             = $(this).data('latitude');
+        var longitude            = $(this).data('longitude');
+        var pickup_location      = $('#pickup_location_latitude').val();
+        var destination_location = $('#destination_location_latitude').val();
+        var pickupAddress        = $(this).data('address');
+        if(pickup_location == ''){
+            $('#pickup_location').val($(this).data('address'));
+            $('#pickup_location_latitude').val(latitude);
+            $('#pickup_location_longitude').val(longitude);
+
+            // initMap2();
+            var pickupLocationLatitude  = latitude;
+            var pickupLocationLongitude = longitude;
+            var currentUrl              = window.location.href;
+            var queryString             = removeURLParameter(currentUrl, 'pickup_location');
+            var perm                    = "?pickup_location=" + $(this).data('address') + "&pickup_location_latitude=" + pickupLocationLatitude +"&pickup_location_longitude=" + pickupLocationLongitude + (queryString != '' ? "&" + queryString : '');
+            window.history.replaceState(null, null, perm);
+
+            $(".check-pick-first").css("display", "none");
+            $("#pickup-where-from").html(" "+$(this).data('address'));
+            $(".check-dropoff-secpond").css("display", "block");
+            $('.check-pickup').attr("style", "display: none !important");
+            $(".check-dropoff").css("display", "block");
+
+        }else if(destination_location == ''){
+            $('#destination_location').val($(this).data('address'));
+            $('#destination_location_latitude').val(latitude);
+            $('#destination_location_longitude').val(longitude);
+
+            var currentUrl  = window.location.href;
+            var queryString = removeURLParameter(currentUrl, 'destination_location');
+            var perm        = "?" + (queryString != '' ? queryString : '') + "&destination_location=" + $(this).data('address')  + "&destination_location_latitude=" + latitude +"&destination_location_longitude=" + longitude;
+            window.history.replaceState(null, null, perm);
+            
+            $("#dropoff-where-to").html(" "+$(this).data('address'));
+            $('.where-to-first').attr("style", "display: none !important");
+            $('.check-dropoff').attr("style", "display: none !important");
+            $(".where-to-second").css("display", "block");
+            $('.add-more-location').attr("style", "display: block !important");
+
+            $('#search_product_main_div').attr("style", "display: block !important");
+            $('.location-list').attr("style", "display: none !important");
+
+        }else{
+            $('#destination_location_add_temp').find('input[name="destination_location_name[]"]').map(function(){
+                if(this.value == ''){
+                    var inputId = this.id;
+                    $('#'+inputId).val(pickupAddress);
+                    var random_id = $(this).data( "rel" );
+                    $('#destination_location_latitude_'+random_id).val(latitude);
+                    $('#destination_location_longitude_'+random_id).val(longitude);
+                    
+                    $('#search_product_main_div').attr("style", "display: block !important");
+                    $('.location-list').attr("style", "display: none !important");
+
+                    let destination_location_template_li = _.template($('#destination_location_template_li').html());
+                    var destination_location = $('#destination_location_'+random_id).val();            
+                    $('#location_input_main_div li:last-child').after(destination_location_template_li({random_id:random_id}));
+                    $("#dropoff-where-to-"+random_id).html(" "+ pickupAddress);
+
+                    var currentUrl                   = window.location.href;
+                    var queryString                  = removeURLParameter(currentUrl, 'destination_location_'+random_id);
+                    var perm = "?" + (queryString != '' ? queryString : '') + "&destination_location_"+random_id+"=" + pickupAddress  + "&destination_location_latitude_"+random_id+"=" + latitude + "&destination_location_longitude_"+random_id+"=" + longitude;
+                    window.history.replaceState(null, null, perm);
+                }
+            }).get();
+        }
+
         displayLocationCab(latitude, longitude);
+        getVendorList();   
     });
     function getVendorList(){
         var locations = [];
@@ -223,7 +323,7 @@ $(document).ready(function () {
                 url: autocomplete_urls,
                 success: function(response) {
                     if(response.status == 'Success'){
-                        $('.cab-booking-main-loader').hide();
+                        // $('.cab-booking-main-loader').hide();
                         $('#vendor_main_div').html('');
                         if(response.data.length != 0){
                             let vendors_template = _.template($('#vendors_template').html());
@@ -237,6 +337,7 @@ $(document).ready(function () {
                         }else{
                             $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
                         }
+                       // $('.cab-booking-main-loader').hide();
                     }
                 }
             });
@@ -321,6 +422,8 @@ $(document).ready(function () {
                     $('.cab-detail-box #discount_amount').text('').hide();
                     $('.cab-detail-box .code-text').text("Select A Promo Code").show();
                     $('.cab-detail-box #real_amount').text(response.data.currency_symbol+' '+amount);
+                    $('#pickup_now').attr("data-coupon_id",'');
+                    $('#pickup_later').attr("data-coupon_id",'');
                 }
             }
         });
@@ -334,7 +437,7 @@ $(document).ready(function () {
             type: "POST",
             dataType: 'json',
             url:  apply_cab_booking_promocode_coupon_url,
-            data: {amount:amount, vendor_id:vendor_id, product_id:product_id, coupon_id},
+            data: {amount:amount, vendor_id:vendor_id, product_id:product_id, coupon_id:coupon_id},
             success: function(response) {
                 if(response.status == 'Success'){
                     $('.promo-box').addClass('d-none');
@@ -344,7 +447,10 @@ $(document).ready(function () {
                     let real_amount = $('.cab-detail-box #real_amount').text();
                     $('.cab-detail-box #discount_amount').text(real_amount).show();
                     $('.cab-detail-box .code-text').text('Code '+response.data.name+' applied').show();
-                    $('.cab-detail-box #real_amount').text(response.data.currency_symbol+''+response.data.new_amount);
+                    $('#pickup_now').attr("data-coupon_id",coupon_id);
+                    $('#pickup_later').attr("data-coupon_id",coupon_id);
+                    var current_amount = amount - response.data.new_amount;
+                    $('.cab-detail-box #real_amount').text(response.data.currency_symbol+''+current_amount);
                 }
             }
         });
@@ -358,6 +464,7 @@ $(document).ready(function () {
         $('.address-form').removeClass('d-none');
     });
     $(document).on("click",".vehical-view-box",function() {
+        $('.cab-booking-main-loader').show();
         var locations = [];
         let product_id = $(this).data('product_id');
         var pickup_location_latitude = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
@@ -384,6 +491,7 @@ $(document).ready(function () {
             success: function(response) {
                 if(response.status == 'Success'){
                     $('#cab_detail_box').html('');
+                    $('.cab-booking-main-loader').hide();
                     if(response.data.length != 0){
                         $('.address-form').addClass('d-none');
                         $('.cab-detail-box').removeClass('d-none');
@@ -397,30 +505,285 @@ $(document).ready(function () {
             }
         });
     });
-    function initMap2() {
+
+    $(document).on("click",".edit-pickup",function() {
+        $(".check-pick-first").css("display", "block");
+        $(".check-dropoff-secpond").css("display", "none");
+        $('.check-pickup').attr("style", "display: block !important");
+        $('.check-dropoff').attr("style", "display: none !important");
+    });
+
+    $(document).on("click","#get-current-location",function() {
+        // alert();
+        getLocation();
+    });
+    $(document).on("click",".edit-dropoff",function() {
+        $(".check-dropoff-secpond").css("display", "block");
+        $('.add-more-location').attr("style", "display: none !important");
+        $('.where-to-second').attr("style", "display: none !important");
+        $('.where-to-first').attr("style", "display: block !important");
+        $('.check-dropoff').attr("style", "display: block !important");
+        $('#destination_location_add_temp').attr("style", "display: none !important");
+
+        $('#destination_location_add_temp').find('input[name="destination_location_name[]"]').map(function(){
+            if(this.value == ''){
+                var inputId = this.id;
+                $("#"+inputId).remove();
+            }
+        }).get();
+
+    });
+
+    $(document).on("click",".scheduled-ride",function() {
+        return false;
+        $('.location-list').attr("style", "display: none !important");
+        $('.scheduled-ride-list').attr("style", "display: block !important");
+        var fromDate = moment();
+        var toDate   = moment().add(31, 'days');
+        enumerateDaysBetweenDates(fromDate, toDate);
+    });
+
+    var enumerateDaysBetweenDates = function(startDate, endDate) {
+        var now = startDate, dates = [];
+        var i = 1;
+        while (now.isSameOrBefore(endDate)) {
+            i++;
+            if(now.format('MMDDYYYY') == moment().format('MMDDYYYY')){
+                var lableText = 'Today';
+            }else{
+                var lableText = now.format('ddd, D MMM');
+            }
+            var scheduledDate = '<div class="form-check radio check-active" id="schedule-date-'+now.format('MMDDYYYY')+'" ><input class="form-check-input" id="'+now.format('MMDDYYYY')+'" type="radio"'+ ((now.format('MMDDYYYY') == moment().format('MMDDYYYY')) ? 'checked': '') +' onclick="appendScheduleTime(this)" name="scheduledDate" data-mdi="schedule-date-'+now.format('MMDDYYYY')+'" value="'+now.format('MM-DD-YYYY')+'"><label class="radio-label" id="lable-schedule-date-'+now.format('MMDDYYYY')+'" for="'+now.format('MMDDYYYY')+'">'+lableText+'</label></div>';
+            $(".date-radio-list").append(scheduledDate);
+            if(now.format('MMDDYYYY') == moment().format('MMDDYYYY')){
+                $('.scheduled-ride-list').find('.scheduleTime').remove();
+                let scheduleTime_template = _.template($('#scheduleTime_template').html());
+                var mainDivId = 'schedule-date-'+now.format('MMDDYYYY');
+                $("#"+mainDivId).append(scheduleTime_template).show();
+            }
+            now.add(1, 'days');
+        }
+        
+        $(".scheduled-footer").append('<button id="check-schedule-date-time" onclick="getScheduleDateTime(this)" disabled>Select</button>');
+    };
+
+    
+
+    $(document).on("click",".apremove",function() {
+        var destination_location_add_temp = $('#destination_location_add_temp').find('input[name="destination_location_name[]"]').length;
+        
+        if(destination_location_add_temp == 0){
+            return false;
+        }else if(destination_location_add_temp == 1){
+            var destination_location_names = $('#destination_location_add_temp').find('input[name="destination_location_name[]"]').map(function(){
+                if(this.value == ''){
+                    return "empty";
+                }
+            }).get();
+
+            if(destination_location_names[0] == 'empty'){
+                return false;
+            }
+
+            var destination_location = $("#destination_location").val();
+            if(destination_location == undefined){
+                return false;
+            }
+            
+        }else if(destination_location_add_temp == 2){
+            var destination_location_names = $('#destination_location_add_temp').find('input[name="destination_location_name[]"]').map(function(){
+                if(this.value == ''){
+                    return "empty";
+                }
+            }).get();
+
+            var destination_location = $("#destination_location").val();
+            if(destination_location_names[0] == 'empty' && destination_location == undefined){
+                return false;
+            }
+            
+        }
+
+        var random_id = $(this).data('rel');
+
+        if(random_id == ''){
+            $(".where-to-second").remove();
+            $("#destination_location").remove();
+            $("#destination_location_latitude").remove();
+            $("#destination_location_longitude").remove();
+
+            var currentUrl = window.location.href;
+            query1 = removeURLParameter(currentUrl, 'destination_location');
+            var perm        = (query1 != '' ? "?" + query1 : '');
+            window.history.replaceState(null, null, perm);
+
+            var currentUrl2 = window.location.href;
+            query2 = removeURLParameter(currentUrl2, 'destination_location_latitude');
+            var perm        = (query2 != '' ? "?" + query2 : '');
+            window.history.replaceState(null, null, perm);
+
+            var currentUrl3 = window.location.href;
+            var query3 = removeURLParameter(currentUrl3, 'destination_location_longitude');
+            var perm        = (query3 != '' ? "?" + query3 : '');
+            window.history.replaceState(null, null, perm);
+        }else{
+            
+            $("#dots_"+random_id).remove();
+            $("#destination_location_"+random_id).remove();
+            $("#destination_location_latitude_"+random_id).remove();
+            $("#destination_location_longitude_"+random_id).remove();
+
+            var currentUrl = window.location.href;
+            query1 = removeURLParameter(currentUrl, 'destination_location_'+random_id);
+            var perm        = (query1 != '' ? "?" + query1 : '');
+            window.history.replaceState(null, null, perm);
+
+            var currentUrl2 = window.location.href;
+            query2 = removeURLParameter(currentUrl2, 'destination_location_latitude_'+random_id);
+            var perm        = (query2 != '' ? "?" + query2 : '');
+            window.history.replaceState(null, null, perm);
+
+            var currentUrl3 = window.location.href;
+            var query3 = removeURLParameter(currentUrl3, 'destination_location_longitude_'+random_id);
+            var perm        = (query3 != '' ? "?" + query3 : '');
+            window.history.replaceState(null, null, perm);
+        }
+
+        const waypts = [];
+        var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
+            return this.value;
+         }).get();
+ 
+         $(destination_location_names).each(function(index, destination_location_name) {
+             waypts.push({
+                 location: destination_location_name,
+                 stopover: true,
+               });
+         });
+ 
+        var random_id = $("#destination_location_add_temp input:last").data("rel");
+
+        let origin = $('#pickup_location').val();
+        let destination = (random_id != undefined) ? $('#destination_location_'+random_id).val() : $('#destination_location').val();
+        if(origin && destination){
+            directionsService.route({
+                origin: origin,
+                waypoints:waypts,
+                optimizeWaypoints:true,
+                destination: destination,
+                travelMode: google.maps.TravelMode.DRIVING,
+            }, function(response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                var point = response.routes[0].legs[0];
+                directionsDisplay.setDirections(response);
+                getVendorList();
+                } else {
+                window.alert('Directions request failed due to ' + status);
+                return false;
+                }
+            });
+        }
+         
+        
+    });
+
+    $(document).on("click",".edit-other-stop",function() {
+        var random_id = $(this).attr("id");
+        $("#destination_location_add_temp").attr("style", "display: block !important");
+        $("#destination_location_"+random_id).attr("style", "display: block !important");
+        initializeNew(random_id);
+    });
+    
+    var query = window.location.search.substring(1);
+    if(query != ''){
+        var vars = query.split('&');
+        for(i = 0; i<vars.length; i++){
+            var perm = vars[i].split('=');
+            if(perm[0] == 'pickup_location'){
+                var pickup_location = window.unescape(perm[1]);
+                $('#pickup_location').val(pickup_location);
+            }else if(perm[0] == 'pickup_location_latitude'){
+                $('#pickup_location_latitude').val(perm[1]);
+            }else if(perm[0] == 'pickup_location_longitude'){
+                $('#pickup_location_longitude').val(perm[1]);
+            }else if(perm[0] == 'destination_location'){
+                var destination_location = window.unescape(perm[1]);
+                $('#destination_location').val(destination_location);
+            }else if(perm[0] == 'destination_location_latitude'){
+                $('#destination_location_latitude').val(perm[1]);
+            }else if(perm[0] == 'destination_location_longitude'){
+                $('#destination_location_longitude').val(perm[1]);
+            }
+        }
+
+        var pickup_location      = $("#pickup_location").val();
+        var destination_location = $("#destination_location").val();
+        if(pickup_location != '' && destination_location != ''){
+            $(".check-pick-first").css("display", "none");
+            $("#pickup-where-from").html(" "+pickup_location);
+            $(".check-dropoff-secpond").css("display", "block");
+            $('.check-pickup').attr("style", "display: none !important");
+            $(".check-dropoff").css("display", "block");
+            
+            $("#dropoff-where-to").html(" "+destination_location);
+            $('.where-to-first').attr("style", "display: none !important");
+            $('.check-dropoff').attr("style", "display: none !important");
+            $(".where-to-second").css("display", "block");
+            $('.add-more-location').attr("style", "display: block !important");
+            getVendorList();
+            setTimeout(function(){
+                initMap2();
+            }, 1000);
+        }else if(pickup_location != ''){
+            $(".check-pick-first").css("display", "none");
+            $("#pickup-where-from").html(" "+pickup_location);
+            $(".check-dropoff-secpond").css("display", "block");
+            $('.check-pickup').attr("style", "display: none !important");
+            $(".check-dropoff").css("display", "block");
+        }
+    }
+
+
+    function initMap2(random_id = '') {
         var locations = [];
-        let pickup_location_latitude = $('#pickup_location_latitude').val();
+        let pickup_location_latitude  = $('#pickup_location_latitude').val();
         let pickup_location_longitude = $('#pickup_location_longitude').val();
+        
+
         var pointA = new google.maps.LatLng(pickup_location_latitude, pickup_location_longitude);
         map = new google.maps.Map(document.getElementById('booking-map'), {zoom: 7,center: pointA});
         map.setOptions({ styles:  styles});
         directionsService = new google.maps.DirectionsService;
         directionsDisplay = new google.maps.DirectionsRenderer({map: map});
-        calculateAndDisplayRoute(directionsService, directionsDisplay);
+        calculateAndDisplayRoute(directionsService, directionsDisplay, random_id);
     }
-    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+    function calculateAndDisplayRoute(directionsService, directionsDisplay, random_id = '') {
         const waypts = [];
+        if(random_id != ''){
+            if($("#dots_" + random_id).length == 1){
+                var destination_location = $('#destination_location_'+random_id).val(); 
+                $("#dropoff-where-to-"+random_id).html(" "+destination_location);
+            }else{
+                let destination_location_template_li = _.template($('#destination_location_template_li').html());
+                var destination_location = $('#destination_location_'+random_id).val();            
+                $('#location_input_main_div li:last-child').after(destination_location_template_li({random_id:random_id}));
+                $("#dropoff-where-to-"+random_id).html(" "+destination_location);
+            }
+            
+        }
         var destination_location_names = $('input[name="destination_location_name[]"]').map(function(){
            return this.value;
         }).get();
+
         $(destination_location_names).each(function(index, destination_location_name) {
             waypts.push({
                 location: destination_location_name,
                 stopover: true,
               });
         });
+
         let origin = $('#pickup_location').val();
-        let destination = $('#destination_location').val();
+        let destination = (random_id != '') ? $('#destination_location_'+random_id).val() : $('#destination_location').val();
         if(origin && destination){
             directionsService.route({
                 origin: origin,
@@ -449,41 +812,112 @@ $(document).ready(function () {
         var autocomplete2 = new google.maps.places.Autocomplete(input2);
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
             var place = autocomplete.getPlace();
-           $('#pickup_location_latitude').val(place.geometry.location.lat());
-           $('#pickup_location_longitude').val(place.geometry.location.lng());
-           initMap2();
+            $('#pickup_location_latitude').val(place.geometry.location.lat());
+            $('#pickup_location_longitude').val(place.geometry.location.lng());
+            initMap2();
+            
+            var pickup_location = $("#pickup_location").val();
+            if(pickup_location != ""){
+                var pickupLocationLatitude  = place.geometry.location.lat();
+                var pickupLocationLongitude = place.geometry.location.lng();
+                var currentUrl              = window.location.href;
+                var queryString             = removeURLParameter(currentUrl, 'pickup_location');
+                var perm                    = "?pickup_location=" + pickup_location + "&pickup_location_latitude=" + pickupLocationLatitude +"&pickup_location_longitude=" + pickupLocationLongitude + (queryString != '' ? "&" + queryString : '');
+                window.history.replaceState(null, null, perm);
+
+                $(".check-pick-first").css("display", "none");
+                $("#pickup-where-from").html(" "+pickup_location);
+                $(".check-dropoff-secpond").css("display", "block");
+                $('.check-pickup').attr("style", "display: none !important");
+                $(".check-dropoff").css("display", "block");
+            }
+            
         });
         google.maps.event.addListener(autocomplete2, 'place_changed', function () {
             var place2 = autocomplete2.getPlace();
             $('#destination_location_latitude').val(place2.geometry.location.lat());
             $('#destination_location_longitude').val(place2.geometry.location.lng());
             initMap2();
+
+            var pickup_location      = $("#pickup_location").val();
+            var destination_location = $("#destination_location").val();
+            if(pickup_location != '' && destination_location != ''){
+                
+                var currentUrl  = window.location.href;
+                var queryString = removeURLParameter(currentUrl, 'destination_location');
+                var perm        = "?" + (queryString != '' ? queryString : '') + "&destination_location=" + destination_location  + "&destination_location_latitude=" + place2.geometry.location.lat() +"&destination_location_longitude=" + place2.geometry.location.lng();
+                window.history.replaceState(null, null, perm);
+                
+                $("#dropoff-where-to").html(" "+destination_location);
+                $('.where-to-first').attr("style", "display: none !important");
+                $('.check-dropoff').attr("style", "display: none !important");
+                $(".where-to-second").css("display", "block");
+                $('.add-more-location').attr("style", "display: block !important");
+            }
+            
         });
       }
     }
-    function getDistance(){
-     //Find the distance
-     var distanceService = new google.maps.DistanceMatrixService();
-     distanceService.getDistanceMatrix({
-        origins: [$("#pickup_location").val()],
-        destinations: [$("#destination_location").val()],
-        travelMode: google.maps.TravelMode.WALKING,
-        unitSystem: google.maps.UnitSystem.METRIC,
-        durationInTraffic: true,
-        avoidHighways: false,
-        avoidTolls: false
-    },
-    function (response, status) {
-        if (status !== google.maps.DistanceMatrixStatus.OK) {
-            console.log('Error:', status);
-        } else {
-            console.log('distance is'+response.rows[0].elements[0].distance.text);
-            console.log('duration is'+response.rows[0].elements[0].duration.text);
-            $("#distance").text(response.rows[0].elements[0].distance.text).show();
-            $("#duration").text(response.rows[0].elements[0].duration.text).show();
+
+    
+
+    function removeURLParameter(url, parameter) {
+        //prefer to use l.search if you have a location/link object
+        var urlparts = url.split('?');   
+        if (urlparts.length >= 2) {
+    
+            var prefix = encodeURIComponent(parameter) + '=';
+            var pars = urlparts[1].split(/[&;]/g);
+    
+            //reverse iteration as may be destructive
+            for (var i = pars.length; i-- > 0;) {    
+                //idiom for string.startsWith
+                if (pars[i].lastIndexOf(prefix, 0) !== -1) {  
+                    pars.splice(i, 1);
+                }
+            }
+            return (pars.length > 0 ? pars.join('&') : '');
         }
-    });
-  }
+        return false;
+    }
+
+    function getQueryStringVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split('&');
+        for (var i=0; i<vars.length; i++) {
+            var pair = vars[i].split('=');
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+    
+        return false;
+   }
+
+    function getDistance(){
+            //Find the distance
+            var distanceService = new google.maps.DistanceMatrixService();
+            distanceService.getDistanceMatrix({
+            origins: [$("#pickup_location").val()],
+            destinations: [$("#destination_location").val()],
+            travelMode: google.maps.TravelMode.DRIVING,
+            unitSystem: google.maps.UnitSystem.METRIC,
+            durationInTraffic: true,
+            avoidHighways: false,
+            avoidTolls: false
+        },
+        function (response, status) {
+            if (status !== google.maps.DistanceMatrixStatus.OK) {
+                console.log('Error:', status);
+            } else {
+                console.log('distance is'+response.rows[0].elements[0].distance.text);
+                console.log('duration is'+response.rows[0].elements[0].duration.text);
+                $("#distance").text(response.rows[0].elements[0].distance.text).show();
+                $("#duration").text(response.rows[0].elements[0].duration.text).show();
+            }
+        });
+    }
+    
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition, null);
@@ -546,6 +980,42 @@ $(document).ready(function () {
         );
     }
 });
+
+
+function appendScheduleTime(thisObj){
+    $('.scheduled-ride-list').find('.scheduleTime').remove();
+    let scheduleTime_template = _.template($('#scheduleTime_template').html());
+    var mainDivId = $(thisObj).data('mdi');
+    $("#"+mainDivId).append(scheduleTime_template).show();
+}
+
+function getScheduleDateTime(thisObj){
+    var mainDivId      = $('input[name=scheduledDate]:checked').data('mdi');
+    var scheduledDate  = $("#lable-"+mainDivId).text();
+    var scheduleHour   = $('.scheduleHour').find(":selected").val();
+    var scheduleMinute = $('.scheduleMinute').find(":selected").val();
+    var scheduleAmPm   = $('.scheduleAmPm').find(":selected").val();
+    var waitTime       = parseFloat(scheduleMinute) + Number(10);
+    var scheduleDateTime = scheduledDate + ", " + scheduleHour + ":" + scheduleMinute + " " + scheduleAmPm + " - " + scheduleHour + ":" + waitTime + " " + scheduleAmPm;
+    $('.scheduleDateTimeApnd').text(scheduleDateTime);
+
+    $('.location-list').attr("style", "display: block !important");
+    $('.scheduled-ride-list').attr("style", "display: none !important");
+
+}
+
+function checkScheduleDateTime(thisObj){
+    var scheduledDate = $('input[name=scheduledDate]:checked').val();
+    var scheduleHour   = $('.scheduleHour').find(":selected").val();
+    var scheduleMinute = $('.scheduleMinute').find(":selected").val();
+    var scheduleAmPm   = $('.scheduleAmPm').find(":selected").val();
+    if(scheduledDate != '' && scheduleHour != '' && scheduleMinute != '' && scheduleAmPm != ''){
+        $('#check-schedule-date-time').prop('disabled', false);
+    }else{
+        $('#check-schedule-date-time').prop('disabled', true);
+    }
+    
+}
 
 function addressInputDisplay(locationWrapper, inputWrapper, input) {
     $(inputWrapper).removeClass("d-none").addClass("d-flex");

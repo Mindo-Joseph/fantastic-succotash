@@ -74,7 +74,6 @@ class CategoryController extends FrontController{
             // if(Session::has('vendors')){
             if( (isset($vendors)) && (count($vendors) > 0) ){
                 Session::put('vendors', $vendors);
-                // $vendors = Session::get('vendors');
                 //remake child categories array
                 if($category->childs->isNotEmpty()){
                     $childArray = array();
@@ -155,7 +154,7 @@ class CategoryController extends FrontController{
                 $user_addresses = UserAddress::get();
                 return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories]);
             }
-        }elseif($page == 'on demand service'){
+        }elseif($page == 'on demand service'){ 
             $cartDataGet = $this->getCartOnDemand($request);
             if($request->step == 2 && empty($request->addons) && empty($request->dataset)){
                 $addos = 0;
@@ -246,9 +245,7 @@ class CategoryController extends FrontController{
                         },
                         'variant' => function($q) use($langId,$column,$value){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode','id');
-                            $q->groupBy('product_id')->with(['checkIfInCart' => function($q1) use($column,$value){
-                                $q1->whereHas('cart',function($qset)use($column,$value){$qset->where($column,$value);});
-                            }]);
+                            $q->groupBy('product_id');
                         },'variant.checkIfInCart'])->select('products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating', 'products.inquiry_only')->where('products.is_live', 1)->where('category_id', $category_id);
             if(count($vendors) > 0){
                 $products = $products->whereIn('products.vendor_id', $vendors);
@@ -376,9 +373,13 @@ class CategoryController extends FrontController{
 
         if(!empty($products)){
             foreach ($products as $key => $value) {
-                foreach ($value->variant as $k => $v) {
-                    $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
-                }
+                $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
+                $value->translation_description = (!empty($value->translation->first())) ? $value->translation->first()->body_html : $value->sku;
+                $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
+                // foreach ($value->variant as $k => $v) {
+                //     $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
+                // }
             }
         }
         $listData = $products;
@@ -436,9 +437,9 @@ class CategoryController extends FrontController{
         $start_time = $date." ".$curr_time;
         $end_time = $date." 23:59";
         $time_slots = $this->SplitTime($start_time, $end_time, "60");
-      
+        $cart_product_id = $request->cart_product_id??0;
         if ($request->ajax()) {
-           return \Response::json(\View::make('frontend.ondemand.time-slots-for-date', array('time_slots' => $time_slots))->render());
+           return \Response::json(\View::make('frontend.ondemand.time-slots-for-date', array('time_slots' => $time_slots,'cart_product_id'=> $cart_product_id))->render());
         }
     }
 

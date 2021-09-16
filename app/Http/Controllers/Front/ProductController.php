@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Front;
 use DB;
 use Auth;
 use Session;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Front\FrontController;
 use Redirect;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Front\FrontController;
 use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category, Vendor};
 class ProductController extends FrontController{
     private $field_status = 2;
@@ -23,6 +24,18 @@ class ProductController extends FrontController{
         $curId = Session::get('customerCurrency');
         $navCategories = $this->categoryNav($langId);
         $product = Product::select('id', 'vendor_id')->where('url_slug', $url_slug)->firstOrFail();
+        $product_in_cart = CartProduct::where(["product_id" => $product->id]);
+        if ($user) {
+             $product_in_cart = $product_in_cart->whereHas('cart', function($query) use($user){
+                $query->where(['user_id' => $user->id]);
+            });
+        } else {
+            $user_token = session()->get('_token');
+            $product_in_cart = $product_in_cart->whereHas('cart', function($query) use($user_token){
+                $query->where(['unique_identifier' => $user_token]);
+            });
+        }
+        $product_in_cart = $product_in_cart->first();
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if($product){
                 $productVendorId = $product->vendor_id;
@@ -136,12 +149,40 @@ class ProductController extends FrontController{
             $listData = $nlistData;
             $category = $category_detail;
 
-           
-            return view('frontend.ondemand.index')->with(['time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
+            if($request->step == 2 && empty($request->addons) && empty($request->dataset)){
+                $addos = 0;
+                foreach($cartDataGet['cartData'] as $cp){
+                    if(count($cp->product->addOn) > 0)
+                    $addos = 1;
+               }
+               if($addos == 1){
+                $name = \Request::route()->getName();
+                $new_url = $request->path()."?step=1&addons=1";
+                return redirect($new_url);
+               }else{
+                $name = \Request::route()->getName();
+                $new_url = $request->path()."?step=2&dataset=1";
+                return redirect($new_url);
+               }
+            }
+            if($request->step == 2 && empty($request->addons))
+            {
+                if ($request->session()->has('skip_addons')) {
+                    $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
+                    return view('frontend.ondemand.index')->with(['clientCurrency' => $clientCurrency,'time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
+                }
+                $request->session()->put('skip_addons', '1');
+                $new_url = $request->path()."?step=2";
+                return redirect($new_url);
+            }
+
+            $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
+            return view('frontend.ondemand.index')->with(['clientCurrency' => $clientCurrency,'time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }
         elseif($product->category->categoryDetail->type_id == 7)
-        {
-            return Redirect::route('categoryDetail','cabservice');
+        {  
+            $slug = $product->category->categoryDetail->slug ?? '';
+            return Redirect::route('categoryDetail',$slug);
         }
         else{
             $vendor_info = Vendor::where('id', $product->vendor_id)->with('slot')->first();
@@ -177,7 +218,7 @@ class ProductController extends FrontController{
     
             // dd($shareComponent);
             $category = $product->category->categoryDetail;
-            return view('frontend.product')->with(['shareComponent' => $shareComponent, 'sets' => $sets, 'vendor_info' => $vendor_info, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn, 'category' => $category]);
+            return view('frontend.product')->with(['shareComponent' => $shareComponent, 'sets' => $sets, 'vendor_info' => $vendor_info, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn, 'category' => $category, 'product_in_cart' => $product_in_cart]);
         
         }
    }
@@ -188,6 +229,7 @@ class ProductController extends FrontController{
      * @return \Illuminate\Http\Response
      */
     public function getVariantData(Request $request, $domain = '', $sku){
+        $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         $product = Product::select('id')->where('sku', $sku)->firstOrFail();
         $pv_ids = array();
         $product_variant = '';
@@ -247,7 +289,7 @@ class ProductController extends FrontController{
         ->where('id', $product->id)->first();
 
         if($pv_ids){
-            $variantData = ProductVariant::with('product', 'media.pimage.image')->select('id', 'sku', 'quantity', 'price', 'compare_at_price', 'barcode', 'product_id')
+            $variantData = ProductVariant::with('product.media.image', 'product.addOn', 'media.pimage.image', 'checkIfInCart')->select('id', 'sku', 'quantity', 'price', 'compare_at_price', 'barcode', 'product_id')
                 ->whereIn('id', $pv_ids)->get();
             if ($variantData) {
                 foreach($variantData as $variant){
@@ -265,6 +307,29 @@ class ProductController extends FrontController{
                 }
                 if(count($variantData) <= 1){
                     $variantData = $variantData->first()->toArray();
+                    if(!empty($variantData['media'])){
+                        $image_fit = $variantData['media'][0]['pimage']['image']['path']['image_fit'];
+                        $image_path = $variantData['media'][0]['pimage']['image']['path']['image_path'];
+                    }else{
+                        $image_fit = $variantData['product']['media'][0]['image']['path']['image_fit'];
+                        $image_path = $variantData['product']['media'][0]['image']['path']['image_path'];
+                    }
+                    if(empty($image_path)){
+                        $image_fit = \Config::get('app.FIT_URl');
+                        $image_path = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png');
+                    }
+                    $variantData['image_fit'] = $image_fit;
+                    $variantData['image_path'] = $image_path;
+                    if(count($variantData['check_if_in_cart']) > 0){
+                        $variantData['check_if_in_cart'] = $variantData['check_if_in_cart'][0];
+                    }
+                    $variantData['isAddonExist'] = 0;
+                    if(count($variantData['product']['add_on']) > 0){
+                        $variantData['isAddonExist'] = 1;
+                    }
+
+                    $variantData['variant_multiplier'] = $clientCurrency ? $clientCurrency->doller_compare : 1;
+                    // dd($variantData);
                 }else{
                     $variantData = array();
                 }

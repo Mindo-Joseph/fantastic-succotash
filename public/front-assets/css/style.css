@@ -36,11 +36,9 @@
   }
   .icon-ic_currency:before {
     content: "\e900";
-    color: #fff;
   }
   .icon-ic_lang:before {
     content: "\e901";
-    color: #fff;
   }
 
 /* latin-ext */
@@ -624,11 +622,11 @@ label {
 ==========================**/
 section,
 .section-t-space {
-    padding-top: 70px;
+    padding-top: 40px;
 }
 
 .section-b-space {
-    padding-bottom: 70px;
+    padding-bottom: 40px;
 }
 
 .large-section {
@@ -5079,8 +5077,8 @@ button.btn.btn-outline:active {
     font-size: 10px;
     line-height: 15px;
     font-weight: 600;
-    top: -9px;
-    right: -11px;
+    top: -40px;
+    right: -20px;
     padding: 3px;
 }
 
@@ -8758,7 +8756,7 @@ footer.dark-footer .sub-footer.dark-subfooter {
 
 .footer-theme .sub-title .contact-list li {
     position: relative;
-    padding-left: 25px;
+    padding-left: 25px !important;
     line-height: 28px;
 }
 
@@ -10660,7 +10658,7 @@ header.header-style .onhover-dropdown:before {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    z-index: 9;
+    z-index: 99;
 }
 
 .main-menu.product-full-page {
@@ -33501,9 +33499,9 @@ body.dark {
         margin-bottom: 15px;
     }
 
-    .cart_qty_cls {
+    /* .cart_qty_cls {
         top: -10px;
-    }
+    } */
 
     header.sticky .top-header {
         display: block;

@@ -65,12 +65,14 @@ class CartController extends FrontController
             'guest_user'=>$guest_user,
             'action' => $action
         );
-        return view('frontend.cartnew')->with($data);
+        $client_preference_detail = ClientPreference::first();
+        return view('frontend.cartnew')->with($data,$client_preference_detail);
         // return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user]);
     }
 
     public function postAddToCart(Request $request, $domain = '')
     {
+        $preference = ClientPreference::first();
         $luxury_option = LuxuryOption::where('title', Session::get('vendorType'))->first();
         try {
             $cart_detail = [];
@@ -81,6 +83,7 @@ class CartController extends FrontController
             $new_session_token = session()->get('_token');
             $client_currency = ClientCurrency::where('is_primary', '=', 1)->first();
             $user_id = $user ? $user->id : '';
+            $variant_id = $request->variant_id;
             if ($user) {
                 $cart_detail['user_id'] = $user_id;
                 $cart_detail['created_by'] = $user_id;
@@ -94,9 +97,34 @@ class CartController extends FrontController
             ];
             if ($user) {
                 $cart_detail = Cart::updateOrCreate(['user_id' => $user->id], $cart_detail);
+                $already_added_product_in_cart = CartProduct::where(["product_id" => $request->product_id, 'cart_id' => $cart_detail->id])->first();
             } else {
                 $cart_detail = Cart::updateOrCreate(['unique_identifier' => $new_session_token], $cart_detail);
+                $already_added_product_in_cart = CartProduct::where(["product_id" => $request->product_id, 'cart_id' => $cart_detail->id])->first();
             }
+            $productDetail = Product::with([
+                'variant' => function ($sel) use($variant_id) {
+                    $sel->where('id', $variant_id);
+                    $sel->groupBy('product_id');
+                }
+            ])->find($request->product_id);
+
+            # if product type is not equal to on demand 
+            if($productDetail->category->categoryDetail->type_id != 8){
+                if(!empty($already_added_product_in_cart)){
+                    if($productDetail->variant[0]->quantity <= $already_added_product_in_cart->quantity){
+                        return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart')]);
+                    }
+                    if($productDetail->variant[0]->quantity <= ($already_added_product_in_cart->quantity + $request->quantity)){
+                        $request->quantity = $productDetail->variant[0]->quantity - $already_added_product_in_cart->quantity;
+                    }
+                }
+                if($productDetail->variant[0]->quantity < $request->quantity){
+                    $request->quantity = $productDetail->variant[0]->quantity;
+                }
+            }
+          
+
             $addonSets = $addon_ids = $addon_options = array();
             if($request->has('addonID')){
                 $addon_ids = $request->addonID;
@@ -145,19 +173,25 @@ class CartController extends FrontController
                 'luxury_option_id' => ($luxury_option) ? $luxury_option->id : 0
             ];
 
+            $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $request->vendor_id)->first();
+
             if ($luxury_option) {
                 $checkCartLuxuryOption = CartProduct::where('luxury_option_id', '!=', $luxury_option->id)->where('cart_id', $cart_detail->id)->first();
                 if ($checkCartLuxuryOption) {
                     CartProduct::where('cart_id', $cart_detail->id)->delete();
                 }
                 if ($luxury_option->id == 2 || $luxury_option->id == 3) {
-                    $checkVendorId = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', '!=', $request->vendor_id)->first();
                     if ($checkVendorId) {
                         CartProduct::where('cart_id', $cart_detail->id)->delete();
                     }else{
                         $checkVendorTableAdded = CartProduct::where('cart_id', $cart_detail->id)->where('vendor_id', $request->vendor_id)->whereNotNull('vendor_dinein_table_id')->first();
                         $cart_product_detail['vendor_dinein_table_id'] = ($checkVendorTableAdded) ? $checkVendorTableAdded->vendor_dinein_table_id : NULL;
                     }
+                }
+            }
+            if ( (isset($preference->isolate_single_vendor_order)) && ($preference->isolate_single_vendor_order == 1) ) {
+                if ($checkVendorId) {
+                    CartProduct::where('cart_id', $cart_detail->id)->delete();
                 }
             }
             
@@ -751,7 +785,22 @@ class CartController extends FrontController
     public function updateQuantity($domain = '', Request $request)
     {
         $cartProduct = CartProduct::find($request->cartproduct_id);
-        $cartProduct->quantity = $request->quantity;
+        $variant_id = $cartProduct->variant_id;
+        $productDetail = Product::with([
+            'variant' => function ($sel) use($variant_id) {
+                $sel->where('id', $variant_id);
+                $sel->groupBy('product_id');
+            }
+        ])->find($cartProduct->product_id);
+
+        if($productDetail->category->categoryDetail->type_id != 8){
+            if($productDetail->variant[0]->quantity < $request->quantity){
+                return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart')]);
+            }
+         
+        }
+
+         $cartProduct->quantity = $request->quantity;
         $cartProduct->save();
        
         return response()->json("Successfully Updated");
@@ -814,7 +863,9 @@ class CartController extends FrontController
         if ($cart) {
             $cart_details = $this->getCart($cart, $address_id);
         }
-        return response()->json(['status' => 'success', 'cart_details' => $cart_details]);
+
+        $client_preference_detail = ClientPreference::first();
+        return response()->json(['status' => 'success', 'cart_details' => $cart_details, 'client_preference_detail' => $client_preference_detail]);
     }
 
 
@@ -932,7 +983,31 @@ class CartController extends FrontController
         }
     }
 
-
+    # update schedule for home services basis on services
+    public function updateProductSchedule(Request $request, $domain = '')
+    {
+        DB::beginTransaction();
+        try{
+            $user = Auth::user();
+            if ($user) {
+                if($request->task_type == 'now'){
+                    $request->schedule_dt = Carbon::now()->format('Y-m-d H:i:s');
+                }else{
+                    $request->schedule_dt = Carbon::parse($request->schedule_dt, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
+                }
+                CartProduct::where('id', $request->cart_product_id)->update(['schedule_type' => $request->task_type, 'scheduled_date_time' => $request->schedule_dt]);
+                DB::commit();
+                return response()->json(['status'=>'Success', 'message'=>'Cart has been scheduled']);
+            }
+            else{
+                return response()->json(['status'=>'Error', 'message'=>'Invalid user']);
+            }
+        }
+        catch(\Exception $ex){
+            DB::rollback();
+            return response()->json(['status'=>'Error', 'message'=>$ex->getMessage()]);
+        }
+    }
 
     // add ones add in cart for ondemand 
 
@@ -1004,6 +1079,23 @@ class CartController extends FrontController
             return response()->json(['status' => 'success', 'message' => 'Addons Added Successfully!']);
         } catch (Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function checkIsolateSingleVendor(Request $request, $domain=''){
+        $preference = ClientPreference::first();
+        $user = Auth::user();
+        $new_session_token = session()->get('_token');
+        if ($user) {
+            $cart_detail = Cart::where('user_id', $user->id)->first();
+        } else {
+            $cart_detail = Cart::where('unique_identifier', $new_session_token)->first();
+        }
+        if ( (isset($preference->isolate_single_vendor_order)) && ($preference->isolate_single_vendor_order == 1) && (!empty($cart_detail)) ) {
+            $checkVendorId = CartProduct::where('vendor_id', '!=', $request->vendor_id)->where('cart_id', $cart_detail->id)->first();
+            return response()->json(['status'=>'Success', 'otherVendorExists'=>($checkVendorId ? 1 : 0), 'isSingleVendorEnabled'=>1]);
+        }else{
+            return response()->json(['status'=>'Success', 'otherVendorExists'=>0 , 'isSingleVendorEnabled'=>0]);
         }
     }
 }

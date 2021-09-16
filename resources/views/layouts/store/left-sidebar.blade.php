@@ -4,12 +4,97 @@ $urlImg =  $clientData ? $clientData->logo['image_fit'].'200/80'.$clientData->lo
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
+
+
+<style>
+    .cab-booking-header{
+         display: none;
+     }
+ </style>
+
 <header class="site-header">
 @if (Auth::check())
    @include('layouts.store/topbar-auth')
   @else
     @include('layouts.store/topbar-guest')
   @endif
+        <!-- Start Cab Booking Header From Here -->
+        <div class="cab-booking-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-2">
+                        <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
+                    </div>
+                    <div class="top-header bg-transparent col-10 d-flex align-items-center justify-content-end">
+                        <ul class="header-dropdown">
+                            <li class="onhover-dropdown change-language">
+                                <a href="javascript:void(0)">{{session()->get('locale')}} 
+                                <span class="icon-ic_lang align-middle"></span>
+                                <span class="language ml-1 align-middle">language</span>
+                                </a>
+                                <ul class="onhover-show-div">
+                                    @foreach($languageList as $key => $listl)
+                                        <li class="{{session()->get('locale') ==  $listl->language->sort_code ?  'active' : ''}}">
+                                            <a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                            <li class="onhover-dropdown change-currency">
+                                <a href="javascript:void(0)">{{session()->get('iso_code')}}
+                                <span class="icon-ic_currency align-middle"></span>
+                                <span class="currency ml-1 align-middle">currency</span>
+                                </a>
+                                <ul class="onhover-show-div">
+                                    @foreach($currencyList as $key => $listc)
+                                    <li class="{{session()->get('iso_code') ==  $listc->currency->iso_code ?  'active' : ''}}">
+                                        <a href="javascript:void(0)" currId="{{$listc->currency_id}}" class="customerCurr" currSymbol="{{$listc->currency->symbol}}">
+                                            {{$listc->currency->iso_code}}
+                                        </a>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                            @if(Auth::guest())
+                            <li class="onhover-dropdown mobile-account">
+                                <i class="fa fa-user" aria-hidden="true"></i>{{__('Account')}}
+                                <ul class="onhover-show-div">
+                                    <li>
+                                        <a href="{{route('customer.login')}}" data-lng="en">{{__('Login')}}</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('customer.register')}}" data-lng="es">{{__('Register')}}</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            @else
+                            <li class="onhover-dropdown mobile-account">
+                                <i class="fa fa-user" aria-hidden="true"></i>{{__('Account')}}
+                                <ul class="onhover-show-div">
+                                    @if(Auth::user()->is_superadmin == 1 || Auth::user()->is_admin == 1)
+                                    <li>
+                                        <a href="{{route('client.dashboard')}}" data-lng="en">{{__('Control Panel')}}</a>
+                                    </li>
+                                    @endif
+                                    <li>
+                                        <a href="{{route('user.profile')}}" data-lng="en">{{__('Profile')}}</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('user.logout')}}" data-lng="es">{{__('Logout')}}</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                           
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Cab Booking Header From Here -->
+
+
         <div class="container main-menu d-block">
             <div class="row align-items-center py-md-2 position-initial">
                 <div class="col-lg-2 col-3">
@@ -19,7 +104,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="d-md-flex mr-auto">  
                         @if( (Session::get('preferences')))
                             @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
-                                <div class="location-bar d-flex align-items-center justify-content-start ml-md-2 my-2 my-lg-0 dropdown-toggle order-1" href="#edit-address" data-toggle="modal">
+                                <div class="location-bar d-none d-lg-flex align-items-center justify-content-start ml-md-2 my-2 my-lg-0 dropdown-toggle order-1" href="#edit-address" data-toggle="modal">
                                     <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                                     <div class="homepage-address text-left">
                                         <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
@@ -44,7 +129,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 @endif
                                 @if($client_preference_detail->takeaway_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ __('Takeaway') }}</a>
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{getNomenclatureName('Takeaway', true)}}</a>
                                 </li>
                                 @endif
                                 <div class="navigation-tab-overlay"></div>
@@ -52,12 +137,26 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif 
                     </div>
                 </div>
-                <div class="col-lg-5 col-9 order-lg-2 order-1 position-initial">                
-                    <div class="search_bar menu-right d-flex align-items-center justify-content-end justify-content-lg-between w-100 ">
-                        <div class="radius-bar">
+                <div class="col-lg-5 col-9 order-lg-2 order-1 position-initial"> 
+                                 
+                    <div class="search_bar menu-right d-flex align-items-center justify-content-between justify-content-lg-between w-100 ">
+                        @if( (Session::get('preferences')))
+                            @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
+                                <div class="location-bar d-lg-none d-flex align-items-center justify-content-start ml-md-2 my-2 my-lg-0 dropdown-toggle" href="#edit-address" data-toggle="modal">
+                                    <div class="map-icon mr-1"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                    <div class="homepage-address text-left">
+                                        <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
+                                    </div>
+                                    <div class="down-icon">
+                                        <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            @endif
+                        @endif  
+                        <div class="radius-bar d-none d-lg-inline">
                             <div class="search_form d-flex align-items-center justify-content-between">
                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                <input class="form-control border-0 typeahead" type="search" placeholder="{{__('Search')}}" id="main_search_box">
+                                <input class="form-control border-0 typeahead" type="search" placeholder="{{getNomenclatureName('Search', true)}}" id="main_search_box">
                             </div>
                             <div class="list-box style-4" style="display:none;" id="search_box_main_div">
                                 
@@ -179,8 +278,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     </div>
                                 </li>
                                 <li class="onhover-div mobile-cart">
-                                    <a href="{{route('showCart')}}"><i class="ti-shopping-cart"></i></a>
-                                    <span class="cart_qty_cls" style="display:none"></span>
+                                    <a href="{{route('showCart')}}" style="position: relative">
+                                        <i class="ti-shopping-cart"></i>
+                                        <span class="cart_qty_cls" style="display:none"></span>
+                                    </a>
+                                    {{--<span class="cart_qty_cls" style="display:none"></span>--}}
                                     <ul class="show-div shopping-cart">
                                     </ul>
                                 </li>
@@ -191,7 +293,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div>
             </div>
         </div>
-    @if(count($navCategories) > 0)
+    {{--@if(count($navCategories) > 0)--}}
         <div class="menu-navigation">
             <div class="container">
                 <div class="row">
@@ -233,7 +335,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div>
             </div>
         </div>
-    @endif
+    {{--@endif--}}
 
    
 

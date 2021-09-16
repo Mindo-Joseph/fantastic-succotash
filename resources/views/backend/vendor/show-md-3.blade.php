@@ -27,7 +27,7 @@
         </p>
     </div>
 </div>
-<div class="card-box">
+<!-- <div class="card-box">
     <div class="row text-left">
         <div class="col-md-12">
             <div class="row">
@@ -50,7 +50,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <div class="card-box">
     <div class="row text-left">
         <div class="col-md-12">
@@ -77,6 +77,10 @@
                     <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
                         {!! Form::label('title', '24*7 Availability',['class' => 'control-label']) !!}
                         <input type="checkbox" data-plugin="switchery" name="show_slot" class="form-control" data-color="#43bee1" @if($vendor->show_slot == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
+                    </div>
+                    <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+                        {!! Form::label('title', 'Auto Accept Order',['class' => 'control-label']) !!}
+                        <input type="checkbox" data-plugin="switchery" name="auto_accept_order" class="form-control" data-color="#43bee1" @if($vendor->auto_accept_order == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
                     </div>
                     <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
                         {!! Form::label('title', 'Show Profile Details',['class' => 'control-label']) !!}

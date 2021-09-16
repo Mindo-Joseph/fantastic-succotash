@@ -63,7 +63,7 @@ class ProductVariant extends Model
     }
     public function product()
     {
-        return $this->belongsTo('App\Models\Product', 'product_id', 'id')->select('id', 'sku', 'title', 'averageRating', 'inquiry_only');
+        return $this->belongsTo('App\Models\Product', 'product_id', 'id')->select('id', 'sku', 'title', 'averageRating', 'inquiry_only', 'vendor_id');
     }
     public function wishlist(){
        return $this->hasOne('App\Models\UserWishlist', 'product_id', 'product_id')->select('product_id', 'user_id'); 
@@ -81,5 +81,21 @@ class ProductVariant extends Model
         }
 
         return $this->hasMany('App\Models\CartProduct', 'variant_id', 'id')->whereHas('cart',function($qset)use($column,$value){$qset->where($column,$value);});;
+    }
+
+    public function checkIfInCartApp()
+    { 
+        $user = Auth::user();
+        if ($user->id && $user->id > 0) {
+            $column = 'user_id';
+            $value = $user->id;
+        } else {
+            $column = 'unique_identifier';
+            $value = $user->system_user;
+        }
+
+        return $this->hasMany('App\Models\CartProduct', 'variant_id', 'id')->whereHas('cart',function($qset)use($column,$value){
+            $qset->where($column,$value);
+        });
     }
 }

@@ -713,13 +713,13 @@
                      <div class="card-box mb-0">
                         <div class="row align-items-center">
                            <div class="col-sm-5">
-                              <div class="form-group mb-0 switchery-demo">
+                              <div class="form-group mb-md-0 switchery-demo">
                                  <label for="verify_email" class="mr-3 mb-0">Verify Email</label>
                                  <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1')) checked='checked' @endif>
                               </div>
                            </div>
                            <div class="col-sm-5">
-                              <div class="form-group mb-0">
+                              <div class="form-group mb-md0">
                                  <label for="verify_phone" class="mr-3 mb-0">Verify Phone</label>
                                  <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1')) checked='checked' @endif>
                               </div>
@@ -739,19 +739,19 @@
                      <div class="card-box mb-0">
                         <div class="row align-items-center">
                            <div class="col-md-3">
-                              <div class="form-group mb-0">
+                              <div class="form-group mb-md-0">
                                  <label for="dinein_check" class="mr-3 mb-0">Dine In</label>
                                  <input type="checkbox" data-plugin="switchery" name="dinein_check" id="dinein_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->dinein_check == '1')) checked='checked' @endif>
                               </div>
                            </div>
                            <div class="col-md-3">
-                              <div class="form-group mb-0">
+                              <div class="form-group mb-md-0">
                                  <label for="delivery_check" class="mr-3 mb-0">Delivery</label>
                                  <input type="checkbox" data-plugin="switchery" name="delivery_check" id="delivery_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delivery_check == '1')) checked='checked' @endif>
                               </div>
                            </div>
                            <div class="col-md-3">
-                              <div class="form-group mb-0">
+                              <div class="form-group mb-md-0">
                                  <label for="takeaway_check" class="mr-3 mb-0">Takeaway</label>
                                  <input type="checkbox" data-plugin="switchery" name="takeaway_check" id="takeaway_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->takeaway_check == '1')) checked='checked' @endif>
                               </div>
@@ -930,8 +930,32 @@
                      </div>
                      <div class="col-md-4">
                         <div class="form-group mb-3">
-                           <label for="enquire_mode" class="mr-3 mb-0">Subscription Mod</label>
+                           <label for="subscription_mode" class="mr-3 mb-0">Subscription Mod</label>
                            <input type="checkbox" data-plugin="switchery" name="subscription_mode" id="subscription_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->subscription_mode == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="tip_before_order" class="mr-3 mb-0">{{__('Tip Before Order')}}</label>
+                           <input type="checkbox" data-plugin="switchery" name="tip_before_order" id="tip_before_order" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->tip_before_order == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="tip_after_order" class="mr-3 mb-0">{{__('Tip After Order')}}</label>
+                           <input type="checkbox" data-plugin="switchery" name="tip_after_order" id="tip_after_order" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->tip_after_order == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="off_scheduling_at_cart" class="mr-3 mb-0">{{__('Off Scheduling  Order')}}</label>
+                           <input type="checkbox" data-plugin="switchery" name="off_scheduling_at_cart" id="off_scheduling_at_cart" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->off_scheduling_at_cart == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="form-group mb-3">
+                           <label for="isolate_single_vendor_order" class="mr-3 mb-0">{{__('Isolate Single Vendor Order')}}</label>
+                           <input type="checkbox" data-plugin="switchery" name="isolate_single_vendor_order" id="isolate_single_vendor_order" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->isolate_single_vendor_order == '1')) checked='checked' @endif>
                         </div>
                      </div>
                      <div class="col-md-12">
@@ -952,7 +976,7 @@
                   <div class="col-md-4">
                      <button class="btn w-100 btn-danger cleanSoftDeleted">Clean All Soft Deleted</button>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-4 my-2 my-md-0">
                      <button class="btn w-100 btn-danger importDemoContent">Import Demo Content</button>
                   </div>
                   <div class="col-md-4">

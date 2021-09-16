@@ -371,7 +371,7 @@ class OrderController extends Controller {
                 });
             break;
         }
-        $orders = $orders->paginate($paginate);
+        $orders = $orders->with(['vendor:id,name,logo,banner'])->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
             $order->user_name = $user->name;
@@ -423,7 +423,7 @@ class OrderController extends Controller {
                     $q->select('id','product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                     $q->where('language_id', $language_id);
                 },
-                'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address','vendors.products.productRating'
+                'vendors.products.pvariant.vset.optionData.trans','vendors.products.addon','vendors.coupon','address','vendors.products.productRating','vendors.allStatus'
             ])->where('id', $order_id)->first();
             }else{
                 $order = Order::with(['vendors.vendor',
