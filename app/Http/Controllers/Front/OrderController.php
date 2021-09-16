@@ -773,7 +773,7 @@ class OrderController extends FrontController
                     'title' => __("New Order"),
                     'body'  => __("You have received a new order"),
                     'sound' => "default",
-                    'click_action' => route('order')
+                    'click_action' => route('order.index')
                 ],
                 "data" => [
                     'title' => __("New Order"),
