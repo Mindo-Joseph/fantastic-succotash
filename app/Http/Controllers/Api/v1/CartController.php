@@ -760,11 +760,10 @@ class CartController extends BaseController{
         try{
             $preference = ClientPreference::first();
             $user = Auth::user();
-            $new_session_token = session()->get('_token');
-            if ($user) {
+            if ($user->id && $user->id > 0) {
                 $cart_detail = Cart::where('user_id', $user->id)->first();
             } else {
-                $cart_detail = Cart::where('unique_identifier', $new_session_token)->first();
+                $cart_detail = Cart::where('unique_identifier', $user->system_user)->first();
             }
             if ( (isset($preference->isolate_single_vendor_order)) && ($preference->isolate_single_vendor_order == 1) && (!empty($cart_detail)) ) {
                 $checkVendorId = CartProduct::where('vendor_id', '!=', $request->vendor_id)->where('cart_id', $cart_detail->id)->first();
