@@ -1272,14 +1272,11 @@ class OrderController extends FrontController
                             'id' => $file['id'],
                             'filename' => $file_uploaded_name,
                             'Mime-Type' => $file_mime,
-                            'contents' =>
-                            json_encode([
-                                'file_type' => $file['file_type'],
-                                'id' => $file['id'],
-                                'contents' => fopen($file_path, 'r')
-                            ]),
+                            'contents' => fopen($file_path, 'r'),
+                          
                         ];
                         $other[$key2]=[
+                            'filename1' => $file_uploaded_name,
                             'file_type' => $file['file_type'],
                             'id' => $file['id'],  
                         ];
@@ -1293,7 +1290,7 @@ class OrderController extends FrontController
                         $key1++;
                     }
                 }
-                $res = $client->post($url.'/api/agent/create', [
+                $res = $client->post( $url.'/api/agent/create', [
 
                     'multipart' => [
                         $filedata[0],
