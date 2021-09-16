@@ -75,14 +75,19 @@ class HomePageLabelSeeder extends Seeder
             'order_by' => 6,
         ]);
 
-        $already = HomePageLabel::where('slug', 'cab_booking')->count();
+        $already = HomePageLabel::where('slug', 'pickup_delivery')->count();
 
-        if($already == 0)
-        $home_page = HomePageLabel::insertGetId([
-            'title' => 'Cab Booking',
-            'slug' => 'cab_booking',
-            'order_by' => 7,
-            'is_active' => 0
-        ]);
+        if($already == 0){
+             $home_page = HomePageLabel::insertGetId([
+                'id' => 7,
+                'title' => 'Pickup Delivery',
+                'slug' => 'pickup_delivery',
+                'order_by' => 7,
+                'is_active' => 0
+            ]);
+         
+        }
+           
+       
     }
 }
