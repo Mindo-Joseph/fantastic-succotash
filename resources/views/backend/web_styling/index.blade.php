@@ -191,7 +191,7 @@
 </form>
 
 <!-- cab booking template -->
-
+@if(isset($if_pickup_on) && !empty($if_pickup_on)  && $if_pickup_on->is_active == 1)
 <div class="row">
     <div class="col-xl-8">
         <div class="card-box home-options-list">
@@ -312,6 +312,8 @@
 <!-- end modal for add section -->
 <!-- end cab booking template -->
 
+
+@endif
 @endsection
 
 @section('script')

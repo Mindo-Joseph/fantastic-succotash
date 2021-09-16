@@ -22,13 +22,15 @@ class WebStylingController extends BaseController{
         $all_pickup_category = Category::with('translation_one')->where('type_id',7)->get();
         $cab_booking_layouts = CabBookingLayout::with('translations')->orderBy('order_by')->get();
         // pr($home_page_labels->toArray());die;
+
+        $if_pickup_on  = HomePageLabel::where('slug','pickup_delivery')->first();
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
                     ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
                     ->where('client_languages.client_code', Auth::user()->code)
                     ->where('client_languages.is_active', 1)
                     ->orderBy('client_languages.is_primary', 'desc')->get();
 
-        return view('backend/web_styling/index')->with(['all_pickup_category'=> $all_pickup_category,'client_preferences' => $client_preferences,'home_page_labels' => $home_page_labels,'cab_booking_layouts' => $cab_booking_layouts, 'langs' => $langs]);
+        return view('backend/web_styling/index')->with(['if_pickup_on' => $if_pickup_on ,'all_pickup_category'=> $all_pickup_category,'client_preferences' => $client_preferences,'home_page_labels' => $home_page_labels,'cab_booking_layouts' => $cab_booking_layouts, 'langs' => $langs]);
     }
 
 
@@ -80,10 +82,10 @@ class WebStylingController extends BaseController{
             $best_sellers->is_active = $request->has('best_sellers') && $request->best_sellers == "on" ? 1 : 0;
             $best_sellers->save(); 
         }
-        $cab_booking = HomePageLabel::where('slug', 'cab_booking')->first();
-        if($cab_booking){
-            $cab_booking->is_active = $request->has('cab_booking') && $request->cab_booking == "on" ? 1 : 0;
-            $cab_booking->save(); 
+        $pickup_delivery = HomePageLabel::where('slug', 'pickup_delivery')->first();
+        if($pickup_delivery){
+            $pickup_delivery->is_active = $request->has('pickup_delivery') && $request->pickup_delivery == "on" ? 1 : 0;
+            $pickup_delivery->save(); 
         }
         $client_preferences = ClientPreference::first();
         if($client_preferences){
