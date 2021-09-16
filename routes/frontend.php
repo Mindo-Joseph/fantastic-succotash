@@ -56,6 +56,7 @@ Route::group(['middleware' => ['domain']], function () {
 		'as' => 'customer.resetPassword',
 		'uses' => 'Front\CustomerAuthController@resetPasswordForm'
 	]);
+	
 	Route::get('/autocomplete-search','Front\SearchController@postAutocompleteSearch')->name('autocomplete');
 	Route::get('/search-all/{keyword}','Front\SearchController@showSearchResults')->name('showSearchResults');
 	Route::get('/','Front\UserhomeController@index')->name('userHome');
