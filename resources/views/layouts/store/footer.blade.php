@@ -3,6 +3,7 @@
         <i class="fa fa-angle-double-up"></i>
     </div>
 </div>
+
 @php 
     $mapKey = '1234';
     $theme = \App\Models\ClientPreference::where(['id' => 1])->first();
@@ -33,6 +34,7 @@
     var show_cart_url = "{{ route('showCart') }}";
     var home_page_data_url = "{{ route('homePageData') }}";
     var client_preferences_url = "{{ route('getClientPreferences') }}";
+    var check_isolate_single_vendor_url = "{{ route('checkIsolateSingleVendor') }}";
     let empty_cart_url = "{{route('emptyCartData')}}";
     var cart_details_url = "{{ route('cartDetails') }}";
     var delete_cart_url = "{{ route('emptyCartData') }}";

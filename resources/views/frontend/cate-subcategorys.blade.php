@@ -113,15 +113,15 @@
                                                             <li><i class="fa fa-list-ul list-layout-view"></i></li>
                                                         </ul>
                                                     </div>
-                                                    <div class="collection-grid-view">
+                                                    {{-- <div class="collection-grid-view">
                                                         <ul>
                                                             <li><img src="{{asset('front-assets/images/icon/2.png')}}" alt="" class="product-2-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/3.png')}}" alt="" class="product-3-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/4.png')}}" alt="" class="product-4-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/6.png')}}" alt="" class="product-6-layout-view"></li>
                                                         </ul>
-                                                    </div>
-                                                    <div class="product-page-per-view">
+                                                    </div> --}}
+                                                    {{-- <div class="product-page-per-view">
                                                         <?php $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 8; ?>
                                                         <select class="customerPaginate">
 
@@ -134,7 +134,7 @@
                                                             <option value="48" @if($pagiNate == 48) selected @endif>Show 48
                                                             </option>
                                                         </select>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -145,7 +145,7 @@
                                                 @if(!empty($category->childs) && count($category->childs) > 0)
                                                     @foreach($category->childs->toArray() as $cate)
                                                     <div class="col-xl-3 col-6 col-grid-box">
-                                                        <a href="{{route('categoryDetail', $cate['slug'])}}"  class="product-box scale-effect d-block  mt-3">
+                                                        <a href="{{route('categoryDetail', $cate['slug'])}}"  class="product-box scale-effect mt-3">
                                                             <div class="product-image p-0"><img width="100%" alt="" src="{{$cate['icon']['proxy_url'] . '150/150' . $cate['icon']['image_path']}}" ></div>                                                        
                                                             <div class="media-body align-self-center">
                                                                 <div class="inner_spacing w-100">
