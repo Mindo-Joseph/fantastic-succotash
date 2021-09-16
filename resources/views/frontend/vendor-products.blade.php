@@ -140,7 +140,9 @@
                                     <div class="media-body align-self-center">
                                         <div class="inner_spacing">
                                             <a href="{{route('productDetail', $new['url_slug'])}}">
-                                                <h3>{{ $new['translation_title'] }}</h3>
+                                                <h3 class="d-flex align-items-center justify-content-between">
+                                                    <label class="mb-0">{{ $new['translation_title'] }}</label>
+                                                </h3>
                                                 @if($new['inquiry_only'] == 0)
                                                     <h4 class="mt-1">
                                                         <?php $multiply = $new['variant_multiplier']; ?>
@@ -227,14 +229,14 @@
                                                             <li><i class="fa fa-list-ul list-layout-view"></i></li>
                                                         </ul>
                                                     </div>
-                                                    <div class="collection-grid-view">
+                                                    {{-- <div class="collection-grid-view">
                                                         <ul>
                                                             <li><img src="{{asset('front-assets/images/icon/2.png')}}" alt="" class="product-2-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/3.png')}}" alt="" class="product-3-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/4.png')}}" alt="" class="product-4-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/6.png')}}" alt="" class="product-6-layout-view"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> --}} 
                                                     {{--<div class="product-page-per-view">
                                                         <?php $pnum = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 8; ?>
                                                         <select class="customerPaginate">
@@ -264,8 +266,8 @@
                                                         }
                                                         $imagePath2 = $data->media[$i]->image->path['image_fit'] . '600/600' . $data->media[$i]->image->path['image_path'];
                                                     } ?>
-                                                    <div class="col-xl-4 col-6 col-grid-box mt-3">
-                                                        <a href="{{route('productDetail', $data->url_slug)}}" class="product-box scale-effect d-block mt-4">
+                                                    <div class="col-xl-3 col-md-4 col-6 col-grid-box mt-3">
+                                                        <a href="{{route('productDetail', $data->url_slug)}}" class="product-box scale-effect mt-4">
                                                             <div class="product-image p-0">
                                                                 <img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt="">
                                                             </div>

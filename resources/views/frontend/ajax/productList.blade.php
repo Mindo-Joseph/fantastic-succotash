@@ -11,8 +11,8 @@
                     }
                     $imagePath2 = $data->media[$i]->image->path['proxy_url'].'300/300'.$data->media[$i]->image->path['image_path'];
                 } ?>
-                <div class="col-xl-4 col-6 col-grid-box mt-3">
-                    <a href="{{route('productDetail', $data->url_slug)}}" class="product-box scale-effect d-block mt-0">
+                <div class="col-xl-3 col-md-4 col-6 col-grid-box mt-3">
+                    <a href="{{route('productDetail', $data->url_slug)}}" class="product-box scale-effect mt-0">
                         <div class="product-image p-0">
                             <img class="img-fluid blur-up lazyload" src="{{$imagePath}}" alt="">
                         </div>
@@ -28,7 +28,7 @@
                                         @endif
                                     @endif
                                 </h3>
-                                <p>Lorem ipsum dolor sit amet.</p>
+                                <p>{{ $data->translation_description }}</p>
                                 @if($data['inquiry_only'] == 0)
                                     <h4 class="mt-1">{{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}</h4>
                                 @endif

@@ -698,6 +698,112 @@
             </div>
          </form>
       </div>
+      <div class="col-xl-6 mb-3">
+         <form method="POST" action="{{route('configure.update', Auth::user()->code)}}" class="h-100">
+            @csrf
+            <div class="card-box h-100 h-100">
+               <h4 class="header-title text-uppercase">{{__('Firebase Notification Configuration')}}</h4>
+               <p class="sub-header">{{__('View and update your Firebase Keys')}}</p>
+               <div class="row">
+                  <div class="col-md-6">
+                     <div class="form-group mb-3">
+                        <label for="mail_type">{{__('Server Key')}}</label>
+                        <input type="text" name="fcm_server_key" placeholder="" class="form-control" value="{{ old('fcm_server_key', $preference->fcm_server_key ?? '')}}" required>
+                        @if($errors->has('fcm_server_key'))
+                        <span class="text-danger" role="alert">
+                           <strong>{{ $errors->first('fcm_server_key') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+                  </div>
+                  <div class="col-md-6">
+                     <div class="form-group mb-3">
+                        <label for="mail_driver">{{__('API Key')}}</label>
+                        <input type="text" name="fcm_api_key" placeholder="" class="form-control" value="{{ old('fcm_api_key', $preference->fcm_api_key ?? '')}}" required>
+                        @if($errors->has('fcm_api_key'))
+                        <span class="text-danger" role="alert">
+                           <strong>{{ $errors->first('fcm_api_key') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+                  </div>
+                  <div class="col-md-6">
+                     <div class="form-group mb-3">
+                        <label for="mail_host">{{__('Auth Domain')}}</label>
+                        <input type="text" name="fcm_auth_domain" id="" placeholder="" class="form-control" value="{{ old('fcm_auth_domain', $preference->fcm_auth_domain ?? '')}}" required>
+                        @if($errors->has('fcm_auth_domain'))
+                        <span class="text-danger" role="alert">
+                           <strong>{{ $errors->first('fcm_auth_domain') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+                  </div>
+                  <div class="col-md-6">
+                     <div class="form-group mb-3">
+                        <label for="mail_port">{{__('Project ID')}}</label>
+                        <input type="text" name="fcm_project_id" placeholder="" class="form-control" value="{{ old('fcm_project_id', $preference->fcm_project_id ?? '')}}" required>
+                        @if($errors->has('fcm_project_id'))
+                        <span class="text-danger" role="alert">
+                           <strong>{{ $errors->first('fcm_project_id') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+                  </div>
+                  <div class="col-md-6">
+                     <div class="form-group mb-3">
+                        <label for="mail_username">{{__('Storage Bucket')}}</label>
+                        <input type="text" name="fcm_storage_bucket" placeholder="" class="form-control" value="{{ old('fcm_storage_bucket', $preference->fcm_storage_bucket ?? '')}}" required>
+                        @if($errors->has('fcm_storage_bucket'))
+                        <span class="text-danger" role="alert">
+                           <strong>{{ $errors->first('fcm_storage_bucket') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+                  </div>
+                  <div class="col-md-6">
+                     <div class="form-group mb-3">
+                        <label for="mail_password">{{__('Messaging Sender ID')}}</label>
+                        <input type="password" name="fcm_messaging_sender_id" placeholder="" class="form-control" value="{{ old('fcm_messaging_sender_id', $preference->fcm_messaging_sender_id ?? '')}}" required>
+                        @if($errors->has('fcm_messaging_sender_id'))
+                        <span class="text-danger" role="alert">
+                           <strong>{{ $errors->first('fcm_messaging_sender_id') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+                  </div>
+                  <div class="col-md-6">
+                     <div class="form-group mb-3">
+                        <label for="mail_encryption">{{__('App ID')}}</label>
+                        <input type="text" name="fcm_app_id" placeholder="" class="form-control" value="{{ old('fcm_app_id', $preference->fcm_app_id ?? '')}}" required>
+                        @if($errors->has('fcm_app_id'))
+                        <span class="text-danger" role="alert">
+                           <strong>{{ $errors->first('fcm_app_id') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+                  </div>
+                  <div class="col-md-6">
+                     <div class="form-group mb-3">
+                        <label for="mail_from">{{__('Measurement ID')}}</label>
+                        <input type="text" name="fcm_measurement_id" placeholder="" class="form-control" value="{{ old('fcm_measurement_id', $preference->fcm_measurement_id ?? '')}}" required>
+                        @if($errors->has('fcm_measurement_id'))
+                        <span class="text-danger" role="alert">
+                           <strong>{{ $errors->first('fcm_measurement_id') }}</strong>
+                        </span>
+                        @endif
+                     </div>
+                  </div>
+               </div>
+               <div class="row mb-2">
+                  <div class="col-md-2">
+                     <div class="form-group mb-0 text-center">
+                        <button class="btn btn-info d-block" type="submit"> Save </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </form>
+      </div>
    </div>
    
       <div class="row">
