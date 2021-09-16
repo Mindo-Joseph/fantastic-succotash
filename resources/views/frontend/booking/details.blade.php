@@ -1,4 +1,4 @@
-@extends('layouts.store', ['title' => 'Product'])
+@extends('layouts.store', ['title' => 'Booking Details'])
 @section('content')
 <style type="text/css">
 
@@ -19,7 +19,7 @@
         opacity: 0;
       }
     }
-    .top-header,.main-menu.d-block{
+    .site-topbar,.main-menu.d-block{
         display: none !important;
     }
     
@@ -30,12 +30,24 @@
         display: block !important;
     }
     </style>
-<style>
-    .container .main-menu .d-block{
-         display: none !important;
-     }
- </style>
-
+    
+    <?php
+    $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+    if (strpos($url,'/looking/details/') !== false) {?>
+    <style>
+        .container .main-menu .d-block{
+             display: none;
+         }
+     </style>
+    <?php
+    } else { ?>
+        <style>
+            .cab-booking-header{
+                 display: none;
+             }
+         </style>
+    <?php }
+    ?>
 <header>
     <div class="mobile-fix-option"></div>
     @include('layouts.store/left-sidebar')
@@ -182,7 +194,7 @@
                                 <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
                                 <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
                                 <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
-                                <li><span class="rating-count">(8)</span></li>
+                                <li><span class="rating-count">(<%= result.total_order_by_agent %> )</span></li>
                             </ul>
                             <p class="mb-0" id="driver_phone_number"><%= result.phone_number %></p>
                        </div>
