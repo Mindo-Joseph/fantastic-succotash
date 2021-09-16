@@ -707,8 +707,8 @@
                <div class="row">
                   <div class="col-md-6">
                      <div class="form-group mb-3">
-                        <label for="mail_type">{{__('Server Key')}}</label>
-                        <input type="text" name="fcm_server_key" placeholder="" class="form-control" value="{{ old('fcm_server_key', $preference->fcm_server_key ?? '')}}" required>
+                        <label for="fcm_server_key">{{__('Server Key')}}</label>
+                        <input type="text" name="fcm_server_key" id="fcm_server_key" placeholder="" class="form-control" value="{{ old('fcm_server_key', $preference->fcm_server_key ?? '')}}" required>
                         @if($errors->has('fcm_server_key'))
                         <span class="text-danger" role="alert">
                            <strong>{{ $errors->first('fcm_server_key') }}</strong>
@@ -718,8 +718,8 @@
                   </div>
                   <div class="col-md-6">
                      <div class="form-group mb-3">
-                        <label for="mail_driver">{{__('API Key')}}</label>
-                        <input type="text" name="fcm_api_key" placeholder="" class="form-control" value="{{ old('fcm_api_key', $preference->fcm_api_key ?? '')}}" required>
+                        <label for="fcm_api_key">{{__('API Key')}}</label>
+                        <input type="text" name="fcm_api_key" id="fcm_api_key" placeholder="" class="form-control" value="{{ old('fcm_api_key', $preference->fcm_api_key ?? '')}}" required>
                         @if($errors->has('fcm_api_key'))
                         <span class="text-danger" role="alert">
                            <strong>{{ $errors->first('fcm_api_key') }}</strong>
@@ -729,8 +729,8 @@
                   </div>
                   <div class="col-md-6">
                      <div class="form-group mb-3">
-                        <label for="mail_host">{{__('Auth Domain')}}</label>
-                        <input type="text" name="fcm_auth_domain" id="" placeholder="" class="form-control" value="{{ old('fcm_auth_domain', $preference->fcm_auth_domain ?? '')}}" required>
+                        <label for="fcm_auth_domain">{{__('Auth Domain')}}</label>
+                        <input type="text" name="fcm_auth_domain" id="fcm_auth_domain" placeholder="" class="form-control" value="{{ old('fcm_auth_domain', $preference->fcm_auth_domain ?? '')}}" required>
                         @if($errors->has('fcm_auth_domain'))
                         <span class="text-danger" role="alert">
                            <strong>{{ $errors->first('fcm_auth_domain') }}</strong>
@@ -740,8 +740,8 @@
                   </div>
                   <div class="col-md-6">
                      <div class="form-group mb-3">
-                        <label for="mail_port">{{__('Project ID')}}</label>
-                        <input type="text" name="fcm_project_id" placeholder="" class="form-control" value="{{ old('fcm_project_id', $preference->fcm_project_id ?? '')}}" required>
+                        <label for="fcm_project_id">{{__('Project ID')}}</label>
+                        <input type="text" name="fcm_project_id" id="fcm_project_id" placeholder="" class="form-control" value="{{ old('fcm_project_id', $preference->fcm_project_id ?? '')}}" required>
                         @if($errors->has('fcm_project_id'))
                         <span class="text-danger" role="alert">
                            <strong>{{ $errors->first('fcm_project_id') }}</strong>
@@ -751,8 +751,8 @@
                   </div>
                   <div class="col-md-6">
                      <div class="form-group mb-3">
-                        <label for="mail_username">{{__('Storage Bucket')}}</label>
-                        <input type="text" name="fcm_storage_bucket" placeholder="" class="form-control" value="{{ old('fcm_storage_bucket', $preference->fcm_storage_bucket ?? '')}}" required>
+                        <label for="fcm_storage_bucket">{{__('Storage Bucket')}}</label>
+                        <input type="text" name="fcm_storage_bucket" id="fcm_storage_bucket" placeholder="" class="form-control" value="{{ old('fcm_storage_bucket', $preference->fcm_storage_bucket ?? '')}}" required>
                         @if($errors->has('fcm_storage_bucket'))
                         <span class="text-danger" role="alert">
                            <strong>{{ $errors->first('fcm_storage_bucket') }}</strong>
@@ -762,8 +762,8 @@
                   </div>
                   <div class="col-md-6">
                      <div class="form-group mb-3">
-                        <label for="mail_password">{{__('Messaging Sender ID')}}</label>
-                        <input type="password" name="fcm_messaging_sender_id" placeholder="" class="form-control" value="{{ old('fcm_messaging_sender_id', $preference->fcm_messaging_sender_id ?? '')}}" required>
+                        <label for="fcm_messaging_sender_id">{{__('Messaging Sender ID')}}</label>
+                        <input type="text" name="fcm_messaging_sender_id" id="fcm_messaging_sender_id" placeholder="" class="form-control" value="{{ old('fcm_messaging_sender_id', $preference->fcm_messaging_sender_id ?? '')}}" required>
                         @if($errors->has('fcm_messaging_sender_id'))
                         <span class="text-danger" role="alert">
                            <strong>{{ $errors->first('fcm_messaging_sender_id') }}</strong>
@@ -773,8 +773,8 @@
                   </div>
                   <div class="col-md-6">
                      <div class="form-group mb-3">
-                        <label for="mail_encryption">{{__('App ID')}}</label>
-                        <input type="text" name="fcm_app_id" placeholder="" class="form-control" value="{{ old('fcm_app_id', $preference->fcm_app_id ?? '')}}" required>
+                        <label for="fcm_app_id">{{__('App ID')}}</label>
+                        <input type="text" name="fcm_app_id" id="fcm_app_id" placeholder="" class="form-control" value="{{ old('fcm_app_id', $preference->fcm_app_id ?? '')}}" required>
                         @if($errors->has('fcm_app_id'))
                         <span class="text-danger" role="alert">
                            <strong>{{ $errors->first('fcm_app_id') }}</strong>
@@ -784,8 +784,8 @@
                   </div>
                   <div class="col-md-6">
                      <div class="form-group mb-3">
-                        <label for="mail_from">{{__('Measurement ID')}}</label>
-                        <input type="text" name="fcm_measurement_id" placeholder="" class="form-control" value="{{ old('fcm_measurement_id', $preference->fcm_measurement_id ?? '')}}" required>
+                        <label for="fcm_measurement_id">{{__('Measurement ID')}}</label>
+                        <input type="text" name="fcm_measurement_id" id="fcm_measurement_id" placeholder="" class="form-control" value="{{ old('fcm_measurement_id', $preference->fcm_measurement_id ?? '')}}">
                         @if($errors->has('fcm_measurement_id'))
                         <span class="text-danger" role="alert">
                            <strong>{{ $errors->first('fcm_measurement_id') }}</strong>

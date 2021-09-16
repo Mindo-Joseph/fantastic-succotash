@@ -209,7 +209,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
     Route::post('subscription/payment/stripe', 'Client\StripeGatewayController@subscriptionPaymentViaStripe')->name('subscription.payment.stripe');
 
     Route::get('/admin/signup', 'Client\AdminSignUpController@index')->name('admin.signup');
-    Route::get('save_fcm_token', 'Client\UserController@save_fcm')->name('client.save_fcm');
+    Route::post('save_fcm_token', 'Client\UserController@save_fcm')->name('client.save_fcm');
 
     // pickup & delivery 
     Route::group(['prefix' => 'vendor/dispatcher'], function () {
