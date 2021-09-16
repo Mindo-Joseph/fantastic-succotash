@@ -1298,9 +1298,9 @@ class OrderController extends FrontController
                     'multipart' => [
                         $filedata[0],
                         $filedata[1],
-                        $filedata[2],
-                        $filedata[3],
-                        $filedata[4],
+                        //$filedata[2],
+                        //$filedata[3],
+                        //$filedata[4],
                         [
                             'name' => 'other',
                             'contents' => json_encode($other)

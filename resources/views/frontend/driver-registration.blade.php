@@ -44,7 +44,7 @@
                             <div class="col-md-4 mb-3" id="phone_numberInput">
                                 <div class="form-group" id="nameInputEdit">
                                     <label for="name" class="control-label">NAME</label>
-                                    <input type="text" class="form-control" id="name" placeholder="John Doe" name="name" value="new">
+                                    <input type="text" class="form-control" id="name" placeholder="John Doe" name="name" value="">
                                     <span class="invalid-feedback" role="alert">
                                         <strong></strong>
                                     </span>
@@ -52,7 +52,7 @@
                             </div>
                             <div class="col-md-4 mb-3" id="phone_numberInput">
                                 <label for="validationCustom02">{{__('CONTACT NUMBER.')}}</label>
-                                <input type="tel" class="form-control" name="phone_number" id="phone" value="86473547537">
+                                <input type="tel" class="form-control" name="phone_number" id="phone" value="">
                                 <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
                                 <input type="hidden" id="countryData" name="countryData" value="us">
                                 <input type="hidden" id="dialCode" name="dialCode" value="">
@@ -105,7 +105,7 @@
                         <div class="col-md-6">
                             <div class="form-group" id="make_modelInputEdit">
                                 <label for="make_model" class="control-label">TRANSPORT DETAILS</label>
-                                <input type="text" class="form-control" id="make_model" placeholder="Year, Make, Model" name="make_model" value="abc">
+                                <input type="text" class="form-control" id="make_model" placeholder="Year, Make, Model" name="make_model" value="">
                                 <span class="invalid-feedback" role="alert">
                                     <strong></strong>
                                 </span>
@@ -114,7 +114,7 @@
                         <div class="col-md-6">
                             <div class="form-group" id="make_modelInput1">
                                 <label for="make_model" class="control-label">UID</label>
-                                <input type="text" class="form-control" id="uid" placeholder="897abd" name="uid" value="999">
+                                <input type="text" class="form-control" id="uid" placeholder="897abd" name="uid" value="">
                                 <span class="invalid-feedback" role="alert">
                                     <strong></strong>
                                 </span>
@@ -125,7 +125,7 @@
                         <div class="col-md-6">
                             <div class="form-group" id="plate_numberInputEdit">
                                 <label for="plate_number" class="control-label">LICENCE PLATE</label>
-                                <input type="text" class="form-control" id="plate_number" name="plate_number" placeholder="508.KLV" value="234">
+                                <input type="text" class="form-control" id="plate_number" name="plate_number" placeholder="508.KLV" value="">
                                 <span class="invalid-feedback" role="alert">
                                     <strong></strong>
                                 </span>
@@ -134,7 +134,7 @@
                         <div class="col-md-6">
                             <div class="form-group" id="colorInputEdit">
                                 <label for="color" class="control-label">COLOR</label>
-                                <input type="text" class="form-control" id="color" name="color" placeholder="Color" value="pink">
+                                <input type="text" class="form-control" id="color" name="color" placeholder="Color" value="">
                                 <span class="invalid-feedback" role="alert">
                                     <strong></strong>
                                 </span>
