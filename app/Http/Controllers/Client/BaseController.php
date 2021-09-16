@@ -78,7 +78,7 @@ class BaseController extends Controller
                         $this->htmlData .= '</li>';
                     }
                 }else{
-                    if($node['type_id'] == 4 || $node['type_id']==5){
+                    if($node['type_id'] == 4 || $node['type_id']==5|| $node['type_id']==1){
                         $this->htmlData .= '<li class="dd-item dd3-item dd-nochildren" data-id="' . $node["id"] . '">';
                     } else {
                         $this->htmlData .= '<li class="dd-item dd3-item" data-id="' . $node["id"] . '">';

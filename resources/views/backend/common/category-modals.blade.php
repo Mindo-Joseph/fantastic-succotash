@@ -8,7 +8,7 @@
             <form id="addCategoryForm" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body" id="AddCategoryBox">
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-info waves-effect waves-light addCategorySubmit">Submit</button>
@@ -30,10 +30,11 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-body" id="editCategoryBox">
-                    
+
                 </div>
 
                 <div class="modal-footer">
+                    <p id="p-error" style="color:red;font-size:26px;padding-right:300px;"></p>
                     <button type="button" class="btn btn-info waves-effect waves-light editCategorySubmit">Submit</button>
                 </div>
             </form>
