@@ -89,7 +89,6 @@ class HomePageLabelSeeder extends Seeder
          
         }
         else{
-            $del = HomePageLabel::where('slug', 'cab_booking')->delete();
             $del = HomePageLabel::where('slug', 'pickup_delivery')->delete();
             $home_page = HomePageLabel::where('id', $already->id)->update([
                 'id' => 8,
