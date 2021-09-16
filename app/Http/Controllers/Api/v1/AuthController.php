@@ -41,11 +41,11 @@ class AuthController extends BaseController{
         $errors = array();
         $user = User::with('country')->where('email', $loginReq->email)->first();
         if(!$user){
-            $errors['error'] = 'Invalid email';
+            $errors['error'] = __('Invalid email');
             return response()->json($errors, 422);
         }
         if(!Auth::attempt(['email' => $loginReq->email, 'password' => $loginReq->password])){
-            $errors['error'] = 'Invalid password';
+            $errors['error'] = __('Invalid password');
             return response()->json($errors, 422);
         }
         $user = Auth::user();
@@ -137,7 +137,7 @@ class AuthController extends BaseController{
             'name'          => 'required|string|min:3|max:50',
             'password'      => 'required|string|min:6|max:50',
             'email'         => 'required|email|max:50||unique:users',
-            'phone_number'  => 'required|string|min:10|max:15|unique:users',
+            'phone_number'  => 'required|string|min:8|max:15|unique:users',
             'refferal_code' => 'nullable|exists:user_refferals,refferal_code',
         ]);
         if($validator->fails()){

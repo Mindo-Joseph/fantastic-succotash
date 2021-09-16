@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Controller;
 use Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\OrderVendorListExport;
+
 class VendorController extends Controller{
     use ApiResponser;
 
@@ -66,15 +69,15 @@ class VendorController extends Controller{
             $vendor->total_paid = 0.00;
             $vendor->url = route('vendor.show', $vendor->id);
             $vendor->view_url = route('vendor.show', $vendor->id);
-            $vendor->delivery_fee = number_format($vendor->orders->sum('delivery_fee'), 2);
-            $vendor->order_value = number_format($vendor->orders->sum('payable_amount'),2);
-            $vendor->payment_method = number_format($vendor->orders->whereIn('payment_option_id', [2,3, 4])->sum('payable_amount'), 2);
-            $vendor->promo_admin_amount = number_format($vendor->orders->where('coupon_paid_by', 1)->sum('discount_amount'), 2);
-            $vendor->promo_vendor_amount = number_format($vendor->orders->where('coupon_paid_by', 0)->sum('discount_amount'), 2);
-            $vendor->cash_collected_amount = number_format($vendor->orders->where('payment_option_id', 1)->sum('payable_amount'), 2);
-            $vendor->admin_commission_amount = number_format($vendor->orders->sum('admin_commission_percentage_amount')+ $vendor->orders->sum('admin_commission_percentage_amount'), 2);
+            $vendor->delivery_fee = number_format($vendor->orders->sum('delivery_fee'), 2, ".","");
+            $vendor->order_value = number_format($vendor->orders->sum('payable_amount'),2, ".","");
+            $vendor->payment_method = number_format($vendor->orders->whereIn('payment_option_id', [2,3, 4])->sum('payable_amount'), 2, ".","");
+            $vendor->promo_admin_amount = number_format($vendor->orders->where('coupon_paid_by', 1)->sum('discount_amount'), 2, ".","");
+            $vendor->promo_vendor_amount = number_format($vendor->orders->where('coupon_paid_by', 0)->sum('discount_amount'), 2, ".","");
+            $vendor->cash_collected_amount = number_format($vendor->orders->where('payment_option_id', 1)->sum('payable_amount'), 2, ".","");
+            $vendor->admin_commission_amount = number_format($vendor->orders->sum('admin_commission_percentage_amount')+ $vendor->orders->sum('admin_commission_percentage_amount'), 2, ".","");
             $admin_commission_amount = $vendor->orders->sum('admin_commission_percentage_amount')+ $vendor->orders->sum('admin_commission_percentage_amount');
-            $vendor->vendor_earning = number_format(($vendor->orders->sum('payable_amount') - $vendor->promo_vendor_amount - $vendor->promo_admin_amount - $admin_commission_amount), 2);
+            $vendor->vendor_earning = number_format(($vendor->orders->sum('payable_amount') - $vendor->promo_vendor_amount - $vendor->promo_admin_amount - $admin_commission_amount), 2, ".","");
         }
         return Datatables::of($vendors)
             ->addIndexColumn()
@@ -88,5 +91,9 @@ class VendorController extends Controller{
                     });
                 }
             })->make(true);
+    }
+
+    public function export() {
+        return Excel::download(new OrderVendorListExport, 'vendor_list.xlsx');
     }
 }
