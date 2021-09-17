@@ -12,7 +12,7 @@ class BaseController extends Controller
 {
     private $htmlData = '';
     private $toggleData = '';
-    private $optionData = '';
+    private $optionData = ''; 
     private $successCount = 0;
     private $parent_cat_id = 0;
     private $makeArray = array();
