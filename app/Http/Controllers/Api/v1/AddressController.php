@@ -35,7 +35,7 @@ class AddressController extends BaseController{
             $user = Auth::user();
             if($validator->fails()){
                 foreach($validator->errors()->toArray() as $error_key => $error_value){
-                    $errors['error'] = $error_value[0];
+                    $errors['error'] = __($error_value[0]);
                     return response()->json($errors, 422);
                 }
             }
