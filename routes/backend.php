@@ -221,7 +221,7 @@ Route::group(['middleware' => ['ClientAuth','database'], 'prefix' => '/client'],
         Route::post('updateCreateVendorInDispatchOnDemand', 'Client\VendorController@updateCreateVendorInDispatchOnDemand')->name('update.Create.Vendor.In.Dispatch.OnDemand');
     });
 });
-
+});
 
 
 Route::get('/search11',[SearchController::class,'search']);

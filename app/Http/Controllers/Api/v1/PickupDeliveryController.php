@@ -184,7 +184,7 @@ class PickupDeliveryController extends BaseController{
                                 ['form_params' => ($postdata)]
                             );
                             $response = json_decode($res->getBody(), true); 
-                            if($response && $response['message'] == __('success')){
+                            if($response && $response['message'] == 'success'){
                                 return $response['total'];
                             }
                     
