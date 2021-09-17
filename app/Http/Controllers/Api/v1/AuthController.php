@@ -142,7 +142,7 @@ class AuthController extends BaseController{
         ]);
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
-                $errors['error'] = $error_value[0];
+                $errors['error'] = __($error_value[0]);
                 return response()->json($errors, 422);
             }
         }
@@ -341,10 +341,10 @@ class AuthController extends BaseController{
         try {
             $user = User::where('id', Auth::user()->id)->first();
             if(!$user){
-                return response()->json(['error' => 'User not found.'], 404);
+                return response()->json(['error' => __('User not found.')], 404);
             }
             if($user->is_email_verified == 1 && $user->is_phone_verified == 1){
-                return response()->json(['message' => 'Account already verified.'], 200); 
+                return response()->json(['message' => __('Account already verified.')], 200); 
             }
             $notified = 1;
             $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
@@ -483,7 +483,7 @@ class AuthController extends BaseController{
         $del_token = UserDevice::where('access_token',$header['authorization'][0])->delete();
 
         return response()->json([
-            'message' => 'Successfully logged out'
+            'message' => __('Successfully logged out')
         ]);
     }
 
@@ -493,7 +493,7 @@ class AuthController extends BaseController{
         ]);
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
-                $errors['error'] = $error_value[0];
+                $errors['error'] = __($error_value[0]);
                 return response()->json($errors, 422);
             }
         }
@@ -579,24 +579,24 @@ class AuthController extends BaseController{
         ]);
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
-                $errors['error'] = $error_value[0];
+                $errors['error'] = __($error_value[0]);
                 return response()->json($errors, 422);
             }
         }
         $user = User::where('email', $request->email)->first();
         if(!$user){
-            return response()->json(['error' => 'User not found.'], 404);
+            return response()->json(['error' => __('User not found.')], 404);
         }
         if($user->email_token != $request->otp){
-            return response()->json(['error' => 'OTP is not valid'], 404);
+            return response()->json(['error' => __('OTP is not valid')], 404);
         }
         $currentTime = Carbon::now()->toDateTimeString();
         if($currentTime > $user->phone_token_valid_till){
-            return response()->json(['error' => 'OTP has been expired.'], 404);
+            return response()->json(['error' => __('OTP has been expired.')], 404);
         }
         $user->password = Hash::make($request['new_password']);
         $user->save(); 
-        return response()->json(['message' => 'Password updated successfully.']);
+        return response()->json(['message' => __('Password updated successfully.')]);
     }
 
     /**
@@ -606,7 +606,7 @@ class AuthController extends BaseController{
      */
     public function sacialData(Request $request){
         return response()->json([
-            'message' => 'Successfully logged out'
+            'message' => __('Successfully logged out')
         ]);
     }
 }
