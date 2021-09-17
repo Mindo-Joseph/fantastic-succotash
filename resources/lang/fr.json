@@ -664,6 +664,9 @@
     "Order Placed": "Commande passée",
     "Coupon Code already applied.": "Code promo déjà appliqué.",
     "Coupon Code already applied other vendor.": "Le code de coupon a déjà été appliqué à un autre fournisseur.",
-    "Create new account":"Créer un nouveau compte",
+    "Create new account": "Créer un nouveau compte",
+    "The country code field is required.": "Le champ code pays est obligatoire.",
+    "Phone number is not valid.": "Le numéro de téléphone n'est pas valide.",
+    "The country field is required.": "Le champ pays est obligatoire.",
     "": ""
 }
