@@ -114,6 +114,12 @@ class CategoryController extends BaseController
                 'data' => $save
             ]);
         }
+        if ($save == 'bad parent') {
+            return response()->json([
+                'status' => 'error1',
+
+            ]);
+        }
     }
 
     /**
@@ -194,19 +200,19 @@ class CategoryController extends BaseController
                 'data' => $save
             ]);
         }
-        if ($save=='bad parent') {
+        if ($save == 'bad parent') {
             return response()->json([
-            'status' => 'error1',
-            
-        ]);
+                'status' => 'error1',
+
+            ]);
         }
-        if ($save=='bad type') {
+        if ($save == 'bad type') {
             return response()->json([
-            'status' => 'error2',
-            
-        ]);
+                'status' => 'error2',
+
+            ]);
         }
-       // return response()->json('error', 'Cannot create a sub-category of product type of category!!!');
+        // return response()->json('error', 'Cannot create a sub-category of product type of category!!!');
     }
 
     /**
@@ -220,8 +226,7 @@ class CategoryController extends BaseController
     {
         try {
             $cate->slug = $request->slug;
-            if($request->type_id==1&&$cate->childs->first()!=null)
-            {
+            if ($request->type_id == 1 && $cate->childs->first() != null) {
                 return 'bad type';
             }
             $cate->type_id = $request->type_id;
@@ -233,8 +238,8 @@ class CategoryController extends BaseController
             $cate->show_wishlist = ($request->has('show_wishlist') && $request->show_wishlist == 'on') ? 1 : 0;
             $cate->can_add_products = ($request->has('can_add_products') && $request->can_add_products == 'on' && ($request->type_id == 1 || $request->type_id == 3)) ? 1 : 0;
             if ($request->has('parent_cate') && $request->parent_cate > 0) {
-                $cat=Category::find($request->parent_cate);
-                if ($update == 'true' && $cat->type->title == 'Product') {
+                $cat = Category::find($request->parent_cate);
+                if ($update =='false'|| $update=='true' && $cat->type->title == 'Product') {
                     return 'bad parent';
                 }
                 $cate->parent_id = $request->parent_cate;

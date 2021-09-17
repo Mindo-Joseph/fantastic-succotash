@@ -153,12 +153,14 @@
                     $(".modal .close").click();
                     location.reload();
                 } else if (response.status == 'error1') {
+                    $("#p-error1").empty();
                     $("#p-error").empty();
-                    $("#p-error").append("Cannot create a sub-category of product type of category!!!");
+                    $("#p-error1").append("*!Cannot create a sub-category of product type of category.");                   
+                    $("#p-error").append("*!Cannot create a sub-category of product type of category.");
                     $(".show_all_error.invalid-feedback").show();
                 } else if (response.status == 'error2') {
-                    $("#p-error").empty();
-                    $("#p-error").append("Either delete the sub categories of this category or do  not change type to product!!!");
+                    $("#p-error1").empty();
+                    $("#p-error1").append("*!Either delete the sub categories of this category or do  not change type to product.");
                     $(".show_all_error.invalid-feedback").show();
                 } else {
                     $(".show_all_error.invalid-feedback").text(response.message);
