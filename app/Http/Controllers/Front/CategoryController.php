@@ -298,6 +298,7 @@ class CategoryController extends FrontController{
         'allParentsAccount'])
         ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products', 'parent_id')
         ->where('slug', $slug1)->firstOrFail();
+        $category->translation_name = ($category->translation->first()) ? $category->translation->first()->name : $category->slug;
 
         $vendor = Vendor::select('id', 'name')->where('slug', $slug2)->where('status', 1)->firstOrFail();
 
