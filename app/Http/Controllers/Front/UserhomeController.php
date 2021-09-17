@@ -189,9 +189,10 @@ class UserhomeController extends FrontController
             $only_cab_booking = OnboardSetting::where('key_value','home_page_cab_booking')->count();
             if($only_cab_booking == 1)
             return Redirect::route('categoryDetail','cabservice');    
-
-            $home_page_pickup_labels = CabBookingLayout::with('translations')->where('is_active', 1)->orderBy('order_by')->get();
-
+            $home_page_pickup_labels = CabBookingLayout::with(['translations' => function($q)use($langId){
+                $q->where('language_id',$langId);
+            }])->where('is_active', 1)->orderBy('order_by')->get();
+           
             return view('frontend.home')->with(['home' => $home, 'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels,'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
             pr($e->getCode());

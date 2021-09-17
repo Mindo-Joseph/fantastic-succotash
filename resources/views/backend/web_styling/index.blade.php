@@ -519,7 +519,11 @@
     $('#pickup-add-section-form').submit(function(e) {
         e.preventDefault();  
         var form = document.getElementById('pickup-add-section-form');
+
         var formData = new FormData(form);
+        for (var i = 0; i < allEditors.length; ++i) {
+            formData.append("description.["+i+"]", CKEDITOR.instances["description"+i].getData());
+        }
         var data_uri = "{{route('pickup.add.section')}}";
         $.ajaxSetup({
             headers: {

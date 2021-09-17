@@ -40,4 +40,4 @@
 
 <!-- Cab Content Area Start From Here -->
 
-{!! $homePagePickupLabel->body_html !!}
+{!! $homePagePickupLabel->translations->first()->body_html !!}
