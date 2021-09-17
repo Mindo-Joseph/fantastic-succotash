@@ -228,9 +228,11 @@
    "Stripe": "Bande",
    "View More": "Voir plus",
    "Address added successfully": "Adresse ajoutée avec succès",
+   "Address added successfully.": "Adresse ajoutée avec succès.",
     "Cash on Delivery": " paiement à la livraison",
     "Empty cart successfully.": " Vider le panier avec succès",
     "Product removed from cart successfully": "Produit supprimé du panier avec succès",
+    "Product removed from cart successfully.": "Produit supprimé du panier avec succès.",
     "Product has been added in wishlist": "Le produit a été ajouté dans la liste de souhaits",
     "Product has been removed from wishlist": "Le produit a été supprimé de la liste de souhaits",
     "Product Successfully added": "Produit ajouté avec succès",
@@ -239,8 +241,11 @@
     "Address is Added successfully": "L'adresse est ajoutée avec succès",
     "Profile image update successfully": "Mise à jour de l'image de profil réussie",
     "Order placed successfully": "Commande passée avec succès",
+    "Order placed successfully.": "Commande passée avec succès.",
     "Promotion Code Removed Successfully": "Code promotionnel supprimé avec succès",
+    "Promotion Code Removed Successfully.": "Code promotionnel supprimé avec succès.",
     "Promotion Code used Successfully": "Code promotionnel utilisé avec succès",
+    "Promotion Code used Successfully.": "Code promotionnel utilisé avec succès.",
     "Offers": "des offres",
     "The select refferal code is invalid": "Le code de parrainage sélectionné n'est pas valide",
     "Create a free account & join us!": "Créez un compte gratuit et rejoignez-nous",
@@ -264,7 +269,9 @@
     "Total": " le total",
     "Show": "spectacle",
     "Address updated successfully": "Adresse mise à jour avec succès",
+    "Address updated successfully.": "Adresse mise à jour avec succès.",
     "Address deleted successfully": "Adresse supprimée avec succès",
+    "Address deleted successfully.": "Adresse supprimée avec succès.",
     "Promotion Code Used Successfully": "Code promotionnel utilisé avec succès",
     "cash on delivery": "paiement à la livraison ",
     "placed": "mis",
@@ -628,7 +635,7 @@
 "COMPANY NAME":"NOM DE LA COMPAGNIE",
 "COUNTRY":"PAYS",
 "TIMEZONE":"FUSEAU HORAIRE",
-"Update":"Mettre à jour",
+
 
 "Admin": "Administrateur",
 "Choose between light and dark theme, for the platform.": "Choisissez entre le thème clair et sombre, pour la plate-forme.",
@@ -653,7 +660,7 @@
 "View and update the naming": "Afficher et mettre à jour le nom",
 "The primary language name field is required.": "Le champ du nom de la langue principale est obligatoire.",
 "Add Social Media": "Ajouter des réseaux sociaux",
-"Loyalty Cards": "Cartes de fidélité",
+
 "URL": "URL",
 
 
@@ -662,18 +669,44 @@
 
 "View Website":  "Voir le site Web",
 "Website": "Site Internet",
-"My Account": "Mon compte",
+
 "Old Password": "Ancien mot de passe",
 "New Password": "Nouveau mot de passe",
 "Enter your old password": "Entrez votre ancien mot de passe",
 "Enter your password": "Tapez votre mot de passe",
-"Confirm Password": "Confirmez le mot de passe",
+
 "Enter your confirm password": "Entrez votre mot de passe de confirmation",
-"Update": "Mettre à jour",
-"Search": "Chercher",
+
+
 
 
 "Loyalty Cards" :   "Cartes de fidélité",
+
+
+"Send Successfully":"Envoyer avec succès",
+"Product has been added in wishlist.":"Le produit a été ajouté dans la liste de souhaits.",
+"Password updated successfully.":"Mot de passe mis à jour avec succès.",
+"Password did not matched.":"Le mot de passe ne correspond pas.",
+"Profile image updated successfully.":"Image de profil mise à jour avec succès.",
+"Profile updated successfully.":"Mise à jour du profil réussie.",
+"Profile updated successfully":"Mise à jour du profil réussie",
+"No record found.":"Aucun Enregistrement Trouvé.",
+"Invalid country code.":"Code de pays invalide.",
+"Account already verified.":"Compte déjà vérifié.",
+"User not found.":"Utilisateur non trouvé.",
+"Successfully logged out":"Déconnecté avec succès",
+"OTP is not valid":"OTP n'est pas valide",
+"OTP has been expired.":"OTP a expiré.",
+"Empty cart.":"Panier vide.",
+"Invalid Promocode Id":"Identifiant de code promotionnel invalide",
+"Invalid vendor id.":"Identifiant de fournisseur non valide.",
+"Invalid Cart Id":"Identifiant de panier invalide",
+"success":"Succès",
+"Your account is not verified.":"Votre compte n'est pas vérifié.",
+"Your phone is not verified.":"Votre téléphone n'est pas vérifié.",
+"Order Placed":"Commande passée",
+"Coupon Code already applied.":"Code promo déjà appliqué.",
+"Coupon Code already applied other vendor.":"Le code de coupon a déjà été appliqué à un autre fournisseur.",
 
 
 
