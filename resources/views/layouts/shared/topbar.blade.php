@@ -101,7 +101,7 @@
         @endphp
         
         <ul class="list-unstyled topnav-menu float-right mb-0">
-            <li class="dropdown ">
+            {{-- <li class="dropdown ">
                 <a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                 Language
                 {{ $applocale_admin }}
@@ -115,7 +115,7 @@
                 <a href="/switch/admin/language?lang=de" class="dropdown-item" langid="1">German</a>
                 <div class="dropdown-divider"></div>
                 </div>
-            </li> 
+            </li>  --}}
 
             
     {{-- ADMIN LANGUAGE SWITCH END --}}

@@ -215,7 +215,7 @@
     "Empty cart successfully.": " Vider le panier avec succès",
     "Product removed from cart successfully": "Produit supprimé du panier avec succès",
     "Product removed from cart successfully.": "Produit supprimé du panier avec succès.",
-    "Product has been added in wishlist": "Le produit a été ajouté dans la liste de souhaits",
+    "Product has been added in wishlist": "Le produit a été ajouté dans la liste de souhaits",    
     "Product has been removed from wishlist": "Le produit a été supprimé de la liste de souhaits",
     "Product has been removed from wishlist.": "Le produit a été supprimé de la liste de souhaits.",
     "Product Successfully added": "Produit ajouté avec succès",
@@ -591,9 +591,10 @@
     "Order Placed": "Commande passée",
     "Coupon Code already applied.": "Code promo déjà appliqué.",
     "Coupon Code already applied other vendor.": "Le code de coupon a déjà été appliqué à un autre fournisseur.",
-    "Create new account":"Créer un nouveau compte",
-    "The country code field is required.":"Le champ code pays est obligatoire.",
-    "Phone number is not valid.":"Le numéro de téléphone n'est pas valide.",
-    "The country field is required.":"Le champ pays est obligatoire.",
-    "Address not found.":"Adresse introuvable."
+    "Create new account": "Créer un nouveau compte",
+    "The country code field is required.": "Le champ code pays est obligatoire.",
+    "Phone number is not valid.": "Le numéro de téléphone n'est pas valide.",
+    "The country field is required.": "Le champ pays est obligatoire.",
+    "Address not found.":"Adresse introuvable.",
+    "": ""
 }
