@@ -238,7 +238,7 @@ class CategoryController extends FrontController{
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
             }
-            $products = Product::with(['media.image', 'category',
+            $products = Product::with(['vendor', 'media.image', 'category',
                         'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },

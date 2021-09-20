@@ -307,8 +307,19 @@ class OrderController extends Controller {
                             'balance_transaction' => $order->payable_amount,
                         ]);
                     }
+                    $order = $order->with(['user_vendor'])->where('order_number', $order->order_number)->first();
+                    $user_admins = User::where(function ($query) {
+                        $query->where(['is_admin' => 1])
+                        ->orWhere(['is_superadmin' => 1]);
+                    })->pluck('id')->toArray();
+                    $user_vendors = [];
+                    if (!empty($order->user_vendor) && count($order->user_vendor) > 0) {
+                        $user_vendors = $order->user_vendor->pluck('user_id')->toArray();
+                    }
+                    $order->admins = array_unique(array_merge($user_admins, $user_vendors));
                     DB::commit();
                     // $this->sendOrderNotification($user->id);
+                    $this->sendOrderPushNotificationVendors($order->admins, $order);
                     return $this->successResponse($order, __('Order placed successfully.'), 201);
                     }
                 }else{
@@ -513,7 +524,10 @@ class OrderController extends Controller {
                     'current_status' => $current_status,
                     'upcoming_status' => $upcoming_status,
                 ];
+                $orderData = Order::find($order_id);
                 DB::commit();
+                // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
+                $this->sendStatusChangePushNotificationCustomer([$orderData->user_id], $orderData, $order_status_option_id);
                 return response()->json([
                     'status' => 'success',
                     'order_status' => $order_status,
@@ -529,4 +543,96 @@ class OrderController extends Controller {
            
         }
     }
+
+    public function sendOrderPushNotificationVendors($user_ids, $orderData)
+    {
+        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
+        $client_preferences = ClientPreference::select('fcm_server_key')->first();
+        if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
+            $from = $client_preferences->fcm_server_key;
+            $notification_content = NotificationTemplate::where('id', 4)->first();
+            if ($notification_content) {
+                $headers = [
+                    'Authorization: key=' . $from,
+                    'Content-Type: application/json',
+                ];
+                $data = [
+                    "registration_ids" => $devices,
+                    "notification" => [
+                        'title' => $notification_content->subject,
+                        'body'  => $notification_content->content,
+                        'sound' => "default",
+                        'click_action' => route('order.index')
+                    ],
+                    "data" => [
+                        'title' => $notification_content->subject,
+                        'body'  => $notification_content->content
+                    ],
+                    "priority" => "high"
+                ];
+                $dataString = $data;
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataString));
+                $result = curl_exec($ch);
+                curl_close($ch);
+            }
+        }
+    }
+
+    public function sendStatusChangePushNotificationCustomer($user_ids, $orderData, $order_status_id)
+    {
+        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
+        $client_preferences = ClientPreference::select('fcm_server_key')->first();
+        if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
+            $from = $client_preferences->fcm_server_key;
+            if ($order_status_id == 2 || $order_status_id == 7) {
+                $notification_content = NotificationTemplate::where('id', 5)->first();
+            } elseif ($order_status_id == 3 || $order_status_id == 8) {
+                $notification_content = NotificationTemplate::where('id', 6)->first();
+            } elseif ($order_status_id == 4) {
+                $notification_content = NotificationTemplate::where('id', 7)->first();
+            } elseif ($order_status_id == 5) {
+                $notification_content = NotificationTemplate::where('id', 8)->first();
+            } elseif ($order_status_id == 6) {
+                $notification_content = NotificationTemplate::where('id', 9)->first();
+            }
+            if ($notification_content) {
+                $headers = [
+                    'Authorization: key=' . $from,
+                    'Content-Type: application/json',
+                ];
+                $body_content = str_ireplace("{order_id}", "#".$orderData->order_number, $notification_content->content);
+                $data = [
+                    "registration_ids" => $devices,
+                    "notification" => [
+                        'title' => $notification_content->subject,
+                        'body'  => $body_content,
+                        'sound' => "default",
+                        'click_action' => route('order.index')
+                    ],
+                    "data" => [
+                        'title' => $notification_content->subject,
+                        'body'  => $body_content
+                    ],
+                    "priority" => "high"
+                ];
+                $dataString = $data;
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataString));
+                $result = curl_exec($ch);
+                curl_close($ch);
+            }
+        }
+    }
+
 }
