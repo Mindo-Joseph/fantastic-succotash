@@ -763,7 +763,7 @@ class OrderController extends FrontController
         $client_preferences = ClientPreference::select('fcm_server_key')->first();
         if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
             $from = $client_preferences->fcm_server_key;
-            $notification_content = NotificationTemplate::where('id', 1)->first();
+            $notification_content = NotificationTemplate::where('id', 4)->first();
             if ($notification_content) {
                 $headers = [
                     'Authorization: key=' . $from,
