@@ -9,7 +9,7 @@ use GuzzleHttp\Client as GCLIENT;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client};
 
 class OrderController extends Controller {
     use ApiResponser;
@@ -319,7 +319,8 @@ class OrderController extends Controller {
                     $order->admins = array_unique(array_merge($user_admins, $user_vendors));
                     DB::commit();
                     // $this->sendOrderNotification($user->id);
-                    $this->sendOrderPushNotificationVendors($order->admins, $order);
+                    $code = $request->header('code');
+                    $this->sendOrderPushNotificationVendors($order->admins, $order, $code);
                     return $this->successResponse($order, __('Order placed successfully.'), 201);
                     }
                 }else{
@@ -527,7 +528,8 @@ class OrderController extends Controller {
                 $orderData = Order::find($order_id);
                 DB::commit();
                 // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
-                $this->sendStatusChangePushNotificationCustomer([$orderData->user_id], $orderData, $order_status_option_id);
+                $code = $request->header('code');
+                $this->sendStatusChangePushNotificationCustomer([$orderData->user_id], $orderData, $order_status_option_id, $code);
                 return response()->json([
                     'status' => 'success',
                     'order_status' => $order_status,
@@ -544,7 +546,7 @@ class OrderController extends Controller {
         }
     }
 
-    public function sendOrderPushNotificationVendors($user_ids, $orderData)
+    public function sendOrderPushNotificationVendors($user_ids, $orderData, $header_code)
     {
         $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
         $client_preferences = ClientPreference::select('fcm_server_key')->first();
@@ -552,6 +554,9 @@ class OrderController extends Controller {
             $from = $client_preferences->fcm_server_key;
             $notification_content = NotificationTemplate::where('id', 4)->first();
             if ($notification_content) {
+                $code = $header_code;
+                $client = Client::where('code',$code)->first();
+                $redirect_URL = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/client/order";
                 $headers = [
                     'Authorization: key=' . $from,
                     'Content-Type: application/json',
@@ -562,7 +567,7 @@ class OrderController extends Controller {
                         'title' => $notification_content->subject,
                         'body'  => $notification_content->content,
                         'sound' => "default",
-                        'click_action' => route('order.index')
+                        'click_action' => $redirect_URL
                     ],
                     "data" => [
                         'title' => $notification_content->subject,
@@ -584,7 +589,7 @@ class OrderController extends Controller {
         }
     }
 
-    public function sendStatusChangePushNotificationCustomer($user_ids, $orderData, $order_status_id)
+    public function sendStatusChangePushNotificationCustomer($user_ids, $orderData, $order_status_id, $header_code)
     {
         $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
         $client_preferences = ClientPreference::select('fcm_server_key')->first();
@@ -602,6 +607,9 @@ class OrderController extends Controller {
                 $notification_content = NotificationTemplate::where('id', 9)->first();
             }
             if ($notification_content) {
+                $code = $header_code;
+                $client = Client::where('code',$code)->first();
+                $redirect_URL = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/user/orders";
                 $headers = [
                     'Authorization: key=' . $from,
                     'Content-Type: application/json',
@@ -613,7 +621,7 @@ class OrderController extends Controller {
                         'title' => $notification_content->subject,
                         'body'  => $body_content,
                         'sound' => "default",
-                        'click_action' => route('order.index')
+                        'click_action' => $redirect_URL
                     ],
                     "data" => [
                         'title' => $notification_content->subject,
