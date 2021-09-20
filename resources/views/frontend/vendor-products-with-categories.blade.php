@@ -96,7 +96,7 @@
                                                     {{$vendor->opening_time}} – {{$vendor->closing_time}} 
                                                     <span class="badge badge-success">Open</span>
                                                 @elseif(($vendor->is_vendor_closed == 0) && ($vendor->show_slot == 1))
-                                                    24 x  7 <span class="badge badge-success">Open</span>
+                                                    24 x 7 <span class="badge badge-success">Open</span>
                                                 @else
                                                     <span class="badge badge-danger">Closed</span>
                                                 @endif
