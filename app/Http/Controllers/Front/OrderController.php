@@ -7,18 +7,14 @@ use Log;
 use Auth;
 use Carbon\Carbon;
 use Omnipay\Omnipay;
-// use GuzzleHttp\Client;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Models\ClientPreference;
 use App\Models\Client as CP;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-<<<<<<< HEAD
-use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus, OrderTax, SubscriptionInvoicesUser, UserDevice, UserVendor, VendorOrderDispatcherStatus, Page, DriverRegistrationDocument};
-=======
 use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus,OrderTax, SubscriptionInvoicesUser, UserDevice, UserVendor,VendorOrderDispatcherStatus,Page,DriverRegistrationDocument};
->>>>>>> da11609466715a0a8592ac3ee75e02a9b705a1f6
 use GuzzleHttp\Client as GCLIENT;
 
 class OrderController extends FrontController
@@ -389,17 +385,10 @@ class OrderController extends FrontController
         //     $navCategories = $this->categoryNav($langId);
         //     return view('frontend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone, 'total_amount' => $request->total_amount, 'address_id' => $request->address_id]);
         // }
-<<<<<<< HEAD
-
-        $order_response = $this->orderSave($request, "1");
-        $response = $order_response->getData();
-        if ($response->status == 'Success') {
-=======
         
         $order_response = $this->orderSave($request, "1");
         $response = $order_response->getData();
         if($response->status == 'Success'){
->>>>>>> da11609466715a0a8592ac3ee75e02a9b705a1f6
             # if vendor selected auto accept
             $autoaccept = $this->autoAcceptOrderIfOn($response->data->id);
             return $this->successResponse($response->data, 'Order placed successfully.', 201);
@@ -557,13 +546,8 @@ class OrderController extends FrontController
                     $order_product->variant_id = $vendor_cart_product->variant_id;
                     $order_product->product_name = $vendor_cart_product->product->title ?? $vendor_cart_product->product->sku;
                     $order_product->product_dispatcher_tag = $vendor_cart_product->product->tags;
-<<<<<<< HEAD
-                    $order_product->schedule_type = $vendor_cart_product->schedule_type ?? null;
-                    $order_product->scheduled_date_time = $vendor_cart_product->scheduled_date_time ?? null;
-=======
                     $order_product->schedule_type = $vendor_cart_product->schedule_type??null;
                     $order_product->scheduled_date_time = $vendor_cart_product->scheduled_date_time??null;
->>>>>>> da11609466715a0a8592ac3ee75e02a9b705a1f6
                     if ($vendor_cart_product->product->pimage) {
                         $order_product->image = $vendor_cart_product->product->pimage->first() ? $vendor_cart_product->product->pimage->first()->path : '';
                     }
@@ -1268,370 +1252,7 @@ class OrderController extends FrontController
          
      }
 
-<<<<<<< HEAD
-    # if vendor selected auto accepted order 
-    public function autoAcceptOrderIfOn($order_id)
-    {
-        $order_vendors = OrderVendor::where('order_id', $order_id)->whereHas('vendor', function ($q) {
-            $q->where('auto_accept_order', 1);
-        })->get();
-        Log::info($order_vendors);
-        foreach ($order_vendors as $ov) {
-            Log::info($ov);
-            Log::info($ov->order_id);
-            $request = $ov;
-
-            DB::beginTransaction();
-            //try {
-
-            $request->order_id = $ov->order_id;
-            Log::info($ov->order_id);
-            Log::info($request->order_id);
-            $request->vendor_id = $ov->vendor_id;
-            $request->order_vendor_id = $ov->id;
-            $request->status_option_id = 2;
-            $timezone = Auth::user()->timezone;
-            Log::info($request);
-            $vendor_order_status_check = VendorOrderStatus::where('order_id', $request->order_id)->where('vendor_id', $request->vendor_id)->where('order_status_option_id', $request->status_option_id)->first();
-            Log::info($vendor_order_status_check);
-            if (!$vendor_order_status_check) {
-                $vendor_order_status = new VendorOrderStatus();
-                $vendor_order_status->order_id = $request->order_id;
-                $vendor_order_status->vendor_id = $request->vendor_id;
-                $vendor_order_status->order_vendor_id = $request->order_vendor_id;
-                $vendor_order_status->order_status_option_id = $request->status_option_id;
-                $vendor_order_status->save();
-                if ($request->status_option_id == 2) {
-                    Log::info($request->status_option_id);
-                    $order_dispatch = $this->checkIfanyProductLastMileon($request);
-                    if ($order_dispatch && $order_dispatch == 1)
-                        $stats = $this->insertInVendorOrderDispatchStatus($request);
-                }
-                OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id]);
-                DB::commit();
-                $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
-            }
-            // } catch(\Exception $e){
-            // DB::rollback();
-            // Log::info($e->getMessage());
-            // }
-        }
-    }
-
-
-    /// ******************  check If any Product Last Mile on   ************************ ///////////////
-    public function checkIfanyProductLastMileon($request)
-    {
-        $order_dispatchs = 2;
-        $checkdeliveryFeeAdded = OrderVendor::where(['order_id' => $request->order_id, 'vendor_id' => $request->vendor_id])->first();
-        $dispatch_domain = $this->getDispatchDomain();
-        if ($dispatch_domain && $dispatch_domain != false) {
-            if ($checkdeliveryFeeAdded && $checkdeliveryFeeAdded->delivery_fee > 0.00)
-                $order_dispatchs = $this->placeRequestToDispatch($request->order_id, $request->vendor_id, $dispatch_domain);
-
-
-            if ($order_dispatchs && $order_dispatchs == 1)
-                return 1;
-        }
-
-
-        $dispatch_domain_ondemand = $this->getDispatchOnDemandDomain();
-        if ($dispatch_domain_ondemand && $dispatch_domain_ondemand != false) {
-            $ondemand = 0;
-            Log::info($dispatch_domain_ondemand);
-            foreach ($checkdeliveryFeeAdded->products as $key => $prod) {
-                if (isset($prod->product_dispatcher_tag) && !empty($prod->product_dispatcher_tag) && $prod->product->category->categoryDetail->type_id == 8) {
-                    $dispatch_domain_ondemand = $this->getDispatchOnDemandDomain();
-                    if ($dispatch_domain_ondemand && $dispatch_domain_ondemand != false && $ondemand == 0  && $checkdeliveryFeeAdded->delivery_fee <= 0.00) {
-                        $order_dispatchs = $this->placeRequestToDispatchOnDemand($request->order_id, $request->vendor_id, $dispatch_domain_ondemand);
-                        if ($order_dispatchs && $order_dispatchs == 1) {
-                            $ondemand = 1;
-                            return 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        return 2;
-    }
-
-
-    // place Request To Dispatch
-    public function placeRequestToDispatch($order, $vendor, $dispatch_domain)
-    {
-        try {
-
-            $order = Order::find($order);
-            $customer = User::find($order->user_id);
-            $cus_address = UserAddress::find($order->address_id);
-            $tasks = array();
-            if ($order->payment_method == 1) {
-                $cash_to_be_collected = 'Yes';
-                $payable_amount = $order->payable_amount;
-            } else {
-                $cash_to_be_collected = 'No';
-                $payable_amount = 0.00;
-            }
-            $dynamic = uniqid($order->id . $vendor);
-            $call_back_url = route('dispatch-order-update', $dynamic);
-            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
-            $tasks = array();
-            $meta_data = '';
-
-            $team_tag = null;
-            if (!empty($dispatch_domain->last_mile_team))
-                $team_tag = $dispatch_domain->last_mile_team;
-
-
-            $tasks[] = array(
-                'task_type_id' => 1,
-                'latitude' => $vendor_details->latitude ?? '',
-                'longitude' => $vendor_details->longitude ?? '',
-                'short_name' => '',
-                'address' => $vendor_details->address ?? '',
-                'post_code' => '',
-                'barcode' => '',
-            );
-
-            $tasks[] = array(
-                'task_type_id' => 2,
-                'latitude' => $cus_address->latitude ?? '',
-                'longitude' => $cus_address->longitude ?? '',
-                'short_name' => '',
-                'address' => $cus_address->address ?? '',
-                'post_code' => $cus_address->pincode ?? '',
-                'barcode' => '',
-            );
-
-            $postdata =  [
-                'customer_name' => $customer->name ?? 'Dummy Customer',
-                'customer_phone_number' => $customer->phone_number ?? rand(111111, 11111),
-                'customer_email' => $customer->email ?? null,
-                'recipient_phone' => $customer->phone_number ?? rand(111111, 11111),
-                'recipient_email' => $customer->email ?? null,
-                'task_description' => "Order From :" . $vendor_details->name,
-                'allocation_type' => 'a',
-                'task_type' => 'now',
-                'cash_to_be_collected' => $payable_amount ?? 0.00,
-                'barcode' => '',
-                'order_team_tag' => $team_tag,
-                'call_back_url' => $call_back_url ?? null,
-                'task' => $tasks
-            ];
-
-
-            $client = new Client([
-                'headers' => [
-                    'personaltoken' => $dispatch_domain->delivery_service_key,
-                    'shortcode' => $dispatch_domain->delivery_service_key_code,
-                    'content-type' => 'application/json'
-                ]
-            ]);
-
-            $url = $dispatch_domain->delivery_service_key_url;
-            $res = $client->post(
-                $url . '/api/task/create',
-                ['form_params' => ($postdata)]
-            );
-            $response = json_decode($res->getBody(), true);
-            if ($response && $response['task_id'] > 0) {
-                $up_web_hook_code = OrderVendor::where(['order_id' => $order->id, 'vendor_id' => $vendor])
-                    ->update(['web_hook_code' => $dynamic]);
-                return 1;
-            }
-            return 2;
-        } catch (\Exception $e) {
-            return 2;
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
-
-
-
-    // place Request To Dispatch for On Demand
-    public function placeRequestToDispatchOnDemand($order, $vendor, $dispatch_domain)
-    {
-        try {
-            Log::info($order);
-            Log::info($vendor);
-            Log::info($dispatch_domain);
-            $order = Order::find($order);
-            $customer = User::find($order->user_id);
-            $cus_address = UserAddress::find($order->address_id);
-            $tasks = array();
-            if ($order->payment_method == 1) {
-                $cash_to_be_collected = 'Yes';
-                $payable_amount = $order->payable_amount;
-            } else {
-                $cash_to_be_collected = 'No';
-                $payable_amount = 0.00;
-            }
-            $dynamic = uniqid($order->id . $vendor);
-            $call_back_url = route('dispatch-order-update', $dynamic);
-            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
-            $tasks = array();
-            $meta_data = '';
-
-            $unique = Auth::user()->code;
-            $team_tag = $unique . "_" . $vendor;
-
-
-            $tasks[] = array(
-                'task_type_id' => 1,
-                'latitude' => $vendor_details->latitude ?? '',
-                'longitude' => $vendor_details->longitude ?? '',
-                'short_name' => '',
-                'address' => $vendor_details->address ?? '',
-                'post_code' => '',
-                'barcode' => '',
-            );
-
-            $tasks[] = array(
-                'task_type_id' => 2,
-                'latitude' => $cus_address->latitude ?? '',
-                'longitude' => $cus_address->longitude ?? '',
-                'short_name' => '',
-                'address' => $cus_address->address ?? '',
-                'post_code' => $cus_address->pincode ?? '',
-                'barcode' => '',
-            );
-
-            $postdata =  [
-                'customer_name' => $customer->name ?? 'Dummy Customer',
-                'customer_phone_number' => $customer->phone_number ?? rand(111111, 11111),
-                'customer_email' => $customer->email ?? null,
-                'recipient_phone' => $customer->phone_number ?? rand(111111, 11111),
-                'recipient_email' => $customer->email ?? null,
-                'task_description' => "Order From :" . $vendor_details->name,
-                'allocation_type' => 'a',
-                'task_type' => 'now',
-                'cash_to_be_collected' => $payable_amount ?? 0.00,
-                'barcode' => '',
-                'order_team_tag' => $team_tag,
-                'call_back_url' => $call_back_url ?? null,
-                'task' => $tasks
-            ];
-
-
-            $client = new Client([
-                'headers' => [
-                    'personaltoken' => $dispatch_domain->dispacher_home_other_service_key,
-                    'shortcode' => $dispatch_domain->dispacher_home_other_service_key_code,
-                    'content-type' => 'application/json'
-                ]
-            ]);
-
-            $url = $dispatch_domain->dispacher_home_other_service_key_url;
-            $res = $client->post(
-                $url . '/api/task/create',
-                ['form_params' => ($postdata)]
-            );
-            $response = json_decode($res->getBody(), true);
-            if ($response && $response['task_id'] > 0) {
-                $up_web_hook_code = OrderVendor::where(['order_id' => $order->id, 'vendor_id' => $vendor])
-                    ->update(['web_hook_code' => $dynamic]);
-                return 1;
-            }
-            return 2;
-        } catch (\Exception $e) {
-            return 2;
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
-
-
-    # get prefereance if last mile on or off and all details updated in config
-    public function getDispatchDomain()
-    {
-        $preference = ClientPreference::first();
-        if ($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url))
-            return $preference;
-        else
-            return false;
-    }
-
-
-    # get prefereance if on demand on in config
-    public function getDispatchOnDemandDomain()
-    {
-        $preference = ClientPreference::first();
-        if ($preference->need_dispacher_home_other_service == 1 && !empty($preference->dispacher_home_other_service_key) && !empty($preference->dispacher_home_other_service_key_code) && !empty($preference->dispacher_home_other_service_key_url))
-            return $preference;
-        else
-            return false;
-    }
-
-    public function sendSuccessNotification($id, $vendorId)
-    {
-        $super_admin = User::where('is_superadmin', 1)->pluck('id');
-        $user_vendors = UserVendor::where('vendor_id', $vendorId)->pluck('user_id');
-        $devices = UserDevice::whereNotNull('device_token')->where('user_id', $id)->pluck('device_token');
-        foreach ($devices as $device) {
-            $token[] = $device;
-        }
-        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_vendors)->pluck('device_token');
-        foreach ($devices as $device) {
-            $token[] = $device;
-        }
-        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $super_admin)->pluck('device_token');
-        foreach ($devices as $device) {
-            $token[] = $device;
-        }
-        $token[] = "d4SQZU1QTMyMaENeZXL3r6:APA91bHoHsQ-rnxsFaidTq5fPse0k78qOTo7ZiPTASiH69eodqxGoMnRu2x5xnX44WfRhrVJSQg2FIjdfhwCyfpnZKL2bHb5doCiIxxpaduAUp4MUVIj8Q43SB3dvvvBkM1Qc1ThGtEM";
-        // dd($token);
-
-        $from = env('FIREBASE_SERVER_KEY');
-
-        $notification_content = NotificationTemplate::where('id', 2)->first();
-        if ($notification_content) {
-            $headers = [
-                'Authorization: key=' . $from,
-                'Content-Type: application/json',
-            ];
-            $data = [
-                "registration_ids" => $token,
-                "notification" => [
-                    'title' => $notification_content->label,
-                    'body'  => $notification_content->content,
-                ]
-            ];
-            $dataString = $data;
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataString));
-            $result = curl_exec($ch);
-            // dd($result);
-            curl_close($ch);
-        }
-    }
-
-    /// ******************   insert In Vendor Order Dispatch Status   ************************ ///////////////
-    public function insertInVendorOrderDispatchStatus($request)
-    {
-        $update = VendorOrderDispatcherStatus::updateOrCreate([
-            'dispatcher_id' => null,
-            'order_id' =>  $request->order_id,
-            'dispatcher_status_option_id' => 1,
-            'vendor_id' =>  $request->vendor_id
-        ]);
-    }
-
-    public function checkIfLastMileDeliveryOn()
-=======
      public function checkIfLastMileDeliveryOn()
->>>>>>> da11609466715a0a8592ac3ee75e02a9b705a1f6
     {
         $preference = ClientPreference::first();
         if ($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url))
@@ -1667,21 +1288,7 @@ class OrderController extends FrontController
                         $files[$key]['file_name'] =  $driver_registration_document_file_name[$key];
                     }
                 }
-                $postdata =  [
-                    'upload_photo' => $request->upload_photo,
-                    'name' => $request->name,
-                    'phone_number' => $request->phone_number,
-                    'type' => $request->type,
-                    'vehicle_type_id' => $request->vehicle_type_id,
-                    'make_model' => $request->make_model,
-                    'uid' => $request->uid,
-                    'plate_number' => $request->plate_number,
-                    'color' => $request->color,
-                    'extra_keys' => $files
-                ];
-                //dd($dispatch_domain->delivery_service_key_code);
-                //$dispatch_domain->delivery_service_key_code = '649a9a';
-                //$dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
+               
                 $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
                 $url = $dispatch_domain->delivery_service_key_url;
                 $key1 = 0;
@@ -1723,10 +1330,7 @@ class OrderController extends FrontController
                     'multipart' => [
                         $filedata[0],
                         $filedata[1],
-                        //$filedata[2],
-                        //$filedata[3],
-                        //$filedata[4],
-                        [
+                          [
                             'name' => 'other',
                             'contents' => json_encode($other)
                         ],
@@ -1779,9 +1383,7 @@ class OrderController extends FrontController
                 ]);
                 $response = json_decode($res->getBody(), true);
                 if ($response && isset($response['task_id']) && $response['task_id'] > 0) {
-                    $dispatch_traking_url = $response['dispatch_traking_url'] ?? '';
-                    $response['dispatch_traking_url'] = $dispatch_traking_url;
-                    return $response;
+                   return $response;
                 }
                 return $response;
             }
