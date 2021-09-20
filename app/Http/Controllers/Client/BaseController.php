@@ -221,7 +221,6 @@ class BaseController extends Controller
             }
             $count++;
         }
-
         return $this->successCount;
     }
 

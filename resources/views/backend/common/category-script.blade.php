@@ -76,7 +76,6 @@
                     makeTag();
                     summernoteInit();
                 }
-
                 $('.dropify').dropify();
                 $('.selectize-select').selectize();
 

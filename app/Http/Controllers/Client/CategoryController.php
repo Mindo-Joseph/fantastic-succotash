@@ -337,12 +337,6 @@ class CategoryController extends BaseController
         return $ids;
     }
 
-
-
-
-
-
-
     # get dispatcher tags from dispatcher panel  
     public function getDispatcherTags()
     {
