@@ -146,7 +146,7 @@
                                                         @foreach($category->childs->toArray() as $cate)
                                                         <div class="category-block">
                                                             <a href="{{route('categoryDetail', $cate['slug'])}}">
-                                                                <div class="category-image"><img alt="" src="{{$cate['icon']['image_fit'] . '100/80' . $cate['icon']['image_path']}}" ></div>
+                                                                <div class="category-image"><img alt="" src="{{$cate['icon']['image_fit'] . '300/300' . $cate['icon']['image_path']}}" ></div>
                                                             </a>
                                                             <div class="category-details">
                                                                 <a href="{{route('categoryDetail', $cate['slug'])}}">
