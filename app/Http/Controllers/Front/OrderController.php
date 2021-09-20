@@ -703,7 +703,7 @@ class OrderController extends FrontController
                 $user_vendors = $order->user_vendor->pluck('user_id')->toArray();
             }
             $order->admins = array_unique(array_merge($user_admins, $user_vendors));
-            $this->sendOrderPushNotification($order->admins, $order);
+            $this->sendOrderPushNotificationVendors($order->admins, $order);
             DB::commit();
             return $this->successResponse($order);
         } catch (Exception $e) {
@@ -757,40 +757,43 @@ class OrderController extends FrontController
         }
     }
 
-    public function sendOrderPushNotification($user_ids, $orderData)
+    public function sendOrderPushNotificationVendors($user_ids, $orderData)
     {
         $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
         $client_preferences = ClientPreference::select('fcm_server_key')->first();
         if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
             $from = $client_preferences->fcm_server_key;
-            $headers = [
-                'Authorization: key=' . $from,
-                'Content-Type: application/json',
-            ];
-            $data = [
-                "registration_ids" => $devices,
-                "notification" => [
-                    'title' => __("New Order"),
-                    'body'  => __("You have received a new order"),
-                    'sound' => "default",
-                    'click_action' => route('order.index')
-                ],
-                "data" => [
-                    'title' => __("New Order"),
-                    'body'  => __("You have received a new order")
-                ],
-                "priority" => "high"
-            ];
-            $dataString = $data;
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataString));
-            $result = curl_exec($ch);
-            curl_close($ch);
+            $notification_content = NotificationTemplate::where('id', 1)->first();
+            if ($notification_content) {
+                $headers = [
+                    'Authorization: key=' . $from,
+                    'Content-Type: application/json',
+                ];
+                $data = [
+                    "registration_ids" => $devices,
+                    "notification" => [
+                        'title' => $notification_content->subject,
+                        'body'  => $notification_content->content,
+                        'sound' => "default",
+                        'click_action' => route('order.index')
+                    ],
+                    "data" => [
+                        'title' => $notification_content->subject,
+                        'body'  => $notification_content->content,
+                    ],
+                    "priority" => "high"
+                ];
+                $dataString = $data;
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataString));
+                $result = curl_exec($ch);
+                curl_close($ch);
+            }
         }
     }
 
