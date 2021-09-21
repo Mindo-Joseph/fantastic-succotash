@@ -50,6 +50,7 @@ class CategoryController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request){
+        // dd('dfg');
         $is_vendor = ($request->has('is_vendor')) ? $request->is_vendor : 0;
         $vendors = array();
         $category = new Category();

@@ -44,7 +44,7 @@ Route::get('/switch/language',function(Request $request){
     if($request->lang){
         session()->put("applocale",$request->lang);
     }
-    return redirect('/');
+    return redirect()-> back();
 });
 
 // ADMIN languageSwitch 

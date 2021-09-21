@@ -199,7 +199,7 @@
                 <div class="col-sm-8">
                     <h4 class="page-title mt-0">{{ __('Pickup & Delivery')}}</h4>
                     <p class="sub-header">
-                        Drag & drop to edit different sections.
+                        {{ __("Drag & drop to edit different sections.") }}
                     </p>
                 </div>
                 <div class="col-sm-4 text-right">

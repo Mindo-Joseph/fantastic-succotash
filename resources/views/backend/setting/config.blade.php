@@ -1271,7 +1271,7 @@
       <div class="modal-dialog modal-dialog-centered">
          <div class="modal-content">
             <div class="modal-header border-bottom">
-               <h4 class="modal-title" id="standard-modalLabel">Add Driver Registration Document</h4>
+               <h4 class="modal-title" id="standard-modalLabel">{{ __("Add Driver Registration Document") }}</h4>
                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
@@ -1282,7 +1282,7 @@
                      <div class="row">
                         <div class="col-md-12">
                            <div class="form-group position-relative">
-                              <label for="">Type</label>
+                              <label for="">{{ __('Type') }}</label>
                               <div class="input-group mb-2">
                                  <select class="form-control" name="file_type">
                                     @forelse($file_types_driver as $k => $file_type)
@@ -1298,7 +1298,7 @@
                            <div class="row">
                               <div class="col-12">
                                  <div class="form-group position-relative">
-                                    <label for="">Name ({{$client_language->langName}})</label>
+                                    <label for="">{{ __("Name") }} ({{$client_language->langName}})</label>
                                     <input class="form-control" name="language_id[{{$k}}]" type="hidden" value="{{$client_language->langId}}">
                                     <input class="form-control" name="name[{{$k}}]" type="text" id="driver_registration_document_name_{{$client_language->langId}}">
                                  </div>
@@ -1315,7 +1315,7 @@
                </form>
             </div>
             <div class="modal-footer">
-               <button type="button" class="btn btn-primary submitSaveDriverRegistrationDocument">Save</button>
+               <button type="button" class="btn btn-primary submitSaveDriverRegistrationDocument">{{ __("Save") }}</button>
             </div>
          </div>
       </div>

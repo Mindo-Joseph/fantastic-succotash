@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h4 class="modal-title">Add Category</h4>
+                <h4 class="modal-title">{{ __("Add Category") }}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="addCategoryForm" method="post" enctype="multipart/form-data">
@@ -11,7 +11,7 @@
                     
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-info waves-effect waves-light addCategorySubmit">Submit</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light addCategorySubmit">{{ __('Submit') }}</button>
                 </div>
             </form>
         </div>
@@ -22,7 +22,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h4 class="modal-title">Edit Category</h4>
+                <h4 class="modal-title">{{ __("Edit Category") }}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
 
@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info waves-effect waves-light editCategorySubmit">Submit</button>
+                    <button type="button" class="btn btn-info waves-effect waves-light editCategorySubmit">{{ __('Submit') }}</button>
                 </div>
             </form>
         </div>

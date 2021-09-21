@@ -101,7 +101,7 @@
         @endphp
         
         <ul class="list-unstyled topnav-menu float-right mb-0">
-            {{-- <li class="dropdown ">
+            <li class="dropdown ">
                 <a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                 Language
                 {{ $applocale_admin }}
@@ -115,7 +115,7 @@
                 <a href="/switch/admin/language?lang=de" class="dropdown-item" langid="1">German</a>
                 <div class="dropdown-divider"></div>
                 </div>
-            </li>  --}}
+            </li> 
 
             
     {{-- ADMIN LANGUAGE SWITCH END --}}
@@ -127,23 +127,12 @@
                     <i class="fe-search noti-icon"></i>
                 </a> -->
             
-
-               
-
-
-
-            
-            
                 <div class="dropdown-menu dropdown-lg dropdown-menu-right p-0">
                     <form class="p-3">
                         <input type="text" class="form-control" placeholder="{{ __("Search") }} ..." aria-label="Recipient's username">
                     </form>
                 </div>
             </li>
-
-
-          
-
             <li class="dropdown d-none d-lg-inline-block">
                 <a class="nav-link dropdown-toggle arrow-none waves-effect waves-light" data-toggle="fullscreen"
                     href="#">
@@ -192,16 +181,9 @@
                     <form id="logout-form" action="{{route('client.logout')}}" method="POST">
                         @csrf
                     </form>
-
                 </div>
             </li>
-        </ul>
-
-        
-
-        
-
-        
+        </ul>  
     </div>
 </div>
 
