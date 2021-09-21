@@ -44,12 +44,14 @@ class StripeGatewayController extends FrontController{
                 'description' => 'This is a test purchase transaction.',
             ])->send();
             if ($response->isSuccessful()) {
+                $this->successMail();
                 return $this->successResponse($response->getData());
             } 
             // elseif ($response->isRedirect()) {
             //     return $this->errorResponse($response->getRedirectUrl(), 400);
             // } 
             else {
+                $this->failMail();
                 return $this->errorResponse($response->getMessage(), 400);
             }
         }catch(\Exception $ex){
@@ -102,13 +104,16 @@ class StripeGatewayController extends FrontController{
                     'customerReference' => $customer_id
                 ])->send();
                 if ($purchaseResponse->isSuccessful()) {
+                    $this->successMail();
                     return $this->successResponse($purchaseResponse->getData());
                 }
                 else {
+                    $this->failMail();
                     return $this->errorResponse($purchaseResponse->getMessage(), 400);
                 }
             }
             else {
+                $this->failMail();
                 return $this->errorResponse($authorizeResponse->getMessage(), 400);
             }
         }catch(\Exception $ex){
