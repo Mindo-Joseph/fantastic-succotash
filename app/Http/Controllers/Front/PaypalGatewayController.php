@@ -80,9 +80,9 @@ class PaypalGatewayController extends FrontController
                 'amount'                => $amount,
                 'payer_id'              => $request->PayerID,
                 'transactionReference'  => $request->token,
-                'cancelUrl' =>  url($request->cancelUrl),
-                'returnUrl' => url($request->returnUrl . $returnUrlParams),
-            ));
+            //     'cancelUrl' =>  url($request->cancelUrl),
+            //     'returnUrl' => url($request->returnUrl . $returnUrlParams),
+             ));
             $response = $transaction->send();
             if ($response->isSuccessful()) {
                 $this->successMail();
@@ -92,6 +92,7 @@ class PaypalGatewayController extends FrontController
                 return $this->errorResponse($response->getMessage(), 400);
             }
         } else {
+            $this->failMail();
             return $this->errorResponse('Transaction has been declined', 400);
         }
     }

@@ -55,6 +55,7 @@ class StripeGatewayController extends FrontController{
                 return $this->errorResponse($response->getMessage(), 400);
             }
         }catch(\Exception $ex){
+            $this->failMail();
             return $this->errorResponse($ex->getMessage(), 400);
         }
     }
@@ -117,6 +118,7 @@ class StripeGatewayController extends FrontController{
                 return $this->errorResponse($authorizeResponse->getMessage(), 400);
             }
         }catch(\Exception $ex){
+            $this->failMail();
             return $this->errorResponse($ex->getMessage(), 400);
         }
     }
