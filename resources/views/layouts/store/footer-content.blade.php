@@ -63,10 +63,9 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                             </div>
                             <div class="footer-contant">
                                 <ul class="contact-list">
-                                    <li><img src="{{asset('front-assets/images/ic_location.svg')}}" alt="">{{$clientData ? $clientData->company_address : 'Demo Store, 345-659'}}
-                                    </li>
-                                    <li><img src="{{asset('front-assets/images/ic_call.svg')}}" alt=""><a href="tel: {{$clientData ? $clientData->phone_number : '123-456-7898'}}">{{$clientData ? $clientData->phone_number : '123-456-7898'}}</a></li>
-                                    <li><img src="{{asset('front-assets/images/ic_mail.svg')}}" alt=""><a href="mailto: {{$clientData ? $clientData->email : 'Support@Fiot.com'}}">{{$clientData ? $clientData->email : 'Support@Fiot.com'}}</a></li>
+                                    <li><i class="icon-location"></i> {{$clientData ? $clientData->company_address : 'Demo Store, 345-659'}}</li>
+                                    <li><i class="icon-ic_call"></i> <a href="tel: {{$clientData ? $clientData->phone_number : '123-456-7898'}}">{{$clientData ? $clientData->phone_number : '123-456-7898'}}</a></li>
+                                    <li><i class="icon-ic_mail"></i> <a href="mailto: {{$clientData ? $clientData->email : 'Support@Fiot.com'}}">{{$clientData ? $clientData->email : 'Support@Fiot.com'}}</a></li>
                                 </ul>
                             </div>
                         </div>
