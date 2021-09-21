@@ -412,7 +412,7 @@
                 <div class="col-md-6 col-sm-6 text-left">
                     <h6 class="m-0 font-14"><b>{{__('Delivery fee')}}</b></h6>
                 </div>
-                <div class="col-md-3 col-sm-6 text-right">
+                <div class="col-md-6 col-sm-6 text-right">
                     <div class="extra-items-price font-14 mr-3">{{Session::get('currencySymbol')}}<%= product.delivery_fee_charges %></div>
                 </div>
             </div>

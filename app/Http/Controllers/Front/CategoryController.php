@@ -238,7 +238,7 @@ class CategoryController extends FrontController{
             if(Session::has('vendors')){
                 $vendors = Session::get('vendors');
             }
-            $products = Product::with(['media.image', 'category',
+            $products = Product::with(['vendor', 'media.image', 'category',
                         'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
@@ -299,7 +299,9 @@ class CategoryController extends FrontController{
         ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products', 'parent_id')
         ->where('slug', $slug1)->firstOrFail();
         $category->translation_name = ($category->translation->first()) ? $category->translation->first()->name : $category->slug;
-
+        foreach($category->childs as $key => $child){
+            $child->translation_name = ($child->translation->first()) ? $child->translation->first()->name : $child->slug;
+        }
         $vendor = Vendor::select('id', 'name')->where('slug', $slug2)->where('status', 1)->firstOrFail();
 
         $variantSets = ProductVariantSet::with(['options' => function($zx) use($langId){
