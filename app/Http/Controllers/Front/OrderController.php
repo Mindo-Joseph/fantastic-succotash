@@ -1328,11 +1328,59 @@ class OrderController extends FrontController
                         $key1++;
                     }
                 }
+                if(!array_key_exists(0, $filedata))
+                {
+                    $filedata[0]=[ 'name' => 'uploaded_file[]','contents' => 'abc'];
+                }
+                if(!array_key_exists(1, $filedata))
+                {
+                    $filedata[1]=[ 'name' => 'uploaded_file[]','contents' => 'abc'];
+                }
+                if(!array_key_exists(2, $filedata))
+                {
+                    $filedata[2]=[ 'name' => 'uploaded_file[]','contents' => 'abc'];
+                }
+                if(!array_key_exists(3, $filedata))
+                {
+                    $filedata[3]=[ 'name' => 'uploaded_file[]','contents' => 'abc'];
+                }
+                if(!array_key_exists(4, $filedata))
+                {
+                    $filedata[4]=[ 'name' => 'uploaded_file[]','contents' => 'abc'];
+                }
+                if(!array_key_exists(5, $filedata))
+                {
+                    $filedata[5]=[ 'name' => 'uploaded_file[]','contents' => 'abc'];
+                }
+                if(!array_key_exists(6, $filedata))
+                {
+                    $filedata[6]=[ 'name' => 'uploaded_file[]','contents' => 'abc'];
+                }
+                if(!array_key_exists(7, $filedata))
+                {
+                    $filedata[7]=[ 'name' => 'uploaded_file[]','contents' => 'abc'];
+                }
+                if(!array_key_exists(8, $filedata))
+                {
+                    $filedata[8]=[ 'name' => 'uploaded_file[]','contents' => 'abc'];
+                }
+                if(!array_key_exists(9, $filedata))
+                {
+                    $filedata[9]=[ 'name' => 'uploaded_file[]','contents' => 'abc'];
+                }
                 $res = $client->post( $url.'/api/agent/create', [
 
                     'multipart' => [
                         $filedata[0],
                         $filedata[1],
+                        $filedata[2],
+                        $filedata[3],
+                        $filedata[4],
+                        $filedata[5],
+                        $filedata[6],
+                        $filedata[7],
+                        $filedata[8],
+                        $filedata[9],
                           [
                             'name' => 'other',
                             'contents' => json_encode($other)
@@ -1342,8 +1390,11 @@ class OrderController extends FrontController
                             'contents' => json_encode($abc)
                         ],
                         [
+                            'Content-type' => 'multipart/form-data',
                             'name' => 'upload_photo',
-                            'contents' => json_encode($request->upload_photo)
+                            'filename' => $request->upload_photo->getClientOriginalName(),
+                            'Mime-Type' =>$request->upload_photo->getMimeType('image'),
+                            'contents' =>  fopen($request->upload_photo, 'r'),
                         ],
                         [
                             'name' => 'count',
