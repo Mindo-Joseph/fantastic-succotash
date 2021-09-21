@@ -95,6 +95,9 @@ class UserhomeController extends FrontController
         $client = Auth::user();
         $ClientPreference = ClientPreference::where('client_code', $client->code)->first();
         $preference = $ClientPreference ? $ClientPreference : new ClientPreference();
+        $page_detail = Page::with(['translations' => function ($q) {
+            $q->where('language_id', session()->get('customerLanguage'));
+        }])->where('slug', 'driver-registration')->firstOrFail();
         $last_mile_teams = [];
         // $tags   =  $this->getAgentTags();
         $tag = [];
@@ -106,7 +109,7 @@ class UserhomeController extends FrontController
         }
         $showTag = implode(',', $tag);
         $driver_registration_documents = DriverRegistrationDocument::get();
-        return view('frontend.driver-registration', compact('navCategories', 'client_preferences', 'user', 'showTag', 'last_mile_teams', 'driver_registration_documents'));
+        return view('frontend.driver-registration', compact('page_detail','navCategories', 'client_preferences', 'user', 'showTag', 'last_mile_teams', 'driver_registration_documents'));
     }
 
     public function checkIfLastMileOn()
