@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Mail;
+use Auth;
 use App\Models\{Product,OrderProductRating,ClientPreference};
 trait ApiResponser{
 
@@ -18,6 +20,38 @@ trait ApiResponser{
 			'data' => $data
 		], $code);
 	}
+
+	protected function successMail()
+	{
+		$data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from', 'mail_type', 'mail_driver', 'mail_host', 
+        'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
+        $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+      
+
+        $mail_from = $data->mail_from;
+		Mail::send('frontend.paypalmail', compact('response'), function ($message) use ($request,$mail_from) {
+			$message->from($mail_from);
+			$message->to(Auth::user()->email);
+			$message->subject('Payment Succesful Notification');
+		});
+	}
+
+	protected function failMail()
+	{
+		$data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from', 'mail_type', 'mail_driver', 'mail_host', 
+        'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
+        $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+      
+
+        $mail_from = $data->mail_from;
+		Mail::send('frontend.paypalmailfail', compact('response'), function ($message) use ($request,$mail_from) {
+			$message->from($mail_from);
+			$message->to(Auth::user()->email);
+			$message->subject('Payment Failure Notification');
+		});
+	}
+
+
 
 	protected function errorResponse($message = null, $code, $data = null)
 	{
