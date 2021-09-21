@@ -5,7 +5,7 @@
             <div class="col-sm-2">
                 <label>{{ __("Upload Category Icon") }}</label>
                 <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify" data-default-file="{{$category->icon['proxy_url'].'400/400'.$category->icon['image_path']}}" />
-                <label class="logo-size d-block text-right mt-1">Image Size 150x150</label>
+                <label class="logo-size d-block text-right mt-1">{{ __("Image Size") }} 150x150</label>
             </div>
             <div class="col-sm-4">
                 <label>Upload Category image</label>
@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group" id="slugInputEdit">
-                            {!! Form::label('title', 'URL Slug',['class' => 'control-label']) !!}
+                            {!! Form::label('title', __('URL Slug'),['class' => 'control-label']) !!}
                             {!! Form::text('slug', $category->slug, ['class'=>'form-control','id' => 'slug', 'onkeypress' => "return alphaNumeric(event)"]) !!}
                             <span class="invalid-feedback" role="alert">
                                 <strong></strong>
@@ -44,7 +44,7 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            {!! Form::label('title', 'Visible In Menus',['class' => 'control-label']) !!}
+                            {!! Form::label('title', __('Visible In Menus'),['class' => 'control-label']) !!}
                             <div>
                                 @if($category->is_visible == '1')
                                 <input type="checkbox" data-plugin="switchery" name="is_visible" class="form-control edit-switch_menu" data-color="#43bee1" checked='checked'>
@@ -56,7 +56,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            {!! Form::label('title', 'Show Wishlist',['class' => 'control-label']) !!}
+                            {!! Form::label('title', __('Show Wishlist'),['class' => 'control-label']) !!}
                             <div>
                                 @if($category->show_wishlist == '1')
                                 <input type="checkbox" data-plugin="switchery" name="show_wishlist" class="form-control edit-wishlist_switch" data-color="#43bee1" checked='checked'>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="col-md-3" style="{{($category->type_id != 1) ? 'display:none;' : ''}}" id="editProductHide">
                         <div class="form-group">
-                            {!! Form::label('title', 'Can Add Products',['class' => 'control-label']) !!}
+                            {!! Form::label('title', __('Can Add Products'),['class' => 'control-label']) !!}
                             <div>
                                 @if($category->can_add_products == '1')
                                 <input type="checkbox" data-plugin="switchery" class="form-control edit-add_product_switch" data-color="#43bee1" name="can_add_products" checked='checked'>
@@ -156,7 +156,7 @@
                         <h4 class="col-md-12"> {{ $trans->langName.' Language' }} </h4>
                         <div class="col-md-6">
                             <div class="form-group" id="{{ ($trans->is_primary == 1) ? 'nameInputEdit' : 'nameotherInput' }}">
-                                {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
+                                {!! Form::label('title', __('Name'),['class' => 'control-label']) !!}
                                 @if($trans->is_primary == 1)
                                 {!! Form::text('name[]', $trans->name, ['class' => 'form-control', 'required' => 'required']) !!}
                                 @else
@@ -171,19 +171,19 @@
                         {!! Form::hidden('trans_id[]', $trans->id) !!}
                         <div class="col-md-6">
                             <div class="form-group" id="meta_titleInput">
-                                {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!}
+                                {!! Form::label('title', __('Meta Title'),['class' => 'control-label']) !!}
                                 {!! Form::text('meta_title[]', $trans->meta_title, ['class' => 'form-control']) !!}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!}
+                                {!! Form::label('title', __('Meta Description'),['class' => 'control-label']) !!}
                                 {!! Form::textarea('meta_description[]', $trans->meta_description, ['class'=>'form-control', 'rows' => '3']) !!}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                {!! Form::label('title', 'Meta Keywords',['class' => 'control-label']) !!}
+                                {!! Form::label('title', __('Meta Keywords'),['class' => 'control-label']) !!}
                                 {!! Form::textarea('meta_keywords[]', $trans->meta_keywords, ['class' => 'form-control', 'rows' => '3']) !!}
                             </div>
                         </div>
@@ -200,7 +200,7 @@
                         <h4 class="col-md-12"> {{ $langs->langName.' Language' }} </h4>
                         <div class="col-md-6">
                             <div class="form-group" id="{{ ($langs->is_primary == 1) ? 'nameInputEdit' : 'nameotherInput' }}">
-                                {!! Form::label('title', 'Name',['class' => 'control-label']) !!}
+                                {!! Form::label('title', __('Name'),['class' => 'control-label']) !!}
                                 @if($langs->is_primary == 1)
                                 {!! Form::text('name[]', null, ['class' => 'form-control', 'required' => 'required']) !!}
                                 @else
@@ -214,19 +214,19 @@
                         {!! Form::hidden('language_id[]', $langs->langId) !!}
                         <div class="col-md-6">
                             <div class="form-group" id="meta_titleInput">
-                                {!! Form::label('title', 'Meta Title',['class' => 'control-label']) !!}
+                                {!! Form::label('title', __('Meta Title'),['class' => 'control-label']) !!}
                                 {!! Form::text('meta_title[]', null, ['class' => 'form-control']) !!}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                {!! Form::label('title', 'Meta Description',['class' => 'control-label']) !!}
+                                {!! Form::label('title', __('Meta Description'),['class' => 'control-label']) !!}
                                 {!! Form::textarea('meta_description[]', null, ['class'=>'form-control', 'rows' => '3']) !!}
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                {!! Form::label('title', 'Meta Keywords',['class' => 'control-label']) !!}
+                                {!! Form::label('title', __('Meta Keywords'),['class' => 'control-label']) !!}
                                 {!! Form::textarea('meta_keywords[]', null, ['class' => 'form-control', 'rows' => '3']) !!}
                             </div>
                         </div>

@@ -797,7 +797,7 @@
                <div class="row">
                   <div class="col-md-2">
                      <div class="form-group mb-0 text-center">
-                        <button class="btn btn-info d-block" type="submit"> Save </button>
+                        <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
                      </div>
                   </div>
                </div>
@@ -814,23 +814,23 @@
                      <h4 class="page-title text-uppercase">User Authentication</h4>
                   </div> -->
                   <div class="card-box">
-                     <h4 class="header-title text-uppercase">User Authentication</h4>
+                     <h4 class="header-title text-uppercase">{{ __("User Authentication") }}</h4>
                      <div class="row align-items-center">
                         <div class="col-sm-5">
                            <div class="form-group mb-md-0 switchery-demo">
-                              <label for="verify_email" class="mr-3 mb-0">Verify Email</label>
+                              <label for="verify_email" class="mr-3 mb-0">{{ __("Verify Email") }}</label>
                               <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1')) checked='checked' @endif>
                            </div>
                         </div>
                         <div class="col-sm-5">
                            <div class="form-group mb-md-0">
-                              <label for="verify_phone" class="mr-3 mb-0">Verify Phone</label>
+                              <label for="verify_phone" class="mr-3 mb-0">{{ __("Verify Phone") }}</label>
                               <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1')) checked='checked' @endif>
                            </div>
                         </div>
                         <div class="col-sm-2">
                            <div class="form-group mb-0 text-md-right">
-                              <button class="btn btn-info d-block ml-auto" type="submit"> Save </button>
+                              <button class="btn btn-info d-block ml-auto" type="submit"> {{ __("Save") }} </button>
                            </div>
                         </div>
                      </div>
@@ -840,32 +840,32 @@
          </form>
 
          <div class="card-box">
-            <h4 class="header-title text-uppercase mb-3">Custom Mods</h4>
+            <h4 class="header-title text-uppercase mb-3">{{ __("Custom Mods") }}</h4>
             <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
                <input type="hidden" name="custom_mods_config" id="custom_mods_config" value="1">
                @csrf
                <div class="row align-items-center">
                   <div class="col-md-4">
                      <div class="form-group mb-3">
-                        <label for="celebrity_check" class="mr-2 mb-0"> Celebrity Mod</label>
+                        <label for="celebrity_check" class="mr-2 mb-0"> {{ __("Celebrity Mod") }}</label>
                         <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1')) checked='checked' @endif>
                      </div>
                   </div>
                   <div class="col-md-4">
                      <div class="form-group mb-3">
-                        <label for="pharmacy_check" class="mr-2 mb-0">Pharmacy Mod</label>
+                        <label for="pharmacy_check" class="mr-2 mb-0">{{ __('Pharmacy Mod') }}</label>
                         <input type="checkbox" data-plugin="switchery" name="pharmacy_check" id="pharmacy_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1')) checked='checked' @endif>
                      </div>
                   </div>
                   <div class="col-md-4">
                      <div class="form-group mb-3">
-                        <label for="enquire_mode" class="mr-2 mb-0">Inquiry Mod</label>
+                        <label for="enquire_mode" class="mr-2 mb-0">{{ __("Inquiry Mod") }}</label>
                         <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1')) checked='checked' @endif>
                      </div>
                   </div>
                   <div class="col-md-4">
                      <div class="form-group mb-3">
-                        <label for="subscription_mode" class="mr-2 mb-0">Subscription Mod</label>
+                        <label for="subscription_mode" class="mr-2 mb-0">{{ __("Subscription Mod") }}</label>
                         <input type="checkbox" data-plugin="switchery" name="subscription_mode" id="subscription_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->subscription_mode == '1')) checked='checked' @endif>
                      </div>
                   </div>
@@ -895,7 +895,7 @@
                   </div>
                   <div class="col-md-12">
                      <div class="form-group mb-0 text-md-left">
-                        <button class="btn btn-info d-block" type="submit">Save</button>
+                        <button class="btn btn-info d-block" type="submit">{{ __("Save") }}</button>
                      </div>
                   </div>
                </div>
@@ -910,31 +910,31 @@
          <div class="row">
             <div class="col-xl-12 mb-4">
                   <div class="page-title-box">
-                     <h4 class="page-title text-uppercase">Vendor</h4>
+                     <h4 class="page-title text-uppercase">{{ __("Vendor") }}</h4>
                   </div>
                   <div class="card-box mb-0">
                      <div class="row align-items-center">
                         <div class="col-md-3">
                            <div class="form-group mb-md-0">
-                              <label for="dinein_check" class="mr-3 mb-0">Dine In</label>
+                              <label for="dinein_check" class="mr-3 mb-0">{{ __("Dine In") }}</label>
                               <input type="checkbox" data-plugin="switchery" name="dinein_check" id="dinein_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->dinein_check == '1')) checked='checked' @endif>
                            </div>
                         </div>
                         <div class="col-md-3">
                            <div class="form-group mb-md-0">
-                              <label for="delivery_check" class="mr-3 mb-0">Delivery</label>
+                              <label for="delivery_check" class="mr-3 mb-0">{{ __("Delivery") }}</label>
                               <input type="checkbox" data-plugin="switchery" name="delivery_check" id="delivery_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delivery_check == '1')) checked='checked' @endif>
                            </div>
                         </div>
                         <div class="col-md-3">
                            <div class="form-group mb-md-0">
-                              <label for="takeaway_check" class="mr-3 mb-0">Takeaway</label>
+                              <label for="takeaway_check" class="mr-3 mb-0">{{ __("Takeaway") }}</label>
                               <input type="checkbox" data-plugin="switchery" name="takeaway_check" id="takeaway_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->takeaway_check == '1')) checked='checked' @endif>
                            </div>
                         </div>
                         <div class="col-md-3">
                            <div class="form-group mb-0 text-md-right">
-                              <button class="btn btn-info d-block ml-md-auto" type="submit"> Save </button>
+                              <button class="btn btn-info d-block ml-md-auto" type="submit"> {{ __("Save") }} </button>
                            </div>
                         </div>
                      </div>
@@ -945,19 +945,19 @@
                   <h4 class="page-title text-uppercase">Vendor Registration Documents</h4>
                </div> -->
                <div class="card-box mb-0 pb-2">
-                  <h4 class="header-title text-uppercase">Vendor Registration Documents</h4>
+                  <h4 class="header-title text-uppercase">{{ __("Vendor Registration Documents") }}</h4>
                   <div class="d-flex align-items-center justify-content-end mt-2">
                      <a class="btn btn-info d-block" id="add_vendor_registration_document_modal_btn">
-                        <i class="mdi mdi-plus-circle mr-1"></i>Add
+                        <i class="mdi mdi-plus-circle mr-1"></i>{{ __("Add") }}
                      </a>
                   </div>
                   <div class="table-responsive mt-3 mb-1">
                      <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
                         <thead>
                            <tr>
-                              <th>Name</th>
-                              <th>Type</th>
-                              <th>Action</th>
+                              <th>{{ __("Name") }}</th>
+                              <th>{{ __("Type") }}</th>
+                              <th>{{ __("Action") }}</th>
                            </tr>
                         </thead>
                         <tbody id="post_list">
@@ -986,7 +986,7 @@
                            </tr>
                            @empty
                            <tr align="center">
-                              <td colspan="4" style="padding: 20px 0">Result not found.</td>
+                              <td colspan="4" style="padding: 20px 0">{{ __("Result not found.") }}</td>
                            </tr>
                            @endforelse
                         </tbody>
@@ -1000,39 +1000,39 @@
          <div class="row">
             <div class="col-xl-6">
                <div class="page-title-box">
-                  <h4 class="page-title text-uppercase">Data Management</h4>
+                  <h4 class="page-title text-uppercase">{{ __("Data Management") }}</h4>
                </div>
                <div class="card-box">
                   <div class="row align-items-center text-center">
                      <div class="col-md-12">
-                        <button class="btn w-100 btn-danger cleanSoftDeleted">Clean All Soft Deleted</button>
+                        <button class="btn w-100 btn-danger cleanSoftDeleted">{{ __("Clean All Soft Deleted") }}</button>
                      </div>
                      <div class="col-md-12 my-3">
-                        <button class="btn w-100 btn-danger importDemoContent">Import Demo Content</button>
+                        <button class="btn w-100 btn-danger importDemoContent">{{ __("Import Demo Content") }}</button>
                      </div>
                      <div class="col-md-12">
-                        <button class="btn w-100 btn-danger hardDeleteEverything">Hard Delete Everything</button>
+                        <button class="btn w-100 btn-danger hardDeleteEverything">{{ __("Hard Delete Everything") }}</button>
                      </div>
                   </div>
                </div>
             </div>
             <div class="col-xl-6">
             <div class="page-title-box">
-                  <h4 class="page-title text-uppercase">Refer and Earn</h4>
+                  <h4 class="page-title text-uppercase">{{ __("Refer and Earn") }}</h4>
                </div>
                <form method="POST" class="h-100" action="{{route('referandearn.update', Auth::user()->code)}}">
                   @csrf
                   <div class="card-box mb-0 pb-1">
                   <!-- <h4 class="header-title text-uppercase">Refer and Earn</h4> -->
                      <div class="d-flex align-items-center justify-content-end">
-                        <button class="btn btn-info d-block" type="submit"> Save </button>
+                        <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
                      </div>
                      <div class="col-xl-12 my-2" id="addCur-160">
-                        <label class="primaryCurText">Referred To Amount = </label>
+                        <label class="primaryCurText">{{ __("Referred To Amount") }} = </label>
                         <input class="form-control" type="number" id="reffered_to_amount" name="reffered_to_amount" value="{{ old('reffered_to_amount', $reffer_to ?? '')}}" min="0">
                      </div>
                      <div class="col-xl-12 mb-2 mt-3" id="addCur-160">
-                        <label class="primaryCurText">Referred By Amount = </label>
+                        <label class="primaryCurText">{{ __("Referred By Amount") }} = </label>
                         <input class="form-control" type="number" name="reffered_by_amount" id="reffered_by_amount" value="{{ old('reffered_by_amount', $reffer_by ?? '')}}" min="0">
                      </div>
                   </div>
@@ -1045,22 +1045,22 @@
    <div class="row">
       <div class="col-lg-6">
          <div class="page-title-box">
-            <h4 class="page-title text-uppercase">Driver</h4>
+            <h4 class="page-title text-uppercase">{{ __("Driver") }}</h4>
          </div>
          <div class="card-box pb-2">
-         <h4 class="header-title text-uppercase">Driver Registration Documents</h4>
+         <h4 class="header-title text-uppercase">{{ __("Driver Registration Documents") }}</h4>
             <div class="d-flex align-items-center justify-content-end mt-2">
                <a class="btn btn-info d-block" id="add_driver_registration_document_modal_btn">
-                  <i class="mdi mdi-plus-circle mr-1"></i>Add
+                  <i class="mdi mdi-plus-circle mr-1"></i>{{ __("Add") }}
                </a>
             </div>
             <div class="table-responsive mt-3 mb-1">
                <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
                   <thead>
                      <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Action</th>
+                        <th>{{ __("Name") }}</th>
+                        <th>{{ __("Type") }}</th>
+                        <th>{{ __("Action") }}</th>
                      </tr>
                   </thead>
                   <tbody id="post_list">
@@ -1089,7 +1089,7 @@
                      </tr>
                      @empty
                      <tr align="center">
-                        <td colspan="4" style="padding: 20px 0">Result not found.</td>
+                        <td colspan="4" style="padding: 20px 0">{{ __("Result not found.") }}</td>
                      </tr>
                      @endforelse
                   </tbody>
@@ -1269,7 +1269,7 @@
                </form>
             </div>
             <div class="modal-footer">
-               <button type="button" class="btn btn-primary submitSaveVendorRegistrationDocument">Save</button>
+               <button type="button" class="btn btn-primary submitSaveVendorRegistrationDocument">{{ __("Save") }}</button>
             </div>
          </div>
       </div>

@@ -924,5 +924,27 @@
 "Features included" :"Funciones incluidas",
 "Debit From" :"Débito de",
 
+"Inquiry Mod" : "Mod de consulta",
+"Search a Product" : "Buscar un producto",
+"Pharmacy Mod" : "Mod de farmacia",
+"Dark" : "Oscuro",
+"Change Theme" : "Cambiar de tema",
+"Celebrity Mod" : "Celebrity Mod",
+"Subscription Mod" : "Mod de suscripción",
+"Vendor Registration Documents" : "Documentos de registro de proveedores",
+"Result not found." : "Resultado no encontrado".,
+"Data Management" : "Gestión de datos",
+"Clean All Soft Deleted" : "Limpiar todo suave eliminado",
+"Import Demo Content" : "Importar contenido de demostración",
+"Hard Delete Everything" : "Eliminar todo de forma dura",
+"Referred To Amount" : "Monto referido",
+"Referred By Amount" : "Recomendado por cantidad",
+"Driver Registration Documents" : "Documentos de registro de conductor",
+"Content" : "Contenido",
+"Visible In Menus" : "Visible en menús",
+"Promo Code Uses" : "Usos del código promocional",
+
+
+
    "": ""
 }

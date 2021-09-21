@@ -928,6 +928,28 @@
 "Features included" : "الميزات المضمنة",
 "Debit From" : "الخصم من",
 
+
+"Inquiry Mod": "نموذج الاستعلام",
+"Search a Product": "البحث عن منتج",
+"Pharmacy Mod": "وضع الصيدلة",
+"Dark": "داكن",
+"Change Theme": "غير الخلفية",
+"Celebrity Mod": "نمط المشاهير",
+"Subscription Mod": "وضع الاشتراك",
+"Vendor Registration Documents": "مستندات تسجيل البائع",
+"Result not found.": "لم يتم العثور على النتيجة".,
+"Data Management": "إدارة البيانات",
+"Clean All Soft Deleted": "تنظيف جميع المحذوفات الناعمة",
+"Import Demo Content": "استيراد محتوى تجريبي",
+"Hard Delete Everything": "حذف كل شيء نهائيًا",
+"Referred To Amount": "تمت الإشارة إلى المبلغ",
+"Referred By Amount": "المشار إليه بالمبلغ",
+"Driver Registration Documents": "وثائق تسجيل السائق",
+"Content": "المحتوى",
+"Visible In Menus": "مرئي في القوائم",
+"Promo Code Uses": "استخدامات الرمز الترويجي",
+
+
   
   "":""
 }

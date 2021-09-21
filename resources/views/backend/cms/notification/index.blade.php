@@ -59,7 +59,7 @@
                                     <span class="text-danger error-text updatetitleError"></span>
                                 </div>
                                 <div class="col-md-10 mb-3">
-                                    <label for="title" class="control-label">Content</label>
+                                    <label for="title" class="control-label">{{ __("Content") }}</label>
                                     <textarea class="form-control" id="content" placeholder="Meta Keyword" rows="6" name="meta_keyword" cols="10" maxlength="250"></textarea>
                                 </div>
                                 <div class="col-md-2 mb-3">
