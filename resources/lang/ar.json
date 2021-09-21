@@ -454,7 +454,7 @@
   "Draft": "مشروع",
   "Publish": "ينشر",
   "Update": "تحديث",
-  "Meta Keyword": "Meta Keyword" ,
+  "Meta Keyword": "كلمة ميتا" ,
   "Meta Title": "عنوان الفوقية",
   "Meta Description": "ميتا الوصف",
   "Templates Name":"اسم القوالب",
@@ -937,7 +937,7 @@
 "Celebrity Mod": "نمط المشاهير",
 "Subscription Mod": "وضع الاشتراك",
 "Vendor Registration Documents": "مستندات تسجيل البائع",
-"Result not found.": "لم يتم العثور على النتيجة".,
+"Result not found.": "لم يتم العثور على النتيجة",
 "Data Management": "إدارة البيانات",
 "Clean All Soft Deleted": "تنظيف جميع المحذوفات الناعمة",
 "Import Demo Content": "استيراد محتوى تجريبي",
@@ -950,7 +950,77 @@
 "Promo Code Uses": "استخدامات الرمز الترويجي",
 
 
+
+
+
+
+
+"Product Type" : "نوع المنتج",
+"Product Information" : "معلومات المنتج",
+"Compare at price" : "المقارنة بالسعر",
+"Sell When Out Of Stock" : "البيع عند نفاد المخزون",
+"Create Variants" : "إنشاء متغيرات",
+"Draft" : "مشروع",
+"Physical" : "بدني",
+"Dispatcher Tags" : "علامات المرسل",
+"Required Last Mile" : "الميل الأخير المطلوب",
+"Edit Product" : "تحرير المنتج",
+"Published" : "نشرت",
+"Weight Unit" : "وحدة الوزن",
+"Other Information" : "معلومات أخرى",
+"Weight" : "وزن",
+"Inquiry Only" : "استفسار فقط",
+"Add Product Image" : "إضافة صورة المنتج",
+"Product Images" : "صور المنتج",
+"Country Origin" : "بلد المنشأ",
+"Applied Variants Set" : "مجموعة المتغيرات المطبقة",
+"Select gear" : "حدد العتاد",
+"Relate with other products" : "ارتبط بمنتجات أخرى",
+"Select Addon Set" : "حدد المجموعة الإضافية",
+"Up Cell Products" : "Up Cell Products",
+"Make Variant Sets" : "إنشاء مجموعات متنوعة",
+"Pitons" : "بيتون",
+"Cams" : "كاميرات",
+"Requires Prescription" : "يتطلب وصفة طبية",
+"Select or change category to get variants" : "تحديد أو تغيير الفئة للحصول على متغيرات",
+"Pricing Information" : "معلومات التسعير",
+"Variant Information" : "معلومات متغيرة",
+"Nuts" : "المكسرات",
+"Bolts" : "البراغي",
+"Requires Last Mile Delivery" : "يتطلب توصيل الميل الأخير",
+"Stoppers" : "سدادات",
+"Track Inventory" : "حساب المخزون",
+"Sling" : "حبال",
+"Skis" : "الزلاجات",
+"Skins" : "جلود",
+"Quantity" : "كمية",
+"Poles" : "أعمدة",
+"Cross Cell Products" : "منتجات عبر الخلايا",
+"Compare at price (Optional)" : "المقارنة بالسعر (اختياري)",
+"Related Products" : "منتجات ذات صله",
+
+
+"Addon Set": "مجموعة الملحق",
+"General": "عام",
+
+
+"Order Prepare Time(In minutes)" : "وقت تحضير الطلب (بالدقائق)",
+"Return Request" : "طلب ارجاع",
+"24*7 Availability" : "توفر 24 * 7",
+"Auto Accept Order" : "قبول الطلب تلقائيًا",
+"Can Add Category" : "يمكن إضافة فئة",
+"Show Profile Details" : "إظهار تفاصيل ملف التعريف",
+"Commission Percent" : "نسبة العمولة",
+"Commission Fixed Per Order" : "العمولة الثابتة لكل طلب",
+"Vendor Detail To Show" : "تفاصيل البائع المراد عرضها",
+"Vendor Category" : "فئة البائع",
+
   
+"EXTRA" : "إضافي",
+"CMS" : "CMS",
+"Celebrities" : "مشاهير",
+"Inquiries" : "استفسارات",
+
   "":""
 }
 

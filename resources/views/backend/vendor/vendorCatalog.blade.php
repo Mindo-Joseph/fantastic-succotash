@@ -198,9 +198,9 @@
                                 <div class="col-12 d-flex align-items-center justify-content-between mb-3">
                                     <h4 class="mb-0"> {{ __('Catalog') }}</h4>
                                     <div class="">
-                                        <a class="btn btn-info waves-effect waves-light text-sm-right importProductBtn {{$vendor->status == 1 ? '' : 'disabled'}}" dataid="0" href="javascript:void(0);" {{$vendor->status == 1 ? '' : 'disabled'}}><i class="mdi mdi-plus-circle mr-1"></i> Import
+                                        <a class="btn btn-info waves-effect waves-light text-sm-right importProductBtn {{$vendor->status == 1 ? '' : 'disabled'}}" dataid="0" href="javascript:void(0);" {{$vendor->status == 1 ? '' : 'disabled'}}><i class="mdi mdi-plus-circle mr-1"></i> {{ __("Import") }}
                                         </a>
-                                        <a class="btn btn-info waves-effect waves-light text-sm-right addProductBtn {{$vendor->status == 1 ? '' : 'disabled'}}" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> Add Product</a>
+                                        <a class="btn btn-info waves-effect waves-light text-sm-right addProductBtn {{$vendor->status == 1 ? '' : 'disabled'}}" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1"></i> {{ __("Add Product") }}</a>
                                     </div>
                                 </div>
                                 <div class="col-md-12">

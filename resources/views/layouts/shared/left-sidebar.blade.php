@@ -139,7 +139,11 @@
                                             @endif
                                             @if(in_array('accounting_vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                                 <li>
-                                                    <a href="{{route('account.vendor')}}">{{getNomenclatureName('Vendors', true)}}</a>
+                                                    @php
+                                                    $Vendors = getNomenclatureName('Vendors', true);
+                                                    $VendorsTrans = ($Vendors=="Vendors")?__('Vendors'):$Vendors;
+                                                @endphp
+                                                    <a href="{{route('account.vendor')}}">{{ $VendorsTrans }}</a>
                                                 </li>
                                             @endif
                                         </ul>
@@ -152,7 +156,7 @@
                                     <li>
                                         <a href="#sidebarsubscriptions" data-toggle="collapse">
                                             <span class="icon-subscribe"></span>
-                                            <span> {{ __('Subscriptions ') }}</span>
+                                            <span> {{ __('Subscriptions') }}</span>
                                         </a>
                                         <div class="collapse" id="sidebarsubscriptions">
                                             <ul class="nav-second-level">
@@ -163,7 +167,7 @@
                                                 @endif
                                                 @if(in_array('subscription_plans_vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                                     <li>
-                                                        <a href="{{route('subscription.plans.vendor')}}">{{getNomenclatureName('Vendors', true)}}</a>
+                                                        <a href="{{route('subscription.plans.vendor')}}">{{ $VendorsTrans }}</a>
                                                     </li>
                                                 @endif
                                             </ul>
@@ -232,7 +236,7 @@
                         <li>
                             <a href="#sidebarcms" data-toggle="collapse">
                                 <span class="icon-cms"></span>
-                                <span>CMS</span>
+                                <span>{{ __("CMS") }}</span>
                             </a>
                             <div class="collapse" id="sidebarcms">
                                 <ul class="nav-second-level">
@@ -317,7 +321,11 @@
                             <li>
                                 <a href="{{route('loyalty.index')}}">
                                     <span class="icon-loyaltycard"></span>
-                                    <span> {{getNomenclatureName('Loyalty Cards', true)}}</span>
+                                    @php
+                                        $LoyaltyCards =  getNomenclatureName('Loyalty Cards', true)
+
+                                    @endphp
+                                    <span> {{ $LoyaltyCards === "Loyalty Cards" ?  __("Loyalty Cards")  : $$LoyaltyCards }}</span>
                                 </a>
                             </li>
                         @endif
@@ -330,7 +338,7 @@
                         <li>
                             <a class="menu-title pl-1">
                                 <!-- <span class="icon-extra"></span> -->
-                                <span>EXTRA</span>
+                                <span>{{ __("EXTRA") }}</span>
                             </a>
                             <ul class="nav-second-level">
                                 {{-- @if(!empty($client_preference) && $client_preference->celebrity_check == 1) --}}
@@ -339,7 +347,7 @@
                                         <li>
                                             <a href="{{ route('celebrity.index') }}">
                                                 <span class="icon-celebrity"></span>
-                                                <span> Celebrities </span>
+                                                <span> {{ __("Celebrities") }} </span>
                                             </a>
                                         </li>
                                     @endif
@@ -349,7 +357,7 @@
                                         <li>
                                             <a href="{{ route('inquiry.index') }}">
                                                 <span class="icon-question"></span>
-                                                <span> Inquiries </span>
+                                                <span> {{ __("Inquiries") }} </span>
                                             </a>
                                         </li>
                                     @endif

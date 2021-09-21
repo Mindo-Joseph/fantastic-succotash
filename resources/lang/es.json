@@ -932,7 +932,7 @@
 "Celebrity Mod" : "Celebrity Mod",
 "Subscription Mod" : "Mod de suscripción",
 "Vendor Registration Documents" : "Documentos de registro de proveedores",
-"Result not found." : "Resultado no encontrado".,
+"Result not found." : "Resultado no encontrado",
 "Data Management" : "Gestión de datos",
 "Clean All Soft Deleted" : "Limpiar todo suave eliminado",
 "Import Demo Content" : "Importar contenido de demostración",
@@ -945,6 +945,75 @@
 "Promo Code Uses" : "Usos del código promocional",
 
 
+
+
+"Product Type": "Tipo de producto",
+"Product Information": "Información del Producto",
+"Compare at price": "Comparar por precio",
+"Sell When Out Of Stock": "Vender cuando no haya existencias",
+"Create Variants": "Crear variantes",
+"Draft": "Borrador",
+"Physical": "Físico",
+"Dispatcher Tags": "Etiquetas de despachador",
+"Required Last Mile": "Última milla requerida",
+"Edit Product": "Editar producto",
+"Published": "Publicado",
+"Weight Unit": "Unidad de peso",
+"Other Information": "Otra información",
+"Weight": "Peso",
+"Inquiry Only": "Solo consulta",
+"Add Product Image": "Agregar imagen de producto",
+"Product Images": "Imágenes del producto",
+"Country Origin": "País de origen",
+"Applied Variants Set": "Conjunto de variantes aplicadas",
+"Select gear": "Seleccionar marcha",
+"Relate with other products": "Relacionarse con otros productos",
+"Select Addon Set": "Seleccionar conjunto de complementos",
+"Up Cell Products": "Up Cell Products",
+"Make Variant Sets": "Crear conjuntos de variantes",
+"Pitons": "Pitones",
+"Cams": "Cámaras",
+"Requires Prescription": "Requiere receta médica",
+"Select or change category to get variants": "Seleccione o cambie la categoría para obtener variantes",
+"Pricing Information": "Información de precio",
+"Variant Information": "Información de variantes",
+"Nuts": "Nueces",
+"Bolts": "Pernos",
+"Requires Last Mile Delivery": "Requiere entrega de última milla",
+"Stoppers": "Tapones",
+"Track Inventory": "Seguimiento de inventario",
+"Sling": "Honda",
+"Skis": "Esquís",
+"Skins": "Pieles",
+"Quantity": "Cantidad",
+"Poles": "Polos",
+"Cross Cell Products": "Productos de células cruzadas",
+"Compare at price (Optional)": "Comparar por precio (opcional)",
+"Related Products": "Productos relacionados",
+
+
+"Order Prepare Time(In minutes)": "Tiempo de preparación del pedido (en minutos)",
+"Return Request": "Solicitud de devolución",
+"24*7 Availability": "Disponibilidad 24 * 7",
+"Auto Accept Order": "Pedido de aceptación automática",
+"Can Add Category": "Puede agregar una categoría",
+"Show Profile Details": "Mostrar detalles del perfil",
+"Commission Percent": "Porcentaje de comisión",
+"Commission Fixed Per Order": "Comisión fija por pedido",
+"Vendor Detail To Show": "Detalle del proveedor para mostrar",
+"Vendor Category": "Categoría de proveedor",
+
+
+
+
+"Addon Set": "Conjunto de complementos",
+"General": "General",
+
+
+"EXTRA" : "EXTRA",
+"CMS" : "CMS",
+"Celebrities" : "Famosos",
+"Inquiries" : "Consultas",
 
    "": ""
 }

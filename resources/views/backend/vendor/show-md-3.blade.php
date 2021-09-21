@@ -64,7 +64,7 @@
                 <div class="row mb-2">
                     <div class="col-md-12">
                         <div class="form-group" id="order_pre_timeInput">
-                            {!! Form::label('title', 'Order Prepare Time(In minutes)',['class' => 'control-label']) !!}
+                            {!! Form::label('title', __('Order Prepare Time(In minutes)'),['class' => 'control-label']) !!}
                             <input class="form-control" onkeypress="return isNumberKey(event)" name="order_pre_time" type="text" value="{{ ($vendor->order_pre_time > 0) ? $vendor->order_pre_time : 0 }}" {{$vendor->status == 1 ? '' : 'disabled'}}>
                         </div>
                     </div>
@@ -75,15 +75,15 @@
                         </div>
                     </div> --}}
                     <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-                        {!! Form::label('title', '24*7 Availability',['class' => 'control-label']) !!}
+                        {!! Form::label('title', __('24*7 Availability'),['class' => 'control-label']) !!}
                         <input type="checkbox" data-plugin="switchery" name="show_slot" class="form-control" data-color="#43bee1" @if($vendor->show_slot == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
                     </div>
                     <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-                        {!! Form::label('title', 'Auto Accept Order',['class' => 'control-label']) !!}
+                        {!! Form::label('title', __('Auto Accept Order'),['class' => 'control-label']) !!}
                         <input type="checkbox" data-plugin="switchery" name="auto_accept_order" class="form-control" data-color="#43bee1" @if($vendor->auto_accept_order == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
                     </div>
                     <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-                        {!! Form::label('title', 'Show Profile Details',['class' => 'control-label']) !!}
+                        {!! Form::label('title', __('Show Profile Details'),['class' => 'control-label']) !!}
                         <input type="checkbox" data-plugin="switchery" name="is_show_vendor_details" class="form-control" data-color="#43bee1" @if($vendor->is_show_vendor_details == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
                     </div>
                     <!-- <div class="col-md-12">
@@ -93,7 +93,7 @@
                         </div>
                     </div> -->
                     <div class="col-12">
-                        <button class="btn btn-info waves-effect waves-light w-100" {{$vendor->status == 1 ? '' : 'disabled'}}>Save</button>
+                        <button class="btn btn-info waves-effect waves-light w-100" {{$vendor->status == 1 ? '' : 'disabled'}}>{{ __("Save") }}</button>
                     </div>
                 </div>
             </form>
@@ -115,13 +115,13 @@
 
                     <div class="col-md-12">
                         <div class="form-group" id="commission_percentInput">
-                            {!! Form::label('title', 'Commission Percent',['class' => 'control-label']) !!}
+                            {!! Form::label('title', __('Commission Percent'),['class' => 'control-label']) !!}
                             <input class="form-control" name="commission_percent" type="text" value="{{$vendor->commission_percent}}" onkeypress="return isNumberKey(event)">
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-group" id="commission_fixed_per_orderInput">
-                            {!! Form::label('title', 'Commission Fixed Per Order',['class' => 'control-label']) !!}
+                            {!! Form::label('title', __('Commission Fixed Per Order'),['class' => 'control-label']) !!}
                             <input class="form-control" name="commission_fixed_per_order" type="text" value="{{$vendor->commission_fixed_per_order}}" onkeypress="return isNumberKey(event)">
                         </div>
                     </div>
@@ -157,11 +157,11 @@
     </div>
     <div class="row">
         <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-            {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!}
+            {!! Form::label('title', __('Can Add Category'),['class' => 'control-label']) !!}
             <input type="checkbox" data-plugin="switchery" name="can_add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
         </div>
         <div class="col-md-6 mb-3">
-            {!! Form::label('title', 'Vendor Detail To Show',['class' => 'control-label ']) !!}
+            {!! Form::label('title', __('Vendor Detail To Show'),['class' => 'control-label ']) !!}
         </div>
         <div class="col-md-6 mb-3">
             <select class="selectize-select form-control assignToSelect" id="assignTo" {{$vendor->status == 1 ? '' : 'disabled'}}>
@@ -171,7 +171,7 @@
             </select>
         </div>
         <div class="col-md-12">
-            {!! Form::label('title', 'Vendor Category',['class' => 'control-label']) !!}
+            {!! Form::label('title', __('Vendor Category'),['class' => 'control-label']) !!}
             <div class="custom-dd dd nestable_list_1" id="nestable_list_1">
                 <ol class="dd-list">
                     @forelse($builds as $build)
@@ -244,7 +244,13 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h4 class="modal-title">{{ __("Edit") }} {{getNomenclatureName('vendors', false)}}</h4>
+
+                @php
+                $vendors = getNomenclatureName('vendors', false);
+                $newvendors = ($vendors === "vendors") ? __('vendors') : $vendors ; 
+                @endphp
+
+                <h4 class="modal-title">{{ __("Edit") }} {{ $newvendors }}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <form id="save_edit_banner_form" method="post" enctype="multipart/form-data">

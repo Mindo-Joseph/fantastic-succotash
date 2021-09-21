@@ -11,7 +11,13 @@
     <div class="row align-items-center">
         <div class="col-sm-6">
             <div class="page-title-box">
-                <h4 class="page-title">{{getNomenclatureName('vendors', true)}}</h4>
+
+                @php
+                    $vendors = getNomenclatureName('vendors', true);
+                    $newvendors = ($vendors === "vendors") ? __('vendors') : $vendors ; 
+                @endphp
+
+                <h4 class="page-title">{{ $newvendors }}</h4>
             </div>
         </div>
         <div class="col-sm-6 text-sm-right">
@@ -34,7 +40,7 @@
                                     <i class="mdi mdi-storefront text-primary mdi-24px"></i>
                                     <span data-plugin="counterup" id="total_earnings_by_vendors">{{$active_vendor_count}}</span>
                                 </h3>
-                                <p class="text-muted font-15 mb-0">{{ __('Total') }} {{getNomenclatureName('vendors', true)}}</p>
+                                <p class="text-muted font-15 mb-0">{{ __('Total') }} {{ $newvendors }}</p>
                             </div>
                         </div>
                         <div class="col-sm-6 col-md-3 mb-3 mb-md-0">

@@ -94,7 +94,7 @@
                         <input type="checkbox" id="age_restriction" data-plugin="switchery" name="age_restriction" class="chk_box1" data-color="#43bee1" {{$client_preferences->age_restriction == 1 ? 'checked' : ''}}>
                     </div>
                 </div>
-                <label for="">Title</label>
+                <label for="">{{ __("Title") }}</label>
                 <input type="text" class="form-control" id="age_restriction_title" name="age_restriction_title" value="{{ old('age_restriction_title', $client_preferences->age_restriction_title ?? '')}}">
             </div>
         </div>
@@ -150,7 +150,7 @@
                     <div class="col-sm-8">
                         <h4 class="page-title mt-0">{{ __("Home Page") }}</h4>
                         <p class="sub-header">
-                           {{ __(" Drag & drop to edit different sections.") }}
+                           {{ __("Drag & drop to edit different sections.") }}
                         </p>
                     </div>
                     <div class="col-sm-4 text-right">
