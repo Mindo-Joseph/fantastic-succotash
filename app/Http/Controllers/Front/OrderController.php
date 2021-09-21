@@ -1392,6 +1392,8 @@ class OrderController extends FrontController
                         [
                             'Content-type' => 'multipart/form-data',
                             'name' => 'upload_photo',
+                            'filename' => $request->upload_photo->getClientOriginalName(),
+                            'Mime-Type' =>$request->upload_photo->getMimeType('image'),
                             'contents' =>  fopen($request->upload_photo, 'r'),
                         ],
                         [
