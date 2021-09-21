@@ -114,10 +114,14 @@ class PickupDeliveryController extends FrontController{
                                 $qr->select('category_id')->from('vendor_categories')
                                     ->where('vendor_id', $vid)->where('status', 0);
                     })
+                    ->whereHas('category.categoryDetail' ,function($qryd) {
+                        $qryd->where('type_id', 7);   # check only products get of pickup
+                    })
                     ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id','products.tags')
                     ->where('products.vendor_id', $vid)
                     ->where('products.is_live', 1)->distinct()->get(); 
-            if(!empty($products)){
+
+             if(!empty($products)){
                 foreach ($products as $key => $product) {
                     $tags_price = $this->getDeliveryFeeDispatcher($request, $product);
                     $image_url = $product->media->first() ? $product->media->first()->image->path['image_fit'].'93/93'.$product->media->first()->image->path['image_path'] : '';
@@ -460,7 +464,7 @@ class PickupDeliveryController extends FrontController{
             $dispatch_domain = $this->checkIfPickupDeliveryOn();
             $customer = Auth::user();
             if ($dispatch_domain && $dispatch_domain != false) {
-                if ($request->payment_method == 1 || 1 ==1 ) {
+                if ($request->payment_option_id == 1) {
                     $cash_to_be_collected = 'Yes';
                     $payable_amount = $order->payable_amount;
                 } else {

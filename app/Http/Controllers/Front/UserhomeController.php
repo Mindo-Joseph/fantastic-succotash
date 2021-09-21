@@ -184,14 +184,26 @@ class UserhomeController extends FrontController
                             ->whereDate('end_date_time', '>=', Carbon::now());
                     });
                 })->orderBy('sorting', 'asc')->with('category')->with('vendor')->get();
+            
+            
+            $home_page_labels = CabBookingLayout::where('is_active', 1)->orderBy('order_by');
+            
+            if(isset($langId) && !empty($langId))
+            $home_page_labels = $home_page_labels->with(['translations' => function ($q)use($langId){
+                $q->where('language_id',$langId);
+            }]);
+
+            $home_page_labels = $home_page_labels->get();  
+
+            if(count($home_page_labels) == 0)
             $home_page_labels = HomePageLabel::with('translations')->where('is_active', 1)->orderBy('order_by')->get();
+            
 
             $only_cab_booking = OnboardSetting::where('key_value','home_page_cab_booking')->count();
             if($only_cab_booking == 1)
-            return Redirect::route('categoryDetail','cabservice');    
-            $home_page_pickup_labels = CabBookingLayout::with(['translations' => function($q)use($langId){
-                $q->where('language_id',$langId);
-            }])->where('is_active', 1)->orderBy('order_by')->get();
+            return Redirect::route('categoryDetail','cabservice');   
+
+            $home_page_pickup_labels = CabBookingLayout::where('is_active', 1)->orderBy('order_by')->get();
            
             return view('frontend.home')->with(['home' => $home, 'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels,'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
