@@ -136,6 +136,62 @@ class AuthController extends BaseController{
     }
 
     /**
+     * Login user via Phone and create token
+     *
+     */
+    public function loginViaPhone(Request $loginReq){
+        $errors = array();
+        $validator = Validator::make($loginReq->all(), [
+            'device_type'   => 'required|string',
+            'device_token'  => 'required|string',
+            'country_code'  => 'required|string',
+            'phone_number'  => 'required|string|min:8|max:15|unique:users'
+        ]);
+        if($validator->fails()){
+            foreach($validator->errors()->toArray() as $error_key => $error_value){
+                $errors['error'] = __($error_value[0]);
+                return response()->json($errors, 422);
+            }
+        }
+        $response['status'] = 'Success';
+        $response['dial_code'] = $loginReq->country_code;
+        $response['phone_number'] = $loginReq->phone_number;
+        $verified['is_email_verified'] = 0;
+        $verified['is_phone_verified'] = 0;
+        $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
+                    'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
+        $response['verify_details'] = $verified;
+        $response['cca2'] = $loginReq->country_code;
+        $preferData['map_key'] = $prefer->map_key;
+        $preferData['theme_admin'] = $prefer->theme_admin;
+        $preferData['date_format'] = $prefer->date_format;
+        $preferData['time_format'] = $prefer->time_format;
+        $preferData['map_provider'] = $prefer->map_provider;
+        $preferData['sms_provider'] = $prefer->sms_provider;
+        $preferData['verify_email'] = $prefer->verify_email;
+        $preferData['verify_phone'] = $prefer->verify_phone;
+        $preferData['distance_unit'] = $prefer->distance_unit;
+        $preferData['app_template_id'] = $prefer->app_template_id;
+        $preferData['web_template_id'] = $prefer->web_template_id;
+        $response['client_preference'] = $preferData;
+
+        if(!empty($prefer->sms_key) && !empty($prefer->sms_secret) && !empty($prefer->sms_from)){
+            $response['send_otp'] = 1;
+            if($loginReq->country_code == "971"){
+                $to = '+'.$loginReq->country_code."0".$loginReq->phone_number;
+            } else {
+                $to = '+'.$loginReq->country_code.$loginReq->phone_number;
+            }
+            $provider = $prefer->sms_provider;
+            $phoneCode = mt_rand(100000, 999999);
+            $body = "Please enter OTP ".$phoneCode." to verify your account.";
+            $send = $this->sendSms($provider, $prefer->sms_key, $prefer->sms_secret, $prefer->sms_from, $to, $body);
+        }
+
+        return response()->json(['data' => $response]);
+    }
+
+    /**
      * User registraiotn
      * @return [status, email, need_email_verify, need_phone_verify]
      */

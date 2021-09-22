@@ -1,7 +1,16 @@
    ////////   **************  cab details page  *****************  ////////
 
    $(document).on("click", ".select_cab_payment_method",function() {
-      $("#payment_modal").modal('toggle');
+       var payment_method = $(this).attr('data-payment_method');
+       if(payment_method == 2)
+       $('#payment_type').html('<i class="fa fa-money" aria-hidden="true"></i> Wallet');
+       else
+       $('#payment_type').html('<i class="fa fa-money" aria-hidden="true"></i> Cash');
+
+       $('#pickup_now').attr("data-payment_method",payment_method);
+       $('#pickup_later').attr("data-payment_method",payment_method);
+
+       $("#payment_modal").modal('toggle');
    });
 
 
@@ -110,13 +119,13 @@ $(document).ready(function () {
         let coupon_id = $(this).data('coupon_id');
         let task_type = $(this).data('task_type');
         let product_id = $(this).data('product_id');
-
+        let payment_option_id = $(this).data('payment_method');
        
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: cab_booking_create_order,
-            data: {payment_option_id: 1, vendor_id: vendor_id, product_id: product_id,coupon_id: coupon_id, amount: amount, tasks: tasks, task_type:task_type, schedule_datetime:schedule_datetime},
+            data: {payment_option_id: payment_option_id, vendor_id: vendor_id, product_id: product_id,coupon_id: coupon_id, amount: amount, tasks: tasks, task_type:task_type, schedule_datetime:schedule_datetime},
             success: function(response) {
                 $('#pickup_now').attr('disabled', false);
                 $('#pickup_later').attr('disabled', false);
@@ -128,6 +137,8 @@ $(document).ready(function () {
                     setInterval(function(){
                         getDriverDetails(response.data.dispatch_traking_url)
                     },3000);
+                }else{
+                    $('#show_error_of_booking').html(response.message);
                 }
             }
         });
