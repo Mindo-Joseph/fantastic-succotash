@@ -220,6 +220,11 @@
                                  
                             <input type="checkbox" {{$home_page_label->is_active == 1 ? 'checked' : ''}} id="{{$home_page_label->slug}}" data-plugin="switchery" name="is_active[{{$key}}][check]" class="chk_box2" data-color="#43bee1">
                         </div>
+                        @if($home_page_label->slug == 'dynamic_page')
+                        <a class="action-icon edit_dynamic_page" dataid="{{$home_page_label->id}}" href="javascript:void(0);">
+                            <i class="mdi mdi-pencil"></i>
+                        </a>
+                        @endif
                         <a class="action-icon deletePickupSectionx" href="{{route('pickup.delete.section', $home_page_label->id)}}" onclick="return confirm('Are you sure you want to delete this section?');"  dataid="{{$home_page_label->id}}" href="javascript:void(0);">
                             <i class="mdi mdi-delete"></i>
                         </a>
@@ -354,7 +359,7 @@
     </script>
 <!-- end allow html -->
 <script>
-$(document).on('click','.on_clickdynamic_page',function(){
+$(document).on('click','.edit_dynamic_page',function(){
         event.preventDefault();
         var id = $(this).data('row-id');
         $.get('/client/web-styling/get-html-data-in-modal?id=' + id, function(markup)
