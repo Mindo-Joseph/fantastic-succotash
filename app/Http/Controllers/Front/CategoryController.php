@@ -45,12 +45,11 @@ class CategoryController extends FrontController{
         'allParentsAccount'])
         ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products', 'parent_id')
         ->where('slug', $slug)->firstOrFail();
-
         $category->translation_name = ($category->translation->first()) ? $category->translation->first()->name : $category->slug;
         foreach($category->childs as $key => $child){
             $child->translation_name = ($child->translation->first()) ? $child->translation->first()->name : $child->slug;
         }
-
+       
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) && (isset($category->type_id)) && ($category->type_id != 4) && ($category->type_id != 5) ){
             $latitude = Session::get('latitude');
             $longitude = Session::get('longitude');
@@ -70,7 +69,8 @@ class CategoryController extends FrontController{
                     $vendors[] = $value->id;
                 }
             }
-                
+            $redirect_to = $category->type->redirect_to; 
+            $page = (strtolower($redirect_to) != '') ? strtolower($redirect_to) : 'product';  
             // if(Session::has('vendors')){
             if( (isset($vendors)) && (count($vendors) > 0) ){
                 Session::put('vendors', $vendors);
@@ -87,22 +87,25 @@ class CategoryController extends FrontController{
                     $category->childs = collect($childArray);
                 }
                 //Abort route if category from route does not exist as per hyperlocal vendors
-                $category_vendors = VendorCategory::select('vendor_id')->where('category_id', $category->id)->where('status', 1)->get();
-                if($category_vendors->isNotEmpty()){
-                    $index = 1;
-                    foreach($category_vendors as $key => $value){
-                        if(in_array($value->vendor_id, $vendors)){
-                            break;
+                if($page != 'pickup/delivery'){
+                    $category_vendors = VendorCategory::select('vendor_id')->where('category_id', $category->id)->where('status', 1)->get();
+                    if($category_vendors->isNotEmpty()){
+                        $index = 1;
+                        foreach($category_vendors as $key => $value){
+                            if(in_array($value->vendor_id, $vendors)){
+                                break;
+                            }
+                            elseif(count($category_vendors) == $index){
+                                abort(404);
+                            }
+                            $index++;
                         }
-                        elseif(count($category_vendors) == $index){
-                            abort(404);
-                        }
-                        $index++;
+                    }
+                    else{
+                        abort(404);                    
                     }
                 }
-                else{
-                    abort(404);                    
-                }
+              
             }else{
                 // abort(404);
             }
