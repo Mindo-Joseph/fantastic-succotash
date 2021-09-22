@@ -169,7 +169,7 @@
      <!-- Popular Brands Section Start From Here -->
      <section class="popular-brands left-shape position-relative">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="row align-items-center position-relative">
                 <div class="col-lg-2 cw top-heading pr-0 text-center text-lg-left mb-3 mb-lg-0">
                     <h2 class="h2-heading">Popular Brands</h2>
                     <p>Check out the favorites among people.</p>
@@ -198,6 +198,14 @@
                                     <img src="{{asset('front-assets/images/dominos.png')}}" alt="">
                                 </div>
                                 <h6>Dominos</h6>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="brand-box d-flex align-items-center justify-content-center flex-column red-box">
+                                <div class="brand-ing">
+                                    <img src="{{asset('front-assets/images/nike.png')}}" alt="">
+                                </div>
+                                <h6>Nike</h6>
                             </div>
                         </div>
                         <div>
@@ -345,13 +353,21 @@
     <!-- Popular Brands Section Start From Here -->
     <section class="royo-recommends right-shape position-relative">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="row align-items-center position-relative">
                 <div class="col-lg-2 cw top-heading pl-0 order-lg-1 mb-3 mb-lg-0 text-center text-lg-left">
                     <h2 class="h2-heading">Royo Recommends</h2>
                     <p>Check out recommended items.</p>
                 </div>
                 <div class="col-lg-10 cw">
                     <div class="brand-slider">
+                        <div>
+                            <div class="brand-box d-flex align-items-center justify-content-center flex-column black-box">
+                                <div class="brand-ing">
+                                    <img src="{{asset('front-assets/images/nike.png')}}" alt="">
+                                </div>
+                                <h6>Nike</h6>
+                            </div>
+                        </div>
                         <div>
                             <div class="brand-box d-flex align-items-center justify-content-center flex-column black-box">
                                 <div class="brand-ing">
@@ -405,7 +421,7 @@
                                 <div class="suppliers-img-outer text-center">
                                     <img class="fluid-img mx-auto" src="{{asset('front-assets/images/appirio.png')}}" alt="">
                                 </div>
-                                <div class="supplier-rating d-flex align-items-center justify-content-between">
+                                <div class="supplier-rating d-flex flex-column align-items-center justify-content-between">
                                     <h6>Cloudtail</h6>
                                     <ul class="m-0 p-0">
                                         <li><i class="fa fa-star" aria-hidden="true"></i></li>
@@ -422,7 +438,7 @@
                                 <div class="suppliers-img-outer text-center">
                                     <img class="fluid-img mx-auto" src="{{asset('front-assets/images/cloud-tail.png')}}" alt="">
                                 </div>
-                                <div class="supplier-rating d-flex align-items-center justify-content-between">
+                                <div class="supplier-rating d-flex flex-column align-items-center justify-content-between">
                                     <h6>Cloudtail</h6>
                                     <ul class="m-0 p-0">
                                         <li><i class="fa fa-star" aria-hidden="true"></i></li>
@@ -437,9 +453,9 @@
                         <div>
                             <div class="suppliers-box px-2">
                                 <div class="suppliers-img-outer text-center">
-                                    <img class="fluid-img mx-auto" src="{{asset('front-assets/images/appirio.png')}}" alt="">
+                                    <img class="fluid-img mx-auto" src="{{asset('front-assets/images/fireart.png')}}" alt="">
                                 </div>
-                                <div class="supplier-rating d-flex align-items-center justify-content-between">
+                                <div class="supplier-rating d-flex flex-column align-items-center justify-content-between">
                                     <h6>Cloudtail</h6>
                                     <ul class="m-0 p-0">
                                         <li><i class="fa fa-star" aria-hidden="true"></i></li>
@@ -456,7 +472,7 @@
                                 <div class="suppliers-img-outer text-center">
                                     <img class="fluid-img mx-auto" src="{{asset('front-assets/images/cloud-tail.png')}}" alt="">
                                 </div>
-                                <div class="supplier-rating d-flex align-items-center justify-content-between">
+                                <div class="supplier-rating d-flex flex-column align-items-center justify-content-between">
                                     <h6>Cloudtail</h6>
                                     <ul class="m-0 p-0">
                                         <li><i class="fa fa-star" aria-hidden="true"></i></li>

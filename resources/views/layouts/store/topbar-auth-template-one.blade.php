@@ -7,7 +7,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 <div class="top-header site-topbar">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-6 col-sm-4 col-md-6">
+            <div class="col-6">
                 <div class="d-flex align-items-center">  
                     <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                     @if( (Session::get('preferences')))
@@ -25,7 +25,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     @endif
                 </div>
             </div>
-            <div class="col-6 col-sm-8 col-md-6 text-right">
+            <div class="col-6 text-right">
                 <div class="d-inline d-sm-none">
                     @if( (Session::get('preferences')))
                         @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
