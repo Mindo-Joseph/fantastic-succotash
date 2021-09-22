@@ -9,6 +9,7 @@ use GuzzleHttp\Client as GCLIENT;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
+use Log;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client};
 
 class OrderController extends Controller {
@@ -549,7 +550,8 @@ class OrderController extends Controller {
     public function sendOrderPushNotificationVendors($user_ids, $orderData, $header_code)
     {
         $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
-        $client_preferences = ClientPreference::select('fcm_server_key')->first();
+        Log::info($devices);
+        $client_preferences = ClientPreference::select('fcm_server_key','favicon')->first();
         if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
             $from = $client_preferences->fcm_server_key;
             $notification_content = NotificationTemplate::where('id', 4)->first();
@@ -567,6 +569,7 @@ class OrderController extends Controller {
                         'title' => $notification_content->subject,
                         'body'  => $notification_content->content,
                         'sound' => "default",
+                        "icon" => (!empty($client_preferences->favicon)) ? $client_preferences->favicon['proxy_url'].'200/200'.$client_preferences->favicon['image_path'] : '',
                         'click_action' => $redirect_URL
                     ],
                     "data" => [
@@ -584,6 +587,7 @@ class OrderController extends Controller {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataString));
                 $result = curl_exec($ch);
+                Log::info($result);
                 curl_close($ch);
             }
         }
@@ -592,7 +596,8 @@ class OrderController extends Controller {
     public function sendStatusChangePushNotificationCustomer($user_ids, $orderData, $order_status_id, $header_code)
     {
         $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
-        $client_preferences = ClientPreference::select('fcm_server_key')->first();
+        Log::info($devices);
+        $client_preferences = ClientPreference::select('fcm_server_key', 'favicon')->first();
         if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
             $from = $client_preferences->fcm_server_key;
             if ($order_status_id == 2 || $order_status_id == 7) {
@@ -621,6 +626,7 @@ class OrderController extends Controller {
                         'title' => $notification_content->subject,
                         'body'  => $body_content,
                         'sound' => "default",
+                        "icon" => (!empty($client_preferences->favicon)) ? $client_preferences->favicon['proxy_url'].'200/200'.$client_preferences->favicon['image_path'] : '',
                         'click_action' => $redirect_URL
                     ],
                     "data" => [
@@ -638,6 +644,7 @@ class OrderController extends Controller {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataString));
                 $result = curl_exec($ch);
+                Log::info($result);
                 curl_close($ch);
             }
         }

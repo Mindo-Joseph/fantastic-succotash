@@ -87,6 +87,15 @@ class HomePageLabelSeeder extends Seeder
             ]);
          
         }
+
+        $already = HomePageLabel::where('slug', 'dynamic_page')->count();
+
+        if($already == 0)
+        $home_page = HomePageLabel::insertGetId([
+            'title' => 'Dynamic Page',
+            'slug' => 'dynamic_page',
+            'order_by' => 8,
+        ]);
            
        
     }

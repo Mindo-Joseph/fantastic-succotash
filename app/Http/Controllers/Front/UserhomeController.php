@@ -95,6 +95,9 @@ class UserhomeController extends FrontController
         $client = Auth::user();
         $ClientPreference = ClientPreference::where('client_code', $client->code)->first();
         $preference = $ClientPreference ? $ClientPreference : new ClientPreference();
+        $page_detail = Page::with(['translations' => function ($q) {
+            $q->where('language_id', session()->get('customerLanguage'));
+        }])->where('slug', 'driver-registration')->firstOrFail();
         $last_mile_teams = [];
         // $tags   =  $this->getAgentTags();
         $tag = [];
@@ -106,7 +109,7 @@ class UserhomeController extends FrontController
         }
         $showTag = implode(',', $tag);
         $driver_registration_documents = DriverRegistrationDocument::get();
-        return view('frontend.driver-registration', compact('navCategories', 'client_preferences', 'user', 'showTag', 'last_mile_teams', 'driver_registration_documents'));
+        return view('frontend.driver-registration', compact('page_detail','navCategories', 'client_preferences', 'user', 'showTag', 'last_mile_teams', 'driver_registration_documents'));
     }
 
     public function checkIfLastMileOn()
@@ -184,14 +187,26 @@ class UserhomeController extends FrontController
                             ->whereDate('end_date_time', '>=', Carbon::now());
                     });
                 })->orderBy('sorting', 'asc')->with('category')->with('vendor')->get();
+            
+            
+            $home_page_labels = CabBookingLayout::where('is_active', 1)->orderBy('order_by');
+            
+            if(isset($langId) && !empty($langId))
+            $home_page_labels = $home_page_labels->with(['translations' => function ($q)use($langId){
+                $q->where('language_id',$langId);
+            }]);
+
+            $home_page_labels = $home_page_labels->get();  
+
+            if(count($home_page_labels) == 0)
             $home_page_labels = HomePageLabel::with('translations')->where('is_active', 1)->orderBy('order_by')->get();
+            
 
             $only_cab_booking = OnboardSetting::where('key_value','home_page_cab_booking')->count();
             if($only_cab_booking == 1)
-            return Redirect::route('categoryDetail','cabservice');    
-            $home_page_pickup_labels = CabBookingLayout::with(['translations' => function($q)use($langId){
-                $q->where('language_id',$langId);
-            }])->where('is_active', 1)->orderBy('order_by')->get();
+            return Redirect::route('categoryDetail','cabservice');   
+
+            $home_page_pickup_labels = CabBookingLayout::where('is_active', 1)->orderBy('order_by')->get();
            
             return view('frontend.home')->with(['home' => $home, 'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels,'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
@@ -259,9 +274,11 @@ class UserhomeController extends FrontController
                 $long1  = $longitude;
                 $lat2   = $value->latitude;
                 $long2  = $value->longitude;
-                $distance = $this->calulateDistanceLineOfSight($lat1,$long1,$lat2, $long2, 'K');
+                $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
+                $distance_to_time_multiplier = (!empty($preferences->distance_to_time_multiplier)) ? $preferences->distance_to_time_multiplier : 2;
+                $distance = $this->calulateDistanceLineOfSight($lat1,$long1,$lat2, $long2, $distance_unit);
                 $value->lineOfSightDistance = number_format($distance, 1, '.', '');
-                $value->timeofLineOfSightDistance = number_format(floatval($value->order_pre_time), 0, '.', '') + number_format(($distance * 2), 0, '.', ''); // distance is multiplied by 2 minutes per 1 distance unit to calculate travel time
+                $value->timeofLineOfSightDistance = number_format(floatval($value->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by multiplier to calculate travel time
             }
         }
         if (($latitude) && ($longitude)) {
