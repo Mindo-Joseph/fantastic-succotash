@@ -303,6 +303,8 @@ $(document).ready(function () {
         getVendorList();   
     });
     function getVendorList(){
+        if(wallet_balance < 0)
+        return false;
         var locations = [];
         let vendor_id = $(this).data('vendor');
         var pickup_location_latitude = $('input[name="pickup_location_latitude[]"]').map(function(){return this.value;}).get();
@@ -704,8 +706,12 @@ $(document).ready(function () {
         $("#destination_location_"+random_id).attr("style", "display: block !important");
         initializeNew(random_id);
     });
-    
+   
     var query = window.location.search.substring(1);
+   // var query = str.replace(query.replace('+', ' ');
+  //  var uri_enc = encodeURIComponent(uri);
+  //  var uri_dec = decodeURIComponent(uri_enc);
+    console.log(query);
     if(query != ''){
         var vars = query.split('&');
         for(i = 0; i<vars.length; i++){

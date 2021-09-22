@@ -24,7 +24,8 @@ class CategoryController extends FrontController{
      * @return \Illuminate\Http\Response
      */
     public function categoryProduct(Request $request, $domain = '', $slug = 0)
-    {
+    {   
+        //dd($request->pickup_location);
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
@@ -155,7 +156,10 @@ class CategoryController extends FrontController{
             }else{
 
                 $user_addresses = UserAddress::get();
-                return view('frontend.booking.index')->with(['user_addresses' => $user_addresses, 'navCategories' => $navCategories,'category' => $category]);
+                $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
+                $wallet_balance = Auth::user()->balanceFloat * $clientCurrency->doller_compare;
+
+                return view('frontend.booking.index')->with(['wallet_balance' => $wallet_balance, 'user_addresses' => $user_addresses, 'navCategories' => $navCategories,'category' => $category]);
             }
         }elseif($page == 'on demand service'){ 
             $cartDataGet = $this->getCartOnDemand($request);
@@ -186,7 +190,7 @@ class CategoryController extends FrontController{
                 return redirect($new_url);
             }
             
-            $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
+            $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
             return view('frontend.ondemand.index')->with(['clientCurrency' => $clientCurrency,'time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }else{
             if(view()->exists('frontend/cate-'.$page.'s')){
