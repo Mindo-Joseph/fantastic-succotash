@@ -137,6 +137,8 @@ $(document).ready(function () {
                     setInterval(function(){
                         getDriverDetails(response.data.dispatch_traking_url)
                     },3000);
+                }else{
+                    $('#show_error_of_booking').html(response.message);
                 }
             }
         });

@@ -243,6 +243,8 @@ if (strpos($url,'cabservice') !== false) {?>
                     <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="">
                 </div>
             </div>
+            <span id="show_error_of_booking" class="error"></span>
+                
             <div class="payment-promo-container p-2">
                 <h4 class="d-flex align-items-center justify-content-between mb-2"  data-toggle="modal" data-target="#payment_modal">
                     <span id="payment_type">
