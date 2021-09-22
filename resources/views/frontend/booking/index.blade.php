@@ -243,19 +243,21 @@ if (strpos($url,'cabservice') !== false) {?>
                     <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="">
                 </div>
             </div>
+            <span id="show_error_of_booking" class="error"></span>
+                
             <div class="payment-promo-container p-2">
                 <h4 class="d-flex align-items-center justify-content-between mb-2"  data-toggle="modal" data-target="#payment_modal">
-                    <span>
+                    <span id="payment_type">
                         <i class="fa fa-money" aria-hidden="true"></i> Cash
                     </span>
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                 </h4>
                 <div class="row">
                     <div class="col-6">
-                        <button class="btn btn-solid w-100" id="pickup_now" data-product_id="<%= result.id %>" data-coupon_id ="" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_now" data-task_type="now">Pickup Now</button>
+                        <button class="btn btn-solid w-100" id="pickup_now" data-payment_method="1" data-product_id="<%= result.id %>" data-coupon_id ="" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_now" data-task_type="now">Pickup Now</button>
                     </div>
                     <div class="col-6">
-                        <button class="btn btn-solid w-100" id="pickup_later" data-product_id="<%= result.id %>" data-coupon_id ="" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_later">Pickup Later</button>
+                        <button class="btn btn-solid w-100" id="pickup_later" data-payment_method="1" data-product_id="<%= result.id %>" data-coupon_id ="" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_later">Pickup Later</button>
                     </div>
                 </div>
             </div>
@@ -345,7 +347,9 @@ if (strpos($url,'cabservice') !== false) {?>
                 </button>
             </div>
             <div class="modal-body p-0">
-                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Cash</span></h4>
+                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method" data-payment_method="1"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Cash</span></h4>
+                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method" data-payment_method="2"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Wallet</span></h4>
+               
                 {{-- <h4 class="payment-button"  data-toggle="modal" data-target="#select_payment_option" aria-label="Close">Select Payment Method</h4> --}}
             </div>        
         </div>
