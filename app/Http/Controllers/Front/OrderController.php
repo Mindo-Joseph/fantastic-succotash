@@ -775,7 +775,7 @@ class OrderController extends FrontController
                     "notification" => [
                         'title' => $notification_content->subject,
                         'body'  => $notification_content->content,
-                        'sound' => "default",
+                        'sound' => "notification.mp3",
                         "icon" => (!empty($client_preferences->favicon)) ? $client_preferences->favicon['proxy_url'].'200/200'.$client_preferences->favicon['image_path'] : '',
                         'click_action' => route('order.index')
                     ],
