@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\CabBookingLayout;
 use DB;
 use Log;
-class CabBookingLayoutSeederDefault extends Seeder
+class HomePageLabelSeederDefault extends Seeder
 {
     /**
      * Run the database seeds.

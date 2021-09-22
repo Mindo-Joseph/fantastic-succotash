@@ -12,7 +12,6 @@ jQuery(window).scroll(function () {
     }
 });
 $(document).ready(function () {
-
     if (window.location.pathname == '/') {
         let latitude = "";
         let longitude = "";
