@@ -22,15 +22,31 @@
         <div class="row">
             <div class="col-12">
                 <div class="home-banner-slider">
-                    <div>
-                        <img src="{{asset('front-assets/images/banner-one.png')}}" alt="">
-                    </div>
-                    <div>
-                        <img src="{{asset('front-assets/images/banner-one.png')}}" alt="">
-                    </div>
-                    <div>
-                        <img src="{{asset('front-assets/images/banner-one.png')}}" alt="">
-                    </div>
+                    @foreach($banners as $banner)
+                        @php
+                        $url = '';
+                        if($banner->link == 'category'){
+                        if($banner->category != null){
+                        $url = route('categoryDetail', $banner->category->slug);
+                        }
+                        }
+                        else if($banner->link == 'vendor'){
+                        if($banner->vendor != null){
+                        $url = route('vendorDetail', $banner->vendor->slug);
+                        }
+                        }
+                        @endphp
+                    @if($url)
+                    <a href="{{$url}}">
+                        @endif
+                        <div>
+                            <img src="{{$banner->image['image_fit'] . '1500/600' . $banner->image['image_path']}}">
+                        </div>
+                        @if($url)
+                    </a>
+                    @endif
+                    @endforeach    
+                   
                 </div>
             </div>
         </div>
@@ -167,9 +183,9 @@
     </section>
 
      <!-- Popular Brands Section Start From Here -->
-     <section class="popular-brands left-shape position-relative">
+     {{-- <section class="popular-brands left-shape position-relative">
         <div class="container">
-            <div class="row align-items-center position-relative">
+            <div class="row align-items-center">
                 <div class="col-lg-2 cw top-heading pr-0 text-center text-lg-left mb-3 mb-lg-0">
                     <h2 class="h2-heading">Popular Brands</h2>
                     <p>Check out the favorites among people.</p>
@@ -208,22 +224,14 @@
                                 <h6>Nike</h6>
                             </div>
                         </div>
-                        <div>
-                            <div class="brand-box d-flex align-items-center justify-content-center flex-column red-box">
-                                <div class="brand-ing">
-                                    <img src="{{asset('front-assets/images/nike.png')}}" alt="">
-                                </div>
-                                <h6>Nike</h6>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
      <!-- Newly arrived Section Start From Here -->
-     <section class="newly-arrived pt-0">
+     {{-- <section class="newly-arrived pt-0">
         <div class="container">
             <div class="row">
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between mb-md-4 mb-3">
@@ -348,26 +356,18 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Popular Brands Section Start From Here -->
-    <section class="royo-recommends right-shape position-relative">
+    {{-- <section class="royo-recommends right-shape position-relative">
         <div class="container">
-            <div class="row align-items-center position-relative">
+            <div class="row align-items-center">
                 <div class="col-lg-2 cw top-heading pl-0 order-lg-1 mb-3 mb-lg-0 text-center text-lg-left">
                     <h2 class="h2-heading">Royo Recommends</h2>
                     <p>Check out recommended items.</p>
                 </div>
                 <div class="col-lg-10 cw">
                     <div class="brand-slider">
-                        <div>
-                            <div class="brand-box d-flex align-items-center justify-content-center flex-column black-box">
-                                <div class="brand-ing">
-                                    <img src="{{asset('front-assets/images/nike.png')}}" alt="">
-                                </div>
-                                <h6>Nike</h6>
-                            </div>
-                        </div>
                         <div>
                             <div class="brand-box d-flex align-items-center justify-content-center flex-column black-box">
                                 <div class="brand-ing">
@@ -404,10 +404,10 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Newly arrived Section Start From Here -->
-    <section class="suppliers-section pt-0 mb-5">
+    {{-- <section class="suppliers-section pt-0 mb-5">
         <div class="container">
             <div class="row">
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between mb-md-4 mb-3">
@@ -421,7 +421,7 @@
                                 <div class="suppliers-img-outer text-center">
                                     <img class="fluid-img mx-auto" src="{{asset('front-assets/images/appirio.png')}}" alt="">
                                 </div>
-                                <div class="supplier-rating d-flex flex-column align-items-center justify-content-between">
+                                <div class="supplier-rating d-flex align-items-center justify-content-between">
                                     <h6>Cloudtail</h6>
                                     <ul class="m-0 p-0">
                                         <li><i class="fa fa-star" aria-hidden="true"></i></li>
@@ -438,7 +438,7 @@
                                 <div class="suppliers-img-outer text-center">
                                     <img class="fluid-img mx-auto" src="{{asset('front-assets/images/cloud-tail.png')}}" alt="">
                                 </div>
-                                <div class="supplier-rating d-flex flex-column align-items-center justify-content-between">
+                                <div class="supplier-rating d-flex align-items-center justify-content-between">
                                     <h6>Cloudtail</h6>
                                     <ul class="m-0 p-0">
                                         <li><i class="fa fa-star" aria-hidden="true"></i></li>
@@ -453,9 +453,9 @@
                         <div>
                             <div class="suppliers-box px-2">
                                 <div class="suppliers-img-outer text-center">
-                                    <img class="fluid-img mx-auto" src="{{asset('front-assets/images/fireart.png')}}" alt="">
+                                    <img class="fluid-img mx-auto" src="{{asset('front-assets/images/appirio.png')}}" alt="">
                                 </div>
-                                <div class="supplier-rating d-flex flex-column align-items-center justify-content-between">
+                                <div class="supplier-rating d-flex align-items-center justify-content-between">
                                     <h6>Cloudtail</h6>
                                     <ul class="m-0 p-0">
                                         <li><i class="fa fa-star" aria-hidden="true"></i></li>
@@ -472,7 +472,7 @@
                                 <div class="suppliers-img-outer text-center">
                                     <img class="fluid-img mx-auto" src="{{asset('front-assets/images/cloud-tail.png')}}" alt="">
                                 </div>
-                                <div class="supplier-rating d-flex flex-column align-items-center justify-content-between">
+                                <div class="supplier-rating d-flex align-items-center justify-content-between">
                                     <h6>Cloudtail</h6>
                                     <ul class="m-0 p-0">
                                         <li><i class="fa fa-star" aria-hidden="true"></i></li>
@@ -488,40 +488,11 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
 </div>
 
-<!-- <section class="p-0 small-slider">
-    <div class="slide-1 home-slider">
-        @foreach($banners as $banner)
-        @php
-        $url = '';
-        if($banner->link == 'category'){
-        if($banner->category != null){
-        $url = route('categoryDetail', $banner->category->slug);
-        }
-        }
-        else if($banner->link == 'vendor'){
-        if($banner->vendor != null){
-        $url = route('vendorDetail', $banner->vendor->slug);
-        }
-        }
-        @endphp
-        <div>
-            @if($url)
-            <a href="{{$url}}">
-                @endif
-                <div class="home text-center">
-                    <img src="{{$banner->image['image_fit'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
-                </div>
-                @if($url)
-            </a>
-            @endif
-        </div>
-        @endforeach
-    </div>
-</section> -->
+
 <script type="text/template" id="vendors_template">
     <% _.each(vendors, function(vendor, k){%>
         <div class="product-box scale-effect">
@@ -600,14 +571,15 @@
 </script>
 <section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos d-none" id="our_vendor_main_div">
     <div class="vendors">
-        @foreach($homePageLabels as $homePageLabel)
+        @foreach($homePageLabels as $key => $homePageLabel)
         @if($homePageLabel->slug == 'pickup_delivery')
-            @foreach($homePagePickupLabels as $key =>  $homePagePickupLabel)
-            @include('frontend.booking.cabbooking-single-module')
-            <hr>
-            @endforeach
-        @else
-        <div class="container" id="{{$homePageLabel->slug.'1'}}">
+                @if(isset($homePageLabel->pickupCategories))
+                 @include('frontend.booking.cabbooking-single-module')
+                @endif 
+        @elseif($homePageLabel->slug == 'dynamic_page')
+                @include('frontend.included_files.dynamic_page')
+         @else
+        <div class="container render_full_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
             <div class="row">
                 <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                     <div class="title1">
@@ -621,9 +593,9 @@
             <div class="row">
                 <div class="col-12">
                     @if($homePageLabel->slug == 'vendors')
-                    <div class="product-5 product-m no-arrow" id="{{$homePageLabel->slug}}"></div>
+                    <div class="product-5 product-m no-arrow render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}"></div>
                     @else
-                    <div class="product-4 product-m no-arrow" id="{{$homePageLabel->slug}}"></div>
+                    <div class="product-4 product-m no-arrow render_{{$homePageLabel->slug }}" id="{{$homePageLabel->slug.$key}}"></div>
                     @endif
                 </div>
             </div>
