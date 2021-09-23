@@ -2,7 +2,7 @@
 
 @section('css')
 
-<link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/custom-template-one.css')}}">
+
 <style type="text/css">
     .main-menu .brand-logo {
         display: inline-block;
@@ -408,7 +408,7 @@
 @section('script')
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
 <script src="{{asset('front-assets/js/fly-cart.js')}}"></script>
-<script src="{{asset('front-assets/js/custom-template-one.js')}}"></script>
+
 <script>
     $(document).ready(function() {
         $("#doneeee").click(function(){

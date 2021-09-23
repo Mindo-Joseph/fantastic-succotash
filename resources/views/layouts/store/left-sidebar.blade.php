@@ -13,10 +13,23 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
  </style>
 
 <header class="site-header">
-@if (Auth::check())
-   @include('layouts.store/topbar-auth')
+  @if (Auth::check())
+        @if(isset($set_template)  && $set_template->template_id == 1)
+        @include('layouts.store/topbar-auth-template-one')
+        @elseif(isset($set_template)  && $set_template->template_id == 2)
+        @include('layouts.store/topbar-auth')
+        @else
+        @include('layouts.store/topbar-auth-template-one')
+        @endif
+
   @else
-    @include('layouts.store/topbar-guest')
+        @if(isset($set_template)  && $set_template->template_id == 1)
+        @include('layouts.store/topbar-guest-template-one')
+        @elseif(isset($set_template)  && $set_template->template_id == 2)
+        @include('layouts.store/topbar-guest')
+        @else
+        @include('layouts.store/topbar-guest-template-one')
+        @endif
   @endif
         <!-- Start Cab Booking Header From Here -->
         <div class="cab-booking-header">
