@@ -105,6 +105,11 @@ if (strpos($url,'cabservice') !== false) {?>
                 <div class="scheduled-ride">
                     <button><i class="fa fa-clock-o" aria-hidden="true"></i> <span class="mx-2 scheduleDateTimeApnd">Now</span> <i class="fa fa-angle-down" aria-hidden="true"></i></button>
                 </div>
+                @if($wallet_balance < 0)
+                    <h6 style="color: red;">{{__('* Please recharge your wallet first.')}}
+                    <a href="{{route('user.wallet')}}">{{ __('Click Here') }}</a></h6>
+                
+                @endif
                 <div class="loader cab-booking-main-loader"></div>
                 <div class="location-list style-4"> 
                         <a class="select-location row align-items-center" id="get-current-location" href="javascript:void(0)">
@@ -384,7 +389,7 @@ var category_id = "{{ $category->id??'' }}";
 var routeset = "{{route('pickup-delivery-route',':category_id')}}";
 
 var autocomplete_urls = routeset.replace(":category_id", category_id);
-
+var wallet_balance = {{ $wallet_balance}}
 var get_product_detail = "{{url('looking/product-detail')}}";
 var promo_code_list_url = "{{route('verify.promocode.list')}}";
 var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";

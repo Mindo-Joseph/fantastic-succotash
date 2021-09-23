@@ -22,13 +22,19 @@
     var is_hyperlocal = 0;
     var selected_address = 0;
     var vendor_type = "delivery";
+    var currentRouteName = "{{Route::currentRouteName()}}";
     @if(Session::has('vendorType'))
         vendor_type = "{{Session::get('vendorType')}}";
     @endif
     var autocomplete_url = "{{ route('autocomplete') }}";
     let stripe_publishable_key = '{{ $stripe_publishable_key }}';
     var login_url = "{{ route('customer.login') }}";
+    if(currentRouteName == 'indexTemplateOne')
+    var home_page_url = "{{ route('indexTemplateOne') }}";
+    else
     var home_page_url = "{{ route('userHome') }}";
+    
+    var home_page_url_template_one = "{{ route('indexTemplateOne') }}";
     let home_page_url2 = home_page_url.concat("/");
     var add_to_whishlist_url = "{{ route('addWishlist') }}";
     var show_cart_url = "{{ route('showCart') }}";
