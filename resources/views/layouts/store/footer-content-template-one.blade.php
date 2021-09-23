@@ -33,7 +33,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                     </div>
                 @endif
                 @if(count($social_media_details))
-                    <div class="col-lg-4 col-md-6 pl-lg-5">
+                    <div class="col-lg-4 col-md-6 pl-lg-5  d-none">
                         <div class="sub-title">
                             <div class="footer-title mt-0">
                                 <h4 class="mt-0">{{ __('Connect') }}</h4>
@@ -56,7 +56,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                     </div>
                 @endif
                 @if($client_preference_detail->show_contact_us == 1)
-                    <div class="col-lg-3 col-md-6 mb-md-0 mb-3 d-none">
+                    <div class="col-lg-3 col-md-6 mb-md-0 mb-3">
                         <div class="sub-title">
                             <div class="footer-title mt-0">
                                 <h4 class="mt-0">{{ __('Contact Us') }}</h4>
@@ -71,12 +71,12 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     </div>
                 @endif  
-                <div class="col-lg-3 col-md-6 mb-md-0 mb-3 text-right">
+                <div class="col-lg-3 col-md-6 mb-md-0 mb-3 text-lg-right text-center">
                     <div class="store-btn">
                         <a href="#"><img src="{{asset('front-assets/images/app-store.png')}}" alt=""></a>
                         <a class="ml-2" href="#"><img src="{{asset('front-assets/images/google-play.png')}}" alt=""></a>
                     </div>
-                    <ul class="social-links ml-md-auto mt-3">
+                    <ul class="social-links ml-lg-auto mx-auto mt-3">
                         <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                         <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
                         <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>

@@ -103,7 +103,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="col-lg-12">
                     <div class="d-flex mr-auto align-items-center">  
                         @if($mod_count > 1)
-                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mb-2 mb-lg-0 mr-md-3 vendor_mods" id="top-tab" role="tablist">
+                            <ul class="nav nav-tabs navigation-tab nav-material tab-icons mr-md-3 vendor_mods" id="top-tab" role="tablist">
                                 @if($client_preference_detail->delivery_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
                                     <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'delivery')) ? 'active' : ''}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
