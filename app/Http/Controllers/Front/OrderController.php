@@ -1306,8 +1306,8 @@ class OrderController extends FrontController
                         $files[$key]['file_name'] =  $driver_registration_document_file_name[$key];
                     }
                 }
-                $dispatch_domain->delivery_service_key_code = '649a9a';
-                $dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
+                //$dispatch_domain->delivery_service_key_code = '649a9a';
+                //$dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
                 $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
                 $url = $dispatch_domain->delivery_service_key_url;
                 $key1 = 0;
@@ -1374,7 +1374,7 @@ class OrderController extends FrontController
                 if (!array_key_exists(9, $filedata)) {
                     $filedata[9] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
                 }
-                $res = $client->post('http://192.168.99.177:8005/api/agent/create', [
+                $res = $client->post($url.'/api/agent/create', [
 
                     'multipart' => [
                         $filedata[0],
