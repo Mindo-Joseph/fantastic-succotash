@@ -179,7 +179,7 @@ body{
     height: 100%;
     object-fit: cover;
     width: 100%;
-    object-position: 0 0;
+    object-position: center;
     border-radius: 10px;
 }
 
@@ -214,7 +214,7 @@ body{
     font-weight: 400;
     font-size: 15px;
     letter-spacing: 0;
-    margin: 0 0 10px;
+    margin: 8px 0;
     line-height: 20px;  
 }
 
@@ -338,8 +338,8 @@ body{
     max-width: 100%;
 }
 
-.black-box{
-    background: #000;
+.black-box {
+    background: rgb(0 0 0 / 26%);
 }
 .red-box{
     background-color: #ED1D24;
@@ -376,6 +376,14 @@ body{
 
 .supplier-rating .fa.fa-star{
     color: #ffaa00;
+}
+
+.suppliers-box .rating-box {
+    position: initial;
+}
+
+.suppliers-box .fa.fa-star {
+    color: #fff;
 }
 
 .menu-navigation {

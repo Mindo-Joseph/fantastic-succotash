@@ -292,6 +292,8 @@ $(document).ready(function () {
                         $(".slide-6").slick('destroy');
                         $(".product-4").slick('destroy');
                         $(".product-5").slick('destroy');
+                        $(".brand-slider").slick('destroy');
+                        $(".suppliers-slider").slick('destroy');
                         if ($('.vendor-product').html() != '') {
                             $('.vendor-product').slick('destroy');
                         }

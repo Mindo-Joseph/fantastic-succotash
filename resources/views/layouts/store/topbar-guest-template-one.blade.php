@@ -1,24 +1,18 @@
 @php
 $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
-
-$urlImg = $clientData->logo['proxy_url'].'200/80'.$clientData->logo['image_path'];
+$urlImg = $clientData->logo['image_fit'].'150/60'.$clientData->logo['image_path'];
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
 <div class="top-header site-topbar">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-7">
-            @if($client_preference_detail->show_contact_us == 1)
-                {{-- <div class="header-contact">
-                    <ul>
-                        <li>{{session('client_config') ? session('client_config')->company_name : ''}}</li>
-                        <!-- <li><i class="fa fa-phone" aria-hidden="true"></i>{{__('Call Us')}}: {{session('client_config') ? session('client_config')->phone_number : ''}}</li> -->
-                    </ul>
-                </div> --}}
-            @endif
+            <div class="col-6">
+                <div class="d-flex align-items-center">  
+                    <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
+                </div>
             </div>
-            <div class="col-lg-5 text-right">
+            <div class="col-6 text-right">
                 <ul class="header-dropdown">
                     <li class="onhover-dropdown change-language">
                         <a href="javascript:void(0)">{{session()->get('locale')}} 
