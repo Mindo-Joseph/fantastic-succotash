@@ -90,13 +90,60 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !1,
         speed: 300,
-        slidesToShow: 5,
+        slidesToShow: 6,
         slidesToScroll: 4,
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
             { breakpoint: 420, settings: { slidesToShow: 2, arrows: true,slidesToScroll: 1 } },
         ],
+    });
+    $(".brand-slider").slick({
+        arrows: false,
+        dots: !1,
+        infinite: !1,
+        speed: 300,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        responsive: [
+            { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
+            { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
+            { breakpoint: 420, settings: { slidesToShow: 2, arrows: true,slidesToScroll: 1 } },
+        ],
+    });
+    $('.suppliers-slider').slick({
+    dots: true,
+    infinite: true,
+    speed: 300,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    arrows: false,
+    dots: false,
+    responsive: [
+      {
+        breakpoint: 991,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      }
+    ]
     });
     $(".product-5").slick({
         arrows: !0,
@@ -669,6 +716,9 @@ $(document).ready(function () {
                     else if (path.indexOf("wallet") !== -1) {
                         creditWallet(total_amount, payment_option_id, resp.data.id);
                     }
+                    else if ((cabbookingwallet != undefined) && (cabbookingwallet == 1)) {
+                        creditWallet(total_amount, payment_option_id, resp.data.id);
+                    }
                     else if (path.indexOf("subscription") !== -1) {
                         userSubscriptionPurchase(total_amount, payment_option_id, resp.data.id);
                     }
@@ -684,6 +734,10 @@ $(document).ready(function () {
                     else if (path.indexOf("subscription") !== -1) {
                         success_error_alert('error', resp.message, "#subscription_payment_form .payment_response");
                         $(".subscription_confirm_btn").removeAttr("disabled");
+                    }
+                    else if ((cabbookingwallet != undefined) && (cabbookingwallet == 1)) {
+                        success_error_alert('error', resp.message, "#wallet_topup_form .payment_response");
+                        $(".topup_wallet_confirm").removeAttr("disabled");
                     }
                 }
             },
@@ -780,6 +834,9 @@ $(document).ready(function () {
                     else if (path.indexOf("wallet") !== -1) {
                         creditWallet(amount, 3, response.data);
                     }
+                    else if ((cabbookingwallet != undefined) && (cabbookingwallet == 1)) {
+                        creditWallet(amount, 3, response.data);
+                    }
                 } else {
                     $('.spinner-overlay').hide();
                     if (path.indexOf("cart") !== -1) {
@@ -789,6 +846,12 @@ $(document).ready(function () {
                         $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
                     }
                     else if (path.indexOf("wallet") !== -1) {
+                        // success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                        ("#wallet_response .message").removeClass('d-none');
+                        success_error_alert('error', response.message, "#wallet_response .message");
+                        $("#topup_wallet_btn, .topup_wallet_confirm").removeAttr("disabled");
+                    }
+                    else if ((cabbookingwallet != undefined) && (cabbookingwallet == 1)) {
                         // success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
                         ("#wallet_response .message").removeClass('d-none');
                         success_error_alert('error', response.message, "#wallet_response .message");

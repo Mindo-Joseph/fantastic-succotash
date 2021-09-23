@@ -237,9 +237,10 @@ class UserhomeController extends FrontController
         $preferences = Session::get('preferences');
         $currency_id = Session::get('customerCurrency');
         $language_id = Session::get('customerLanguage');
-        $brands = Brand::select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
+        $brands = Brand::select('id', 'image','title')->with(['translation' => function($q)use($language_id){$q->where('language_id',$language_id);}])->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
         foreach ($brands as $brand) {
             $brand->redirect_url = route('brandDetail', $brand->id);
+            $brand->translation_title = $brand->translation->first() ? $brand->translation->first()->title : $brand->title;
         }
         Session::forget('vendorType');
         Session::put('vendorType', $request->type);
