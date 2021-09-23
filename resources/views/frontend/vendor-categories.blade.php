@@ -39,6 +39,7 @@
                                                 <div class="inner_spacing">
                                                     <a href="{{route('productDetail', $new['url_slug'])}}">
                                                         <h3>{{ $new['translation_title'] }}</h3>
+                                                        <h6><b>{{$new['vendor']['name']}}</b></h6>
                                                         @if($new['inquiry_only'] == 0)
                                                             <h4 class="mt-1">
                                                                 <?php $multiply = $new['variant_multiplier']; ?>
