@@ -170,7 +170,7 @@
                         </div>
                         @endforeach
                     </div>
-                    <p id="data"></p>
+                    <p id="data-error" style="color:red;"></p>
 
                     <button class="btn btn-solid mt-3 w-100" dir="ltr" data-style="expand-right" id="register_btn" type="button">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="register_btn_loader" style="display:none !important;"></span>
@@ -333,10 +333,16 @@
                             $('#success_msg').html('').hide();
                         }, 3000);
                     }
+                 
+                    console.log(data);
+               
+                    $("#data-error").empty();
+                    $("#data-error").html(data.message);
                 },
-                error: function(response) {
-                    $("#data").empty();
-                    $("#data").append(response.data);
+                error: function(data) {
+                    $("#data-error").empty();
+                   // console.log(data);
+                    $("#data-error").append(response.data);
                     that.attr('disabled', false);
                     $('html,body').animate({
                         scrollTop: '0px'
@@ -355,6 +361,7 @@
                         $(".show_all_error.invalid-feedback").text('Something went wrong, Please try Again.');
                     }
                 }
+               
             });
         });
     });
