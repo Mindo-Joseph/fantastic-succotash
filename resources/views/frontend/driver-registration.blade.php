@@ -170,6 +170,8 @@
                         </div>
                         @endforeach
                     </div>
+                    <p id="data"></p>
+
                     <button class="btn btn-solid mt-3 w-100" dir="ltr" data-style="expand-right" id="register_btn" type="button">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="register_btn_loader" style="display:none !important;"></span>
                         <span class="ladda-label">{{__('Submit')}}</span>
@@ -333,6 +335,8 @@
                     }
                 },
                 error: function(response) {
+                    $("#data").empty();
+                    $("#data").append(response.data);
                     that.attr('disabled', false);
                     $('html,body').animate({
                         scrollTop: '0px'
@@ -346,6 +350,7 @@
                             $("#" + key + "Input div.invalid-feedback").show();
                         });
                     } else {
+
                         $(".show_all_error.invalid-feedback").show();
                         $(".show_all_error.invalid-feedback").text('Something went wrong, Please try Again.');
                     }
@@ -371,6 +376,7 @@
         var phonevalue = $('.xyz').val();
         $("#countryCode").val(mobile_number.getSelectedCountryData().dialCode);
     });
+
     function phoneInput() {
         console.log('phone working');
         var input = document.querySelector(".xyz");
@@ -484,6 +490,7 @@
         saveTeam(urls, formData, inp = 'Edit', modal = 'edit-agent-modal');
         console.log(urls);
     });
+
     function saveTeam(urls, formData, inp = '', modal = '') {
         $.ajax({
             method: 'post',
