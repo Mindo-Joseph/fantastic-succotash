@@ -105,6 +105,17 @@ if (strpos($url,'cabservice') !== false) {?>
                 <div class="scheduled-ride">
                     <button><i class="fa fa-clock-o" aria-hidden="true"></i> <span class="mx-2 scheduleDateTimeApnd">Now</span> <i class="fa fa-angle-down" aria-hidden="true"></i></button>
                 </div>
+                @if($wallet_balance < 0)
+                <div class="row">
+                        <div class="col-md-7">
+                            <h6 style="color: red;">{{__('* Please recharge your wallet.')}}
+                        </div>
+                        <div class="col-md-5 text-md-right text-center">
+                            <button type="button" class="btn btn-solid" id="topup_wallet_btn" data-toggle="modal" data-target="#topup_wallet">{{__('Topup Wallet')}}</button>
+                        </div>
+                    </div>        
+                  
+                @endif
                 <div class="loader cab-booking-main-loader"></div>
                 <div class="location-list style-4"> 
                         <a class="select-location row align-items-center" id="get-current-location" href="javascript:void(0)">
@@ -243,19 +254,21 @@ if (strpos($url,'cabservice') !== false) {?>
                     <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="">
                 </div>
             </div>
+            <span id="show_error_of_booking" class="error"></span>
+                
             <div class="payment-promo-container p-2">
                 <h4 class="d-flex align-items-center justify-content-between mb-2"  data-toggle="modal" data-target="#payment_modal">
-                    <span>
+                    <span id="payment_type">
                         <i class="fa fa-money" aria-hidden="true"></i> Cash
                     </span>
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                 </h4>
                 <div class="row">
                     <div class="col-6">
-                        <button class="btn btn-solid w-100" id="pickup_now" data-product_id="<%= result.id %>" data-coupon_id ="" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_now" data-task_type="now">Pickup Now</button>
+                        <button class="btn btn-solid w-100" id="pickup_now" data-payment_method="1" data-product_id="<%= result.id %>" data-coupon_id ="" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_now" data-task_type="now">Pickup Now</button>
                     </div>
                     <div class="col-6">
-                        <button class="btn btn-solid w-100" id="pickup_later" data-product_id="<%= result.id %>" data-coupon_id ="" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_later">Pickup Later</button>
+                        <button class="btn btn-solid w-100" id="pickup_later" data-payment_method="1" data-product_id="<%= result.id %>" data-coupon_id ="" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_later">Pickup Later</button>
                     </div>
                 </div>
             </div>
@@ -345,7 +358,9 @@ if (strpos($url,'cabservice') !== false) {?>
                 </button>
             </div>
             <div class="modal-body p-0">
-                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Cash</span></h4>
+                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method" data-payment_method="1"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Cash</span></h4>
+                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method" data-payment_method="2"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Wallet</span></h4>
+               
                 {{-- <h4 class="payment-button"  data-toggle="modal" data-target="#select_payment_option" aria-label="Close">Select Payment Method</h4> --}}
             </div>        
         </div>
@@ -368,10 +383,152 @@ if (strpos($url,'cabservice') !== false) {?>
         </div>
     </div>
 </div>
+<!-- topup wallet -->
+<div class="modal fade" id="topup_wallet" tabindex="-1" aria-labelledby="topup_walletLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title text-17 mb-0 mt-0" id="topup_walletLabel">{{__('Available Balance')}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="" id="wallet_topup_form">
+        @csrf
+        @method('POST')
+        <div class="modal-body pb-0">
+            <div class="form-group">
+                <div class="text-36">{{Session::get('currencySymbol')}}<span class="wallet_balance">@money(Auth::user()->balanceFloat * $clientCurrency->doller_compare)</span></div>
+            </div>
+            <div class="form-group">
+                <h5 class="text-17 mb-2">{{__('Topup Wallet')}}</h5>
+            </div>
+            <div class="form-group">
+                <label for="wallet_amount">{{__('Amount')}}</label>
+                <input class="form-control" name="wallet_amount" id="wallet_amount" type="text" placeholder="Enter Amount">
+            </div>
+            <div class="form-group">
+                <div><label for="custom_amount">{{__('Recommended')}}</label></div>
+                <button type="button" class="btn btn-solid mb-2 custom_amount">+10</button>
+                <button type="button" class="btn btn-solid mb-2 custom_amount">+20</button>
+                <button type="button" class="btn btn-solid mb-2 custom_amount">+50</button>
+            </div>
+            <hr class="mt-0 mb-1" />
+            <div class="payment_response">
+                <div class="alert p-0 m-0" role="alert"></div>
+            </div>
+            <h5 class="text-17 mb-2">{{__('Debit From')}}</h5>
+            <div class="form-group" id="wallet_payment_methods">
+            </div>
+        </div>
+        <div class="modal-footer d-block text-center">
+            <div class="row">
+                <div class="col-sm-12 p-0 d-flex justify-space-around">
+                    <button type="button" class="btn btn-block btn-solid mr-1 mt-2 topup_wallet_confirm">{{__('Topup Wallet')}}</button>
+                    <button type="button" class="btn btn-block btn-solid ml-1 mt-2" data-dismiss="modal">{{__('Cancel')}}</button>
+                </div>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/template" id="payment_method_template">
+    <% if(payment_options == '') { %>
+        <h6>{{__('Payment Options Not Avaialable')}}</h6>
+    <% }else{ %>
+        <% _.each(payment_options, function(payment_option, k){%>
+            <% if( (payment_option.slug != 'cash_on_delivery') && (payment_option.slug != 'loyalty_points') ) { %>
+                <label class="radio mt-2">
+                    <%= payment_option.title %> 
+                    <input type="radio" name="wallet_payment_method" id="radio-<%= payment_option.slug %>" value="<%= payment_option.slug %>" data-payment_option_id="<%= payment_option.id %>">
+                    <span class="checkround"></span>
+                </label>
+                <% if(payment_option.slug == 'stripe') { %>
+                    <div class="col-md-12 mt-3 mb-3 stripe_element_wrapper d-none">
+                        <div class="form-control">
+                            <label class="d-flex flex-row pt-1 pb-1 mb-0">
+                                <div id="stripe-card-element"></div>
+                            </label>
+                        </div>
+                        <span class="error text-danger" id="stripe_card_error"></span>
+                    </div>
+                <% } %>
+            <% } %>
+        <% }); %>
+    <% } %>
+</script>
+
+<!-- end topup wallet -->
 
 @endsection
 
 @section('script')
+<script src="https://js.stripe.com/v3/"></script>
+<script type="text/javascript">
+    var ajaxCall = 'ToCancelPrevReq';
+    var credit_wallet_url = "{{route('user.creditWallet')}}";
+    var payment_stripe_url = "{{route('payment.stripe')}}";
+    var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
+    var wallet_payment_options_url = "{{route('wallet.payment.option.list')}}";
+    var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
+    var payment_paystack_url = "{{route('payment.paystackPurchase')}}";
+    var payment_success_paystack_url = "{{route('payment.paystackCompletePurchase')}}";
+    var payment_payfast_url = "{{route('payment.payfastPurchase')}}";
+    var cabbookingwallet = 1;
+    $('.verifyEmail').click(function() {
+        verifyUser('email');
+    });
+    $('.verifyPhone').click(function() {
+        verifyUser('phone');
+    });
+    function verifyUser($type = 'email') {
+        ajaxCall = $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ route('verifyInformation', Auth::user()->id) }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "type": $type,
+            },
+            beforeSend: function() {
+                if (ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
+                    ajaxCall.abort();
+                }
+            },
+            success: function(response) {
+                var res = response.result;
+            },
+            error: function(data) {},
+        });
+    }
+    $(document).delegate(".custom_amount", "click", function(){
+        let wallet_amount = $("#wallet_amount").val();
+        let amount = $(this).text();
+        if(wallet_amount == ''){ wallet_amount = 0; }
+        let new_amount = parseInt(amount) + parseInt(wallet_amount);
+        $("#wallet_amount").val(new_amount);
+    });
+
+    $(document).on('change', '#wallet_payment_methods input[name="wallet_payment_method"]', function() {
+        var method = $(this).val();
+        if(method == 'stripe'){
+            $("#wallet_payment_methods .stripe_element_wrapper").removeClass('d-none');
+        }else{
+            $("#wallet_payment_methods .stripe_element_wrapper").addClass('d-none');
+        }
+    });
+</script>
+<script>
+    var loadFile = function(event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+    };
+</script>
+<script src="{{asset('js/payment.js')}}"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{asset('js/cab_booking.js')}}"></script>
 <script>
@@ -380,7 +537,7 @@ var category_id = "{{ $category->id??'' }}";
 var routeset = "{{route('pickup-delivery-route',':category_id')}}";
 
 var autocomplete_urls = routeset.replace(":category_id", category_id);
-
+var wallet_balance = {{ $wallet_balance}}
 var get_product_detail = "{{url('looking/product-detail')}}";
 var promo_code_list_url = "{{route('verify.promocode.list')}}";
 var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";

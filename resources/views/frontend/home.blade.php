@@ -54,17 +54,25 @@
                     </a>
                 </div>
             </div>
-            <div class="product-detail inner_spacing text-center">
+            <div class="product-detail inner_spacing text-center m-0 w-100">
                 <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
-                    <h6><%= vendor.name %></h6>
+                    <h3 class="d-flex justify-content-between p-0">
+                        <span><%= vendor.name %></span>
+                        @if($client_preference_detail)
+                            @if($client_preference_detail->rating_check == 1)
+                                <% if(vendor.vendorRating > 0){%>
+                                    <span class="rating m-0"><%= vendor.vendorRating %> <i class="fa fa-star text-white p-0"></i></span>
+                                <% } %>
+                            @endif
+                        @endif
+                    </h3>
                 </a>
-                @if($client_preference_detail)
-                    @if($client_preference_detail->rating_check == 1)
-                        <% if(vendor.vendorRating > 0){%>
-                            <span class="rating"><%= vendor.vendorRating %> <i class="fa fa-star text-white p-0"></i></span>
-                        <% } %>
-                    @endif
-                @endif
+                <% if(vendor.timeofLineOfSightDistance != undefined){ %>
+                    <h6 class="d-flex justify-content-between">
+                        <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
+                        <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
+                    </h6>
+                <% } %>
             </div>
         </div>
     <% }); %>
@@ -114,14 +122,15 @@
 </script>
 <section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos d-none" id="our_vendor_main_div">
     <div class="vendors">
-        @foreach($homePageLabels as $homePageLabel)
+        @foreach($homePageLabels as $key => $homePageLabel)
         @if($homePageLabel->slug == 'pickup_delivery')
-            @foreach($homePagePickupLabels as $key =>  $homePagePickupLabel)
-            @include('frontend.booking.cabbooking-single-module')
-            <hr>
-            @endforeach
-        @else
-        <div class="container" id="{{$homePageLabel->slug.'1'}}">
+                @if(isset($homePageLabel->pickupCategories))
+                 @include('frontend.booking.cabbooking-single-module')
+                @endif 
+        @elseif($homePageLabel->slug == 'dynamic_page')
+                @include('frontend.included_files.dynamic_page')
+         @else
+        <div class="container render_full_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
             <div class="row">
                 <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
                     <div class="title1">
@@ -135,9 +144,9 @@
             <div class="row">
                 <div class="col-12">
                     @if($homePageLabel->slug == 'vendors')
-                    <div class="product-5 product-m no-arrow" id="{{$homePageLabel->slug}}"></div>
+                    <div class="product-5 product-m no-arrow render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}"></div>
                     @else
-                    <div class="product-4 product-m no-arrow" id="{{$homePageLabel->slug}}"></div>
+                    <div class="product-4 product-m no-arrow render_{{$homePageLabel->slug }}" id="{{$homePageLabel->slug.$key}}"></div>
                     @endif
                 </div>
             </div>

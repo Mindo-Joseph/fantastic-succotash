@@ -2148,7 +2148,7 @@ div#test {
     font-weight: 700;
     color: rgb(0 0 0 / 68%);
     padding-right: 10px;
-    font-size: 18px;
+    font-size: 16px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -3386,7 +3386,10 @@ header .homepage-address h2 {
     border-radius: 50px;
     overflow: hidden;
     padding: 8px 10px;
-    width: 100%;
+}
+
+.page-tabs{
+    width: 50%;
 }
 
 /* Animation Tabbar Css */
@@ -3452,6 +3455,10 @@ header .homepage-address h2 {
 .navigation-tab-item,
 .navigation-tab-overlay {
     width: 100px;
+}
+
+.navigation-tab-item .nav-link{
+    padding: .5rem 0;
 }
 
 /* Animation Tabbar Css End */
@@ -5838,9 +5845,7 @@ section.royo-business .title-36 {
     width: 100%;
 }
 
-
-
-
+/* New P */
 
 
 
@@ -6338,20 +6343,6 @@ body[dir="rtl"] .inner_spacing h3 {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Responsiveness Css Start From Here */
 @media (max-width: 1919px) {
 
@@ -6368,6 +6359,7 @@ body[dir="rtl"] .inner_spacing h3 {
     .common_card .card {
         width: calc(100% - 20px);
     }
+
 }
 
 @media(min-width: 992px) {
@@ -6401,6 +6393,9 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(max-width:991px) {
+    .cab-booking-body footer.footer-light {
+        display: none;
+    }
     .location-bar {
         width: 90%;
     }
@@ -6545,6 +6540,7 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(min-width:576px) {
+
     .add_new_address .modal-dialog {
         max-width: 1000px;
     }
