@@ -49,7 +49,7 @@ class SocialController extends BaseController{
         ]);
         if($validator->fails()){
             foreach($validator->errors()->toArray() as $error_key => $error_value){
-                $errors['error'] = $error_value[0];
+                $errors['error'] = __($error_value[0]);
                 return response()->json($errors, 422);
             }
         }
@@ -135,11 +135,25 @@ class SocialController extends BaseController{
             // $user_device->device_type = $request->device_type;
             // $user_device->device_token = $request->device_token;
             // $user_device->save();
-
-            $user_device = UserDevice::updateOrCreate(['device_token' => $request->device_token],
-                                                          ['user_id' => $customer->id,
-                                                          'device_type' => $request->device_type,
-                                                          'access_token' => $token]);
+            if (!empty($request->fcm_token)) {
+                $user_device = UserDevice::updateOrCreate(
+                    ['device_token' => $request->fcm_token],
+                    [
+                        'user_id' => $customer->id,
+                        'device_type' => $request->device_type,
+                        'access_token' => $token
+                    ]
+                );
+            } else {
+                $user_device = UserDevice::updateOrCreate(
+                    ['device_token' => $request->device_token],
+                    [
+                        'user_id' => $customer->id,
+                        'device_type' => $request->device_type,
+                        'access_token' => $token
+                    ]
+                );
+            }
             
             $response['status'] = 'Success';
             $response['auth_token'] =  $token;

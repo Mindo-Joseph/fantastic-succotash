@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor, Category_translation, ClientLanguage, PaymentOption, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory, BrandTranslation, Celebrity, UserVendor, AppStyling};
+use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor,VendorCategory, Category_translation, ClientLanguage, PaymentOption, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory, BrandTranslation, Celebrity, UserVendor, AppStyling};
 
 class HomeController extends BaseController{
     use ApiResponser;
@@ -31,7 +31,7 @@ class HomeController extends BaseController{
             $app_styling_detail = AppStyling::getSelectedData();
             foreach ($app_styling_detail as $app_styling) {
                 $key = $app_styling['key'];
-                $homeData['profile']->preferences->$key = $app_styling['value'];
+                $homeData['profile']->preferences->$key = __($app_styling['value']);
             }
             $homeData['languages'] = ClientLanguage::with('language')->select('language_id', 'is_primary')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
             $banners = Banner::select("id", "name", "description", "image", "link", 'redirect_category_id', 'redirect_vendor_id')
@@ -57,10 +57,14 @@ class HomeController extends BaseController{
                     if(!empty($value->link) && $value->link == 'vendor'){
                         $bannerLink = $value->redirect_vendor_id;
                         if($bannerLink){
-                            $vendorData = Vendor::select('name','vendor_templete_id')->where('status', 1)->where('id', $value->redirect_vendor_id)->first();
+                            $vendorData = Vendor::select('id', 'slug', 'name', 'banner', 'show_slot', 'order_pre_time', 'order_min_amount', 'vendor_templete_id', 'latitude', 'longitude')->where('status', 1)->where('id', $value->redirect_vendor_id)->first();
+                            if($vendorData){
+                                $vendorData->is_show_category = ($vendorData->vendor_templete_id == 2 || $vendorData->vendor_templete_id == 4 ) ? 1 : 0;
+                            }
                             $is_show_category = (($vendorData) && ($vendorData->vendor_templete_id == 1)) ? 0 : 1;
                             $value->is_show_category = $is_show_category;
                             $value->redirect_name = $vendorData->name ?? '';
+                            $value->vendor = $vendorData;
                         }
                     }
                     $value->redirect_to = ucwords($value->link);
@@ -97,14 +101,14 @@ class HomeController extends BaseController{
             $user_geo[] = $longitude;
             if($request->has('type') ){
                 if($request->type == ''){
-                    $vendorData = Vendor::select('id', 'slug', 'name', 'desc', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id', 'show_slot')->withAvg('product', 'averageRating');
+                    $vendorData = Vendor::select('id', 'slug', 'name', 'desc', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id', 'show_slot', 'latitude', 'longitude')->withAvg('product', 'averageRating');
                 }else{
-                    $vendorData = Vendor::select('id', 'slug', 'name', 'desc', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id', 'show_slot')->withAvg('product', 'averageRating')->where($request->type, 1);
+                    $vendorData = Vendor::select('id', 'slug', 'name', 'desc', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id', 'show_slot', 'latitude', 'longitude')->withAvg('product', 'averageRating')->where($request->type, 1);
                 }
             }else{
-                $vendorData = Vendor::select('id', 'slug', 'name', 'desc', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id', 'show_slot')->withAvg('product', 'averageRating');
+                $vendorData = Vendor::select('id', 'slug', 'name', 'desc', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id', 'show_slot', 'latitude', 'longitude')->withAvg('product', 'averageRating');
             }
-            if($preferences->is_hyperlocal == 1){
+            if(($preferences) && ($preferences->is_hyperlocal == 1)){
                 if( (empty($latitude)) && (empty($longitude)) ){
                     $address = $preferences->Default_location_name;
                     $latitude = (!empty($preferences->Default_latitude)) ? floatval($preferences->Default_latitude) : 0;
@@ -116,13 +120,28 @@ class HomeController extends BaseController{
                         ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(".$latitude." ".$longitude.")'))");
                 });
             }
-            $vendorData = $vendorData->with('slot')->where('status', '!=', $this->field_status)->get();
+            $vendorData = $vendorData->with('slot')->where('status', 1)->get();
+            
             foreach ($vendorData as $vendor) {
                 unset($vendor->products);
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 2 || $vendor->vendor_templete_id == 4 ) ? 1 : 0;
-            }
-            foreach ($vendorData as $key => $value) {
-                $vends[] = $value->id;
+
+                $vendorCategories = VendorCategory::with('category.translation_one')->where('vendor_id', $vendor->id)->where('status', 1)->get();
+                $categoriesList = '';
+                foreach($vendorCategories as $key => $category){
+                    if($category->category){
+                        $categoriesList = $categoriesList . $category->category->translation_one->name;
+                        if( $key !=  $vendorCategories->count()-1 ){
+                            $categoriesList = $categoriesList . ', ';
+                        }
+                    }
+                }
+                $vendor->categoriesList = $categoriesList;
+                
+                $vends[] = $vendor->id;
+                if (($preferences) && ($preferences->is_hyperlocal == 1) && ($latitude) && ($longitude)) {
+                    $vendor = $this->getVendorDistanceWithTime($latitude, $longitude, $vendor, $preferences);
+                }
             }
             $isVendorArea = 0;
             $langId = $user->language;

@@ -48,7 +48,24 @@ class VendorController extends FrontController
      */
     public function vendorProducts(Request $request, $domain = '', $slug = 0){
         $preferences = Session::get('preferences');
-        $vendor = Vendor::select('id','email', 'name', 'slug', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id', 'is_show_vendor_details', 'website')->where('slug', $slug)->where('status', 1)->firstOrFail();
+        $vendor = Vendor::with('slot.day', 'slotDate')
+            ->select('id','email', 'name', 'slug', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id', 'is_show_vendor_details', 'website', 'show_slot')->where('slug', $slug)->where('status', 1)->firstOrFail();
+        $vendor->is_vendor_closed = 0;
+        if($vendor->show_slot == 0){
+            if( ($vendor->slotDate->isEmpty()) && ($vendor->slot->isEmpty()) ){
+                $vendor->is_vendor_closed = 1;
+            }else{
+                $vendor->is_vendor_closed = 0;
+                if($vendor->slotDate->isNotEmpty()){
+                    $vendor->opening_time = Carbon::parse($vendor->slotDate->first()->start_time)->format('g:i A');
+                    $vendor->closing_time = Carbon::parse($vendor->slotDate->first()->end_time)->format('g:i A');
+                }elseif($vendor->slot->isNotEmpty()){
+                    $vendor->opening_time = Carbon::parse($vendor->slot->first()->start_time)->format('g:i A');
+                    $vendor->closing_time = Carbon::parse($vendor->slot->first()->end_time)->format('g:i A');
+                }
+            }
+        }
+        // dd($vendor->toArray());
         if( $request->has('table') ){
             if(!Auth::user()){
                 session(['url.intended' => url()->full()]);
@@ -226,6 +243,7 @@ class VendorController extends FrontController
             return $categoryData;
         }
         elseif($type == 5){
+            // listing category with products
             $user = Auth::user();
             if ($user) {
                 $column = 'user_id';
@@ -290,7 +308,7 @@ class VendorController extends FrontController
                         $value->variantSet = $variantData->variantSet;
                         $value->product_image = ($value->media->isNotEmpty()) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : '';
                         $value->translation_title = ($value->translation->isNotEmpty()) ? $value->translation->first()->title : $value->sku;
-                        $value->translation_description = ($value->translation->isNotEmpty()) ? strip_tags($value->translation->first()->body_html) : '';
+                        $value->translation_description = ($value->translation->isNotEmpty()) ? html_entity_decode(strip_tags($value->translation->first()->body_html)) : '';
                         $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                         $value->variant_price = ($value->variant->isNotEmpty()) ? $value->variant->first()->price : 0;
                         $value->variant_id = ($value->variant->isNotEmpty()) ? $value->variant->first()->id : 0;
@@ -326,7 +344,8 @@ class VendorController extends FrontController
             $products = $products->where('is_live', 1)->where('vendor_id', $vid)->paginate($pagiNate);
             if(!empty($products)){
                 foreach ($products as $key => $value) {
-                    $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
+                    $value->translation_title = ($value->translation->isNotEmpty()) ? $value->translation->first()->title : $value->sku;
+                    $value->translation_description = ($value->translation->isNotEmpty()) ? html_entity_decode(strip_tags($value->translation->first()->body_html)) : '';
                     $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
                     // foreach ($value->variant as $k => $v) {

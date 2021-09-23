@@ -9,7 +9,8 @@ use GuzzleHttp\Client as GCLIENT;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice};
+use Log;
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client};
 
 class OrderController extends Controller {
     use ApiResponser;
@@ -307,12 +308,24 @@ class OrderController extends Controller {
                             'balance_transaction' => $order->payable_amount,
                         ]);
                     }
+                    $order = $order->with(['user_vendor'])->where('order_number', $order->order_number)->first();
+                    $user_admins = User::where(function ($query) {
+                        $query->where(['is_admin' => 1])
+                        ->orWhere(['is_superadmin' => 1]);
+                    })->pluck('id')->toArray();
+                    $user_vendors = [];
+                    if (!empty($order->user_vendor) && count($order->user_vendor) > 0) {
+                        $user_vendors = $order->user_vendor->pluck('user_id')->toArray();
+                    }
+                    $order->admins = array_unique(array_merge($user_admins, $user_vendors));
                     DB::commit();
                     // $this->sendOrderNotification($user->id);
-                    return $this->successResponse($order, 'Order placed successfully.', 201);
+                    $code = $request->header('code');
+                    $this->sendOrderPushNotificationVendors($order->admins, $order, $code);
+                    return $this->successResponse($order, __('Order placed successfully.'), 201);
                     }
                 }else{
-                    return $this->errorResponse(['error' => 'Empty cart.'], 404);
+                    return $this->errorResponse(['error' => __('Empty cart.')], 404);
                 }
         
             }
@@ -377,12 +390,12 @@ class OrderController extends Controller {
             $order->user_name = $user->name;
             $order->user_image = $user->image;
             $order->date_time = convertDateTimeInTimeZone($order->orderDetail->created_at, $user->timezone);
-            $order->payment_option_title = $order->orderDetail->paymentOption->title;
+            $order->payment_option_title = __($order->orderDetail->paymentOption->title);
             $order->order_number = $order->orderDetail->order_number;
             $product_details = [];
             $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->orderDetail->id)->where('vendor_id', $order->vendor_id)->orderBy('id', 'DESC')->first();
             if($vendor_order_status){
-                $order->order_status =  ['current_status' => ['id' => $vendor_order_status->OrderStatusOption->id, 'title' => $vendor_order_status->OrderStatusOption->title]];
+                $order->order_status =  ['current_status' => ['id' => $vendor_order_status->OrderStatusOption->id, 'title' => __($vendor_order_status->OrderStatusOption->title)]];
             }else{
                 $order->current_status = null;
             }
@@ -437,7 +450,7 @@ class OrderController extends Controller {
             if($order){
                 $order->user_name = $order->user->name;
                 $order->user_image = $order->user->image;
-                $order->payment_option_title = $order->paymentOption->title;
+                $order->payment_option_title = __($order->paymentOption->title);
     	    	foreach ($order->vendors as $vendor) {
     				$couponData = [];
     				$payable_amount = 0;
@@ -513,7 +526,11 @@ class OrderController extends Controller {
                     'current_status' => $current_status,
                     'upcoming_status' => $upcoming_status,
                 ];
+                $orderData = Order::find($order_id);
                 DB::commit();
+                // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
+                $code = $request->header('code');
+                $this->sendStatusChangePushNotificationCustomer([$orderData->user_id], $orderData, $order_status_option_id, $code);
                 return response()->json([
                     'status' => 'success',
                     'order_status' => $order_status,
@@ -529,4 +546,108 @@ class OrderController extends Controller {
            
         }
     }
+
+    public function sendOrderPushNotificationVendors($user_ids, $orderData, $header_code)
+    {
+        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
+        Log::info($devices);
+        $client_preferences = ClientPreference::select('fcm_server_key','favicon')->first();
+        if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
+            $from = $client_preferences->fcm_server_key;
+            $notification_content = NotificationTemplate::where('id', 4)->first();
+            if ($notification_content) {
+                $code = $header_code;
+                $client = Client::where('code',$code)->first();
+                $redirect_URL = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/client/order";
+                $headers = [
+                    'Authorization: key=' . $from,
+                    'Content-Type: application/json',
+                ];
+                $data = [
+                    "registration_ids" => $devices,
+                    "notification" => [
+                        'title' => $notification_content->subject,
+                        'body'  => $notification_content->content,
+                        'sound' => "notification.mp3",
+                        "icon" => (!empty($client_preferences->favicon)) ? $client_preferences->favicon['proxy_url'].'200/200'.$client_preferences->favicon['image_path'] : '',
+                        'click_action' => $redirect_URL
+                    ],
+                    "data" => [
+                        'title' => $notification_content->subject,
+                        'body'  => $notification_content->content
+                    ],
+                    "priority" => "high"
+                ];
+                $dataString = $data;
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataString));
+                $result = curl_exec($ch);
+                Log::info($result);
+                curl_close($ch);
+            }
+        }
+    }
+
+    public function sendStatusChangePushNotificationCustomer($user_ids, $orderData, $order_status_id, $header_code)
+    {
+        $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
+        Log::info($devices);
+        $client_preferences = ClientPreference::select('fcm_server_key', 'favicon')->first();
+        if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
+            $from = $client_preferences->fcm_server_key;
+            if ($order_status_id == 2 || $order_status_id == 7) {
+                $notification_content = NotificationTemplate::where('id', 5)->first();
+            } elseif ($order_status_id == 3 || $order_status_id == 8) {
+                $notification_content = NotificationTemplate::where('id', 6)->first();
+            } elseif ($order_status_id == 4) {
+                $notification_content = NotificationTemplate::where('id', 7)->first();
+            } elseif ($order_status_id == 5) {
+                $notification_content = NotificationTemplate::where('id', 8)->first();
+            } elseif ($order_status_id == 6) {
+                $notification_content = NotificationTemplate::where('id', 9)->first();
+            }
+            if ($notification_content) {
+                $code = $header_code;
+                $client = Client::where('code',$code)->first();
+                $redirect_URL = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/user/orders";
+                $headers = [
+                    'Authorization: key=' . $from,
+                    'Content-Type: application/json',
+                ];
+                $body_content = str_ireplace("{order_id}", "#".$orderData->order_number, $notification_content->content);
+                $data = [
+                    "registration_ids" => $devices,
+                    "notification" => [
+                        'title' => $notification_content->subject,
+                        'body'  => $body_content,
+                        'sound' => "notification.mp3",
+                        "icon" => (!empty($client_preferences->favicon)) ? $client_preferences->favicon['proxy_url'].'200/200'.$client_preferences->favicon['image_path'] : '',
+                        'click_action' => $redirect_URL
+                    ],
+                    "data" => [
+                        'title' => $notification_content->subject,
+                        'body'  => $body_content
+                    ],
+                    "priority" => "high"
+                ];
+                $dataString = $data;
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataString));
+                $result = curl_exec($ch);
+                Log::info($result);
+                curl_close($ch);
+            }
+        }
+    }
+
 }

@@ -8,6 +8,20 @@
 
 <div class="row">
     <div class="col-12">
+        <div class="col-sm-8">
+            <div class="text-sm-left">
+                @if (\Session::has('success'))
+                <div class="alert alert-success">
+                    <span>{!! \Session::get('success') !!}</span>
+                </div>
+                @endif
+                @if (\Session::has('error_delete'))
+                <div class="alert alert-danger">
+                    <span>{!! \Session::get('error_delete') !!}</span>
+                </div>
+                @endif
+            </div>
+        </div>
         <div class="page-title-box">
             <h4 class="page-title">Web Styling</h4>
         </div>
@@ -129,71 +143,246 @@
         </div>
     </div>   
 
-    <div class="row">
-        <div class="col-xl-8">
-            <div class="card-box home-options-list">
-                <div class="row mb-2">
-                    <div class="col-sm-8">
-                        <h4 class="page-title mt-0">Home Page</h4>
-                        <p class="sub-header">
-                            Drag & drop to edit different sections.
-                        </p>
-                    </div>
-                    <div class="col-sm-4 text-right">
-                        <button class="btn btn-info waves-effect waves-light text-sm-right" id="save_home_page">Save</button>
-                    </div>
-                </div>
+  
+</form>
 
-                <div class="custom-dd-empty dd" id="homepage_datatable">
-                    <ol class="dd-list p-0" id="homepage_ol">
-                        @foreach($home_page_labels as $home_page_label)
-                        <li class="dd-item dd3-item d-flex align-items-center" data-id="1" data-row-id="{{$home_page_label->id}}">
-                            <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
-                                @if($home_page_label->slug == "vendors")
-                                {{getNomenclatureName('Vendors', true)}}
-                                @else
-                                {{$home_page_label->title}}
-                                @endif
-                            </a>
-                            <div class="language-inputs style-4">
-                                <div class="row no-gutters flex-nowrap align-items-center my-2">
-                                    @foreach($langs as $lang)
-                                    @php
-                                    $exist = 0;
-                                    $value = '';
-                                    @endphp
-                                    <div class="col-3 pl-1">
-                                        <input class="form-control" type="hidden" value="{{$home_page_label->id}}" name="home_labels[]">
-                                        <input class="form-control" type="hidden" value="{{$lang->langId}}" name="languages[]">
-                                        @foreach($home_page_label->translations as $translation)
-                                        @if($translation->language_id == $lang->langId)
-                                        @php
-                                        $exist = 1;
-                                        $value = $translation->title;
-                                        @endphp
-                                        @endif
-                                        @endforeach
-                                        <input class="form-control" value="{{$exist == 1 ? $value : '' }}" type="text" name="names[]" placeholder="{{ $lang->langName }}">
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="mb-0 ml-3">
-                                <input type="checkbox" {{$home_page_label->is_active == 1 ? 'checked' : ''}} id="{{$home_page_label->slug}}" data-plugin="switchery" name="{{$home_page_label->slug}}" class="chk_box2" data-color="#43bee1">
-                            </div>
-                        </li>
-                        @endforeach
-                    </ol>
+<!-- cab booking template -->
+<form id="favicon-form-pickup" method="post" enctype="multipart/form-data">
+<div class="row" >
+    <div class="col-xl-8"   ondrop="drop(event)" ondragover="allowDrop(event)">
+        <div class="card-box home-options-list">
+            <div class="row mb-2">
+                <div class="col-sm-8">
+                    <h4 class="page-title mt-0">{{ __('Home Page')}}</h4>
+                    <p class="sub-header">
+                        Drag & drop to edit different sections.
+                    </p>
                 </div>
+                {{-- <div class="col-sm-4 text-right">
+                    <button class="btn btn-info waves-effect waves-light text-sm-right" id="add_pickup_delivery_section_button"   data-toggle="modal" data-target="#add_pickup_delivery_section">Add</button>
+                </div> --}}
+                <div class="col-sm-4 text-right">
+                    <button class="btn btn-info waves-effect waves-light text-sm-right" id="save_home_page_pickup">Save</button>
+                </div>
+            </div>
+
+            <div class="custom-dd-empty dd" id="pickup_datatable">
+                <ol class="dd-list p-0" id="pickup_ol" >
+                    @foreach($cab_booking_layouts as $key => $home_page_label)
+                    <li class="dd-item dd3-item d-flex align-items-center on_click{{$home_page_label->slug}}" data-id="1" data-row-id="{{$home_page_label->id}}">
+                        <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                            {{$home_page_label->title}}
+                        </a>
+                         
+                        <div class="language-inputs style-4">
+                            <div class="row no-gutters flex-nowrap align-items-center my-2">
+                                @foreach($langs as $lang)
+                                @php
+                                $exist = 0;
+                                $value = '';
+                                @endphp
+                                <div class="col-2 pl-1">
+                                    <input class="form-control" type="hidden" value="{{$home_page_label->id}}" name="home_labels[]">
+                                    <input class="form-control" type="hidden" value="{{$lang->langId}}" name="languages[]">
+                                    @foreach($home_page_label->translations as $translation)
+                                    @if($translation->language_id == $lang->langId)
+                                    @php
+                                    $exist = 1;
+                                    $value = $translation->title;
+                                    @endphp
+                                    @endif
+                                    @endforeach
+                                    <input class="form-control" value="{{$exist == 1 ? $value : '' }}" type="text" name="names[]" placeholder="{{ $lang->langName }}">
+                                </div>
+                                @endforeach
+                                  
+                                    
+                                    
+                            </div>
+                        </div>
+                        @if($home_page_label->slug == 'pickup_delivery')
+                        <div class="col-2 pl-1">
+                             <select class="form-control select2-multiple" required id="categories" name="categories[{{$key}}][check]" data-toggle="select2"  data-placeholder="Choose ...">
+                            
+                             {{-- <select class="form-control w-100">  --}}
+                                 @foreach ($all_pickup_category as $category)
+                                 <option value="{{$category->id}}" 
+                                    @if(isset($home_page_label->pickupCategories->first()->categoryDetail) && !empty($home_page_label->pickupCategories->first()) && $home_page_label->pickupCategories->first()->categoryDetail->id == $category->id)
+                                     selected="selected"
+                                    @endif>{{$category->translation_one->name}}
+                                 </option>
+                                 @endforeach
+                             </select>
+                         </div>
+                         @endif  
+                        <div class="mb-0 ml-3">
+                            <input class="form-control" type="hidden" value="{{$home_page_label->id}}" name="pickup_labels[]">
+                                 
+                            <input type="checkbox" {{$home_page_label->is_active == 1 ? 'checked' : ''}} id="{{$home_page_label->slug}}" data-plugin="switchery" name="is_active[{{$key}}][check]" class="chk_box2" data-color="#43bee1">
+                        </div>
+                        @if($home_page_label->slug == 'dynamic_page')
+                        <a class="action-icon edit_dynamic_page" dataid="{{$home_page_label->id}}" href="javascript:void(0);">
+                            <i class="mdi mdi-pencil"></i>
+                        </a>
+                        @endif
+                        <a class="action-icon deletePickupSectionx" href="{{route('pickup.delete.section', $home_page_label->id)}}" onclick="return confirm('Are you sure you want to delete this section?');"  dataid="{{$home_page_label->id}}" href="javascript:void(0);">
+                            <i class="mdi mdi-delete"></i>
+                        </a>
+                       
+                    </li>
+                    @endforeach
+                </ol>
             </div>
         </div>
     </div>
+
+    <div class="col-xl-4">
+        <div class="card-box home-options-list">
+            <div class="row mb-2">
+                <div class="col-sm-8">
+                    <h4 class="page-title mt-0">{{ __('Home Page Sections') }}</h4>
+                    <p class="sub-header">
+                        {{ __('Drag & drop to home page sections') }}
+                    </p>
+                </div>
+              
+            </div>
+
+            <div class="custom-dd-empty dd" id="homepage_datatablex">
+                <ol class="dd-list p-0" id="homepage_ol">
+                    @foreach($home_page_labels as $home_page_label)
+                    <li class="dd-item dd3-item d-flex align-items-center" id="drag{{$home_page_label->id}}" data-id="1" data-row-id="{{$home_page_label->id}}" draggable="true" ondragstart="drag(event)">
+                        <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                            @if($home_page_label->slug == "vendors")
+                            {{getNomenclatureName('Vendors', true)}}
+                            @else
+                            {{$home_page_label->title}}
+                            @endif
+                        </a>
+                       
+                       
+                       
+                    </li>
+                    @endforeach
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
 </form>
+
+
+
+<!-- html Modal -->
+<div class="modal fade" id="edit_dynamic_html" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="edit_dynamic_htmllabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="edit_dynamic_htmllabel">{{ __('Edit Section')}}</h5>
+                <button type="button" class="close right-top" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body py-0 px-2" id="edit_dynamic_html_desc">
+                
+              
+            
+            </div>        
+        </div>
+    </div>
+</div>
+<!-- end modal for add section -->
+
+
+<!-- end cab booking template -->
+
+
 
 @endsection
 
 @section('script')
 <script src="{{asset('assets/js/jscolor.js')}}"></script>
+<script src="{{ asset('assets/ck_editor/ckeditor.js')}}"></script>
+<script src="{{ asset('assets/ck_editor/samples/js/sample.js')}}"></script>
+<!-- allow drop html -->
+<script>
+    function allowDrop(ev) {
+        console.log('allowDrop');
+       ev.preventDefault();
+    }
+    
+    function drag(ev) {
+        console.log('drag');
+      var attod =   $(ev.target).attr('data-row-id');
+      ev.dataTransfer.setData("row_id", attod);
+    }
+    
+    function drop(ev) {
+      console.log('drop');
+      ev.preventDefault();
+      var row_id = ev.dataTransfer.getData("row_id");
+
+      submitDataWithNewSection(row_id); 
+      console.log(row_id);
+      //ev.target.appendChild(document.getElementById(row-id));
+    }
+
+    function submitDataWithNewSection(row_id) {
+        console.log('ajax');
+       var data_uri = "{{route('pickup.append.section')}}";
+       $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: data_uri,
+            data: {
+                row_id: row_id
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status == 'success') {
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                    var r = document.querySelector(':root');
+                    r.style.setProperty('--theme-deafult', 'lightblue');
+                    location.reload();
+                }
+            }
+        });
+    }
+    </script>
+<!-- end allow html -->
+<script>
+$(document).on('click','.edit_dynamic_page',function(){
+        event.preventDefault();
+        var id = $(this).data('row-id');
+        $.get('/client/web-styling/get-html-data-in-modal?id=' + id, function(markup)
+        {
+            $('#edit_dynamic_html').modal('show'); 
+            $('#edit_dynamic_html_desc').html(markup);
+            $('#layout_id').val(id);
+        });
+
+}); 
+
+
+
+$(document).on('click', '.deletePickupSection', function() {
+        var did = $(this).attr('dataid');
+        if (confirm("Are you sure? You want to delete this section.")) {
+            $('#pickupDeleteForm' + did).submit();
+        }
+        return false;
+    });
+
+
+</script>
 <script type="text/javascript">
     var options = {
         zIndex: 9999
@@ -226,6 +415,10 @@
         event.preventDefault();
         submitData();
     });
+    $("#save_home_page_pickup").click(function(event) {
+        event.preventDefault();
+        submitDataNewPickup();
+    });
     $("#cart_enable").change(function() {
         submitData();
     });
@@ -242,6 +435,43 @@
         submitData();
     });
 
+
+    function submitDataNewPickup() {
+        var form = document.getElementById('favicon-form-pickup');
+        for (instance in CKEDITOR.instances) {
+        CKEDITOR.instances[instance].updateElement();
+        }
+        var formData = new FormData(form);
+        var data_uri = "{{route('styling.updateWebStylesNew')}}";
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+
+        
+        $.ajax({
+            type: "post",
+            url: data_uri,
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                Accept: "application/json"
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    console.log(response.message);
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                    var r = document.querySelector(':root');
+                    r.style.setProperty('--theme-deafult', 'lightblue');
+                }
+            }
+        });
+    }
+    // $('#submit_new_pickup_section').on('click',function(e){
+    //     $(this).closest("form").submit();
+    // });
     function submitDarkMmode(id) {
         var data_uri = "{{route('styling.updateDarkMode')}}";
         console.log(id);
@@ -271,6 +501,9 @@
 
     function submitData() {
         var form = document.getElementById('favicon-form');
+        for (instance in CKEDITOR.instances) {
+        CKEDITOR.instances[instance].updateElement();
+        }
         var formData = new FormData(form);
         var data_uri = "{{route('styling.updateWebStyles')}}";
         $.ajaxSetup({
@@ -278,6 +511,8 @@
                 'X-CSRF-TOKEN': $('input[name="_token"]').val()
             }
         });
+
+        
         $.ajax({
             type: "post",
             url: data_uri,
@@ -309,6 +544,18 @@
         }
     });
 
+    $("#pickup_datatable ol").sortable({
+         placeholder: "ui-state-highlight",
+        update: function(event, ui) {
+            var post_order_ids = new Array();
+            $('#pickup_ol li').each(function() {
+                post_order_ids.push($(this).data("row-id"));
+            });
+            saveOrderPickup(post_order_ids);
+            
+        }
+    });
+
     function saveOrder(orderVal) {
         $.ajaxSetup({
             headers: {
@@ -329,5 +576,28 @@
             },
         });
     }
+
+    function saveOrderPickup(orderVal) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ url('client/pickuplabel/saveOrder') }}",
+            data: {
+                order: orderVal
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                }
+            },
+        });
+    }
+
+   
 </script>
 @endsection

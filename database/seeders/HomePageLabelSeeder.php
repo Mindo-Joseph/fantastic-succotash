@@ -75,14 +75,47 @@ class HomePageLabelSeeder extends Seeder
             'order_by' => 6,
         ]);
 
-        $already = HomePageLabel::where('slug', 'cab_booking')->count();
+        $already = HomePageLabel::where('slug', 'pickup_delivery')->count();
+
+        if($already == 0){
+             $home_page = HomePageLabel::insertGetId([
+                'id' => 7,
+                'title' => 'Pickup Delivery',
+                'slug' => 'pickup_delivery',
+                'order_by' => 7,
+                'is_active' => 0
+            ]);
+         
+        }
+
+        $already = HomePageLabel::where('slug', 'dynamic_page')->count();
 
         if($already == 0)
         $home_page = HomePageLabel::insertGetId([
-            'title' => 'Cab Booking',
-            'slug' => 'cab_booking',
-            'order_by' => 7,
-            'is_active' => 0
+            'title' => 'Dynamic Page',
+            'slug' => 'dynamic_page',
+            'order_by' => 8,
         ]);
+
+
+        $already = HomePageLabel::where('slug', 'trending_vendors')->count();
+
+        if($already == 0)
+        $home_page = HomePageLabel::insertGetId([
+            'title' => 'Trending Vendors',
+            'slug' => 'trending_vendors',
+            'order_by' => 9,
+        ]);
+
+        $already = HomePageLabel::where('slug', 'recent_orders')->count();
+
+        if($already == 0)
+        $home_page = HomePageLabel::insertGetId([
+            'title' => 'Recent Orders',
+            'slug' => 'recent_orders',
+            'order_by' => 10,
+        ]);
+           
+       
     }
 }
