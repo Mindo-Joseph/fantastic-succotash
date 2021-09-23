@@ -551,10 +551,10 @@ class VendorController extends FrontController
         //         $query->whereIn('type_id', [1]);
         // })->where('status', 1)->get();
 
-        $cid = 0;
+        $vendorCategory = 0;
         if($vCat != ''){
             $category = Category::select('id')->where('slug', $vCat)->firstOrFail();
-            $cid = $category->id;
+            $vendorCategory = $category->id;
         }
 
         $products = Product::with(['media.image',
@@ -587,8 +587,8 @@ class VendorController extends FrontController
                 ->orWhere('url_slug', 'LIKE', '%' . $keyword . '%')
                 ->orWhere('title', 'LIKE', '%' . $keyword . '%');
             });
-        if($cid > 0){
-            $products = $products->where('category_id', $cid);
+        if($vendorCategory > 0){
+            $products = $products->where('category_id', $vendorCategory);
         }
         $products = $products->where('is_live', 1)->where('vendor_id', $vid)->get();
 
@@ -631,15 +631,20 @@ class VendorController extends FrontController
                 if(!in_array($cid, $category_list)){
                     $category_list[] = $cid;
                     $vendor_category = VendorCategory::with(['category.translation_one'])
-                    ->where('vendor_id', $vid)
-                    ->whereHas('category', function($query) {
+                    ->where('vendor_id', $vid);
+                    if($vendorCategory < 1){ // if user is not coming to vendor by selecting a category
+                        $vendor_category = $vendor_category->whereHas('category', function($query) {
                             $query->whereIn('type_id', [1]);
-                    })->where('status', 1)->where('category_id', $cid)->first();
+                        });
+                    }
+                    $vendor_category = $vendor_category->where('status', 1)->where('category_id', $cid)->first();
                     if($vendor_categories){
                         $vendorProducts = $products->where('category_id', $cid);
-                        $vendor_category->products = $vendorProducts;
-                        $vendor_category->products_count = $vendorProducts->count();
-                        $vendor_categories->push($vendor_category);
+                        if($vendor_category){
+                            $vendor_category->products = $vendorProducts;
+                            $vendor_category->products_count = $vendorProducts->count();
+                            $vendor_categories->push($vendor_category);
+                        }
                     }
                 }
             }
