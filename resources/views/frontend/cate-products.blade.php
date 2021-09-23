@@ -108,9 +108,9 @@
                                                 <div class="inner_spacing">
                                                     <a href="{{route('productDetail', $new['url_slug'])}}">
                                                         <h3 class="d-flex align-items-center justify-content-between">
-                                                            <label class="mb-0">{{ $new['translation_title'] }}</label>
+                                                            <label class="mb-0"><b>{{ $new['translation_title'] }}</b></label>
                                                         </h3>
-                                                        <h6><b>{{$new['vendor']['name']}}</b></h6>
+                                                        <h6 class="mt-0"><b>{{$new['vendor']['name']}}</b></h6>
                                                         @if($client_preference_detail)
                                                             @if($client_preference_detail->rating_check == 1)
                                                                 @if($new['averageRating'] > 0)
@@ -145,7 +145,7 @@
                                     @endif
                                     <div class="top-banner-content small-section">
                                         <h4>{{ $category->translation_name }}</h4>
-                                        @if(!empty($category->childs) && count($category->childs) > 0)
+                                        {{-- @if(!empty($category->childs) && count($category->childs) > 0)
                                             <div class="row">
                                                 <div class="col-12">
                                                     
@@ -165,7 +165,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </div>
                                 <div class="collection-product-wrapper">
@@ -234,7 +234,7 @@
                                                         <div class="media-body align-self-center">
                                                             <div class="inner_spacing w-100">
                                                                 <h3 class="d-flex align-items-center justify-content-between">
-                                                                    <label class="mb-0">{{ $data->translation_title }}</label>
+                                                                    <label class="mb-0"><b>{{ $data->translation_title }}</b></label>
                                                                     @if($client_preference_detail)
                                                                         @if($client_preference_detail->rating_check == 1)  
                                                                             @if($data->averageRating > 0)
@@ -243,6 +243,7 @@
                                                                         @endif
                                                                     @endif
                                                                 </h3>
+                                                                <h6 class="mt-0 mb-1"><b>{{$data->vendor->name}}</b></h6>
                                                                 @if (strlen($data->translation_description) >= 65)
                                                                     <p title="{{$data->translation_description}}">{{ substr($data->translation_description, 0, 64)." ..." }}</p>
                                                                 @else

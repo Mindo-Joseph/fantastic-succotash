@@ -574,7 +574,9 @@ class OrderController extends Controller {
                     ],
                     "data" => [
                         'title' => $notification_content->subject,
-                        'body'  => $notification_content->content
+                        'body'  => $notification_content->content,
+                        'data' => $orderData,
+                        'type' => "order_created"
                     ],
                     "priority" => "high"
                 ];
