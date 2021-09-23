@@ -90,13 +90,60 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !1,
         speed: 300,
-        slidesToShow: 5,
+        slidesToShow: 6,
         slidesToScroll: 4,
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
             { breakpoint: 420, settings: { slidesToShow: 2, arrows: true,slidesToScroll: 1 } },
         ],
+    });
+    $(".brand-slider").slick({
+        arrows: false,
+        dots: !1,
+        infinite: !1,
+        speed: 300,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        responsive: [
+            { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
+            { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
+            { breakpoint: 420, settings: { slidesToShow: 2, arrows: true,slidesToScroll: 1 } },
+        ],
+    });
+    $('.suppliers-slider').slick({
+    dots: true,
+    infinite: true,
+    speed: 300,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    arrows: false,
+    dots: false,
+    responsive: [
+      {
+        breakpoint: 991,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      }
+    ]
     });
     $(".product-5").slick({
         arrows: !0,

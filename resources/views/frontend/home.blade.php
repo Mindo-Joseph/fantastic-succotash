@@ -77,6 +77,7 @@
         </div>
     <% }); %>
 </script>
+
 <script type="text/template" id="banner_template">
     <% _.each(brands, function(brand, k){%>
         <div>
