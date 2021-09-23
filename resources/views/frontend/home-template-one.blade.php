@@ -56,6 +56,10 @@
                                         <i class="fa fa-star" aria-hidden="true"></i>
                                         <span>4.5</span>
                                     </div>
+                                    <div class="off-price">
+                                        20<sup>%</sup>    
+                                        <span>off</span>
+                                    </div>
                                 </div>
                                 <div class="product-description">
                                     <h3>Extra Virgin Olive Oil</h3>
@@ -227,7 +231,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between mb-md-4 mb-3">
-                    <h2 class="h2-heading">Newly arrived</h2>
+                    <h2 class="h2-heading">On Sale</h2>
                     <a class="see-all-btn" href="#">See all</a>
                 </div>
                 <div class="col-12 px-0">

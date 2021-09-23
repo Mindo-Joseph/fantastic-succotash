@@ -37,6 +37,21 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'Eina03';
+    src: url('../fonts/Eina03-SemiBold.eot');
+    src: url('../fonts/Eina03-SemiBold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Eina03-SemiBold.woff2') format('woff2'),
+        url('../fonts/Eina03-SemiBold.woff') format('woff'),
+        url('../fonts/Eina03-SemiBold.ttf') format('truetype'),
+        url('../fonts/Eina03-SemiBold.svg#Eina03-SemiBold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
 body{
     font-family: 'Eina02';
     font-weight: 400;
@@ -104,6 +119,25 @@ body{
 .navigation-tab-item .nav-link.active {
     color: #fff;
     font-weight: 600;
+}
+
+.search_form input.form-control{
+    opacity: 0.81;
+    color: #8B8B8B;
+    font-family: 'Eina03';
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: 16px;
+}
+
+.search_form input.form-control::-webkit-input-placeholder,
+.search_form input.form-control::placeholder {
+    opacity: 0.81;
+    color: #8B8B8B;
+    font-family: 'Eina03';
+    font-weight: 600;
+    font-size: 16px;
 }
 
 .icon-nav .btn.btn-solid {
@@ -216,6 +250,43 @@ body{
     text-align: center;
     border: 1px solid #EC5837;
     display: block;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.see-all-btn:hover {
+    background: linear-gradient(136.24deg, #FC7049 0%, #FD312C 100%);
+    color: #fff;
+}
+
+.off-price {
+    background: url(../images/off.svg);
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+    color: #FFFFFF;
+    font-size: 10px;
+    letter-spacing: 0;
+    width: 40px;
+    height: 40px;
+    text-indent: -8px;
+    line-height: 10px;
+    font-family: 'Eina02';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.off-price span {
+    display: block;
+    margin-left: 16px;
+    font-size: 8px;
+}
+
+.off-price sup {
+    right: -10px;
 }
 
 .popular-brands,.royo-recommends{
@@ -380,6 +451,20 @@ footer ul.social-links li a {
     font-size: 16px;
 }
 
+
+
+
+
+
+
+/* Dark Mood Css */
+.dark .left-shape::before,.dark .right-shape::before {
+    background: rgb(247 247 247 / 15%);
+}
+
+.dark .product-description h3,.dark .supplier-rating h6 {
+    color: #fff;
+}
 
 
 
