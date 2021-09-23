@@ -54,8 +54,8 @@
                                 <label for="validationCustom02">{{__('CONTACT NUMBER.')}}</label>
                                 <input type="tel" class="form-control" name="phone_number" id="phone" value="">
                                 <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
-                                <input type="hidden" id="countryData" name="countryData" value="us">
-                                <input type="hidden" id="dialCode" name="dialCode" value="">
+                                <input type="hidden" id="countryData" name="country_code" value="">
+                                <input type="hidden" id="dialCode" name="country" value="">
                             </div>
                             <div class="col-md-4 mb-3" id="full_nameInput">
                                 <div class="form-group" id="typeInputEdit">

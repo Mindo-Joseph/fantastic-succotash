@@ -1415,6 +1415,10 @@ class OrderController extends FrontController
                             'contents' => $request->phone_number
                         ],
                         [
+                            'name' => 'country_code',
+                            'contents' => $request->country_code
+                        ],
+                        [
                             'name' => 'type',
                             'contents' => $request->type
                         ],
