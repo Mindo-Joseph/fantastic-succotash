@@ -2379,7 +2379,6 @@ body[dir="rtl"] .navbar-custom {
 }
 
 body[dir="rtl"] .mr-auto {
-    margin-left: AUTO !important;
     margin-right: 0 !important;
 }
 
@@ -2411,19 +2410,49 @@ body[dir="rtl"] .nav-second-level li .collapse li a:before {
 }
 
 body[dir="rtl"] .dt-buttons.btn-group.flex-wrap {
-    right: auto;
-    left: 30px;
+    right: auto !important;
+    left: 330px;
+}
+
+body[dir="rtl"] .text-sm-right {
+    text-align: left!important;
+}
+
+body[dir="rtl"] {
+    text-align: right !important;
+}
+
+body[dir="rtl"] .dataTables_filter label {
+    float: left !important;
+}
+
+body[dir="rtl"] .home-options-list .dd-list .dd3-item {
+    padding-right: 40px;
+    position: relative;
+}
+
+body[dir="rtl"] .home-options-list .dd-list .dd3-handle::before {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+body[dir="rtl"] span.switchery.switchery-default {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 20px;
+}
+
+body[dir="rtl"] .home-options-list .dd-list .dd-item .dd-handle {
+    padding: 0 0 0 20px;
 }
 
 
-
-
-
-
-
-
-
-
+body[dir="rtl"] span.inner-div {
+    float: left;
+}
 
 
 
