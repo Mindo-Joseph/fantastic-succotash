@@ -103,16 +103,16 @@
                         <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable" width="100%">
                             <thead>
                                 <tr>
-                                    <th>{{ __("Order Id") }}</th>
-                                    <th>{{ __('Date & Time') }}</th>
+                                    <th>{{ __("Order ID") }}</th>
+                                    <th>{{ __("Date & Time") }}</th>
                                     <th>{{ __("Customer Name") }}</th>
                                     <th>{{ __("Vendor Name") }}</th>
-                                    <th>{{ __('Subtotal Amount') }}</th>
-                                    <th>{{ __('Promo Code Discount [Vendor Paid Promos]') }}</th>
-                                    <th>{{ __("Promo Code Discount [Admin Paid Promos]") }}</th>
+                                    <th>{{ __("Subtotal Amount") }}</th>
+                                    <th>{{ __("Promo Code Discount") }} [{{ __("Vendor Paid Promos") }}]</th>
+                                    <th>{{ __("Promo Code Discount") }} [{{ __("Admin Paid Promos") }}]</th>
                                     <th>{{ __("Final Amount") }}</th>
-                                    <th>{{ __('Payment Method') }}</th>
-                                    <th>{{ __('Order Status') }}</th>
+                                    <th>{{ __("Payment Method") }}</th>
+                                    <th>{{ __("Order Status") }}</th>
                                 </tr>
                             </thead>
                             <tbody id="accounting_vendor_tbody_list">

@@ -11,6 +11,10 @@
                     <div class="page-title-right">
                     </div>
                     <h4 class="page-title">{{ __('Loyality') }}</h4>
+                        @php
+                            $LoyaltyCards = getNomenclatureName('Loyalty Cards', false);
+                            $LoyaltyCards = ($LoyaltyCards === 'Loyalty Cards') ? __('Loyalty Cards') : $LoyaltyCards;
+                        @endphp
                 </div>
             </div>
         </div>     
@@ -25,7 +29,7 @@
                                         <i class="mdi mdi-trophy-variant-outline text-primary mdi-24px"></i>
                                         <span data-plugin="counterup">{{$type_of_loyality_applied_count}}</span>
                                     </h3>
-                                    <p class="text-muted font-15 mb-0">{{ __('Type Of') }} {{getNomenclatureName('Loyalty Cards', false)}} {{ __('Applied') }}</p>
+                                    <p class="text-muted font-15 mb-0">{{ __('Type Of') }} {{ $LoyaltyCards }} {{ __('Applied') }}</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
@@ -34,7 +38,7 @@
                                         <i class="fas fa-money-check-alt text-primary"></i>
                                         <span data-plugin="counterup">{{$total_loyalty_earned}}</span>
                                     </h3>
-                                        <p class="text-muted font-15 mb-0">{{ __("Total") }} {{getNomenclatureName('Loyalty Cards', false)}} {{ __('Earned') }}</p>
+                                        <p class="text-muted font-15 mb-0">{{ __("Total") }} {{$LoyaltyCards}} {{ __('Earned') }}</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
@@ -43,7 +47,7 @@
                                         <i class="fas fa-money-check-alt text-primary"></i>
                                         <span data-plugin="counterup">{{$total_loyalty_spent}}</span>
                                     </h3>
-                                    <p class="text-muted font-15 mb-0">{{ __('Total') }} {{getNomenclatureName('Loyalty Cards', false)}} {{ __('Spent') }}</p>
+                                    <p class="text-muted font-15 mb-0">{{ __('Total') }} {{$LoyaltyCards}} {{ __('Spent') }}</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
@@ -76,7 +80,7 @@
                                     </div>
                                     <div class="col">
                                         <select class="form-control" id="loyalty_select_box">
-                                            <option value="">{{ __('Select') }} {{getNomenclatureName('Loyalty Cards', false)}}</option>
+                                            <option value="">{{ __('Select') }} {{$LoyaltyCards}}</option>
                                             @foreach($loyalty_card_details as $loyalty_card_detail)
                                                 <option value="{{$loyalty_card_detail->id}}">{{$loyalty_card_detail->name}}</option>
                                             @endforeach
@@ -102,15 +106,18 @@
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-striped" id="accounting_loyality_datatable" width="100%">
                             <thead>
+
+                               
+
                                 <tr>
-                                    <th>{{ __('Order Id') }}</th>
-                                    <th>{{ __('Date & Time') }}</th>
+                                    <th>{{ __('Order ID') }}</th>
+                                    <th>{{ __("Date & Time") }}</th>
                                     <th>{{ __('Customer Name') }}</th>
                                     <th>{{ __('Final Amount') }}</th>
-                                    <th>{{getNomenclatureName('Loyalty Cards', false)}} {{ __('Used') }}</th>
-                                    <th>{{getNomenclatureName('Loyalty Cards', false)}} {{ __('Membership') }}</th>
-                                    <th>{{getNomenclatureName('Loyalty Cards', false)}} {{ __('Earned') }}</th>
-                                    <th>{{ __('Payment Method') }}</th>
+                                    <th>{{ $LoyaltyCards }} {{ __('Used') }}</th>
+                                    <th>{{ $LoyaltyCards }} {{ __("Membership") }}</th>
+                                    <th>{{ $LoyaltyCards }} {{ __("Earned") }}</th>
+                                    <th>{{ __("Payment Method") }}</th>
                                 </tr>
                             </thead>
                             <tbody id="accounting_loyality_tbody_list">

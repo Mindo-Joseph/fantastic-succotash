@@ -103,14 +103,14 @@
                         <table class="table table-centered table-nowrap table-striped" id="accounting_vendor_datatable" width="100%">
                             <thead>
                                 <tr>
-                                    <th>{{ __('Order Id') }}</th>
+                                    <th>{{ __('Order ID') }}</th>
                                     <th>{{ __('Date & Time') }}</th>
-                                    <th>{{ __("Customer Name") }}</th>
+                                    <th>{{ __('Customer Name') }}</th>
                                     <th>{{ __('Vendor') }}</th>
                                     <th>{{ __('Subtotal Amount') }}</th>
                                     <th>{{ __('Promo Code Discount') }}</th>
-                                    <th>{{ __('Admin Commission') }} [Fixed]</th>
-                                    <th>{{ __('Admin Commission') }} [%Age]</th>
+                                    <th>{{ __('Admin Commission') }} [{{ __("Fixed") }}]</th>
+                                    <th>{{ __('Admin Commission') }} [%{{ __("Age") }}]</th>
                                     <th>{{ __('Final Amount') }}</th>
                                     <th>{{ __('Payment Method') }}</th>
                                     <th>{{ __('Order Status') }}</th>

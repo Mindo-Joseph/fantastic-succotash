@@ -836,5 +836,26 @@
     "CMS": "CMS",
     "Celebrities": "Célébrités",
     "Inquiries": "Enquêtes",
+
+
+
+
+    "Fixed": "Fixé",
+    "Age": "Âge",
+    "Order ID": "Numéro de commande",
+    "Date & Time": "Date et heure",
+    "Customer Name": "Nom du client",
+    "Vendor Name": "Nom du fournisseur",
+    "Subtotal Amount": "Montant du sous-total",
+    "Promo Code Discount ": "Réduction Code Promo",
+    "Vendor Paid Promos": "Promotions payées par le fournisseur",
+    "Promo Code Discount ": "Réduction Code Promo",
+    "Admin Paid Promos": "Promotions payées par l'administrateur",
+    "Final Amount": "Le montant final",
+    "Payment Method": "Mode de paiement",
+    "Order Status": "Statut de la commande",
+    
+
+
     "": ""
 }

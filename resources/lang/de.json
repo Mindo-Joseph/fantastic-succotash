@@ -779,5 +779,23 @@
   "CMS": "CMS",
   "Celebrities": "Prominente",
   "Inquiries": "Anfragen",
+
+
+
+  "Fixed": "Fest",
+"Age": "Alter",
+"Order ID": "Auftragsnummer",
+"Date & Time": "Terminzeit",
+"Customer Name": "Kundenname",
+"Vendor Name": "Herstellername",
+"Subtotal Amount": "Zwischensumme",
+"Promo Code Discount ": "Gutscheincode-Rabatt",
+"Vendor Paid Promos": "Vom Anbieter bezahlte Werbeaktionen",
+"Promo Code Discount ": "Gutscheincode-Rabatt",
+"Admin Paid Promos": "Vom Administrator bezahlte Werbeaktionen",
+"Final Amount": "Endbetrag",
+"Payment Method": "Bezahlverfahren",
+"Order Status": "Bestellstatus",
+
   "": ""
 }

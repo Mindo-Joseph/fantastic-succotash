@@ -783,5 +783,22 @@
    "CMS": "CMS",
    "Celebrities": "Famosos",
    "Inquiries": "Consultas",
+   
+"Fixed" : "Reparado",
+"Age" : "La edad",
+"Order ID" : "Solicitar ID",
+"Date & Time" : "Fecha y hora",
+"Customer Name" : "Nombre del cliente",
+"Vendor Name" : "Nombre del vendedor",
+"Subtotal Amount" : "Importe subtotal",
+"Promo Code Discount " : "Descuento de código promocional",
+"Vendor Paid Promos" : "Promociones pagadas por el proveedor",
+"Promo Code Discount " : "Descuento de código promocional",
+"Admin Paid Promos" : "Promociones pagadas por el administrador",
+"Final Amount" : "Cantidad final",
+"Payment Method" : "Método de pago",
+"Order Status" : "Estado del pedido",
+
+
    "": ""
 }

@@ -27,10 +27,10 @@
             <% if(order.vendors.length !== 0) { %>
                 <div class="col-xl-6"  id="full-order-div<%= k %>">
                     <div class="row no-gutters order_head">
-                        <div class="col-md-3"><h4>{{ __('Order Id') }}</h4></div>
-                        <div class="col-md-3"><h4>{{ __('Date & Time') }}</h4></div>
-                        <div class="col-md-3"><h4>{{ __('Customer') }}</h4></div>
-                        <div class="col-md-3"><h4>{{ __('Address') }}</h4></div>
+                        <div class="col-md-3"><h4>{{ __("Order ID") }}</h4></div>
+                        <div class="col-md-3"><h4>{{ __("Date & Time") }}</h4></div>
+                        <div class="col-md-3"><h4>{{ __("Customer") }}</h4></div>
+                        <div class="col-md-3"><h4>{{ __("Address") }}</h4></div>
                     </div>
                     <div class="row no-gutters order_data mb-lg-2">
                         <div class="col-md-3"><h6 class="m-0">#<%= order.order_number %></h6></div>
@@ -113,7 +113,7 @@
                                                         <% } %> 
                                                     </li>
                                                     <li class="grand_total d-flex align-items-center justify-content-between">
-                                                        <label class="m-0">{{ _('Amount') }}</label>
+                                                        <label class="m-0">{{ __('Amount') }}</label>
                                                         <span>$<%= vendor.payable_amount %></span>
                                                     </li>
                                                 </ul>
@@ -179,7 +179,7 @@
             </div>
         </div>
         <div class="offset-md-9 col-md-3 offset-lg-10 col-lg-2 mb-2">
-            <input type="search" class="form-control form-control-sm" placeholder="Search By Order Id" id="search_via_keyword">
+            <input type="search" class="form-control form-control-sm" placeholder="Search By Order ID" id="search_via_keyword">
         </div>
     </div>
 </div>
