@@ -165,6 +165,13 @@ class OrderController extends BaseController {
                                     $vendor_cart_product->delivery_fee = number_format($delivery_fee, 2, '.', '');
                                     // $payable_amount = $payable_amount + $delivery_fee;
                                     $delivery_fee_charges = $delivery_fee;
+                                    $latitude = $request->header('latitude');
+                                    $longitude = $request->header('longitude');
+                                    $vendor_cart_product->vendor = $this->getVendorDistanceWithTime($latitude, $longitude, $vendor_cart_product->vendor, $client_preference);
+                                    $order_vendor->order_pre_time = ($vendor_cart_product->vendor->order_pre_time > 0) ? $vendor_cart_product->vendor->order_pre_time : 0;
+                                    if($vendor_cart_product->vendor->timeofLineOfSightDistance > 0){
+                                        $order_vendor->user_to_vendor_time = $vendor_cart_product->vendor->timeofLineOfSightDistance - $order_vendor->order_pre_time;
+                                    }
                                 }
                             }
                             $vendor_taxable_amount += $taxable_amount;
@@ -414,7 +421,7 @@ class OrderController extends BaseController {
                 $order_pre_time = ($order->order_pre_time > 0) ? $order->order_pre_time : 0;
                 $user_to_vendor_time = ($order->user_to_vendor_time > 0) ? $order->user_to_vendor_time : 0;
                 $ETA = $order_pre_time + $user_to_vendor_time;
-                $order->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA) : '0 minutes';
+                $order->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA) : convertDateTimeInTimeZone(Carbon::now(), $user->timezone, 'h:i A');
             }
             $order->product_details = $product_details;
             $order->item_count = $order_item_count;
@@ -492,7 +499,7 @@ class OrderController extends BaseController {
                         $order_pre_time = ($vendor->order_pre_time > 0) ? $vendor->order_pre_time : 0;
                         $user_to_vendor_time = ($vendor->user_to_vendor_time > 0) ? $vendor->user_to_vendor_time : 0;
                         $ETA = $order_pre_time + $user_to_vendor_time;
-                        $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA) : '0 minutes';
+                        $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA) : convertDateTimeInTimeZone(Carbon::now(), $user->timezone, 'h:i A');
                     }
         		}
     		    $order->order_item_count = $order_item_count;
