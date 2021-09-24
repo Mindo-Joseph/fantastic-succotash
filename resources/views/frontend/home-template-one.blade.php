@@ -127,10 +127,12 @@
                                             @endif
                                         @endif
                                     </ul>
+                                    <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                                     <div class="product-timing d-flex justify-content-between">
                                         <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
                                         <small><i class="fa fa-clock-o"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
                                     </div>
+                                    <% } %>
                                 </div>
                             </a>
                         </div> 
