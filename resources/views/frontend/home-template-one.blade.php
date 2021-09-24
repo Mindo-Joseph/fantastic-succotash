@@ -37,11 +37,9 @@
                         }
                         @endphp
                     @if($url)
-                    <a href="{{$url}}">
+                    <a class="banner-img-outer" href="{{$url}}">
                         @endif
-                        <div>
                             <img src="{{$banner->image['image_fit'] . '1500/600' . $banner->image['image_path']}}">
-                        </div>
                         @if($url)
                     </a>
                     @endif
@@ -128,8 +126,13 @@
                                                 <% } %>
                                             @endif
                                         @endif
-                                       
                                     </ul>
+                                    <% if(vendor.timeofLineOfSightDistance != undefined){ %>
+                                    <div class="product-timing d-flex justify-content-between">
+                                        <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
+                                        <small><i class="fa fa-clock-o"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
+                                    </div>
+                                    <% } %>
                                 </div>
                             </a>
                         </div> 

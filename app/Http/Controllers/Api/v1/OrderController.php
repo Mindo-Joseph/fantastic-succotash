@@ -6,13 +6,13 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use GuzzleHttp\Client as GCLIENT;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
 use Log;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client};
 
-class OrderController extends Controller {
+class OrderController extends BaseController {
     use ApiResponser;
     /**
      * Display a listing of the resource.
@@ -165,6 +165,13 @@ class OrderController extends Controller {
                                     $vendor_cart_product->delivery_fee = number_format($delivery_fee, 2, '.', '');
                                     // $payable_amount = $payable_amount + $delivery_fee;
                                     $delivery_fee_charges = $delivery_fee;
+                                    $latitude = $request->header('latitude');
+                                    $longitude = $request->header('longitude');
+                                    $vendor_cart_product->vendor = $this->getVendorDistanceWithTime($latitude, $longitude, $vendor_cart_product->vendor, $client_preference);
+                                    $order_vendor->order_pre_time = ($vendor_cart_product->vendor->order_pre_time > 0) ? $vendor_cart_product->vendor->order_pre_time : 0;
+                                    if($vendor_cart_product->vendor->timeofLineOfSightDistance > 0){
+                                        $order_vendor->user_to_vendor_time = $vendor_cart_product->vendor->timeofLineOfSightDistance - $order_vendor->order_pre_time;
+                                    }
                                 }
                             }
                             $vendor_taxable_amount += $taxable_amount;
@@ -410,6 +417,12 @@ class OrderController extends Controller {
                     'title' => $product->product_name,
                 );
             }
+            if($order->delivery_fee > 0){
+                $order_pre_time = ($order->order_pre_time > 0) ? $order->order_pre_time : 0;
+                $user_to_vendor_time = ($order->user_to_vendor_time > 0) ? $order->user_to_vendor_time : 0;
+                $ETA = $order_pre_time + $user_to_vendor_time;
+                $order->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $order->created_at, $order->orderDetail->scheduled_date_time) : convertDateTimeInTimeZone($order->created_at, $user->timezone, 'h:i A');
+            }
             $order->product_details = $product_details;
             $order->item_count = $order_item_count;
             unset($order->user);
@@ -482,6 +495,12 @@ class OrderController extends Controller {
                         }
                         $product->product_addons = $product_addons;
         			}
+                    if($vendor->delivery_fee > 0){
+                        $order_pre_time = ($vendor->order_pre_time > 0) ? $vendor->order_pre_time : 0;
+                        $user_to_vendor_time = ($vendor->user_to_vendor_time > 0) ? $vendor->user_to_vendor_time : 0;
+                        $ETA = $order_pre_time + $user_to_vendor_time;
+                        $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : convertDateTimeInTimeZone($vendor->created_at, $user->timezone, 'h:i A');
+                    }
         		}
     		    $order->order_item_count = $order_item_count;
             }
