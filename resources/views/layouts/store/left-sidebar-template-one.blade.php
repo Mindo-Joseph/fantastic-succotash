@@ -138,7 +138,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </div>
                             @endif
                         @endif  
-                        <div class="radius-bar d-none d-lg-inline">
+                        <div class="radius-bar d-lg-inline">
                             <div class="search_form d-flex align-items-center justify-content-between">
                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
                                 <input class="form-control border-0 typeahead" type="search" placeholder="{{getNomenclatureName('Search product, vendor, item', true)}}" id="main_search_box">
