@@ -813,6 +813,8 @@ class OrderController extends FrontController
                     "data" => [
                         'title' => $notification_content->subject,
                         'body'  => $notification_content->content,
+                        'data' => $orderData,
+                        'type' => "order_created"
                     ],
                     "priority" => "high"
                 ];

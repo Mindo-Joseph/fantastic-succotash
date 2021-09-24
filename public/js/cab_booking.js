@@ -413,6 +413,9 @@ $(document).ready(function () {
                         let cab_booking_promo_code_template = _.template($('#cab_booking_promo_code_template').html());
                         $("#cab_booking_promo_code_list_main_div").append(cab_booking_promo_code_template({promo_codes: response.data, vendor_id:vendor_id, product_id:product_id, amount:amount})).show();
                     }else{
+                        $('.promo-box').removeClass('d-none');
+                        $('.cab-detail-box').addClass('d-none');
+                        let cab_booking_promo_code_template = _.template($('#cab_booking_promo_code_template').html());
                         $("#cab_booking_promo_code_list_main_div").html(no_coupon_available_message).show();
                     }
                 }
