@@ -1300,15 +1300,41 @@ class OrderController extends FrontController
             return false;
     }
 
-    public function driverSignup(Request $request)
+    public function driverDocuments()
     {
         try {
+            $dispatch_domain = $this->checkIfLastMileDeliveryOn();
+            $url = $dispatch_domain->delivery_service_key_url;
+            $endpoint = $url."/api/send-documents";           
+           // $dispatch_domain->delivery_service_key_code = '649a9a';
+           // $dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
+            $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
+
+            $response = $client->post($endpoint);
+            $response = json_decode($response->getBody(), true);
+
+            return json_encode($response['data']);
+        } catch (\Exception $e) {
+            $data = [];
+            $data['status'] = 400;
+            $data['message'] =  $e->getMessage();
+            return $data;
+        }
+    }
+
+    public function driverSignup(Request $request)
+    {
+
+        try {
             $validator = Validator::make($request->all(), [
-                'phone_number' => 'required|unique',
                 'name' => 'required',
+                'phone_number' => 'required|unique',
+                'type' => 'required',
+                'vehicle_type_id' => 'required',
+                'make_model' => 'required',
+                'uid' => 'required',
                 'plate_number' => 'required',
                 'color' => 'required',
-                'uid' => 'required'
             ]);
             $meta_data = '';
             $tasks = array();
@@ -1316,61 +1342,85 @@ class OrderController extends FrontController
             $customer = Auth::user();
             if ($dispatch_domain && $dispatch_domain != false) {
                 $unique = Auth::user()->code;
-                $driver_registration_documents = DriverRegistrationDocument::with('primary')->get();
-                $rules_array = [];
-                foreach ($driver_registration_documents as $driver_registration_document) {
-                    $rules_array[$driver_registration_document->primary->slug] = 'required';
-                }
-                $request->validate($rules_array);
+                $driver_registration_documents = json_decode($this->driverDocuments());
+
+                //     $rules_array = [];
+                //     foreach ($driver_registration_documents as $driver_registration_document) {
+                //         $rules_array[$driver_registration_document->name] = 'required';
+                //     }
+                //    $request->validate($rules_array);
+
                 $files = [];
-                if ($driver_registration_documents->count() > 0) {
+                if ($driver_registration_documents != null) {
                     foreach ($driver_registration_documents as $key => $driver_registration_document) {
                         $driver_registration_document_file_type[$key] = $driver_registration_document->file_type;
                         $files[$key]['file_type'] = $driver_registration_document_file_type[$key];
                         $driver_registration_document_id[$key] = $driver_registration_document->id;
                         $files[$key]['id'] = $driver_registration_document_id[$key];
-                        $name = $driver_registration_document->primary->slug;
-                        $driver_registration_document_file_name[$key] = $request->$name;
+                        $driver_registration_document_name[$key] = $driver_registration_document->name;
+                        $files[$key]['name'] = $driver_registration_document_name[$key];
+                        $name = $driver_registration_document->name;
+                        $arr = explode(' ', $name);
+                        $name = implode('_', $arr);
+                        $driver_registration_document_file_name[$key] = $request[$name];
                         $files[$key]['file_name'] =  $driver_registration_document_file_name[$key];
                     }
                 }
-                //$dispatch_domain->delivery_service_key_code = '649a9a';
-                //$dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
+               // $dispatch_domain->delivery_service_key_code = '649a9a';
+              //  $dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
                 $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
                 $url = $dispatch_domain->delivery_service_key_url;
                 $key1 = 0;
                 $key2 = 0;
-
+                $filedata = [];
+                $other = [];
+                $abc = [];
                 foreach ($files as $file) {
+                    if ($file['file_name'] != null) {
+                        if ($file['file_type'] != "Text") {
+                            $file_path          = $file['file_name']->getPathname();
+                            $file_mime          = $file['file_name']->getMimeType('image');
+                            $file_uploaded_name = $file['file_name']->getClientOriginalName();
+                            $filedata[$key2] =  [
+                                'Content-type' => 'multipart/form-data',
+                                'name' => 'uploaded_file[]',
+                                'file_type' => $file['file_type'],
+                                'id' => $file['id'],
+                                'filename' => $file_uploaded_name,
+                                'Mime-Type' => $file_mime,
+                                'contents' => fopen($file_path, 'r'),
 
-                    if ($file['file_type'] != "Text") {
-                        $file_path          = $file['file_name']->getPathname();
-                        $file_mime          = $file['file_name']->getMimeType('image');
-                        $file_uploaded_name = $file['file_name']->getClientOriginalName();
-                        $filedata[$key2] =  [
-                            'Content-type' => 'multipart/form-data',
-                            'name' => 'uploaded_file[]',
-                            'file_type' => $file['file_type'],
-                            'id' => $file['id'],
-                            'filename' => $file_uploaded_name,
-                            'Mime-Type' => $file_mime,
-                            'contents' => fopen($file_path, 'r'),
-
-                        ];
-                        $other[$key2] = [
-                            'filename1' => $file_uploaded_name,
-                            'file_type' => $file['file_type'],
-                            'id' => $file['id'],
-                        ];
-                        $key2++;
-                    } else {
-                        $abc[$key1] =  [
-                            'file_type' => $file['file_type'],
-                            'id' => $file['id'],
-                            'contents' => $file['file_name'],
-                        ];
-                        $key1++;
+                            ];
+                            $other[$key2] = [
+                                'filename1' => $file['name'],
+                                'file_type' => $file['file_type'],
+                                'id' => $file['id'],
+                            ];
+                            $key2++;
+                        } else {
+                            $abc[$key1] =  [
+                                'file_type' => $file['file_type'],
+                                'id' => $file['id'],
+                                'contents' => $file['file_name'],
+                                'label_name' => $file['name']
+                            ];
+                            $key1++;
+                        }
                     }
+                }
+                $profile_photo = [];
+                if ($request->hasFile('upload_photo')) {
+                    $profile_photo =
+                        [
+                            'Content-type' => 'multipart/form-data',
+                            'name' => 'upload_photo',
+                            'filename' => $request->upload_photo->getClientOriginalName(),
+                            'Mime-Type' => $request->upload_photo->getMimeType('image'),
+                            'contents' =>  fopen($request->upload_photo, 'r'),
+                        ];
+                }
+                if ($profile_photo == null) {
+                    $profile_photo = ['name' => 'profile_photo[]', 'contents' => 'abc'];
                 }
                 if (!array_key_exists(0, $filedata)) {
                     $filedata[0] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
@@ -1402,10 +1452,11 @@ class OrderController extends FrontController
                 if (!array_key_exists(9, $filedata)) {
                     $filedata[9] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
                 }
-                $res = $client->post($url . '/api/agent/create', [
+                $res = $client->post($url.'/api/agent/create', [
 
                     'multipart' => [
                         $filedata[0],
+                        $profile_photo,
                         $filedata[1],
                         $filedata[2],
                         $filedata[3],
@@ -1423,13 +1474,7 @@ class OrderController extends FrontController
                             'name' => 'files_text',
                             'contents' => json_encode($abc)
                         ],
-                        [
-                            'Content-type' => 'multipart/form-data',
-                            'name' => 'upload_photo',
-                            'filename' => $request->upload_photo->getClientOriginalName(),
-                            'Mime-Type' => $request->upload_photo->getMimeType('image'),
-                            'contents' =>  fopen($request->upload_photo, 'r'),
-                        ],
+
                         [
                             'name' => 'count',
                             'contents' => count($files)

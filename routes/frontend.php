@@ -7,6 +7,8 @@ Route::get('/debug-sentry', function () {
 
 Route::get('page/driver-registration', 'Front\UserhomeController@driverSignup')->name('page/driver-registration');
 Route::post('page/driverSignup', 'Front\OrderController@driverSignup')->name('page.driverSignup');
+Route::get('driver-documents', 'Front\UserhomeController@driverDocuments')->name('driver-documents');
+
 Route::group(['middleware' => ['domain']], function () {
 	Route::get('dispatch-order-status-update/{id?}', 'Front\DispatcherController@dispatchOrderStatusUpdate')->name('dispatch-order-update'); // Order Status update Dispatch
 	Route::get('dispatch-pickup-delivery/{id?}', 'Front\DispatcherController@dispatchPickupDeliveryUpdate')->name('dispatch-pickup-delivery'); // pickup delivery update from dispatch

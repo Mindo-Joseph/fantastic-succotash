@@ -26,50 +26,55 @@
                         </div>
                     </div>
                     <div class="needs-validation vendor-signup">
-                        <div class="form-group">
-                            <label for="">{{__('UPLOAD PROFILE PHOTO')}}</label>
-                            <div class="file file--upload" >
-                                <label for="input_file_logo">
-                                    <span class="update_pic">
-                                        <img src="" id="upload_logo_preview">
-                                    </span>
-                                    <span class="plus_icon">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                </label>
-                                <input id="input_file_logo" type="file" name="upload_photo" accept="image/*">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-4 mb-3" id="phone_numberInput">
-                                <div class="form-group" id="nameInputEdit">
-                                    <label for="name" class="control-label">NAME</label>
-                                    <input type="text" class="form-control" id="name" placeholder="John Doe" name="name" value="">
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong></strong>
-                                    </span>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="">{{__('UPLOAD PROFILE PHOTO')}}</label>
+                                    <div class="file file--upload" >
+                                        <label for="input_file_logo">
+                                            <span class="update_pic">
+                                                <img src="" id="upload_logo_preview">
+                                            </span>
+                                            <span class="plus_icon">
+                                                <i class="fa fa-plus"></i>
+                                            </span>
+                                        </label>
+                                        <input id="input_file_logo" type="file" name="upload_photo" accept="image/*">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3" id="phone_numberInput">
-                                <label for="validationCustom02">{{__('CONTACT NUMBER.')}}</label>
-                                <input type="tel" class="form-control" name="phone_number" id="phone" value="">
-                                <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
-                                <input type="hidden" id="countryCode" name="country" value="">
-                                <input type="hidden" id="dialCode" name="country_code" value="">
-                            </div>
-                            <div class="col-md-4 mb-3" id="full_nameInput">
-                                <div class="form-group" id="typeInputEdit">
-                                    <label for="type" class="control-label">TYPE</label>
-                                    <select class="form-control" data-style="btn-light" name="type" id="type">
-                                        <option value="Employee">Employee</option>
-                                        <option value="Freelancer">Freelancer</option>
-                                    </select>
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong></strong>
-                                    </span>
+                            <div class="col-lg-6">
+                                <div class="col-md-12 mb-3" id="phone_numberInput">
+                                    <div class="form-group" id="nameInputEdit">
+                                        <label for="name" class="control-label">NAME</label>
+                                        <input type="text" class="form-control" id="name" placeholder="John Doe" name="name" value="">
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-3" id="phone_numberInput">
+                                    <label for="validationCustom02">{{__('CONTACT NUMBER.')}}</label>
+                                    <input type="tel" class="form-control" name="phone_number" id="phone" value="">
+                                    <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
+                                    <input type="hidden" id="countryCode" name="country" value="">
+                                    <input type="hidden" id="dialCode" name="country_code" value="">
+                                </div>
+                                <div class="col-md-12 mb-3" id="full_nameInput">
+                                    <div class="form-group" id="typeInputEdit">
+                                        <label for="type" class="control-label">TYPE</label>
+                                        <select class="form-control" data-style="btn-light" name="type" id="type">
+                                            <option value="Employee">Employee</option>
+                                            <option value="Freelancer">Freelancer</option>
+                                        </select>
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="row ">
                             <div class="col-md-12">
                                 <div class="form-group" id="vehicle_type_idInput">
@@ -143,11 +148,11 @@
                     </div>
                     <div class="form-row">
                         @foreach($driver_registration_documents as $driver_registration_document)
-                        <div class="col-md-6 mb-3" id="{{$driver_registration_document->primary->slug}}Input">
-                            <label for="">{{$driver_registration_document->primary ? $driver_registration_document->primary->name : ''}}</label>
+                        <div class="col-md-6 mb-3" id="{{$driver_registration_document->name}}Input">
+                            <label for="">{{$driver_registration_document->name ? $driver_registration_document->name : ''}}</label>
                             @if(strtolower($driver_registration_document->file_type) == 'text')
                             <div class="form-group">
-                                <input type="text" class="form-control" id="input_file_logo_{{$driver_registration_document->id}}" name="{{$driver_registration_document->primary->slug}}" placeholder="Enter Text" value="">
+                                <input type="text" class="form-control" id="input_file_logo_{{$driver_registration_document->id}}" name="{{$driver_registration_document->name}}" placeholder="Enter Text" value="">
                             </div>
                             @else
                             <div class="file file--upload">
@@ -160,11 +165,11 @@
                                     </span>
                                 </label>
                                 @if(strtolower($driver_registration_document->file_type) == 'image')
-                                <input id="input_file_logo_{{$driver_registration_document->id}}" type="file" name="{{$driver_registration_document->primary->slug}}" v accept="image/*" data-rel="{{$driver_registration_document->id}}">
+                                <input id="input_file_logo_{{$driver_registration_document->id}}" type="file" name="{{$driver_registration_document->name}}" v accept="image/*" data-rel="{{$driver_registration_document->id}}">
                                 @elseif(strtolower($driver_registration_document->file_type) == 'pdf')
-                                <input id="input_file_logo_{{$driver_registration_document->id}}" type="file" name="{{$driver_registration_document->primary->slug}}" accept=".pdf" data-rel="{{$driver_registration_document->id}}">
+                                <input id="input_file_logo_{{$driver_registration_document->id}}" type="file" name="{{$driver_registration_document->name}}" accept=".pdf" data-rel="{{$driver_registration_document->id}}">
                                 @endif
-                                <div class="invalid-feedback" id="{{$driver_registration_document->primary->slug}}_error"><strong></strong></div>
+                                <div class="invalid-feedback" id="{{$driver_registration_document->name}}_error"><strong></strong></div>
                             </div>
                             @endif
                         </div>
