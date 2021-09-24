@@ -136,6 +136,11 @@ $timezone = Auth::user()->timezone;
                                                                 $product_total_count = $product_subtotal_amount = $product_taxable_amount = 0;
                                                             @endphp
                                                             <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
+                                                                @if($vendor->delivery_fee > 0)
+                                                                    <div class="progress-order font-12">
+                                                                        <span class="ml-2">Your order will arrive in {{$vendor->ETA}}</span>
+                                                                    </div>
+                                                                @endif
                                                                 <span class="left_arrow pulse"></span>
                                                                 <div class="row">
                                                                     <div class="col-5 col-sm-3">
