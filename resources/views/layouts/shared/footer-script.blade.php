@@ -170,7 +170,6 @@ if (Session::has('toaster')) {
     firebase.initializeApp(firebaseConfig);
 
     const messaging = firebase.messaging();
-    console.log("here4");
     function initFirebaseMessagingRegistration() {
         @if(empty(Session::get('current_fcm_token')))
         messaging.requestPermission().then(function() {
@@ -196,15 +195,10 @@ if (Session::has('toaster')) {
     }
 
     initFirebaseMessagingRegistration();
-    console.log("here4");
     messaging.onMessage(function(payload) {
-        console.log("here1");
-        console.log(payload);
         if (!("Notification" in window)) {
-            console.log("here2");
             console.log("This browser does not support system notifications.");
         } else if (Notification.permission === "granted") {
-            console.log("here3");
             if(payload && payload.data && payload.data.data.type && payload.data.data.type && payload.data.data.type=="order_created"){
                 get_latest_order_socket(payload.data.data.order_number);
             }
