@@ -103,7 +103,7 @@ class UserhomeController extends FrontController
             $endpoint = $url."/api/send-documents";  
             // $endpoint = "http://192.168.99.177:8006/api/send-documents";
             // $dispatch_domain = $this->checkIfLastMileDeliveryOn();
-            // $dispatch_domain->delivery_service_key_code = '649a9a';
+             //$dispatch_domain->delivery_service_key_code = '649a9a';
             // $dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
             $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
 
@@ -126,8 +126,8 @@ class UserhomeController extends FrontController
         $client_preferences = ClientPreference::first();
         $navCategories = $this->categoryNav($language_id);
         $client = Auth::user();
-        $ClientPreference = ClientPreference::where('client_code', $client->code)->first();
-        $preference = $ClientPreference ? $ClientPreference : new ClientPreference();
+        // $ClientPreference = ClientPreference::where('client_code', $client->code)->first();
+        // $preference = $ClientPreference ? $ClientPreference : new ClientPreference();
         $page_detail = Page::with(['translations' => function ($q) {
             $q->where('language_id', session()->get('customerLanguage'));
         }])->where('slug', 'driver-registration')->firstOrFail();
@@ -135,13 +135,12 @@ class UserhomeController extends FrontController
 
         $tag = [];
     
-        if (isset($preference) && $preference->need_delivery_service == '1') {
-            $last_mile_teams = $this->getLastMileTeams();
-        }
+        // if (isset($preference) && $preference->need_delivery_service == '1') {
+        //     $last_mile_teams = $this->getLastMileTeams();
+        // }
         $showTag = implode(',', $tag);
-
         $driver_registration_documents = json_decode($this->driverDocuments());
-        return view('frontend.driver-registration', compact('page_detail', 'navCategories', 'client_preferences', 'user', 'showTag', 'last_mile_teams', 'driver_registration_documents'));
+        return view('frontend.driver-registration', compact('page_detail', 'navCategories', 'user', 'showTag', 'driver_registration_documents'));
     }
 
     public function checkIfLastMileOn()
