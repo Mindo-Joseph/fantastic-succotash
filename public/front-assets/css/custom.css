@@ -1584,9 +1584,9 @@ h6 {
     top: 15px;
 }
 
-.order_detail:nth-child(2):before {
+/* .order_detail:nth-child(2):before {
     border: 0;
-}
+} */
 
 .left_arrow {
     width: 7px;
@@ -5844,6 +5844,21 @@ section.royo-business .title-36 {
 .bottom-line:hover:after {
     width: 100%;
 }
+
+.progress-order {
+    width: calc(100% + 48px);
+    margin: -24px 0 20px;
+    background: #00000012;
+    color: var(--theme-deafult);
+    position: relative;
+    left: -24px;
+    font-weight: 600;
+    font-size: 16px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 5px 0;
+}
+
 
 /* New P */
 
