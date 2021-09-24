@@ -18,6 +18,8 @@ class FirebaseController extends FrontController
     public function service_worker()
     {
         $preference = ClientPreference::first();
-        return view('frontend.firebase.service_worker', compact('preference'));
+        $view = response()->view('frontend.firebase.service_worker', compact('preference'));
+        $view->header('Content-Type', 'application/javascript');
+        return $view;
     }
 }
