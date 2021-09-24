@@ -13,11 +13,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
  </style>
 
 <header class="site-header">
-@if (Auth::check())
+  
+   @if(Auth::check())
    @include('layouts.store/topbar-auth-template-one')
-  @else
-    @include('layouts.store/topbar-guest-template-one')
-  @endif
+   @else
+   @include('layouts.store/topbar-guest-template-one')
+   @endif
         <!-- Start Cab Booking Header From Here -->
         <div class="cab-booking-header">
             <div class="container">
@@ -122,8 +123,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <div class="navigation-tab-overlay"></div>
                             </ul>
                         @endif 
-
-
+                       
                         <div class="search_bar menu-right d-sm-flex d-block align-items-center justify-content-end justify-content-lg-between w-100 ">
                         @if( (Session::get('preferences')))
                             @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
