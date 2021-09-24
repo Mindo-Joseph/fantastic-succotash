@@ -220,7 +220,7 @@
         <section class="suppliers-section pt-0 mb-3">
         <div class="container">
             <div class="row">
-                <div class="col-12 top-heading d-flex align-items-center justify-content-between mb-lg-4 mb-3">
+                <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-3">
                     <h2 class="h2-heading">{{ $homePageLabel->slug == 'vendors' ? getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2>
                     <a class="see-all-btn" href="{{route('vendor.all')}}">See all</a>
                 </div>
@@ -236,7 +236,7 @@
         @else
         <div class="container render_full_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
             <div class="row">
-                <div class="col-12 top-heading d-flex align-items-center justify-content-between mb-lg-4 mb-3">
+                <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-3">
                     <h2 class="h2-heading">{{ $homePageLabel->slug == 'vendors' ? getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2>
                     @if($homePageLabel->slug == 'vendors')
                     <a class="see-all-btn" href="{{route('vendor.all')}}">{{__('View More')}}</a>
