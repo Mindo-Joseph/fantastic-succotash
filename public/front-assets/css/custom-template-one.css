@@ -109,7 +109,7 @@ body{
 }
 
 .navigation-tab-overlay {
-    background: linear-gradient(136.24deg, #FC7049 0%, #FD312C 100%);
+    background: var(--theme-deafult);
 }
 
 .navigation-tab-item .nav-link {
@@ -141,7 +141,7 @@ body{
 }
 
 .icon-nav .btn.btn-solid {
-    background: linear-gradient(136.24deg, #FC7049 0%, #FD312C 100%);
+    background: var(--theme-deafult);
     border: 0;
 }
 
@@ -684,6 +684,13 @@ footer ul.social-links li a {
         right: 0;
         left: 0;
     }
+    .popular-brands {
+        margin: 0;
+        padding-bottom: 0;
+    }
+    .home-slider-wrapper {
+        padding-top: 0;
+    }
 }
 @media (max-width: 767px){
     .location-bar {
@@ -702,6 +709,28 @@ footer ul.social-links li a {
     .see-all-btn {
         height: 30px;
         line-height: 26px;
+    }
+    .p-64 {
+        padding: 24px 20px !important;
+    }
+    .suppliers-img-outer.text-center {
+        width: calc(100% - 40px);
+        margin: 0 auto 20px;
+    }
+    .suppliers-img-outer.text-center img{
+        width: 100%;
+    }
+    .img-outer-box {
+        height: 170px;
+    }
+    section.suppliers-section {
+        padding: 0  16px;
+    }
+    .product-4 {
+        padding: 0 16px;
+    }
+    .cab-banner-area .card-box{
+        padding: 24px;
     }
 }
 

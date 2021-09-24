@@ -106,13 +106,43 @@ window.initializeSlider = function initializeSlider() {
         slidesToShow: 4,
         slidesToScroll: 1,
         responsive: [
-            { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
-            { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
-            { breakpoint: 420, settings: { slidesToShow: 2, arrows: true,slidesToScroll: 1 } },
-        ],
+            {
+              breakpoint: 1367,
+              settings: {
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                arrows: false,
+                infinite: true
+              }
+            },
+            {
+              breakpoint: 991,
+              settings: {
+                slidesToShow: 2,
+                arrows: false,
+                slidesToScroll: 1 
+              }
+            },
+            {
+              breakpoint: 767,
+              settings: {
+                slidesToShow: 2,
+                arrows: false,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                slidesToShow: 1,
+                arrows:false,
+                slidesToScroll: 1
+              }
+            }
+          ],
     });
     $('.suppliers-slider').slick({
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 300,
     slidesToShow: 5,
@@ -126,21 +156,23 @@ window.initializeSlider = function initializeSlider() {
           slidesToShow: 4,
           slidesToScroll: 1,
           infinite: true,
-          dots: true
+          dots: false
         }
       },
       {
         breakpoint: 767,
         settings: {
           slidesToShow: 3,
-          slidesToScroll: 1
+          slidesToScroll: 1,
+          dots: false
         }
       },
       {
         breakpoint: 480,
         settings: {
           slidesToShow: 2,
-          slidesToScroll: 1
+          slidesToScroll: 1,
+          dots: false
         }
       }
     ]

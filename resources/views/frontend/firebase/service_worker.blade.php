@@ -10,3 +10,5 @@ var firebaseConfig = {
     appId: "{{$preference->fcm_app_id}}",
     measurementId: "{{$preference->fcm_measurement_id}}"
 };
+
+const messaging = firebase.messaging();
