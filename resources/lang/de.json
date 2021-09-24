@@ -779,23 +779,18 @@
   "CMS": "CMS",
   "Celebrities": "Prominente",
   "Inquiries": "Anfragen",
-
-
-
   "Fixed": "Fest",
-"Age": "Alter",
-"Order ID": "Auftragsnummer",
-"Date & Time": "Terminzeit",
-"Customer Name": "Kundenname",
-"Vendor Name": "Herstellername",
-"Subtotal Amount": "Zwischensumme",
-"Promo Code Discount ": "Gutscheincode-Rabatt",
-"Vendor Paid Promos": "Vom Anbieter bezahlte Werbeaktionen",
-"Promo Code Discount ": "Gutscheincode-Rabatt",
-"Admin Paid Promos": "Vom Administrator bezahlte Werbeaktionen",
-"Final Amount": "Endbetrag",
-"Payment Method": "Bezahlverfahren",
-"Order Status": "Bestellstatus",
-
+  "Age": "Alter",
+  "Vendor Paid Promos": "Vom Anbieter bezahlte Werbeaktionen",
+  "Promo Code Discount ": "Gutscheincode-Rabatt",
+  "Admin Paid Promos": "Vom Administrator bezahlte Werbeaktionen",
+  "No result found. Please try a new search": "Keine Einträge gefunden. Bitte versuchen Sie eine neue Suche",
+  "currency": "Währung",
+  "French": "Französisch",
+  "Out of Stock": "Nicht vorrättig",
+  "No result found": "Keine Einträge gefunden",
+  "Size": "Größe",
+  "No Product Found": "Kein Produkt gefunden",
+  "Add an item to begin": "Ein Element hinzufügen, um zu beginnen",
   "": ""
 }

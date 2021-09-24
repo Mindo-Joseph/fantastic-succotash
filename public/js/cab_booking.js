@@ -348,7 +348,7 @@ $(document).ready(function () {
                                 $('.vendor-list').first().trigger('click');
                             }
                         }else{
-                            $("#vendor_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                            $("#vendor_main_div").html('<p class="text-center my-3">{{ __("No result found. Please try a new search") }}</p>').show();
                         }
                        // $('.cab-booking-main-loader').hide();
                     }
@@ -389,7 +389,7 @@ $(document).ready(function () {
                         let products_template = _.template($('#products_template').html());
                         $("#search_product_main_div").append(products_template({results: response.data.products})).show();
                     }else{
-                        $("#search_product_main_div ").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                        $("#search_product_main_div ").html('<p class="text-center my-3">{{ __("No result found. Please try a new search") }}</p>').show();
                     }
                 }
             }
@@ -512,7 +512,7 @@ $(document).ready(function () {
                         $("#cab_detail_box").append(cab_detail_box_template({result: response.data})).show();
                         getDistance();
                     }else{
-                        $("#cab_detail_box ").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                        $("#cab_detail_box ").html('<p class="text-center my-3">{{ __("No result found. Please try a new search") }}</p>').show();
                     }
                 }
             }
