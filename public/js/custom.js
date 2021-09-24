@@ -90,13 +90,92 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !1,
         speed: 300,
-        slidesToShow: 5,
+        slidesToShow: 6,
         slidesToScroll: 4,
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
             { breakpoint: 420, settings: { slidesToShow: 2, arrows: true,slidesToScroll: 1 } },
         ],
+    });
+    $(".brand-slider").slick({
+        arrows: false,
+        dots: !1,
+        infinite: !1,
+        speed: 300,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        responsive: [
+            {
+              breakpoint: 1367,
+              settings: {
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                arrows: false,
+                infinite: true
+              }
+            },
+            {
+              breakpoint: 991,
+              settings: {
+                slidesToShow: 2,
+                arrows: false,
+                slidesToScroll: 1 
+              }
+            },
+            {
+              breakpoint: 767,
+              settings: {
+                slidesToShow: 2,
+                arrows: false,
+                slidesToScroll: 1
+              }
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                slidesToShow: 1,
+                arrows:false,
+                slidesToScroll: 1
+              }
+            }
+          ],
+    });
+    $('.suppliers-slider').slick({
+    dots: false,
+    infinite: true,
+    speed: 300,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    arrows: false,
+    dots: false,
+    responsive: [
+      {
+        breakpoint: 991,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: false
+        }
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          dots: false
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          dots: false
+        }
+      }
+    ]
     });
     $(".product-5").slick({
         arrows: !0,
@@ -180,6 +259,12 @@ $(document).ready(function () {
     $("#mobile_search_box_btn").click(function () {
         $('.radius-bar').slideToggle();
     });
+    // $("#mobile_search_box_btn").click(function () {
+    //     $('.search-overlay').slideToggle();
+    // });
+    // $(".closebtn").click(function () {
+    //     $('.search-overlay').slideUp();
+    // });
     // $("#search_viewall").click(function () {
     //     console.log("nsdhfjs");
     // });
@@ -920,6 +1005,7 @@ $(document).ready(function () {
             url: credit_wallet_url,
             data: { wallet_amount: amount, payment_option_id: payment_option_id, transaction_id: transaction_id },
             success: function (response) {
+               // var currentUrl = window.location.href;
                 location.href = path;
                 if (response.status == "Success") {
                     // $("#topup_wallet").modal("hide");
@@ -973,8 +1059,24 @@ $(document).ready(function () {
         }
     }
     $(document).on("click", ".topup_wallet_confirm", function () {
-        $(".topup_wallet_confirm").attr("disabled", true);
+        var wallet_amount = $('#wallet_amount').val();
         let payment_option_id = $('#wallet_payment_methods input[name="wallet_payment_method"]:checked').data('payment_option_id');
+        if((wallet_amount == undefined || wallet_amount <= 0 ) && (amount_required_error_msg != undefined)){
+            $('#wallet_amount_error').html(amount_required_error_msg);
+            return false;
+        }else{
+            $('#wallet_amount_error').html('');
+        }
+         if((payment_option_id == undefined || payment_option_id <= 0) && (payment_method_required_error_msg != undefined)){
+            $('#wallet_payment_methods_error').html(payment_method_required_error_msg);
+            return false;
+        }else{
+            $('#wallet_payment_methods_error').html('');
+        }
+        
+
+        $(".topup_wallet_confirm").attr("disabled", true);
+       
         if (payment_option_id == 4) {
             stripe.createToken(card).then(function (result) {
                 if (result.error) {
