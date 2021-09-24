@@ -200,11 +200,10 @@ if (Session::has('toaster')) {
             console.log("This browser does not support system notifications.");
         } else if (Notification.permission === "granted") {
             if(payload && payload.data && payload.data.data){
-                var payload_data = JSON.parse(payload.data.data);
-                if(payload_data.type && payload_data.type=="order_created"){
+                if(payload.data.type && payload.data.type=="order_created"){
+                    var payload_data = JSON.parse(payload.data.data);
                     get_latest_order_socket(payload_data.order_number);
                 }
-                
             }
         }
     });
