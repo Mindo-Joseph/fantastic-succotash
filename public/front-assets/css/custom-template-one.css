@@ -58,7 +58,7 @@ body{
 }
 
 .top-header.site-topbar {
-    background: #4A4A4A;
+    background: var(--top-header-color);
     padding: 10px 0;
 }
 
@@ -421,7 +421,7 @@ body{
 }
 
 .sub-footer {
-    background-color: #000000;
+    background-color :var(--top-header-color);
 }
 
 .sub-footer p {
