@@ -289,10 +289,10 @@ body{
     right: -10px;
 }
 
-.popular-brands,.royo-recommends{
+.popular-brands, .royo-recommends {
     padding: 55px 0;
     z-index: 1;
-    margin: 55px 0;
+    margin: 30px 0 20px;
 }
 
 .popular-brands .brand-slider {
@@ -641,7 +641,12 @@ footer ul.social-links li a {
     .right-shape .slick-dots {
         right: 90px;
     }
-
+    .render_full_on_sale, .render_full_best_sellers {
+        margin-bottom: 30px;
+    }
+    .cab-banner-area .container.p-64 {
+        padding-left: 0 !important;
+    }
 
 }
 @media (max-width: 991px){
@@ -686,7 +691,6 @@ footer ul.social-links li a {
     }
     .popular-brands {
         margin: 0;
-        padding-bottom: 0;
     }
     .home-slider-wrapper {
         padding-top: 0;
@@ -699,6 +703,9 @@ footer ul.social-links li a {
     .footer-theme .sub-title .contact-list li {
         padding-left: 0 !important;
     }  
+    ul.social-links.ml-auto {
+        margin: auto;
+    }
     .map-icon {
         margin-left: auto;
     }
@@ -731,6 +738,9 @@ footer ul.social-links li a {
     }
     .cab-banner-area .card-box{
         padding: 24px;
+    }
+    .sub-footer .payment-card-bottom {
+        padding: 0 0 10px;
     }
 }
 

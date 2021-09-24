@@ -76,7 +76,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         <a href="#"><img src="{{asset('front-assets/images/app-store.png')}}" alt=""></a>
                         <a class="ml-2" href="#"><img src="{{asset('front-assets/images/google-play.png')}}" alt=""></a>
                     </div>
-                    <ul class="social-links ml-lg-auto mx-auto mt-3">
+                    <ul class="social-links ml-auto mt-3">
                         <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                         <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
                         <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
