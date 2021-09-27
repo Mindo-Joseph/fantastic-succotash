@@ -108,34 +108,44 @@
 <script type="text/template" id="vendors_template">
     <% _.each(vendors, function(vendor, k){%>
 
-                       <div>
-                            <a class="suppliers-box px-2" href="{{route('vendorDetail')}}/<%= vendor.slug %>">
-                                <div class="suppliers-img-outer text-center">
-                                    <img class="fluid-img mx-auto" src="<%= vendor.logo.image_fit %>200/92<%= vendor.logo['image_path'] %>" alt="">
-                                </div>
-                                <div class="supplier-rating d-flex flex-column align-items-center justify-content-between">
-                                    <h6><%= vendor.name %></h6>
-                                    <ul class="m-0 p-0">
-                                        @if($client_preference_detail)
-                                            @if($client_preference_detail->rating_check == 1)
-                                                <% if(vendor.vendorRating > 0){%>
-                                                    <div class="rating-box">
-                                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                                        <span><%= vendor.vendorRating %></span>
-                                                    </div>
-                                                <% } %>
-                                            @endif
-                                        @endif
-                                    </ul>
-                                    <% if(vendor.timeofLineOfSightDistance != undefined){ %>
-                                    <div class="product-timing d-flex justify-content-between">
-                                        <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
-                                        <small><i class="fa fa-clock-o"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
+        <div>
+            <a class="suppliers-box d-block px-2" href="{{route('vendorDetail')}}/<%= vendor.slug %>">
+                <div class="suppliers-img-outer">
+                    <img class="fluid-img mx-auto" src="<%= vendor.logo.image_fit %>200/92<%= vendor.logo['image_path'] %>" alt="">
+                </div>
+                <div class="supplier-rating">
+                    <h6 class="mb-1"><%= vendor.name %></h6>
+                    <p class="vendor-cate border-bottom pb-1 mb-1">Pizza, Fast Food, Desserts</p>
+                    <!-- <% if(vendor.timeofLineOfSightDistance != undefined){ %>
+                    <div class="product-timing d-flex justify-content-between">
+                        <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
+                        <small><i class="fa fa-clock-o"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
+                    </div>
+                    <% } %> -->
+                    <div class="product-timing">
+                        <small class="ellips d-block"><i class="fa fa-map-marker"></i> 5, Madhya Marg, 28B, Sector 28B, Chandigarh, 160028</small>
+                        <small class="d-block"><i class="fa fa-clock-o"></i> 10min</small>
+                    </div>
+                    <ul class="custom-rating m-0 p-0">
+                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                        <!-- @if($client_preference_detail)
+                            @if($client_preference_detail->rating_check == 1)
+                                <% if(vendor.vendorRating > 0){%>
+                                    <div class="rating-box d-inline-block">
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <span><%= vendor.vendorRating %></span>
                                     </div>
-                                    <% } %>
-                                </div>
-                            </a>
-                        </div> 
+                                <% } %>
+                            @endif
+                        @endif -->
+                    </ul>
+                </div>
+            </a>
+        </div> 
 
     <% }); %>
 </script>
@@ -157,38 +167,51 @@
 
 <script type="text/template" id="products_template">
     <% _.each(products, function(product, k){ %>
-        <div>
-            <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
-                <div class="img-outer-box position-relative">
-                    <img src="<%= product.image_url %>" alt="">
-                    @if($client_preference_detail)
-                        @if($client_preference_detail->rating_check == 1)
-                            <% if(product.averageRating > 0){%>
-                                <div class="rating-box">
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    <span><%= product.averageRating %></span>
-                                </div>
-                            <% } %>
-                        @endif
+        <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
+            <div class="img-outer-box position-relative">
+                <img src="<%= product.image_url %>" alt="">
+                <!-- @if($client_preference_detail)
+                    @if($client_preference_detail->rating_check == 1)
+                        <% if(product.averageRating > 0){%>
+                            <div class="rating-box">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <span><%= product.averageRating %></span>
+                            </div>
+                        <% } %>
                     @endif
-                    <!-- <div class="off-price">
-                        20<sup>%</sup>    
-                        <span>off</span>
-                    </div> -->
-                </div>    
-                <div class="media-body align-self-center">
-                    <div class="inner_spacing px-0">
-                        <div class="product-description">
-                            <h3 class="m-0"><%= product.title %></h3>
-                            <p><%= product.vendor_name %></p>
-                            <b class="d-block"><% if(product.inquiry_only == 0) { %>
+                @endif -->
+                <!-- <div class="off-price">
+                    20<sup>%</sup>    
+                    <span>off</span>
+                </div> -->
+            </div>    
+            <div class="media-body align-self-center">
+                <div class="inner_spacing px-0">
+                    <div class="product-description">
+                        <h3 class="m-0"><%= product.title %></h3>
+                        <p><%= product.vendor_name %></p>
+                        <p class="border-bottom pb-1">In Bekery, biscuit,jaljeera</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <b><% if(product.inquiry_only == 0) { %>
                                 <%= product.price %>
                             <% } %></b>
+
+                            @if($client_preference_detail)
+                                @if($client_preference_detail->rating_check == 1)
+                                    <% if(product.averageRating > 0){%>
+                                        <div class="rating-box">
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <span><%= product.averageRating %></span>
+                                        </div>
+                                    <% } %>
+                                @endif
+                            @endif  
                         </div>
+                       
                     </div>
                 </div>
-            </a>
-        </div>
+            </div>
+        </a>
     <% }); %>
 </script>
 <section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos d-none" id="our_vendor_main_div">
@@ -239,7 +262,7 @@
         @else
         <div class="container render_full_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
             <div class="row">
-                <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-3">
+                <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-0">
                     <h2 class="h2-heading">{{ $homePageLabel->slug == 'vendors' ? getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2>
                     @if($homePageLabel->slug == 'vendors')
                     <a class="see-all-btn" href="{{route('vendor.all')}}">{{__('View More')}}</a>
