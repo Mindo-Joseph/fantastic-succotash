@@ -124,7 +124,14 @@
                     <% } %> -->
                     <div class="product-timing">
                         <small class="ellips d-block"><i class="fa fa-map-marker"></i> 5, Madhya Marg, 28B, Sector 28B, Chandigarh, 160028</small>
-                        <small class="d-block"><i class="fa fa-clock-o"></i> 10min</small>
+                        <ul class="timing-box">
+                            <li>
+                                <small class="d-block"><img class="d-inline-block mr-1" src="{{ asset('front-assets/images/distance.png') }}" alt=""> 10km</small>
+                            </li>
+                            <li>
+                                <small class="d-block mx-1"><i class="fa fa-clock-o"></i> 10min</small>
+                            </li>
+                        </ul>
                     </div>
                     <ul class="custom-rating m-0 p-0">
                         <li><i class="fa fa-star" aria-hidden="true"></i></li>
