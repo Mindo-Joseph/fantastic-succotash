@@ -17,7 +17,7 @@
     @include('layouts.store/left-sidebar-template-one')
 </header>
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login_modal">
+<button type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#login_modal">
   Launch demo modal
 </button>
 <section class="home-slider-wrapper">
@@ -325,7 +325,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
         <div class="modal-body">
-            <div class="login-form">
+            <div class="login-form-new">
                 <div class="modal-header px-0 pt-0">
                     <h5 class="modal-title">Log in</h5>
                     <button type="button" class="close m-0 p-0" data-dismiss="modal" aria-label="Close">
@@ -334,7 +334,7 @@
                 </div>
                 <form action="">
                     <div class="form-group">
-                        <input class="from-control" type="text">
+                        <input class="from-control" type="text" placeholder="Enter Phone Number">
                     </div>
                     <div class="form-group">
                         <button class="btn btn-solid w-100" type="submit">Send OTP</button>
@@ -394,11 +394,11 @@
     jQuery('.login-with-mail').hide();
     jQuery('.email-btn').click(function(){
         jQuery('.login-with-mail').show();
-        jQuery('.login-form').hide();
+        jQuery('.login-form-new').hide();
     });
     jQuery('.back-login').click(function(){
         jQuery('.login-with-mail').hide();
-        jQuery('.login-form').show();
+        jQuery('.login-form-new').show();
     });
     // $(".mobile-back").on("click", function() {
     //     $(".sm-horizontal").css("right", "-410px");

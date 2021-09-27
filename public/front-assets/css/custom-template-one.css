@@ -400,7 +400,9 @@ body{
 
 .suppliers-img-outer {
     height: 200px;
-    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .supplier-rating h6{
