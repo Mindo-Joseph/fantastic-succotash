@@ -94,8 +94,8 @@ window.initializeSlider = function initializeSlider() {
         slidesToScroll: 4,
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
-            { breakpoint: 991, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
-            { breakpoint: 420, settings: { slidesToShow: 1, arrows: true,slidesToScroll: 1 } },
+            { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
+            { breakpoint: 420, settings: { slidesToShow: 2, arrows: true,slidesToScroll: 1 } },
         ],
     });
     $(".brand-slider").slick({
@@ -146,7 +146,7 @@ window.initializeSlider = function initializeSlider() {
     infinite: true,
     speed: 300,
     slidesToShow: 5,
-    slidesToScroll: 1,
+    slidesToScroll: 4,
     arrows: false,
     dots: false,
     responsive: [

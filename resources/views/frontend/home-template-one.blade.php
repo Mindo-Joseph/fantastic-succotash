@@ -115,7 +115,7 @@
                 </div>
                 <div class="supplier-rating">
                     <h6 class="mb-1"><%= vendor.name %></h6>
-                    <p class="vendor-cate border-bottom pb-1 mb-1">Pizza, Fast Food, Desserts</p>
+                    <p title="<%= vendor.categoriesList %>" class="vendor-cate border-bottom pb-1 mb-1" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><%= vendor.categoriesList %></p>
                     <!-- <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                     <div class="product-timing d-flex justify-content-between">
                         <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
@@ -123,26 +123,28 @@
                     </div>
                     <% } %> -->
                     <div class="product-timing">
-                        <small class="ellips d-block"><i class="fa fa-map-marker"></i> 5, Madhya Marg, 28B, Sector 28B, Chandigarh, 160028</small>
-                        <small class="d-block"><i class="fa fa-clock-o"></i> 10min</small>
+                        <small class="ellips d-block"><i class="fa fa-map-marker"></i> <%= vendor.address %></small>
+                        <small class="d-block">
+                            <i class="fa fa-clock-o"></i> <%= vendor.timeofLineOfSightDistance %> min
+                            <i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %> km
+                        </small>
                     </div>
-                    <ul class="custom-rating m-0 p-0">
-                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                        <!-- @if($client_preference_detail)
-                            @if($client_preference_detail->rating_check == 1)
-                                <% if(vendor.vendorRating > 0){%>
-                                    <div class="rating-box d-inline-block">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <span><%= vendor.vendorRating %></span>
-                                    </div>
-                                <% } %>
-                            @endif
-                        @endif -->
-                    </ul>
+                    @if($client_preference_detail)
+                        @if($client_preference_detail->rating_check == 1)
+                            <% if(vendor.vendorRating > 0){%>
+                                <ul class="custom-rating m-0 p-0">
+                                    <% for(var i=0; i < 5; i++){ %>
+                                        <% if(i <= vendor.vendorRating){
+                                            var starFillClass = 'fa-star';
+                                        }else{
+                                            var starFillClass = 'fa-star-o';
+                                        } %>
+                                        <li><i class="fa <%= starFillClass %>" aria-hidden="true"></i></li>
+                                    <% } %>
+                                </ul>
+                            <% } %>
+                        @endif
+                    @endif
                 </div>
             </a>
         </div> 
@@ -190,7 +192,7 @@
                     <div class="product-description">
                         <h3 class="m-0"><%= product.title %></h3>
                         <p><%= product.vendor_name %></p>
-                        <p class="border-bottom pb-1">In Bekery, biscuit,jaljeera</p>
+                        <p class="border-bottom pb-1">In <%= product.category %></p>
                         <div class="d-flex align-items-center justify-content-between">
                             <b><% if(product.inquiry_only == 0) { %>
                                 <%= product.price %>
