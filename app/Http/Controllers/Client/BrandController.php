@@ -158,7 +158,8 @@ class BrandController extends BaseController
     {
         $brand = Brand::where('id', $id)->first();
         $brand->status = 2;
-        $brand->bc()->save();
+       // $brand->bc()->save();
+       BrandCategory::where('brand_id',$id)->delete();
         $brand->save();
         return redirect()->back()->with('success', 'Brand deleted successfully!');
     }
