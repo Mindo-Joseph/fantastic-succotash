@@ -48,7 +48,7 @@ class FrontController extends Controller
                         $q1->whereIn('vct.vendor_id', $vendors)
                             ->where('vct.status', 1)
                             ->orWhere(function ($q2) {
-                                $q2->whereIn('categories.type_id', [4, 5]);
+                                $q2->whereIn('categories.type_id', [4,5,8]);
                             });
                     });
             }
@@ -65,6 +65,8 @@ class FrontController extends Controller
         if ($categories) {
             $categories = $this->buildTree($categories->toArray());
         }
+
+        
         return $categories;
     }
 
@@ -522,10 +524,25 @@ class FrontController extends Controller
         }
     }
 
-    public function formattedOrderETA($minutes){
+    public function formattedOrderETA($minutes, $order_vendor_created_at, $scheduleTime=''){
         $d = floor ($minutes / 1440);
         $h = floor (($minutes - $d * 1440) / 60);
         $m = $minutes - ($d * 1440) - ($h * 60);
-        return (($d > 0) ? $d.' days ' : '') . (($h > 0) ? $h.' hours ' : '') . (($m > 0) ? $m.' minutes' : '');
+        // return (($d > 0) ? $d.' days ' : '') . (($h > 0) ? $h.' hours ' : '') . (($m > 0) ? $m.' minutes' : '');
+
+        if($scheduleTime != ''){
+            $datetime = Carbon::parse($scheduleTime)->setTimezone(Auth::user()->timezone)->toDateTimeString();
+        }else{
+            $datetime = Carbon::parse($order_vendor_created_at)->setTimezone(Auth::user()->timezone)->addMinutes($minutes)->toDateTimeString();
+        }
+        
+        if(Carbon::parse($datetime)->isToday()){
+            $format = 'h:i A';
+        }else{
+            $format = 'M d, Y h:i A';
+        }
+        // $time = convertDateTimeInTimeZone($datetime, Auth::user()->timezone, $format);
+        $time = Carbon::parse($datetime)->format($format);
+        return $time;
     }
 }
