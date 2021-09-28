@@ -51,7 +51,7 @@ class BrandController extends FrontController
                     ->where('id', $brandId)->firstOrFail();
         $brand->translation_title = ($brand->translation->first()) ? $brand->translation->first()->title : '';
 
-        $products = Product::with(['media.image', 'translation' => function($q) use($langId){
+        $products = Product::with(['vendor', 'media.image', 'translation' => function($q) use($langId){
                     $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                     },
                     'variant' => function($q) use($langId){
@@ -59,12 +59,12 @@ class BrandController extends FrontController
                         $q->groupBy('product_id');
                     },
                 ])
-                ->select('id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'brand_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
+                ->select('id', 'vendor_id', 'sku', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'brand_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating')
                 ->where('brand_id', $brandId);
         if (is_array($vendorIds)) {
             $products = $products->whereIn('vendor_id', $vendorIds);
         }
-        $products = $products->where('is_live', 1)->paginate(8);
+        $products = $products->where('is_live', 1)->paginate(12);
         
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
         if(!empty($products)){
