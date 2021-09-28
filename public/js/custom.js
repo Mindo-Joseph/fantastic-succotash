@@ -95,7 +95,8 @@ window.initializeSlider = function initializeSlider() {
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
-            { breakpoint: 420, settings: { slidesToShow: 2, arrows: true,slidesToScroll: 1 } },
+            { breakpoint: 767, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
+            { breakpoint: 420, settings: { slidesToShow: 1, arrows: true,slidesToScroll: 1 } },
         ],
     });
     $(".brand-slider").slick({
@@ -151,9 +152,9 @@ window.initializeSlider = function initializeSlider() {
     dots: false,
     responsive: [
       {
-        breakpoint: 991,
+        breakpoint: 1199,
         settings: {
-          slidesToShow: 4,
+          slidesToShow: 3,
           slidesToScroll: 1,
           infinite: true,
           dots: false
@@ -162,7 +163,7 @@ window.initializeSlider = function initializeSlider() {
       {
         breakpoint: 767,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 2,
           slidesToScroll: 1,
           dots: false
         }
@@ -170,7 +171,7 @@ window.initializeSlider = function initializeSlider() {
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           slidesToScroll: 1,
           dots: false
         }
@@ -305,7 +306,7 @@ $(document).ready(function () {
                             let search_box_category_template = _.template($('#search_box_main_div_template').html());
                             $("#search_box_main_div").append(search_box_category_template({ results: response.data })).show();
                         } else {
-                            $("#search_box_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
+                            $("#search_box_main_div").html('<p class="text-center my-3">{{ __("No result found. Please try a new search") }}</p>').show();
                         }
                     }
                 }
