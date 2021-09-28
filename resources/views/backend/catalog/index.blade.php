@@ -166,7 +166,6 @@
                                         <td><span class="dragula-handle"></span></td>
                                         <td><img class="rounded-circle" src="{{$brand->image['proxy_url'].'30/30'.$brand->image['image_path']}}"></td>
                                         <td><a class="editBrandBtn" dataid="{{$brand->id}}" href="javascript:void(0);">{{$brand->title}}</a> <br> <b>
-
                                                 @foreach($brand->bc as $cat)
                                                 @foreach($categories as $cate)
                                                 @if($cat->category_id == $cate->id && $cat->brand_id==$brand->id)
