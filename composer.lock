@@ -343,6 +343,18 @@
         },
         {
             "name": "aws/aws-sdk-php",
+<<<<<<< HEAD
+            "version": "3.193.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "418ff1173253b8d0fd8e50eeb9ca15b51ab24e4a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/418ff1173253b8d0fd8e50eeb9ca15b51ab24e4a",
+                "reference": "418ff1173253b8d0fd8e50eeb9ca15b51ab24e4a",
+=======
             "version": "3.193.2",
             "source": {
                 "type": "git",
@@ -353,6 +365,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d5080f7a1bb63569c19b8de06f787808eca70cc6",
                 "reference": "d5080f7a1bb63569c19b8de06f787808eca70cc6",
+>>>>>>> 8c39ba0f6cb9051bfdbce7b01457957ccb625a99
                 "shasum": ""
             },
             "require": {
@@ -428,9 +441,15 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
+<<<<<<< HEAD
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.193.0"
+            },
+            "time": "2021-09-08T18:14:42+00:00"
+=======
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.193.2"
             },
             "time": "2021-09-10T18:21:27+00:00"
+>>>>>>> 8c39ba0f6cb9051bfdbce7b01457957ccb625a99
         },
         {
             "name": "awt/apilogger",
@@ -14655,5 +14674,5 @@
         "php": "^7.4.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
