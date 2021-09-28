@@ -337,7 +337,7 @@ class OrderController extends BaseController {
                     // $this->sendOrderNotification($user->id);
                     $code = $request->header('code');
                     $this->sendOrderPushNotificationVendors($order->admins, $order, $code);
-                    return $this->successResponse($order, __('Order placed successfully.'), 201);
+                    return $this->successResponse($order, __('Order placed successfully.'), 201); 
                 }
             } else {
                 return $this->errorResponse(['error' => __('Empty cart.')], 404);
