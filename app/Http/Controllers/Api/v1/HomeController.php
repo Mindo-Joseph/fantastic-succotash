@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor,VendorCategory, Category_translation, ClientLanguage, PaymentOption, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory, BrandTranslation, Celebrity, UserVendor, AppStyling};
+use App\Models\{User, Category, Brand, Client, ClientPreference, Cms, Order, Banner, Vendor,VendorCategory, Category_translation, ClientLanguage, PaymentOption, Product, Country, Currency, ServiceArea, ClientCurrency, ProductCategory, BrandTranslation, Celebrity, UserVendor, AppStyling, Nomenclature};
 
 class HomeController extends BaseController{
     use ApiResponser;
@@ -27,12 +27,15 @@ class HomeController extends BaseController{
     public function headerContent(Request $request){
         try {
             $homeData = array();
+            $langId = $request->header('language');
+            $takeaway_nomenclature = $this->getNomenclatureName('Takeaway', $langId, false);
             $homeData['profile'] = Client::with(['preferences','country:id,name,code,phonecode'])->select('country_id', 'company_name', 'code', 'sub_domain', 'logo', 'company_address', 'phone_number', 'email')->first();
             $app_styling_detail = AppStyling::getSelectedData();
             foreach ($app_styling_detail as $app_styling) {
                 $key = $app_styling['key'];
                 $homeData['profile']->preferences->$key = __($app_styling['value']);
             }
+            $homeData['profile']->preferences->takeaway_nomenclature = $takeaway_nomenclature;
             $homeData['languages'] = ClientLanguage::with('language')->select('language_id', 'is_primary')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
             $banners = Banner::select("id", "name", "description", "image", "link", 'redirect_category_id', 'redirect_vendor_id')
                         ->where('status', 1)->where('validity_on', 1)
