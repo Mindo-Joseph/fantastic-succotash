@@ -124,7 +124,7 @@
                     <div class="product-timing">
                         <small title="<%= vendor.address %>" class="ellips d-block"><i class="fa fa-map-marker"></i> <%= vendor.address %></small>
                         <% if(vendor.timeofLineOfSightDistance != undefined){ %>
-                            <ul class="timing-box">
+                            <ul class="timing-box mb-1">
                                 <li>
                                     <small class="d-block"><img class="d-inline-block mr-1" src="{{ asset('front-assets/images/distance.png') }}" alt=""> <%= vendor.lineOfSightDistance %> km</small>
                                 </li>
@@ -165,7 +165,7 @@
 <script type="text/template" id="banner_template">
     <% _.each(brands, function(brand, k){%>
         <div>
-            <a class="brand-box d-flex align-items-center justify-content-center flex-column black-box" href="<%= brand.redirect_url %>">
+            <a class="brand-box d-block black-box" href="<%= brand.redirect_url %>">
                 <div class="brand-ing">
                     <img src="<%= brand.image.image_fit %>120/120<%= brand.image.image_path %>" alt="">
                 </div>
@@ -216,8 +216,7 @@
                                     <% } %>
                                 @endif
                             @endif  
-                        </div>
-                       
+                        </div>                       
                     </div>
                 </div>
             </div>
