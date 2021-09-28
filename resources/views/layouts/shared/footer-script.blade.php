@@ -144,8 +144,8 @@ if (Session::has('toaster')) {
                         $("#received_new_orders").find(".modal-body").append(latest_order_template({
                             orders: response.data.orders.data
                         }));
+                        $("#received_new_orders").modal('show');
                     }
-                    $("#received_new_orders").modal('show');
                 }
             },
             error: function(data) {
@@ -199,8 +199,11 @@ if (Session::has('toaster')) {
         if (!("Notification" in window)) {
             console.log("This browser does not support system notifications.");
         } else if (Notification.permission === "granted") {
-            if(payload && payload.data && payload.data.data.type && payload.data.data.type && payload.data.data.type=="order_created"){
-                get_latest_order_socket(payload.data.data.order_number);
+            if(payload && payload.data && payload.data.data){
+                if(payload.data.type && payload.data.type=="order_created"){
+                    var payload_data = JSON.parse(payload.data.data);
+                    get_latest_order_socket(payload_data.order_number);
+                }
             }
         }
     });

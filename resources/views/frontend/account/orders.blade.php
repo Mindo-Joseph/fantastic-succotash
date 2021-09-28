@@ -136,6 +136,11 @@ $timezone = Auth::user()->timezone;
                                                                 $product_total_count = $product_subtotal_amount = $product_taxable_amount = 0;
                                                             @endphp
                                                             <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
+                                                                @if($vendor->delivery_fee > 0)
+                                                                    <div class="progress-order font-12">
+                                                                        <span class="ml-2">Your order will arrive by {{$vendor->ETA}}</span>
+                                                                    </div>
+                                                                @endif
                                                                 <span class="left_arrow pulse"></span>
                                                                 <div class="row">
                                                                     <div class="col-5 col-sm-3">
@@ -146,7 +151,7 @@ $timezone = Auth::user()->timezone;
                                                                                 @if($vendor->order_status == 'placed')
                                                                                     <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
                                                                                 @elseif($vendor->order_status == 'accepted')
-                                                                                    <li><img src="{{ asset('assets/images/payment_icon.svg') }}" alt="">
+                                                                                    <img src="{{ asset('assets/images/payment_icon.svg') }}" alt="">
                                                                                 @elseif($vendor->order_status == 'processing')
                                                                                     <img src="{{ asset('assets/images/customize_icon.svg') }}" alt="">
                                                                                 @elseif($vendor->order_status == 'out for delivery')
@@ -159,6 +164,15 @@ $timezone = Auth::user()->timezone;
                                                                         @if(!empty($vendor->dispatch_traking_url))
                                                                             <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
                                                                             <a href="{{route('front.booking.details',$order->order_number)}}" target="_blank">{{ __('Details') }}</a>
+                                                                        @endif
+
+                                                                        @if($vendor->dineInTable)
+                                                                            <li>
+                                                                                <h5 class="mb-1">{{ __('Dine-in') }}</h5>
+                                                                                <h6 class="m-0">{{ $vendor->dineInTableName }}</h6>
+                                                                                <h6 class="m-0">Category : {{ $vendor->dineInTableCategory }}</h6>
+                                                                                <h6 class="m-0">Capacity : {{ $vendor->dineInTableCapacity }}</h6>
+                                                                            </li>
                                                                         @endif
 
                                                                         </ul>
@@ -322,6 +336,15 @@ $timezone = Auth::user()->timezone;
                                                                                 <label class="m-0 in-progress">{{ ucfirst($vendor->order_status) }}</label>
                                                                             </li>
                                                                         @endif
+
+                                                                            @if($vendor->dineInTable)
+                                                                                <li>
+                                                                                    <h5 class="mb-1">{{ __('Dine-in') }}</h5>
+                                                                                    <h6 class="m-0">{{ $vendor->dineInTableName }}</h6>
+                                                                                    <h6 class="m-0">Category : {{ $vendor->dineInTableCategory }}</h6>
+                                                                                    <h6 class="m-0">Capacity : {{ $vendor->dineInTableCapacity }}</h6>
+                                                                                </li>
+                                                                            @endif
                                                                         </ul>
                                                                     </div>
                                                                     <div class="col-7 col-sm-4">
@@ -349,6 +372,7 @@ $timezone = Auth::user()->timezone;
                                                                                         $total_tax_order_price += $product->taxable_amount;
                                                                                     @endphp
                                                                                 @endif
+                                                                            </li>
                                                                             @endforeach
                                                                         </ul>
                                                                     </div>
@@ -487,6 +511,16 @@ $timezone = Auth::user()->timezone;
                                                             <div class="row">
                                                                 <div class="col-5 col-sm-3">
                                                                     <h5 class="m-0"></h5>
+                                                                    <ul class="status_box mt-3 pl-0">
+                                                                        @if($vendor->dineInTable)
+                                                                            <li>
+                                                                                <h5 class="mb-1">{{ __('Dine-in') }}</h5>
+                                                                                <h6 class="m-0">{{ $vendor->dineInTableName }}</h6>
+                                                                                <h6 class="m-0">Category : {{ $vendor->dineInTableCategory }}</h6>
+                                                                                <h6 class="m-0">Capacity : {{ $vendor->dineInTableCapacity }}</h6>
+                                                                            </li>
+                                                                        @endif
+                                                                    </ul>
                                                                 </div>
                                                                 <div class="col-7 col-sm-4">
                                                                     <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
