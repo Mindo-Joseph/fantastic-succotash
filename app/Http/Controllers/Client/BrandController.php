@@ -121,19 +121,15 @@ class BrandController extends BaseController
             //$affected->cate()->associate($cate_id)->save();
             $brand = Brand::find($id);
 
-            $cat = BrandCategory::where('category_id', $cate_id)->first();
-            if ($cat != null)
-                $brand->bc()->save($cat);
+            // $cat = BrandCategory::where('category_id', $cate_id)->first();
 
-            //$brand->save();
-            //$cate_array[$key]=$cate_id;
-
-
-            else {
+            // $cat = BrandCategory::insert(['brand_id' => $id, 'category_id' => $cate_id]);
+           // $cat = BrandCategory::where('category_id', $cate_id)->first();
+            // if ($cat == null)
+            if(BrandCategory::where('brand_id',$id)->where('category_id',$cate_id)->first()==null)
                 $cat = BrandCategory::insert(['brand_id' => $id, 'category_id' => $cate_id]);
-                $cat = BrandCategory::where('category_id', $cate_id)->first();
-                $brand->bc()->save($cat);
-            }
+            // else
+            //     $brand->bc()->save($cat);
         }
         // $affected = BrandCategory::where('brand_id', $id)->with('cate')->get();
         // dd($affected);
@@ -162,6 +158,7 @@ class BrandController extends BaseController
     {
         $brand = Brand::where('id', $id)->first();
         $brand->status = 2;
+        $brand->bc()->save();
         $brand->save();
         return redirect()->back()->with('success', 'Brand deleted successfully!');
     }

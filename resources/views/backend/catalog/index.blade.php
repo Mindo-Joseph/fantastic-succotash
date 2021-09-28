@@ -37,8 +37,7 @@
                         </p>
                     </div>
                     <div class="col-sm-4 text-right">
-                        <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal"
-                         dataid="0" is_vendor="0"><i class="mdi mdi-plus-circle mr-1"></i> {{ __('Add') }}
+                        <button class="btn btn-info waves-effect waves-light text-sm-right openCategoryModal" dataid="0" is_vendor="0"><i class="mdi mdi-plus-circle mr-1"></i> {{ __('Add') }}
                         </button>
                     </div>
                 </div>
@@ -70,8 +69,7 @@
                         </p>
                     </div>
                     <div class="col-sm-4 text-right">
-                        <button class="btn btn-info waves-effect waves-light text-sm-right addVariantbtn"
-                         dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> {{ __('Add') }}
+                        <button class="btn btn-info waves-effect waves-light text-sm-right addVariantbtn" dataid="0"><i class="mdi mdi-plus-circle mr-1"></i> {{ __('Add') }}
                         </button>
                     </div>
                     <div class="col-sm-8">
@@ -141,9 +139,8 @@
                         <p class="sub-header"></p>
                     </div>
                     <div class="col-sm-4 text-right">
-                        <button class="btn btn-info waves-effect waves-light text-sm-right addBrandbtn"
-                         dataid="0">
-                         <i class="mdi mdi-plus-circle mr-1"></i> {{ __('Add') }}
+                        <button class="btn btn-info waves-effect waves-light text-sm-right addBrandbtn" dataid="0">
+                            <i class="mdi mdi-plus-circle mr-1"></i> {{ __('Add') }}
                         </button>
                     </div>
                 </div>
@@ -169,9 +166,10 @@
                                         <td><span class="dragula-handle"></span></td>
                                         <td><img class="rounded-circle" src="{{$brand->image['proxy_url'].'30/30'.$brand->image['image_path']}}"></td>
                                         <td><a class="editBrandBtn" dataid="{{$brand->id}}" href="javascript:void(0);">{{$brand->title}}</a> <br> <b>
-                                                @foreach($categories as $cate)
+
                                                 @foreach($brand->bc as $cat)
-                                                @if($cat->category_id == $cate->id)
+                                                @foreach($categories as $cate)
+                                                @if($cat->category_id == $cate->id && $cat->brand_id==$brand->id)
                                                 {{$cate->translation_one['name']}}
                                                 @endif
                                                 @endforeach
