@@ -1384,7 +1384,7 @@ class OrderController extends FrontController
             $dispatch_domain = $this->checkIfLastMileDeliveryOn();
             $customer = Auth::user();
             if ($dispatch_domain && $dispatch_domain != false) {
-                $unique = Auth::user()->code;
+                //$unique = Auth::user()->code;
                 $driver_registration_documents = json_decode($this->driverDocuments());
 
                 //     $rules_array = [];
@@ -1430,7 +1430,6 @@ class OrderController extends FrontController
                                 'file_type' => $file['file_type'],
                                 'id' => $file['id'],
                                 'filename' => $file_uploaded_name,
-                                'Mime-Type' => $file_mime,
                                 'contents' => fopen($file_path, 'r'),
 
                             ];
