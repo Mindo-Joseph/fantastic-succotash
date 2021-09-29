@@ -4,18 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnsToBrandCategories extends Migration
+class Createbusinessmodaltable extends Migration
 {
-    /**
+     /**
      * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
-        Schema::table('brand_categories', function (Blueprint $table) {
-            //
-            $table->bigIncrements('id')->unsigned()->first();
+        Schema::create('business_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('title', 150);
+            $table->string('slug', 150);
+            $table->timestamps();
         });
     }
 
@@ -26,8 +28,6 @@ class AddColumnsToBrandCategories extends Migration
      */
     public function down()
     {
-        Schema::table('brand_categories', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('business_types');
     }
 }
