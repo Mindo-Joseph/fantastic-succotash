@@ -167,8 +167,9 @@
                                         <td><img class="rounded-circle" src="{{$brand->image['proxy_url'].'30/30'.$brand->image['image_path']}}"></td>
                                         <td><a class="editBrandBtn" dataid="{{$brand->id}}" href="javascript:void(0);">{{$brand->title}}</a> <br> <b>
                                                 @foreach($brand->bc as $cat)
-                                                @if($cat->category_id == $cate->id)
-                                                {{$cate->translation_one['name']??$cate->slug}}
+                                                @foreach($categories as $cate)
+                                                @if($cat->category_id == $cate->id && $cat->brand_id==$brand->id)
+                                                {{$cate->translation_one['name']}}
                                                 @endif
                                                 @endforeach
                                                 @endforeach
