@@ -1,3 +1,18 @@
+jQuery(window).scroll(function () {
+	var scroll = jQuery(window).scrollTop();
+
+	if (scroll <= 50) {
+
+		jQuery(".site-header").removeClass("fixed-bar");
+
+	} else {
+
+		jQuery(".site-header").addClass("fixed-bar");
+
+	}
+}); 
+
+
 $(function () {
     document.ajax_loading = false;
     $.hasAjaxRunning = function () {
