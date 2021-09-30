@@ -14,7 +14,11 @@ class AddColumnsToBrandCategories extends Migration
     public function up()
     {
         if (Schema::hasColumn('brand_categories', 'id')) {
-            $table->bigIncrements('id')->change();
+
+            Schema::table('brand_categories', function (Blueprint $table) {
+                $table->bigIncrements('id')->change();
+            });
+
         }
         else{
             Schema::table('brand_categories', function (Blueprint $table) {
