@@ -247,6 +247,10 @@ window.initializeSlider = function initializeSlider() {
             { breakpoint: 480, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
         ],
     });
+
+    if($('body').attr('dir') == 'rtl'){
+        $(".slide-6, .brand-slider, .product-4, .product-5, .brand-slider, .suppliers-slider, .booking-time, .vendor-product").slick('slickSetOption', {rtl: true}, true);
+    }
 }
 
 $(document).ready(function () {

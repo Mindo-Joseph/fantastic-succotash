@@ -159,7 +159,6 @@
                                                     {{-- <div class="product-page-per-view">
                                                         <?php $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 8; ?>
                                                         <select class="customerPaginate">
-
                                                             <option value="8" @if($pagiNate == 8) selected @endif>Show 8 
                                                             </option>
                                                             <option value="12" @if($pagiNate == 12) selected @endif>Show 12 
