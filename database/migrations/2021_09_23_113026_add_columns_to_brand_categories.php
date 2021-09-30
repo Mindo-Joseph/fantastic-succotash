@@ -13,10 +13,14 @@ class AddColumnsToBrandCategories extends Migration
      */
     public function up()
     {
-        Schema::table('brand_categories', function (Blueprint $table) {
-            //
-            $table->bigIncrements('id')->nullable()->first();
-        });
+        if (Schema::hasColumn('brand_categories', 'id')) {
+            $table->bigIncrements('id')->change();
+        }
+        else{
+            Schema::table('brand_categories', function (Blueprint $table) {
+                $table->bigIncrements('id')->first();
+            });
+        }   
     }
 
     /**
@@ -25,10 +29,12 @@ class AddColumnsToBrandCategories extends Migration
      * @return void
      */
     public function down()
-    {
-        Schema::table('brand_categories', function (Blueprint $table) {
-            //
-            $table->dropColumn('id');
-        });
+    {   
+        if (Schema::hasColumn('brand_categories', 'id')) {
+            Schema::table('brand_categories', function (Blueprint $table) {
+                //
+                $table->dropColumn('id');
+            });
+        }
     }
 }
