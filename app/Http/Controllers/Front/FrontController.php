@@ -36,8 +36,8 @@ class FrontController extends Controller
     public function categoryNav($lang_id)
     {
         $preferences = Session::get('preferences');
-        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
-            ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')->distinct('categories.id');
+       $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
+       ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')->distinct('categories.id');
         $status = $this->field_status;
         if ($preferences) {
             if ((isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1)) {
@@ -60,12 +60,13 @@ class FrontController extends Controller
             ->where('cts.language_id', $lang_id)
             ->whereNull('categories.vendor_id')
             ->orderBy('categories.position', 'asc')
-            ->orderBy('categories.parent_id', 'asc')->get();
+            ->orderBy('categories.parent_id', 'asc')->groupBy('id')->get();
+
         if ($categories) {
             $categories = $this->buildTree($categories->toArray());
         }
 
-        
+       
         return $categories;
     }
 
