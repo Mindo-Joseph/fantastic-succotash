@@ -110,7 +110,11 @@ class FrontController extends Controller
 
     public function productList($vendorIds, $langId, $currency = 'USD', $where = '')
     {
-        $products = Product::with(['vendor',
+        $products = Product::with([
+            'category.categoryDetail.translation' => function ($q) use ($langId) {
+                $q->where('category_translations.language_id', $langId);
+            },
+            'vendor',
             'media' => function ($q) {
                 $q->groupBy('product_id');
             }, 'media.image',
@@ -138,6 +142,7 @@ class FrontController extends Controller
                 foreach ($value->variant as $k => $v) {
                     $value->variant[$k]->multiplier = Session::get('currencyMultiplier');
                 }
+                $value->category_name = $value->category->categoryDetail->translation->first()->name;
             }
         }
         return $products;
@@ -488,9 +493,10 @@ class FrontController extends Controller
             $long2  = $vendor->longitude;
             if($lat1 && $long1 && $lat2 && $long2){
                 $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
+                $unit_abbreviation = ($distance_unit == 'mile') ? 'miles' : 'km';
                 $distance_to_time_multiplier = (!empty($preferences->distance_to_time_multiplier)) ? $preferences->distance_to_time_multiplier : 2;
                 $distance = $this->calulateDistanceLineOfSight($lat1, $long1, $lat2, $long2, $distance_unit);
-                $vendor->lineOfSightDistance = number_format($distance, 1, '.', '');
+                $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
                 $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
             }else{
                 $vendor->lineOfSightDistance = 0;
