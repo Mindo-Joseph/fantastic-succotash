@@ -404,7 +404,7 @@ class OrderController extends BaseController {
             $order->user_name = $user->name;
             $order->user_image = $user->image;
             $order->date_time = convertDateTimeInTimeZone($order->orderDetail->created_at, $user->timezone);
-            $order->payment_option_title = __($order->orderDetail->paymentOption->title);
+            $order->payment_option_title = __($order->orderDetail->paymentOption->title??'');
             $order->order_number = $order->orderDetail->order_number;
             $product_details = [];
             $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->orderDetail->id)->where('vendor_id', $order->vendor_id)->orderBy('id', 'DESC')->first();
