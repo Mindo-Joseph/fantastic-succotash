@@ -27,6 +27,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
         Route::get('wishlists', 'Api\v1\ProfileController@wishlists');
         Route::get('newsLetter', 'Api\v1\ProfileController@newsLetter');
         Route::get('mystore', 'Api\v1\StoreController@getMyStoreDetails');
+        Route::get('my_pending_orders', 'Api\v1\StoreController@my_pending_orders');
         Route::post('place/order', 'Api\v1\OrderController@postPlaceOrder');
         Route::post('update/image', 'Api\v1\ProfileController@updateAvatar');
         Route::post('user/getAddress', 'Api\v1\ProfileController@getAddress');
@@ -73,6 +74,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
             Route::post('promo-code/list', 'Api\v1\PickupDeliveryController@postPromoCodeList');
             Route::post('promo-code/verify', 'Api\v1\PickupDeliveryController@postVerifyPromoCode');
             Route::post('promo-code/remove', 'Api\v1\PickupDeliveryController@postRemovePromoCode');
+            Route::post('order-tracking-details', 'Api\v1\PickupDeliveryController@getOrderTrackingDetails');
             
         });
 

@@ -1,3 +1,18 @@
+jQuery(window).scroll(function () {
+	var scroll = jQuery(window).scrollTop();
+
+	if (scroll <= 50) {
+
+		jQuery(".site-header").removeClass("fixed-bar");
+
+	} else {
+
+		jQuery(".site-header").addClass("fixed-bar");
+
+	}
+}); 
+
+
 $(function () {
     document.ajax_loading = false;
     $.hasAjaxRunning = function () {
@@ -232,6 +247,10 @@ window.initializeSlider = function initializeSlider() {
             { breakpoint: 480, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
         ],
     });
+
+    if($('body').attr('dir') == 'rtl'){
+        $(".slide-6, .brand-slider, .product-4, .product-5, .brand-slider, .suppliers-slider, .booking-time, .vendor-product").slick('slickSetOption', {rtl: true}, true);
+    }
 }
 
 $(document).ready(function () {
@@ -306,7 +325,7 @@ $(document).ready(function () {
                             let search_box_category_template = _.template($('#search_box_main_div_template').html());
                             $("#search_box_main_div").append(search_box_category_template({ results: response.data })).show();
                         } else {
-                            $("#search_box_main_div").html('<p class="text-center my-3">{{ __("No result found. Please try a new search") }}</p>').show();
+                            $("#search_box_main_div").html('<p class="text-center my-3">No result found. Please try a new search</p>').show();
                         }
                     }
                 }
@@ -417,7 +436,6 @@ $(document).ready(function () {
     }
     function isNumberKey(evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
-        console.log(charCode);
         if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
             return false;
         }
@@ -611,7 +629,9 @@ $(document).ready(function () {
     $(document).on("click", "#order_placed_btn", function () {
         $('.alert-danger').html('');
         if ((typeof guest_cart != undefined) && (guest_cart == 1)) {
-            window.location.href = login_url;
+            // window.location.href = login_url;
+            $("#login_modal").modal("show");
+            return false;
         }
         var address = $("input[name='address_id']").val();
         if ((vendor_type == 'delivery') && ((address == '') || (address < 1))) {
@@ -1982,7 +2002,7 @@ $(document).ready(function () {
             var addonId = $(value).attr("addonId");
             var addonOptId = $(value).attr("addonOptId");
             if ($(value).is(":checked")) {
-                console.log(addonoptids);
+                // console.log(addonoptids);
                 addonids.push(addonId);
                 addonoptids.push(addonOptId);
             }
@@ -2157,7 +2177,7 @@ $(document).ready(function () {
             data: { task_type: task_type, schedule_dt: schedule_dt ,specific_instructions:specific_instructions,cart_product_id:cart_product_id},
             success: function (response) {
                 if (response.status == "Success") {
-                    console.log(success);
+                    // console.log(success);
                 }
             },
             error: function (error) {

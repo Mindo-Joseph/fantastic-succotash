@@ -76,6 +76,8 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('validateEmail', 'Front\CustomerAuthController@validateEmail')->name('validateEmail');
 	Route::post('user/loginData', 'Front\CustomerAuthController@login')->name('customer.loginData');
 	Route::post('user/register', 'Front\CustomerAuthController@register')->name('customer.register');
+	Route::post('user/loginViaUsername', 'Front\CustomerAuthController@loginViaUsername')->name('customer.loginViaUsername');
+    Route::post('user/verifyPhoneLoginOtp', 'Front\CustomerAuthController@verifyPhoneLoginOtp')->name('customer.verifyPhoneLoginOtp');
 	Route::post('vendor/register', 'Front\CustomerAuthController@postVendorregister')->name('vendor.register');
 	Route::post('user/forgotPassword', 'Front\ForgotPasswordController@postForgotPassword')->name('customer.forgotPass');
 	Route::post('user/resetPassword', 'Front\CustomerAuthController@resetPassword')->name('customer.resetPass');
@@ -123,7 +125,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('viewcart','Front\CartController@showCart')->name('showCart');
 	Route::post('/getTimeSlotsForOndemand','Front\CategoryController@getTimeSlotsForOndemand')->name('getTimeSlotsForOndemand');
 	Route::post('checkIsolateSingleVendor','Front\CartController@checkIsolateSingleVendor')->name('checkIsolateSingleVendor');
-	Route::get('firebase-messaging-sw.js', 'Front\FirebaseController@service_worker')->name('page/driver-registration');
+	Route::get('firebase-messaging-sw.js', 'Front\FirebaseController@service_worker');
 });
 Route::group(['middleware' => ['domain', 'webAuth']], function () {
 	Route::get('user/orders', 'Front\OrderController@orders')->name('user.orders');

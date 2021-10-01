@@ -4,10 +4,86 @@ html {
 
 body {
     font-size: 16px;
+    position: initial;
 }
 
 a {
     color: var(--theme-deafult);
+}
+
+.onhover-dropdown .onhover-show-div{
+    display: none;
+}
+.onhover-dropdown:hover .onhover-show-div{
+    display: block;
+}
+
+.site-header {
+    width: 100%;
+    padding: 0;
+    top: 0;
+    left: 0;
+    background: #fff;
+    position: fixed;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    border-bottom: 1px solid rgb(221 221 221 / 50%);
+    z-index: 999;
+}
+
+.offset-top {
+    margin-top: 243px;
+}
+
+.inner-pages-offset {
+    margin-top: 148px;
+}
+
+.set-hide-nav-bar {
+    margin-top: 43px;
+}
+
+header.site-header.fixed-bar {
+    top: -50px;
+    border-color: rgb(221 221 221 / 50%);
+}
+
+.fixed-bar .nav-cate-img {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+}
+
+.navbar-brand img {
+    width: 100px;
+}
+
+.navigation-tab-item .nav-link {
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+.search_form input.form-control {
+    height: 42px;
+}
+
+.icon-nav .btn.btn-solid {
+    padding: 10px 0;
+}
+
+.site-header .pb-3 {
+    padding-bottom: 0 !important;
+}
+
+.pixelstrap li > a {
+    padding: 10px 30px 10px 0;
+}
+
+.top-header .header-dropdown li:hover i{
+    color: #fff;
 }
 
 .productVariants .firstChild {
@@ -39,6 +115,10 @@ a {
 
 .product-right .size-box ul li.active {
     background-color: inherit;
+}
+
+.collection-filter-block {
+    padding: 20px 10px 10px;
 }
 
 .chiller_cb {
@@ -97,8 +177,8 @@ a {
 }
 
 .chiller_cb label {
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     position: relative;
     z-index: 2;
     cursor: pointer;
@@ -111,7 +191,11 @@ a {
     font-weight: 300;
     letter-spacing: 0;
     line-height: 24px;
-    margin-right: 10px;
+    margin-right: 6px;
+}
+
+.small_label:last-child {
+    margin-right: 0;
 }
 
 .chiller_cb .check_icon {
@@ -175,7 +259,7 @@ a {
 
 .product-img {
     width: 100px;
-    height: 70px;
+    height: 150px;
 }
 
 .product-img img {
@@ -429,7 +513,7 @@ td.items-details h4 {
 
 .number .counter-container {
     border: 1px solid var(--theme-deafult);
-    border-radius: 1rem;
+    border-radius: 4px;
     width: fit-content;
 }
 
@@ -735,12 +819,8 @@ form .btn {
 
 .collection-filter .theme-card .offer-slider .media>a {
     display: block;
-    width: 50%;
+    width: 30%;
     height: 100px;
-}
-
-.offer-slider .media-body {
-    width: 50%;
 }
 
 .theme-card .offer-slider img {
@@ -2193,7 +2273,7 @@ div#test {
     font-size: 11px;
     color: #fff;
     background: orange;
-    padding: 3px;
+    padding: 3px 5px;
 }
 
 .inner_spacing p {
@@ -2468,7 +2548,6 @@ footer .form-control {
 
 #productPriceValue b {
     font-weight: 900;
-    color: var(--theme-deafult);
 }
 
 .change-language:before,
@@ -2983,12 +3062,13 @@ td.order_address {
 }
 
 .common-banner {
-    height: 200px;
+    height: 300px;
 }
 
 .common-banner img,
 .category-block .category-image img {
     height: 100%;
+    width: 100%;
     object-fit: cover;
 }
 
@@ -3580,6 +3660,8 @@ h4#driver_name {
     margin-left: 2px;
 }
 
+
+
 .product-rating-star i {
     color: #fdcc0d;
     font-size: 14px;
@@ -3594,6 +3676,10 @@ h4#driver_name {
 
 .dark section.royo-business .title-36 {
     color: #000;
+}
+
+.dark .inner_spacing .productAddonSet {
+    background-color: rgb(243 247 249 / 8%);
 }
 
 .dark .safety-content h3 {
@@ -5901,8 +5987,151 @@ section.royo-business .title-36 {
     margin: 0 2px 0 0;
 }
 
->>>>>>>bbe5807f11c20c30292a76b74625074a19c8bfec
-/* New P */
+.product-box a {
+    display: block;
+}
+
+.product-box a img {
+    width: 100%;
+}
+
+.vendor_products_tr h4 {
+    font-size: 12px;
+}
+
+.number + .btn.btn-solid.prescription_btn.mt-2 {
+    font-size: 12px;
+}
+
+.list-view .suppliers-box {
+    display: flex !important;
+    align-items: center;
+}
+
+.displayProducts .suppliers-img-outer {
+    height: auto;
+}
+
+.offer-slider .img-outer-box {
+    width: 40%;
+    height: 110px;
+}
+
+.offer-slider .common-product-box {
+    display: flex;
+    align-items: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* Arabic Mood Css */
@@ -6097,6 +6326,15 @@ body[dir=rtl] .slick-next {
     left: 20px;
     right: auto;
 }
+
+body[dir=rtl] .offer-slider .slick-next {
+    left: 20px;
+    right: auto;
+}
+
+body[dir=rtl] .offer-slider .slick-prev {
+    left: 0;
+}   
 
 body[dir=rtl] .checkbox-input label {
     padding-right: 5px;

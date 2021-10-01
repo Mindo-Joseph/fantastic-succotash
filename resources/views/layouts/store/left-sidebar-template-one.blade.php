@@ -1,6 +1,6 @@
 @php
 $clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
-$urlImg =  $clientData ? $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'] : " ";
+$urlImg =  $clientData ? $clientData->logo['image_fit'].'100/80'.$clientData->logo['image_path'] : " ";
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
@@ -95,8 +95,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </div>
         <!-- End Cab Booking Header From Here -->
 
-
-        <div class="container main-menu d-block">
+    <div class="main-menu">
+        <div class="container d-block">
             <div class="row align-items-center pb-3 pt-2 position-initial">
                 <!-- <div class="col-lg-2 col-3">
                     <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
@@ -108,7 +108,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <ul class="nav nav-tabs navigation-tab nav-material tab-icons mr-md-3 vendor_mods" id="top-tab" role="tablist">
                                 @if($client_preference_detail->delivery_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'delivery')) ? 'active' : ''}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'delivery') || (Session::get('vendorType') == '')) ? 'active' : ''}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
                                 </li>
                                 @endif
                                 @if($client_preference_detail->dinein_check == 1)
@@ -433,6 +433,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div>
             </div>
         </div>
+    </div>
+
     {{--@if(count($navCategories) > 0)--}}
         <div class="menu-navigation">
             <div class="container">
@@ -447,7 +449,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 @if($cate['name'])
                                 <li>                                    
                                     <a href="{{route('categoryDetail', $cate['slug'])}}">
-                                        @if($client_preference_detail->show_icons == 1)
+                                        @if($client_preference_detail->show_icons == 1 && \Request::route()->getName() == 'userHome')
                                         <div class="nav-cate-img">
                                             <img src="{{$cate['icon']['image_fit']}}200/200{{$cate['icon']['image_path']}}" alt="">
                                         </div>
@@ -483,6 +485,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
 
 </header>
+<div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div>
 <script type="text/template" id="nav_categories_template">
     <li>
         <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
@@ -490,7 +493,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <% _.each(nav_categories, function(category, key){ %>
         <li>
             <a href="{{route('categoryDetail')}}/<%= category.slug %>">
-                @if($client_preference_detail->show_icons == 1)
+                @if($client_preference_detail->show_icons == 1  && \Request::route()->getName() == 'userHome')
                     <div class="nav-cate-img">
                         <img src="<%= category.icon.image_fit %>200/200<%= category.icon.image_path %>" alt=""> 
                     </div>
