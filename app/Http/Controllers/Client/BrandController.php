@@ -117,31 +117,32 @@ class BrandController extends BaseController
         }
         $brand->save();
         $cate_array = array($request->cate_id);
-        $database_array=array(BrandCategory::where('brand_id',$id)->pluck('category_id'));
-        foreach($database_array as $data)
-        {
-            if(!in_array($data,$cate_array))
-            
-                BrandCategory::where('brand_id', $id)->where('category_id',$data)->delete();
-            
-        }
-
-        foreach ($request->cate_id as $key => $cate_id) {
-            //$affected = BrandCategory::where('brand_id', $brand->id)->update(['category_id'=>$cate_id]);
-            //$affected->cate()->associate($cate_id)->save();
-            $brand = Brand::find($id);
-
-            // $cat = BrandCategory::where('category_id', $cate_id)->first();
-
-            // $cat = BrandCategory::insert(['brand_id' => $id, 'category_id' => $cate_id]);
-            // $cat = BrandCategory::where('category_id', $cate_id)->first();
-            // if ($cat == null)
-            if (BrandCategory::where('brand_id', $id)->where('category_id', $cate_id)->first() == null) {
-                $cat = BrandCategory::insert(['brand_id' => $id, 'category_id' => $cate_id]);
+        $database_array = array(BrandCategory::where('brand_id', $id)->pluck('category_id'));
+        if ($database_array != null) {
+            foreach ($database_array as $data) {
+                if (!in_array($data, $cate_array)) {
+                    BrandCategory::where('brand_id', $id)->where('category_id', $data)->delete();
+                }
             }
-           
-            // else
-            //$brand->bc()->save($cat);
+        }
+        if ($request->cate_id != null) {
+            foreach ($request->cate_id as $key => $cate_id) {
+                //$affected = BrandCategory::where('brand_id', $brand->id)->update(['category_id'=>$cate_id]);
+                //$affected->cate()->associate($cate_id)->save();
+                $brand = Brand::find($id);
+
+                // $cat = BrandCategory::where('category_id', $cate_id)->first();
+
+                // $cat = BrandCategory::insert(['brand_id' => $id, 'category_id' => $cate_id]);
+                // $cat = BrandCategory::where('category_id', $cate_id)->first();
+                // if ($cat == null)
+                if (BrandCategory::where('brand_id', $id)->where('category_id', $cate_id)->first() == null) {
+                    $cat = BrandCategory::insert(['brand_id' => $id, 'category_id' => $cate_id]);
+                }
+
+                // else
+                //$brand->bc()->save($cat);
+            }
         }
         //  $affected = BrandCategory::where('brand_id', $id)->with('cate')->get();
         // // dd($affected);
