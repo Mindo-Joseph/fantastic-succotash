@@ -665,7 +665,7 @@
                 <div>
                     <a class="card scale-effect text-center" href="{{route('productDetail')}}/{{ $related_product->url_slug }}">
                         <label class="product-tag">{{ __($related_product->product_type) }}</label>
-                        <div class="product-image">
+                        <div class="product-image 21">
                             <img src="{{ $related_product->media ? $related_product->media->first()->image->path['image_fit'].'600/600'.$related_product->media->first()->image->path['image_path'] : '' }}" alt="">
                         </div>
                         <div class="media-body align-self-center">

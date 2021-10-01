@@ -39,7 +39,7 @@ a {
 }
 
 .inner-pages-offset {
-    margin-top: 148px;
+    margin-top: 181px;
 }
 
 .set-hide-nav-bar {
@@ -57,10 +57,6 @@ header.site-header.fixed-bar {
     display: none;
 }
 
-.navbar-brand img {
-    width: 100px;
-}
-
 .navigation-tab-item .nav-link {
     padding: 5px 0;
     font-size: 14px;
@@ -72,10 +68,6 @@ header.site-header.fixed-bar {
 
 .icon-nav .btn.btn-solid {
     padding: 10px 0;
-}
-
-.site-header .pb-3 {
-    padding-bottom: 0 !important;
 }
 
 .pixelstrap li > a {
@@ -3184,8 +3176,8 @@ button.close {
     border-bottom-left-radius: 0;
 }
 
-.pb-250 {
-    padding-bottom: 250px;
+.pb-265 {
+    padding-bottom: 265px;
 }
 
 .btn-outline-secondary {
@@ -6022,9 +6014,41 @@ section.royo-business .title-36 {
     align-items: center;
 }
 
-
-
-
+.barnd-img-outer img{
+    width: 100%;
+}
+.return-wrapper{    
+    width: 80%;
+    margin-left: auto;
+}
+.footer-return-box {
+    text-align: left;
+    padding-left: 50px;
+    position: relative;
+}
+.return-icon {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.return-text h4 {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 16px;
+}
+.return-text p {
+    line-height: normal;
+    font-size: 14px;
+    color: #777777;
+}
+body .footer-theme .sub-title h4 {
+    color: #000000;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 26px;
+    margin-bottom: 15px;
+}
 
 
 
@@ -6382,7 +6406,7 @@ body[dir="rtl"] .inner_spacing {
 }
 
 body[dir="rtl"] .footer-theme .sub-title .contact-list li {
-    padding: 13px 25px 0 0;
+    padding: 0 25px 0 0;
 }
 
 body[dir="rtl"] .footer-theme .sub-title .contact-list i {

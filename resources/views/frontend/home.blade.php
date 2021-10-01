@@ -86,15 +86,12 @@
 
 <script type="text/template" id="banner_template">
     <% _.each(brands, function(brand, k){%>
-        <div>
-            <div class="">
-                <a href="<%= brand.redirect_url %>">
-                    <img src="<%= brand.image.image_fit %>120/120<%= brand.image.image_path %>" alt="">
-                </a>
-            </div>
-        </div>
+        <a class="barnd-img-outer" href="<%= brand.redirect_url %>">
+            <img src="<%= brand.image.image_fit %>500/500<%= brand.image.image_path %>" alt="">
+        </a>
     <% }); %>
 </script>
+
 <script type="text/template" id="products_template">
     <% _.each(products, function(product, k){ %>
         <div>
