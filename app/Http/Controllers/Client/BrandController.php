@@ -118,10 +118,12 @@ class BrandController extends BaseController
         $brand->save();
         $cate_array = array($request->cate_id);
         $database_array = array(BrandCategory::where('brand_id', $id)->pluck('category_id'));
-        if ($database_array != null) {
-            foreach ($database_array as $data) {
-                if (!in_array($data, $cate_array)) {
-                    BrandCategory::where('brand_id', $id)->where('category_id', $data)->delete();
+        if (count(BrandCategory::where('brand_id', $id)->pluck('category_id'))>=1) {
+            if ($cate_array != null) {
+                foreach ($database_array as $data) {
+                    if (!in_array($data, $cate_array)) {
+                        BrandCategory::where('brand_id', $id)->where('category_id', $data)->delete();
+                    }
                 }
             }
         }
