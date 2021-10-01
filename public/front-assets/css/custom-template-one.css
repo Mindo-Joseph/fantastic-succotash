@@ -56,6 +56,9 @@ body{
     font-family: 'Eina02';
     font-weight: 400;
 }
+.offset-top {
+    margin-top: 260px;
+}
 
 .top-header.site-topbar {
     background: var(--top-header-color);
@@ -69,18 +72,6 @@ body{
 .site-topbar .location-bar {
     background: transparent;
 }
-
-.site-topbar .location-bar h2{
-    color: #fff;
-    font-size: 16px;
-    line-height: 24px;
-}
-
-.site-topbar .location-bar i {
-    font-size: 20px;
-    color: #fff !important;
-}
-
 
 .site-header .pb-3 {
     padding-bottom: 0 !important;

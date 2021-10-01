@@ -136,16 +136,6 @@
          @else
         <div class="container render_full_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
             <div class="row">
-                <div class="col-12 text-center d-flex align-items-center justify-content-between mb-4">
-                    <div class="title1">
-                        <!-- <h2 class="title-inner1 mb-0">{{ $homePageLabel->slug == 'vendors' ? getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2> -->
-                    </div>
-                    @if($homePageLabel->slug == 'vendors')
-                    <a class="view_more_items" href="{{route('vendor.all')}}">{{__('View More')}}</a>
-                    @endif
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-12">
                     @if($homePageLabel->slug == 'vendors')
                     <div class="product-5 product-m no-arrow render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}"></div>

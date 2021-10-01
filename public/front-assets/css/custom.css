@@ -30,20 +30,20 @@ a {
     -ms-transition: all 0.5s ease-in-out;
     -o-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
-    border-bottom: 1px solid rgb(221 221 221 / 50%);
     z-index: 999;
+    border-bottom: 1px solid rgb(221 221 221 / 50%);
 }
 
 .offset-top {
-    margin-top: 243px;
+    margin-top: 226px;
 }
 
 .inner-pages-offset {
-    margin-top: 181px;
+    margin-top: 177px;
 }
 
 .set-hide-nav-bar {
-    margin-top: 43px;
+    margin-top: 40px;
 }
 
 header.site-header.fixed-bar {
@@ -76,6 +76,21 @@ header.site-header.fixed-bar {
 
 .top-header .header-dropdown li:hover i{
     color: #fff;
+}
+
+.site-topbar .location-bar h2{
+    color: #fff;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.site-topbar .location-bar i {
+    font-size: 20px;
+    color: #fff !important;
+}
+
+.vendors .container {
+    margin: 0 auto 30px;
 }
 
 .productVariants .firstChild {
@@ -6163,6 +6178,16 @@ body .footer-theme .sub-title h4 {
 body[dir="rtl"] {
     text-align: right;
     overflow-x: hidden;
+}
+
+body[dir="rtl"] .close.edit-close {
+    float: left;
+    padding-top: 0;
+}
+
+body[dir="rtl"] .return-wrapper {
+    margin-left: 0;
+    margin-right: auto;
 }
 
 body[dir="rtl"] .sm,
