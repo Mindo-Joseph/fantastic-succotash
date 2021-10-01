@@ -458,7 +458,7 @@ class CustomerAuthController extends FrontController
                 if ($checkEmail) {
                     return $this->errorResponse(__('Incorrect password'), 404);
                 }
-                return $this->errorResponse(__('Email not exist. Please enter correct email'), 404);
+                return $this->errorResponse(__('You are not registered with us. Please sign up.'), 404);
             }
             else {
                 return $this->errorResponse(__('Invalid email or phone number'), 404);
@@ -542,7 +542,7 @@ class CustomerAuthController extends FrontController
                             if ($user_refferd_by) {
                                 //user reffered by amount
                                 $wallet_user_reffered_by = $user_refferd_by->wallet;
-                                $wallet_user_reffered_by->depositFloat($refferal_amounts->reffered_by_amount, ['Referral code used by <b>' . $req->name . '</b>']);
+                                $wallet_user_reffered_by->depositFloat($refferal_amounts->reffered_by_amount, ['Referral code used by <b>' . $req->phone_number . '</b>']);
                                 $wallet_user_reffered_by->balance;
                                 //user reffered to amount
                                 $wallet->depositFloat($refferal_amounts->reffered_to_amount, ['You used referral code of <b>' . $user_refferd_by->name . '</b>']);
