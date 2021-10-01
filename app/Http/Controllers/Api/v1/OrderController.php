@@ -604,7 +604,8 @@ class OrderController extends BaseController {
                         'body'  => $notification_content->content,
                         'sound' => "notification.wav",
                         "icon" => (!empty($client_preferences->favicon)) ? $client_preferences->favicon['proxy_url'] . '200/200' . $client_preferences->favicon['image_path'] : '',
-                        'click_action' => $redirect_URL
+                        'click_action' => $redirect_URL,
+                        "android_channel_id" => "high-priority"
                     ],
                     "data" => [
                         'title' => $notification_content->subject,
@@ -663,7 +664,8 @@ class OrderController extends BaseController {
                         'body'  => $body_content,
                         'sound' => "default",
                         "icon" => (!empty($client_preferences->favicon)) ? $client_preferences->favicon['proxy_url'] . '200/200' . $client_preferences->favicon['image_path'] : '',
-                        'click_action' => $redirect_URL
+                        'click_action' => $redirect_URL,
+                        "android_channel_id" => "high-priority"
                     ],
                     "data" => [
                         'title' => $notification_content->subject,
