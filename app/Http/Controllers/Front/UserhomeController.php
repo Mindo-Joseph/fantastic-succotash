@@ -316,7 +316,7 @@ class UserhomeController extends FrontController
             $categoriesList = '';
             foreach ($vendorCategories as $key => $category) {
                 if ($category->category) {
-                    $categoriesList = $categoriesList . $category->category->translation_one->name;
+                    $categoriesList = $categoriesList . @$category->category->translation_one->name;
                     if ($key !=  $vendorCategories->count() - 1) {
                         $categoriesList = $categoriesList . ', ';
                     }
@@ -324,7 +324,7 @@ class UserhomeController extends FrontController
             }
             $value->categoriesList = $categoriesList;
         }
-        // dd($vendors->toArray());
+         
         if (($latitude) && ($longitude)) {
             Session::put('vendors', $vendor_ids);
         }
