@@ -1,12 +1,11 @@
 @switch($client_preference_detail->business_type)
     @case('taxi')
-        @php $ordertitle = 'Rides'; @endphp 
-        @php $hidereturn = 1; @endphp
+        <?php $ordertitle = 'Rides'; ?>
+        <?php $hidereturn = 1; ?>
         @break
     @default
-        @php $ordertitle = 'Orders'; @endphp 
+    <?php $ordertitle = 'Orders';  ?>
 @endswitch
-
 <div class="dashboard-left">
     <div class="collection-mobile-back">
         <span class="filter-back">

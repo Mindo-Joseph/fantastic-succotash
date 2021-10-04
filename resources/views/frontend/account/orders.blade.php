@@ -1,12 +1,11 @@
 @switch($client_preference_detail->business_type)
     @case('taxi')
-        @php $ordertitle = 'Rides'; @endphp 
-        @php $hidereturn = 1; @endphp
+        <?php $ordertitle = 'Rides'; ?>
+        <?php $hidereturn = 1; ?>
         @break
     @default
-        @php $ordertitle = 'Orders'; @endphp 
+    <?php $ordertitle = 'Orders';  ?>
 @endswitch
-
 @extends('layouts.store', ['title' => __('My '.$ordertitle)])
 @section('css')
 <style type="text/css">
@@ -409,7 +408,9 @@ $timezone = Auth::user()->timezone;
                                                                                 @endphp
                                                                                 <span>{{Session::get('currencySymbol')}}@money($product_subtotal_amount * $clientCurrency->doller_compare)</span>
                                                                             </li>
+                                                                            @if($hidereturn != 1)
                                                                             <button class="return-order-product btn btn-solid" data-id="{{$order->id??0}}"  data-vendor_id="{{$vendor->vendor_id??0}}"><td class="text-center" colspan="3">{{__('Return')}}</button>
+                                                                            @endif    
                                                                         </ul>
                                                                     </div>
                                                                 </div>

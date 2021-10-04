@@ -1,5 +1,14 @@
 @extends('layouts.store', ['title' => 'Booking Details'])
 @section('content')
+
+@switch($client_preference_detail->business_type)
+    @case('taxi')
+        <?php $navfor = 'taxi'; ?>
+        @break
+    @default
+    <?php $navfor = 'all';  ?>
+@endswitch
+
 <style type="text/css">
 
     .cabbooking-loader {
@@ -30,24 +39,19 @@
         display: block !important;
     }
     </style>
-    
-    <?php
-    $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-    if (strpos($url,'/looking/details/') !== false) {?>
+    @if($navfor == 'all')
     <style>
         .container .main-menu .d-block{
              display: none;
          }
      </style>
-    <?php
-    } else { ?>
+    @elseif($navfor == 'taxi')
         <style>
             .cab-booking-header{
                  display: none;
              }
          </style>
-    <?php }
-    ?>
+    @endif
 <header>
     <div class="mobile-fix-option"></div>
     @if(isset($set_template)  && $set_template->template_id == 1)

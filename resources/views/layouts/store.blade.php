@@ -1,6 +1,8 @@
 @php
 $set_template = \App\Models\WebStylingOption::where('web_styling_id',1)->where('is_selected',1)->first();
+$set_common_business_type = $client_preference_detail->business_type??'';
 @endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +38,7 @@ else if($client_preference_detail->show_dark_mode == 2){
   }
 }
 @endphp
+
 <body  class="{{$dark_mode}}{{ Request::is('category/cabservice') ? 'cab-booking-body' : '' }}" dir="{{session()->get('locale') == 'ar' ? 'rtl' : ''}}">
   
   @yield('content')

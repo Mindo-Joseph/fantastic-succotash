@@ -28,7 +28,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                                     <a href="{{route('page/driver-registration')}}">{{$page->translations->first() ? $page->translations->first()->title : $page->primary->title}}</a>
                                 </li>
                                 @else--}}
-                                @if($last_mile!=false)
+                                @if($last_mile_common_set!=false)
                                 <li>
                                     <a href="{{route('extrapage',['slug' => $page->slug])}}">{{$page->translations->first() ? $page->translations->first()->title : $page->primary->title}}</a>
                                 </li>
