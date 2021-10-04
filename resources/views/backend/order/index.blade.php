@@ -56,7 +56,7 @@
                                         <div id="update-single-status">
                                             <% if(vendor.order_status_option_id == 1) { %>
                                                 <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>" data-count="<%= ve %>" data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="2" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Accept') }}</button>
-                                                <button class="update-status btn-danger" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>
+                                                <button class="update-status btn-danger" id="reject" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>
                                                 <% } else if(vendor.order_status_option_id == 2) { %>
                                                     <button class="update-status btn-warning" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="4" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Processing') }}</button>
                                                 <% } else if(vendor.order_status_option_id == 4) { %>
@@ -225,6 +225,30 @@
     </div>
 </div>
 </div>
+
+
+<div id="addRejectmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h4 class="modal-title">{{ __("Reject Reason") }}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form id="addRejectForm" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body" id="AddRejectBox">
+                    <label style="font-size:medium;">Enter reason for rejecting the order.</label>
+                    <textarea class="reject_reason" data-name="reject_reason" name="reject_reason" id="" cols="107" rows="10" ></textarea>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info waves-effect waves-light addrejectSubmit">{{ __("Submit") }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script> -->
 
 <!-- <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous"></script> -->
@@ -237,7 +261,8 @@
             'X-CSRF-TOKEN': $('input[name="_token"]').val()
         }
     });
-    function init(filter_order_status, url, search_keyword = "", isOnload=false) {
+
+    function init(filter_order_status, url, search_keyword = "", isOnload = false) {
         $.ajax({
             url: url,
             type: "POST",
@@ -282,7 +307,7 @@
             var url = $(this).data('url');
             var rel = $(this).data('rel');
             $("#search_via_keyword").val("");
-            init(rel, url, '',true);
+            init(rel, url, '', true);
             $(this).remove();
         });
         $(".nav-link").click(function() {
@@ -291,7 +316,7 @@
             var url = "{{ route('orders.filter') }}";
             $("#search_via_keyword").val("");
             // $(".tab-pane").html('');
-            init(rel, url,'',false);
+            init(rel, url, '', false);
         });
         // $(function() {
         //     var url = window.location.href;
@@ -318,63 +343,143 @@
             init(rel, url, search_keyword, false);
         })
 
-        
 
+        function openRejectModal(order_id, vendor_id, status_option_id, order_vendor_id) {
+            // var that = document.getElementById('reject');
+            //     var count = that.data("count");
+            //     var full_div = that.data("full_div");
+            //     var single_div =that.data("single_div");
+            //     var status_option_id = that.data("status_option_id");
+            //     var status_option_id_next = status_option_id + 1;
+            //     var order_vendor_id = that.data("order_vendor_id");
+            //     var order_id = that.data("order_id");
+            //     var vendor_id = that.data("vendor_id");
 
-        // update status 
-        $(document).on("click", ".update-status", function() {
-            if (confirm("Are you Sure?")) {
-                let that = $(this);
-                var count = that.data("count");
-                var full_div = that.data("full_div");
-                var single_div = that.data("single_div");
-                var status_option_id = that.data("status_option_id");
-                var status_option_id_next = status_option_id + 1;
-                var order_vendor_id = that.data("order_vendor_id");
-                var order_id = that.data("order_id");
-                var vendor_id = that.data("vendor_id");
-                var count = that.data("count");
+            //     var count = that.data("count");
+            $('#addRejectmodal').modal({
+                backdrop: 'static',
+                keyboard: false,
 
+            });
+            $('.addrejectSubmit').on('click', function(e) {
+                e.preventDefault();
+                var reject_reason=$('#addRejectForm #AddRejectBox .reject_reason').val();
+                
+               
+                //  var reject_reason = document.getElementById('reject_reason').value;
+
+                // var formData = new FormData(form);
+                // console.log(formData);
                 $.ajax({
                     url: "{{ route('order.changeStatus') }}",
                     type: "POST",
                     data: {
                         order_id: order_id,
                         vendor_id: vendor_id,
+                        reject_reason: reject_reason,
                         "_token": "{{ csrf_token() }}",
                         status_option_id: status_option_id,
                         order_vendor_id: order_vendor_id,
                     },
+
                     success: function(response) {
-
-                        if (status_option_id == 4 || status_option_id == 5) {
-                            if (status_option_id == 4)
-                                var next_status = 'Out For Delivery';
-                            else
-                                var next_status = 'Delivered';
-                            that.replaceWith("<button class='update-status btn-warning' data-full_div='" + full_div + "' data-single_div='" + single_div + "'  data-count='" + count + "'  data-order_id='" + order_id + "'  data-vendor_id='" + vendor_id + "'  data-status_option_id='" + status_option_id_next + "' data-order_vendor_id=" + order_vendor_id + ">" + next_status + "</button>");
-                            return false;
-                        } else {
-                            if (count == 0) {
-                                $(full_div).slideUp(1000, function() {
-                                    $(this).remove();
-                                });
-
-                            } else {
-                                $(single_div).slideUp(1000, function() {
-                                    $(this).remove();
-                                });
-
+                        if (response.status == 'success') {
+                            // $(".modal .close").click();
+                            location.reload();
+                        }
+                        if (count == 0) {
+                            $(full_div).slideUp(1000, function() {
+                                $(this).remove();
+                            });
+                            if (response.status == 'success') {
+                                // $(".modal .close").click();
+                                location.reload();
                             }
+
+
+
+                        } else {
+                            $(single_div).slideUp(1000, function() {
+                                $(this).remove();
+                            });
+                            if (response.status == 'success') {
+                                //   $(".modal .close").click();
+                                location.reload();
+                            }
+
                         }
 
 
-
-                        if (status_option_id == 2)
-                            $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                        // location.reload();
                     },
+
                 });
+
+
+            });
+
+
+        }
+
+
+
+
+
+        // update status 
+        $(document).on("click", ".update-status", function() {
+
+            let that = $(this);
+            var count = that.data("count");
+            var full_div = that.data("full_div");
+            var single_div = that.data("single_div");
+            var status_option_id = that.data("status_option_id");
+            var status_option_id_next = status_option_id + 1;
+            var order_vendor_id = that.data("order_vendor_id");
+            var order_id = that.data("order_id");
+            var vendor_id = that.data("vendor_id");
+            var count = that.data("count");
+            if (status_option_id == 3) {
+                return openRejectModal(order_id, vendor_id, status_option_id, order_vendor_id);
+            } else {
+                if (confirm("Are you Sure?")) {
+                    $.ajax({
+                        url: "{{ route('order.changeStatus') }}",
+                        type: "POST",
+                        data: {
+                            order_id: order_id,
+                            vendor_id: vendor_id,
+                            "_token": "{{ csrf_token() }}",
+                            status_option_id: status_option_id,
+                            order_vendor_id: order_vendor_id,
+                        },
+                        success: function(response) {
+
+                            if (status_option_id == 4 || status_option_id == 5) {
+                                if (status_option_id == 4)
+                                    var next_status = 'Out For Delivery';
+                                else
+                                    var next_status = 'Delivered';
+                                that.replaceWith("<button class='update-status btn-warning' data-full_div='" + full_div + "' data-single_div='" + single_div + "'  data-count='" + count + "'  data-order_id='" + order_id + "'  data-vendor_id='" + vendor_id + "'  data-status_option_id='" + status_option_id_next + "' data-order_vendor_id=" + order_vendor_id + ">" + next_status + "</button>");
+                                return false;
+                            } else {
+
+                                if (count == 0) {
+                                    $(full_div).slideUp(1000, function() {
+                                        $(this).remove();
+                                    });
+
+                                } else {
+                                    $(single_div).slideUp(1000, function() {
+                                        $(this).remove();
+                                    });
+
+                                }
+                            }
+                            if (status_option_id == 2)
+                                $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                            // location.reload();
+                        },
+                    });
+                }
             }
         });
     });
