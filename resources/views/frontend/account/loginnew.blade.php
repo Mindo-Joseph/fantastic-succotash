@@ -145,6 +145,7 @@
                     <input class="form-control" type="text" id="digit-6" name="digit-6" data-next="digit-7" data-previous="digit-5" onkeypress="return isNumberKey(event)"/>
                 </div>
                 <span class="invalid_phone_otp_error invalid-feedback2 w-100 d-block text-center text-danger"></span>
+                <span id="phone_otp_success_msg" class="font-14 text-success text-center w-100 d-block" style="display:none"></span>
                 <div class="row text-center mt-2">
                     <div class="col-12 resend_txt">
                         <a href="javascript:void(0)" class="mb-2 back-login font-12">
@@ -328,6 +329,10 @@
                             $('#login-section').hide();
                             $('#verify-phone-section').show();
                             $('.otp_inputs input').val('');
+                            $('#phone_otp_success_msg').html(response.message).show();
+                            setTimeout(function(){ 
+                                $('#phone_otp_success_msg').html('').hide();
+                            }, 5000);
                         }
                         else if(data.is_email != undefined && data.is_email == 1){
                             window.location.href = response.data.redirect_to;
