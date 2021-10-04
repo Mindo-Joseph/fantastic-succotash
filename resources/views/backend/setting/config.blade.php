@@ -93,7 +93,9 @@
                </div>
             </div>
          </div>
+         @endif
 
+         @if($client_preference_detail->business_type != 'taxi')
          <div class="col-lg-3 col-md-6 mb-3">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
@@ -158,7 +160,9 @@
                </div>
             </div>
          </div>
-         
+         @endif
+
+         @if($client_preference_detail->business_type != 'taxi')
          <div class="col-lg-3 col-md-6 mb-3">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
@@ -211,6 +215,7 @@
          </div> 
          @endif
 
+         @if($client_preference_detail->business_type == 'taxi')
          <div class="col-lg-3 col-md-6 mb-3">
             <div class="card-box h-100">
                <div class="d-flex align-items-center justify-content-between mb-2">
@@ -261,7 +266,7 @@
                </div>
             </div>
          </div>
-
+         @endif
         
 
       </div>
