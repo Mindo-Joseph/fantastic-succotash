@@ -30,7 +30,7 @@
                 <div class="col-12">
                     <div class="top-banner-wrapper text-center">
                         @if(!empty($celebrity->avatar))
-                            <div class="common-banner"><img alt="" src="{{$celebrity->avatar['image_fit'] . '1000/200' . $celebrity->avatar['image_path']}}" class="img-fluid blur-up lazyload"></div>
+                            <div class="common-banner"><img alt="" src="{{$celebrity->avatar['image_fit'] . '1920/1080' . $celebrity->avatar['image_path']}}" class="img-fluid blur-up lazyload"></div>
                         @endif
                         <div class="top-banner-content small-section">
                             <h4>{{ $celebrity->name }}</h4>
