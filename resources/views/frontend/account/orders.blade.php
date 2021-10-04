@@ -1,4 +1,13 @@
-@extends('layouts.store', ['title' => 'My Orders'])
+@switch($client_preference_detail->business_type)
+    @case('taxi')
+        @php $ordertitle = 'Rides'; @endphp 
+        @php $hidereturn = 1; @endphp
+        @break
+    @default
+        @php $ordertitle = 'Orders'; @endphp 
+@endswitch
+
+@extends('layouts.store', ['title' => __('My '.$ordertitle)])
 @section('css')
 <style type="text/css">
     .main-menu .brand-logo {
@@ -76,26 +85,28 @@ $timezone = Auth::user()->timezone;
                 <div class="dashboard-right">
                     <div class="dashboard">
                         <div class="page-title">
-                            <h2>{{__('Orders')}}</h2>
+                            <h2>{{__($ordertitle)}}</h2>
                         </div>
                         <div class="welcome-msg">
-                            <h5>{{__('Here Are All Your Previous Orders')}}</h5>
+                            <h5>{{__('Here Are All Your Previous '.$ordertitle)}}</h5>
                         </div>
                         <div class="row" id="orders_wrapper">
                             <div class="col-sm-12 col-lg-12 tab-product pt-3">
                                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link {{ ((Request::query('pageType') === null) || (Request::query('pageType') == 'activeOrders')) ? 'active show' : '' }}" id="active-orders-tab" data-toggle="tab" href="#active-orders" role="tab" aria-selected="true"><i class="icofont icofont-ui-home"></i>{{__('Active Orders')}}</a>
+                                        <a class="nav-link {{ ((Request::query('pageType') === null) || (Request::query('pageType') == 'activeOrders')) ? 'active show' : '' }}" id="active-orders-tab" data-toggle="tab" href="#active-orders" role="tab" aria-selected="true"><i class="icofont icofont-ui-home"></i>{{__('Active '.$ordertitle)}}</a>
                                         <div class="material-border"></div>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link {{ (Request::query('pageType') == 'pastOrders') ? 'active show' : '' }}" id="past_order-tab" data-toggle="tab" href="#past_order" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>{{__('Past Orders')}}</a>
+                                        <a class="nav-link {{ (Request::query('pageType') == 'pastOrders') ? 'active show' : '' }}" id="past_order-tab" data-toggle="tab" href="#past_order" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>{{__('Past '.$ordertitle)}}</a>
                                         <div class="material-border"></div>
                                     </li>
+                                    @if(isset($hidereturn) && $hidereturn != 1)
                                     <li class="nav-item">
                                         <a class="nav-link {{ (Request::query('pageType') == 'returnOrders') ? 'active show' : '' }}" id="return_order-tab" data-toggle="tab" href="#return_order" role="tab" aria-selected="false"><i class="icofont icofont-man-in-glasses"></i>{{__('Return Requests')}}</a>
                                         <div class="material-border"></div>
                                     </li>
+                                    @endif
                                 </ul>
                                 <div class="tab-content nav-material" id="top-tabContent">
                                     <div class="tab-pane fade {{ ((Request::query('pageType') === null) || (Request::query('pageType') == 'activeOrders')) ? 'active show' : '' }}" id="active-orders" role="tabpanel"

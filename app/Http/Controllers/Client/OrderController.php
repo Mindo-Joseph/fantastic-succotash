@@ -211,6 +211,7 @@ class OrderController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function changeStatus(Request $request, $domain = ''){   
+   
         DB::beginTransaction();
         try {
             $timezone = Auth::user()->timezone;
@@ -234,7 +235,7 @@ class OrderController extends BaseController{
                     if($order_dispatch && $order_dispatch == 1)
                     $stats = $this->insertInVendorOrderDispatchStatus($request);
                 }
-                OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id]);
+                OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id,'reject_reason'=>$request->reject_reason]);
                 $orderData = Order::find($request->order_id);
                 DB::commit();
                 // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
@@ -664,7 +665,7 @@ class OrderController extends BaseController{
                         'sound' => "default",
                         "icon" => (!empty($client_preferences->favicon)) ? $client_preferences->favicon['proxy_url'].'200/200'.$client_preferences->favicon['image_path'] : '',
                         'click_action' => route('user.orders'),
-                        "android_channel_id" => "high-priority"
+                        "android_channel_id" => "default-channel-id"
                     ],
                     "data" => [
                         'title' => $notification_content->subject,
