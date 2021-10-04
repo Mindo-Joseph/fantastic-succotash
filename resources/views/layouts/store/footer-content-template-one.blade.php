@@ -92,7 +92,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     </div>
                 @endif  
-                <div class="col-lg-3 col-md-6 mb-md-0 mb-3 text-lg-right text-center">
+                <div class="col-lg-3 col-md-6 mb-md-0 mb-3 text-lg-right text-center d-none">
                     <div class="return-wrapper">
                         <div class="footer-return-box mb-3">
                             <div class="return-icon">

@@ -966,6 +966,7 @@
 
     $(document).delegate('input[name="password"]', 'input', function() {
         $(this).parent('#password-wrapper').show();
+        $("#error-msg").hide();
     });
 
     $(document).delegate("#username", "input", function(e){
@@ -1031,6 +1032,8 @@
                     $("#password-wrapper input").attr("required", true);
                     if($("#password-wrapper input").val() == ''){
                         error = 1;
+                        $("#error-msg").show();
+                        $("#error-msg").html('Password field is required');
                     }
                 }else{
                     error = 1;
