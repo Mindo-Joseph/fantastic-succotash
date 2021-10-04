@@ -136,8 +136,11 @@ $timezone = Auth::user()->timezone;
                                                                 $product_total_count = $product_subtotal_amount = $product_taxable_amount = 0;
                                                             @endphp
                                                             <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
-                                                                @if($vendor->delivery_fee > 0)
+                                                                @if(($vendor->delivery_fee > 0) || (!empty($order->scheduled_date_time)))
                                                                     <div class="progress-order font-12">
+                                                                        @if(!empty($order->scheduled_date_time))
+                                                                            <span class="badge badge-success ml-2">Scheduled</span>
+                                                                        @endif
                                                                         <span class="ml-2">Your order will arrive by {{$vendor->ETA}}</span>
                                                                     </div>
                                                                 @endif
