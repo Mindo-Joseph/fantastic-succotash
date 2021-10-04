@@ -167,7 +167,7 @@ class UserhomeController extends FrontController
         $page_detail = Page::with(['translations' => function ($q) {
             $q->where('language_id', session()->get('customerLanguage'));
         }])->where('slug', $request->slug)->firstOrFail();
-        if ($page_detail->slug == 'vendor-registration') {
+        if ($page_detail->primary->type_of_form !=2) {
             $vendor_registration_documents = VendorRegistrationDocument::get();
             return view('frontend.extrapage', compact('page_detail', 'navCategories', 'client_preferences', 'user', 'vendor_registration_documents'));
         } else {
