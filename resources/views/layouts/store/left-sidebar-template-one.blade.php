@@ -99,7 +99,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <div class="container d-block">
             <div class="row align-items-center pt-2 position-initial">
                 <div class="col-lg-12">
-                    <div class="row align-items-center">
+                    <div class="row mobile-header align-items-center">
                         <div class="col-6 d-flex align-items-center"> 
                             <a class="navbar-brand mr-3 d-none d-md-inline-block" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                             @if($mod_count > 1)
@@ -123,7 +123,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </ul>
                             @endif 
                         </div>
-                        <div class="col-6">                       
+                        <div class="col-6 my-2 my-md-0">                       
                             <div class="search_bar menu-right d-sm-flex d-block align-items-center justify-content-end justify-content-lg-between w-100 ">
                                 @if( (Session::get('preferences')))
                                     @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )

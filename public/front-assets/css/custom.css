@@ -5742,36 +5742,6 @@ ul#main-nav-list {
 
 
 /* Cab booking Page Css */
-
-.cabbooking-loader {
-    width: 30px;
-    height: 30px;
-    animation: loading 1s infinite ease-out;
-    margin: auto;
-    border-radius: 50%;
-    background-color: red;
-}
-@keyframes loading {
-0% {
-    transform: scale(1);
-}
-100% {
-    transform: scale(8);
-    opacity: 0;
-}
-}
-.site-topbar,.main-menu.d-block{
-    display: none !important;
-}
-
-.cab-booking-header img.img-fluid {
-    height: 50px;
-}
-.cab-booking-header{
-    display: block !important;
-}
-
-
 .cab-banner-area {
     background: url(https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_1903,h_644/v1613521692/assets/d9/ce6c00-32b0-4b93-9f0d-6f927d93da08/original/Rider_Home_bg_desktop2x.png) no-repeat center center;
     background-size: cover;
@@ -6803,6 +6773,13 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(max-width:767px) {
+    .mobile-header > div {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .navigation-tab {
+        margin: auto;
+    }
     .p-64 {
         padding: 24px 20px !important;
     }

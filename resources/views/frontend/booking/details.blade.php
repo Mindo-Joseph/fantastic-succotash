@@ -1,6 +1,35 @@
 @extends('layouts.store', ['title' => 'Booking Details'])
 @section('content')
+<style type="text/css">
 
+    .cabbooking-loader {
+      width: 30px;
+      height: 30px;
+      animation: loading 1s infinite ease-out;
+      margin: auto;
+      border-radius: 50%;
+      background-color: red;
+    }
+    @keyframes loading {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(8);
+        opacity: 0;
+      }
+    }
+    .site-topbar,.main-menu.d-block{
+        display: none !important;
+    }
+    
+    .cab-booking-header img.img-fluid {
+        height: 50px;
+    }
+    .cab-booking-header{
+        display: block !important;
+    }
+    </style>
     
     <?php
     $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];

@@ -1053,10 +1053,7 @@ body[dir="rtl"] #social-links li:last-child{
         margin-top: 182px;
     }
     .radius-bar {
-        width: calc(100% - 20px);
-        /* position: absolute;
-        bottom: -60px;
-        left: 0; */
+        width: 100%;
     }
     .pixelstrap li > a {
         padding: 10px 15px;
@@ -1078,8 +1075,7 @@ body[dir="rtl"] #social-links li:last-child{
     }
     .right-shape::before {
         border-radius: 0;
-    }
-    
+    }    
     .nav-cate-img{
         display: none;
     }
