@@ -103,10 +103,12 @@
                 <div class="tab-pane fade past-order show active" id="active_vendor" role="tabpanel" aria-labelledby="active-vendor">
                     <div class="row">
                         <div class="col-12">
+                           
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <form name="saveOrder" id="saveOrder"> @csrf</form>
+                                       
                                         <table class="table table-centered table-nowrap table-striped" id="vendor_active_datatable" width="100%">
                                             <thead>
                                                 <tr>

@@ -34,7 +34,7 @@
     var count = 1;
     editCount = 0;
     $(document).ready(function() {
-       
+
         autocompletesWraps.push('def');
         loadMap(autocompletesWraps);
     });
@@ -236,23 +236,23 @@
             }
         });
         $.ajax({
-                type: "post",
-                headers: {
-                    Accept: "application/json"
-                },
-                url: data_uri,
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    location.reload();
-                    if (response.status == 'success') {
-                        // $("#import-form").modal('hide');
-                    
-                      
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: data_uri,
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                location.reload();
+                if (response.status == 'success') {
+                    // $("#import-form").modal('hide');
+
+
 
                 } else {
-                   
+
                     $(".show_all_error.invalid-feedback").show();
                     $(".show_all_error.invalid-feedback").text(response.message);
 
@@ -260,14 +260,22 @@
                 return response;
             },
             beforeSend: function() {
-
-                location.reload();
+                $('#p-message').empty();
+                $('#p-message').append('Document uploading!');
+               
+                setTimeout(function() {
+                    location.reload();
+                }, 2000);
 
                 $(".loader_box").show();
             },
             complete: function() {
+                $('#p-message').empty();
+                $('#p-message').append('Document uploading!');
+                setTimeout(function() {
+                    location.reload();
+                }, 2000);
 
-                location.reload();
 
                 $(".loader_box").hide();
             }
