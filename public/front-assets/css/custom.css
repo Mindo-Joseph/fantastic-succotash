@@ -31,13 +31,6 @@ a {
     -o-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
     z-index: 999;
-}
-/* 
-.menu-navigation{    
-    border-bottom: 1px solid rgb(221 221 221 / 50%);
-} */
-
-.menu-navigation{    
     border-bottom: 1px solid rgb(221 221 221 / 50%);
 }
 
@@ -3081,6 +3074,11 @@ td.order_address {
     object-fit: cover;
 }
 
+.common-banner img{
+    max-width: 100%;
+    width: auto;
+}
+
 .category-block .category-image img {
     width: 100%;
 }
@@ -5745,6 +5743,35 @@ ul#main-nav-list {
 
 /* Cab booking Page Css */
 
+.cabbooking-loader {
+    width: 30px;
+    height: 30px;
+    animation: loading 1s infinite ease-out;
+    margin: auto;
+    border-radius: 50%;
+    background-color: red;
+}
+@keyframes loading {
+0% {
+    transform: scale(1);
+}
+100% {
+    transform: scale(8);
+    opacity: 0;
+}
+}
+.site-topbar,.main-menu.d-block{
+    display: none !important;
+}
+
+.cab-booking-header img.img-fluid {
+    height: 50px;
+}
+.cab-booking-header{
+    display: block !important;
+}
+
+
 .cab-banner-area {
     background: url(https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_1903,h_644/v1613521692/assets/d9/ce6c00-32b0-4b93-9f0d-6f927d93da08/original/Rider_Home_bg_desktop2x.png) no-repeat center center;
     background-size: cover;
@@ -6067,6 +6094,9 @@ body .footer-theme .sub-title h4 {
     margin-bottom: 15px;
 }
 
+.theme-card h5 {
+    padding-bottom: 18px;
+}
 
 
 
@@ -6887,17 +6917,6 @@ body[dir="rtl"] .inner_spacing h3 {
     .top-header .header-dropdown .mobile-wishlist {
         bottom: 10px;
         top: auto;
-    }
-    .radius-bar {
-        width: 100%;
-        position: fixed;
-        z-index: 11111;
-        bottom: 59px;
-        left: 0;
-        right: 0;
-        margin: auto;
-        display: none;
-        border-radius: 0;
     }
     .list-box {
         top: auto;
