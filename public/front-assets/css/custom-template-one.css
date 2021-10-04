@@ -63,6 +63,7 @@ body{
 .top-header.site-topbar {
     background: var(--top-header-color);
     padding: 5px 0;
+    display: list-item;
 }
 
 .top-header .header-dropdown li{

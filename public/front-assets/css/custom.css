@@ -31,8 +31,11 @@ a {
     -o-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
     z-index: 999;
-    border-bottom: 1px solid rgb(221 221 221 / 50%);
 }
+/* 
+.menu-navigation{    
+    border-bottom: 1px solid rgb(221 221 221 / 50%);
+} */
 
 .offset-top {
     margin-top: 226px;
@@ -48,7 +51,6 @@ a {
 
 header.site-header.fixed-bar {
     top: -50px;
-    border-color: rgb(221 221 221 / 50%);
 }
 
 .fixed-bar .nav-cate-img {
@@ -2624,10 +2626,6 @@ footer .form-control {
 
 #location_search_wrapper {
     box-shadow: 0px 0px 2px #ddd;
-}
-
-.menu-navigation {
-    background: #f8f8f8;
 }
 
 .icon-nav .btn.btn-solid {
