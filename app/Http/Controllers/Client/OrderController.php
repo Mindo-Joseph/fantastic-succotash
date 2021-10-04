@@ -211,7 +211,7 @@ class OrderController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function changeStatus(Request $request, $domain = ''){   
-    // dd($request->all());
+   
         DB::beginTransaction();
         try {
             $timezone = Auth::user()->timezone;
