@@ -246,13 +246,13 @@ class UserhomeController extends FrontController
             $home_page_pickup_labels = CabBookingLayout::with('translations')->where('is_active', 1)->orderBy('order_by')->get();
 
             $set_template = WebStylingOption::where('web_styling_id', 1)->where('is_selected', 1)->first();
-            $last_mile = $this->checkIfLastMileDeliveryOn();
+           // $last_mile = $this->checkIfLastMileDeliveryOn();
             if (isset($set_template)  && $set_template->template_id == 1)
-                return view('frontend.home-template-one')->with(['home' => $home, 'last_mile' => $last_mile, 'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+                return view('frontend.home-template-one')->with(['home' => $home,  'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
             if (isset($set_template)  && $set_template->template_id == 2)
-                return view('frontend.home')->with(['home' => $home, 'count' => $count, 'last_mile' => $last_mile, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+                return view('frontend.home')->with(['home' => $home, 'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
             else
-                return view('frontend.home')->with(['home' => $home, 'count' => $count, 'last_mile' => $last_mile, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+                return view('frontend.home')->with(['home' => $home, 'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
             pr($e->getCode());
             die;
