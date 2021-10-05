@@ -20,7 +20,6 @@ a {
 
 .site-header {
     width: 100%;
-    padding: 0 0 10px;
     top: 0;
     left: 0;
     background: #fff;
@@ -31,6 +30,9 @@ a {
     -o-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
     z-index: 999;
+}
+
+.menu-navigation{
     border-bottom: 1px solid rgb(221 221 221 / 50%);
 }
 
@@ -47,7 +49,7 @@ a {
 }
 
 .taxi-header+.offset-top {
-    margin-top: 61px !important;
+    margin-top: 72px !important;
 }
 
 .site-header.taxi-header.fixed-bar {
