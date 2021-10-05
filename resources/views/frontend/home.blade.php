@@ -77,7 +77,7 @@
                 </a>
                 <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                     <h6 class="d-flex justify-content-between">
-                        <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
+                        <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %></small>
                         <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
                     </h6>
                 <% } %>
