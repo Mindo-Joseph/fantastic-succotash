@@ -97,7 +97,7 @@ header.site-header.fixed-bar {
     font-size: 20px;
     color: #fff !important;
 }
-.footer-theme .sub-title li{
+.footer-theme .sub-title .payment-card-bottom li{
     display: inline-block;
 }
 
