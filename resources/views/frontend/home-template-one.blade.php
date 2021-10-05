@@ -21,6 +21,7 @@
 <button type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#login_modal">
   Launch demo modal
 </button>
+
 @if(count($banners))
 <section class="home-slider-wrapper">
     <div class="container">
