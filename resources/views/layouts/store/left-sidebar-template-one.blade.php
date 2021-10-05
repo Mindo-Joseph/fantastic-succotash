@@ -100,8 +100,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             <div class="row align-items-center pt-2 position-initial">
                 <div class="col-lg-12">
                     <div class="row mobile-header align-items-center">
-                        <div class="col-6 d-flex align-items-center"> 
-                            <a class="navbar-brand mr-3 d-none d-md-inline-block" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
+                        <div class="col-6 d-flex align-items-center justify-content-sm-between"> 
+                            <a class="navbar-brand mr-3 d-none d-sm-inline-block" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                             @if($mod_count > 1)
                                 <ul class="nav nav-tabs navigation-tab nav-material tab-icons mr-md-3 vendor_mods" id="top-tab" role="tablist">
                                     @if($client_preference_detail->delivery_check == 1)
@@ -123,7 +123,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </ul>
                             @endif 
                         </div>
-                        <div class="col-6 my-2 my-md-0">                       
+                        <div class="col-6 my-sm-2 my-md-0">                       
                             <div class="search_bar menu-right d-sm-flex d-block align-items-center justify-content-end justify-content-lg-between w-100 ">
                                 @if( (Session::get('preferences')))
                                     @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
@@ -212,6 +212,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             </script>
                                             <ul class="show-div shopping-cart " id="header_cart_main_ul"></ul>
                                         </li>
+                                        <li class="d-inline-block d-lg-none"><div class="toggle-nav p-0 d-inline-block"><i class="fa fa-bars sidebar-bar"></i></div></li>
                                     </ul>
                                 </div>
                                 

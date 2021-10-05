@@ -64,7 +64,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                     </div>
                 @endif
                 @if($client_preference_detail->show_contact_us == 1)
-                    <div class="col-lg-3 col-md-6 mb-md-0 mb-3 pl-xl-3">
+                    <div class="col-lg-3 col-md-6 pl-xl-3">
                         <div class="sub-title">
                             <div class="footer-title mt-0">
                                 <h4 class="mt-0">{{ __('Find our app on mobile') }}</h4>
@@ -92,49 +92,36 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     </div>
                 @endif  
-                <div class="col-lg-3 col-md-6 mb-md-0 mb-3 text-lg-right text-center d-none">
-                    <div class="return-wrapper">
-                        <div class="footer-return-box mb-3">
-                            <div class="return-icon">
-                                <img src="{{asset('front-assets/images/original-icon.svg')}}" alt="">
-                            </div>
-                            <div class="return-text">
-                                <h4 class="m-0">100% ORIGINAL</h4>
-                                <p>guarantee for all products</p>
-                            </div>
+                <div class="col-lg-3 col-md-6 payment-card">
+
+                    <div class="sub-title">
+                        <div class="footer-title mt-0">
+                            <h4 class="mt-0">{{ __('Payment Method') }}</h4>
                         </div>
-                        <div class="footer-return-box mb-3">
-                            <div class="return-icon">
-                                <img src="{{asset('front-assets/images/return-icon.svg')}}" alt="">
-                            </div>
-                            <div class="return-text">
-                                <h4 class="m-0">Return within 30 days</h4>
-                                <p>of recieving your product</p>
-                            </div>
+                        <div class="footer-contant">    
+                            @if($client_preference_detail->show_payment_icons == 1)
+                                <div class="payment-card-bottom text-center d-flex">
+                                    <ul>
+                                        <li>
+                                            <a href="#"><img src="{{asset('assets/images/visa.png')}}"></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="{{asset('assets/images/mastercard.png')}}"></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="{{asset('assets/images/paypal.png')}}"></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="{{asset('assets/images/american-express.png')}}"></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="{{asset('assets/images/discover.png')}}"></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            @endif
                         </div>
-                        <hr>
-                        @if($client_preference_detail->show_payment_icons == 1)
-                            <div class="payment-card-bottom text-center">
-                                <ul>
-                                    <li>
-                                        <a href="#"><img src="{{asset('assets/images/visa.png')}}"></a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><img src="{{asset('assets/images/mastercard.png')}}"></a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><img src="{{asset('assets/images/paypal.png')}}"></a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><img src="{{asset('assets/images/american-express.png')}}"></a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><img src="{{asset('assets/images/discover.png')}}"></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        @endif
-                    </div>
+                    </div>             
                 </div>                
             </div>
         </div>
