@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
-use App\Models\{Client, ClientPreference, Language, ClientLanguage, ClientCurrency, Product,Country};
+use App\Models\{Client, ClientPreference, Language, ClientLanguage, Currency, ClientCurrency, Product,Country};
 
 class CustomDomain{
     /**
@@ -116,6 +116,8 @@ class CustomDomain{
                 Session::put('currencyMultiplier', $primeCurcy->doller_compare);
               }
           }
+          $currency_detail = Currency::where('id', Session::get('customerCurrency'))->first();
+          Session::put('iso_code', $currency_detail->iso_code);
           $preferData = array();
           if(isset($clientPreference)){
             $preferData = $clientPreference;
