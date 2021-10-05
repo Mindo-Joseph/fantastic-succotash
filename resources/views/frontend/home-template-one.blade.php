@@ -172,11 +172,8 @@
             <div class="row align-items-center">
                 <div class="col-lg-2 cw top-heading pr-0 text-center text-lg-left mb-3 mb-lg-0">
                     <h2 class="h2-heading">
-                        @if(isset(@$homePageLabel->translations->first()) && @$homePageLabel->translations->first()->title != null)
                         {{ @$homePageLabel->translations->first()->title ?? '' }}
-                        @else
-                        {{  __(@$homePageLabel->title) ?? '' }}
-                        @endif
+                      
                     </h2>
                     <!-- <p>Check out the favorites among people.</p> -->
                 </div>
@@ -196,11 +193,8 @@
             <div class="row">
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-2">
                     <h2 class="h2-heading">
-                        @if(isset(@$homePageLabel->translations->first()) && @$homePageLabel->translations->first()->title != null)
                         {{@$homePageLabel->translations->first()->title ?? '' }}
-                        @else
-                        {{  __(@$homePageLabel->title) ?? '' }}
-                        @endif
+                       
                     </h2>
                     <a class="btn btn-solid" href="{{route('vendor.all')}}">See all</a>
                 </div>
@@ -218,11 +212,8 @@
             <div class="row">
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-0">
                     <h2 class="h2-heading">
-                        @if(isset(@$homePageLabel->translations->first()) && @$homePageLabel->translations->first()->title != null)
-                        {{@$homePageLabel->translations->first()->title ?? '' }}
-                        @else
-                        {{  __(@$homePageLabel->title) ?? '' }}
-                        @endif
+                       {{ @$homePageLabel->translations->first()->title ?? '' }}
+                       
                     </h2>
                     @if($homePageLabel->slug == 'vendors')
                     <a class="btn btn-solid" href="{{route('vendor.all')}}">{{__('View More')}}</a>
