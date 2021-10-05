@@ -12,7 +12,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
      }
  </style>
 
-<header class="site-header">
+<header class="site-header @if($client_preference_detail->business_type == 'taxi') taxi-header @endif">
   
    @if(Auth::check())
    @include('layouts.store/topbar-auth-template-one')

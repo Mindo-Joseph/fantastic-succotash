@@ -46,6 +46,14 @@ a {
     margin-top: 40px;
 }
 
+.taxi-header+.offset-top {
+    margin-top: 61px !important;
+}
+
+.site-header.taxi-header.fixed-bar {
+    top: -61px;
+}
+
 header.site-header.fixed-bar {
     top: -50px;
 }
