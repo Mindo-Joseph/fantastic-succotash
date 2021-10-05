@@ -309,11 +309,11 @@
                         <ul class="list-inline">
                             <li class="d-inline-block mr-1">
                                 <input type="radio" class="custom-control-input check" id="tasknow" name="task_type" value="now" <%= ((cart_details.schedule_type == 'now' || cart_details.schedule_type == '' || cart_details.schedule_type == null) ? 'checked' : '') %> >
-                                <label class="custom-control-label" for="tasknow">Now</label>
+                                <label class="btn btn-solid" for="tasknow">Now</label>
                             </li>
                             <li class="d-inline-block">
                                 <input type="radio" class="custom-control-input check" id="taskschedule" name="task_type" value="schedule" <%= ((cart_details.schedule_type == 'schedule') ? 'checked' : '') %> >
-                                <label class="custom-control-label" for="taskschedule">Schedule</label>
+                                <label class="btn btn-solid" for="taskschedule">Schedule</label>
                             </li>
                         </ul>
                     </div>

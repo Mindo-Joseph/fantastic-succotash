@@ -20,7 +20,7 @@ a {
 
 .site-header {
     width: 100%;
-    padding: 0;
+    padding: 0 0 10px;
     top: 0;
     left: 0;
     background: #fff;
@@ -77,8 +77,8 @@ header.site-header.fixed-bar {
     padding: 10px 0;
 }
 
-.pixelstrap li > a {
-    padding: 10px 30px 10px 0;
+.pixelstrap li > a,.pixelstrap a, .pixelstrap a:hover, .pixelstrap a:active {
+    padding: 10px 20px 10px 0;
 }
 
 .top-header .header-dropdown li:hover i{
@@ -87,13 +87,16 @@ header.site-header.fixed-bar {
 
 .site-topbar .location-bar h2{
     color: #fff;
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 14px;
+    line-height: 20px;
 }
 
 .site-topbar .location-bar i {
     font-size: 20px;
     color: #fff !important;
+}
+.footer-theme .sub-title li{
+    display: inline-block;
 }
 
 .vendors .container {
@@ -4671,7 +4674,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     font-size: 13px;
     letter-spacing: 0.5px;
     text-align: center;
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
     width: 100%;
 }
 
@@ -4680,7 +4683,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 }
 
 .login-form input[type="radio"]:checked+label {
-    border-color: #6658dd;
+    /* border-color: #6658dd; */
     font-size: 13px;
     letter-spacing: 0.5px;
 }
@@ -6040,7 +6043,7 @@ section.royo-business .title-36 {
     width: 100%;
 }
 .return-wrapper{    
-    width: 80%;
+    width: 100%;
     margin-left: auto;
 }
 .footer-return-box {
@@ -6875,6 +6878,19 @@ body[dir="rtl"] .inner_spacing h3 {
         padding: 10px 0 !important;
         margin-bottom: 10px !important;
     }
+    .popular-brands, .royo-recommends {
+        padding: 25px 0 10px !important;
+    }
+    .footer-theme .sub-title li {
+        display: block;
+    }
+    .footer-theme .sub-title .contact-list li:last-child {
+        margin-bottom: 10px;
+    }
+    .footer-theme .payment-card .sub-title li{
+        display: inline-block;
+    }
+    
 }
 
 @media(max-width: 576px) {
@@ -6902,6 +6918,18 @@ body[dir="rtl"] .inner_spacing h3 {
     .top-header .header-dropdown .mobile-wishlist {
         bottom: 10px;
         top: auto;
+    }
+
+    .radius-bar {
+        width: 100%;
+        position: fixed;
+        z-index: 11111;
+        bottom: 59px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        display: none;
+        border-radius: 0 !important;
     }
     .list-box {
         top: auto;

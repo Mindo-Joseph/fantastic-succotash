@@ -263,11 +263,11 @@ h6 {
 }
 
 .product-4 .slick-slide,.suppliers-slider .slick-slide{
-    padding: 30px 0;
+    padding: 20px 0;
 }
 
 .common-product-box,.suppliers-box {
-    padding: 0 10px;
+    padding: 10px 10px 0;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
     transition: all 0.5s;
@@ -320,6 +320,9 @@ h6 {
     letter-spacing: 0;
     margin: 5px 0;
     line-height: 20px;  
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-description b{
@@ -600,10 +603,10 @@ footer ul.social-links li,.footer-theme .sub-title .contact-list li{
 }
 
 footer ul.social-links li a i, .contact-list li  i {
-    width: 26px;
-    height: 26px;
-    line-height: 26px;
-    font-size: 14px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 10px;
     text-align: center;
     margin-right: 5px;
     background: #000;
@@ -1101,9 +1104,6 @@ body[dir="rtl"] #social-links li:last-child{
 }
 @media (max-width: 767px){
     
-    .site-header {
-        padding-bottom: 0;
-    }   
     .navbar-brand .img-fluid {
         max-width: initial;
     }
@@ -1161,8 +1161,11 @@ body[dir="rtl"] #social-links li:last-child{
 }
 
 @media (max-width: 576px){
-    .main-menu {
-        padding: 0 10px;
+    .offset-top {
+        margin-top: 220px;
+    }
+    header.site-header.fixed-bar {
+        top: 0;
     }
     .top-header.site-topbar {
         padding: 10px 10px 10px 0;
