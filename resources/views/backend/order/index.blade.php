@@ -19,6 +19,18 @@
     .order-page .card-box {
         padding: 20px 20px 5px !important;
     }
+    .progress-order {
+        width: calc(100% + 48px);
+        margin: -24px 0 20px;
+        background: #00000012;
+        color: var(--theme-deafult);
+        position: relative;
+        left: -24px;
+        font-weight: 600;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        padding: 5px 0;
+    }
 </style>
 
 <script type="text/template" id="order_page_template">
@@ -69,6 +81,14 @@
                                         </div>
 
                                         <a href="<%= vendor.vendor_detail_url %>" class="row order_detail order_detail_data align-items-top pb-1 mb-0 card-box no-gutters h-100">
+                                            <% if(order.scheduled_date_time) { %>
+                                            <div class="col-sm-12">
+                                                <div class="progress-order font-12">
+                                                    <span class="badge badge-success ml-2">Scheduled on</span>
+                                                    <span class="ml-2"><%= order.scheduled_date_time %></span>
+                                                </div>
+                                            </div>
+                                            <% } %>
                                             <span class="left_arrow pulse">
                                             </span>
                                             <div class="col-5 col-sm-3">

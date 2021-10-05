@@ -20,7 +20,7 @@
         @include('layouts.store/left-sidebar-template-one')
         @endif
 </header>
-<div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div>
+{{-- <div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div> --}}
 
 <section class="p-0 small-slider">
     <div class="slide-1 home-slider">
@@ -43,7 +43,7 @@
             <a href="{{$url}}">
                 @endif
                 <div class="home text-center">
-                    <img src="{{$banner->image['image_fit'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
+                    <img src="{{$banner->image['image_fit'] . '1920/1080' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
                 </div>
                 @if($url)
             </a>
@@ -77,7 +77,7 @@
                 </a>
                 <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                     <h6 class="d-flex justify-content-between">
-                        <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
+                        <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %></small>
                         <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
                     </h6>
                 <% } %>

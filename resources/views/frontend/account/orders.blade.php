@@ -1,12 +1,11 @@
 @switch($client_preference_detail->business_type)
     @case('taxi')
-        @php $ordertitle = 'Rides'; @endphp 
-        @php $hidereturn = 1; @endphp
+        <?php $ordertitle = 'Rides'; ?>
+        <?php $hidereturn = 1; ?>
         @break
     @default
-        @php $ordertitle = 'Orders'; @endphp 
+    <?php $ordertitle = 'Orders';  ?>
 @endswitch
-
 @extends('layouts.store', ['title' => __('My '.$ordertitle)])
 @section('css')
 <style type="text/css">
@@ -147,8 +146,11 @@ $timezone = Auth::user()->timezone;
                                                                 $product_total_count = $product_subtotal_amount = $product_taxable_amount = 0;
                                                             @endphp
                                                             <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
-                                                                @if($vendor->delivery_fee > 0)
+                                                                @if(($vendor->delivery_fee > 0) || (!empty($order->scheduled_date_time)))
                                                                     <div class="progress-order font-12">
+                                                                        @if(!empty($order->scheduled_date_time))
+                                                                            <span class="badge badge-success ml-2">Scheduled</span>
+                                                                        @endif
                                                                         <span class="ml-2">Your order will arrive by {{$vendor->ETA}}</span>
                                                                     </div>
                                                                 @endif
@@ -409,7 +411,9 @@ $timezone = Auth::user()->timezone;
                                                                                 @endphp
                                                                                 <span>{{Session::get('currencySymbol')}}@money($product_subtotal_amount * $clientCurrency->doller_compare)</span>
                                                                             </li>
+                                                                            @if(isset($hidereturn) && $hidereturn != 1)
                                                                             <button class="return-order-product btn btn-solid" data-id="{{$order->id??0}}"  data-vendor_id="{{$vendor->vendor_id??0}}"><td class="text-center" colspan="3">{{__('Return')}}</button>
+                                                                            @endif    
                                                                         </ul>
                                                                     </div>
                                                                 </div>
