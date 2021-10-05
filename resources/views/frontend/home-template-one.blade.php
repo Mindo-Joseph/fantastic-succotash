@@ -10,7 +10,7 @@
         padding-bottom: 20px;
     }
 </style>
-@endsection
+@endsection 
 @section('content')
 <header>
     <div class="mobile-fix-option"></div>
@@ -21,6 +21,7 @@
 <button type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#login_modal">
   Launch demo modal
 </button>
+@if(count($banners))
 <section class="home-slider-wrapper">
     <div class="container">
         <div class="row">
@@ -54,58 +55,10 @@
         </div>
     </div>
 </section>
+@endif
 
 <div class="home-content-area">
    
-    <!-- Popular Brands Section Start From Here -->
-    {{-- <section class="royo-recommends right-shape position-relative">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-2 cw top-heading pl-0 order-lg-1 mb-3 mb-lg-0 text-center text-lg-left">
-                    <h2 class="h2-heading">Royo Recommends</h2>
-                    <p>Check out recommended items.</p>
-                </div>
-                <div class="col-lg-10 cw">
-                    <div class="brand-slider">
-                        <div>
-                            <div class="brand-box d-flex align-items-center justify-content-center flex-column black-box">
-                                <div class="brand-ing">
-                                    <img src="{{asset('front-assets/images/nike.png')}}" alt="">
-                                </div>
-                                <h6>Nike</h6>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="brand-box d-flex align-items-center justify-content-center flex-column red-box">
-                                <div class="brand-ing">
-                                    <img src="{{asset('front-assets/images/nike.png')}}" alt="">
-                                </div>
-                                <h6>Nike</h6>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="brand-box d-flex align-items-center justify-content-center flex-column blue-box">
-                                <div class="brand-ing">
-                                    <img src="{{asset('front-assets/images/dominos.png')}}" alt="">
-                                </div>
-                                <h6>Nike</h6>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="brand-box d-flex align-items-center justify-content-center flex-column red-box">
-                                <div class="brand-ing">
-                                    <img src="{{asset('front-assets/images/nike.png')}}" alt="">
-                                </div>
-                                <h6>Nike</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> --}}
-
-
 </div>
 
 
@@ -203,7 +156,7 @@
         </a>
     <% }); %>
 </script>
-<section class="section-b-space p-t-0 pt-3 pt-md-4 ratio_asos d-none" id="our_vendor_main_div">
+<section class="section-b-space p-t-0 pt-3 pt-md-4 ratio_asos d-none pb-0" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $key => $homePageLabel)
             @if($homePageLabel->slug == 'pickup_delivery')
