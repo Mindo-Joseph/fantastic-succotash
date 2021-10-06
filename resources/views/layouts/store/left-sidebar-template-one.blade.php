@@ -138,7 +138,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         </div>
                                     @endif
                                 @endif  
-                                <div class="radius-bar d-lg-inline">
+                                <div class="radius-bar d-xl-inline">
                                     <div class="search_form d-flex align-items-center justify-content-between">
                                         <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
                                         <input class="form-control border-0 typeahead" type="search" placeholder="{{getNomenclatureName('Search product, vendor, item', true)}}" id="main_search_box">
@@ -174,7 +174,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                                     </form>
                                     <ul class="d-flex align-items-center">
-                                        <!-- <li class="mx-3 pl-0">t</li> -->
+                                        <li class="mr-2 pl-0 d-ipad">
+                                            <span class="mobile-search-btn"><i class="fa fa-search" aria-hidden="true"></i></span>
+                                        </li>
                                         <li class="onhover-div pl-0 shake-effect">
                                             @if($client_preference_detail)
                                                 @if($client_preference_detail->cart_enable == 1)

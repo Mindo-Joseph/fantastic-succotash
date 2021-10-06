@@ -30963,7 +30963,7 @@ body[dir=rtl] .slick-slide {
         top: 0;
         left: -350px;
         background-color: white;
-        z-index: 99;
+        z-index: 9999;
         overflow-y: scroll;
         padding: 15px 0 15px 15px;
         width: 320px;
@@ -31096,7 +31096,7 @@ body[dir=rtl] .slick-slide {
     .product-right .product-description .qty-box {
         -webkit-box-pack: center;
         -ms-flex-pack: center;
-        justify-content: center;
+        justify-content: start;
     }
 
     .product-right .size-text {
