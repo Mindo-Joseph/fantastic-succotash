@@ -85,7 +85,7 @@
                                             <% if(order.scheduled_date_time) { %>
                                             <div class="col-sm-12">
                                                 <div class="progress-order font-12">
-                                                    <span class="badge badge-success ml-2">Scheduled on</span>
+                                                    <span class="badge badge-success ml-2">Scheduled</span>
                                                     <span class="ml-2"><%= order.scheduled_date_time %></span>
                                                 </div>
                                             </div>
