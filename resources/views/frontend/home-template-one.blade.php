@@ -160,14 +160,13 @@
 <section class="section-b-space p-t-0 pt-3 pt-md-4 ratio_asos d-none pb-0" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $key => $homePageLabel)
-            @if($homePageLabel->slug == 'pickup_delivery')
-                @if(isset($homePageLabel->pickupCategories))
-                 @include('frontend.booking.cabbooking-single-module')
+        @if($homePageLabel->slug == 'pickup_delivery')
+                @if(isset($homePageLabel->pickupCategories) && count($homePageLabel->pickupCategories)) 
+                  @include('frontend.booking.cabbooking-single-module')
                 @endif 
         @elseif($homePageLabel->slug == 'dynamic_page')
                 @include('frontend.included_files.dynamic_page')
         @elseif($homePageLabel->slug == 'brands')  
-                                
         <section class="popular-brands left-shape position-relative">
         <div class="container">
             <div class="row align-items-center">
