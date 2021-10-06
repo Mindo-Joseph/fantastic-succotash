@@ -7,7 +7,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
     <section class="section-b-space light-layout py-4">
         <div class="container">
             <div class="row footer-theme partition-f">
-                <!-- <div class="col-lg-3 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start"> -->
+                @if(count($pages))
+               
                 <div class="col-lg-3 col-md-6">
                     <div class="sub-title">
                         <div class="footer-title mt-0">
@@ -17,15 +18,27 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                             <ul>
                                 @foreach($pages as $page)
 
-                                @if($page->primary->type_of_form == 2)
-                                @if($last_mile_common_set != false)
+                                @if(isset($page->primary->type_of_form) && ($page->primary->type_of_form == 2))
+                                @if(isset($last_mile_common_set) && $last_mile_common_set != false)
                                 <li>
-                                    <a href="{{route('extrapage',['slug' => $page->slug])}}">{{$page->translations->first() ? $page->translations->first()->title : $page->primary->title}}</a>
+                                    <a href="{{route('extrapage',['slug' => $page->slug])}}">
+                                        @if(isset($page->translations) && $page->translations->first()->title != null)
+                                        {{ $page->translations->first()->title ?? ''}}
+                                        @else
+                                        {{ $page->primary->title ?? ''}}
+                                        @endif
+                                    </a>
                                 </li>
                                 @endif
                                 @else
                                 <li>
-                                    <a href="{{route('extrapage',['slug' => $page->slug])}}">{{$page->translations->first() ? $page->translations->first()->title : $page->primary->title}}</a>
+                                    <a href="{{route('extrapage',['slug' => $page->slug])}}">
+                                        @if(isset($page->translations) && $page->translations->first()->title != null)
+                                        {{ $page->translations->first()->title ?? ''}}
+                                        @else
+                                        {{ $page->primary->title ?? ''}}
+                                        @endif
+                                    </a>
                                 </li>
                                 @endif
                                 @endforeach
@@ -33,7 +46,6 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     </div>
                 </div>
-                @if(count($pages))
                 <div class="col-lg-3 col-md-6 pl-lg-4">
                     <div class="sub-title">
                         <div class="footer-title mt-0">
@@ -49,6 +61,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                     </div>
                 </div>
                 @endif
+
+
                 @if(count($social_media_details))
                 <div class="col-lg-4 col-md-6 pl-lg-5  d-none">
                     <div class="sub-title">
@@ -84,6 +98,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                                 <a class="ml-2" href="#"><img src="{{asset('front-assets/images/google-play.png')}}" alt=""></a>
                             </div>
 
+                            @if(count($social_media_details))
                             <div class="footer-title mt-0">
                                 <h4 class="mt-0">{{ __('Keep in Touch') }}</h4>
                             </div>
@@ -97,6 +112,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                                 </li>
                                 @endforeach
                             </ul>
+                            @endif
                         </div>
                     </div>
                 </div>
