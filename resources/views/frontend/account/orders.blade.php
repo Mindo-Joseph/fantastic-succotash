@@ -150,8 +150,10 @@ $timezone = Auth::user()->timezone;
                                                                     <div class="progress-order font-12">
                                                                         @if(!empty($order->scheduled_date_time))
                                                                             <span class="badge badge-success ml-2">Scheduled</span>
+                                                                            <span class="ml-2">Your order will arrive by {{convertDateTimeInTimeZone($order->scheduled_date_time, $timezone, 'M d, Y h:i A')}}</span>
+                                                                        @else
+                                                                            <span class="ml-2">Your order will arrive by {{$vendor->ETA}}</span>
                                                                         @endif
-                                                                        <span class="ml-2">Your order will arrive by {{$vendor->ETA}}</span>
                                                                     </div>
                                                                 @endif
                                                                 <span class="left_arrow pulse"></span>
