@@ -479,6 +479,7 @@ class OrderController extends BaseController {
                 $order->user_name = $order->user->name;
                 $order->user_image = $order->user->image;
                 $order->payment_option_title = __($order->paymentOption->title);
+                $order->created_date = Carbon::parse($order->created_at)->setTimezone($user->timezone)->format('M d, Y h:i A');
                 foreach ($order->vendors as $vendor) {
                     $couponData = [];
                     $payable_amount = 0;

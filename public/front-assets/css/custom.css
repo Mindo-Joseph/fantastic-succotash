@@ -30,6 +30,9 @@ a {
     -o-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
     z-index: 999;
+}
+
+.menu-navigation{
     border-bottom: 1px solid rgb(221 221 221 / 50%);
 }
 
@@ -43,6 +46,14 @@ a {
 
 .set-hide-nav-bar {
     margin-top: 40px;
+}
+
+.taxi-header+.offset-top {
+    margin-top: 72px !important;
+}
+
+.site-header.taxi-header.fixed-bar {
+    top: -61px;
 }
 
 header.site-header.fixed-bar {
@@ -86,7 +97,7 @@ header.site-header.fixed-bar {
     font-size: 20px;
     color: #fff !important;
 }
-.footer-theme .sub-title li{
+.footer-theme .sub-title .payment-card-bottom li{
     display: inline-block;
 }
 

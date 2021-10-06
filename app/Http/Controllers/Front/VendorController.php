@@ -41,7 +41,7 @@ class VendorController extends FrontController
             $categoriesList = '';
             foreach($vendorCategories as $key => $category){
                 if($category->category){
-                    $categoriesList = $categoriesList . $category->category->translation_one->name;
+                    $categoriesList = $categoriesList . $category->category->translation_one->name??'';
                     if( $key !=  $vendorCategories->count()-1 ){
                         $categoriesList = $categoriesList . ', ';
                     }
@@ -289,7 +289,9 @@ class VendorController extends FrontController
             }
 
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
-            $vendor_categories = VendorCategory::with('category.translation_one')->where('vendor_id', $vid);
+            $vendor_categories = VendorCategory::with(['category.translation' => function($q) use($langId){
+                $q->where('category_translations.language_id', $langId);
+            }])->where('vendor_id', $vid);
             if($categorySlug != ''){
                 $vendor_categories = $vendor_categories->whereHas('category', function($query) use($categorySlug) {
                     $query->where('slug', $categorySlug);

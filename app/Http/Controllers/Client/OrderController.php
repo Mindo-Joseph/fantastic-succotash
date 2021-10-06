@@ -142,6 +142,7 @@ class OrderController extends BaseController{
       
         foreach ($orders as $key => $order) {
             $order->created_date = convertDateTimeInTimeZone($order->created_at, $user->timezone, 'd-m-Y, H:i A');
+            $order->scheduled_date_time = !empty($order->scheduled_date_time) ? convertDateTimeInTimeZone($order->scheduled_date_time, $user->timezone, 'M d, Y h:i A') : '';
             foreach ($order->vendors as $vendor) {
                 $vendor->vendor_detail_url = route('order.show.detail', [$order->id, $vendor->vendor_id]);
                 $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
@@ -218,10 +219,10 @@ class OrderController extends BaseController{
             $vendor_order_status_check = VendorOrderStatus::where('order_id', $request->order_id)->where('vendor_id', $request->vendor_id)->where('order_status_option_id', $request->status_option_id)->first();
             $currentOrderStatus = OrderVendor::where(['vendor_id' => $request->vendor_id, 'order_id' => $request->order_id])->first();
             if($currentOrderStatus->order_status_option_id == 2 && $request->status_option_id == 3){
-                return response()->json(['status' => 'error', 'message' => __('Order has already been accepted')]);
+                return response()->json(['status' => 'error', 'message' => __('Order has already been accepted!!!')]);
             }
             if($currentOrderStatus->order_status_option_id == 3 && $request->status_option_id == 2){
-                return response()->json(['status' => 'error', 'message' => __('Order has already been rejected')]);
+                return response()->json(['status' => 'error', 'message' => __('Order has already been rejected!!!')]);
             }
             if (!$vendor_order_status_check) {
                 $vendor_order_status = new VendorOrderStatus();

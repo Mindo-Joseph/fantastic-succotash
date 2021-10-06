@@ -20,8 +20,9 @@
         @include('layouts.store/left-sidebar-template-one')
         @endif
 </header>
-<div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div>
+{{-- <div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div> --}}
 
+@if(count($banners))
 <section class="p-0 small-slider">
     <div class="slide-1 home-slider">
         @foreach($banners as $banner)
@@ -43,7 +44,7 @@
             <a href="{{$url}}">
                 @endif
                 <div class="home text-center">
-                    <img src="{{$banner->image['image_fit'] . '1500/600' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
+                    <img src="{{$banner->image['image_fit'] . '1920/1080' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
                 </div>
                 @if($url)
             </a>
@@ -52,6 +53,7 @@
         @endforeach
     </div>
 </section>
+@endif
 <script type="text/template" id="vendors_template">
     <% _.each(vendors, function(vendor, k){%>
         <div class="product-box scale-effect">
@@ -77,7 +79,7 @@
                 </a>
                 <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                     <h6 class="d-flex justify-content-between">
-                        <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
+                        <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %></small>
                         <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
                     </h6>
                 <% } %>
@@ -126,7 +128,42 @@
         </div>
     <% }); %>
 </script>
-<section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos d-none" id="our_vendor_main_div">
+
+<script type="text/template" id="trending_vendors_template">
+    <% _.each(trending_vendors, function(vendor, k){%>
+        <div class="product-box scale-effect">
+            <div class="img-wrapper">
+                <div class="front">
+                    <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
+                        <img class="img-fluid blur-up lazyload m-auto bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
+                    </a>
+                </div>
+            </div>
+            <div class="product-detail inner_spacing text-center m-0 w-100">
+                <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
+                    <h3 class="d-flex justify-content-between p-0">
+                        <span><%= vendor.name %></span>
+                        @if($client_preference_detail)
+                            @if($client_preference_detail->rating_check == 1)
+                                <% if(vendor.vendorRating > 0){%>
+                                    <span class="rating m-0"><%= vendor.vendorRating %> <i class="fa fa-star text-white p-0"></i></span>
+                                <% } %>
+                            @endif
+                        @endif
+                    </h3>
+                </a>
+                <% if(vendor.timeofLineOfSightDistance != undefined){ %>
+                    <h6 class="d-flex justify-content-between">
+                        <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
+                        <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
+                    </h6>
+                <% } %>
+            </div>
+        </div>
+    <% }); %>
+</script>
+
+<section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos d-none pb-0" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $key => $homePageLabel)
         @if($homePageLabel->slug == 'pickup_delivery')
@@ -139,7 +176,7 @@
         <div class="container render_full_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
             <div class="row">
                 <div class="col-12">
-                    @if($homePageLabel->slug == 'vendors')
+                    @if($homePageLabel->slug == 'vendors' || $homePageLabel->slug == 'trending_vendors')
                     <div class="product-5 product-m no-arrow render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}"></div>
                     @else
                     <div class="product-4 product-m no-arrow render_{{$homePageLabel->slug }}" id="{{$homePageLabel->slug.$key}}"></div>
