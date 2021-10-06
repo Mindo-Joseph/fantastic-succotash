@@ -122,7 +122,7 @@ $timezone = Auth::user()->timezone;
                                                 </div>
                                                 <div class="row no-gutters order_data">
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
-                                                    <div class="col-md-3">{{convertDateTimeInTimeZone($order->created_at, $timezone, 'l, F d, Y, H:i A')}}</div>
+                                                    <div class="col-md-3">{{convertDateTimeInTimeZone($order->created_at, $timezone, 'l, F d, Y, h:i A')}}</div>
                                                     <div class="col-md-3">
                                                         <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                     </div>
