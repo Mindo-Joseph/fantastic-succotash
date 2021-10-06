@@ -98,11 +98,11 @@ class OrderController extends BaseController {
                     $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
                 }
                 $client_preference = ClientPreference::first();
-                if ($client_preference->verify_email == 1) {
-                    if ($user->is_email_verified == 0) {
-                        return response()->json(['error' => 'Your account is not verified.'], 404);
-                    }
-                }
+                // if ($client_preference->verify_email == 1) {
+                //     if ($user->is_email_verified == 0) {
+                //         return response()->json(['error' => 'Your account is not verified.'], 404);
+                //     }
+                // }
                 if ($client_preference->verify_phone == 1) {
                     if ($user->is_phone_verified == 0) {
                         return response()->json(['error' => 'Your phone is not verified.'], 404);
@@ -309,10 +309,11 @@ class OrderController extends BaseController {
                     $order->loyalty_amount_saved = $loyalty_amount_saved;
                     $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
                     $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
-                    $order->scheduled_date_time = $cart->scheduled_date_time;
+                    $order->scheduled_date_time = $cart->schedule_type == 'schedule' ? $cart->scheduled_date_time : null;
                     $order->subscription_discount = $total_subscription_discount;
                     $order->payable_amount = $payable_amount;
                     $order->save();
+                    $this->sendSuccessSMS($request, $order);
                     CartCoupon::where('cart_id', $cart->id)->delete();
                     CartProduct::where('cart_id', $cart->id)->delete();
                     if (($request->payment_option_id != 1) && ($request->payment_option_id != 2)) {
@@ -344,6 +345,29 @@ class OrderController extends BaseController {
         } catch (Exception $e) {
             DB::rollback();
             return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
+    public function sendSuccessSMS($request, $order, $vendor_id = ''){
+        try{
+            $prefer = ClientPreference::select('sms_provider', 'sms_key', 'sms_secret', 'sms_from')->first();
+
+            $user = Auth::user();
+            if($user){
+                $customerCurrency = ClientCurrency::join('currencies as cu', 'cu.id', 'client_currencies.currency_id')->where('client_currencies.currency_id', $user->currency)->first();
+                $currSymbol = $customerCurrency->symbol;
+                if($user->dial_code == "971"){
+                    $to = '+'.$user->dial_code."0".$user->phone_number;
+                } else {
+                    $to = '+'.$user->dial_code.$user->phone_number;
+                }
+                $provider = $prefer->sms_provider;
+                $body = "Hi ".$user->name.", Your order of amount ".$currSymbol.$order->payable_amount." for order number ".$order->order_number." has been placed successfully.";
+                if(!empty($prefer->sms_key) && !empty($prefer->sms_secret) && !empty($prefer->sms_from)){
+                    $send = $this->sendSms($provider, $prefer->sms_key, $prefer->sms_secret, $prefer->sms_from, $to, $body);
+                }
+            }
+        }
+        catch(\Exception $ex){
         }
     }
     public function sendOrderNotification($id)
