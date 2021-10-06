@@ -349,7 +349,7 @@ class ClientPreferenceController extends BaseController{
 
 
     public function postUpdateDomain(Request $request, $id){
-        $rules = array('custom_domain' => 'required|max:30');
+        $rules = array('custom_domain' => 'required|max:150');
         $validation  = Validator::make($request->all(), $rules);
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
