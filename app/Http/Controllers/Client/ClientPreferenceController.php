@@ -354,7 +354,7 @@ class ClientPreferenceController extends BaseController{
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
         }
-        // $client = Client::where('code', Auth::user()->code)->first();
+         $client = Client::where('code', Auth::user()->code)->first();
         // $client->custom_domain = $request->custom_domain;
         // $client->save();
 
