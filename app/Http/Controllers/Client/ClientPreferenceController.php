@@ -389,17 +389,12 @@ class ClientPreferenceController extends BaseController{
                 $response = curl_exec($curl);
                 $err = curl_error($curl);
                 
-                curl_close($curl);
-                if ($err) {
-                    return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $err]));
-                }
-                print_r('success');
-                print_r($response);
-                print_r('error');
-                print_r($err);
-                dd('ok');
-
-               // $process = shell_exec("/var/app/Automation/script.sh '".$my_url."' ");
+$res = json_decode($response);
+if($res->error->statusCode == 400){
+$error = $res->error->customMessage??'ERROR';
+return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $error]));
+}	
+ 
                $exists = Client::on('god')->where('code',$id)->where('custom_domain', $request->custom_domain)->count();
                if ($exists) {
                    return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => 'Domain name "' . $request->custom_domain . '" is not available. Please select a different domain']));
