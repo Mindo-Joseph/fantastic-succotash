@@ -3689,6 +3689,9 @@ h4#driver_name {
 
 
 /* Website Dark Mood Css Start Form Here */
+.dark .coupon-code h6{
+    color: #fff;
+}
 
 .dark .cab-banner-area .card-box {
     background: rgb(0 0 0 / 50%);
@@ -6003,7 +6006,7 @@ section.royo-business .title-36 {
 }
 
 .product-timing small i {
-    color: var(--theme-deafult);
+    color: #000;
     margin: 0 2px 0 0;
 }
 
@@ -6616,6 +6619,44 @@ body[dir="rtl"] .inner_spacing h3 {
     }
     .common_card .card {
         width: calc(100% - 20px);
+    }
+}
+
+
+@media (max-width: 1199px) {
+    .site-header{
+        position: inherit !important;
+    }
+    .offset-top{
+        margin-top: 0;
+    }
+    .pixelstrap>li>a>.sub-arrow {
+        display: block;
+    }
+    .pixelstrap li > a, .pixelstrap a, .pixelstrap a:hover, .pixelstrap a:active,.pixelstrap li a:hover{
+        padding-left: 10px;
+        text-align: left;
+        font-weight: 400 !important;
+        font-size: 13px !important;
+    }
+    .pixelstrap li a, .new-tag{
+        font-weight: 400;
+    }
+    .ipad-view{
+        position: initial !important;
+    }
+
+}
+
+@media screen and (min-device-width: 768px) and (max-device-width: 1200px) { 
+    .radius-bar.d-lg-inline {
+        position: absolute;
+        bottom: -52px;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+        border-radius: 0;
+        display: none !important;
     }
 }
 
