@@ -362,8 +362,6 @@ class ClientPreferenceController extends BaseController{
           # if submit custom domain by client
           if ($request->custom_domain && $request->custom_domain != $client->custom_domain) {
             try {
-                $domain    = str_replace(array('http://', config('domainsetting.domain_set')), '', $request->custom_domain);
-                $domain    = str_replace(array('https://', config('domainsetting.domain_set')), '', $request->custom_domain);
                 $my_url =   $request->custom_domain;
                 
                 $data1 = [
@@ -390,7 +388,7 @@ class ClientPreferenceController extends BaseController{
                 $err = curl_error($curl);
                 $res = json_decode($response); 
                 if($res->error->statusCode == 400){
-                $error = $res->error->customMessage ?? 'ERROR';
+                $error = isset($res->error->customMessage)?$res->error->customMessage:'ERROR';
                 return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $error]));
                 }	
  		
