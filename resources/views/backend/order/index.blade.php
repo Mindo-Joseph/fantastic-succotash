@@ -150,7 +150,7 @@
                             <% }); %>
                         </div>   
                         <div class="col-md-3 pl-0">
-                            <div class="card-box p-2">
+                            <div class="card-box p-2 mb-0 w-100 h-100">
                                 <ul class="price_box_bottom m-0 pl-0 pt-1">
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Total') }}</label>
@@ -181,7 +181,7 @@
         <% }); %>
     </div>
     <% if(next_page_url) { %>
-        <div class="row mt-4">
+        <div class="row mt-4 mb-4">
             <div class="col-md-4 offset-md-4 text-center">
                 <button class="ladda-button btn btn-primary load-more-btn" dir="ltr" data-style="expand-left" data-url="<%= next_page_url%>" data-rel="<%= filter_order_status %>">
                     <span class="ladda-label">{{ __('Load More') }}</span>

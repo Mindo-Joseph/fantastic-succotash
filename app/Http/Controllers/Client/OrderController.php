@@ -128,7 +128,7 @@ class OrderController extends BaseController{
                 break;
             }
         }
-        $orders = $orders->whereHas('vendors')->paginate(50);
+        $orders = $orders->whereHas('vendors')->paginate(30);
 
 
         $pending_orders = $pending_orders->where('order_status_option_id', 1)->count();
