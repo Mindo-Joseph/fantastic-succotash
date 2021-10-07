@@ -387,7 +387,7 @@ class ClientPreferenceController extends BaseController{
                 $response = curl_exec($curl);
                 $err = curl_error($curl);
                 $res = json_decode($response); 
-                if($res->error->statusCode == 400){
+                if(isset($res->error) && $res->error->statusCode == 400){
                 $error = isset($res->error->customMessage)?$res->error->customMessage:'ERROR';
                 return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $error]));
                 }	
