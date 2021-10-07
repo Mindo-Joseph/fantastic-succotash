@@ -390,6 +390,15 @@ class ClientPreferenceController extends BaseController{
                 $err = curl_error($curl);
                 
                 curl_close($curl);
+
+
+                $response = json_decode($response->getBody(), true); 
+                
+                // if($response && isset($response['error']){
+                //     return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $err]));
+                // }
+
+
                 if ($err) {
                     return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $err]));
                 }
