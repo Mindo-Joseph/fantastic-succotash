@@ -504,7 +504,14 @@ class OrderController extends BaseController {
                 $order->user_image = $order->user->image;
                 $order->payment_option_title = __($order->paymentOption->title);
                 $order->created_date = Carbon::parse($order->created_at)->setTimezone($user->timezone)->format('M d, Y h:i A');
+
                 foreach ($order->vendors as $vendor) {
+                    $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order_id)->where('vendor_id', $vendor->vendor->id)->orderBy('id', 'DESC')->first();
+                    if ($vendor_order_status) {
+                        $vendor->order_status =  ['current_status' => ['id' => $vendor_order_status->OrderStatusOption->id, 'title' => __($vendor_order_status->OrderStatusOption->title)]];
+                    } else {
+                        $vendor->current_status = null;
+                    }
                     $couponData = [];
                     $payable_amount = 0;
                     $discount_amount = 0;
