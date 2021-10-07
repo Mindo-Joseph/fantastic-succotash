@@ -52,6 +52,5 @@ Route::get('/switch/admin/language',function(Request $request){
     if($request->lang){
         session()->put("applocale_admin",$request->lang);
     }
-    // return redirect('/client/dashboard');
     return redirect()->back();
 });
