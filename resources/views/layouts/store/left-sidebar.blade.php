@@ -206,7 +206,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <input type="hidden" id="cliLang" name="cliLang" value="{{session('customerLanguage')}}">
                                 <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                             </form>
-                            <ul>
+                            <ul class="d-flex align-items-center">
                                 <li class="onhover-div pl-0 shake-effect">
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->cart_enable == 1)
@@ -245,7 +245,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     </script>
                                     <ul class="show-div shopping-cart " id="header_cart_main_ul"></ul>
                                 </li>
-                                <li class="d-inline-block d-lg-none"><div class="toggle-nav p-0 d-inline-block"><i class="fa fa-bars sidebar-bar"></i></div></li>
+                                <li class="d-sm-inline-block d-none"><div class="toggle-nav p-0 d-inline-block"><i class="fa fa-bars sidebar-bar"></i></div></li>
                             </ul>
                         </div>
                         

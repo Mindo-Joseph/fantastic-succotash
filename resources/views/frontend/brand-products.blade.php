@@ -58,8 +58,8 @@
             <div class="row">
                 <div class="col-12">
                     <div class="top-banner-wrapper text-center">
-                        @if(!empty($brand->image))
-                            <div class="common-banner"><img alt="" src="{{$brand->image['image_fit'] . '1920/1080' . $brand->image['image_path']}}" class="img-fluid blur-up lazyload"></div>
+                        @if(!empty($brand->image_banner))
+                            <div class="common-banner"><img alt="" src="{{$brand->image_banner['image_fit'] . '1920/1080' . $brand->image_banner['image_path']}}" class="img-fluid blur-up lazyload"></div>
                         @endif
                         <div class="top-banner-content small-section">
                             <h4>{{ $brand->translation_title }}</h4>
@@ -259,7 +259,7 @@
                                                     }
                                                     $imagePath2 = $data->media[$i]->image->path['image_fit'].'300/300'.$data->media[$i]->image->path['image_path'];
                                                 } ?>
-                                                <div class="col-xl-3 col-6 col-grid-box">
+                                                <div class="col-xl-3 col-6 col-grid-box mt-3">
                                                     <div class="product-box scale-effect">
                                                         <div class="img-wrapper">
                                                             <div class="front">

@@ -19,6 +19,7 @@
     .order-page .card-box {
         padding: 20px 20px 5px !important;
     }
+
     .progress-order {
         width: calc(100% + 48px);
         margin: -24px 0 20px;
@@ -68,23 +69,26 @@
                                         <div id="update-single-status">
                                             <% if(vendor.order_status_option_id == 1) { %>
                                                 <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>" data-count="<%= ve %>" data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="2" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Accept') }}</button>
-                                                <button class="update-status btn-danger" id="reject" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>
-                                                <% } else if(vendor.order_status_option_id == 2) { %>
-                                                    <button class="update-status btn-warning" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="4" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Processing') }}</button>
-                                                <% } else if(vendor.order_status_option_id == 4) { %>
-                                                        <button class="update-status btn-success" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="5" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Out For Delivery') }}</button>
-                                                <% } else if(vendor.order_status_option_id == 5) { %>
-                                                    <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="6" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Delivered') }}</button>
-                                                <% } else { %>
+                                                <!--<button class="update-status btn-danger" id="reject" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>-->
+                                            <% } else if(vendor.order_status_option_id == 2) { %>
+                                                <button class="update-status btn-warning" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="4" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Processing') }}</button>
+                                            <% } else if(vendor.order_status_option_id == 4) { %>
+                                                    <button class="update-status btn-success" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="5" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Out For Delivery') }}</button>
+                                            <% } else if(vendor.order_status_option_id == 5) { %>
+                                                <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="6" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Delivered') }}</button>
+                                            <% } else { %>
                                                     
                                             <% } %> 
+                                            <% if((vendor.order_status_option_id == 1) || ((vendor.order_status_option_id != 6) && (vendor.order_status_option_id != 3))) { %>
+                                                <button class="update-status btn-danger" id="reject" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>
+                                            <% } %>
                                         </div>
 
                                         <a href="<%= vendor.vendor_detail_url %>" class="row order_detail order_detail_data align-items-top pb-1 mb-0 card-box no-gutters h-100">
                                             <% if(order.scheduled_date_time) { %>
                                             <div class="col-sm-12">
                                                 <div class="progress-order font-12">
-                                                    <span class="badge badge-success ml-2">Scheduled on</span>
+                                                    <span class="badge badge-success ml-2">Scheduled</span>
                                                     <span class="ml-2"><%= order.scheduled_date_time %></span>
                                                 </div>
                                             </div>
@@ -257,8 +261,9 @@
             <form id="addRejectForm" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body" id="AddRejectBox">
+                    <p id="error-case" style="color:red;"></p>
                     <label style="font-size:medium;">Enter reason for rejecting the order.</label>
-                    <textarea class="reject_reason" data-name="reject_reason" name="reject_reason" id="" cols="107" rows="10" ></textarea>
+                    <textarea class="reject_reason" data-name="reject_reason" name="reject_reason" id="" cols="107" rows="10"></textarea>
 
                 </div>
                 <div class="modal-footer">
@@ -383,9 +388,9 @@
             });
             $('.addrejectSubmit').on('click', function(e) {
                 e.preventDefault();
-                var reject_reason=$('#addRejectForm #AddRejectBox .reject_reason').val();
-                
-               
+                var reject_reason = $('#addRejectForm #AddRejectBox .reject_reason').val();
+
+
                 //  var reject_reason = document.getElementById('reject_reason').value;
 
                 // var formData = new FormData(form);
@@ -406,6 +411,9 @@
                         if (response.status == 'success') {
                             // $(".modal .close").click();
                             location.reload();
+                        } else if (response.status == 'error') {
+                            $('#error-case').empty();
+                            $('#error-case').append(response.message);
                         }
                         if (count == 0) {
                             $(full_div).slideUp(1000, function() {
@@ -431,6 +439,12 @@
 
 
                     },
+                    error: function(response) {
+                        if (response.status == 'error') {
+                            $('#error-case').empty();
+                            $('#error-case').append(response.message);
+                        }
+                    }
 
                 });
 

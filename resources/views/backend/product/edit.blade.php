@@ -109,6 +109,16 @@
                     <span>{!! \Session::get('error_delete') !!}</span>
                 </div>
                 @endif
+                @if ( ($errors) && (count($errors) > 0) )
+                    <div class="alert alert-danger">
+                        <button type="button" class="close p-0" data-dismiss="alert">x</button>
+                        <ul class="m-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -136,7 +146,7 @@
                             {!! Form::label('title', __('URL Slug'),['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
                             {!! Form::text('url_slug', $product->url_slug, ['class'=>'form-control', 'id' => 'url_slug','onkeypress' => "return alplaNumericSlug(event)"]) !!}
-                            
+
                             @if($errors->has('url_slug'))
                             <span class="text-danger" role="alert">
                                 {{ $errors->first('url_slug') }}
@@ -167,7 +177,7 @@
                     <div class="row mb-2">
                         <div class="col-12 mb-2">
                             {!! Form::label('title', __('Product Name'),['class' => 'control-label']) !!}
-                            {!! Form::text('product_name', $product->primary ? $product->primary->title : '', ['class'=>'form-control', 'id' => 'product_name', 'placeholder' => 'Apple iMac']) !!}
+                            {!! Form::text('product_name', $product->primary ? $product->primary->title : '', ['class'=>'form-control', 'id' => 'product_name', 'placeholder' => 'Apple iMac', 'required' => 'required']) !!}
                         </div>
                         <div class="col-12 mb-2">
                             {!! Form::label('title', __('Product Description'),['class' => 'control-label']) !!}
@@ -223,7 +233,7 @@
                                     {!! Form::label('title', __('Quantity'),['class' => 'control-label']) !!}
                                     {!! Form::number('quantity', $product->variant[0]->quantity, ['class'=>'form-control', 'id' => 'quantity', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                 </div>
-                               @endif
+                                @endif
                                 <div class="col-sm-4">
                                     {!! Form::label('title', __('Sell When Out Of Stock'),['class' => 'control-label']) !!} <br />
                                     <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#43bee1" @if($product->sell_when_out_of_stock == 1) checked @endif>
@@ -235,7 +245,7 @@
                                     <input type="checkbox" bid="" id="need_price_from_dispatcher" data-plugin="switchery" name="need_price_from_dispatcher" class="chk_box" data-color="#43bee1" @if($product->need_price_from_dispatcher == 1) checked @endif>
                                 </div> --}}
                                 @endif
-                                
+
                             </div>
                         </div>
                     </div>
@@ -256,7 +266,7 @@
                         @endif
                     </div>
                     <p>{{ __("Select or change category to get variants") }}</p>
-                    
+
                     <div class="row" style="width:100%; overflow-x: scroll;">
                         <div id="variantAjaxDiv" class="col-12 mb-2">
                             <h5 class="">Variant List</h5>
@@ -400,39 +410,39 @@
 
 
                         @if($configData->need_dispacher_ride == 1 && $product->category->categoryDetail->type_id == 7)
-                            <div class="col-md-6 d-flex justify-content-between mb-2">
-                                {!! Form::label('title', __('Dispatcher Tags'),['class' => 'control-label']) !!}
-                                <select class="selectize-select1 form-control"  name="tags" required>
-                                    @if($agent_dispatcher_tags != null && count($agent_dispatcher_tags))
-                                    @foreach($agent_dispatcher_tags as $key => $tags)
-                                            <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
-                                    @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                        @endif
-                            
-                        @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 8)
-                            <div class="col-md-6 d-flex justify-content-between mb-2">
-                                {!! Form::label('title', __('Dispatcher Tags'),['class' => 'control-label']) !!}
-                                <select class="selectize-select1 form-control"  name="tags" required>
-                                    @if($agent_dispatcher_on_demand_tags != null && count($agent_dispatcher_on_demand_tags))
-                                    @foreach($agent_dispatcher_on_demand_tags as $key => $tags)
-                                            <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
-                                    @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                        <div class="col-md-6 d-flex justify-content-between mb-2">
+                            {!! Form::label('title', __('Dispatcher Tags'),['class' => 'control-label']) !!}
+                            <select class="selectize-select1 form-control" name="tags" required>
+                                @if($agent_dispatcher_tags != null && count($agent_dispatcher_tags))
+                                @foreach($agent_dispatcher_tags as $key => $tags)
+                                <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
+                                @endforeach
+                                @endif
+                            </select>
+                        </div>
                         @endif
 
                         @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 8)
-                            <div class="col-md-6 d-flex justify-content-between mb-2">
-                                {!! Form::label('title', __('Mode Of Service'),['class' => 'control-label']) !!}
-                                <select class="selectize-select1 form-control"  name="mode_of_service" required>
-                                   <option value="instant" @if($product->mode_of_service == 'instant') selected="selected" @endif>{{ __('Instant') }}</option>
-                                   <option value="schedule" @if($product->mode_of_service == 'schedule') selected="selected" @endif>{{ __('Schedule') }}</option>
-                                 </select>
-                            </div>
+                        <div class="col-md-6 d-flex justify-content-between mb-2">
+                            {!! Form::label('title', __('Dispatcher Tags'),['class' => 'control-label']) !!}
+                            <select class="selectize-select1 form-control" name="tags" required>
+                                @if($agent_dispatcher_on_demand_tags != null && count($agent_dispatcher_on_demand_tags))
+                                @foreach($agent_dispatcher_on_demand_tags as $key => $tags)
+                                <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
+                                @endforeach
+                                @endif
+                            </select>
+                        </div>
+                        @endif
+
+                        @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 8)
+                        <div class="col-md-6 d-flex justify-content-between mb-2">
+                            {!! Form::label('title', __('Mode Of Service'),['class' => 'control-label']) !!}
+                            <select class="selectize-select1 form-control" name="mode_of_service" required>
+                                <option value="instant" @if($product->mode_of_service == 'instant') selected="selected" @endif>{{ __('Instant') }}</option>
+                                <option value="schedule" @if($product->mode_of_service == 'schedule') selected="selected" @endif>{{ __('Schedule') }}</option>
+                            </select>
+                        </div>
                         @endif
 
 
@@ -639,7 +649,7 @@
         }
     });
 
-    
+
 
     var regexp = /^[a-zA-Z0-9-_]+$/;
 
@@ -708,7 +718,13 @@
     var uploadedDocumentMap = {};
     Dropzone.autoDiscover = false;
     $(document).ready(function() {
-        $('.check_inventory').hide();
+        var val = $('#has_inventory').prop('checked');
+
+        if (val == true) {
+            $('.check_inventory').show();
+        } else {
+            $('.check_inventory').hide();
+        }
         // $('#body_html').summernote({
         //     placeholder: 'Description',
         //     tabsize: 2,
@@ -723,14 +739,14 @@
         //     ]
         // });
         $('#has_inventory').change(function() {
-        var val = $(this).prop('checked');
-        console.log(val);
-        if (val == true) {
-            $('.check_inventory').show();
-        } else {
-            $('.check_inventory').hide();
-        }
-    });
+            var val = $(this).prop('checked');
+
+            if (val == true) {
+                $('.check_inventory').show();
+            } else {
+                $('.check_inventory').hide();
+            }
+        });
 
         $("div#my-awesome-dropzone").dropzone({
             acceptedFiles: ".jpeg,.jpg,.png,.svg",

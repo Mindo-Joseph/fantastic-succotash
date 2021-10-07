@@ -279,6 +279,10 @@ class CustomerAuthController extends FrontController
         $user = User::where('phone_number', $req->phone_number)->where('dial_code', $req->dialCode)->where('status', 1)->first();
         if ($user) {
             Auth::login($user);
+            $user->is_phone_verified = 1;
+            $user->phone_token = NULL;
+            $user->phone_token_valid_till = NULL;
+            $user->save();
             $userid = $user->id;
             if($req->has('access_token')){
                 if($req->access_token){
@@ -564,38 +568,50 @@ class CustomerAuthController extends FrontController
         try {
             DB::beginTransaction();
             $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
-            if (empty($request->input('user_id'))){
-                if($vendor_registration_documents->count() > 0){
-                    $request->validate([
-                        'address' => 'required',
-                        'full_name' => 'required',
-                        'email' => 'required|email|unique:users',
-                        'vendor_registration_document.*.did_visit' => 'required',
-                        'password' => 'required|string|min:6|max:50',
-                        'confirm_password' => 'required|same:password',
-                        'name' => 'required|string|max:150|unique:vendors',
-                        'phone_number' => 'required|string|min:6|max:15|unique:users',
-                    ]);
-                }else{
-                    $request->validate([
-                        'address' => 'required',
-                        'full_name' => 'required',
-                        'email' => 'required|email|unique:users',
-                        'password' => 'required|string|min:6|max:50',
-                        'confirm_password' => 'required|same:password',
-                        'name' => 'required|string|max:150|unique:vendors',
-                        'phone_number' => 'required|string|min:6|max:15|unique:users',
-                    ]);
+            if (empty($request->input('user_id'))) {
+                if ($vendor_registration_documents->count() > 0) {
+                    $request->validate(
+                        [
+                            'address' => 'required',
+                            'full_name' => 'required',
+                            'email' => 'required|email|unique:users',
+                            'vendor_registration_document.*.did_visit' => 'required',
+                            'password' => 'required|string|min:6|max:50',
+                            'confirm_password' => 'required|same:password',
+                            'name' => 'required|string|max:150|unique:vendors',
+                            'phone_number' => 'required|string|min:6|max:15|unique:users',
+                            'check_conditions' => 'required',
+                        ],
+                        ['check_conditions.required' => __('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')]
+                    );
+                } else {
+                    $request->validate(
+                        [
+                            'address' => 'required',
+                            'full_name' => 'required',
+                            'email' => 'required|email|unique:users',
+                            'password' => 'required|string|min:6|max:50',
+                            'confirm_password' => 'required|same:password',
+                            'name' => 'required|string|max:150|unique:vendors',
+                            'phone_number' => 'required|string|min:6|max:15|unique:users',
+                            'check_conditions' => 'required',
+                        ],
+                        ['check_conditions.required' => __('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')]
+                    );
                 }
-            }else {
+            } else {
                 $rules_array = [
-                        'address' => 'required',
-                        'name' => 'required|string|max:150|unique:vendors',
+                    'address' => 'required',
+                    'name' => 'required|string|max:150|unique:vendors',
+                    'check_conditions' => 'required',
                 ];
                 foreach ($vendor_registration_documents as $vendor_registration_document) {
                     $rules_array[$vendor_registration_document->primary->slug] = 'required';
                 }
-                $request->validate($rules_array);
+                $request->validate(
+                    $rules_array,
+                    ['check_conditions.required' => __('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')]
+                );
             }
             $client_detail = Client::first();
             $client_preference = ClientPreference::first();
