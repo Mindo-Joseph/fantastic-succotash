@@ -358,7 +358,7 @@ class ClientPreferenceController extends BaseController{
          $client = Client::where('code', Auth::user()->code)->first();
         // $client->custom_domain = $request->custom_domain;
         // $client->save();
-
+        $id = Auth::user()->code;
           # if submit custom domain by client
           if ($request->custom_domain && $request->custom_domain != $client->custom_domain) {
             try {
