@@ -393,6 +393,11 @@ class ClientPreferenceController extends BaseController{
                 if ($err) {
                     return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $err]));
                 }
+                print_r('success');
+                print_r($response);
+                print_r('error');
+                print_r($err);
+                dd('ok');
 
                // $process = shell_exec("/var/app/Automation/script.sh '".$my_url."' ");
                $exists = Client::on('god')->where('code',$id)->where('custom_domain', $request->custom_domain)->count();
