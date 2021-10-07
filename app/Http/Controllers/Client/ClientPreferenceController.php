@@ -391,7 +391,7 @@ class ClientPreferenceController extends BaseController{
                 
                 $res = json_decode($response);
                 if($res->error->statusCode == 400){
-                $error = $res->error->customMessage??'ERROR';
+                $error = $res->error->customMessage ?? 'ERROR';
                 return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $error]));
                 }	
  
@@ -406,11 +406,13 @@ class ClientPreferenceController extends BaseController{
                    }
                }
                return redirect()->route('configure.customize')->with('success', 'Client customize data updated successfully!');
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $e->getMessage()]));
             }
           
            
+        }else{
+            return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => 'Domain name "' . $request->custom_domain . '" is already pointed. Please select a different domain']));
         }
 
 
