@@ -399,11 +399,11 @@ class ClientPreferenceController extends BaseController{
                 return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $e->getMessage()]));
             }
           
-             $exists = Client::on('mysql')->where('code', '<>', $id)->where('custom_domain', $request->custom_domain)->count();
+             $exists = Client::on('god')->where('code',$id)->where('custom_domain', $request->custom_domain)->count();
             if ($exists) {
                 return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => 'Domain name "' . $request->custom_domain . '" is not available. Please select a different domain']));
             } else {
-                Client::on('mysql')->where('code', $id)->update(['custom_domain' => $request->custom_domain]);
+                Client::on('god')->where('code',$id)->update(['custom_domain' => $request->custom_domain]);
                  $dbname = DB::connection()->getDatabaseName();
                 if ($dbname != env('DB_DATABASE')) {
                     Client::where('id', '!=', 0)->update(['custom_domain' => $request->custom_domain]);
