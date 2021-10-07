@@ -14,7 +14,7 @@ class AddImageMobileToBanners extends Migration
     public function up()
     {
         Schema::table('banners', function (Blueprint $table) {
-            $table->string('image_mobile', 150);
+            $table->string('image_mobile', 150)->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AddImageMobileToBanners extends Migration
     public function down()
     {
         Schema::table('banners', function (Blueprint $table) {
-            //
+            $table->dropColumn('image_mobile');
         });
     }
 }
