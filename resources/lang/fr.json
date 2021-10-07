@@ -901,5 +901,18 @@
     "profile": "profil",
     "server error": "erreur du serveur",
     "success": "Succès",
-    "web links list": "liste de liens web"
+    "web links list": "liste de liens web",
+    "Search product, vendor, item": "Rechercher un produit, un fournisseur, un article",
+    "Previous": "Précédent",
+    "Next": "Prochain",
+    "Breadcrumb": "Miette de pain",
+    "Indicate the current page’s location within a navigational hierarchy.": "Indiquez l'emplacement de la page actuelle dans une hiérarchie de navigation.",
+    "Home": "Accueil",
+    "Library": "Une bibliothèque",
+    "Data": "Données",
+    "Home": "Accueil",
+    "Profile": "Profil",
+    "Messages": "Messages",
+    "Settings": "Paramètres",
+    "": ""
 }

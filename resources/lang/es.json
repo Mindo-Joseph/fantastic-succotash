@@ -823,5 +823,17 @@
    "Delivered": "Entregado",
    "Accept": "Aceptar",
    "Reject": "Rechazar",
+   "Search product, vendor, item": "Buscar producto, proveedor, artículo",
+   "Previous": "Anterior",
+   "Next": "Próximo",
+   "Breadcrumb": "Migaja de pan",
+   "Indicate the current page’s location within a navigational hierarchy.": "Indique la ubicación de la página actual dentro de una jerarquía de navegación".,
+   "Home": "Hogar",
+   "Library": "Biblioteca",
+   "Data": "Datos",
+   "Home": "Hogar",
+   "Profile": "Perfil",
+   "Messages": "Mensajes",
+   "Settings": "Ajustes",
    "": ""
 }

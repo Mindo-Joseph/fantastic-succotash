@@ -818,5 +818,17 @@
   "Delivered": "Geliefert",
   "Accept": "Annehmen",
   "Reject": "Ablehnen",
+  "Search product, vendor, item": "Produkt, Anbieter, Artikel suchen",
+  "Previous": "Vorherige",
+  "Next": "Nächste",
+  "Breadcrumb": "Semmelbrösel",
+  "Indicate the current page’s location within a navigational hierarchy.": "Geben Sie die Position der aktuellen Seite innerhalb einer Navigationshierarchie an.",
+  "Home": "Heim",
+  "Library": "Bücherei",
+  "Data": "Daten",
+  "Home": "Heim",
+  "Profile": "Profil",
+  "Messages": "Mitteilungen",
+  "Settings": "Einstellungen",
   "": ""
 }
