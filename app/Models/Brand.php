@@ -13,6 +13,11 @@ class Brand extends Model
   		return $this->hasMany('App\Models\BrandTranslation')->join('languages', 'brand_translations.language_id', 'languages.id');
   	}
 
+    public function translation_one(){
+      return $this->hasOne('App\Models\BrandTranslation')->select('brand_id', 'title')->where('language_id', 1); 
+   }
+   
+
   	public function english(){
   		return $this->hasMany('App\Models\BrandTranslation')->where('language_id', 1); 
   	}
