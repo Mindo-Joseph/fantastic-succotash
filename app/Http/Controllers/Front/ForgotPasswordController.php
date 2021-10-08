@@ -25,7 +25,7 @@ use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand,
 
 class ForgotPasswordController extends FrontController{
     use ApiResponser;
-    public function getResetPasswordForm(Request $request,$token,$domain = ''){
+    public function getResetPasswordForm(Request $request,$domain = '',$token){
 
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
