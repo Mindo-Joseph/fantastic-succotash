@@ -167,7 +167,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach($brands as $key => $brand)
-                                    @if(!empty($variant->translation_one))
+                                    @if(!empty($brand->translation_one))
                                     <tr class="brandList" data-row-id="{{$brand->id}}">
                                         <td><span class="dragula-handle"></span></td>
                                         <td><img class="rounded-circle" src="{{$brand->image['proxy_url'].'30/30'.$brand->image['image_path']}}"></td>
