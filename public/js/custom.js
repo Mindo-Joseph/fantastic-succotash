@@ -2281,7 +2281,7 @@ $(document).ready(function () {
             }
         }
         $('html, body').animate({
-            scrollTop: $(element).offset().top
+            scrollTop: $(element).offset().top - 200
         }, 500);
         setTimeout(function () {
             $(element).addClass('d-none');
