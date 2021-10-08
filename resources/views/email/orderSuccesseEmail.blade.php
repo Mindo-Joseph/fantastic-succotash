@@ -102,14 +102,13 @@
         }
 
         .pad-left-right-space td b {
-            font-size: 15px;
+            font-size: 14px;
             font-family: 'Roboto', sans-serif;
         }
 
         .order-detail th {
-            font-size: 16px;
+            font-size: 14px;
             padding: 15px;
-            text-align: center;
             background: #fafafa;
         }
 
