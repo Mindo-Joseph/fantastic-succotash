@@ -13751,7 +13751,7 @@ header.stickycls {
 
 @media (min-width: 1200px) {
     .toggle-nav {
-        display: none;
+        display: none !important;
     }
 
     .center-margin {

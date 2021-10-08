@@ -4717,6 +4717,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 .pixelstrap li a img {
     display: block;
     width: 40px;
+    height: 40px;
     margin: 0 auto 10px;
 }
 
@@ -6715,6 +6716,12 @@ body[dir="rtl"] .inner_spacing h3 {
     .ds {
         position: absolute;
         left: calc(((100vw - 1440px) / 2) + 24px);
+    }
+}
+
+@media(min-width:1200px) {
+    li.mobile-menu-btn.d-sm-inline-block.d-none {
+        display: none !important;
     }
 }
 

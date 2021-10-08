@@ -167,7 +167,7 @@
     <div class="vendors">
         @foreach($homePageLabels as $key => $homePageLabel)
         @if($homePageLabel->slug == 'pickup_delivery')
-                @if(isset($homePageLabel->pickupCategories))
+                @if(isset($homePageLabel->pickupCategories) && count($homePageLabel->pickupCategories)) 
                  @include('frontend.booking.cabbooking-single-module')
                 @endif 
         @elseif($homePageLabel->slug == 'dynamic_page')
