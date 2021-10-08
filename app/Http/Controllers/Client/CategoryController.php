@@ -33,6 +33,7 @@ class CategoryController extends BaseController
             $categories = $categories->where('type_id', '!=', 5);   # if celebrity mod off .
 
         $categories = $categories->get();
+
         if ($categories) {
             $build = $this->buildTree($categories->toArray());
             $tree = $this->printTree($build);
@@ -43,7 +44,7 @@ class CategoryController extends BaseController
             ->where('client_languages.is_active', 1)
             ->orderBy('client_languages.is_primary', 'desc')->get();
 
-
+        
         return view('backend.catalog.index')->with(['categories' => $categories, 'html' => $tree,  'languages' => $langs, 'variants' => $variants, 'brands' => $brands, 'build' => $build]);
     }
 
