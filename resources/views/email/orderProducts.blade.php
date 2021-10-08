@@ -1,13 +1,13 @@
  <tr>
      <td>
          @foreach($cartData->products as $product)
-         <h4>Vendor: {{$product['vendor']['name']}}</h4>
+         <h4 style="margin-top: 10px; margin-bottom: 0px">{{$product['vendor']['name']}}</h4>
          <table class="order-detail" border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%; margin-bottom: 20px; margin-top: 10px">
              <tr>
-                 <th align="left">PRODUCT</th>
-                 <th align="left" style="padding-left: 15px;">DESCRIPTION</th>
-                 <th align="center">QUANTITY</th>
-                 <th align="right">PRICE </th>
+                 <th>PRODUCT</th>
+                 <th>DESCRIPTION</th>
+                 <th>QUANTITY</th>
+                 <th>PRICE </th>
              </tr>
              @php
              $total_products = 0;
