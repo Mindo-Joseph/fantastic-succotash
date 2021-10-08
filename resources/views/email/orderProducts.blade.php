@@ -2,18 +2,18 @@
      <td>
          @foreach($cartData->products as $product)
          <h4 style="margin-top: 10px; margin-bottom: 0px">{{$product['vendor']['name']}}</h4>
-         <table class="order-detail" border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%; margin-bottom: 20px; margin-top: 10px">
-             <tr>
-                 <th>PRODUCT</th>
-                 <th>DESCRIPTION</th>
-                 <th>QUANTITY</th>
-                 <th>PRICE </th>
+         <table class="order-detail" border="0" cellpadding="0" cellspacing="0" style="width: 100%; margin-bottom: 20px; margin-top: 10px">
+             <tr class="pad-left-right-space">
+                 <th align="left">PRODUCT</th>
+                 <th align="left">DESCRIPTION</th>
+                 <th align="center">QUANTITY</th>
+                 <th align="right">PRICE </th>
              </tr>
              @php
              $total_products = 0;
              @endphp
              @foreach($product['vendor_products'] as $vendor_product)
-             <tr>
+             <tr class="pad-left-right-space">
                  <td align="left">
                     <div style="padding:5px"><img src="{{$vendor_product['product']['media'][0]['image']['path']['image_fit']}}100/100{{$vendor_product['product']['media'][0]['image']['path']['image_path']}}" alt="" width="80"></div>
                  </td>

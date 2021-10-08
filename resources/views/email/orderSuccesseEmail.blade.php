@@ -93,8 +93,8 @@
             border: unset !important;
         }
 
-        .pad-left-right-space td {
-            padding: 5px 15px;
+        .pad-left-right-space td, .pad-left-right-space th {
+            padding: 5px 10px;
         }
 
         .pad-left-right-space td p {
@@ -119,7 +119,7 @@
     </style>
 </head>
 
-<body style="margin: 20px auto;max-width:100%;width:600px;">
+<body style="margin: 20px auto;max-width:100%;width:700px;">
     {!! $mailData['email_template_content'] !!}
     <table class="main-bg-light text-center top-0" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
