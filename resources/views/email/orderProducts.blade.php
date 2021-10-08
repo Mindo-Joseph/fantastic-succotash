@@ -50,7 +50,7 @@
              @if($product['delivery_fee_charges'] > 0)
              <tr class="pad-left-right-space">
                  <td colspan="2" align="left">
-                     <p style="font-size: 14px;">Shipping Charge :</p>
+                     <p style="font-size: 14px;">Delivery Charge :</p>
                  </td>
                  <td colspan="2" align="right">
                      <b>{{$currencySymbol . $product['delivery_fee_charges']}}</b>
