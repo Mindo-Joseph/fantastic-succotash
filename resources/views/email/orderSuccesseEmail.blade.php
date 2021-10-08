@@ -66,9 +66,11 @@
 
         table {
             margin-top: 10px;
+            border-radius: 10px;
         }
         table th {
             font-size: 14px;
+            border-radius: 10px;
         }
 
         table.top-0 {

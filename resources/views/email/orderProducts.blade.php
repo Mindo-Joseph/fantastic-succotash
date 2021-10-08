@@ -9,7 +9,7 @@
             </tr>
             @foreach($cartData->products as $product)
             <tr class="pad-left-right-space">
-                <td colspan="4" class="main-bg-light"><h4 style="margin-top: 10px; margin-bottom: 0px">{{$product['vendor']['name']}}</h4></td>
+                <td colspan="4"><h4 class="main-bg-light" style="margin-top: 5px; margin-bottom: 5px">{{$product['vendor']['name']}}</h4></td>
             </tr>
             @php
                 $total_products = 0;
@@ -36,86 +36,86 @@
             @endforeach
             <tr class="pad-left-right-space ">
                 <td class="m-t-5" colspan="2" align="left">
-                    <p style="font-size: 14px;">Subtotal : </p>
+                    <p style="font-size: 14px;"><b>Subtotal</b></p>
                 </td>
                 <td class="m-t-5" colspan="2" align="right">
-                    <b style>{{$currencySymbol . $order->total_amount}}</b>
+                    <b style>{{$currencySymbol . number_format($order->total_amount, 2, '.', '')}}</b>
                 </td>
             </tr>
             <tr class="pad-left-right-space">
                 <td colspan="2" align="left">
-                    <p style="font-size: 14px;">Tax :</p>
+                    <p style="font-size: 14px;"><b>Tax</b></p>
                 </td>
                 <td colspan="2" align="right">
-                    <b>{{$currencySymbol . $order->taxable_amount}}</b>
+                    <b>{{$currencySymbol . number_format($order->taxable_amount, 2, '.', '')}}</b>
                 </td>
             </tr>
             @if($order->total_delivery_fee > 0)
                 <tr class="pad-left-right-space">
                     <td colspan="2" align="left">
-                        <p style="font-size: 14px;">Delivery Charge :</p>
+                        <p style="font-size: 14px;"><b>Delivery Charge</b></p>
                     </td>
                     <td colspan="2" align="right">
-                        <b>{{$currencySymbol . $order->total_delivery_fee}}</b>
+                        <b>{{$currencySymbol . number_format($order->total_delivery_fee, 2, '.', '')}}</b>
                     </td>
                 </tr>
             @endif
             @if($order->tip_amount > 0)
                 <tr class="pad-left-right-space">
                     <td colspan="2" align="left">
-                        <p style="font-size: 14px;">Tip :</p>
+                        <p style="font-size: 14px;"><b>Tip</b></p>
                     </td>
                     <td colspan="2" align="right">
-                        <b>{{$currencySymbol . $order->tip_amount}}</b>
+                        <b>{{$currencySymbol . number_format($order->tip_amount, 2, '.', '')}}</b>
                     </td>
                 </tr>
             @endif
             @if($order->subscription_discount > 0)
                 <tr class="pad-left-right-space">
                     <td colspan="2" align="left">
-                        <p style="font-size: 14px;">Subscription Discount :</p>
+                        <p style="font-size: 14px;"><b>Subscription Discount</b></p>
                     </td>
                     <td colspan="2" align="right">
-                        <b>{{$currencySymbol . $order->subscription_discount}}</b>
+                        <b>{{$currencySymbol . number_format($order->subscription_discount, 2, '.', '')}}</b>
                     </td>
                 </tr>
             @endif
             @if($order->loyalty_amount_saved > 0)
             <tr class="pad-left-right-space">
                 <td colspan="2" align="left">
-                    <p style="font-size: 14px;">Loyalty Amount Used :</p>
+                    <p style="font-size: 14px;"><b>Loyalty Amount Used</b></p>
                 </td>
                 <td colspan="2" align="right">
-                    <b>{{$currencySymbol . $order->loyalty_amount_saved}}</b>
+                    <b>{{$currencySymbol . number_format($order->loyalty_amount_saved, 2, '.', '')}}</b>
                 </td>
             </tr>
             @endif
-            @if($order->loyalty_amount_saved > 0)
+            @if($order->wallet_amount_used > 0)
             <tr class="pad-left-right-space">
                 <td colspan="2" align="left">
-                    <p style="font-size: 14px;">Loyalty Amount Used :</p>
+                    <p style="font-size: 14px;"><b>Wallet Amount Used</b></p>
                 </td>
                 <td colspan="2" align="right">
-                    <b>{{$currencySymbol . $order->loyalty_amount_saved}}</b>
+                    <b>{{$currencySymbol . number_format($order->wallet_amount_used, 2, '.', '')}}</b>
                 </td>
             </tr>
             @endif
             @if($order->total_discount > 0)
             <tr class="pad-left-right-space">
                 <td colspan="2" align="left">
-                    <p style="font-size: 14px;">Total Discount :</p>
+                    <p style="font-size: 14px;"><b>Total Discount</b></p>
                 </td>
                 <td colspan="2" align="right">
-                    <b>{{$currencySymbol . $order->total_discount}}</b>
+                    <b>{{$currencySymbol . number_format($order->total_discount, 2, '.', '')}}</b>
                 </td>
             </tr>
             @endif
-            <tr class="pad-left-right-space ">
+            <tr class="pad-left-right-space main-bg-light">
                 <td class="m-b-5" colspan="2" align="left">
-                    <p style="font-size: 14px;">Total :</p>
+                    <p style="font-size: 14px;"><b>Total</b></p>
                 </td>
                 <td class="m-b-5" colspan="2" align="right">
-                    <b>{{$currencySymbol . $product['payable_amount']}}</b>
+                    <b>{{$currencySymbol . number_format($order->payable_amount, 2, '.', '')}}</b>
                 </td>
             </tr>
         </table>
