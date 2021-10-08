@@ -377,7 +377,9 @@ class VendorController extends FrontController
         }
         else{
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
-            $products = Product::with(['category.categoryDetail', 'category.categoryDetail.translation',
+            $products = Product::with(['category.categoryDetail.translation' => function($q) use($langId){
+                            $q->where('category_translations.language_id', $langId);
+                        },
                         'media.image',
                         'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
