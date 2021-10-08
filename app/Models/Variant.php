@@ -14,7 +14,6 @@ class Variant extends Model
   }
 
   public function translation_one(){
-    if (Auth::user()->is_superadmin == 1 || Auth::user()->is_admin == 1) {
       $primary = ClientLanguage::orderBy('is_primary', 'desc')->first();
       if (isset($primary) && !empty($primary)) {
         $langset = $primary->language_id;
@@ -23,9 +22,6 @@ class Variant extends Model
       }
 
       return $this->hasOne('App\Models\VariantTranslation')->select('variant_id', 'title')->where('language_id', $langset);
-    } else {
-      return $this->hasOne('App\Models\VariantTranslation')->select('variant_id', 'title')->where('language_id', 1);
-    }
  }
 
   public function primary(){
