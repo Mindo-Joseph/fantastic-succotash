@@ -2,7 +2,7 @@
      <td>
          @foreach($cartData->products as $product)
          <h4>Vendor: {{$product['vendor']['name']}}</h4>
-         <table class="order-detail" border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%;    margin-bottom: 50px;">
+         <table class="order-detail" border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%;    margin-bottom: 20px;">
              <tr align="left">
                  <th>PRODUCT</th>
                  <th style="padding-left: 15px;">DESCRIPTION</th>
@@ -15,7 +15,7 @@
              @foreach($product['vendor_products'] as $vendor_product)
              <tr>
                  <td>
-                     <img src="{{$vendor_product['product']['media'][0]['image']['path']['image_fit']}}100/100{{$vendor_product['product']['media'][0]['image']['path']['image_path']}}" alt="" width="80">
+                    <div style="padding:5px"><img src="{{$vendor_product['product']['media'][0]['image']['path']['image_fit']}}100/100{{$vendor_product['product']['media'][0]['image']['path']['image_path']}}" alt="" width="80"></div>
                  </td>
                  <td valign="top" style="padding-left: 15px;">
                      <h5 style="margin-top: 15px;">{{$vendor_product['product']['translation_one']['title']}}</h5>
@@ -23,10 +23,10 @@
                  <td valign="top" style="padding-left: 15px;">
                      <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>{{$vendor_product['quantity']}}</span></h5>
                  </td>
-                 <td valign="top" style="padding-left: 15px;">
-                     <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>${{$vendor_product['pvariant']['price']}}</b></h5>
+                 <td valign="top" align="right" style="padding-left: 15px;">
+                     <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>${{number_format($vendor_product['pvariant']['price'], 2, '.', '')}}</b></h5>
                      @php
-                     $total_products += $vendor_product['pvariant']['price'];
+                     $total_products += number_format($vendor_product['pvariant']['price'], 2, '.', '');
                      @endphp
                  </td>
              </tr>
