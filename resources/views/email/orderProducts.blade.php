@@ -2,25 +2,25 @@
      <td>
          @foreach($cartData->products as $product)
          <h4>Vendor: {{$product['vendor']['name']}}</h4>
-         <table class="order-detail" border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%;    margin-bottom: 20px;">
+         <table class="order-detail" border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%; margin-bottom: 20px; margin-top: 10px">
              <tr align="left">
-                 <th>PRODUCT</th>
-                 <th style="padding-left: 15px;">DESCRIPTION</th>
-                 <th>QUANTITY</th>
-                 <th>PRICE </th>
+                 <th align="left">PRODUCT</th>
+                 <th align="left" style="padding-left: 15px;">DESCRIPTION</th>
+                 <th align="center">QUANTITY</th>
+                 <th align="right">PRICE </th>
              </tr>
              @php
              $total_products = 0;
              @endphp
              @foreach($product['vendor_products'] as $vendor_product)
              <tr>
-                 <td>
+                 <td align="left">
                     <div style="padding:5px"><img src="{{$vendor_product['product']['media'][0]['image']['path']['image_fit']}}100/100{{$vendor_product['product']['media'][0]['image']['path']['image_path']}}" alt="" width="80"></div>
                  </td>
-                 <td valign="top" style="padding-left: 15px;">
+                 <td valign="top" align="left" style="padding-left: 15px;">
                      <h5 style="margin-top: 15px;">{{$vendor_product['product']['translation_one']['title']}}</h5>
                  </td>
-                 <td valign="top" style="padding-left: 15px;">
+                 <td valign="top" align="center" style="padding-left: 15px;">
                      <h5 style="font-size: 14px; color:#444;margin-top: 10px;"><span>{{$vendor_product['quantity']}}</span></h5>
                  </td>
                  <td valign="top" align="right" style="padding-left: 15px;">

@@ -65,7 +65,10 @@
         }
 
         table {
-            margin-top: 30px
+            margin-top: 10px;
+        }
+        table th {
+            font-size: 14px;
         }
 
         table.top-0 {
