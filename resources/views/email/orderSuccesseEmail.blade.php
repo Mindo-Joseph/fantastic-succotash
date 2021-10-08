@@ -122,7 +122,13 @@
     <table class="main-bg-light text-center top-0" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td style="padding: 30px;">
-                <div>
+                @php
+                    $currYear = \Carbon\Carbon::now()->year;
+                    $prevYear = $currYear - 1;
+                    $currYear = substr($currYear, -2);
+                @endphp
+                <p>&copy; {{$prevYear}}-{{$currYear}} | All rights reserved</p>
+                {{-- <div>
                     <h4 class="title" style="margin:0;text-align: center;">Follow us</h4>
                 </div>
                 <table border="0" cellpadding="0" cellspacing="0" class="footer-social-icon" align="center" class="text-center" style="margin-top:20px;">
@@ -165,7 +171,7 @@
                             <a href="#" style="font-size:13px; margin:0;text-decoration: underline;">Unsubscribe</a>
                         </td>
                     </tr>
-                </table>
+                </table> --}}
             </td>
         </tr>
     </table>
