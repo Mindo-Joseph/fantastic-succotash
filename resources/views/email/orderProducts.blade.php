@@ -9,7 +9,7 @@
             </tr>
             @foreach($cartData->products as $product)
             <tr class="pad-left-right-space">
-                <td colspan="4"><h4 class="main-bg-light" style="margin-top: 5px; margin-bottom: 5px">{{$product['vendor']['name']}}</h4></td>
+                <td colspan="4"><h4 class="main-bg-light" style="padding: 5px 10px; margin-top: 5px; margin-bottom: 5px">{{$product['vendor']['name']}}</h4></td>
             </tr>
             @php
                 $total_products = 0;
