@@ -545,10 +545,10 @@ h6 {
 }
 
 
-.pixelstrap a, .pixelstrap a:hover, .pixelstrap a:active{
+/* .pixelstrap a, .pixelstrap a:hover, .pixelstrap a:active{
     padding-top: 0;
     padding-bottom: 0;
-}
+} */
 
 .brand-slider .slick-dots {
     width: auto;

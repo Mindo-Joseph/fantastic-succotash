@@ -6892,8 +6892,15 @@ body[dir="rtl"] .inner_spacing h3 {
         width: 66%;
     }
     .icon-nav .btn.btn-solid {
-        padding: 5px;
-        min-width: 100px;
+        padding: 10px !important;
+        min-width: auto;
+        margin-right: 10px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+    }
+    .main-menu .menu-right .icon-nav li.mr-2.pl-0.d-ipad {
+        display: none;
     }
     .theme-form .input-group input.form-control {
         width: 100%;
@@ -6984,6 +6991,15 @@ body[dir="rtl"] .inner_spacing h3 {
     .top-header {
         height: auto;
         padding: 10px 0;
+    }
+    section.home-slider-wrapper{
+        padding-top: 0 !important;
+    }
+    .mobile-header {
+        margin-bottom: 10px;
+    }
+    .top-header .header-dropdown li a, .icon-ic_lang:before, .icon-ic_currency:before {
+        color: rgb(70, 62, 62) !important;
     }
     .main-menu .menu-right .icon-nav ul {
         margin-left: auto;
@@ -7085,5 +7101,18 @@ body[dir="rtl"] .inner_spacing h3 {
     }
     .cart-box-outer .col-10 {
         padding-left: 70px;
+    }
+    .mobile-setting .modal-dialog {
+        max-width: 300px;
+        margin: auto;
+    }
+    .mobile-setting h6 {
+        font-weight: 600;
+        color: #000;
+        font-size: 14px;
+    }    
+    .mobile-setting li a {
+        font-size: 14px;
+        text-transform: capitalize;
     }
 }

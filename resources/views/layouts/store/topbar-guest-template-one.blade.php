@@ -25,7 +25,14 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     @endif
                 </div>
             </div>
-            <div class="col-6 text-right">
+            <div class="col-6 d-inline d-sm-none text-right">
+                <div class="icon-nav">
+                    <ul>
+                        <li class="d-inline-block d-lg-none"><div class="toggle-nav p-0 d-inline-block"><i class="fa fa-bars sidebar-bar"></i></div></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-6 text-right d-sm-inline d-none">
                 <ul class="header-dropdown">
                     <li class="onhover-dropdown change-language">
                         <a href="javascript:void(0)">{{session()->get('locale')}} 
@@ -153,3 +160,5 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     </div>
     
 </div>
+
+
