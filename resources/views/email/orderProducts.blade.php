@@ -15,7 +15,7 @@
              @foreach($product['vendor_products'] as $vendor_product)
              <tr class="pad-left-right-space">
                  <td align="left">
-                    <div style="padding:5px"><img src="{{$vendor_product['product']['media'][0]['image']['path']['image_fit']}}100/100{{$vendor_product['product']['media'][0]['image']['path']['image_path']}}" alt="" width="80"></div>
+                    <div style="padding:0px 5px"><img src="{{$vendor_product['product']['media'][0]['image']['path']['image_fit']}}100/100{{$vendor_product['product']['media'][0]['image']['path']['image_path']}}" alt="" width="80"></div>
                  </td>
                  <td valign="top" align="left">
                      <h4 style="margin-top: 10px;">{{$vendor_product['product']['translation_one']['title']}}</h4>

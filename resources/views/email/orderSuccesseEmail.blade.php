@@ -93,7 +93,7 @@
             border: unset !important;
         }
 
-        .pad-left-right-space td, .pad-left-right-space th {
+        .pad-left-right-space td{
             padding: 5px 10px;
         }
 
@@ -108,7 +108,7 @@
 
         .order-detail th {
             font-size: 14px;
-            padding: 15px;
+            padding: 10px;
             background: #fafafa;
         }
 
