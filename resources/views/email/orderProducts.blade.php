@@ -21,12 +21,12 @@
                      <h5 style="margin-top: 15px;">{{$vendor_product['product']['translation_one']['title']}}</h5>
                  </td>
                  <td valign="top" style="padding-left: 15px;">
-                     <h5 style="font-size: 14px; color:#444;margin-top: 10px;">QTY : <span>{{$vendor_product['quantity']}}</span></h5>
+                     <h5 style="font-size: 14px; color:#444;margin-top: 10px;"><span>{{$vendor_product['quantity']}}</span></h5>
                  </td>
                  <td valign="top" align="right" style="padding-left: 15px;">
-                     <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>${{number_format($vendor_product['pvariant']['price'], 2, '.', '')}}</b></h5>
+                     <h5 style="font-size: 14px; color:#444;margin-top:15px"><b>{{ $currencySymbol . number_format($vendor_product['pvariant']['price'], 2, '.', '')}}</b></h5>
                      @php
-                     $total_products += number_format($vendor_product['pvariant']['price'], 2, '.', '');
+                     $total_products += $vendor_product['pvariant']['price'];
                      @endphp
                  </td>
              </tr>
@@ -36,23 +36,23 @@
                      <p style="font-size: 14px;">Subtotal : </p>
                  </td>
                  <td class="m-t-5" colspan="2" align="right">
-                     <b style>${{$total_products}}</b>
+                     <b style>{{$currencySymbol . number_format($total_products, 2, '.', '')}}</b>
                  </td>
              </tr>
              <tr class="pad-left-right-space">
                  <td colspan="2" align="left">
-                     <p style="font-size: 14px;">TAX :</p>
+                     <p style="font-size: 14px;">Tax :</p>
                  </td>
                  <td colspan="2" align="right">
-                     <b>${{$product['taxable_amount']}}</b>
+                     <b>{{$currencySymbol . $product['taxable_amount']}}</b>
                  </td>
              </tr>
              <tr class="pad-left-right-space">
                  <td colspan="2" align="left">
-                     <p style="font-size: 14px;">SHIPPING Charge :</p>
+                     <p style="font-size: 14px;">Shipping Charge :</p>
                  </td>
                  <td colspan="2" align="right">
-                     <b>${{$product['delivery_fee_charges']}}</b>
+                     <b>{{$currencySymbol . $product['delivery_fee_charges']}}</b>
                  </td>
              </tr>
              <tr class="pad-left-right-space">
@@ -60,7 +60,7 @@
                      <p style="font-size: 14px;">Discount :</p>
                  </td>
                  <td colspan="2" align="right">
-                     <b> ${{$product['discount_amount']}}</b>
+                     <b>{{$currencySymbol . $product['discount_amount']}}</b>
                  </td>
              </tr>
              <tr class="pad-left-right-space ">
@@ -68,7 +68,7 @@
                      <p style="font-size: 14px;">Total :</p>
                  </td>
                  <td class="m-b-5" colspan="2" align="right">
-                     <b>${{$product['payable_amount']}}</b>
+                     <b>{{$currencySymbol . $product['payable_amount']}}</b>
                  </td>
              </tr>
          </table>
