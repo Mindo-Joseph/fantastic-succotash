@@ -65,7 +65,10 @@
         }
 
         table {
-            margin-top: 30px
+            margin-top: 10px;
+        }
+        table th {
+            font-size: 14px;
         }
 
         table.top-0 {
@@ -121,7 +124,7 @@
     {!! $mailData['email_template_content'] !!}
     <table class="main-bg-light text-center top-0" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
-            <td style="padding: 30px;">
+            <td>
                 @php
                     $currYear = \Carbon\Carbon::now()->year;
                     $prevYear = $currYear - 1;
