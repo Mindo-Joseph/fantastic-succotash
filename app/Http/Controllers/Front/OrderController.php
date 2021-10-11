@@ -503,7 +503,7 @@ class OrderController extends FrontController
             } else {
                 $user = Auth::user();
             }
-            if (($request->payment_option_id != 1) && ($request->payment_option_id != 2)) {
+            if (($request->payment_option_id != 1) && ($request->payment_option_id != 2) && ($request->has('transaction_id')) && ($request->transaction_id > 0)) {
                 $saved_transaction = Payment::where('transaction_id', $request->transaction_id)->first();
                 if ($saved_transaction) {
                     return $this->errorResponse('Transaction has already been done', 400);
@@ -788,7 +788,7 @@ class OrderController extends FrontController
                     $order_tax->save();
                 }
             }
-            if (($request->payment_option_id != 1) && ($request->payment_option_id != 2)) {
+            if (($request->payment_option_id != 1) && ($request->payment_option_id != 2) && ($request->has('transaction_id')) && ($request->transaction_id > 0)) {
                 Payment::insert([
                     'date' => date('Y-m-d'),
                     'order_id' => $order->id,
