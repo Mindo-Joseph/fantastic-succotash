@@ -326,28 +326,29 @@ class OrderController extends BaseController {
                     }
                     $code = $request->header('code');
                     $order = $order->with(['vendors:id,order_id,vendor_id', 'user_vendor'])->where('order_number', $order->order_number)->first();
-                    if (!empty($order->vendors)) {
-                        foreach ($order->vendors as $vendor_value) {
-                            $vendor_order_detail = $this->orderDetails_for_notification($order->id, $vendor_value->vendor_id);
-                            $user_vendors = UserVendor::where(['vendor_id' => $vendor_value->vendor_id])->pluck('user_id');
-                            $this->sendOrderPushNotificationVendors($user_vendors, $vendor_order_detail, $code);
-                        }
-                    }
-                    $vendor_order_detail = $this->orderDetails_for_notification($order->id);
-                    $super_admin = User::where('is_superadmin', 1)->pluck('id');
-                    $this->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail, $code);
-                    DB::commit();
-                    // $user_admins = User::where(function ($query) {
-                    //     $query->where(['is_superadmin' => 1]);
-                    // })->pluck('id')->toArray();
-                    // $user_vendors = [];
-                    // if (!empty($order->user_vendor) && count($order->user_vendor) > 0) {
-                    //     $user_vendors = $order->user_vendor->pluck('user_id')->toArray();
+                    // if (!empty($order->vendors)) {
+                    //     foreach ($order->vendors as $vendor_value) {
+                    //         $vendor_order_detail = $this->orderDetails_for_notification($order->id, $vendor_value->vendor_id);
+                    //         $user_vendors = UserVendor::where(['vendor_id' => $vendor_value->vendor_id])->pluck('user_id');
+                    //         $this->sendOrderPushNotificationVendors($user_vendors, $vendor_order_detail, $code);
+                    //     }
                     // }
-                    // $order->admins = array_unique(array_merge($user_admins, $user_vendors));
+                    // $vendor_order_detail = $this->orderDetails_for_notification($order->id);
+                    // $super_admin = User::where('is_superadmin', 1)->pluck('id');
+                    // $this->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail, $code);
+                    $user_admins = User::where(function ($query) {
+                        $query->where(['is_superadmin' => 1]);
+                    })->pluck('id')->toArray();
+                    $user_vendors = [];
+                    if (!empty($order->user_vendor) && count($order->user_vendor) > 0) {
+                        $user_vendors = $order->user_vendor->pluck('user_id')->toArray();
+                    }
+                    $order->admins = array_unique(array_merge($user_admins, $user_vendors));
 
                     // $this->sendOrderNotification($user->id);
-                    // $this->sendOrderPushNotificationVendors($order->admins, $order, $code);
+                    $this->sendOrderPushNotificationVendors($order->admins, $order, $code);
+                    DB::commit();
+
                     return $this->successResponse($order, __('Order placed successfully.'), 201);
                 }
             } else {
