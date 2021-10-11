@@ -734,7 +734,7 @@ class OrderController extends BaseController {
 
     public function orderDetails_for_notification($order_id, $vendor_id = "")
     {
-        $order = Order::with(['vendors.products:id,product_name,product_id,order_id,order_vendor_id', 'vendors.vendor:id,name,auto_accept_order', 'vendors.products.addon', 'vendors.products.variant:id,sku,product_id,title,quantity', 'user:id,name,timezone', 'address:id,user_id,address'])->select('id', 'order_number', 'payable_amount', 'payment_option_id', 'user_id', 'address_id', 'loyalty_amount_saved', 'total_discount', 'total_delivery_fee', 'total_amount', 'taxable_amount');
+        $order = Order::with(['vendors.products:id,product_name,product_id,order_id,order_vendor_id,variant_id', 'vendors.vendor:id,name,auto_accept_order', 'vendors.products.addon:id,order_product_id,addon_id,option_id', 'vendors.products.pvariant:id,sku,product_id,title,quantity', 'user:id,name,timezone', 'address:id,user_id,address','vendors.products.addon.option:addon_options.id,addon_options.title,addon_id,price','vendors.products.addon.set:addon_sets.id,addon_sets.title'])->select('id', 'order_number', 'payable_amount', 'payment_option_id', 'user_id', 'address_id', 'loyalty_amount_saved', 'total_discount', 'total_delivery_fee', 'total_amount', 'taxable_amount');
         $order = $order->whereHas('vendors', function ($query) use ($vendor_id) {
             if(!empty($vendor_id)){
                 $query->where('vendor_id', $vendor_id);
