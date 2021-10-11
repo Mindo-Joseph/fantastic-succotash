@@ -667,6 +667,7 @@ class OrderController extends BaseController {
                     "priority" => "high"
                 ];
                 $dataString = $data;
+                Log::info(json_encode($data));
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
                 curl_setopt($ch, CURLOPT_POST, true);
@@ -742,7 +743,21 @@ class OrderController extends BaseController {
 
     public function orderDetails_for_notification($order_id, $vendor_id = "")
     {
-        $order = Order::with(['vendors.products:id,product_name,product_id,order_id,order_vendor_id,variant_id', 'vendors.vendor:id,name,auto_accept_order', 'vendors.products.addon:id,order_product_id,addon_id,option_id', 'vendors.products.pvariant:id,sku,product_id,title,quantity', 'user:id,name,timezone', 'address:id,user_id,address','vendors.products.addon.option:addon_options.id,addon_options.title,addon_id,price','vendors.products.addon.set:addon_sets.id,addon_sets.title'])->select('id', 'order_number', 'payable_amount', 'payment_option_id', 'user_id', 'address_id', 'loyalty_amount_saved', 'total_discount', 'total_delivery_fee', 'total_amount', 'taxable_amount');
+        $user = Auth::user();
+        $language_id = (!empty($user->language))?$user->language:1;
+        $order = Order::with(['vendors.products:id,product_name,product_id,order_id,order_vendor_id,variant_id,quantity,price', 'vendors.vendor:id,name,auto_accept_order,logo', 'vendors.products.addon:id,order_product_id,addon_id,option_id', 'vendors.products.pvariant:id,sku,product_id,title,quantity', 'user:id,name,timezone,dial_code,phone_number', 'address:id,user_id,address','vendors.products.addon.option:addon_options.id,addon_options.title,addon_id,price','vendors.products.addon.set:addon_sets.id,addon_sets.title','vendors.products.translation' => function ($q) use ($language_id) {
+            $q->select('id', 'product_id', 'title');
+            $q->where('language_id', $language_id);
+        },
+        'vendors.products.addon.option.translation_one' => function ($q) use ($language_id) {
+            $q->select('id', 'addon_opt_id', 'title');
+            $q->where('language_id', $language_id);
+        },
+        'vendors.products.addon.set.translation_one' => function ($q) use ($language_id) {
+            $q->select('id', 'addon_id', 'title');
+            $q->where('language_id', $language_id);
+        }
+        ])->select('id', 'order_number', 'payable_amount', 'payment_option_id', 'user_id', 'address_id', 'loyalty_amount_saved', 'total_discount', 'total_delivery_fee', 'total_amount', 'taxable_amount','created_at');
         $order = $order->whereHas('vendors', function ($query) use ($vendor_id) {
             if(!empty($vendor_id)){
                 $query->where('vendor_id', $vendor_id);
@@ -755,7 +770,6 @@ class OrderController extends BaseController {
         });
         $order = $order->find($order_id);
         $order_item_count = 0;
-        // $order->date_time = convertDateTimeInTimeZone($order->created_at, $user->timezone);
         $order->payment_option_title = $order->paymentOption->title;
         $order->item_count = $order_item_count;
         foreach ($order->products as $product) {
