@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\OrderStoreRequest;
 use Log;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client, UserVendor};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, CartProductPrescription, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client, UserVendor};
 
 class OrderController extends BaseController {
     use ApiResponser;
@@ -314,9 +314,11 @@ class OrderController extends BaseController {
                     $order->payable_amount = $payable_amount;
                     $order->save();
                     $this->sendSuccessSMS($request, $order);
+                    Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
                     CartCoupon::where('cart_id', $cart->id)->delete();
                     CartProduct::where('cart_id', $cart->id)->delete();
-                    if (($request->payment_option_id != 1) && ($request->payment_option_id != 2)) {
+                    CartProductPrescription::where('cart_id', $cart->id)->delete();
+                    if (($request->payment_option_id != 1) && ($request->payment_option_id != 2) && ($request->has('transaction_id')) && ($request->transaction_id > 0)) {
                         Payment::insert([
                             'date' => date('Y-m-d'),
                             'order_id' => $order->id,
@@ -465,6 +467,9 @@ class OrderController extends BaseController {
                 $ETA = $order_pre_time + $user_to_vendor_time;
                 $order->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $order->created_at, $order->orderDetail->scheduled_date_time) : convertDateTimeInTimeZone($order->created_at, $user->timezone, 'h:i A');
             }
+            if(!empty($order->orderDetail->scheduled_date_time)){
+                $order->scheduled_date_time = convertDateTimeInTimeZone($order->orderDetail->scheduled_date_time, $user->timezone, 'M d, Y h:i A');
+            }
             $order->product_details = $product_details;
             $order->item_count = $order_item_count;
             unset($order->user);
@@ -560,6 +565,9 @@ class OrderController extends BaseController {
                         $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : convertDateTimeInTimeZone($vendor->created_at, $user->timezone, 'h:i A');
                     }
         		}
+                if(!empty($order->scheduled_date_time)){
+                    $order->scheduled_date_time = convertDateTimeInTimeZone($order->scheduled_date_time, $user->timezone, 'M d, Y h:i A');
+                }
     		    $order->order_item_count = $order_item_count;
             }
             return $this->successResponse($order, null, 201);
