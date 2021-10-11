@@ -318,7 +318,7 @@ class OrderController extends BaseController {
                     CartCoupon::where('cart_id', $cart->id)->delete();
                     CartProduct::where('cart_id', $cart->id)->delete();
                     CartProductPrescription::where('cart_id', $cart->id)->delete();
-                    if (($request->payment_option_id != 1) && ($request->payment_option_id != 2) && ($request->has('transaction_id')) && ($request->transaction_id > 0)) {
+                    if (($request->payment_option_id != 1) && ($request->payment_option_id != 2) && ($request->has('transaction_id')) && (!empty($request->transaction_id))) {
                         Payment::insert([
                             'date' => date('Y-m-d'),
                             'order_id' => $order->id,
