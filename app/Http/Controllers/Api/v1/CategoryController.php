@@ -45,7 +45,7 @@ class CategoryController extends BaseController
                 ->where('id', $cid)->first();
             if ($category != null) {
                 if ($category->products != null)
-                    $mode_of_service = $category->products->mode_of_service;
+                    $mode_of_service = $category->products->first()->mode_of_service;
             }
             $variantSets = ProductVariantSet::with(['options' => function ($zx) use ($langId) {
                 $zx->join('variant_option_translations as vt', 'vt.variant_option_id', 'variant_options.id');
