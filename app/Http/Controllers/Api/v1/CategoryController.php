@@ -66,8 +66,7 @@ class CategoryController extends BaseController
             $category->share_link = "https://" . $client->sub_domain . env('SUBMAINDOMAIN') . "/category/" . $category->slug;
             $response['category'] = $category;
             $response['filterData'] = $variantSets;
-            $response['mode_of_service'] = $mode_of_service;
-            $response['listData'] = $this->listData($langId, $cid, strtolower($category->type->redirect_to), $paginate, $userid, $product_list, $mod_type);
+            $response['listData'] = $this->listData($langId, $cid, strtolower($category->type->redirect_to), $paginate, $userid, $product_list, $mod_type,$mode_of_service);
             return $this->successResponse($response);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
