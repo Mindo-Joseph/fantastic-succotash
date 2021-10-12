@@ -769,17 +769,22 @@ class OrderController extends FrontController
             $order->scheduled_date_time = $cart->schedule_type == 'schedule' ? $cart->scheduled_date_time : null;
             $order->payable_amount = $payable_amount;
             $order->save();
+            if ( ($payable_amount == 0) || (($request->has('transaction_id')) && (!empty($request->transaction_id))) ) {
+                $order->payment_status = 1;
+            }
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $this->sendSuccessEmail($request, $order, $vendor_id);
             }
             // $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
             $this->sendSuccessSMS($request, $order, $vendor_id);
-            Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
-            CartAddon::where('cart_id', $cart->id)->delete();
-            CartCoupon::where('cart_id', $cart->id)->delete();
-            CartProduct::where('cart_id', $cart->id)->delete();
-            CartProductPrescription::where('cart_id', $cart->id)->delete();
+            if($request->payment_option_id != 7){ // if not mobbex
+                Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
+                CartAddon::where('cart_id', $cart->id)->delete();
+                CartCoupon::where('cart_id', $cart->id)->delete();
+                CartProduct::where('cart_id', $cart->id)->delete();
+                CartProductPrescription::where('cart_id', $cart->id)->delete();
+            }
             if (count($tax_category_ids)) {
                 foreach ($tax_category_ids as $tax_category_id) {
                     $order_tax = new OrderTax();
@@ -807,15 +812,18 @@ class OrderController extends FrontController
             // $vendor_order_detail = $this->orderDetails_for_notification($order->id);
             // $super_admin = User::where('is_superadmin', 1)->pluck('id');
             // $this->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
-            $user_admins = User::where(function ($query) {
-                $query->where(['is_superadmin' => 1]);
-            })->pluck('id')->toArray();
-            $user_vendors = [];
-            if (!empty($order->user_vendor) && count($order->user_vendor) > 0) {
-                $user_vendors = $order->user_vendor->pluck('user_id')->toArray();
+
+            if($request->payment_option_id != 7){ // if not mobbex
+                $user_admins = User::where(function ($query) {
+                    $query->where(['is_superadmin' => 1]);
+                })->pluck('id')->toArray();
+                $user_vendors = [];
+                if (!empty($order->user_vendor) && count($order->user_vendor) > 0) {
+                    $user_vendors = $order->user_vendor->pluck('user_id')->toArray();
+                }
+                $order->admins = array_unique(array_merge($user_admins, $user_vendors));
+                $this->sendOrderPushNotificationVendors($order->admins, $order);
             }
-            $order->admins = array_unique(array_merge($user_admins, $user_vendors));
-            $this->sendOrderPushNotificationVendors($order->admins, $order);
             DB::commit();
             return $this->successResponse($order);
         } catch (Exception $e) {
