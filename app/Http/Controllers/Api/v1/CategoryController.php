@@ -43,8 +43,9 @@ class CategoryController extends BaseController
             ])
                 ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
                 ->where('id', $cid)->first();
-            if ($category != null) {
-                if ($category->products->first() != null)
+            $mode_of_service = null;
+            if (!empty($category)) {
+                if (count($category->products) > 0)
                     $mode_of_service = $category->products->first()->mode_of_service;
             }
             $variantSets = ProductVariantSet::with(['options' => function ($zx) use ($langId) {
@@ -66,14 +67,14 @@ class CategoryController extends BaseController
             $category->share_link = "https://" . $client->sub_domain . env('SUBMAINDOMAIN') . "/category/" . $category->slug;
             $response['category'] = $category;
             $response['filterData'] = $variantSets;
-            $response['listData'] = $this->listData($langId, $cid, strtolower($category->type->redirect_to), $paginate, $userid, $product_list, $mod_type,$mode_of_service);
+            $response['listData'] = $this->listData($langId, $cid, strtolower($category->type->redirect_to), $paginate, $userid, $product_list, $mod_type, $mode_of_service);
             return $this->successResponse($response);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
     }
 
-    public function listData($langId, $category_id, $type = '', $limit = 12, $userid, $product_list, $mod_type,$mode_of_service)
+    public function listData($langId, $category_id, $type = '', $limit = 12, $userid, $product_list, $mod_type, $mode_of_service)
     {
         if ($type == 'vendor' && $product_list == 'false') {
             $vendor_ids = [];
@@ -123,7 +124,7 @@ class CategoryController extends BaseController
                     $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                     // $q->groupBy('product_id');
                 }, 'variant.checkIfInCartApp',
-            ])->select('products.category_id', 'products.id', 'mode_of_service','products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
+            ])->select('products.category_id', 'products.id', 'mode_of_service', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
                 ->where('products.category_id', $category_id)->where('products.is_live', 1)->where('mode_of_service', $mode_of_service)->whereIn('products.vendor_id', $vendor_ids)->paginate($limit);
             if (!empty($products)) {
                 foreach ($products as $key => $product) {
@@ -222,7 +223,7 @@ class CategoryController extends BaseController
                     $q->select('id', 'sku', 'product_id', 'title', 'quantity', 'price', 'barcode');
                     // $q->groupBy('product_id');
                 }, 'variant.checkIfInCartApp',
-            ])->select('products.category_id','mode_of_service','products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
+            ])->select('products.category_id', 'mode_of_service', 'products.id', 'products.sku', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.sell_when_out_of_stock', 'products.requires_shipping', 'products.Requires_last_mile', 'products.averageRating')
                 ->where('products.category_id', $category_id)->where('products.is_live', 1)->where('mode_of_service', $mode_of_service)->whereIn('products.vendor_id', $vendor_ids)->paginate($limit);
             if (!empty($products)) {
                 foreach ($products as $key => $product) {
