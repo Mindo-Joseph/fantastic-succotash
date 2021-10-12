@@ -745,6 +745,14 @@ class OrderController extends BaseController {
     public function orderDetails_for_notification($order_id, $vendor_id = "")
     {
         $user = Auth::user();
+        if($user->is_superadmin != 1){
+            $orderDetail = Order::with(['vendors:id,order_id,vendor_id'])->find($order_id);
+            if (!empty($orderDetail->vendors) && count($orderDetail->vendors) > 0) {
+                $vendor_id = $orderDetail->vendors[0]->vendor_id;
+            } else {
+                return response()->json(['error' => __('No order found')], 404);
+            }
+        }
         $language_id = (!empty($user->language))?$user->language:1;
         $order = Order::with(['vendors.products:id,product_name,product_id,order_id,order_vendor_id,variant_id,quantity,price', 'vendors.vendor:id,name,auto_accept_order,logo', 'vendors.products.addon:id,order_product_id,addon_id,option_id', 'vendors.products.pvariant:id,sku,product_id,title,quantity', 'user:id,name,timezone,dial_code,phone_number', 'address:id,user_id,address','vendors.products.addon.option:addon_options.id,addon_options.title,addon_id,price','vendors.products.addon.set:addon_sets.id,addon_sets.title','vendors.products.translation' => function ($q) use ($language_id) {
             $q->select('id', 'product_id', 'title');
@@ -779,7 +787,7 @@ class OrderController extends BaseController {
         $order->item_count = $order_item_count;
         unset($order->products);
         unset($order->paymentOption);
-        return $order;
+        return $this->successResponse($order, __('Order detail.'), 201);
     }
 
     
