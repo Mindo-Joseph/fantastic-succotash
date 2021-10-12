@@ -480,8 +480,11 @@ class OrderController extends FrontController
         $order_response = $this->orderSave($request, "1");
         $response = $order_response->getData();
         if ($response->status == 'Success') {
-            # if vendor selected auto accept
-            $autoaccept = $this->autoAcceptOrderIfOn($response->data->id);
+            # if payment type cash on delivery or payment status is 'Paid'
+            if( ($response->data->payment_option_id == 1) || (($response->data->payment_option_id != 1) && ($response->data->payment_status == 1)) ){
+                # if vendor selected auto accept
+                $autoaccept = $this->autoAcceptOrderIfOn($response->data->id);
+            }
             return $this->successResponse($response->data, 'Order placed successfully.', 201);
         } else {
             return $this->errorResponse($response->message, 400);
