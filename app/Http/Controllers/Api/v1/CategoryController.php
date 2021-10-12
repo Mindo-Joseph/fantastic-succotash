@@ -44,7 +44,7 @@ class CategoryController extends BaseController
                 ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
                 ->where('id', $cid)->first();
             if ($category != null) {
-                if ($category->products != null)
+                if ($category->products->first() != null)
                     $mode_of_service = $category->products->first()->mode_of_service;
             }
             $variantSets = ProductVariantSet::with(['options' => function ($zx) use ($langId) {
