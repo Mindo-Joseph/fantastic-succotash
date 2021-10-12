@@ -112,7 +112,7 @@
                                         {{-- <option value="sql_files\punnet.sql">Punnet - Single Vendor Food Delivery </option> --}}
                                         <option value="sql_files\suel.sql">Suel - Single Vendor Ecommerce </option>
                                         <option value="sql_files\voltaic.sql">Voltaic - Ecommerce </option>
-                                        <option value="sql_files\gusto.sql">Gusto - Grocery Delivery </option>
+                                        <option value="sql_files/gusto.sql">Gusto - Grocery Delivery </option>
                                         <option value="sql_files\elixir.sql">Elixir - Pharmacy Delivery </option>
                                         {{-- <option value="sql_files\zest.sql">Zest - Pickup & Delivery </option> --}}
                                     </select>
