@@ -815,7 +815,7 @@ class OrderController extends FrontController
                 $user_vendors = $order->user_vendor->pluck('user_id')->toArray();
             }
             $order->admins = array_unique(array_merge($user_admins, $user_vendors));
-            $this->sendOrderPushNotificationVendors($order->admins, $order);
+            $this->sendOrderPushNotificationVendors($order->admins, ['id' => $order->id]);
             DB::commit();
             return $this->successResponse($order);
         } catch (Exception $e) {

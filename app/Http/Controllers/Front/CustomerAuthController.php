@@ -473,7 +473,7 @@ class CustomerAuthController extends FrontController
                 $checkEmail = User::where('email', $username)->first();
                 if ($checkEmail) {
                     if($checkEmail->status != 1){
-                        return $this->errorResponse(__('Unauthorized access'), 404);
+                        return $this->errorResponse(__('You are unauthorized to access this account.'), 404);
                     }else{
                         return $this->errorResponse(__('Incorrect Password'), 404);
                     }

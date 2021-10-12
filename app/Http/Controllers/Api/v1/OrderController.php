@@ -348,7 +348,7 @@ class OrderController extends BaseController {
                     $order->admins = array_unique(array_merge($user_admins, $user_vendors));
 
                     // $this->sendOrderNotification($user->id);
-                    $this->sendOrderPushNotificationVendors($order->admins, $order, $code);
+                    $this->sendOrderPushNotificationVendors($order->admins, ['id' => $order->id], $code);
                     DB::commit();
 
                     return $this->successResponse($order, __('Order placed successfully.'), 201);
@@ -745,6 +745,13 @@ class OrderController extends BaseController {
     public function orderDetails_for_notification($order_id, $vendor_id = "")
     {
         $user = Auth::user();
+        if($user->is_superadmin != 1){
+            $userVendorPermissions = UserVendor::where(['user_id' => $user->id])->pluck('vendor_id')->toArray();
+            $vendor_id = OrderVendor::where(['order_id' => $order_id])->whereIn('vendor_id',$userVendorPermissions)->pluck('vendor_id')->first();
+            if (!$vendor_id) {
+                return response()->json(['error' => __('No order found')], 404);
+            }
+        }
         $language_id = (!empty($user->language))?$user->language:1;
         $order = Order::with(['vendors.products:id,product_name,product_id,order_id,order_vendor_id,variant_id,quantity,price', 'vendors.vendor:id,name,auto_accept_order,logo', 'vendors.products.addon:id,order_product_id,addon_id,option_id', 'vendors.products.pvariant:id,sku,product_id,title,quantity', 'user:id,name,timezone,dial_code,phone_number', 'address:id,user_id,address','vendors.products.addon.option:addon_options.id,addon_options.title,addon_id,price','vendors.products.addon.set:addon_sets.id,addon_sets.title','vendors.products.translation' => function ($q) use ($language_id) {
             $q->select('id', 'product_id', 'title');
@@ -779,8 +786,7 @@ class OrderController extends BaseController {
         $order->item_count = $order_item_count;
         unset($order->products);
         unset($order->paymentOption);
-        return $order;
+        return $this->successResponse($order, __('Order detail.'), 201);
     }
 
-    
 }
