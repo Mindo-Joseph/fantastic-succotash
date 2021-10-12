@@ -745,6 +745,8 @@ class OrderController extends BaseController {
     public function orderDetails_for_notification($order_id, $vendor_id = "")
     {
         $user = Auth::user();
+        $headers = \Request::header();
+        Log::info($headers);
         if($user->is_superadmin != 1){
             $orderDetail = Order::with(['vendors:id,order_id,vendor_id'])->find($order_id);
             if (!empty($orderDetail->vendors) && count($orderDetail->vendors) > 0) {
