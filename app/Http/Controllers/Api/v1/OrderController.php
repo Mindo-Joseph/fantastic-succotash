@@ -745,13 +745,10 @@ class OrderController extends BaseController {
     public function orderDetails_for_notification($order_id, $vendor_id = "")
     {
         $user = Auth::user();
-        $headers = \Request::header();
-        Log::info($headers);
         if($user->is_superadmin != 1){
-            $orderDetail = Order::with(['vendors:id,order_id,vendor_id'])->find($order_id);
-            if (!empty($orderDetail->vendors) && count($orderDetail->vendors) > 0) {
-                $vendor_id = $orderDetail->vendors[0]->vendor_id;
-            } else {
+            $userVendorPermissions = UserVendor::where(['user_id' => $user->id])->pluck('vendor_id')->toArray();
+            $vendor_id = OrderVendor::where(['order_id' => $order_id])->whereIn('vendor_id',$userVendorPermissions)->pluck('vendor_id')->first();
+            if (!$vendor_id) {
                 return response()->json(['error' => __('No order found')], 404);
             }
         }
@@ -792,5 +789,4 @@ class OrderController extends BaseController {
         return $this->successResponse($order, __('Order detail.'), 201);
     }
 
-    
 }
