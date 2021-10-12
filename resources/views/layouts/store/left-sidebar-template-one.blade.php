@@ -31,7 +31,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <li class="onhover-dropdown change-language">
                                 <a href="javascript:void(0)">{{session()->get('locale')}} 
                                 <span class="icon-ic_lang align-middle"></span>
-                                <span class="language ml-1 align-middle">language</span>
+                                <span class="language ml-1 align-middle">{{ __("language") }}</span>
                                 </a>
                                 <ul class="onhover-show-div">
                                     @foreach($languageList as $key => $listl)
@@ -44,7 +44,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <li class="onhover-dropdown change-currency">
                                 <a href="javascript:void(0)">{{session()->get('iso_code')}}
                                 <span class="icon-ic_currency align-middle"></span>
-                                <span class="currency ml-1 align-middle">currency</span>
+                                <span class="currency ml-1 align-middle">{{ __("currency") }}</span>
                                 </a>
                                 <ul class="onhover-show-div">
                                     @foreach($currencyList as $key => $listc)
@@ -116,15 +116,24 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     @endif
                                     @if($client_preference_detail->takeaway_check == 1)
                                     <li class="navigation-tab-item" role="presentation">
-                                        <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{getNomenclatureName('Takeaway', true)}}</a>
+
+
+                                        @php
+                                        $Takeaway = getNomenclatureName('Takeaway', true);
+                                        $Takeaway = ($Takeaway === 'Takeaway') ? __('Takeaway') : $Takeaway;
+                                        @endphp
+    
+    
+    
+                                        <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ $Takeaway }}</a>
                                     </li>
                                     @endif
                                     <div class="navigation-tab-overlay"></div>
                                 </ul>
                             @endif 
                         </div>
-                        <div class="col-6 my-sm-2 my-md-0">                       
-                            <div class="search_bar menu-right d-sm-flex d-block align-items-center justify-content-end justify-content-lg-between w-100 ">
+                        <div class="col-6 my-sm-2 my-md-0 ipad-view">                       
+                            <div class="search_bar menu-right d-sm-flex d-block align-items-center justify-content-end w-100 ">
                                 @if( (Session::get('preferences')))
                                     @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
                                         <div class="location-bar d-none align-items-center justify-content-start ml-md-2 my-2 my-lg-0 dropdown-toggle" href="#edit-address" data-toggle="modal">
@@ -138,17 +147,21 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         </div>
                                     @endif
                                 @endif  
-                                <div class="radius-bar d-lg-inline">
+                                <div class="radius-bar d-xl-inline mr-2">
                                     <div class="search_form d-flex align-items-center justify-content-between">
                                         <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                        <input class="form-control border-0 typeahead" type="search" placeholder="{{getNomenclatureName('Search product, vendor, item', true)}}" id="main_search_box">
+                                        @php
+                                            $searchPlaceholder = getNomenclatureName('Search product, vendor, item', true);
+                                            $searchPlaceholder = ($searchPlaceholder === 'Search product, vendor, item') ? __('Search product, vendor, item') : $searchPlaceholder;  
+                                        @endphp
+                                        <input class="form-control border-0 typeahead" type="search" placeholder="{{ $searchPlaceholder }}" id="main_search_box">
                                     </div>
                                     <div class="list-box style-4" style="display:none;" id="search_box_main_div">
                                         
                                     </div>
                                 </div>
                                 <script type="text/template" id="search_box_main_div_template">
-                                    <a class="text-right d-block mr-2 mb-3" id="search_viewall" href="#">View All</a>
+                                    <a class="text-right d-block mr-2 mb-3" id="search_viewall" href="#">{{ __("View All") }}</a>
                                     <div class="row mx-0">
                                         <% _.each(results, function(result, k){ %>
                                             <a class="col-md-4 text-center list-items mb-2" href="<%= result.redirect_url %>">
@@ -173,7 +186,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         <input type="hidden" id="cliLang" name="cliLang" value="{{session('customerLanguage')}}">
                                         <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                                     </form>
-                                    <ul>
+                                    <ul class="d-flex align-items-center">
+                                        <li class="mr-2 pl-0 d-ipad">
+                                            <span class="mobile-search-btn"><i class="fa fa-search" aria-hidden="true"></i></span>
+                                        </li>
                                         <li class="onhover-div pl-0 shake-effect">
                                             @if($client_preference_detail)
                                                 @if($client_preference_detail->cart_enable == 1)
@@ -212,7 +228,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             </script>
                                             <ul class="show-div shopping-cart " id="header_cart_main_ul"></ul>
                                         </li>
-                                        <li class="d-inline-block d-lg-none"><div class="toggle-nav p-0 d-inline-block"><i class="fa fa-bars sidebar-bar"></i></div></li>
+                                        <li class="mobile-menu-btn d-sm-inline-block d-none"><div class="toggle-nav p-0 d-inline-block"><i class="fa fa-bars sidebar-bar"></i></div></li>
                                     </ul>
                                 </div>
                                 
@@ -240,7 +256,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             </div>
                                         </li>
                                         <li class="onhover-div mobile-setting">
-                                            <div><i class="ti-settings"></i></div>
+                                            <div data-toggle="modal" data-target="#staticBackdrop"><i class="ti-settings"></i></div>
                                             <div class="show-div setting">
                                                 <h6>language</h6>
                                                 <ul>

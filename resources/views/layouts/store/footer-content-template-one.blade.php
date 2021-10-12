@@ -95,7 +95,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         <div class="footer-contant">
                             <div class="store-btn mb-3">
                                 <a href="#"><img src="{{asset('front-assets/images/app-store.png')}}" alt=""></a>
-                                <a class="ml-2" href="#"><img src="{{asset('front-assets/images/google-play.png')}}" alt=""></a>
+                                <a class="ml-xl-2 mt-2 mt-xl-0" href="#"><img src="{{asset('front-assets/images/google-play.png')}}" alt=""></a>
                             </div>
 
                             @if(count($social_media_details))
@@ -117,6 +117,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                     </div>
                 </div>
                 @endif
+
+                @if($client_preference_detail->show_payment_icons == 1)
                 <div class="col-lg-3 col-md-6 payment-card">
 
                     <div class="sub-title">
@@ -148,6 +150,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </section>
@@ -156,7 +159,12 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
             <div class="row">
                 <div class="col-12 text-center">
                     <div class="footer-end">
-                        <p><i class="fa fa-copyright" aria-hidden="true"></i> 2020-21 | All rights reserved</p>
+                        @php
+                            $currYear = \Carbon\Carbon::now()->year;
+                            $prevYear = $currYear - 1;
+                            $currYear = substr($currYear, -2);
+                        @endphp
+                        <p><i class="fa fa-copyright" aria-hidden="true"></i> {{$prevYear}}-{{$currYear}} | All rights reserved</p>
                     </div>
                 </div>
             </div>

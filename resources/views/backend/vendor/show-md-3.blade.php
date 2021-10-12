@@ -212,11 +212,11 @@
 
 
  <div class="card-box">
-    <h4 class="header-title mb-2 d-inline-block">{{ __('Users') }}</h4>
-    <h4 class="header-title mb-1 float-right"><a class="btn addUsersBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1" ></i> {{ __("Add Users") }}
+    <h4 class="header-title mb-0 mt-2 d-inline-block align-middle">{{ __('Users') }}</h4>
+    <h4 class="header-title mb-0 float-right"><a class="btn addUsersBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1" ></i> {{ __("Add Users") }}
     </a></h4>
     
-    <div class="inbox-widget" data-simplebar style="max-height: 350px;">
+    <div class="inbox-widget mt-3" data-simplebar style="max-height: 350px;">
         @foreach($vendor->permissionToUser as $users)
         <div class="inbox-item pb-0">
             <div class="inbox-item-img">
@@ -253,11 +253,13 @@
                 <h4 class="modal-title">{{ __("Edit") }} {{ $newvendors }}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
+
+
             <form id="save_edit_banner_form" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-body" id="editCardBox">
-
+                   
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info waves-effect waves-light submitEditForm">{{ __("Submit") }}</button>

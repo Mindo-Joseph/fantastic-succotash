@@ -165,6 +165,19 @@
       float: right !important;
   }
 
+  .dataTables_filter label {
+    float: right !important;
+  }
+  
+  div.dataTables_wrapper div.dataTables_processing{
+    z-index: 1;
+    top: 45%!important;
+    left: 0!important;
+    right: 0!important;
+    margin: auto!important;
+    text-align: center;
+  }
+
   .login-form .custom-control-label::before {
       display: none;
   }
@@ -2105,9 +2118,10 @@
   }
 
   .delete-user {
-      right: 0;
-      top: 0;
-  }
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
 
   #add_user_permission_vendor .dropdown-menu {
       width: 100%;
@@ -2332,13 +2346,13 @@
       cursor: pointer;
   }
 
-  #user_datatable_processing {
+  /* #user_datatable_processing {
       width: auto;
       position: absolute;
       top: 0;
       padding: 9px 0;
       box-shadow: none !important;
-  }
+  } */
 
   .custom-toggle .switchery {
       float: right;

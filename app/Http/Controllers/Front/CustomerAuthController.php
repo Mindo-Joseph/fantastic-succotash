@@ -279,6 +279,10 @@ class CustomerAuthController extends FrontController
         $user = User::where('phone_number', $req->phone_number)->where('dial_code', $req->dialCode)->where('status', 1)->first();
         if ($user) {
             Auth::login($user);
+            $user->is_phone_verified = 1;
+            $user->phone_token = NULL;
+            $user->phone_token_valid_till = NULL;
+            $user->save();
             $userid = $user->id;
             if($req->has('access_token')){
                 if($req->access_token){
@@ -335,24 +339,26 @@ class CustomerAuthController extends FrontController
     public function loginViaUsername(Request $request, $domain = ''){
         try{
             $errors = array();
-            $validator = Validator::make($request->all(), [
-                'username'  => 'required',
-                'dialCode'  => 'required',
-                'countryData'  => 'required'
-            ]);
-
-            if($validator->fails()){
-                foreach($validator->errors()->toArray() as $error_key => $error_value){
-                    $errors['error'] = __($error_value[0]);
-                    return response()->json($errors, 422);
-                }
-            }
+            
             $phone_regex = '/^[0-9\-\(\)\/\+\s]*$/';
             $email_regex = '/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/';
             $username = $request->username;
 
             if(preg_match($phone_regex, $username))
             {
+                $validator = Validator::make($request->all(), [
+                    'username'  => 'required',
+                    'dialCode'  => 'required',
+                    'countryData'  => 'required'
+                ]);
+    
+                if($validator->fails()){
+                    foreach($validator->errors()->toArray() as $error_key => $error_value){
+                        $errors['error'] = __($error_value[0]);
+                        return response()->json($errors, 422);
+                    }
+                }
+
                 $phone_number = preg_replace('/\D+/', '', $username);
                 $dialCode = $request->dialCode;
                 $fullNumber = $request->full_number;
@@ -405,6 +411,16 @@ class CustomerAuthController extends FrontController
             }
             elseif (preg_match($email_regex, $username))
             {
+                $validator = Validator::make($request->all(), [
+                    'username'  => 'required'
+                ]);
+    
+                if($validator->fails()){
+                    foreach($validator->errors()->toArray() as $error_key => $error_value){
+                        $errors['error'] = __($error_value[0]);
+                        return response()->json($errors, 422);
+                    }
+                }
                 $username = str_ireplace(' ', '', $username);
                 if (Auth::attempt(['email' => $username, 'password' => $request->password, 'status' => 1])) {
                     $userid = Auth::id();
@@ -456,7 +472,11 @@ class CustomerAuthController extends FrontController
                 }
                 $checkEmail = User::where('email', $username)->first();
                 if ($checkEmail) {
-                    return $this->errorResponse(__('Incorrect password'), 404);
+                    if($checkEmail->status != 1){
+                        return $this->errorResponse(__('You are unauthorized to access this account.'), 404);
+                    }else{
+                        return $this->errorResponse(__('Incorrect Password'), 404);
+                    }
                 }
                 return $this->errorResponse(__('You are not registered with us. Please sign up.'), 404);
             }
@@ -564,38 +584,50 @@ class CustomerAuthController extends FrontController
         try {
             DB::beginTransaction();
             $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
-            if (empty($request->input('user_id'))){
-                if($vendor_registration_documents->count() > 0){
-                    $request->validate([
-                        'address' => 'required',
-                        'full_name' => 'required',
-                        'email' => 'required|email|unique:users',
-                        'vendor_registration_document.*.did_visit' => 'required',
-                        'password' => 'required|string|min:6|max:50',
-                        'confirm_password' => 'required|same:password',
-                        'name' => 'required|string|max:150|unique:vendors',
-                        'phone_number' => 'required|string|min:6|max:15|unique:users',
-                    ]);
-                }else{
-                    $request->validate([
-                        'address' => 'required',
-                        'full_name' => 'required',
-                        'email' => 'required|email|unique:users',
-                        'password' => 'required|string|min:6|max:50',
-                        'confirm_password' => 'required|same:password',
-                        'name' => 'required|string|max:150|unique:vendors',
-                        'phone_number' => 'required|string|min:6|max:15|unique:users',
-                    ]);
+            if (empty($request->input('user_id'))) {
+                if ($vendor_registration_documents->count() > 0) {
+                    $request->validate(
+                        [
+                            'address' => 'required',
+                            'full_name' => 'required',
+                            'email' => 'required|email|unique:users',
+                            'vendor_registration_document.*.did_visit' => 'required',
+                            'password' => 'required|string|min:6|max:50',
+                            'confirm_password' => 'required|same:password',
+                            'name' => 'required|string|max:150|unique:vendors',
+                            'phone_number' => 'required|string|min:6|max:15|unique:users',
+                            'check_conditions' => 'required',
+                        ],
+                        ['check_conditions.required' => __('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')]
+                    );
+                } else {
+                    $request->validate(
+                        [
+                            'address' => 'required',
+                            'full_name' => 'required',
+                            'email' => 'required|email|unique:users',
+                            'password' => 'required|string|min:6|max:50',
+                            'confirm_password' => 'required|same:password',
+                            'name' => 'required|string|max:150|unique:vendors',
+                            'phone_number' => 'required|string|min:6|max:15|unique:users',
+                            'check_conditions' => 'required',
+                        ],
+                        ['check_conditions.required' => __('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')]
+                    );
                 }
-            }else {
+            } else {
                 $rules_array = [
-                        'address' => 'required',
-                        'name' => 'required|string|max:150|unique:vendors',
+                    'address' => 'required',
+                    'name' => 'required|string|max:150|unique:vendors',
+                    'check_conditions' => 'required',
                 ];
                 foreach ($vendor_registration_documents as $vendor_registration_document) {
                     $rules_array[$vendor_registration_document->primary->slug] = 'required';
                 }
-                $request->validate($rules_array);
+                $request->validate(
+                    $rules_array,
+                    ['check_conditions.required' => __('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')]
+                );
             }
             $client_detail = Client::first();
             $client_preference = ClientPreference::first();
