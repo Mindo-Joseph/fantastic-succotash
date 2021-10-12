@@ -348,7 +348,7 @@ class OrderController extends BaseController {
                     $order->admins = array_unique(array_merge($user_admins, $user_vendors));
 
                     // $this->sendOrderNotification($user->id);
-                    $this->sendOrderPushNotificationVendors($order->admins, $order, $code);
+                    $this->sendOrderPushNotificationVendors($order->admins, ['id' => $order->id], $code);
                     DB::commit();
 
                     return $this->successResponse($order, __('Order placed successfully.'), 201);
