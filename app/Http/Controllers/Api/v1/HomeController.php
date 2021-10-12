@@ -40,7 +40,7 @@ class HomeController extends BaseController{
             $homeData['profile']->preferences->takeaway_nomenclature = $takeaway_nomenclature;
             $homeData['profile']->preferences->search_nomenclature = $search_nomenclature;
             $homeData['languages'] = ClientLanguage::with('language')->select('language_id', 'is_primary')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
-            $banners = Banner::select("id", "name", "description", "image", "link", 'redirect_category_id', 'redirect_vendor_id')
+            $banners = Banner::select("id", "name", "description", "image", "image_mobile", "link", 'redirect_category_id', 'redirect_vendor_id')
                         ->where('status', 1)->where('validity_on', 1)
                         ->where(function($q){
                             $q->whereNull('start_date_time')->orWhere(function($q2){
@@ -236,7 +236,7 @@ class HomeController extends BaseController{
             $homeData['featured_products'] = $feature_product_details;
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
                                     $q->select('brand_id', 'title')->where('language_id', $langId);
-                                }])->select('id', 'image')->where('status', '!=', $this->field_status)
+                                }])->select('id', 'image', 'image_banner')->where('status', '!=', $this->field_status)
                                 ->orderBy('position', 'asc')->get();
             $user_vendor_count = UserVendor::where('user_id', $user->id)->count();
             $homeData['is_admin'] = $user_vendor_count > 0 ? 1 : 0;
@@ -376,7 +376,9 @@ class HomeController extends BaseController{
                 //     $vendor->response_type = 'vendor';
                 //     // $response[] = $vendor;
                 // }
-                $products = Product::with('media')->join('product_translations as pt', 'pt.product_id', 'products.id')
+                $products = Product::with(['category.categoryDetail.translation' => function($q) use($langId){
+                                $q->where('category_translations.language_id', $langId);
+                            },'media'])->join('product_translations as pt', 'pt.product_id', 'products.id')
                             ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
                             ->where('pt.language_id', $langId)
                             ->where(function ($q) use ($keyword) {
