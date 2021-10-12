@@ -43,10 +43,11 @@ class CategoryController extends BaseController
             ])
                 ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products')
                 ->where('id', $cid)->first();
-            $mode_of_service = null;
+            $mode_of_service = "";
             if (!empty($category)) {
-                if (count($category->products) > 0)
+                if (!empty($category->products) && count($category->products) > 0) {
                     $mode_of_service = $category->products->first()->mode_of_service;
+                }
             }
             $variantSets = ProductVariantSet::with(['options' => function ($zx) use ($langId) {
                 $zx->join('variant_option_translations as vt', 'vt.variant_option_id', 'variant_options.id');
@@ -74,7 +75,7 @@ class CategoryController extends BaseController
         }
     }
 
-    public function listData($langId, $category_id, $type = '', $limit = 12, $userid, $product_list, $mod_type, $mode_of_service)
+    public function listData($langId, $category_id, $type = '', $limit = 12, $userid, $product_list, $mod_type, $mode_of_service = null)
     {
         if ($type == 'vendor' && $product_list == 'false') {
             $vendor_ids = [];
