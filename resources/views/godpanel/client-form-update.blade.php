@@ -93,7 +93,7 @@
     </div>
 
     <!-- default data after on board -->
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-12">    
                    <div class="card">
                         <div class="card-body"><h3>Import Demo Content [Warning! All data will be lost.]</h3>
@@ -129,7 +129,7 @@
                     </div>
             
         </div>
-    </div>
+    </div> --}}
     <!--end default --> 
 
 </div>
