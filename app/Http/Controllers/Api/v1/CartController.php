@@ -369,6 +369,9 @@ class CartController extends BaseController
                 $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                 $q->where('language_id', $langId);
             },
+            'vendorProducts.product' => function ($q) use ($langId) {
+                $q->select('id', 'mode_of_service','vendor_id');
+            },
             'vendorProducts' => function ($qry) use ($cartID) {
                 $qry->where('cart_id', $cartID);
             },
