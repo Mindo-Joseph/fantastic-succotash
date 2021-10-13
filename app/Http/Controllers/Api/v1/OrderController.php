@@ -760,7 +760,14 @@ class OrderController extends BaseController {
                 });
                 break;
         }
-        $orders = $orders->with(['vendor:id,name,logo,banner'])->paginate($paginate);
+        $orders = $orders->with(['orderDetail','vendor:id,name,logo,banner'])
+        ->whereHas('orderDetail',function($q1){
+            $q1->where('orders.payment_status', 1)->whereNotIn('orders.payment_option_id', [1]);
+            $q1->orWhere(function ($q2) {
+                $q2->where('orders.payment_option_id', 1);
+            });
+        })
+        ->paginate($paginate);
         foreach ($orders as $order) {
             $order_item_count = 0;
             $order->user_name = $user->name;
@@ -827,7 +834,14 @@ class OrderController extends BaseController {
                         $q->where('language_id', $language_id);
                     },
                     'vendors.products.pvariant.vset.optionData.trans', 'vendors.products.addon', 'vendors.coupon', 'address', 'vendors.products.productRating', 'vendors.allStatus'
-                ])->where('id', $order_id)->first();
+                ])
+                ->where(function ($q1) {
+                    $q1->where('payment_status', 1)->whereNotIn('payment_option_id', [1]);
+                    $q1->orWhere(function ($q2) {
+                        $q2->where('payment_option_id', 1);
+                    });
+                })
+                ->where('id', $order_id)->first();
             } else {
                 $order = Order::with(
                     [
@@ -838,7 +852,14 @@ class OrderController extends BaseController {
                         },
                         'vendors.products.pvariant.vset.optionData.trans', 'vendors.products.addon', 'vendors.coupon', 'address', 'vendors.products.productRating'
                     ]
-                )->where('user_id', $user->id)->where('id', $order_id)->first();
+                )
+                ->where(function ($q1) {
+                    $q1->where('payment_status', 1)->whereNotIn('payment_option_id', [1]);
+                    $q1->orWhere(function ($q2) {
+                        $q2->where('payment_option_id', 1);
+                    });
+                })
+                ->where('user_id', $user->id)->where('id', $order_id)->first();
             }
             if ($order) {
                 $order->user_name = $order->user->name;
