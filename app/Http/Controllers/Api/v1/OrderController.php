@@ -166,19 +166,21 @@ class OrderController extends BaseController {
                                     $vendor_payable_amount = $vendor_payable_amount;
                                 }
                             }
-                            if ((!empty($vendor_cart_product->product->Requires_last_mile)) && ($vendor_cart_product->product->Requires_last_mile == 1)) {
-                                $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
-                                if (!empty($delivery_fee) && $delivery_count == 0) {
-                                    $delivery_count = 1;
-                                    $vendor_cart_product->delivery_fee = number_format($delivery_fee, 2, '.', '');
-                                    // $payable_amount = $payable_amount + $delivery_fee;
-                                    $delivery_fee_charges = $delivery_fee;
-                                    $latitude = $request->header('latitude');
-                                    $longitude = $request->header('longitude');
-                                    $vendor_cart_product->vendor = $this->getVendorDistanceWithTime($latitude, $longitude, $vendor_cart_product->vendor, $client_preference);
-                                    $order_vendor->order_pre_time = ($vendor_cart_product->vendor->order_pre_time > 0) ? $vendor_cart_product->vendor->order_pre_time : 0;
-                                    if($vendor_cart_product->vendor->timeofLineOfSightDistance > 0){
-                                        $order_vendor->user_to_vendor_time = $vendor_cart_product->vendor->timeofLineOfSightDistance - $order_vendor->order_pre_time;
+                            if (($request->has('type')) && ($request->type == 'delivery')) {
+                                if ((!empty($vendor_cart_product->product->Requires_last_mile)) && ($vendor_cart_product->product->Requires_last_mile == 1)) {
+                                    $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
+                                    if (!empty($delivery_fee) && $delivery_count == 0) {
+                                        $delivery_count = 1;
+                                        $vendor_cart_product->delivery_fee = number_format($delivery_fee, 2, '.', '');
+                                        // $payable_amount = $payable_amount + $delivery_fee;
+                                        $delivery_fee_charges = $delivery_fee;
+                                        $latitude = $request->header('latitude');
+                                        $longitude = $request->header('longitude');
+                                        $vendor_cart_product->vendor = $this->getVendorDistanceWithTime($latitude, $longitude, $vendor_cart_product->vendor, $client_preference);
+                                        $order_vendor->order_pre_time = ($vendor_cart_product->vendor->order_pre_time > 0) ? $vendor_cart_product->vendor->order_pre_time : 0;
+                                        if($vendor_cart_product->vendor->timeofLineOfSightDistance > 0){
+                                            $order_vendor->user_to_vendor_time = $vendor_cart_product->vendor->timeofLineOfSightDistance - $order_vendor->order_pre_time;
+                                        }
                                     }
                                 }
                             }
