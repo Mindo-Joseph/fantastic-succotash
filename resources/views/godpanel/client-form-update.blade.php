@@ -93,7 +93,7 @@
     </div>
 
     <!-- default data after on board -->
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-12">    
                    <div class="card">
                         <div class="card-body"><h3>Import Demo Content [Warning! All data will be lost.]</h3>
@@ -109,12 +109,12 @@
                                         <option value="homeric.sql">Homeric - Home Service </option>
                                         <option value="gokab.sql">GoKab - Cab Booking </option>
                                         <option value="ace.sql">Ace - Super App </option>
-                                        {{-- <option value="punnet.sql">Punnet - Single Vendor Food Delivery </option> --}}
+                                        <option value="punnet.sql">Punnet - Single Vendor Food Delivery </option>
                                         <option value="suel.sql">Suel - Single Vendor Ecommerce </option>
                                         <option value="voltaic.sql">Voltaic - Ecommerce </option>
                                         <option value="gusto.sql">Gusto - Grocery Delivery </option>
                                         <option value="elixir.sql">Elixir - Pharmacy Delivery </option>
-                                        {{-- <option value="sql_files\zest.sql">Zest - Pickup & Delivery </option> --}}
+                                        <option value="zest.sql">Zest - Pickup & Delivery </option>
                                     </select>
                                 </div>    
                             </div>
@@ -129,7 +129,7 @@
                     </div>
             
         </div>
-    </div>
+    </div> --}}
     <!--end default --> 
 
 </div>
