@@ -183,7 +183,7 @@ class OrderController extends BaseController {
                                 }
                             }
                             $vendor_taxable_amount += $taxable_amount;
-                            $total_amount += $variant->price;
+                            $total_amount += $vendor_cart_product->quantity * $variant->price;
                             $order_product = new OrderProduct;
                             $order_product->order_vendor_id = $order_vendor->id;
                             $order_product->order_id = $order->id;
