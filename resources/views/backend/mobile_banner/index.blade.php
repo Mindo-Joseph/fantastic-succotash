@@ -178,7 +178,7 @@ $timezone = Auth::user()->timezone ? Auth::user()->timezone : 'UTC';
                                                 <a class="action-icon openBannerModal" userId="{{$ban->id}}" href="#"> <i class="mdi mdi-square-edit-outline"></i></a> 
                                             </div>
                                             <div class="inner-div">
-                                                <form method="POST" action="{{ route('mobile_banner.destroy', $ban->id) }}">
+                                                <form method="POST" action="{{ route('mobilebanner.destroy', $ban->id) }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <div class="form-group mb-0">
