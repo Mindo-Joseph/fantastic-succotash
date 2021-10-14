@@ -405,4 +405,54 @@ class ClientController extends Controller{
             
             
     }
+
+     /////////////// *********************** single Vendor Setting********************************* ////////////////////////////////////////
+
+     public function singleVendorSetting(Request $request,$id)
+     {
+         try {
+             
+             if (isset($request->single_vendor) && !empty($request->single_vendor)) {
+                 $client = Client::find($id);
+ 
+                 $schemaName = 'royo_' . $client->database_name;
+                 $database_host = !empty($client->database_host) ? $client->database_host : env('DB_HOST', '127.0.0.1');
+                 $database_port = !empty($client->database_port) ? $client->database_port : env('DB_PORT', '3306');
+                 $database_username = !empty($client->database_username) ? $client->database_username : env('DB_USERNAME', 'root');
+                 $database_password = !empty($client->database_password) ? $client->database_password : env('DB_PASSWORD', '');
+ 
+                 $default = [
+                 'driver' => env('DB_CONNECTION', 'mysql'),
+                 'host' => $database_host,
+                 'port' => $database_port,
+                 'database' => $schemaName,
+                 'username' => $database_username,
+                 'password' => $database_password,
+                 'charset' => 'utf8mb4',
+                 'collation' => 'utf8mb4_unicode_ci',
+                 'prefix' => '',
+                 'prefix_indexes' => true,
+                 'strict' => false,
+                 'engine' => null
+                ];
+            
+                 Config::set("database.connections.$schemaName", $default);
+                 config(["database.connections.mysql.database" => $schemaName]);
+             
+                 DB::connection($schemaName)->beginTransaction();
+
+                 $update = DB::table('clients')->where('id',$id)->update(['single_vendor' => $request->single_vendor]);
+                 $update_sub = DB::connection($schemaName)->table('client_preferences')->where('id',1)->update(['single_vendor' => $request->single_vendor]);
+
+                 DB::connection($schemaName)->commit();
+                 return redirect()->route('client.index')->with('success', 'Client updated successfully!');
+            
+             }
+         } catch (\PDOException $e) {
+             DB::connection($schemaName)->rollBack();
+             return redirect()->route('client.index')->with('error', $e->getMessage());
+         }
+             
+             
+     }
 }

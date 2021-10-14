@@ -309,6 +309,14 @@
                                 </a>
                             </li>
                         @endif
+                        @if(Auth::user()->is_superadmin == 1)    
+                        <li>
+                                <a href="{{route('mobilebanner.index')}}">
+                                    <span class="icon-banners"></span>
+                                    <span> {{ __('Mobile Banner') }} </span>
+                                </a>
+                            </li>
+                        @endif
                         @if(in_array('promocode',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('promocode.index')}}">
