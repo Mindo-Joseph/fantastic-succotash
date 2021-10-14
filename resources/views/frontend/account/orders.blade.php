@@ -118,7 +118,9 @@ $timezone = Auth::user()->timezone;
                                                     <div class="col-md-3"><h4>{{__('Order Number')}}</h4></div>
                                                     <div class="col-md-3"><h4>{{__('Date & Time')}}</h4></div>
                                                     <div class="col-md-3"><h4>{{__('Customer Name')}}</h4></div>
+                                                    @if($client_preference_detail->business_type != 'taxi')
                                                     <div class="col-md-3"><h4>{{__('Address')}}</h4></div>
+                                                    @endif
                                                 </div>
                                                 <div class="row no-gutters order_data">
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
@@ -126,6 +128,7 @@ $timezone = Auth::user()->timezone;
                                                     <div class="col-md-3">
                                                         <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                     </div>
+                                                    @if($client_preference_detail->business_type != 'taxi')
                                                     <div class="col-md-3">
                                                         <span class="ellipsis" data-toggle="tooltip" data-placement="top" title="">
                                                             @if($order->address)
@@ -134,7 +137,8 @@ $timezone = Auth::user()->timezone;
                                                                 NA
                                                             @endif
                                                         </span>
-                                                    </div>                    
+                                                    </div>    
+                                                    @endif                
                                                 </div>
                                                 <div class="row mt-2"> 
                                                     <div class="col-md-9 mb-3">
@@ -146,12 +150,25 @@ $timezone = Auth::user()->timezone;
                                                                 $product_total_count = $product_subtotal_amount = $product_taxable_amount = 0;
                                                             @endphp
                                                             <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
-                                                                @if(($vendor->delivery_fee > 0) || (!empty($order->scheduled_date_time)))
+                                                                @if(($vendor->delivery_fee > 0) || (!empty($order->scheduled_date_time)) || ($order->luxury_option_id > 0))
                                                                     <div class="progress-order font-12">
+                                                                        @if($order->luxury_option_id > 0)
+                                                                            @php
+                                                                                $luxury_option = \App\Models\LuxuryOption::where('id', $order->luxury_option_id)->first();
+                                                                                if($luxury_option->title == 'takeaway'){
+                                                                                    $luxury_option_name = getNomenclatureName('Takeaway', Session::get('customerLanguage'), false);
+                                                                                }elseif($luxury_option->title == 'dine_in'){
+                                                                                    $luxury_option_name = 'Dine-In';
+                                                                                }else{
+                                                                                    $luxury_option_name = 'Delivery';
+                                                                                }
+                                                                            @endphp
+                                                                            <span class="badge badge-info ml-2">{{$luxury_option_name}}</span>
+                                                                        @endif
                                                                         @if(!empty($order->scheduled_date_time))
                                                                             <span class="badge badge-success ml-2">Scheduled</span>
-                                                                            <span class="ml-2">Your order will arrive by {{convertDateTimeInTimeZone($order->scheduled_date_time, $timezone, 'M d, Y h:i A')}}</span>
-                                                                        @else
+                                                                            <span class="ml-2">{{convertDateTimeInTimeZone($order->scheduled_date_time, $timezone, 'M d, Y h:i A')}}</span>
+                                                                        @elseif(!empty($vendor->ETA))
                                                                             <span class="ml-2">Your order will arrive by {{$vendor->ETA}}</span>
                                                                         @endif
                                                                     </div>
@@ -217,14 +234,18 @@ $timezone = Auth::user()->timezone;
                                                                                 <label class="m-0">{{__('Product Total')}}</label>
                                                                                 <span>{{Session::get('currencySymbol')}}@money($vendor->subtotal_amount * $clientCurrency->doller_compare)</span>
                                                                             </li>
+                                                                            @if($vendor->discount_amount > 0)
                                                                             <li class="d-flex align-items-center justify-content-between">
                                                                                 <label class="m-0">{{__('Coupon Discount')}}</label>
                                                                                 <span>{{Session::get('currencySymbol')}}@money($vendor->discount_amount * $clientCurrency->doller_compare)</span>
                                                                             </li>
+                                                                            @endif
+                                                                            @if($vendor->delivery_fee > 0)
                                                                             <li class="d-flex align-items-center justify-content-between">
                                                                                 <label class="m-0">{{__('Delivery Fee')}}</label>
                                                                                 <span>{{Session::get('currencySymbol')}}@money($vendor->delivery_fee * $clientCurrency->doller_compare)</span>
                                                                             </li>
+                                                                            @endif
                                                                             <li class="grand_total d-flex align-items-center justify-content-between">
                                                                                 <label class="m-0">{{__('Amount')}}</label>
                                                                                 @php
@@ -312,7 +333,9 @@ $timezone = Auth::user()->timezone;
                                                     <div class="col-md-3"><h4>{{__('Order Number')}}</h4></div>
                                                     <div class="col-md-3"><h4>{{__('Date & Time')}}</h4></div>
                                                     <div class="col-md-3"><h4>{{__('Customer Name')}}</h4></div>
+                                                    @if($client_preference_detail->business_type != 'taxi')
                                                     <div class="col-md-3"><h4>{{__('Address')}}</h4></div>
+                                                    @endif
                                                 </div>
                                                 <div class="row no-gutters order_data">
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
@@ -320,6 +343,7 @@ $timezone = Auth::user()->timezone;
                                                     <div class="col-md-3">
                                                         <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                     </div>
+                                                    @if($client_preference_detail->business_type != 'taxi')
                                                     <div class="col-md-3">
                                                         <span class="ellipsis" data-toggle="tooltip" data-placement="top" title="">
                                                             @if($order->address)
@@ -328,7 +352,8 @@ $timezone = Auth::user()->timezone;
                                                                 NA
                                                             @endif
                                                         </span>
-                                                    </div>                    
+                                                    </div>  
+                                                    @endif                  
                                                 </div>
                                                 <div class="row mt-2">
                                                     <div class="col-md-9 mb-3">
@@ -351,7 +376,10 @@ $timezone = Auth::user()->timezone;
                                                                                 <label class="m-0 in-progress">{{ ucfirst($vendor->order_status) }}</label>
                                                                             </li>
                                                                         @endif
-
+                                                                        @if(!empty($vendor->dispatch_traking_url))
+                                                                        <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
+                                                                        <a href="{{route('front.booking.details',$order->order_number)}}" target="_blank">{{ __('Details') }}</a>
+                                                                        @endif
                                                                             @if($vendor->dineInTable)
                                                                                 <li>
                                                                                     <h5 class="mb-1">{{ __('Dine-in') }}</h5>
@@ -397,14 +425,18 @@ $timezone = Auth::user()->timezone;
                                                                                 <label class="m-0">{{__('Product Total')}}</label>
                                                                                 <span>{{Session::get('currencySymbol')}}@money($product_total_count * $clientCurrency->doller_compare)</span>
                                                                             </li>
+                                                                            @if($vendor->discount_amount > 0)
                                                                             <li class="d-flex align-items-center justify-content-between">
                                                                                 <label class="m-0">{{__('Coupon Discount')}}</label>
                                                                                 <span>{{Session::get('currencySymbol')}}@money($vendor->discount_amount * $clientCurrency->doller_compare)</span>
                                                                             </li>
+                                                                            @endif
+                                                                            @if($vendor->delivery_fee > 0)
                                                                             <li class="d-flex align-items-center justify-content-between">
                                                                                 <label class="m-0">{{__('Delivery Fee')}}</label>
                                                                                 <span>{{Session::get('currencySymbol')}}@money($vendor->delivery_fee * $clientCurrency->doller_compare)</span>
                                                                             </li>
+                                                                            @endif
                                                                             <li class="grand_total d-flex align-items-center justify-content-between">
                                                                                 <label class="m-0">{{__('Amount')}}</label>
                                                                                 @php
@@ -496,7 +528,9 @@ $timezone = Auth::user()->timezone;
                                                 <div class="col-md-3"><h4>{{__('Order Number')}}</h4></div>
                                                 <div class="col-md-3"><h4>{{__('Date & Time')}}</h4></div>
                                                 <div class="col-md-3"><h4>{{__('Customer Name')}}</h4></div>
+                                                @if($client_preference_detail->business_type != 'taxi')
                                                 <div class="col-md-3"><h4>{{__('Address')}}</h4></div>
+                                                @endif
                                             </div>
                                             <div class="row no-gutters order_data">
                                                 <div class="col-md-3">#{{$order->order_number}}</div>
@@ -504,6 +538,7 @@ $timezone = Auth::user()->timezone;
                                                 <div class="col-md-3">
                                                     <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                 </div>
+                                                @if($client_preference_detail->business_type != 'taxi')
                                                 <div class="col-md-3">
                                                     <span class="ellipsis" data-toggle="tooltip" data-placement="top" title="">
                                                         @if($order->address)
@@ -512,7 +547,8 @@ $timezone = Auth::user()->timezone;
                                                             NA
                                                         @endif
                                                     </span>
-                                                </div>                    
+                                                </div> 
+                                                @endif                   
                                             </div>
                                             <div class="row mt-2">
                                                 <div class="col-md-9 mb-3">
@@ -575,14 +611,18 @@ $timezone = Auth::user()->timezone;
                                                                             <label class="m-0">{{__('Product Total')}}</label>
                                                                             <span>{{Session::get('currencySymbol')}}@money($vendor->subtotal_amount * $clientCurrency->doller_compare)</span>
                                                                         </li>
+                                                                        @if($vendor->discount_amount > 0)
                                                                         <li class="d-flex align-items-center justify-content-between">
                                                                             <label class="m-0">{{__('Coupon Discount')}}</label>
                                                                             <span>{{Session::get('currencySymbol')}}@money($vendor->discount_amount * $clientCurrency->doller_compare)</span>
                                                                         </li>
+                                                                        @endif
+                                                                        @if($vendor->delivery_fee > 0)
                                                                         <li class="d-flex align-items-center justify-content-between">
                                                                             <label class="m-0">{{__('Delivery Fee')}}</label>
                                                                             <span>{{Session::get('currencySymbol')}}@money($vendor->delivery_fee * $clientCurrency->doller_compare)</span>
                                                                         </li>
+                                                                        @endif
                                                                         <li class="grand_total d-flex align-items-center justify-content-between">
                                                                             <label class="m-0">{{__('Amount')}}</label>
                                                                             @php
