@@ -10,12 +10,13 @@ use Illuminate\Http\Request;
 use App\Models\PaymentOption;
 use Omnipay\Common\CreditCard;
 use App\Http\Traits\ApiResponser;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Http\Controllers\Api\v1\MobbexGatewayController;
 use App\Http\Requests\OrderStoreRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, Client, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, User, Payment, Transaction};
 
-class PaymentOptionController extends Controller{
+class PaymentOptionController extends BaseController{
     use ApiResponser;
     public $gateway;
 
