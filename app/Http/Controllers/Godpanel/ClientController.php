@@ -83,6 +83,8 @@ class ClientController extends Controller{
             return redirect()->back()->withErrors(['error' => "Something went wrong."]);
         }
         $business_type = $request->business_type??null;
+      
+        $update = DB::table('clients')->where('id',$data->id)->update(['business_type' => $business_type]);
         $database_name = preg_replace('/\s+/', '', $request->database_name);
         Cache::set($database_name, $data);
         $languId = ($request->has('primary_language')) ? $request->primary_language : 1;
@@ -110,6 +112,7 @@ class ClientController extends Controller{
         if(!$save){
             return redirect()->back()->withErrors(['error' => "Something went wrong."]);
         }
+        $update = DB::table('clients')->where('id',$id)->update(['business_type' => $request->business_type]);
         $this->dispatchNow(new EditClient($client->id));
         return redirect()->route('client.index')->with('success', 'Client Updated successfully!');
     }
@@ -139,6 +142,7 @@ class ClientController extends Controller{
             $client->code = $this->randomString();
             $client->country_id = $request->country ? $request->country : NULL;
             $client->timezone = $request->timezone ? $request->timezone : NULL;
+            $client->business_type = $request->business_type ?? NULL;
             $client->status = 1;
         }
         $isPasswordUpdate = 0;
