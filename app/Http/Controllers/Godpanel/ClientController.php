@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Redis;
 use Session;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Traits\ApiResponser;
-use App\Models\{AddonOption, AddonOptionTranslation, AddonSet, AddonSetTranslation, OrderVendorProduct, Banner, Brand, BrandCategory, BrandTranslation, Cart, CartAddon, CartCoupon, CartProduct, CartProductPrescription, Category, CategoryHistory, CategoryTranslation, Celebrity, CsvProductImport, CsvVendorImport, LoyaltyCard, Order, OrderProductAddon, OrderProductPrescription, OrderProductRating, OrderProductRatingFile, OrderReturnRequest, OrderReturnRequestFile, OrderTax, OrderVendor, Payment, PaymentOption, Product, ProductAddon, ProductCategory, ProductCelebrity, ProductCrossSell, ProductImage, ProductInquiry, ProductRelated, ProductTranslation, ProductUpSell, ProductVariant, ProductVariantImage, ProductVariantSet, Promocode, PromoCodeDetail, PromocodeRestriction, ServiceArea, SlotDay, SocialMedia, Transaction, User, UserAddress, UserDevice, UserLoyaltyPoint, UserPermissions, UserRefferal, UserVendor, UserWishlist, Variant, VariantCategory, VariantOption, VariantOptionTranslation, VariantTranslation, Vendor, VendorCategory, VendorMedia, VendorOrderStatus, VendorSlot, VendorSlotDate, Wallet,CabBookingLayout,CabBookingLayoutCategory,CabBookingLayoutTranslation};
+use App\Models\{AddonOption, AddonOptionTranslation, AddonSet, AddonSetTranslation, OrderVendorProduct, Banner, MobileBanner, Brand, BrandCategory, BrandTranslation, Cart, CartAddon, CartCoupon, CartProduct, CartProductPrescription, Category, CategoryHistory, CategoryTranslation, Celebrity, CsvProductImport, CsvVendorImport, LoyaltyCard, Order, OrderProductAddon, OrderProductPrescription, OrderProductRating, OrderProductRatingFile, OrderReturnRequest, OrderReturnRequestFile, OrderTax, OrderVendor, Payment, PaymentOption, Product, ProductAddon, ProductCategory, ProductCelebrity, ProductCrossSell, ProductImage, ProductInquiry, ProductRelated, ProductTranslation, ProductUpSell, ProductVariant, ProductVariantImage, ProductVariantSet, Promocode, PromoCodeDetail, PromocodeRestriction, ServiceArea, SlotDay, SocialMedia, Transaction, User, UserAddress, UserDevice, UserLoyaltyPoint, UserPermissions, UserRefferal, UserVendor, UserWishlist, Variant, VariantCategory, VariantOption, VariantOptionTranslation, VariantTranslation, Vendor, VendorCategory, VendorMedia, VendorOrderStatus, VendorSlot, VendorSlotDate, Wallet,CabBookingLayout,CabBookingLayoutCategory,CabBookingLayoutTranslation};
 use Exception;
 use Spatie\DbDumper\Databases\MySql;
 
@@ -320,6 +320,7 @@ class ClientController extends Controller{
                 Brand::on($schemaName)->truncate();
                 Order::on($schemaName)->truncate();
                 Banner::on($schemaName)->truncate();
+                MobileBanner::on($schemaName)->truncate();
                 Vendor::on($schemaName)->truncate();
                 SlotDay::on($schemaName)->truncate();
                 Payment::on($schemaName)->truncate();
@@ -412,7 +413,7 @@ class ClientController extends Controller{
      {
          try {
              
-             if (isset($request->single_vendor) && !empty($request->single_vendor)) {
+            // if (isset($request->single_vendor) && !empty($request->single_vendor)) {
                  $client = Client::find($id);
  
                  $schemaName = 'royo_' . $client->database_name;
@@ -447,7 +448,7 @@ class ClientController extends Controller{
                  DB::connection($schemaName)->commit();
                  return redirect()->route('client.index')->with('success', 'Client updated successfully!');
             
-             }
+             //}
          } catch (\PDOException $e) {
              DB::connection($schemaName)->rollBack();
              return redirect()->route('client.index')->with('error', $e->getMessage());
