@@ -395,3 +395,4 @@ INSERT INTO `cab_booking_layout_transaltions` (`id`, `title`, `cab_booking_layou
 
 UPDATE `client_preferences` SET `business_type` = 'taxi' WHERE `client_preferences`.`id` = 1;
 
+UPDATE `client_preferences` SET `is_hyperlocal` = 0 WHERE `client_preferences`.`id` = 1;

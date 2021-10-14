@@ -208,7 +208,7 @@
 <section class="section-b-space p-t-0 pt-3 pt-md-4 ratio_asos d-none pb-0" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $key => $homePageLabel)
-        @if($homePageLabel->slug == 'pickup_delivery')
+        @if($homePageLabel->slug == 'pickup_delivery') 
                 @if(isset($homePageLabel->pickupCategories) && count($homePageLabel->pickupCategories)) 
                   @include('frontend.booking.cabbooking-single-module')
                 @endif 

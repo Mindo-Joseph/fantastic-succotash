@@ -132,6 +132,37 @@
     </div>
     <!--end default --> 
 
+      <!-- on single vendor panel  -->
+      <div class="row">
+        <div class="col-12">    
+                   <div class="card">
+                        <div class="card-body"><h3>{{__('Single Vendor')}}</h3>
+                        <form id="update_default_data" method="post" action="{{route('client.migrateDefaultData', $client->id)}}"
+                            enctype="multipart/form-data" autocomplete="off">
+                            @csrf
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="languages">Enable/Disable </label>
+                                    <select class="form-control" id="business_type" name="business_type">
+                                        <option value="0">Disable</option>
+                                        <option value="1">Enable</option>
+                                    </select>
+                                </div>    
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="row">
+                                    <button type="submit" class="btn btn-info waves-effect waves-light">{{__('Submit')}}</button>
+                                </div>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+            
+        </div>
+    </div>
+    <!--end default --> 
+
 </div>
 @endsection
 @section('script')
