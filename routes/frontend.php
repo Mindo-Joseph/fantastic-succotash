@@ -196,7 +196,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function () {
 	// Return product 
 	Route::group(['prefix' => 'looking'], function () {
 		Route::get('/', 'Front\BookingController@index')->name('bookingIndex');
-		Route::get('details/{id}', 'Front\BookingController@bookingDetails')->name('front.booking.details');
+		Route::get('details/{id?}', 'Front\BookingController@bookingDetails')->name('front.booking.details');
 		Route::post('orderPlaceDetails/{id}', 'Front\BookingController@orderPlaceDetails')->name('front.booking.orderplacedetails');
 
 
