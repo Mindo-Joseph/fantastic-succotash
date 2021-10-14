@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use DB;
 use App;
 use Config;
+use Log;
 use Validation;
 use Carbon\Carbon;
 use ConvertCurrency;
@@ -236,7 +237,7 @@ class HomeController extends BaseController{
             $homeData['featured_products'] = $feature_product_details;
             $homeData['brands'] = Brand::with(['translation' => function($q) use($langId){
                                     $q->select('brand_id', 'title')->where('language_id', $langId);
-                                }])->select('id', 'image')->where('status', '!=', $this->field_status)
+                                }])->select('id', 'image', 'image_banner')->where('status', '!=', $this->field_status)
                                 ->orderBy('position', 'asc')->get();
             $user_vendor_count = UserVendor::where('user_id', $user->id)->count();
             $homeData['is_admin'] = $user_vendor_count > 0 ? 1 : 0;
@@ -376,7 +377,9 @@ class HomeController extends BaseController{
                 //     $vendor->response_type = 'vendor';
                 //     // $response[] = $vendor;
                 // }
-                $products = Product::with('media')->join('product_translations as pt', 'pt.product_id', 'products.id')
+                $products = Product::with(['category.categoryDetail.translation' => function($q) use($langId){
+                                $q->where('category_translations.language_id', $langId);
+                            },'media'])->join('product_translations as pt', 'pt.product_id', 'products.id')
                             ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
                             ->where('pt.language_id', $langId)
                             ->where(function ($q) use ($keyword) {

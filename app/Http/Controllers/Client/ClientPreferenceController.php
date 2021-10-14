@@ -193,16 +193,18 @@ class ClientPreferenceController extends BaseController{
             $exist_language_id = array();
             if($request->has('languages')){
                 foreach ($request->languages as $lan) {
-                    $client_language = ClientLanguage::where('client_code',Auth::user()->code)->where('language_id', $lan)->first();
-                    if(!$client_language){
-                        $client_language = new ClientLanguage();
-                        $client_language->client_code = Auth::user()->code;
+                    if ($lan != $request->primary_language) {
+                        $client_language = ClientLanguage::where('client_code', Auth::user()->code)->where('language_id', $lan)->first();
+                        if (!$client_language) {
+                            $client_language = new ClientLanguage();
+                            $client_language->client_code = Auth::user()->code;
+                        }
+                        $client_language->is_primary = 0;
+                        $client_language->language_id = $lan;
+                        $client_language->is_active = 1;
+                        $client_language->save();
+                        $exist_language_id[] = $client_language->language_id;
                     }
-                    $client_language->is_primary = 0;
-                    $client_language->language_id = $lan;
-                    $client_language->is_active = 1;
-                    $client_language->save();
-                    $exist_language_id[] = $client_language->language_id;
                 }
             }
             $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->whereNotIn('language_id', $exist_language_id)->where('is_primary', 0)->update(['is_active' => 0]);
@@ -261,6 +263,8 @@ class ClientPreferenceController extends BaseController{
             $preferenceset->delivery_service_key_url = $request->delivery_service_key_url;
             $preferenceset->delivery_service_key_code = $request->delivery_service_key_code;
             $preferenceset->delivery_service_key = $request->delivery_service_key;
+        }else{
+            $preferenceset->need_delivery_service = ($request->has('need_delivery_service') && $request->need_delivery_service == 'on') ? 1 : 0;
         }
 
         if(isset($request->need_dispacher_ride) && !empty($request->need_dispacher_ride)){
@@ -279,7 +283,9 @@ class ClientPreferenceController extends BaseController{
            $preferenceset->pickup_delivery_service_key_url = $request->pickup_delivery_service_key_url;
             $preferenceset->pickup_delivery_service_key_code = $request->pickup_delivery_service_key_code;
             $preferenceset->pickup_delivery_service_key = $request->pickup_delivery_service_key;
-        }
+        }else{
+            $preferenceset->need_dispacher_ride = ($request->has('need_dispacher_ride') && $request->need_dispacher_ride == 'on') ? 1 : 0;
+        }   
 
         if(isset($request->need_dispacher_home_other_service) && !empty($request->need_dispacher_home_other_service))
         {
@@ -301,6 +307,8 @@ class ClientPreferenceController extends BaseController{
             $preferenceset->dispacher_home_other_service_key_url = $request->dispacher_home_other_service_key_url;
             $preferenceset->dispacher_home_other_service_key_code = $request->dispacher_home_other_service_key_code;
             $preferenceset->dispacher_home_other_service_key = $request->dispacher_home_other_service_key;
+        }else{
+            $preferenceset->need_dispacher_home_other_service = ($request->has('need_dispacher_home_other_service') && $request->need_dispacher_home_other_service == 'on') ? 1 : 0;
         }
         $preferenceset->save();
      
