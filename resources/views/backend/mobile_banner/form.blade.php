@@ -93,7 +93,7 @@
         </div>
         <div class="row category_vendor" style="{{(empty($banner->link)) ? 'display: none;' : ''}}">
             <div class="col-md-6 category_list" style="{{($banner->link == 'category') ? '' : 'display: none;'}}">
-                <input type="hidden" id="bannerId" url="{{ (isset($banner->id) && $banner->id > 0) ? route('mobile_banner.update', $banner->id) : route('mobile_banner.store') }}">
+                <input type="hidden" id="bannerId" url="{{ (isset($banner->id) && $banner->id > 0) ? route('mobilebanner.update', $banner->id) : route('mobilebanner.store') }}">
                 <div class="form-group">
                     {!! Form::label('title', __('Select Category'),['class' => 'control-label']) !!}
                     <select class="selectize-select form-control" name="category_id">

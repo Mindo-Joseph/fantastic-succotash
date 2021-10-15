@@ -311,7 +311,7 @@
                         @endif
                         @if(Auth::user()->is_superadmin == 1)    
                         <li>
-                                <a href="{{route('mobile_banner.index')}}">
+                                <a href="{{route('mobilebanner.index')}}">
                                     <span class="icon-banners"></span>
                                     <span> {{ __('Mobile Banner') }} </span>
                                 </a>

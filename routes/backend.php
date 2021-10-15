@@ -83,10 +83,10 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::post('banner/saveOrder', 'Client\BannerController@saveOrder');
         Route::post('banner/changeValidity', 'Client\BannerController@validity');
         Route::post('banner/toggle', 'Client\BannerController@toggleAllBanner')->name('banner.toggle');
-        Route::resource('mobile_banner', 'Client\MobileBannerController');
-        Route::post('mobile_banner/saveOrder', 'Client\MobileBannerController@saveOrder');
-        Route::post('mobile_banner/changeValidity', 'Client\MobileBannerController@validity');
-        Route::post('mobile_banner/toggle', 'Client\MobileBannerController@toggleAllBanner')->name('mobile_banner.toggle');
+        Route::resource('mobilebanner', 'Client\MobileBannerController');
+        Route::post('mobilebanner/saveOrder', 'Client\MobileBannerController@saveOrder');
+        Route::post('mobilebanner/changeValidity', 'Client\MobileBannerController@validity');
+        Route::post('mobilebanner/toggle', 'Client\MobileBannerController@toggleAllBanner')->name('mobilebanner.toggle');
         Route::get('web-styling', 'Client\WebStylingController@index')->name('webStyling.index');
         Route::post('web-styling/updateWebStyles', 'Client\WebStylingController@updateWebStyles')->name('styling.updateWebStyles');
         Route::post('web-styling/updateWebStylesNew', 'Client\WebStylingController@updateWebStylesNew')->name('styling.updateWebStylesNew');

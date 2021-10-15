@@ -13,7 +13,7 @@
         $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ url('client/mobile_banner/changeValidity') }}",
+            url: "{{ url('client/mobilebanner/changeValidity') }}",
             data: {
                 _token: CSRF_TOKEN,
                 value: chk,
@@ -58,11 +58,11 @@
         });
         e.preventDefault();
 
-        var uri = "{{route('mobile_banner.create')}}";
+        var uri = "{{route('mobilebanner.create')}}";
        
         var uid = $(this).attr('userId');
         if(uid > 0){
-            uri = "<?php echo url('client/mobile_banner'); ?>" + '/' + uid + '/edit';
+            uri = "<?php echo url('client/mobilebanner'); ?>" + '/' + uid + '/edit';
 
         }
 
@@ -238,7 +238,7 @@
         $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ url('client/mobile_banner/saveOrder') }}",
+            url: "{{ url('client/mobilebanner/saveOrder') }}",
              data: {
                 _token: CSRF_TOKEN,
                 order: orderVal
