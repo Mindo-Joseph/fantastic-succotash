@@ -64,7 +64,7 @@
                                     <input type="tel" class="form-control" name="phone_number" id="phone" value="">
                                     <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
                                     <input type="hidden" id="countryCode" name="country" value="">
-                                    <input type="hidden" id="dialCode" name="country_code" value="">
+                                    <input type="hidden" id="dialCode" name="country_code" value="91">
                                 </div>
                                 <div class="col-md-12 mb-3" id="full_nameInput">
                                     <div class="form-group" id="typeInputEdit">
@@ -459,7 +459,7 @@
             separateDialCode: true,
             hiddenInput: "full_number",
             utilsScript: "{{asset('assets/js/utils.js')}}",
-            initialCountry: "{{ Session::get('default_country_code','US') }}",
+            initialCountry: "in",
         });
 
         function initialize() {
