@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Api\v1\FrontController;
+use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Controllers\Api\v1\OrderController;
 use App\Models\{User, UserVendor, Cart, CartAddon, CartCoupon, CartProduct, CartProductPrescription, Payment, PaymentOption, Client, ClientPreference, ClientCurrency, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor, OrderTax};
 
@@ -40,46 +40,22 @@ class MobbexGatewayController extends BaseController
         }
     }
 
-    public function mobbexPurchase(Request $request){
+    public function mobbexPurchase($request){
         try{
             $user = Auth::user();
             $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($request->amount);
-            // $returnUrlParams = '?amount='.$amount;
-            // if($request->has('tip')){
-            //     $tip = $request->tip;
-            //     $returnUrlParams = $returnUrlParams.'&tip='.$tip;
-            // }
-            // if( ($request->has('address_id')) && ($request->address_id > 0) ){
-            //     $address_id = $request->address_id;
-            //     $returnUrlParams = $returnUrlParams.'&address_id='.$address_id;
-            // }
             $returnUrlParams = '?gateway=mobbex&order='.$request->order_number;
-
-            $returnUrl = route('order.return.success');
-            if($request->payment_form == 'wallet'){
-                $returnUrl = route('user.wallet');
-            }
 
             $checkout_data = array(
                 'total' => $amount,
                 'currency' => 'ARS',
                 'description' => 'Order Checkout',
-                'return_url' => url($request->returnUrl . $returnUrlParams),
+                'return_url' => url($request->serverUrl . 'payment/gateway/returnResponse' . $returnUrlParams),
                 'reference' => $request->order_number,
-                'webhook' => url('payment/mobbex/notify'),
+                'webhook' => url($request->serverUrl . 'payment/mobbex/notify'),
                 'redirect' => false,
                 'test' => $this->test_mode, // True, testing, false, production
-                // 'options' => array(
-                //     'theme' => array(
-                //         'type' => 'light', // dark or light color scheme
-                //         'showHeader' => true,
-                //         'header' => array(
-                //             'name' => 'Your brand name',
-                //             'logo' => 'https://www.yourstore.com/store-logo.jpg', // Must be https!
-                //         ),
-                //     ),
-                // ),
                 'customer' => array(
                     'email' => $user->email,
                     'name' => $user->name,
