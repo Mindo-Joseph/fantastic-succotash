@@ -165,8 +165,9 @@ class UserController extends BaseController{
     public function save(Request $request, User $user, $update = 'false'){
         $request->contact;
         $request->phone_number;
-        $phone = ($request->has('contact') && !empty($request->contact)) ? $request->contact : '+'.$request->country_code.$request->phone_number;
+        $phone = ($request->has('contact') && !empty($request->contact)) ? $request->contact : $request->phone_number;
         $user->name = $request->name; 
+        $user->dial_code=$request->country_code;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->phone_number = $phone;
