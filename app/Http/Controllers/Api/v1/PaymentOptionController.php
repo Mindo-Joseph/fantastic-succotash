@@ -24,7 +24,7 @@ class PaymentOptionController extends BaseController{
         if($page == 'wallet'){
             $code = array('paypal', 'stripe');
         }else{
-            $code = array('cod', 'paypal', 'stripe');
+            $code = array('cod', 'paypal', 'stripe', 'mobbex');
         }
         $payment_options = PaymentOption::whereIn('code', $code)->where('status', 1)->get(['id', 'title', 'off_site']);
         return $this->successResponse($payment_options, '', 201);
@@ -34,7 +34,7 @@ class PaymentOptionController extends BaseController{
         if(!empty($gateway)){
             $code = $request->header('code');
             $client = Client::where('code',$code)->first();
-            $server_url = "https://".$client->sub_domain.env('SUBMAINDOMAIN');
+            $server_url = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/";
             $request->serverUrl = $server_url;
             $request->currencyId = $request->header('currency');
             $function = 'postPaymentVia_'.$gateway;
