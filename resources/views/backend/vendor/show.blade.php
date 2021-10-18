@@ -360,7 +360,20 @@
                                 <h4 class="mb-4 "> {{ __('Weekly Slot') }}</h4>
                                 <div class="col-md-12">
                                     <div class="row mb-2">
-                                        <div class="col-md-12">
+                                        <div class="col-md-12 col-lg-4">
+                                            <div id='calendar_slot_alldays'>
+                                                <table class="table table-centered table-nowrap table-striped" id="calendar_slot_alldays_table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="2">This week</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-8">
                                             <div id='calendar'>
 
                                             </div>
@@ -1136,6 +1149,31 @@
             events: {
                 url: "{{route('vendor.calender.data', $vendor->id)}}",
             },
+            eventDidMount: function(ev) {
+                // var tooltip = new Tooltip(info.el, {
+                //     title: info.event.extendedProps.description,
+                //     placement: 'top',
+                //     trigger: 'hover',
+                //     container: 'body'
+                // });
+                // $("#calendar_slot_alldays_table tbody").html('');
+                var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                var day = ev.event.start.getDay() + 1;
+                $.each(days, function(key, value){
+                    if(day == key + 1){
+                        var startTime = ("0" + ev.event.start.getHours()).slice(-2) + ":" + ("0" + ev.event.start.getMinutes()).slice(-2);
+                        var endTime = '';
+                        if (ev.event.end) {
+                            endTime = ("0" + ev.event.end.getHours()).slice(-2) + ":" + ("0" + ev.event.end.getMinutes()).slice(-2);
+                        }
+                        if($("#calendar_slot_alldays_table tbody tr[data-slotDay='"+day+"']").length > 0){
+                            $("#calendar_slot_alldays_table tbody tr[data-slotDay='"+day+"']").html("<td>"+value+"</td><td>"+startTime+" - "+endTime+"</td>");
+                        }else{
+                            $("#calendar_slot_alldays_table tbody").append("<tr data-slotDay="+day+"><td>"+value+"</td><td>"+startTime+" - "+endTime+"</td></tr>");
+                        }
+                    }
+                });
+            },
             eventResize: function(arg) {
                 // console.log(arg.event.extendedProps);
 
@@ -1145,7 +1183,7 @@
                     //backdrop: 'static',
                     keyboard: false
                 });
-                console.log(ev.event.extendedProps);
+                // console.log(ev.event.extendedProps);
                 var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
                 var day = ev.event.start.getDay() + 1;
 
