@@ -85,11 +85,16 @@
                                         </div>
 
                                         <a href="<%= vendor.vendor_detail_url %>" class="row order_detail order_detail_data align-items-top pb-1 mb-0 card-box no-gutters h-100">
-                                            <% if(order.scheduled_date_time) { %>
+                                            <% if(order.scheduled_date_time || (order.luxury_option_name != '')) { %>
                                             <div class="col-sm-12">
                                                 <div class="progress-order font-12">
-                                                    <span class="badge badge-success ml-2">Scheduled</span>
-                                                    <span class="ml-2"><%= order.scheduled_date_time %></span>
+                                                    <% if(order.luxury_option_name != '') { %>
+                                                        <span class="badge badge-info ml-2"><%= order.luxury_option_name %></span>
+                                                    <% } %>
+                                                    <% if(order.scheduled_date_time) { %>
+                                                        <span class="badge badge-success ml-2">Scheduled</span>
+                                                        <span class="ml-2"><%= order.scheduled_date_time %></span>
+                                                    <% } %>
                                                 </div>
                                             </div>
                                             <% } %>
@@ -164,10 +169,14 @@
                                         <label class="m-0">{{ __('Tax') }}</label>
                                         <span>$<%= order.taxable_amount %></span>
                                     </li>
-                                    <!-- <li class="d-flex align-items-center justify-content-between">
-                                        <label class="m-0">Delivery Fee</label>
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">{{__('Delivery Fee')}}</label>
                                         <span>$<%= order.total_delivery_fee %></span>
-                                    </li> -->
+                                    </li>
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">{{__('Wallet Amount Used')}}</label>
+                                        <span>$<%= order.wallet_amount_used %></span>
+                                    </li>
                                     <li class="grand_total d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Payable') }} </label>
                                         <span>$<%= order.payable_amount %></span>
