@@ -1,5 +1,12 @@
  <!-- Cab Booking Start From Here -->
- <section class="cab-banner-area p-0" style="background:url({{asset('images/CabBANNER.jpg')}});background-size: cover;background-repeat: no-repeat;background-position: center;">
+@php
+    if(isset($homePageLabel->image['proxy_url']) && !empty($homePageLabel->image['proxy_url']))
+    $img = $homePageLabel->image['proxy_url'].'1900/500'.$homePageLabel->image['image_path'];
+    else
+    $img = "{{asset('images/CabBANNER.jpg')}}";
+@endphp
+
+ <section class="cab-banner-area p-0" style="background:url({{$img}});background-size: cover;background-repeat: no-repeat;background-position: center;">
     <div class="container p-64">
         <div class="row">
             <div class="col-md-8 col-lg-6">
