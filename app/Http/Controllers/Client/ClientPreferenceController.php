@@ -263,6 +263,8 @@ class ClientPreferenceController extends BaseController{
             $preferenceset->delivery_service_key_url = $request->delivery_service_key_url;
             $preferenceset->delivery_service_key_code = $request->delivery_service_key_code;
             $preferenceset->delivery_service_key = $request->delivery_service_key;
+        }else{
+            $preferenceset->need_delivery_service = $preferenceset->need_delivery_service;
         }
 
         if(isset($request->need_dispacher_ride) && !empty($request->need_dispacher_ride)){
@@ -281,7 +283,9 @@ class ClientPreferenceController extends BaseController{
            $preferenceset->pickup_delivery_service_key_url = $request->pickup_delivery_service_key_url;
             $preferenceset->pickup_delivery_service_key_code = $request->pickup_delivery_service_key_code;
             $preferenceset->pickup_delivery_service_key = $request->pickup_delivery_service_key;
-        }
+        }else{
+            $preferenceset->need_dispacher_ride = $preferenceset->need_dispacher_ride;
+        }   
 
         if(isset($request->need_dispacher_home_other_service) && !empty($request->need_dispacher_home_other_service))
         {
@@ -303,6 +307,8 @@ class ClientPreferenceController extends BaseController{
             $preferenceset->dispacher_home_other_service_key_url = $request->dispacher_home_other_service_key_url;
             $preferenceset->dispacher_home_other_service_key_code = $request->dispacher_home_other_service_key_code;
             $preferenceset->dispacher_home_other_service_key = $request->dispacher_home_other_service_key;
+        }else{
+            $preferenceset->need_dispacher_home_other_service = $preferenceset->need_dispacher_home_other_service;
         }
         $preferenceset->save();
      

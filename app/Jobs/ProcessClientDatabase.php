@@ -88,7 +88,7 @@ class ProcessClientDatabase implements ShouldQueue
                 'twitter_login'         => 0,
                 'google_login'          => 0,
                 'apple_login'           => 0,
-                'is_hyperlocal'         => 1,
+                'is_hyperlocal'         => 0,
                 'Default_location_name' => 'Chandigarh, Punjab, India',
                 'Default_latitude'      =>'30.53899440',
                 'Default_longitude'     =>'75.95503290',
@@ -105,7 +105,8 @@ class ProcessClientDatabase implements ShouldQueue
             $cli_currs = [
                 'client_code' => $client['code'],
                 'currency_id' => '147',
-                'is_primary' => '1'
+                'is_primary' => '1',
+                'doller_compare' => 1.00
             ];            
 
             $query = "CREATE DATABASE $schemaName;";

@@ -97,7 +97,7 @@
         <div class="col-12">    
                    <div class="card">
                         <div class="card-body"><h3>Import Demo Content [Warning! All data will be lost.]</h3>
-                        {{-- <form id="update_default_data" method="post" action="{{route('client.migrateDefaultData', $client->id)}}"
+                        <form id="update_default_data" method="post" action="{{route('client.migrateDefaultData', $client->id)}}"
                             enctype="multipart/form-data" autocomplete="off">
                             @csrf
                             <div class="col-md-6">
@@ -105,16 +105,16 @@
                                     <label for="languages">Business Type </label>
                                     <select class="form-control" id="business_type" name="business_type">
                                         <option value=""></option>
-                                        <option value="sql_files\grub.sql">Grub - Food Delivery</option>
-                                        <option value="sql_files\homeric.sql">Homeric - Home Service </option>
-                                        <option value="sql_files\gokab.sql">GoKab - Cab Booking </option>
-                                        <option value="sql_files\ace.sql">Ace - Super App </option>
-                                        <option value="sql_files\punnet.sql">Punnet - Single Vendor Food Delivery </option>
-                                        <option value="sql_files\suel.sql">Suel - Single Vendor Ecommerce </option>
-                                        <option value="sql_files\voltaic.sql">Voltaic - Ecommerce </option>
-                                        <option value="sql_files\gusto.sql">Gusto - Grocery Delivery </option>
-                                        <option value="sql_files\elixir.sql">Elixir - Pharmacy Delivery </option>
-                                        <option value="sql_files\zest.sql">Zest - Pickup & Delivery </option>
+                                        <option value="grub.sql">Grub - Food Delivery</option>
+                                        <option value="homeric.sql">Homeric - Home Service </option>
+                                        <option value="gokab.sql">GoKab - Cab Booking </option>
+                                        <option value="ace.sql">Ace - Super App </option>
+                                        <option value="punnet.sql">Punnet - Single Vendor Food Delivery </option>
+                                        <option value="suel.sql">Suel - Single Vendor Ecommerce </option>
+                                        <option value="voltaic.sql">Voltaic - Ecommerce </option>
+                                        <option value="gusto.sql">Gusto - Grocery Delivery </option>
+                                        <option value="elixir.sql">Elixir - Pharmacy Delivery </option>
+                                        <option value="zest.sql">Zest - Pickup & Delivery </option>
                                     </select>
                                 </div>    
                             </div>
@@ -124,7 +124,38 @@
                                     <button type="submit" class="btn btn-info waves-effect waves-light">{{__('Submit')}}</button>
                                 </div>
                             </div>
-                        </form> --}}
+                        </form>
+                        </div>
+                    </div>
+            
+        </div>
+    </div>
+    <!--end default --> 
+
+      <!-- on single vendor panel  -->
+      <div class="row">
+        <div class="col-12">    
+                   <div class="card">
+                        <div class="card-body"><h3>{{__('Single Vendor')}}</h3>
+                        <form id="update_default_data" method="post" action="{{route('client.update_single_vendor', $client->id)}}"
+                            enctype="multipart/form-data" autocomplete="off">
+                            @csrf
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="languages">Enable/Disable </label>
+                                    <select class="form-control" id="single_vendor" name="single_vendor">
+                                        <option value="0" @if($client->single_vendor == 0) selected="selected" @endif >Disable</option>
+                                        <option value="1" @if($client->single_vendor == 1) selected="selected" @endif >Enable</option>
+                                    </select>
+                                </div>    
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="row">
+                                    <button type="submit" class="btn btn-info waves-effect waves-light">{{__('Submit')}}</button>
+                                </div>
+                            </div>
+                        </form>
                         </div>
                     </div>
             

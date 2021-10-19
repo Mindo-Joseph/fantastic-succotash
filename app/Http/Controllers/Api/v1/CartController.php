@@ -14,7 +14,7 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet, UserAddress, ClientPreference, LuxuryOption, Vendor, LoyaltyCard, SubscriptionInvoicesUser, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
+use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet, UserAddress, ClientPreference, LuxuryOption, Vendor, LoyaltyCard, SubscriptionInvoicesUser, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation, OrderVendor, OrderProductAddon, OrderTax, OrderProduct, OrderProductPrescription, VendorOrderStatus};
 use GuzzleHttp\Client as GCLIENT;
 
 class CartController extends BaseController
@@ -26,6 +26,27 @@ class CartController extends BaseController
     public function index(Request $request)
     {
         try {
+
+            if(($request->has('gateway')) && ($request->gateway == 'mobbex')){
+                if($request->has('order')){
+                    $order = Order::where('order_number', $request->order)->first();
+                    if($order){
+                        if($request->status == 0){
+                            $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
+                            foreach($order_products as $order_prod){
+                                OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
+                            }
+                            OrderProduct::where('order_id', $order->id)->delete();
+                            OrderProductPrescription::where('order_id', $order->id)->delete();
+                            VendorOrderStatus::where('order_id', $order->id)->delete();
+                            OrderVendor::where('order_id', $order->id)->delete();
+                            OrderTax::where('order_id', $order->id)->delete();
+                            $order->delete();
+                        }
+                    }
+                }
+            }
+
             $user = Auth::user();
             if (!$user->id) {
                 $cart = Cart::where('unique_identifier', $user->system_user);
@@ -353,6 +374,8 @@ class CartController extends BaseController
         $address_id = 0;
         $delivery_status = 1;
         $cartID = $cart->id;
+        $upSell_products = collect();
+        $crossSell_products = collect();
         $cartData = CartProduct::with([
             'vendor', 'coupon' => function ($qry) use ($cartID) {
                 $qry->where('cart_id', $cartID);
@@ -543,13 +566,15 @@ class CartController extends BaseController
                             }
                         }
                         $prod->taxdata = $taxData;
-                        if (!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1)) {
-                            $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
-                            if (!empty($deliver_charge) && $delivery_count == 0) {
-                                $delivery_count = 1;
-                                $prod->deliver_charge = number_format($deliver_charge, 2, '.', '');
-                                $payable_amount = $payable_amount + $deliver_charge;
-                                $delivery_fee_charges = $deliver_charge;
+                        if ($action == 'delivery') {
+                            if (!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1)) {
+                                $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                                if (!empty($deliver_charge) && $delivery_count == 0) {
+                                    $delivery_count = 1;
+                                    $prod->deliver_charge = number_format($deliver_charge, 2, '.', '');
+                                    $payable_amount = $payable_amount + $deliver_charge;
+                                    $delivery_fee_charges = $deliver_charge;
+                                }
                             }
                         }
                         if (!empty($prod->addon)) {
@@ -588,6 +613,26 @@ class CartController extends BaseController
                     $prod->variant_options = $variant_options;
                     $payable_amount = $payable_amount;
                     $prod->product_addons = $vendorAddons;
+
+                    $product = Product::with([
+                        'variant' => function ($sel) {
+                            $sel->groupBy('product_id');
+                        },
+                        'variant.media.pimage.image', 'upSell', 'crossSell', 'vendor', 'media.image', 'translation' => function ($q) use ($langId) {
+                            $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                            $q->where('language_id', $langId);
+                        }])->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating')
+                        ->where('url_slug', $prod->product->url_slug)
+                        ->first();
+                    $doller_compare = ($clientCurrency) ? $clientCurrency->doller_compare : 1;
+                    $up_prods = $this->metaProduct($langId, $doller_compare, 'upSell', $product->upSell);
+                    if($up_prods){
+                        $upSell_products->push($up_prods);
+                    }
+                    $cross_prods = $this->metaProduct($langId, $doller_compare, 'crossSell', $product->crossSell);
+                    if($cross_prods){
+                        $crossSell_products->push($cross_prods);
+                    }
                 }
                 $couponApplied = 0;
                 if (!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 1)) {
@@ -706,6 +751,8 @@ class CartController extends BaseController
         );
         $cart->vendor_details = $vendor_details;
         $cart->cart_dinein_table_id = $cart_dinein_table_id;
+        $cart->upSell_products = ($upSell_products) ? $upSell_products->first() : collect();
+        $cart->crossSell_products = ($crossSell_products) ? $crossSell_products->first() : collect();
         return $cart;
     }
 

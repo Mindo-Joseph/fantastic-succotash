@@ -236,9 +236,14 @@ class VendorController extends BaseController
     /*  /**   show vendor page - config tab      */
     public function show($domain = '', $id)
     {
+        
         $active = array();
         $categoryToggle = array();
+        $user = Auth::user();
         $vendor = Vendor::findOrFail($id);
+
+     
+        
         $client_preferences = ClientPreference::first();
         $dinein_categories = VendorDineinCategory::where('vendor_id', $id)->get();
         $vendor_tables = VendorDineinTable::where('vendor_id', $id)->with('category')->get();
@@ -374,6 +379,12 @@ class VendorController extends BaseController
         $type = Type::all();
         $categoryToggle = array();
         $vendor = Vendor::findOrFail($id);
+           // if ($user->is_superadmin == 0) {
+        //     $vendor = $vendor->whereHas('permissionToUser', function ($query) use($user) {
+        //         $query->where('user_id', $user->id);
+        //     });
+        // }
+        // dd($vendor);
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $categories = Category::with('primary')->select('id', 'slug')
                         ->where('id', '>', '1')->where('status', '!=', '2')->where('type_id', '1')
