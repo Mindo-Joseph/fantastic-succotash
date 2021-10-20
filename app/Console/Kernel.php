@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\CartReminder::class
+        Commands\CartReminder::class,
+        Commands\AutoRejectOrders::class
         //
     ];
 
@@ -25,8 +26,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('cart:reminder')
-                ->hourly();
+        $schedule->command('cart:reminder')->hourly();
+        $schedule->command('auto:reject_order')->everyMinute();
         // $schedule->command('inspire')->hourly();
     }
 
