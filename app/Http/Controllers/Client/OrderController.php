@@ -163,8 +163,8 @@ class OrderController extends BaseController{
             $q1->orWhere(function ($q2) {
                 $q2->where('payment_option_id', 1);
             });
-        })->paginate(30);
-
+        })->select('*','id as total_discount_calculate')->paginate(30);
+       
 
         $pending_orders = $pending_orders->whereHas('vendors', function ($query) {
             $query->where('order_status_option_id',1);
