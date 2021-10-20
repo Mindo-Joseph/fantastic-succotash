@@ -14,6 +14,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'payment/payfast/notify',
         'payment/paypal/notify',
-        'payment/mobbex/notify'
+        'payment/mobbex/notify',
+        'payment/yoco/notify'
     ];
 }
