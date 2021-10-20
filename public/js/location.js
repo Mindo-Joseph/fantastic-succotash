@@ -22,28 +22,30 @@ $(document).ready(function () {
             longitude = $("#address-longitude").val();
         }
         getHomePage(latitude, longitude);
-    //     $(document).ready(function () {
-    //         $.ajax({
-    //             url: client_preferences_url,
-    //             type: "POST",
-    //             success: function (response) {
-    //                 if ($.cookie("age_restriction") != 1) {
-    //                     if (response.age_restriction == 1) {
-    //                         $('#age_restriction').modal({backdrop: 'static', keyboard: false});
-    //                     }
-    //                 }
-    //                 if (response.delivery_check == 1) {
-    //                     getHomePage("", "", "delivery");
-    //                 }
-    //                 else if (response.dinein_check == 1) {
-    //                     getHomePage("", "", "dine_in");
-    //                 }
-    //                 else {
-    //                     getHomePage("", "", "takeaway");
-    //                 }
-    //             },
-    //         });
-    //     });
+        $(document).ready(function () {
+            $.ajax({
+                url: client_preferences_url,
+                type: "POST",
+                success: function (response) {
+                    if ($.cookie("age_restriction") != 1) {
+                        if (response.age_restriction == 1) {
+                            $('#age_restriction').modal({backdrop: 'static', keyboard: false});
+                        }
+                    }
+                    // if (response.delivery_check == 1) {
+                    //     getHomePage("", "", "delivery");
+                    // }
+                    // else if (response.dinein_check == 1) {
+                    //     getHomePage("", "", "dine_in");
+                    // }
+                    // else {
+                    //     getHomePage("", "", "takeaway");
+                    // }
+                },
+            });
+        });
+
+    
     }
 
     $(".age_restriction_no").click(function () {

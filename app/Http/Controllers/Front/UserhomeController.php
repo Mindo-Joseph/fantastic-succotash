@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\Front\FrontController;
 use Illuminate\Contracts\Session\Session as SessionSession;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ClientPreference, DriverRegistrationDocument, HomePageLabel, Page, VendorRegistrationDocument, Language, OnboardSetting, CabBookingLayout, WebStylingOption, SubscriptionInvoicesVendor, Order, VendorOrderStatus};
+use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency,Client, ClientPreference, DriverRegistrationDocument, HomePageLabel, Page, VendorRegistrationDocument, Language, OnboardSetting, CabBookingLayout, WebStylingOption, SubscriptionInvoicesVendor, Order, VendorOrderStatus};
 use Illuminate\Contracts\View\View;
 use Illuminate\View\View as ViewView;
 use Redirect;
@@ -101,11 +101,11 @@ class UserhomeController extends FrontController
         try {
             $dispatch_domain = $this->checkIfLastMileDeliveryOn();
             $url = $dispatch_domain->delivery_service_key_url;
-            $endpoint = $url . "/api/send-documents";
+            $endpoint =$url . "/api/send-documents";
             // $endpoint = "http://192.168.99.177:8006/api/send-documents";
             // $dispatch_domain = $this->checkIfLastMileDeliveryOn();
-            //$dispatch_domain->delivery_service_key_code = '649a9a';
-            // $dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
+           // $dispatch_domain->delivery_service_key_code = '1da2e9';
+           // $dispatch_domain->delivery_service_key = 'TMJdbQlNWkYl1JzMONzRgF4zQFuP8s';
             $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
 
             $response = $client->post($endpoint);
@@ -134,7 +134,7 @@ class UserhomeController extends FrontController
         $last_mile_teams = [];
 
         $tag = [];
-
+        
         // if (isset($preference) && $preference->need_delivery_service == '1') {
         //     $last_mile_teams = $this->getLastMileTeams();
         // }
@@ -174,8 +174,9 @@ class UserhomeController extends FrontController
         } else {
             $tag = [];
             $showTag = implode(',', $tag);
+            $client = Client::with('country')->first();
             $driver_registration_documents = json_decode($this->driverDocuments());
-            return view('frontend.driver-registration', compact('page_detail', 'navCategories', 'user', 'showTag', 'driver_registration_documents'));
+            return view('frontend.driver-registration', compact('page_detail', 'navCategories', 'user', 'showTag', 'driver_registration_documents','client'));
         }
     }
     public function index(Request $request)
@@ -245,10 +246,10 @@ class UserhomeController extends FrontController
                 return Redirect::route('categoryDetail', 'cabservice');
 
             $home_page_pickup_labels = CabBookingLayout::with('translations')->where('is_active', 1)->orderBy('order_by')->get();
- 
+
             $set_template = WebStylingOption::where('web_styling_id', 1)->where('is_selected', 1)->first();
 
-            
+
             // $last_mile = $this->checkIfLastMileDeliveryOn();
             if (isset($set_template)  && $set_template->template_id == 1)
                 return view('frontend.home-template-one')->with(['home' => $home,  'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
@@ -346,8 +347,8 @@ class UserhomeController extends FrontController
         if (($latitude) && ($longitude)) {
             Session::put('vendors', $vendor_ids);
         }
-        
-        $trendingVendors = Vendor::whereIn('id',$subscribed_vendors_for_trending)->where('status', 1)->inRandomOrder()->get();
+
+        $trendingVendors = Vendor::whereIn('id', $subscribed_vendors_for_trending)->where('status', 1)->inRandomOrder()->get();
 
         if ((!empty($trendingVendors) && count($trendingVendors) > 0)) {
             foreach ($trendingVendors as $key => $value) {
@@ -470,7 +471,7 @@ class UserhomeController extends FrontController
                     $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
                     $vendor->order_status = $vendor_order_status ? strtolower($vendor_order_status->OrderStatusOption->title) : '';
                     foreach ($vendor->products as $product) {
-                        if ($product->pvariant->media->isNotEmpty()) {
+                        if (isset($product->pvariant) && $product->pvariant->media->isNotEmpty()) {
                             $product->image_url = $product->pvariant->media->first()->pimage->image->path['image_fit'] . '74/100' . $product->pvariant->media->first()->pimage->image->path['image_path'];
                         } elseif ($product->media->isNotEmpty()) {
                             $product->image_url = $product->media->first()->image->path['image_fit'] . '74/100' . $product->media->first()->image->path['image_path'];

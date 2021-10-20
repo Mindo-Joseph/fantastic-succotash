@@ -1437,7 +1437,6 @@ class OrderController extends FrontController
 
     public function driverSignup(Request $request)
     {
-
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required',

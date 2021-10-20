@@ -224,7 +224,9 @@ class OrderController extends BaseController {
                                     $orderAddon->order_product_id = $order_product->id;
                                     $orderAddon->save();
                                 }
-                                CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
+                                if(($request->payment_option_id != 7) && ($request->payment_option_id != 6)){ // if not mobbex, payfast
+                                    CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
+                                }
                             }
                         }
                         $coupon_id = null;
@@ -323,7 +325,7 @@ class OrderController extends BaseController {
                     }
                     $order->save();
                     $this->sendSuccessSMS($request, $order);
-                    if($request->payment_option_id != 7){ // if not mobbex
+                    if(($request->payment_option_id != 7) && ($request->payment_option_id != 6)){ // if not mobbex, payfast
                         Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
                         CartCoupon::where('cart_id', $cart->id)->delete();
                         CartProduct::where('cart_id', $cart->id)->delete();
@@ -338,7 +340,7 @@ class OrderController extends BaseController {
                         ]);
                     }
                     $order = $order->with(['vendors:id,order_id,vendor_id', 'user_vendor', 'vendors.vendor'])->where('order_number', $order->order_number)->first();
-                    if($request->payment_option_id != 7){ // if not mobbex
+                    if(($request->payment_option_id != 7) && ($request->payment_option_id != 6)){ // if not mobbex, payfast
                         $code = $request->header('code');
                         if (!empty($order->vendors)) {
                             foreach ($order->vendors as $vendor_value) {
