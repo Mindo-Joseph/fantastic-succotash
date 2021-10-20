@@ -370,9 +370,9 @@ class UserhomeController extends FrontController
                 $value->categoriesList = $categoriesList;
             }
         }
-        $mostSellingVendors = Vendor::select('vendors.*', DB::raw('count(vendor_id) as max_sales'))->join('order_vendors', 'vendors.id', '=', 'order_vendors.vendor_id')->whereIn('vendors.id', $vendor_ids)->where('vendors.status', 1)->groupBy('order_vendors.vendor_id')->orderBy(DB::raw('count(vendor_id)'), 'desc')->get();
-        if ((!empty($mostSellingVendors) && count($trendingVendors) > 0)) {
-            foreach ($trendingVendors as $key => $value) {
+        $mostSellingVendors = Vendor::select('vendors.*',DB::raw('count(vendor_id) as max_sales'))->join('order_vendors','vendors.id','=','order_vendors.vendor_id')->whereIn('vendors.id',$vendor_ids)->where('vendors.status', 1)->groupBy('order_vendors.vendor_id')->orderBy(DB::raw('count(vendor_id)'),'desc')->get();
+        if ((!empty($mostSellingVendors) && count($mostSellingVendors) > 0)) {
+            foreach ($mostSellingVendors as $key => $value) {
                 $value->vendorRating = $this->vendorRating($value->products);
                 // $value->name = Str::limit($value->name, 15, '..');
                 if (($preferences) && ($preferences->is_hyperlocal == 1)) {
@@ -471,7 +471,7 @@ class UserhomeController extends FrontController
                     $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
                     $vendor->order_status = $vendor_order_status ? strtolower($vendor_order_status->OrderStatusOption->title) : '';
                     foreach ($vendor->products as $product) {
-                        if ($product->pvariant->media->isNotEmpty()) {
+                        if (isset($product->pvariant) && $product->pvariant->media->isNotEmpty()) {
                             $product->image_url = $product->pvariant->media->first()->pimage->image->path['image_fit'] . '74/100' . $product->pvariant->media->first()->pimage->image->path['image_path'];
                         } elseif ($product->media->isNotEmpty()) {
                             $product->image_url = $product->media->first()->image->path['image_fit'] . '74/100' . $product->media->first()->image->path['image_path'];
