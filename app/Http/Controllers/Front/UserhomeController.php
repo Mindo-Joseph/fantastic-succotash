@@ -370,8 +370,8 @@ class UserhomeController extends FrontController
             }
         }
         $mostSellingVendors = Vendor::select('vendors.*',DB::raw('count(vendor_id) as max_sales'))->join('order_vendors','vendors.id','=','order_vendors.vendor_id')->whereIn('vendors.id',$vendor_ids)->where('vendors.status', 1)->groupBy('order_vendors.vendor_id')->orderBy(DB::raw('count(vendor_id)'),'desc')->get();
-        if ((!empty($mostSellingVendors) && count($trendingVendors) > 0)) {
-            foreach ($trendingVendors as $key => $value) {
+        if ((!empty($mostSellingVendors) && count($mostSellingVendors) > 0)) {
+            foreach ($mostSellingVendors as $key => $value) {
                 $value->vendorRating = $this->vendorRating($value->products);
                 // $value->name = Str::limit($value->name, 15, '..');
                 if (($preferences) && ($preferences->is_hyperlocal == 1)) {
