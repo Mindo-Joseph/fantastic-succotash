@@ -22,8 +22,8 @@ class PaymentOptionSeeder extends Seeder
         array('id' => '5', 'path' => 'paystackhq/omnipay-paystack', 'code' => 'paystack', 'title' => 'Paystack', 'off_site' => '1', 'status' => '0'),
         array('id' => '6', 'path' => 'omnipay/payfast', 'code' => 'payfast', 'title' => 'Payfast', 'off_site' => '1', 'status' => '0'),
         array('id' => '7', 'path' => 'mobbex/sdk', 'code' => 'mobbex', 'title' => 'Mobbex', 'off_site' => '1', 'status' => '0'),
-        array('id' => '8', 'path' => 'yoco/yoco-php-laravel', 'code' => 'yoco', 'title' => 'Yoco', 'off_site' => '1', 'status' => '0'),
-        array('id' => '9', 'path' => 'paylink/paylink', 'code' => 'paylink', 'title' => 'Paylink', 'off_site' => '1', 'status' => '0')
+        array('id' => '8', 'path' => 'yoco/yoco-php-laravel', 'code' => 'yoco', 'title' => 'Yoco', 'off_site' => '1', 'status' => '1'),
+        array('id' => '9', 'path' => 'paylink/paylink', 'code' => 'paylink', 'title' => 'Paylink', 'off_site' => '1', 'status' => '1')
       ); 
 
       if($option_count == 0)
