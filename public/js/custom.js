@@ -997,7 +997,8 @@ $(document).ready(function() {
             }
         });
     }
-    window.placeOrderBeforePayment = function placeOrderBeforePayment(address_id = 0, tip = 0) {
+
+    window.placeOrderBeforePayment = function placeOrderBeforePayment(address_id = 0, payment_option_id, tip = 0) {
         var task_type = $("input[name='task_type']:checked").val();
         var schedule_dt = $("#schedule_datetime").val();
         if ((task_type == 'schedule') && (schedule_dt == '')) {
@@ -1049,14 +1050,16 @@ $(document).ready(function() {
         return orderResponse;
     }
     $(document).on("click", ".proceed_to_pay", function() {
+
         $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
 
         let address_id = $("input:radio[name='address_id']:checked").val();
+        console.log(address_id);
         if ((vendor_type == 'delivery') && ((address_id == '') || (address_id < 1) || ($("input[name='address_id']").length < 1))) {
             success_error_alert('error', 'Please add a valid address to continue', ".payment_response");
             return false;
         }
-        // let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
+        //let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
         let payment_option_id = $("#cart_payment_form input[name='cart_payment_method']:checked").val();
 
         let tip = $("#cart_tip_amount").val();
@@ -1075,7 +1078,6 @@ $(document).ready(function() {
 
             var order;
 
-
             inline.createToken().then(function(result) {
 
                 if (result.error) {
@@ -1085,6 +1087,7 @@ $(document).ready(function() {
                 } else {
                     const token = result;
                     // alert("card successfully tokenised: " + token.id);
+                    payment_option_id = 8;
 
                     order = placeOrderBeforePayment(address_id, payment_option_id, tip);
                     paymentViaYoco(address_id, order, token.id);
@@ -1097,7 +1100,7 @@ $(document).ready(function() {
 
                 alert("error occured: " + error);
             });
-            console.log()
+
 
             //paymentViaYoco(address_id, order, );
 
