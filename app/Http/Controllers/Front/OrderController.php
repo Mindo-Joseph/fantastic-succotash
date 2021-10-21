@@ -798,7 +798,7 @@ class OrderController extends FrontController
             // $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
             $this->sendSuccessSMS($request, $order, $vendor_id);
-            if($request->payment_option_id != 7 || $request->payment_option_id != 8){ // if not mobbex
+            if($request->payment_option_id != 7){ // if not mobbex
                 Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
                 CartAddon::where('cart_id', $cart->id)->delete();
                 CartCoupon::where('cart_id', $cart->id)->delete();
