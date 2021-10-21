@@ -66,7 +66,7 @@ class PaylinkGatewayController extends BaseController
                 'amount' => $amount,
                 'currency' => 'AED',
                 'description' => 'Order Checkout',
-                //'returnUrl' =>url('payment/paylink/notify'),
+                'returnUrl' =>url('payment/paylink/notify'),
                 'reference' => $request->order_number,
               //  'webhook' => url('payment/paylink/notify'),
                // 'notifyUrl'=> url('payment/paylink/notify'),
