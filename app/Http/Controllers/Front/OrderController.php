@@ -51,8 +51,7 @@ class OrderController extends FrontController
             });
         })
         ->where('orders.user_id', $user->id)
-        ->orderBy('orders.id', 'DESC')->paginate(10);
-
+        ->orderBy('orders.id', 'DESC')->select('*','id as total_discount_calculate')->paginate(10);
         $activeOrders = Order::with(['vendors' => function ($q) {
             $q->where('order_status_option_id', '!=', 6);
         },
@@ -69,7 +68,7 @@ class OrderController extends FrontController
             });
         })
         ->where('orders.user_id', $user->id)
-        ->orderBy('orders.id', 'DESC')->paginate(10);
+        ->orderBy('orders.id', 'DESC')->select('*','id as total_discount_calculate')->paginate(10);
         foreach ($activeOrders as $order) {
             foreach ($order->vendors as $vendor) {
                 $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
@@ -150,7 +149,7 @@ class OrderController extends FrontController
         }
         $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
 
-        
+        //dd($pastOrders->toArray());
         return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders' => $activeOrders, 'pastOrders' => $pastOrders, 'returnOrders' => $returnOrders, 'clientCurrency' => $clientCurrency]);
     }
 
