@@ -77,7 +77,7 @@ class YocoGatewayController extends FrontController
                 'description' => 'Order Checkout',
                 'return_url' => url($request->returnUrl . $returnUrlParams),
                 'reference' => $request->order_number,
-                'webhook' => url('https://2987-112-196-88-218.ngrok.io/payment/yoco/notify/'),
+                'webhook' => url('/payment/yoco/notify/'),
                 'redirect' => false,
                 'test' => $this->test_mode, // True, testing, false, production
                 // 'options' => array(
@@ -116,15 +116,15 @@ class YocoGatewayController extends FrontController
             $result = curl_exec($ch);
             // return $result;
             $result = json_decode($result);
-            dd($gi);
+       
           
             if ($result->status == 'successful') {
-              
+              $this->yocoSuccess($request,$result);
                 // $response = $this->mb->mobbex_checkout($checkout_data);
                 return $this->successResponse(url($returnUrl . $returnUrlParams));
             }
             else {
-             
+                $this->yocoFail($request);
                 return $this->errorResponse($result->status, 400);
             }
             // if ($response['response']['result']) {
@@ -140,21 +140,19 @@ class YocoGatewayController extends FrontController
         }
     }
 
-    public function yocoNotify(Request $request, $domain = '')
+    public function yocoSuccess($request, $result,$domain = '')
     {
         // Notify Mobbex that information has been received
         // header( 'HTTP/1.0 200 OK' );
         // flush();
-        Log::info('testing');
+       // Log::info('testing');
 
-        $data = $request->data;
-        if ($data['result'] == 'true') {
-            $payment_details = $data['payment'];
-            $transactionId = $payment_details['id'];
-            $order_number = $payment_details['reference'];
+  
+            $transactionId = $result->id;
+            $order_number = $request->order_number;
             $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
             if ($order) {
-                if ($payment_details['status']['code'] == 200) {
+               
                     $order->payment_status = 1;
                     $order->save();
                     $payment_exists = Payment::where('transaction_id', $transactionId)->first();
@@ -163,7 +161,7 @@ class YocoGatewayController extends FrontController
                             'date' => date('Y-m-d'),
                             'order_id' => $order->id,
                             'transaction_id' => $transactionId,
-                            'balance_transaction' => $payment_details['total'],
+                            'balance_transaction' => $request->amount,
                         ]);
 
                         // Auto accept order
@@ -171,12 +169,12 @@ class YocoGatewayController extends FrontController
                         $orderController->autoAcceptOrderIfOn($order->id);
 
                         // Remove cart
-                        $user = $data['customer'];
-                        Cart::where('id', $user['cart_id'])->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
-                        CartAddon::where('cart_id', $user['cart_id'])->delete();
-                        CartCoupon::where('cart_id', $user['cart_id'])->delete();
-                        CartProduct::where('cart_id', $user['cart_id'])->delete();
-                        CartProductPrescription::where('cart_id', $user['cart_id'])->delete();
+                     
+                        Cart::where('id', $request->cart_id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
+                        CartAddon::where('cart_id', $request->cart_id)->delete();
+                        CartCoupon::where('cart_id', $request->cart_id)->delete();
+                        CartProduct::where('cart_id', $request->cart_id)->delete();
+                        CartProductPrescription::where('cart_id', $request->cart_id)->delete();
 
                         // Send Notification
                         if (!empty($order->vendors)) {
@@ -191,23 +189,29 @@ class YocoGatewayController extends FrontController
                         $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
 
                         // Send Email
-                        $this->successMail();
+                       
                     }
-                } else {
-                    $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
-                    foreach ($order_products as $order_prod) {
-                        OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
-                    }
-                    OrderProduct::where('order_id', $order->id)->delete();
-                    OrderProductPrescription::where('order_id', $order->id)->delete();
-                    VendorOrderStatus::where('order_id', $order->id)->delete();
-                    OrderVendor::where('order_id', $order->id)->delete();
-                    OrderTax::where('order_id', $order->id)->delete();
-                    Order::where('id', $order->id)->delete();
-                    $this->failMail();
-                }
+                
             }
+        
+    }
+
+
+    public function yocoFail($request, $domain = '')
+    {
+        $order_number = $request->order_number;
+        $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
+        $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
+        foreach ($order_products as $order_prod) {
+            OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
         }
+        OrderProduct::where('order_id', $order->id)->delete();
+        OrderProductPrescription::where('order_id', $order->id)->delete();
+        VendorOrderStatus::where('order_id', $order->id)->delete();
+        OrderVendor::where('order_id', $order->id)->delete();
+        OrderTax::where('order_id', $order->id)->delete();
+        Order::where('id', $order->id)->delete();
+    
     }
 
     

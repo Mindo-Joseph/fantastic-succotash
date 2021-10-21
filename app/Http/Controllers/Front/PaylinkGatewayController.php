@@ -110,7 +110,7 @@ class PaylinkGatewayController extends FrontController
                 )
             );
           //  $paylink = new \Paylink\Paylink('Paylink', $this->API_SECRET_KEY);
-          
+       
             $ch = curl_init('https://api.test.pointcheckout.com/mer/v2.0/checkout/web');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLINFO_HEADER_OUT, true);
@@ -129,8 +129,10 @@ class PaylinkGatewayController extends FrontController
             $result = curl_exec($ch);
             curl_close($ch);
             $result = json_decode($result);
-            dd($result);
+      
+        
             if ($result->success == true) {
+                $this->paypalSuccess($request,$result);
                 // WebhookCall::create()
                 // ->url('payment/paylink/notify')
                 // ->payload($data)
@@ -140,33 +142,31 @@ class PaylinkGatewayController extends FrontController
                 return $this->successResponse(url($returnUrl . $returnUrlParams));
             }
             else {
+                $this->paypalFail($request);
                
                 return $this->errorResponse($result->error, 400);
             }
            
           
         } catch (\Exception $ex) {
-            $this->failMail();
+           
             return $this->errorResponse($ex->getMessage(), 400);
         }
     }
 
-    public function paylinkNotify(Request $request, $domain = '')
+    public function paypalSuccess($request, $result,$domain = '')
     {
         // Notify Mobbex that information has been received
         // header( 'HTTP/1.0 200 OK' );
         // flush();
-        // Log::info($request->all());
-    
-Log::info('hi');
-        $data = $request->data;
-       
-            $payment_details = $data['payment'];
-            $transactionId = $payment_details['id'];
-            $order_number = $data['order_number'];
+        Log::info('testing');
+
+  
+            $transactionId = $result->result->id;
+            $order_number = $request->order_number;
             $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
             if ($order) {
-                if ($payment_details['status']['code'] == 200) {
+               
                     $order->payment_status = 1;
                     $order->save();
                     $payment_exists = Payment::where('transaction_id', $transactionId)->first();
@@ -175,7 +175,7 @@ Log::info('hi');
                             'date' => date('Y-m-d'),
                             'order_id' => $order->id,
                             'transaction_id' => $transactionId,
-                            'balance_transaction' => $payment_details['total'],
+                            'balance_transaction' => $request->amount,
                         ]);
 
                         // Auto accept order
@@ -183,12 +183,12 @@ Log::info('hi');
                         $orderController->autoAcceptOrderIfOn($order->id);
 
                         // Remove cart
-                        $user = $data['customer'];
-                        Cart::where('id', $user['cart_id'])->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
-                        CartAddon::where('cart_id', $user['cart_id'])->delete();
-                        CartCoupon::where('cart_id', $user['cart_id'])->delete();
-                        CartProduct::where('cart_id', $user['cart_id'])->delete();
-                        CartProductPrescription::where('cart_id', $user['cart_id'])->delete();
+                     
+                        Cart::where('id', $request->cart_id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
+                        CartAddon::where('cart_id', $request->cart_id)->delete();
+                        CartCoupon::where('cart_id', $request->cart_id)->delete();
+                        CartProduct::where('cart_id', $request->cart_id)->delete();
+                        CartProductPrescription::where('cart_id', $request->cart_id)->delete();
 
                         // Send Notification
                         if (!empty($order->vendors)) {
@@ -203,24 +203,31 @@ Log::info('hi');
                         $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
 
                         // Send Email
-                        $this->successMail();
+                       
                     }
-                } else {
-                    $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
-                    foreach ($order_products as $order_prod) {
-                        OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
-                    }
-                    OrderProduct::where('order_id', $order->id)->delete();
-                    OrderProductPrescription::where('order_id', $order->id)->delete();
-                    VendorOrderStatus::where('order_id', $order->id)->delete();
-                    OrderVendor::where('order_id', $order->id)->delete();
-                    OrderTax::where('order_id', $order->id)->delete();
-                    Order::where('id', $order->id)->delete();
-                    $this->failMail();
-                }
+                
             }
         
     }
+
+
+    public function paypalFail($request, $domain = '')
+    {
+        $order_number = $request->order_number;
+        $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
+        $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
+        foreach ($order_products as $order_prod) {
+            OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
+        }
+        OrderProduct::where('order_id', $order->id)->delete();
+        OrderProductPrescription::where('order_id', $order->id)->delete();
+        VendorOrderStatus::where('order_id', $order->id)->delete();
+        OrderVendor::where('order_id', $order->id)->delete();
+        OrderTax::where('order_id', $order->id)->delete();
+        Order::where('id', $order->id)->delete();
+    
+    }
+
 
     
 }

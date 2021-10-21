@@ -1001,6 +1001,7 @@ $(document).ready(function() {
     window.placeOrderBeforePayment = function placeOrderBeforePayment(address_id = 0, payment_option_id, tip = 0) {
         var task_type = $("input[name='task_type']:checked").val();
         var schedule_dt = $("#schedule_datetime").val();
+
         if ((task_type == 'schedule') && (schedule_dt == '')) {
             $("#proceed_to_pay_modal").modal('hide');
             $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
@@ -1054,7 +1055,7 @@ $(document).ready(function() {
         $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
 
         let address_id = $("input:radio[name='address_id']:checked").val();
-        console.log(address_id);
+
         if ((vendor_type == 'delivery') && ((address_id == '') || (address_id < 1) || ($("input[name='address_id']").length < 1))) {
             success_error_alert('error', 'Please add a valid address to continue', ".payment_response");
             return false;
@@ -1142,6 +1143,8 @@ $(document).ready(function() {
         let tip = 0;
         let tipElement = $("#cart_tip_amount");
         let cartElement = $("input[name='cart_total_payable_amount']");
+        let cart_id = $("#cart_total_payable_amount").data("cart_id");
+
         let walletElement = $("input[name='wallet_amount']");
         let ajaxData = {};
         if (cartElement.length > 0) {
@@ -1151,6 +1154,7 @@ $(document).ready(function() {
             ajaxData.address_id = address_id;
             ajaxData.payment_form = 'cart';
             ajaxData.token = token;
+            ajaxData.cart_id = cart_id;
             ajaxData.order_number = order.order_number;
         } else if (walletElement.length > 0) {
             total_amount = walletElement.val();
@@ -1195,6 +1199,8 @@ $(document).ready(function() {
         let tip = 0;
         let tipElement = $("#cart_tip_amount");
         let cartElement = $("input[name='cart_total_payable_amount']");
+        let cart_id = $("#cart_total_payable_amount").data("cart_id");
+
         let walletElement = $("input[name='wallet_amount']");
         let ajaxData = {};
         if (cartElement.length > 0) {
@@ -1203,6 +1209,7 @@ $(document).ready(function() {
             ajaxData.tip = tip;
             ajaxData.address_id = address_id;
             ajaxData.payment_form = 'cart';
+            ajaxData.cart_id = cart_id;
             ajaxData.order_number = order.order_number;
         } else if (walletElement.length > 0) {
             total_amount = walletElement.val();
