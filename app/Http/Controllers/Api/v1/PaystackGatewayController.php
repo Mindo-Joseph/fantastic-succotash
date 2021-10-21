@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Front;
+namespace App\Http\Controllers\Api\v1;
 
 use Auth;
 use Omnipay\Omnipay;
@@ -8,10 +8,10 @@ use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Front\FrontController;
+use App\Http\Controllers\Api\v1\BaseController;
 use App\Models\{PaymentOption, Client, ClientPreference, ClientCurrency};
 
-class PaystackGatewayController extends FrontController
+class PaystackGatewayController extends BaseController
 {
     use ApiResponser;
     public $gateway;
@@ -77,7 +77,7 @@ class PaystackGatewayController extends FrontController
             ));
             $response = $transaction->send();
             if ($response->isSuccessful()){
-            //    $this->successMail();
+                $this->successMail();
                 return $this->successResponse($response->getTransactionReference());
             } else {
                 $this->failMail();
