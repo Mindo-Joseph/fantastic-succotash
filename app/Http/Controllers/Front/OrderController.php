@@ -1696,4 +1696,42 @@ class OrderController extends FrontController
         return $order;
     }
 
+
+    
+     /**
+     * Credit Money Into Wallet
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function tipAfterOrder(Request $request, $domain = '')
+    {
+      
+        $user = Auth::user();
+        
+        if($user){
+            $credit_amount = $request->wallet_amount;
+            $wallet = $user->wallet;
+            if ($credit_amount > 0) {
+                $saved_transaction = Transaction::where('meta', 'like', '%'.$request->transaction_id.'%')->first();
+                if($saved_transaction){
+                    return $this->errorResponse('Transaction has already been done', 400);
+                }
+
+                $wallet->depositFloat($credit_amount, ['Wallet has been <b>Credited</b> by transaction reference <b>'.$request->transaction_id.'</b>']);
+                $transactions = Transaction::where('payable_id', $user->id)->get();
+                $response['wallet_balance'] = $wallet->balanceFloat;
+                $response['transactions'] = $transactions;
+                $message = 'Tip has been credited successfully';
+                Session::put('success', $message);
+                return $this->successResponse($response, $message, 200);
+            }
+            else{
+                return $this->errorResponse('Amount is not sufficient', 400);
+            }
+        }
+        else{
+            return $this->errorResponse('Invalid User', 400);
+        }
+    }
+
 }

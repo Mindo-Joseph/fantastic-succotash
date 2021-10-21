@@ -138,6 +138,7 @@ Route::group(['middleware' => ['domain']], function () {
 });
 Route::group(['middleware' => ['domain', 'webAuth']], function () {
 	Route::get('user/orders', 'Front\OrderController@orders')->name('user.orders');
+	Route::post('user/orders/tip-after-order', 'Front\OrderController@tipAfterOrder')->name('user.tip_after_order'); 
 	Route::post('user/store', 'Front\AddressController@store')->name('address.store');
 	Route::get('user/addAddress', 'Front\AddressController@add')->name('addNewAddress');
 	Route::get('user/address/{id}', 'Front\AddressController@address')->name('user.address');
