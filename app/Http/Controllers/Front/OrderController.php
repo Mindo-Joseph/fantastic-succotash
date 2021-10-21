@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus, OrderTax, SubscriptionInvoicesUser, UserDevice, UserVendor, VendorOrderDispatcherStatus, Page, DriverRegistrationDocument, LuxuryOption};
 use GuzzleHttp\Client as GCLIENT;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use App\Models\AutoRejectOrderCron;
 
 class OrderController extends FrontController
 {
@@ -49,8 +51,7 @@ class OrderController extends FrontController
             });
         })
         ->where('orders.user_id', $user->id)
-        ->orderBy('orders.id', 'DESC')->paginate(10);
-
+        ->orderBy('orders.id', 'DESC')->select('*','id as total_discount_calculate')->paginate(10);
         $activeOrders = Order::with(['vendors' => function ($q) {
             $q->where('order_status_option_id', '!=', 6);
         },
@@ -67,7 +68,7 @@ class OrderController extends FrontController
             });
         })
         ->where('orders.user_id', $user->id)
-        ->orderBy('orders.id', 'DESC')->paginate(10);
+        ->orderBy('orders.id', 'DESC')->select('*','id as total_discount_calculate')->paginate(10);
         foreach ($activeOrders as $order) {
             foreach ($order->vendors as $vendor) {
                 $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
@@ -148,7 +149,7 @@ class OrderController extends FrontController
         }
         $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
 
-        
+        //dd($pastOrders->toArray());
         return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders' => $activeOrders, 'pastOrders' => $pastOrders, 'returnOrders' => $returnOrders, 'clientCurrency' => $clientCurrency]);
     }
 
@@ -507,7 +508,7 @@ class OrderController extends FrontController
     {
         try {
             DB::beginTransaction();
-            $preferences = ClientPreference::select('is_hyperlocal','Default_latitude', 'Default_longitude', 'distance_unit_for_time', 'distance_to_time_multiplier')->first();
+            $preferences = ClientPreference::select('is_hyperlocal','Default_latitude', 'Default_longitude', 'distance_unit_for_time', 'distance_to_time_multiplier', 'client_code')->first();
             $action = (Session::has('vendorType')) ? Session::get('vendorType') : 'delivery';
             $luxury_option = LuxuryOption::where('title', $action)->first();
             $delivery_on_vendors = array();
@@ -819,10 +820,15 @@ class OrderController extends FrontController
                     'balance_transaction' => $order->payable_amount,
                 ]);
             }
-            $order = $order->with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order->order_number)->first();
+            $order = $order->with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id', 'vendors.vendor'])->where('order_number', $order->order_number)->first();
             if($request->payment_option_id != 7){ // if not mobbex
                 if (!empty($order->vendors)) {
                     foreach ($order->vendors as $vendor_value) {
+                        $vendorDetail = $vendor_value->vendor;
+                        if($vendorDetail->auto_accept_order == 0 && $vendorDetail->auto_reject_time > 0){
+                            $clientDetail = CP::on('mysql')->where(['code' => $preferences->client_code])->first();
+                            AutoRejectOrderCron::on('mysql')->create(['database_host' => $clientDetail->database_path,'database_name' => $clientDetail->database_name,'database_username' => $clientDetail->database_username,'database_password' => $clientDetail->database_password,'order_vendor_id' => $vendor_value->id,'auto_reject_time' => Carbon::now()->addMinute($vendorDetail->auto_reject_time)]);
+                        }
                         $vendor_order_detail = $this->minimize_orderDetails_for_notification($order->id, $vendor_value->vendor_id);
                         $user_vendors = UserVendor::where(['vendor_id' => $vendor_value->vendor_id])->pluck('user_id');
                         $this->sendOrderPushNotificationVendors($user_vendors, $vendor_order_detail);
@@ -1688,6 +1694,44 @@ class OrderController extends FrontController
         unset($order->products);
         unset($order->paymentOption);
         return $order;
+    }
+
+
+    
+     /**
+     * Credit Money Into Wallet
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function tipAfterOrder(Request $request, $domain = '')
+    {
+      
+        $user = Auth::user();
+        
+        if($user){
+            $credit_amount = $request->wallet_amount;
+            $wallet = $user->wallet;
+            if ($credit_amount > 0) {
+                $saved_transaction = Transaction::where('meta', 'like', '%'.$request->transaction_id.'%')->first();
+                if($saved_transaction){
+                    return $this->errorResponse('Transaction has already been done', 400);
+                }
+
+                $wallet->depositFloat($credit_amount, ['Wallet has been <b>Credited</b> by transaction reference <b>'.$request->transaction_id.'</b>']);
+                $transactions = Transaction::where('payable_id', $user->id)->get();
+                $response['wallet_balance'] = $wallet->balanceFloat;
+                $response['transactions'] = $transactions;
+                $message = 'Tip has been credited successfully';
+                Session::put('success', $message);
+                return $this->successResponse($response, $message, 200);
+            }
+            else{
+                return $this->errorResponse('Amount is not sufficient', 400);
+            }
+        }
+        else{
+            return $this->errorResponse('Invalid User', 400);
+        }
     }
 
 }
