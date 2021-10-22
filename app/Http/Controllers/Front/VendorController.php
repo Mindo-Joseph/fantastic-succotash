@@ -94,16 +94,7 @@ class VendorController extends FrontController
                 }
             }
         }
-        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
-            if(Session::has('vendors')){
-                $vendors = Session::get('vendors');
-                if(!in_array($vendor->id, $vendors)){
-                    abort(404);
-                }
-            }else{
-                // abort(404);
-            }
-        }
+      
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
@@ -204,16 +195,7 @@ class VendorController extends FrontController
                 }
             }
         }
-        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
-            if(Session::has('vendors')){
-                $vendors = Session::get('vendors');
-                if(!in_array($vendor->id, $vendors)){
-                    abort(404);
-                }
-            }else{
-                // abort(404);
-            }
-        }
+      
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
