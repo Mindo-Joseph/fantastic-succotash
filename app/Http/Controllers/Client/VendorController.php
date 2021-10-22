@@ -242,12 +242,7 @@ class VendorController extends BaseController
         $user = Auth::user();
         $vendor = Vendor::findOrFail($id);
 
-        // if ($user->is_superadmin == 0) {
-        //     $vendor = $vendor->whereHas('permissionToUser', function ($query) use($user) {
-        //         $query->where('user_id', $user->id);
-        //     });
-        // }
-        // dd($vendor);
+     
         
         $client_preferences = ClientPreference::first();
         $dinein_categories = VendorDineinCategory::where('vendor_id', $id)->get();
@@ -383,7 +378,16 @@ class VendorController extends BaseController
         $active = array();
         $type = Type::all();
         $categoryToggle = array();
-        $vendor = Vendor::findOrFail($id);
+        $vendor = Vendor::where('id',$id);
+        if (Auth::user()->is_superadmin == 0) {
+            $vendor = $vendor->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendor  =  $vendor->first();
+        if(empty($vendor))
+        abort(404);
+        
         $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
         $categories = Category::with('primary')->select('id', 'slug')
                         ->where('id', '>', '1')->where('status', '!=', '2')->where('type_id', '1')
@@ -469,8 +473,13 @@ class VendorController extends BaseController
         }
         if ($request->has('order_pre_time')) {
             $vendor->order_pre_time     = $request->order_pre_time;
-            $vendor->auto_reject_time   = $request->auto_reject_time;
         }
+        if (empty($vendor->auto_accept_order) && $request->has('auto_reject_time')) {
+            $vendor->auto_reject_time = $request->auto_reject_time;
+        } else {
+            $vendor->auto_reject_time = "";
+        }
+        
         $vendor->is_show_vendor_details = ($request->has('is_show_vendor_details') && $request->is_show_vendor_details == 'on') ? 1 : 0;
         if ($request->has('commission_percent')) {
             $vendor->commission_percent         = $request->commission_percent;

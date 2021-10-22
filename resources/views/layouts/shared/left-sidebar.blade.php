@@ -148,7 +148,7 @@
                                             @endif
                                         </ul>
                                     </div>
-                                </li>
+                                </li> 
                             @endif
                             @if(Auth::user()->is_superadmin == 1)
                             {{-- @if(count(array_intersect($subscription_permissions, $allowed)) || Auth::user()->is_superadmin == 1) --}}
@@ -309,9 +309,11 @@
                             </a>
                             <div class="collapse" id="sidebarbanner">
                                 <ul class="nav-second-level">
+                                        @if($client_preference_detail->business_type != 'taxi')
                                         <li>
                                             <a href="{{route('banner.index')}}">{{ __('Banner') }}</a>
                                         </li>
+                                        @endif
                                          <li>
                                             <a href="{{route('mobilebanner.index')}}">{{ __('Mobile Banner') }}</a>
                                         </li>
