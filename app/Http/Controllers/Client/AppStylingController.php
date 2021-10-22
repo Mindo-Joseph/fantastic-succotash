@@ -183,4 +183,12 @@ class AppStylingController extends BaseController
         $tutorialObj->save();
         return redirect()->back()->with('success', __("Tutorial updated successfully"));
     }
+
+    public function deleteTutorials(Request $request, $domain, $id)
+    {
+        $tutorialObj = AppDynamicTutorial::find($id);
+        $tutorialObj->delete();
+        return redirect()->back()->with('success', __("Tutorial deleted successfully"));
+    }
+
 }
