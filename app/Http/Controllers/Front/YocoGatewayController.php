@@ -116,8 +116,7 @@ class YocoGatewayController extends FrontController
             $result = curl_exec($ch);
             // return $result;
             $result = json_decode($result);
-       
-          
+       	          
             if ($result->status == 'successful') {
               $this->yocoSuccess($request,$result);
                 // $response = $this->mb->mobbex_checkout($checkout_data);
