@@ -8,7 +8,7 @@
     <section class="jet-taxi-banner">
         <div class="container">
             <div class="row">
-                <div class="col-md-8 mb-md-0 mb-4">
+                <div class="col-md-6 mb-md-0 mb-4">
                     <div class="jet-left-content">
                         <h1>Download App, <br class="d-none d-md-block"> Start driving,<br class="d-none d-md-block"> Earn money !</h1>
                         <p>Download the Jet App from playstore, create <br class="d-none d-md-block"> account, use your car and drive by yourself. Get rides and <br class="d-none d-md-block">earn money with Jet.</p>
@@ -22,9 +22,9 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6 text-center">
                     <div class="jet-banner-right">
-                        <img src="{{asset('assets/images/ic_phone2@2x.png')}}" alt="">
+                        <img class="img-fluid" src="{{asset('assets/images/ic_bannerimage@2x.png')}}" alt="">
                     </div>
                 </div>
             </div>

@@ -6141,8 +6141,8 @@ body .footer-theme .sub-title h4 {
 
 .jet-banner-right {
     height: 430px;
-    margin: auto;
-    width: 215px;
+    margin: auto;  
+    width: auto; 
 }
 
 .jet-banner-right img {
