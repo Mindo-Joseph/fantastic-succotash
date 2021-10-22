@@ -9,11 +9,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <div class="row align-items-center">
             <div class="col-6">
                 <div class="d-flex align-items-center">    
-                    <a class="navbar-brand mr-0 mr-sm-3 d-block d-md-none" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
+                    <a class="navbar-brand mr-0 mr-sm-3 d-block d-sm-none" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                     @if( (Session::get('preferences')))
                         @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
                             <div class="location-bar d-none d-sm-flex align-items-center justify-content-start my-2 my-lg-0 dropdown-toggle order-1" href="#edit-address" data-toggle="modal">
-                                <div class="map-icon mr-md-2"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                <div class="map-icon mr-2"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                                 <div class="homepage-address text-left">
                                     <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
                                 </div>
@@ -25,16 +25,29 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     @endif
                 </div>
             </div>
-            <div class="col-6 text-right">
+            <div class="col-6 d-inline d-sm-none text-right">
+                <div class="icon-nav">
+                    <ul>
+                        <li class="d-inline-block d-lg-none"><div class="toggle-nav p-0 d-inline-block"><i class="fa fa-bars sidebar-bar"></i></div></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-6 text-right d-sm-inline d-none">
+            @php  
+            $applocale = 'en';
+            if(session()->has('applocale')){
+                $applocale = session()->get('applocale');
+            }            
+            @endphp
                 <ul class="header-dropdown">
                     <li class="onhover-dropdown change-language">
-                        <a href="javascript:void(0)">{{session()->get('locale')}} 
+                        <a href="javascript:void(0)">{{$applocale}}
                         <span class="icon-ic_lang align-middle"></span>
-                        <span class="language ml-1 align-middle">language</span>
+                        <span class="language ml-1 align-middle">{{ __("language") }}</span>
                         </a>
                         <ul class="onhover-show-div">
                             @foreach($languageList as $key => $listl)
-                                <li class="{{session()->get('locale') ==  $listl->language->sort_code ?  'active' : ''}}">
+                                <li class="{{$applocale ==  $listl->language->sort_code ?  'active' : ''}}">
                                     <a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a>
                                 </li>
                             @endforeach
@@ -43,7 +56,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <li class="onhover-dropdown change-currency">
                         <a href="javascript:void(0)">{{session()->get('iso_code')}}
                         <span class="icon-ic_currency align-middle"></span>
-                        <span class="currency ml-1 align-middle">currency</span>
+                        <span class="currency ml-1 align-middle">{{ __("currency") }}</span>
                         </a>
                         <ul class="onhover-show-div">
                             @foreach($currencyList as $key => $listc)
@@ -103,7 +116,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     {{__('My Account')}}
                     <ul class="onhover-show-div">
                         <li>
-                            <a href="{{route('login')}}" data-lng="en">{{__('Login')}}</a>
+                            <a href="{{route('customer.login')}}" data-lng="en">{{__('Login')}}</a>
                         </li>
                         
                     </ul>
@@ -153,3 +166,5 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     </div>
     
 </div>
+
+

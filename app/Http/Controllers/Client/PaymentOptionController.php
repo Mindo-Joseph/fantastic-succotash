@@ -23,7 +23,7 @@ class PaymentOptionController extends BaseController
      */
     public function index()
     {
-        $code = array('cod', 'wallet', 'layalty-points', 'paypal', 'stripe', 'paystack', 'payfast');
+        $code = array('cod', 'wallet', 'layalty-points', 'paypal', 'stripe', 'paystack', 'payfast', 'mobbex');
         $payOption = PaymentOption::whereIn('code', $code)->get();
         return view('backend/payoption/index')->with(['payOption' => $payOption]);
     }
@@ -141,6 +141,16 @@ class PaymentOptionController extends BaseController
                         'merchant_id' => $request->payfast_merchant_id,
                         'merchant_key' => $request->payfast_merchant_key,
                         'passphrase' => $request->payfast_passphrase
+                    ));
+                }
+                else if( (isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'mobbex') ){
+                    $validatedData = $request->validate([
+                        'mobbex_api_key'=> 'required',
+                        'mobbex_api_access_token'=> 'required'
+                    ]);
+                    $json_creds = json_encode(array(
+                        'api_key' => $request->mobbex_api_key,
+                        'api_access_token' => $request->mobbex_api_access_token
                     ));
                 }
             }

@@ -8,8 +8,8 @@ Route::group(['prefix' => 'v1/auth', 'middleware' => ['ApiLocalization']], funct
     });
     Route::group(['middleware' => ['dbCheck', 'apilogger']], function() {
         Route::post('login', 'Api\v1\AuthController@login');
-        Route::post('loginViaPhone', 'Api\v1\AuthController@loginViaPhone');
-        Route::post('verify/loginViaPhone', 'Api\v1\AuthController@verifyLoginViaPhone');
+        Route::post('loginViaUsername', 'Api\v1\AuthController@loginViaUsername');
+        Route::post('verify/phoneLoginOtp', 'Api\v1\AuthController@verifyPhoneLoginOtp');
         Route::post('register', 'Api\v1\AuthController@signup');
         Route::post('resetPassword', 'Api\v1\AuthController@resetPassword');
         Route::post('forgotPassword', 'Api\v1\AuthController@forgotPassword');
@@ -52,6 +52,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
         Route::get('user/loyalty/info', 'Api\v1\LoyaltyController@index');
         Route::post('add/vendorTable/cart','Api\v1\CartController@addVendorTableToCart');
         Route::post('cart/schedule/update','Api\v1\CartController@updateSchedule');
+        Route::get('order/orderDetails_for_notification/{order_id}', 'Api\v1\OrderController@orderDetails_for_notification');
+        
         // Rating & review 
         Route::group(['prefix' => 'rating'], function () {
             Route::post('update-product-rating', 'Api\v1\RatingController@updateProductRating');

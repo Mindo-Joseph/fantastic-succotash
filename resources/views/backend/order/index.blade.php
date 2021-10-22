@@ -19,6 +19,19 @@
     .order-page .card-box {
         padding: 20px 20px 5px !important;
     }
+
+    .progress-order {
+        width: calc(100% + 48px);
+        margin: -24px 0 20px;
+        background: #00000012;
+        color: var(--theme-deafult);
+        position: relative;
+        left: -24px;
+        font-weight: 600;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        padding: 5px 0;
+    }
 </style>
 
 <script type="text/template" id="order_page_template">
@@ -56,19 +69,35 @@
                                         <div id="update-single-status">
                                             <% if(vendor.order_status_option_id == 1) { %>
                                                 <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>" data-count="<%= ve %>" data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="2" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Accept') }}</button>
-                                                <button class="update-status btn-danger" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>
-                                                <% } else if(vendor.order_status_option_id == 2) { %>
-                                                    <button class="update-status btn-warning" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="4" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Processing') }}</button>
-                                                <% } else if(vendor.order_status_option_id == 4) { %>
-                                                        <button class="update-status btn-success" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="5" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Out For Delivery') }}</button>
-                                                <% } else if(vendor.order_status_option_id == 5) { %>
-                                                    <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="6" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Delivered') }}</button>
-                                                <% } else { %>
+                                                <button class="update-status btn-danger" id="reject" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>
+                                            <% } else if(vendor.order_status_option_id == 2) { %>
+                                                <button class="update-status btn-warning" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="4" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Processing') }}</button>
+                                            <% } else if(vendor.order_status_option_id == 4) { %>
+                                                    <button class="update-status btn-success" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="5" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Out For Delivery') }}</button>
+                                            <% } else if(vendor.order_status_option_id == 5) { %>
+                                                <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="6" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Delivered') }}</button>
+                                            <% } else { %>
                                                     
                                             <% } %> 
+                                            <!--<% if((vendor.order_status_option_id == 1) || ((vendor.order_status_option_id != 6) && (vendor.order_status_option_id != 3))) { %>
+                                                <button class="update-status btn-danger" id="reject" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>
+                                            <% } %>-->
                                         </div>
 
                                         <a href="<%= vendor.vendor_detail_url %>" class="row order_detail order_detail_data align-items-top pb-1 mb-0 card-box no-gutters h-100">
+                                            <% if(order.scheduled_date_time || (order.luxury_option_name != '')) { %>
+                                            <div class="col-sm-12">
+                                                <div class="progress-order font-12">
+                                                    <% if(order.luxury_option_name != '') { %>
+                                                        <span class="badge badge-info ml-2"><%= order.luxury_option_name %></span>
+                                                    <% } %>
+                                                    <% if(order.scheduled_date_time) { %>
+                                                        <span class="badge badge-success ml-2">Scheduled</span>
+                                                        <span class="ml-2"><%= order.scheduled_date_time %></span>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                            <% } %>
                                             <span class="left_arrow pulse">
                                             </span>
                                             <div class="col-5 col-sm-3">
@@ -98,14 +127,19 @@
                                             </div>
                                             <div class="col-md-3 mt-md-0 mt-sm-2">
                                                 <ul class="price_box_bottom m-0 p-0">
+                                                    <% if(vendor.subtotal_amount > 0 || vendor.subtotal_amount < 0) { %>
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Total') }}</label>
                                                         <span>$<%= vendor.subtotal_amount %></span>
                                                     </li>
+                                                    <% } %> 
+                                                    <% if(vendor.discount_amount > 0 || vendor.discount_amount < 0) { %>
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Promocode') }}</label>
                                                         <span>$<%= vendor.discount_amount %></span>
                                                     </li>
+                                                    <% } %> 
+                                                    <% if(vendor.delivery_fee > 0 || vendor.delivery_fee < 0) { %>
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Delivery') }}</label>
                                                         <% if(vendor.delivery_fee !== null) { %>
@@ -114,6 +148,8 @@
                                                             <span>$ 0.00</span>
                                                         <% } %> 
                                                     </li>
+                                                    <% } %> 
+                                                    
                                                     <li class="grand_total d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Amount') }}</label>
                                                         <span>$<%= vendor.payable_amount %></span>
@@ -126,27 +162,46 @@
                             <% }); %>
                         </div>   
                         <div class="col-md-3 pl-0">
-                            <div class="card-box p-2">
+                            <div class="card-box p-2 mb-0 w-100 h-100">
                                 <ul class="price_box_bottom m-0 pl-0 pt-1">
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Total') }}</label>
                                         <span>$<%= order.total_amount %></span>
                                     </li>
+                                    <% if(order.loyalty_amount_saved > 0 || order.loyalty_amount_saved < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Loyalty Used') }}</label>
                                         <span>$<%= order.loyalty_amount_saved %></span>
                                     </li>
+                                    <% } %> 
+
+                                    <% if(order.taxable_amount > 0 || order.taxable_amount < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Tax') }}</label>
                                         <span>$<%= order.taxable_amount %></span>
                                     </li>
-                                    <!-- <li class="d-flex align-items-center justify-content-between">
-                                        <label class="m-0">Delivery Fee</label>
+                                    <% } %> 
+                                    <% if(order.total_delivery_fee > 0 || order.total_delivery_fee < 0) { %>
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">{{__('Delivery Fee')}}</label>
                                         <span>$<%= order.total_delivery_fee %></span>
-                                    </li> -->
+                                    </li>
+                                    <% } %> 
+                                    <% if(order.wallet_amount_used > 0 || order.wallet_amount_used < 0) { %>
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">{{__('Wallet Amount Used')}}</label>
+                                        <span>$<%= order.wallet_amount_used %></span>
+                                    </li>
+                                    <% } %> 
+                                    <% if(order.total_discount_calculate > 0 || order.total_discount_calculate < 0) { %>
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">{{__('Total Discount')}}</label>
+                                        <span>$<%= order.total_discount_calculate %></span>
+                                    </li>
+                                    <% } %> 
                                     <li class="grand_total d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Payable') }} </label>
-                                        <span>$<%= order.payable_amount %></span>
+                                        <span>$<%= order.payable_amount - order.total_discount_calculate%></span>
                                     </li>
                                 </ul>
                             </div>
@@ -157,7 +212,7 @@
         <% }); %>
     </div>
     <% if(next_page_url) { %>
-        <div class="row mt-4">
+        <div class="row mt-4 mb-4">
             <div class="col-md-4 offset-md-4 text-center">
                 <button class="ladda-button btn btn-primary load-more-btn" dir="ltr" data-style="expand-left" data-url="<%= next_page_url%>" data-rel="<%= filter_order_status %>">
                     <span class="ladda-label">{{ __('Load More') }}</span>
@@ -181,7 +236,7 @@
             </div>
         </div>
         <div class="offset-md-9 col-md-3 offset-lg-10 col-lg-2 mb-2">
-            <input type="search" class="form-control form-control-sm" placeholder="Search By Order ID" id="search_via_keyword">
+            <input type="search" class="form-control form-control-sm" placeholder="{{ __('Search By Order ID') }}" id="search_via_keyword">
         </div>
     </div>
 </div>
@@ -225,6 +280,31 @@
     </div>
 </div>
 </div>
+
+
+<div id="addRejectmodal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h4 class="modal-title">{{ __("Reject Reason") }}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form id="addRejectForm" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body" id="AddRejectBox">
+                    <p id="error-case" style="color:red;"></p>
+                    <label style="font-size:medium;">Enter reason for rejecting the order.</label>
+                    <textarea class="reject_reason" data-name="reject_reason" name="reject_reason" id="" cols="107" rows="10"></textarea>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info waves-effect waves-light addrejectSubmit">{{ __("Submit") }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script> -->
 
 <!-- <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous"></script> -->
@@ -237,7 +317,8 @@
             'X-CSRF-TOKEN': $('input[name="_token"]').val()
         }
     });
-    function init(filter_order_status, url, search_keyword = "", isOnload=false) {
+
+    function init(filter_order_status, url, search_keyword = "", isOnload = false) {
         $.ajax({
             url: url,
             type: "POST",
@@ -282,7 +363,7 @@
             var url = $(this).data('url');
             var rel = $(this).data('rel');
             $("#search_via_keyword").val("");
-            init(rel, url, '',true);
+            init(rel, url, '', true);
             $(this).remove();
         });
         $(".nav-link").click(function() {
@@ -291,7 +372,7 @@
             var url = "{{ route('orders.filter') }}";
             $("#search_via_keyword").val("");
             // $(".tab-pane").html('');
-            init(rel, url,'',false);
+            init(rel, url, '', false);
         });
         // $(function() {
         //     var url = window.location.href;
@@ -318,63 +399,152 @@
             init(rel, url, search_keyword, false);
         })
 
-        
+
+        function openRejectModal(order_id, vendor_id, status_option_id, order_vendor_id) {
+            // var that = document.getElementById('reject');
+            //     var count = that.data("count");
+            //     var full_div = that.data("full_div");
+            //     var single_div =that.data("single_div");
+            //     var status_option_id = that.data("status_option_id");
+            //     var status_option_id_next = status_option_id + 1;
+            //     var order_vendor_id = that.data("order_vendor_id");
+            //     var order_id = that.data("order_id");
+            //     var vendor_id = that.data("vendor_id");
+
+            //     var count = that.data("count");
+            $('#addRejectmodal').modal({
+                backdrop: 'static',
+                keyboard: false,
+
+            });
+            $('.addrejectSubmit').on('click', function(e) {
+                e.preventDefault();
+                var reject_reason = $('#addRejectForm #AddRejectBox .reject_reason').val();
 
 
-        // update status 
-        $(document).on("click", ".update-status", function() {
-            if (confirm("Are you Sure?")) {
-                let that = $(this);
-                var count = that.data("count");
-                var full_div = that.data("full_div");
-                var single_div = that.data("single_div");
-                var status_option_id = that.data("status_option_id");
-                var status_option_id_next = status_option_id + 1;
-                var order_vendor_id = that.data("order_vendor_id");
-                var order_id = that.data("order_id");
-                var vendor_id = that.data("vendor_id");
-                var count = that.data("count");
+                //  var reject_reason = document.getElementById('reject_reason').value;
 
+                // var formData = new FormData(form);
+                // console.log(formData);
                 $.ajax({
                     url: "{{ route('order.changeStatus') }}",
                     type: "POST",
                     data: {
                         order_id: order_id,
                         vendor_id: vendor_id,
+                        reject_reason: reject_reason,
                         "_token": "{{ csrf_token() }}",
                         status_option_id: status_option_id,
                         order_vendor_id: order_vendor_id,
                     },
+
                     success: function(response) {
-
-                        if (status_option_id == 4 || status_option_id == 5) {
-                            if (status_option_id == 4)
-                                var next_status = 'Out For Delivery';
-                            else
-                                var next_status = 'Delivered';
-                            that.replaceWith("<button class='update-status btn-warning' data-full_div='" + full_div + "' data-single_div='" + single_div + "'  data-count='" + count + "'  data-order_id='" + order_id + "'  data-vendor_id='" + vendor_id + "'  data-status_option_id='" + status_option_id_next + "' data-order_vendor_id=" + order_vendor_id + ">" + next_status + "</button>");
-                            return false;
-                        } else {
-                            if (count == 0) {
-                                $(full_div).slideUp(1000, function() {
-                                    $(this).remove();
-                                });
-
-                            } else {
-                                $(single_div).slideUp(1000, function() {
-                                    $(this).remove();
-                                });
-
+                        if (response.status == 'success') {
+                            // $(".modal .close").click();
+                            location.reload();
+                        } else if (response.status == 'error') {
+                            $('#error-case').empty();
+                            $('#error-case').append(response.message);
+                        }
+                        if (count == 0) {
+                            $(full_div).slideUp(1000, function() {
+                                $(this).remove();
+                            });
+                            if (response.status == 'success') {
+                                // $(".modal .close").click();
+                                location.reload();
                             }
+
+
+
+                        } else {
+                            $(single_div).slideUp(1000, function() {
+                                $(this).remove();
+                            });
+                            if (response.status == 'success') {
+                                //   $(".modal .close").click();
+                                location.reload();
+                            }
+
                         }
 
 
-
-                        if (status_option_id == 2)
-                            $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                        // location.reload();
                     },
+                    error: function(response) {
+                        if (response.status == 'error') {
+                            $('#error-case').empty();
+                            $('#error-case').append(response.message);
+                        }
+                    }
+
                 });
+
+
+            });
+
+
+        }
+
+
+
+
+
+        // update status 
+        $(document).on("click", ".update-status", function() {
+
+            let that = $(this);
+            var count = that.data("count");
+            var full_div = that.data("full_div");
+            var single_div = that.data("single_div");
+            var status_option_id = that.data("status_option_id");
+            var status_option_id_next = status_option_id + 1;
+            var order_vendor_id = that.data("order_vendor_id");
+            var order_id = that.data("order_id");
+            var vendor_id = that.data("vendor_id");
+            var count = that.data("count");
+            if (status_option_id == 3) {
+                return openRejectModal(order_id, vendor_id, status_option_id, order_vendor_id);
+            } else {
+                if (confirm("Are you Sure?")) {
+                    $.ajax({
+                        url: "{{ route('order.changeStatus') }}",
+                        type: "POST",
+                        data: {
+                            order_id: order_id,
+                            vendor_id: vendor_id,
+                            "_token": "{{ csrf_token() }}",
+                            status_option_id: status_option_id,
+                            order_vendor_id: order_vendor_id,
+                        },
+                        success: function(response) {
+
+                            if (status_option_id == 4 || status_option_id == 5) {
+                                if (status_option_id == 4)
+                                    var next_status = 'Out For Delivery';
+                                else
+                                    var next_status = 'Delivered';
+                                that.replaceWith("<button class='update-status btn-warning' data-full_div='" + full_div + "' data-single_div='" + single_div + "'  data-count='" + count + "'  data-order_id='" + order_id + "'  data-vendor_id='" + vendor_id + "'  data-status_option_id='" + status_option_id_next + "' data-order_vendor_id=" + order_vendor_id + ">" + next_status + "</button>");
+                                return false;
+                            } else {
+
+                                if (count == 0) {
+                                    $(full_div).slideUp(1000, function() {
+                                        $(this).remove();
+                                    });
+
+                                } else {
+                                    $(single_div).slideUp(1000, function() {
+                                        $(this).remove();
+                                    });
+
+                                }
+                            }
+                            if (status_option_id == 2)
+                                $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                            // location.reload();
+                        },
+                    });
+                }
             }
         });
     });

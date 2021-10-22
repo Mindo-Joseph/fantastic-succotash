@@ -62,7 +62,7 @@ class PickupDeliveryController extends FrontController{
         $product->original_tags_price = $tags_price;
         $product->tags_price = number_format($tags_price);
         $product->name = $product->translation->first() ? $product->translation->first()->title :'';
-        $product->description = $product->translation->first() ? $product->translation->first()->meta_description :'';
+        $product->description = $product->translation->first() ? $product->translation->first()->body_html :'';
         $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
         foreach ($product->variant as $k => $v) {
             $product->variant[$k]->price = $product->tags_price;
@@ -83,6 +83,11 @@ class PickupDeliveryController extends FrontController{
             }
         }
         $product->loyalty_amount_saved = number_format((float)$loyalty_amount_saved, 2, '.', '') ??0.00;
+
+        if($product->loyalty_amount_saved > $product->tags_price)
+        $product->loyalty_amount_saved = $product->tags_price;
+
+
         return $this->successResponse($product);
     }
     # get all vehicles category by vendor

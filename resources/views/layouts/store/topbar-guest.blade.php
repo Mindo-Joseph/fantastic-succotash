@@ -27,45 +27,34 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 $applocale = session()->get('applocale');
             }            
             @endphp
-            
-           
-          
        
             <div class="col-lg-5 text-right">
                 <ul class="header-dropdown">
                     <li class="onhover-dropdown change-language">
-                        <a href="javascript:void(0)">{{ $applocale }} {
+                        <a href="javascript:void(0)">{{$applocale}}
                         <span class="icon-ic_lang align-middle"></span>
-                        <span class="language ml-1 align-middle">language</span>
+                        <span class="language ml-1 align-middle">{{ __("language") }}</span>
                         </a>
                         <ul class="onhover-show-div">
-                            {{-- @foreach($languageList as $key => $listl) --}}
-                                {{-- <li class="{{session()->get('locale') ==  $listl->language->sort_code ?  'active' : ''}}">
+                            @foreach($languageList as $key => $listl)
+                                <li class="{{$applocale ==  $listl->language->sort_code ?  'active' : ''}}">
                                     <a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a>
-                                </li> --}}
-                                {{-- @endforeach --}}
+                                </li>
+                            @endforeach
 
-                              
-          
-                                
                             {{-- language switch --}}
-
-                           
-
-                            <li class={{ $applocale === 'en' ? "active" : "" }} > <a href="/switch/language?lang=en" class="customerLang" langid="1">English</a> </li>
+                            {{-- <li class={{ $applocale === 'en' ? "active" : "" }} > <a href="/switch/language?lang=en" class="customerLang" langid="1">English</a> </li>
                             <li class={{ $applocale === 'ar' ? "active" : "" }} > <a href="/switch/language?lang=ar" class="customerLang" langid="1">Arabic</a> </li>
                             <li class={{ $applocale === 'fr' ? "active" : "" }} > <a href="/switch/language?lang=fr" class="customerLang" langid="1">French</a> </li>
                             <li class={{ $applocale === 'de' ? "active" : "" }} > <a href="/switch/language?lang=de" class="customerLang" langid="1">Germany</a> </li>
-                            <li class={{ $applocale === 'es' ? "active" : "" }} > <a href="/switch/language?lang=es" class="customerLang" langid="1">Spanish</a> </li>
-                            
+                            <li class={{ $applocale === 'es' ? "active" : "" }} > <a href="/switch/language?lang=es" class="customerLang" langid="1">Spanish</a> </li> --}}                            
                             {{-- language switch --}}
-
                         </ul>
                     </li>
                     <li class="onhover-dropdown change-currency">
                         <a href="javascript:void(0)">{{session()->get('iso_code')}}
                         <span class="icon-ic_currency align-middle"></span>
-                        <span class="currency ml-1 align-middle">currency</span>
+                        <span class="currency ml-1 align-middle">{{ __("currency") }}</span>
                         </a>
                         <ul class="onhover-show-div">
                             @foreach($currencyList as $key => $listc)
@@ -126,7 +115,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     {{__('My Account')}}
                     <ul class="onhover-show-div">
                         <li>
-                            <a href="{{route('login')}}" data-lng="en">{{__('Login')}}</a>
+                            <a href="{{route('customer.login')}}" data-lng="en">{{__('Login')}}</a>
                         </li>
                         
                     </ul>

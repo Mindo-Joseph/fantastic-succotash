@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use DB;
+use Log;
 use Auth;
 use Session;
 use Redirect;
@@ -105,13 +106,16 @@ class PayfastGatewayController extends FrontController
             elseif ($response->isRedirect()) {
                 $data['formData'] = $request_arr;
                 $data['redirectUrl'] = $response->getRedirectUrl();
+                $this->failMail();
                 return $this->successResponse($data);
             }
             else {
+                $this->failMail();
                 return $this->errorResponse($response->getMessage(), 400);
             }
         }
         catch(\Exception $ex){
+            $this->failMail();
             return $this->errorResponse($ex->getMessage(), 400);
         }
     }
@@ -154,7 +158,7 @@ class PayfastGatewayController extends FrontController
             }
 
             if($response->status == 'Success'){
-                $this->successMail();
+            //    $this->successMail();
                 return $this->successResponse($response->data, 'Payment completed successfully.', 200);
             }else{
                 $this->failMail();
@@ -162,6 +166,120 @@ class PayfastGatewayController extends FrontController
             }
         break;
         case 'FAILED':
+            $this->failMail();
+            // There was an error, update your application
+            return $this->errorResponse('Payment failed', 400);
+        break;
+        default:
+        $this->failMail();
+            // If unknown status, do nothing (safest course of action)
+            // return $this->errorResponse($response->getMessage(), 400);
+        break;
+        }
+    }
+
+    public function payfastNotifyApp(Request $request, $domain = '')
+    {
+        // Notify PayFast that information has been received
+        header( 'HTTP/1.0 200 OK' );
+        flush();
+
+        // Posted variables from ITN
+        $pfData = $request;
+        $pfData->payment_status = 'COMPLETE';
+        //update db
+        switch( $pfData->payment_status )
+        {
+        case 'COMPLETE':
+            // If complete, update your application, email the buyer and process the transaction as paid
+            $pfData->request->add([
+                'user_id' => $pfData->custom_int1,
+                'payment_option_id' => $pfData->custom_int3,
+                'transaction_id' => $pfData->pf_payment_id
+            ]);
+            if($pfData->custom_str2 == 'cart'){
+                $transactionId = $pfData->pf_payment_id;
+                $order_number = $pfData->custom_str3;
+                $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
+                if($order){
+                    // if($payment_details['status']['code'] == 200){
+                        $order->payment_status = 1;
+                        $order->save();
+                        $payment_exists = Payment::where('transaction_id', $transactionId)->first();
+                        if(!$payment_exists){
+                            Payment::insert([
+                                'date' => date('Y-m-d'),
+                                'order_id' => $order->id,
+                                'transaction_id' => $transactionId,
+                                'balance_transaction' => $pfData->amount_gross,
+                            ]);
+
+                            // Auto accept order
+                            $orderController = new OrderController();
+                            $orderController->autoAcceptOrderIfOn($order->id);
+
+                            // Remove cart
+                            $user_id = $pfData->custom_int1;
+                            $cart_id = $pfData->custom_int2;
+                            Cart::where('id', $cart_id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
+                            CartAddon::where('cart_id', $cart_id)->delete();
+                            CartCoupon::where('cart_id', $cart_id)->delete();
+                            CartProduct::where('cart_id', $cart_id)->delete();
+                            CartProductPrescription::where('cart_id', $cart_id)->delete();
+
+                            // Send Notification
+                            if (!empty($order->vendors)) {
+                                foreach ($order->vendors as $vendor_value) {
+                                    $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id, $vendor_value->vendor_id);
+                                    $user_vendors = UserVendor::where(['vendor_id' => $vendor_value->vendor_id])->pluck('user_id');
+                                    $orderController->sendOrderPushNotificationVendors($user_vendors, $vendor_order_detail);
+                                }
+                            }
+                            $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id);
+                            $super_admin = User::where('is_superadmin', 1)->pluck('id');
+                            $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
+
+                            // Send Email
+                        //    $this->successMail();
+                    //     }
+                    // }else{
+                    }
+                }
+            }
+            // elseif($pfData->custom_str2 == 'wallet'){
+            //     $pfData->request->add([
+            //         'wallet_amount' => $pfData->amount_gross
+            //     ]);
+            //     $wallet = new WalletController();
+            //     $creditWallet = $wallet->creditWallet($pfData);
+            //     $response = $creditWallet->getData();
+            // }
+
+            if($response->status == 'Success'){
+            //    $this->successMail();
+                return $this->successResponse($response->data, 'Payment completed successfully.', 200);
+            }else{
+                $this->failMail();
+                return $this->errorResponse($response->message, 400);
+            }
+        break;
+        case 'FAILED':
+
+            if($pfData->custom_str2 == 'cart'){
+                $order_number = $pfData->custom_str3;
+                $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
+                $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
+                foreach($order_products as $order_prod){
+                    OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
+                }
+                OrderProduct::where('order_id', $order->id)->delete();
+                OrderProductPrescription::where('order_id', $order->id)->delete();
+                VendorOrderStatus::where('order_id', $order->id)->delete();
+                OrderVendor::where('order_id', $order->id)->delete();
+                OrderTax::where('order_id', $order->id)->delete();
+                Order::where('id', $order->id)->delete();
+            }
+
             $this->failMail();
             // There was an error, update your application
             return $this->errorResponse('Payment failed', 400);

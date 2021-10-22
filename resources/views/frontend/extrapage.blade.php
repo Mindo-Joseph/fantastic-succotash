@@ -13,7 +13,7 @@
         @include('layouts.store/left-sidebar-template-one')
         @endif
 </header>
-<section class="section-b-space new-pages pb-250">
+<section class="section-b-space new-pages pb-265">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -21,7 +21,7 @@
                 <p>{!!$page_detail->translations->first() ? $page_detail->translations->first()->description : $page_detail->primary->description !!}</p>
             </div>
         </div>
-        @if($page_detail->slug == 'vendor-registration')
+        @if($page_detail->primary->type_of_form == 1)
             <form class="vendor-signup" id="vendor_signup_form">
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
@@ -191,8 +191,9 @@
                             </div>
                             <div class="form-row">
                                 <div class="col-12 checkbox-input">
-                                    <input type="checkbox" id="html">
+                                    <input type="checkbox" id="html" name="check_conditions" value="1">
                                     <label for="html">{{__('I accept the')}} <a href="{{url('page/terms-conditions')}}" target="_blank">{{__('Terms And Conditions')}}</a> {{__('and have read the')}} <a href="{{url('page/privacy-policy')}}" target="_blank"> {{__('Privacy Policy.')}}</a></label>
+                                    <div class="invalid-feedback" id="check_conditions_error"><strong></strong></div>
                                 </div>
                             </div>
                             <button class="btn btn-solid mt-3 w-100" dir="ltr" data-style="expand-right" id="register_btn" type="button">

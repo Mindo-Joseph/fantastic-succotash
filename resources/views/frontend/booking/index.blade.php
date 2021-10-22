@@ -1,53 +1,6 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
-<style type="text/css">
 
-.cabbooking-loader {
-  width: 30px;
-  height: 30px;
-  animation: loading 1s infinite ease-out;
-  margin: auto;
-  border-radius: 50%;
-  background-color: red;
-}
-@keyframes loading {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(8);
-    opacity: 0;
-  }
-}
-.site-topbar,.main-menu.d-block{
-    display: none !important;
-}
-
-.cab-booking-header img.img-fluid {
-    height: 50px;
-}
-.cab-booking-header{
-    display: block !important;
-}
-</style>
-
-<?php
-$url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-if (strpos($url,'cabservice') !== false) {?>
-<style>
-    .container .main-menu .d-block{
-         display: none;
-     }
- </style>
-<?php
-} else { ?>
-    <style>
-        .cab-booking-header{
-             display: none;
-         }
-     </style>
-<?php }
-?>
 <header>
     <div class="mobile-fix-option"></div>
     @if(isset($set_template)  && $set_template->template_id == 1)
@@ -222,7 +175,7 @@ if (strpos($url,'cabservice') !== false) {?>
                 <div class="title title-24 position-relative edit-other-stop" id="<%= random_id %>">  {{__('To')}} - <span id="dropoff-where-to-<%= random_id %>"></span><i class="fa fa-angle-down" aria-hidden="true"></i></div>
                 <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel="<%= random_id %>"></i>
             </li>
-        </script>
+        </script> 
         <script type="text/template" id="cab_detail_box_template">
             <div class="cab-outer style-4">
                 <div class="bg-white p-2">
@@ -242,9 +195,9 @@ if (strpos($url,'cabservice') !== false) {?>
                         <div class="col-6 mb-2 text-right" id="distance"></div>
                         <div class="col-6 mb-2">{{__('Duration')}}</div>
                         <div class="col-6 mb-2 text-right" id="duration"></div>
-                        <% if(result.loyalty_amount_saved) { %>
+                        <% if((result.loyalty_amount_saved) && (result.loyalty_amount_saved) > 0 ){ %>
                             <div class="col-6 mb-2">Loyalty</div>
-                            <div class="col-6 mb-2 text-right">-{{Session::get('currencySymbol')}}<%= result.loyalty_amount_saved %></div>
+                            <div class="col-6 mb-2 text-right">-{{Session::get('currencySymbol')}}<%= result.loyalty_amount_saved %></div>xx
                         <% } %>
                     </div>
                 </div>
@@ -366,7 +319,7 @@ if (strpos($url,'cabservice') !== false) {?>
             </div>
             <div class="modal-body p-0">
                 <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method" data-payment_method="1"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Cash</span></h4>
-                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method" data-payment_method="2"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Wallet</span></h4>
+                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method" data-payment_method="2"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Wallet/Card</span></h4>
                
                 {{-- <h4 class="payment-button"  data-toggle="modal" data-target="#select_payment_option" aria-label="Close">Select Payment Method</h4> --}}
             </div>        
@@ -405,7 +358,7 @@ if (strpos($url,'cabservice') !== false) {?>
         @method('POST')
         <div class="modal-body pb-0">
             <div class="form-group">
-                <div class="text-36">{{Session::get('currencySymbol')}}<span class="wallet_balance">@money(Auth::user()->balanceFloat * $clientCurrency->doller_compare)</span></div>
+                <div class="text-36">{{Session::get('currencySymbol')}}<span class="wallet_balance">@money(Auth::user()->balanceFloat * (isset($clientCurrency->doller_compare)?$clientCurrency->doller_compare:1))</span></div>
             </div>
             <div class="form-group">
                 <h5 class="text-17 mb-2">{{__('Topup Wallet')}}</h5>
@@ -475,6 +428,8 @@ if (strpos($url,'cabservice') !== false) {?>
 @endsection
 
 @section('script')
+
+
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
@@ -567,4 +522,5 @@ var cab_booking_promo_code_remove_url = "{{url('looking/promo-code/remove')}}";
 var apply_cab_booking_promocode_coupon_url = "{{ route('verify.cab.booking.promo-code') }}";
 
 </script>
+
 @endsection

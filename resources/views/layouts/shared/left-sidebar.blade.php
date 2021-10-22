@@ -148,7 +148,7 @@
                                             @endif
                                         </ul>
                                     </div>
-                                </li>
+                                </li> 
                             @endif
                             @if(Auth::user()->is_superadmin == 1)
                             {{-- @if(count(array_intersect($subscription_permissions, $allowed)) || Auth::user()->is_superadmin == 1) --}}
@@ -262,7 +262,7 @@
                             <li>
                                 <a href="{{route('category.index')}}">
                                     <span class="icon-catalogue"></span>
-                                    <span> {{ __('Catalog ') }}</span>
+                                    <span> {{ __('Catalog') }}</span>
                                 </a>
                             </li>
                         @endif
@@ -300,15 +300,30 @@
                         <span>{{ __('MARKETING') }}</span>
                     </a>
                     <ul class="nav-second-level">
-                        {{-- @if(in_array('banner',$allowed) || Auth::user()->is_superadmin == 1) --}}
+
                         @if(Auth::user()->is_superadmin == 1)    
                         <li>
-                                <a href="{{route('banner.index')}}">
-                                    <span class="icon-banners"></span>
-                                    <span> {{ __('Banner') }} </span>
-                                </a>
-                            </li>
+                            <a href="#sidebarbanner" data-toggle="collapse">
+                                <span class="icon-styling"></span>
+                                <span> {{ __('Banner') }} </span>
+                            </a>
+                            <div class="collapse" id="sidebarbanner">
+                                <ul class="nav-second-level">
+                                        @if($client_preference_detail->business_type != 'taxi')
+                                        <li>
+                                            <a href="{{route('banner.index')}}">{{ __('Banner') }}</a>
+                                        </li>
+                                        @endif
+                                         <li>
+                                            <a href="{{route('mobilebanner.index')}}">{{ __('Mobile Banner') }}</a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </li>
                         @endif
+
+
+                       
                         @if(in_array('promocode',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('promocode.index')}}">

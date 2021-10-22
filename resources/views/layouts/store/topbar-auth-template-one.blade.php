@@ -4,16 +4,23 @@ $urlImg = $clientData->logo['image_fit'].'150/60'.$clientData->logo['image_path'
 $languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
 $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
+
+<style>
+    .modal-backdrop {
+        z-index: 99;
+    }
+</style>
+
 <div class="top-header site-topbar">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-6">
                 <div class="d-flex align-items-center">    
-                    <a class="navbar-brand mr-0 mr-sm-3 d-block d-md-none" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
+                    <a class="navbar-brand mr-0 mr-sm-3 d-block d-sm-none" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                     @if( (Session::get('preferences')))
                         @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
                             <div class="location-bar d-none d-sm-flex align-items-center justify-content-start m-0 p-0 dropdown-toggle order-1" href="#edit-address" data-toggle="modal">
-                                <div class="map-icon mr-md-2"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                <div class="map-icon mr-2"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                                 <div class="homepage-address text-left">
                                     <h2><span data-placement="top">{{session('selectedAddress')}}</span></h2>
                                 </div>
@@ -25,12 +32,21 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     @endif
                 </div>
             </div>
-            <div class="col-6 text-right">
+
+            <div class="col-6 d-inline d-sm-none text-right">
+                <div class="icon-nav">
+                    <ul>
+                        <li class="d-inline-block d-lg-none"><div class="toggle-nav p-0 d-inline-block"><i class="fa fa-bars sidebar-bar"></i></div></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-sm-6 mt-2 mt-sm-0 text-right">
                 <div class="d-inline d-sm-none">
                     @if( (Session::get('preferences')))
                         @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
                             <div class="location-bar d-flex align-items-center justify-content-start dropdown-toggle" href="#edit-address" data-toggle="modal">
-                                <div class="map-icon mr-md-2"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                <div class="map-icon mr-2"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
                                 <div class="homepage-address text-left">
                                     <h2><span data-placement="top">{{session('selectedAddress')}}</span></h2>
                                 </div>
@@ -41,6 +57,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif
                     @endif
                 </div>
+                @php  
+                $applocale = 'en';
+                if(session()->has('applocale')){
+                    $applocale = session()->get('applocale');
+                }            
+                @endphp
                 <ul class="header-dropdown d-none d-sm-inline">                    
                     <!-- <li class="mobile-wishlist d-inline d-sm-none">
                         <a href="{{route('user.wishlists')}}">
@@ -48,13 +70,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </a>
                     </li> -->
                     <li class="onhover-dropdown change-language slected-language">
-                        <a href="javascript:void(0)">{{session()->get('locale')}} 
+                        <a href="javascript:void(0)">{{$applocale}} 
                         <span class="icon-ic_lang align-middle"></span>
                         <span class="language ml-1 align-middle">{{ __('language') }}</span>
                         </a>
                         <ul class="onhover-show-div">
                             @foreach($languageList as $key => $listl)
-                                <li class="{{session()->get('locale') ==  $listl->language->sort_code ?  'active' : ''}}">
+                                <li class="{{$applocale ==  $listl->language->sort_code ?  'active' : ''}}">
                                     <a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a>
                                 </li>
                             @endforeach
@@ -97,8 +119,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <div class="menu-right">
             <ul class="header-dropdown icon-nav">
                 <li class="onhover-div mobile-setting">
-                    <div><i class="ti-settings"></i></div>
-                    <div class="show-div setting">
+                    <div data-toggle="modal" data-target="#setting_modal"><i class="ti-settings"></i></div>
+                    <!-- <div class="show-div setting">
                         <h6>{{ __("language") }}</h6>
                         <ul>
                             <li><a href="#">english</a></li>
@@ -118,7 +140,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <li><a class="theme-layout-version" href="javascript:void(0)">Dark</a></li>
                         </ul>
                         @endif
-                    </div>
+                    </div> -->
                 </li>
                 
                 <li class="onhover-dropdown mobile-account  d-inline d-sm-none"> <i class="fa fa-user" aria-hidden="true"></i>
@@ -184,4 +206,41 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     </div>
 
   
+</div>
+
+<!-- Modal -->
+<div class="modal fade mobile-setting" id="setting_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="setting-modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title" id="setting-modalLabel">Language & Currency</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="show-div setting">
+            <h6 class="mb-1">{{ __("language") }}</h6>
+            <ul>
+                <li><a href="#">english</a></li>
+                <li><a href="#">{{ __("french") }}</a></li>
+            </ul>
+            <h6 class="mb-1">{{ __("currency") }}</h6>
+            <ul class="list-inline">
+                @foreach($currencyList as $key => $listc)
+                    <li class="{{session()->get('iso_code') ==  $listc->currency->iso_code ?  'active' : ''}}">
+                        <a href="javascript:void(0)" currId="{{$listc->currency_id}}" class="customerCurr " currSymbol="{{$listc->currency->symbol}}">{{$listc->currency->iso_code}}</a>
+                    </li>
+                @endforeach
+            </ul>
+            <!-- <h6>Change Theme</h6>
+            @if($client_preference_detail->show_dark_mode == 1)
+            <ul class="list-inline">
+                <li><a class="theme-layout-version" href="javascript:void(0)">Dark</a></li>
+            </ul>
+            @endif -->
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

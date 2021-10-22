@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency, Nomenclature, ReferAndEarn,SocialMedia, VendorRegistrationDocument, PageTranslation, BrandTranslation, VariantTranslation, ProductTranslation, Category_translation, AddonOptionTranslation, DriverRegistrationDocument, VariantOptionTranslation};
 use GuzzleHttp\Client as GCLIENT;
+use DB;
 class ClientPreferenceController extends BaseController{
     public function index(){
         $client = Auth::user();
@@ -95,55 +96,7 @@ class ClientPreferenceController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $code){
-
-
-        if(isset($request->need_delivery_service) && !empty($request->need_delivery_service)){   
-            try {
-                $client = new GClient(['headers' => ['personaltoken' => $request->delivery_service_key,'shortcode' => $request->delivery_service_key_code,'content-type' => 'application/json']]);
-                $url = $request->delivery_service_key_url;                                                   
-                $res = $client->post($url.'/api/check-dispatcher-keys');
-                $response = json_decode($res->getBody(), true);
-                if($response && $response['status'] == 400){
-                    return redirect()->route('configure.index')->with('error', 'Last Mile Delivery Keys incorrect !'); 
-                }
-            }catch(\Exception $e){
-                return redirect()->route('configure.index')->with('error', 'Invalid Last Mile Delivery Dispatcher URL !'); 
-            }                                                
-        }
-
-        if(isset($request->need_dispacher_ride) && !empty($request->need_dispacher_ride)){
-            try {
-                $client = new GClient(['headers' => ['personaltoken' => $request->pickup_delivery_service_key,'shortcode' => $request->pickup_delivery_service_key_code,'content-type' => 'application/json']]);
-                $url = $request->pickup_delivery_service_key_url;                                                   
-                $res = $client->post($url.'/api/check-dispatcher-keys');
-                $response = json_decode($res->getBody(), true);
-                if($response && $response['status'] == 400){
-                    return redirect()->route('configure.index')->with('error', 'Pickup & Delivery Keys incorrect !'); 
-                }
-            }catch(\Exception $e){
-                return redirect()->route('configure.index')->with('error', 'Invalid Pickup & Delivery Dispatcher URL !'); 
-            } 
-        }
-
-        if(isset($request->need_dispacher_home_other_service) && !empty($request->need_dispacher_home_other_service))
-        {
-            try {
-                $client = new GClient(['headers' => ['personaltoken' => $request->dispacher_home_other_service_key,
-                                                            'shortcode' => $request->dispacher_home_other_service_key_code,
-                                                            'content-type' => 'application/json']
-                                                                ]);
-                $url = $request->dispacher_home_other_service_key_url;                                                   
-                $res = $client->post($url.'/api/check-dispatcher-keys');
-                $response = json_decode($res->getBody(), true);
-                if($response && $response['status'] == 400){
-                    return redirect()->route('configure.index')->with('error', 'On Demand Services Keys incorrect !'); 
-                }
-            }catch(\Exception $e){
-                    return redirect()->route('configure.index')->with('error', 'Invalid On Demand Services Dispatcher URL !'); 
-            } 
-        }
         
-     
 
         $cp = new ClientPreference();
         $preference = ClientPreference::where('client_code', Auth::user()->code)->first();
@@ -151,7 +104,8 @@ class ClientPreferenceController extends BaseController{
             $preference = new ClientPreference();
             $preference->client_code = $code;
         }
-        $keyShouldNot = array('Default_location_name', 'Default_latitude', 'Default_longitude', 'is_hyperlocal', '_token', 'social_login', 'send_to', 'languages', 'hyperlocals', 'currency_data', 'multiply_by', 'cuid', 'primary_language', 'primary_currency', 'currency_data', 'verify_config','custom_mods_config', 'distance_to_time_calc_config');
+        $keyShouldNot = array('dispacher_home_other_service_key_url','dispacher_home_other_service_key_code','dispacher_home_other_service_key','pickup_delivery_service_key_url','pickup_delivery_service_key_code','pickup_delivery_service_key','delivery_service_key_url','delivery_service_key_code','delivery_service_key','need_delivery_service','need_dispacher_home_other_service','need_dispacher_ride','Default_location_name', 'Default_latitude', 'Default_longitude', 'is_hyperlocal', '_token', 'social_login', 'send_to', 'languages', 'hyperlocals', 'currency_data', 'multiply_by', 'cuid', 'primary_language', 'primary_currency', 'currency_data', 'verify_config','custom_mods_config', 'distance_to_time_calc_config');
+   
         foreach ($request->all() as $key => $value) {
             if(!in_array($key, $keyShouldNot)){
                $preference->{$key} = $value; 
@@ -177,20 +131,7 @@ class ClientPreferenceController extends BaseController{
            
         }
         
-        $preference->need_delivery_service = ($request->has('need_delivery_service') && $request->need_delivery_service == 'on') ? 1 : 0;
-        $preference->need_dispacher_ride = ($request->has('need_dispacher_ride') && $request->need_dispacher_ride == 'on') ? 1 : 0;
-        $preference->need_dispacher_home_other_service = ($request->has('need_dispacher_home_other_service') && $request->need_dispacher_home_other_service == 'on') ? 1 : 0;
-   
-        if($request->has('need_delivery_service') && $request->need_delivery_service == 'on'){
-            $preference->delivery_service_key = $request->delivery_service_key;
-        }
-        if($request->has('need_dispacher_ride') && $request->need_dispacher_ride == 'on'){
-            $preference->dispatcher_key = $request->dispatcher_key;
-        }
-
-        if($request->has('need_dispacher_home_other_service') && $request->need_dispacher_home_other_service == 'on'){
-            $preference->dispacher_home_other_service_key = $request->dispacher_home_other_service_key;
-        }
+      
         
         /* social login update */        
         if($request->has('social_login') && $request->social_login == '1'){
@@ -252,16 +193,18 @@ class ClientPreferenceController extends BaseController{
             $exist_language_id = array();
             if($request->has('languages')){
                 foreach ($request->languages as $lan) {
-                    $client_language = ClientLanguage::where('client_code',Auth::user()->code)->where('language_id', $lan)->first();
-                    if(!$client_language){
-                        $client_language = new ClientLanguage();
-                        $client_language->client_code = Auth::user()->code;
+                    if ($lan != $request->primary_language) {
+                        $client_language = ClientLanguage::where('client_code', Auth::user()->code)->where('language_id', $lan)->first();
+                        if (!$client_language) {
+                            $client_language = new ClientLanguage();
+                            $client_language->client_code = Auth::user()->code;
+                        }
+                        $client_language->is_primary = 0;
+                        $client_language->language_id = $lan;
+                        $client_language->is_active = 1;
+                        $client_language->save();
+                        $exist_language_id[] = $client_language->language_id;
                     }
-                    $client_language->is_primary = 0;
-                    $client_language->language_id = $lan;
-                    $client_language->is_active = 1;
-                    $client_language->save();
-                    $exist_language_id[] = $client_language->language_id;
                 }
             }
             $deactivateLanguages = ClientLanguage::where('client_code',Auth::user()->code)->whereNotIn('language_id', $exist_language_id)->where('is_primary', 0)->update(['is_active' => 0]);
@@ -297,22 +240,83 @@ class ClientPreferenceController extends BaseController{
             $delete = ClientCurrency::where('client_code',Auth::user()->code)->where('is_primary', 0)
                             ->whereNotIn('currency_id',$exist_cid)->delete();
         }
+
+       
+       
         $preference->save();
+
+      
+        $preferenceset = ClientPreference::where('client_code', Auth::user()->code)->first();
+        if(isset($request->need_delivery_service) && !empty($request->need_delivery_service)){   
+            try {
+                $client = new GClient(['headers' => ['personaltoken' => $request->delivery_service_key,'shortcode' => $request->delivery_service_key_code,'content-type' => 'application/json']]);
+                $url = $request->delivery_service_key_url;                                                   
+                $res = $client->post($url.'/api/check-dispatcher-keys');
+                $response = json_decode($res->getBody(), true);
+                if($response && $response['status'] == 400){
+                    return redirect()->route('configure.index')->with('error', 'Last Mile Delivery Keys incorrect !'); 
+                }
+            }catch(\Exception $e){
+                return redirect()->route('configure.index')->with('error', 'Invalid Last Mile Delivery Dispatcher URL !'); 
+            }                           
+            $preferenceset->need_delivery_service = ($request->has('need_delivery_service') && $request->need_delivery_service == 'on') ? 1 : 0;
+            $preferenceset->delivery_service_key_url = $request->delivery_service_key_url;
+            $preferenceset->delivery_service_key_code = $request->delivery_service_key_code;
+            $preferenceset->delivery_service_key = $request->delivery_service_key;
+        }else{
+            $preferenceset->need_delivery_service = $preferenceset->need_delivery_service;
+        }
+
+        if(isset($request->need_dispacher_ride) && !empty($request->need_dispacher_ride)){
+            try {
+                $client = new GClient(['headers' => ['personaltoken' => $request->pickup_delivery_service_key,'shortcode' => $request->pickup_delivery_service_key_code,'content-type' => 'application/json']]);
+                $url = $request->pickup_delivery_service_key_url;                                                   
+                $res = $client->post($url.'/api/check-dispatcher-keys');
+                $response = json_decode($res->getBody(), true);
+                if($response && $response['status'] == 400){
+                    return redirect()->route('configure.index')->with('error', 'Pickup & Delivery Keys incorrect !'); 
+                }
+            }catch(\Exception $e){
+                return redirect()->route('configure.index')->with('error', 'Invalid Pickup & Delivery Dispatcher URL !'); 
+            } 
+            $preferenceset->need_dispacher_ride = ($request->has('need_dispacher_ride') && $request->need_dispacher_ride == 'on') ? 1 : 0;
+           $preferenceset->pickup_delivery_service_key_url = $request->pickup_delivery_service_key_url;
+            $preferenceset->pickup_delivery_service_key_code = $request->pickup_delivery_service_key_code;
+            $preferenceset->pickup_delivery_service_key = $request->pickup_delivery_service_key;
+        }else{
+            $preferenceset->need_dispacher_ride = $preferenceset->need_dispacher_ride;
+        }   
+
+        if(isset($request->need_dispacher_home_other_service) && !empty($request->need_dispacher_home_other_service))
+        {
+            try {
+                $client = new GClient(['headers' => ['personaltoken' => $request->dispacher_home_other_service_key,
+                                                            'shortcode' => $request->dispacher_home_other_service_key_code,
+                                                            'content-type' => 'application/json']
+                                                                ]);
+                $url = $request->dispacher_home_other_service_key_url;                                                   
+                $res = $client->post($url.'/api/check-dispatcher-keys');
+                $response = json_decode($res->getBody(), true);
+                if($response && $response['status'] == 400){
+                    return redirect()->route('configure.index')->with('error', 'On Demand Services Keys incorrect !'); 
+                }
+            }catch(\Exception $e){
+                    return redirect()->route('configure.index')->with('error', 'Invalid On Demand Services Dispatcher URL !'); 
+            } 
+            $preferenceset->need_dispacher_home_other_service = ($request->has('need_dispacher_home_other_service') && $request->need_dispacher_home_other_service == 'on') ? 1 : 0;
+            $preferenceset->dispacher_home_other_service_key_url = $request->dispacher_home_other_service_key_url;
+            $preferenceset->dispacher_home_other_service_key_code = $request->dispacher_home_other_service_key_code;
+            $preferenceset->dispacher_home_other_service_key = $request->dispacher_home_other_service_key;
+        }else{
+            $preferenceset->need_dispacher_home_other_service = $preferenceset->need_dispacher_home_other_service;
+        }
+        $preferenceset->save();
+     
+
         if($request->has('send_to') && $request->send_to == 'customize'){
             return redirect()->route('configure.customize')->with('success', 'Client customizations updated successfully!');
         }
         return redirect()->route('configure.index')->with('success', 'Client configurations updated successfully!');
-    }
-    public function postUpdateDomain(Request $request, $code){
-        $rules = array('custom_domain' => 'required|max:30');
-        $validation  = Validator::make($request->all(), $rules);
-        if ($validation->fails()) {
-            return redirect()->back()->withInput()->withErrors($validation);
-        }
-        $client = Client::where('code', Auth::user()->code)->first();
-        $client->custom_domain = $request->custom_domain;
-        $client->save();
-        return redirect()->route('configure.customize')->with('success', 'Client customize data updated successfully!');
     }
 
 
@@ -350,5 +354,75 @@ class ClientPreferenceController extends BaseController{
             return $preference;
         else
             return false;
+    }
+
+
+    public function postUpdateDomain(Request $request, $id){
+        $rules = array('custom_domain' => 'required|max:150');
+        $validation  = Validator::make($request->all(), $rules);
+        if ($validation->fails()) {
+            return redirect()->back()->withInput()->withErrors($validation);
+        }
+         $client = Client::where('code', Auth::user()->code)->first();
+        // $client->custom_domain = $request->custom_domain;
+        // $client->save();
+        $id = Auth::user()->code;
+          # if submit custom domain by client
+          if ($request->custom_domain && $request->custom_domain != $client->custom_domain) {
+            try {
+                $my_url =   $request->custom_domain;
+                
+                $data1 = [
+                    'domain' => $my_url
+                ];
+                
+                $curl = curl_init();
+                
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => "localhost:3000/add_subdomain",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30000,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => json_encode($data1),
+                    CURLOPT_HTTPHEADER => array(
+                       "content-type: application/json",
+                    ),
+                ));
+                
+                $response = curl_exec($curl);
+                $err = curl_error($curl);
+                $res = json_decode($response); 
+                if(isset($res->error) && $res->error->statusCode == 400){
+                $error = isset($res->error->customMessage)?$res->error->customMessage:'ERROR';
+                return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $error]));
+                }	
+ 		
+               $exists = Client::on('god')->where('code',$id)->where('custom_domain', $request->custom_domain)->count();
+               if ($exists) {
+                   return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => 'Domain name "' . $request->custom_domain . '" is not available. Please select a different domain']));
+               } else {
+                   Client::on('god')->where('code',$id)->update(['custom_domain' => $request->custom_domain]);
+                    $dbname = DB::connection()->getDatabaseName();
+                   if ($dbname != env('DB_DATABASE')) {
+                       Client::where('id', '!=', 0)->update(['custom_domain' => $request->custom_domain]);
+                   }
+               }
+               return redirect()->route('configure.customize')->with('success', 'Client customize data updated successfully!');
+            } catch (\Exception $e) {
+                return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => $e->getMessage()]));
+            }
+          
+           
+        }else{
+            return redirect()->back()->withInput()->withErrors(new \Illuminate\Support\MessageBag(['custom_domain' => 'Domain name "' . $request->custom_domain . '" is already pointed. Please select a different domain']));
+        }
+
+
+
+
+       
     }
 }

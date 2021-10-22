@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs, VendorRegistrationDocument, EmailTemplate, NotificationTemplate, UserDevice};
 use Kutia\Larafirebase\Facades\Larafirebase;
@@ -174,16 +175,26 @@ class CustomerAuthController extends FrontController
     /**     * Display register Form     */
     public function register(SignupRequest $req, $domain = ''){
         try {
+            if( (empty($req->email)) && (empty($req->phone_number)) ){
+                $validator = $req->validate([
+                    'email'  => 'required',
+                    'phone_number'  => 'required'
+                ],[
+                    "email.required" => __('The email or phone number field is required.'),
+                    "phone_number.required" => __('The email or phone number field is required.'),
+                ]);
+            }
             $user = new User();
             $county = Country::where('code', strtoupper($req->countryData))->first();
             $phoneCode = mt_rand(100000, 999999);
             $emailCode = mt_rand(100000, 999999);
             $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
+            $email = (!empty($req->email)) ? $req->email : ('ro_'.Carbon::now()->timestamp . '.' . uniqid() . '@royoorders.com');
             $user->type = 1;
             $user->status = 1;
             $user->role_id = 1;
             $user->name = $req->name;
-            $user->email = $req->email;
+            $user->email = $email;
             $user->is_email_verified = 0;
             $user->is_phone_verified = 0;
             $user->country_id = $county->id;
@@ -274,59 +285,119 @@ class CustomerAuthController extends FrontController
         }
     }
 
-    /**
-     * Login user via username
-     *
-     */
+    /**     * proceed to user login on phone number     */
+    public function proceedToPhoneLogin($req, $domain = ''){
+        $user = User::where('phone_number', $req->phone_number)->where('dial_code', $req->dialCode)->where('status', 1)->first();
+        if ($user) {
+            Auth::login($user);
+            $user->is_phone_verified = 1;
+            $user->phone_token = NULL;
+            $user->phone_token_valid_till = NULL;
+            $user->save();
+            $userid = $user->id;
+            if($req->has('access_token')){
+                if($req->access_token){
+                    $user_device = UserDevice::where('user_id', $userid)->where('device_token', $req->access_token)->first();
+                    if(!$user_device){
+                        $user_device = new UserDevice();
+                        $user_device->user_id = $userid;
+                        $user_device->device_type = 'web';
+                        $user_device->device_token = $req->access_token;
+                        $user_device->save();
+                    }
+                }
+            }
+            $this->checkCookies($userid);
+            $user_cart = Cart::where('user_id', $userid)->first();
+            if ($user_cart) {
+                $unique_identifier_cart = Cart::where('unique_identifier', session()->get('_token'))->first();
+                if ($unique_identifier_cart) {
+                    $unique_identifier_cart_products = CartProduct::where('cart_id', $unique_identifier_cart->id)->get();
+                    foreach ($unique_identifier_cart_products as $unique_identifier_cart_product) {
+                        $user_cart_product_detail = CartProduct::where('cart_id', $user_cart->id)->where('product_id', $unique_identifier_cart_product->product_id)->first();
+                        if ($user_cart_product_detail) {
+                            $user_cart_product_detail->quantity = ($unique_identifier_cart_product->quantity + $user_cart_product_detail->quantity);
+                            $user_cart_product_detail->save();
+                            $unique_identifier_cart_product->delete();
+                        } else {
+                            $unique_identifier_cart_product->cart_id = $user_cart->id;
+                            $unique_identifier_cart_product->save();
+                        }
+                    }
+                    $unique_identifier_cart->delete();
+                }
+            } else {
+                Cart::where('unique_identifier', session()->get('_token'))->update(['user_id' => $userid, 'created_by' => $userid, 'unique_identifier' => '']);
+            }
+            $message = __('Logged in successfully');
+            $redirect_to = '';
+            if(session()->has('url.intended')){
+                $redirect_to = session()->get('url.intended');
+                session()->forget('url.intended');
+            }else{
+                $redirect_to = route('user.verify');
+            }
+            $req->request->add(['is_phone'=>1, 'redirect_to'=>$redirect_to]);
+            $response = $req->all();
+            return $this->successResponse($response, $message);
+        }
+        else {
+            return $this->errorResponse(__('Invalid phone number'), 404);
+        }
+    }
+
+    /*** Login user via username ***/
     public function loginViaUsername(Request $request, $domain = ''){
         try{
             $errors = array();
-            $validator = Validator::make($request->all(), [
-                'username'  => 'required',
-                'dialCode'  => 'required',
-                'countryData'  => 'required'
-            ]);
-
-            if($validator->fails()){
-                foreach($validator->errors()->toArray() as $error_key => $error_value){
-                    $errors['error'] = __($error_value[0]);
-                    return response()->json($errors, 422);
-                }
-            }
-            $phone_regex = '/[0-9 -()+]+$/';
+            
+            $phone_regex = '/^[0-9\-\(\)\/\+\s]*$/';
             $email_regex = '/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/';
-            $username = str_ireplace(' ', '', $request->username);
+            $username = $request->username;
 
-            if(preg_match($phone_regex, $username)){
-                $request->request->add(['is_phone'=>1]);
+            if(preg_match($phone_regex, $username))
+            {
+                $validator = Validator::make($request->all(), [
+                    'username'  => 'required',
+                    'dialCode'  => 'required',
+                    'countryData'  => 'required'
+                ]);
+    
+                if($validator->fails()){
+                    foreach($validator->errors()->toArray() as $error_key => $error_value){
+                        $errors['error'] = __($error_value[0]);
+                        return response()->json($errors, 422);
+                    }
+                }
+
+                $phone_number = preg_replace('/\D+/', '', $username);
                 $dialCode = $request->dialCode;
                 $fullNumber = $request->full_number;
-                $fullNumberWithoutPlus = str_replace('+', '', $fullNumber);
-                $phone_number = substr($fullNumberWithoutPlus, strlen($dialCode));
-
-                $user = User::where('dial_code', $dialCode)->where('phone_number', $phone_number)->first();
-                if(!$user){
-                    $errors['error'] = __('Your phone number is not registered');
-                    return response()->json($errors, 422);
-                }
-
+                // $fullNumberWithoutPlus = str_replace('+', '', $fullNumber);
+                // $phone_number = substr($fullNumberWithoutPlus, strlen($dialCode));
                 $phoneCode = mt_rand(100000, 999999);
                 $sendTime = Carbon::now()->addMinutes(10)->toDateTimeString();
-                $user->phone_token = $phoneCode;
-                $user->phone_token_valid_till = $sendTime;
-                $user->save();
+                $request->request->add(['is_phone'=>1, 'phone_number'=>$phone_number, 'phoneCode'=>$phoneCode, 'sendTime'=>$sendTime, 'codeSent'=>0]);
+                
+                $user = User::where('dial_code', $dialCode)->where('phone_number', $phone_number)->first();
+                if(!$user){
+                    // $errors['error'] = __('Your phone number is not registered');
+                    // return response()->json($errors, 422);
+                    $registerUser = $this->registerViaPhone($request)->getData();
+                    if($registerUser->status == 'Success'){
+                        $user = $registerUser->data;
+                    }else{
+                        return $this->errorResponse(__('Invalid data'), 404);
+                    }
+                }else{
+                    $user->phone_token = $phoneCode;
+                    $user->phone_token_valid_till = $sendTime;
+                    $user->save();
+                }
 
-                $response['status'] = 'Success';
-                $response['dial_code'] = $dialCode;
-                $response['phone_number'] = $phone_number;
-                $verified['is_email_verified'] = $request->is_email_verified;
-                $verified['is_phone_verified'] = $request->is_phone_verified;
                 $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
                             'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
-                $response['verify_details'] = $verified;
-                $response['cca2'] = $dialCode;
 
-                $response['send_otp'] = 1;
                 if($dialCode == "971"){
                     $to = '+'.$dialCode."0".$phone_number;
                 } else {
@@ -337,6 +408,7 @@ class CustomerAuthController extends FrontController
                 if(!empty($prefer->sms_key) && !empty($prefer->sms_secret) && !empty($prefer->sms_from)){
                     $send = $this->sendSms($provider, $prefer->sms_key, $prefer->sms_secret, $prefer->sms_from, $to, $body);
                     if($send){
+                        $request->request->add(['codeSent' => 1]);
                         $message = __('An otp has been sent to your phone. Please check.');
                         $response = $request->all();
                         unset($response->_token);
@@ -345,11 +417,22 @@ class CustomerAuthController extends FrontController
                         return $this->errorResponse(__('Something went wrong in sending OTP. We are sorry to for the inconvenience'), 404);
                     }
                 }else{
-                    return $this->errorResponse(__('Provider service is not configured. Please contact administration.'), 404);
+                    return $this->errorResponse(__('Provider service is not configured. Please contact administration'), 404);
                 }
             }
-            elseif (preg_match($email_regex, $username)) {
-                $request->request->add(['is_email'=>1]);
+            elseif (preg_match($email_regex, $username))
+            {
+                $validator = Validator::make($request->all(), [
+                    'username'  => 'required'
+                ]);
+    
+                if($validator->fails()){
+                    foreach($validator->errors()->toArray() as $error_key => $error_value){
+                        $errors['error'] = __($error_value[0]);
+                        return response()->json($errors, 422);
+                    }
+                }
+                $username = str_ireplace(' ', '', $username);
                 if (Auth::attempt(['email' => $username, 'password' => $request->password, 'status' => 1])) {
                     $userid = Auth::id();
                     if($request->has('access_token')){
@@ -383,27 +466,33 @@ class CustomerAuthController extends FrontController
                             }
                             $unique_identifier_cart->delete();
                         }
-                    } else {
+                    } else { 
                         Cart::where('unique_identifier', session()->get('_token'))->update(['user_id' => $userid, 'created_by' => $userid, 'unique_identifier' => '']);
                     }
                     $message = 'Logged in successfully';
+                    $redirect_to = '';
                     if(session()->has('url.intended')){
-                        $url = session()->get('url.intended');
+                        $redirect_to = session()->get('url.intended');
                         session()->forget('url.intended');
-                        $data['redirect_to'] = $url;
                     }else{
-                        $data['redirect_to'] = route('user.verify');
+                        $redirect_to = route('user.verify');
                     }
-                    return $this->successResponse($data, $message);
+                    $request->request->add(['is_email'=>1, 'redirect_to'=>$redirect_to]);
+                    $response = $request->all();
+                    return $this->successResponse($response, $message);
                 }
-                $checkEmail = User::where('email', $req->email)->first();
+                $checkEmail = User::where('email', $username)->first();
                 if ($checkEmail) {
-                    return $this->errorResponse(__('Password not matched. Please enter correct password.'), 404);
+                    if($checkEmail->status != 1){
+                        return $this->errorResponse(__('You are unauthorized to access this account.'), 404);
+                    }else{
+                        return $this->errorResponse(__('Incorrect Password'), 404);
+                    }
                 }
-                return $this->errorResponse(__('Email not exist. Please enter correct email.'), 404);
+                return $this->errorResponse(__('You are not registered with us. Please sign up.'), 404);
             }
             else {
-                return $this->errorResponse(__('Invalid email or phone number.'), 404);
+                return $this->errorResponse(__('Invalid email or phone number'), 404);
             }
         }
         catch(\Exception $ex){
@@ -415,10 +504,12 @@ class CustomerAuthController extends FrontController
      * Verify Login user via Phone number and create token
      *
      */
-    public function verifyLoginViaPhone(Request $loginReq, $domain = ''){
+    public function verifyPhoneLoginOtp(Request $request, $domain = ''){
         try {
-            $phone_number = str_ireplace(' ', '', $loginReq->phone_number);
-            $user = User::where('dial_code', $loginReq->country_code)->where('phone_number', $loginReq->phone_number)->first();
+            $username = $request->username;
+            $dialCode = $request->dialCode;
+            $phone_number = preg_replace('/\D+/', '', $username);
+            $user = User::where('dial_code', $dialCode)->where('phone_number', $phone_number)->first();
             if(!$user){
                 $errors['error'] = __('Your phone number is not registered');
                 return response()->json($errors, 422);
@@ -426,94 +517,78 @@ class CustomerAuthController extends FrontController
             $currentTime = Carbon::now()->toDateTimeString();
             $message = 'Account verified successfully.';
             
-            if($user->phone_token != $loginReq->otp){
+            if($user->phone_token != $request->verifyToken){
                 return $this->errorResponse(__('OTP is not valid'), 404);
             }
             if($currentTime > $user->phone_token_valid_till){
                 return $this->errorResponse(__('OTP has been expired.'), 404);
             }
-
-            $token1 = new Token;
-            $token = $token1->make([
-                'key' => 'royoorders-jwt',
-                'issuer' => 'royoorders.com',
-                'expiry' => strtotime('+1 month'),
-                'issuedAt' => time(),
-                'algorithm' => 'HS256',
-            ])->get();
-            $token1->setClaim('user_id', $user->id);
-            try {
-                Token::validate($token, 'secret');
-            } catch (\Exception $e) {
-
-            }
-            $user_refferal = UserRefferal::where('user_id', $user->id)->first();
-
-            if (!empty($loginReq->fcm_token)) {
-                $device = UserDevice::updateOrCreate(
-                    ['device_token' => $loginReq->fcm_token],
-                    [
-                        'user_id' => $user->id,
-                        'device_type' => $loginReq->device_type,
-                        'access_token' => $token
-                    ]
-                );
-            } else {
-                $device = UserDevice::updateOrCreate(['device_token' => $loginReq->device_token],
-                    ['user_id' => $user->id,
-                    'device_type' => $loginReq->device_type,
-                    'access_token' => $token]);
-            }
-            $user->phone_token = NULL;
-            $user->phone_number = $loginReq->phone_number;
-            $user->is_phone_verified = 1;
-            $user->phone_token_valid_till = NULL;
-            $user->auth_token = $token;
-            $user->save();
-
-            $prefer = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 
-                        'mail_password', 'mail_encryption', 'mail_from', 'sms_provider', 'sms_key', 'sms_secret', 'sms_from', 'theme_admin', 'distance_unit', 'map_provider', 'date_format', 'time_format', 'map_key', 'sms_provider', 'verify_email', 'verify_phone', 'app_template_id', 'web_template_id')->first();
-            $verified['is_email_verified'] = $user->is_email_verified;
-            $verified['is_phone_verified'] = $user->is_phone_verified;
-
-            $user_cart = Cart::where('user_id', $user->id)->first();
-            if($user_cart){
-                $unique_identifier_cart = Cart::where('unique_identifier', $loginReq->device_token)->first();
-                if($unique_identifier_cart){
-                    $unique_identifier_cart_products = CartProduct::where('cart_id', $unique_identifier_cart->id)->get();
-                    foreach ($unique_identifier_cart_products as $unique_identifier_cart_product) {
-                        $user_cart_product_detail = CartProduct::where('cart_id', $user_cart->id)->where('product_id', $unique_identifier_cart_product->product_id)->first();
-                        if($user_cart_product_detail){
-                            $user_cart_product_detail->quantity = ($unique_identifier_cart_product->quantity + $user_cart_product_detail->quantity);
-                            $user_cart_product_detail->save();
-                            $unique_identifier_cart_product->delete();
-                        }else{
-                        $unique_identifier_cart_product->cart_id = $user_cart->id;
-                        $unique_identifier_cart_product->save();
-                        }
-                    }
-                    $unique_identifier_cart->delete();
-                }
-            }else{
-                Cart::where('unique_identifier', $loginReq->device_token)->update(['user_id' => $user->id,  'unique_identifier' => '']);
-            }
-            $checkSystemUser = $this->checkCookies($user->id);
-            $data['name'] = $user->name;
-            $data['email'] = $user->email;
-            $data['auth_token'] =  $token;
-            $data['source'] = $user->image;
-            $data['verify_details'] = $verified;
-            $data['is_admin'] = $user->is_admin;
-            $data['client_preference'] = $prefer;
-            $data['dial_code'] = $user->dial_code;
-            $data['phone_number'] = $user->phone_number;
-            $data['cca2'] = $user->country ? $user->country->code : '';
-            $data['callingCode'] = $user->country ? $user->country->phonecode : '';
-            $data['refferal_code'] = $user_refferal ? $user_refferal->refferal_code: '';
-            return $this->successResponse($data , $message);
+            $request->request->add(['phone_number'=>$phone_number]);
+            return $this->proceedToPhoneLogin($request);
         } 
         catch (Exception $ex) {
             return $this->errorResponse($ex->getMessage(), $ex->getCode()); 
+        }
+    }
+
+    /*** register user via phone number ***/
+    public function registerViaPhone($req, $domain = ''){
+        try {
+            $user = new User();
+            $country = Country::where('code', strtoupper($req->countryData))->first();
+            // $emailCode = mt_rand(100000, 999999);
+            $email = 'ro_'.Carbon::now()->timestamp . '.' . uniqid() . '@royoorders.com';
+            $user->type = 1;
+            $user->status = 1;
+            $user->role_id = 1;
+            $user->name = 'RO'.substr($req->phone_number, -6);
+            $user->email = $email; //$req->email;
+            $user->is_email_verified = 0;
+            $user->is_phone_verified = 0;
+            $user->country_id = $country->id;
+            $user->phone_token = $req->phoneCode;
+            $user->dial_code = $req->dialCode;
+            // $user->email_token = $emailCode;
+            $user->phone_number = $req->phone_number;
+            $user->phone_token_valid_till = $req->sendTime;
+            // $user->email_token_valid_till = $sendTime;
+            // $user->password = Hash::make($req->password);
+            $user->save();
+
+            $wallet = $user->wallet;
+            $userRefferal = new UserRefferal();
+            $userRefferal->refferal_code = $this->randomData("user_refferals", 8, 'refferal_code');
+            if ($req->refferal_code != null) {
+                $userRefferal->reffered_by = $req->refferal_code;
+            }
+            $userRefferal->user_id = $user->id;
+            $userRefferal->save();
+            if ($user->id > 0) {
+                if ($req->refferal_code != null) {
+                    $refferal_amounts = ClientPreference::first();
+                    if ($refferal_amounts) {
+                        if ($refferal_amounts->reffered_by_amount != null && $refferal_amounts->reffered_to_amount != null) {
+                            $reffered_by = UserRefferal::where('refferal_code', $req->refferal_code)->first();
+                            $user_refferd_by = $reffered_by->user_id;
+                            $user_refferd_by = User::where('id', $reffered_by->user_id)->first();
+                            if ($user_refferd_by) {
+                                //user reffered by amount
+                                $wallet_user_reffered_by = $user_refferd_by->wallet;
+                                $wallet_user_reffered_by->depositFloat($refferal_amounts->reffered_by_amount, ['Referral code used by <b>' . $req->phone_number . '</b>']);
+                                $wallet_user_reffered_by->balance;
+                                //user reffered to amount
+                                $wallet->depositFloat($refferal_amounts->reffered_to_amount, ['You used referral code of <b>' . $user_refferd_by->name . '</b>']);
+                                $wallet->balance;
+                            }
+                        }
+                    }
+                }
+                Session::forget('referrer');
+            }
+
+            return $this->successResponse($user , 'Successfully registered');
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
         }
     }
 
@@ -521,38 +596,50 @@ class CustomerAuthController extends FrontController
         try {
             DB::beginTransaction();
             $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
-            if (empty($request->input('user_id'))){
-                if($vendor_registration_documents->count() > 0){
-                    $request->validate([
-                        'address' => 'required',
-                        'full_name' => 'required',
-                        'email' => 'required|email|unique:users',
-                        'vendor_registration_document.*.did_visit' => 'required',
-                        'password' => 'required|string|min:6|max:50',
-                        'confirm_password' => 'required|same:password',
-                        'name' => 'required|string|max:150|unique:vendors',
-                        'phone_number' => 'required|string|min:6|max:15|unique:users',
-                    ]);
-                }else{
-                    $request->validate([
-                        'address' => 'required',
-                        'full_name' => 'required',
-                        'email' => 'required|email|unique:users',
-                        'password' => 'required|string|min:6|max:50',
-                        'confirm_password' => 'required|same:password',
-                        'name' => 'required|string|max:150|unique:vendors',
-                        'phone_number' => 'required|string|min:6|max:15|unique:users',
-                    ]);
+            if (empty($request->input('user_id'))) {
+                if ($vendor_registration_documents->count() > 0) {
+                    $request->validate(
+                        [
+                            'address' => 'required',
+                            'full_name' => 'required',
+                            'email' => 'required|email|unique:users',
+                            'vendor_registration_document.*.did_visit' => 'required',
+                            'password' => 'required|string|min:6|max:50',
+                            'confirm_password' => 'required|same:password',
+                            'name' => 'required|string|max:150|unique:vendors',
+                            'phone_number' => 'required|string|min:6|max:15|unique:users',
+                            'check_conditions' => 'required',
+                        ],
+                        ['check_conditions.required' => __('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')]
+                    );
+                } else {
+                    $request->validate(
+                        [
+                            'address' => 'required',
+                            'full_name' => 'required',
+                            'email' => 'required|email|unique:users',
+                            'password' => 'required|string|min:6|max:50',
+                            'confirm_password' => 'required|same:password',
+                            'name' => 'required|string|max:150|unique:vendors',
+                            'phone_number' => 'required|string|min:6|max:15|unique:users',
+                            'check_conditions' => 'required',
+                        ],
+                        ['check_conditions.required' => __('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')]
+                    );
                 }
-            }else {
+            } else {
                 $rules_array = [
-                        'address' => 'required',
-                        'name' => 'required|string|max:150|unique:vendors',
+                    'address' => 'required',
+                    'name' => 'required|string|max:150|unique:vendors',
+                    'check_conditions' => 'required',
                 ];
                 foreach ($vendor_registration_documents as $vendor_registration_document) {
                     $rules_array[$vendor_registration_document->primary->slug] = 'required';
                 }
-                $request->validate($rules_array);
+                $request->validate(
+                    $rules_array,
+                    ['check_conditions.required' => __('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')]
+                );
             }
             $client_detail = Client::first();
             $client_preference = ClientPreference::first();

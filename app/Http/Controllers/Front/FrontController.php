@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category, Product, ClientPreference,EmailTemplate, ClientCurrency, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser,Country,UserAddress,CartProduct, Vendor};
+use App\Models\{Client, Category, Product, ClientPreference,EmailTemplate, ClientCurrency, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser,Country,UserAddress,CartProduct, Vendor,ClientLanguage};
 
 class FrontController extends Controller
 {
@@ -35,7 +35,8 @@ class FrontController extends Controller
 	}
     public function categoryNav($lang_id)
     {
-        $preferences = Session::get('preferences');
+       $preferences = Session::get('preferences');
+       $primary = ClientLanguage::orderBy('is_primary','desc')->first();
        $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
        ->select('categories.id', 'categories.icon', 'categories.slug', 'categories.parent_id', 'cts.name')->distinct('categories.id');
         $status = $this->field_status;
@@ -58,6 +59,9 @@ class FrontController extends Controller
             ->where('categories.is_visible', 1)
             ->where('categories.status', '!=', $status)
             ->where('cts.language_id', $lang_id)
+            ->where(function ($qrt) use($lang_id,$primary){
+                $qrt->where('cts.language_id', $lang_id)->orWhere('cts.language_id',$primary->language_id);
+             })
             ->whereNull('categories.vendor_id')
             ->orderBy('categories.position', 'asc')
             ->orderBy('categories.parent_id', 'asc')->groupBy('id')->get();
@@ -65,7 +69,7 @@ class FrontController extends Controller
             $categories = $this->buildTree($categories->toArray());
         }
 
-       
+      
         return $categories;
     }
 
@@ -110,7 +114,11 @@ class FrontController extends Controller
 
     public function productList($vendorIds, $langId, $currency = 'USD', $where = '')
     {
-        $products = Product::with(['vendor',
+        $products = Product::with([
+            'category.categoryDetail.translation' => function ($q) use ($langId) {
+                $q->where('category_translations.language_id', $langId);
+            },
+            'vendor',
             'media' => function ($q) {
                 $q->groupBy('product_id');
             }, 'media.image',
@@ -138,6 +146,8 @@ class FrontController extends Controller
                 foreach ($value->variant as $k => $v) {
                     $value->variant[$k]->multiplier = Session::get('currencyMultiplier');
                 }
+                
+                $value->category_name = $value->category->categoryDetail->translation->first() ? $value->category->categoryDetail->translation->first()->name :  $value->category->slug;
             }
         }
         return $products;
@@ -159,7 +169,11 @@ class FrontController extends Controller
                 $productIds[] = $value->cross_product_id;
             }
         }
-        $products = Product::with(['vendor', 'media' => function($q){
+        $products = Product::with([
+                        'category.categoryDetail.translation' => function ($q) use ($langId) {
+                            $q->where('category_translations.language_id', $langId);
+                        },
+                        'vendor', 'media' => function($q){
                             $q->groupBy('product_id');
                         }, 'media.image',
                         'translation' => function($q) use($langId){
@@ -188,6 +202,7 @@ class FrontController extends Controller
                 $value->variant_multiplier = $multiplier ? $multiplier : 1;
                 $value->variant_price = (!empty($value->variant->first())) ? number_format(($value->variant->first()->price * $multiplier),2,'.','') : 0;
                 $value->averageRating = number_format($value->averageRating, 1, '.', '');
+                $value->category_name = $value->category->categoryDetail->translation->first()->name;
                 // foreach ($value->variant as $k => $v) {
                 //     $value->variant[$k]->multiplier = $multiplier;
                 // }
@@ -488,9 +503,10 @@ class FrontController extends Controller
             $long2  = $vendor->longitude;
             if($lat1 && $long1 && $lat2 && $long2){
                 $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
-                $distance_to_time_multiplier = (!empty($preferences->distance_to_time_multiplier)) ? $preferences->distance_to_time_multiplier : 2;
+                $unit_abbreviation = ($distance_unit == 'mile') ? 'miles' : 'km';
+                $distance_to_time_multiplier = ($preferences->distance_to_time_multiplier > 0) ? $preferences->distance_to_time_multiplier : 2;
                 $distance = $this->calulateDistanceLineOfSight($lat1, $long1, $lat2, $long2, $distance_unit);
-                $vendor->lineOfSightDistance = number_format($distance, 1, '.', '');
+                $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
                 $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
             }else{
                 $vendor->lineOfSightDistance = 0;

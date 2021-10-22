@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Client;
 
-use App\Http\Controllers\Client\BaseController;
-use App\Models\{Banner, Vendor, Category};
+use Image;
+use Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Image;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Client\BaseController;
+use App\Models\{Banner, Vendor, Category, ClientLanguage};
 
 class BannerController extends BaseController
 {
@@ -18,7 +19,7 @@ class BannerController extends BaseController
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-     */
+     */   
     public function index()
     {
         $banners = Banner::orderBy('sorting', 'asc')->get();
@@ -32,9 +33,15 @@ class BannerController extends BaseController
      */
     public function create()
     {
-        $categories = Category::select('id', 'slug')
-                    ->where('status', $this->fstatus)->where('can_add_products', 1)->where('id', '>', 1)->get();
-        
+        $langId = Session::has('adminLanguage') ? Session::get('adminLanguage') : 1;
+        $categories = Category::with(['translation' => function($q) use($langId){
+            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+            ->where('category_translations.language_id', $langId);
+        }])
+        ->select('id', 'slug')->where('status', $this->fstatus)->where('can_add_products', 1)->where('id', '>', 1)->get();
+        foreach($categories as $key => $category){
+            $category->translation_name = ($category->translation->first()) ? $category->translation->first()->name : $category->slug;
+        }        
         $vendors = Vendor::select('id', 'name')->where('status', $this->fstatus)->get();
         $banner = new Banner();
         $returnHTML = view('backend.banner.form')->with(['banner' => $banner,  'vendors' => $vendors, 'categories' => $categories])->render();
@@ -49,9 +56,16 @@ class BannerController extends BaseController
      */
     public function edit($domain = '', $id)
     {
+        $langId = Session::has('adminLanguage') ? Session::get('adminLanguage') : 1;
         $banner = Banner::where('id', $id)->first();
-        $categories = Category::select('id', 'slug')
-                    ->where('status', $this->fstatus)->where('can_add_products', 1)->where('id', '>', 1)->get();
+        $categories = Category::with(['translation' => function($q) use($langId){
+            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+            ->where('category_translations.language_id', $langId);
+        }])
+        ->select('id', 'slug')->where('status', $this->fstatus)->where('can_add_products', 1)->where('id', '>', 1)->get();
+        foreach($categories as $key => $category){
+            $category->translation_name = ($category->translation->first()) ? $category->translation->first()->name : $category->slug;
+        }
         $vendors = Vendor::select('id', 'name')->where('status', $this->fstatus)->get();
         $returnHTML = view('backend.banner.form')->with(['banner' => $banner,  'vendors' => $vendors, 'categories' => $categories])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
@@ -74,10 +88,19 @@ class BannerController extends BaseController
         if ($request->hasFile('image')) {    /* upload logo file */
             $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
         }
+        
+        if ($request->hasFile('image_mobile')) {    /* upload logo file */
+            $rules['image'] =  'image|mimes:jpeg,png,jpg,gif';
+        }
 
+    
         $validation  = Validator::make($request->all(), $rules)->validate();
         $banner = new Banner();
+
+    
         $savebanner = $this->save($request, $banner, 'false');
+    
+
         if($savebanner > 0){
             return response()->json([
                 'status'=>'success',
@@ -126,6 +149,12 @@ class BannerController extends BaseController
      */
     public function save(Request $request, Banner $banner, $update = 'false')
     {
+
+       
+        
+
+
+
         $banner->validity_on = ($request->has('validity_on') && $request->validity_on == 'on') ? 1 : 0; 
         $banner->name = $request->name;
         $banner->start_date_time = $request->start_date_time;
@@ -149,7 +178,20 @@ class BannerController extends BaseController
             $file = $request->file('image');
             $banner->image = Storage::disk('s3')->put('/banner', $file,'public');
         }
-        $banner->save();
+
+
+        if ($request->hasFile('image_mobile')) {    /* upload logo file */
+            $file = $request->file('image_mobile');
+            $banner->image_mobile = Storage::disk('s3')->put('/banner', $file,'public');
+        }
+
+        
+        
+        $saveRes = $banner->save();
+        
+
+
+
         return $banner->id;
     }
 

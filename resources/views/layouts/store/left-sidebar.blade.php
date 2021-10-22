@@ -147,7 +147,16 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 @endif
                                 @if($client_preference_detail->takeaway_check == 1)
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{getNomenclatureName('Takeaway', true)}}</a>
+
+
+                                    @php
+                                    $Takeaway = getNomenclatureName('Takeaway', true);
+                                    $Takeaway = ($Takeaway === 'Takeaway') ? __('Takeaway') : $Takeaway;
+                                    @endphp
+
+
+
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ $T {{  akeaway <  }}}}/a>
                                 </li>
                                 @endif
                                 <div class="navigation-tab-overlay"></div>
@@ -181,7 +190,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             </div>
                         </div>
                         <script type="text/template" id="search_box_main_div_template">
-                            <a class="text-right d-block mr-2 mb-3" id="search_viewall" href="#">View All</a>
+                            <a class="text-right d-block mr-2 mb-3" id="search_viewall" href="#">{{ __("View All") }}</a>
                             <div class="row mx-0">
                                 <% _.each(results, function(result, k){ %>
                                     <a class="col-md-4 text-center list-items mb-2" href="<%= result.redirect_url %>">
@@ -206,7 +215,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <input type="hidden" id="cliLang" name="cliLang" value="{{session('customerLanguage')}}">
                                 <input type="hidden" id="cliCur" name="cliCur" value="{{session('customerCurrency')}}">
                             </form>
-                            <ul>
+                            <ul class="d-flex align-items-center">
                                 <li class="onhover-div pl-0 shake-effect">
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->cart_enable == 1)
@@ -245,7 +254,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     </script>
                                     <ul class="show-div shopping-cart " id="header_cart_main_ul"></ul>
                                 </li>
-                                <li class="d-inline-block d-lg-none"><div class="toggle-nav p-0 d-inline-block"><i class="fa fa-bars sidebar-bar"></i></div></li>
+                                <li class="d-sm-inline-block d-none"><div class="toggle-nav p-0 d-inline-block"><i class="fa fa-bars sidebar-bar"></i></div></li>
                             </ul>
                         </div>
                         
@@ -273,7 +282,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     </div>
                                 </li>
                                 <li class="onhover-div mobile-setting">
-                                    <div><i class="ti-settings"></i></div>
+                                    <div data-toggle="modal" data-target="#staticBackdrop"><i class="ti-settings"></i></div>
                                     <div class="show-div setting">
                                         <h6>{{ __('language') }}</h6>
                                         <ul>
@@ -359,7 +368,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
 
 </header>
-<div class="offset-top @if((\Request::route()->getName() != 'userHome')) inner-pages-offset @endif"></div>
+<div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div>
 <script type="text/template" id="nav_categories_template">
     <li>
         <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>

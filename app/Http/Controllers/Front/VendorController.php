@@ -41,7 +41,7 @@ class VendorController extends FrontController
             $categoriesList = '';
             foreach($vendorCategories as $key => $category){
                 if($category->category){
-                    $categoriesList = $categoriesList . $category->category->translation_one->name;
+                    $categoriesList = $categoriesList . $category->category->translation_one->name??'';
                     if( $key !=  $vendorCategories->count()-1 ){
                         $categoriesList = $categoriesList . ', ';
                     }
@@ -94,16 +94,7 @@ class VendorController extends FrontController
                 }
             }
         }
-        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
-            if(Session::has('vendors')){
-                $vendors = Session::get('vendors');
-                if(!in_array($vendor->id, $vendors)){
-                    abort(404);
-                }
-            }else{
-                // abort(404);
-            }
-        }
+       
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
@@ -159,13 +150,26 @@ class VendorController extends FrontController
         }else{
             $page = 'products';
         }
+
+        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+            if(Session::has('vendors')){
+                $vendors = Session::get('vendors');
+                if(!in_array($vendor->id, $vendors)){
+                    return view('frontend/vendor-'.$page)->with(['show_range' => $show_range, 'range_products' => $range_products, 'vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
+                //  return view('frontend.vendor-not-in-location')->with(['show_range' => $show_range, 'range_products' => $range_products, 'vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
+                    abort(404);
+                }
+            }else{
+                // abort(404);
+            }
+        }
         // $page = ($vendor->vendor_templete_id == 2) ? 'categories' : 'products';
         return view('frontend/vendor-'.$page)->with(['show_range' => $show_range, 'range_products' => $range_products, 'vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
     }
 
     /**
      * Display product By Vendor Category
-     *
+     * vendor -> category -> product
      * @return \Illuminate\Http\Response
      */
     public function vendorCategoryProducts(Request $request, $domain = '', $slug1 = 0, $slug2 = 0){
@@ -190,16 +194,7 @@ class VendorController extends FrontController
                 }
             }
         }
-        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
-            if(Session::has('vendors')){
-                $vendors = Session::get('vendors');
-                if(!in_array($vendor->id, $vendors)){
-                    abort(404);
-                }
-            }else{
-                // abort(404);
-            }
-        }
+       
         $langId = Session::get('customerLanguage');
         $curId = Session::get('customerCurrency');
         $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
@@ -257,6 +252,22 @@ class VendorController extends FrontController
         }
         // $page = ($vendor->vendor_templete_id == 2) ? 'categories' : 'products';
         $range_products = Product::join('product_variants', 'product_variants.product_id', '=', 'products.id')->orderBy('product_variants.price', 'desc')->select('*')->where('is_live', 1)->where('vendor_id', $vendor->id)->get();
+        
+        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+            if(Session::has('vendors')){
+                $vendors = Session::get('vendors');
+                if(!in_array($vendor->id, $vendors)){
+                    return view('frontend/vendor-'.$page)->with(['vendor' => $vendor, 'show_range' => $show_range, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands, 'range_products' => $range_products, 'vendor_category' => $slug2]);
+ 
+                //    return view('frontend.vendor-not-in-location')->with(['vendor' => $vendor, 'show_range' => $show_range, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands, 'range_products' => $range_products, 'vendor_category' => $slug2]);
+                    abort(404);
+                }
+            }else{
+                // abort(404);
+            }
+        }
+        
+        
         return view('frontend/vendor-'.$page)->with(['vendor' => $vendor, 'show_range' => $show_range, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands, 'range_products' => $range_products, 'vendor_category' => $slug2]);
     }
 
@@ -289,7 +300,9 @@ class VendorController extends FrontController
             }
 
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
-            $vendor_categories = VendorCategory::with('category.translation_one')->where('vendor_id', $vid);
+            $vendor_categories = VendorCategory::with(['category.translation' => function($q) use($langId){
+                $q->where('category_translations.language_id', $langId);
+            }])->where('vendor_id', $vid);
             if($categorySlug != ''){
                 $vendor_categories = $vendor_categories->whereHas('category', function($query) use($categorySlug) {
                     $query->where('slug', $categorySlug);
@@ -375,7 +388,10 @@ class VendorController extends FrontController
         }
         else{
             $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
-            $products = Product::with(['media.image',
+            $products = Product::with(['category.categoryDetail.translation' => function($q) use($langId){
+                            $q->where('category_translations.language_id', $langId);
+                        },
+                        'media.image',
                         'translation' => function($q) use($langId){
                         $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
                         },
@@ -395,6 +411,7 @@ class VendorController extends FrontController
                     $value->translation_description = ($value->translation->isNotEmpty()) ? html_entity_decode(strip_tags($value->translation->first()->body_html)) : '';
                     $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
+                    $value->category_name = ($value->category->categoryDetail->translation->first()) ? $value->category->categoryDetail->translation->first()->name : $value->category->categoryDetail->slug;
                     // foreach ($value->variant as $k => $v) {
                     //     $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     // }

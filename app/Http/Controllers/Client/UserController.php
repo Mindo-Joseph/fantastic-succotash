@@ -142,6 +142,7 @@ class UserController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+      
         $customer = new User();
         $validation  = Validator::make($request->all(), $customer->rules())->validate();
         $saveId = $this->save($request, $customer, 'false');
@@ -164,8 +165,9 @@ class UserController extends BaseController{
     public function save(Request $request, User $user, $update = 'false'){
         $request->contact;
         $request->phone_number;
-        $phone = ($request->has('contact') && !empty($request->contact)) ? $request->contact : '+1'.$request->phone_number;
+        $phone = ($request->has('contact') && !empty($request->contact)) ? $request->contact : $request->phone_number;
         $user->name = $request->name; 
+        $user->dial_code=$request->country_code;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->phone_number = $phone;
@@ -195,7 +197,7 @@ class UserController extends BaseController{
      */
     public function newEdit($domain = '', $id){
         $subadmin = User::find($id);
-        $permissions = Permissions::all();
+        $permissions = Permissions::where('status',1)->whereNotin('id',[4,5,6,7,8,9,10,11,14,15,16,22,23,24,25])->get();
         $user_permissions = UserPermissions::where('user_id', $id)->get();
         $vendor_permissions = UserVendor::where('user_id', $id)->pluck('vendor_id')->toArray();
         $vendors = Vendor::where('status',1)->get();

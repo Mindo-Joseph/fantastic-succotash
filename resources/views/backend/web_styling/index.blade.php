@@ -111,17 +111,13 @@
                                 <input type="checkbox" id="show_wishlist" data-plugin="switchery" name="show_wishlist" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_wishlist == 1 ? 'checked' : ''}}>
                             </div>
                         </li>
-                    @endif
-
-                    <li class="d-flex align-items-center justify-content-between mt-2">
+                   <li class="d-flex align-items-center justify-content-between mt-2">
                         <h4 class="header-title mb-2">{{ __("Show Ratings") }}</h4>
                         <div class="mb-0">
                             <input type="checkbox" id="rating_enable" data-plugin="switchery" name="rating_enable" class="chk_box2" data-color="#43bee1" {{$client_preferences->rating_check == 1 ? 'checked' : ''}}>
                         </div>
                     </li>
-                    
-                    @if($client_preference_detail->business_type != 'taxi')
-                    <li class="d-flex align-items-center justify-content-between mt-2">
+                     <li class="d-flex align-items-center justify-content-between mt-2">
                         <h4 class="header-title mb-2">{{ __("Show Cart Icon") }}</h4>
                         <div class="mb-0">
                             <input type="checkbox" id="cart_enable" data-plugin="switchery" name="cart_enable" class="chk_box1" data-color="#43bee1" {{$client_preferences->cart_enable == 1 ? 'checked' : ''}}>
@@ -135,24 +131,28 @@
                             <input type="checkbox" id="show_contact_us" data-plugin="switchery" name="show_contact_us" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_contact_us == 1 ? 'checked' : ''}}>
                         </div>
                     </li>
+                    @if($client_preference_detail->business_type != 'taxi')
                     <li class="d-flex align-items-center justify-content-between mt-2">
                         <h4 class="header-title mb-2">{{ __("Show Icons in navigation") }}</h4>
                         <div class="mb-0">
                             <input type="checkbox" id="show_icons" data-plugin="switchery" name="show_icons" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_icons == 1 ? 'checked' : ''}}>
                         </div>
                     </li>
+                    @endif
                     <li class="d-flex align-items-center justify-content-between mt-2">
                         <h4 class="header-title mb-2">{{ __("Show Payment Icons") }}</h4>
                         <div class="mb-0">
                             <input type="checkbox" id="show_payment_icons" data-plugin="switchery" name="show_payment_icons" class="chk_box2" data-color="#43bee1" {{$client_preferences->show_payment_icons == 1 ? 'checked' : ''}}>
                         </div>
                     </li>
+                    @if($client_preference_detail->business_type != 'taxi')
                     <li class="d-flex align-items-center justify-content-between mt-2">
                         <h4 class="header-title mb-2">{{ __('Hide Nav Bar') }}</h4>
                         <div class="mb-0">
                             <input type="checkbox" id="hide_nav_bar" data-plugin="switchery" name="hide_nav_bar" class="chk_box2" data-color="#43bee1" {{$client_preferences->hide_nav_bar == 1 ? 'checked' : ''}}>
                         </div>
                     </li>
+                    @endif
                 </ul>
             </div>
         </div>
@@ -264,6 +264,11 @@
                                  
                             <input type="checkbox" {{$home_page_label->is_active == 1 ? 'checked' : ''}} id="{{$home_page_label->slug}}" data-plugin="switchery" name="is_active[{{$key}}][check]" class="chk_box2" data-color="#43bee1">
                         </div>
+                        @if($home_page_label->slug == 'pickup_delivery')
+                        <a class="action-icon openBannerModal" userId="{{$home_page_label->id}}" data-row-id="{{$home_page_label->id}}" href="javascript:void(0);">
+                            <i class="mdi mdi-pencil"></i>
+                        </a>
+                        @endif
                         @if($home_page_label->slug == 'dynamic_page')
                         <a class="action-icon edit_dynamic_page" data-row-id="{{$home_page_label->id}}" href="javascript:void(0);">
                             <i class="mdi mdi-pencil"></i>
@@ -339,6 +344,29 @@
               
             
             </div>        
+        </div>
+    </div>
+</div>
+<!-- end modal for add section -->
+
+<!-- cab banner Modal -->
+<div id="edit-form" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h4 class="modal-title">{{ __("Edit Background Image") }}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form id="save_edit_banner_form" method="post" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="modal-body" id="editCardBox">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info waves-effect waves-light submitEditForm">{{ __("Submit") }}</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -420,7 +448,6 @@ $(document).on('click','.edit_dynamic_page',function(){
         });
 
 }); 
-
 
 
 $(document).on('click', '.deletePickupSection', function() {
@@ -674,6 +701,116 @@ $(document).on('click', '.deletePickupSection', function() {
                     console.log(response.message);
                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
                 }
+            }
+        });
+    }
+
+
+
+
+    /////////// ************* edit banner image ***************************
+    $(".openBannerModal").click(function (e) {
+        
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        e.preventDefault();
+
+        var uri = "{{route('get-image-data-in-modal')}}";
+       
+        var uid = $(this).attr('userId');
+       
+
+        $.ajax({
+            type: "get",
+            url: uri,
+            data: {id:uid},
+            dataType: 'json',
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            success: function (data) {
+                if(uid > 0){
+                    $('#edit-form #editCardBox').html(data.html);
+                    $('#edit-form').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    
+                }
+                // var now = new Date();
+                // runPicker();
+                $('.dropify').dropify();
+            },
+            error: function (data) {
+                console.log('data2');
+            },
+            complete: function(){
+                $('.loader_box').hide();
+            }
+        });
+    });
+
+
+
+    $(document).on('click', '.submitEditForm', function(e) { 
+        e.preventDefault();
+        var form =  document.getElementById('save_edit_banner_form');
+        var formData = new FormData(form);
+        var url =  "{{route('update-image-data-in-modal')}}";
+        saveData(formData, 'edit', url);
+
+    });
+
+    function saveData(formData, type, banner_uri){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+     
+        $.ajax({
+            type: "post",
+            headers: {
+                Accept: "application/json"
+            },
+            url: banner_uri,
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function(){
+                $(".loader_box").show();
+            },
+            success: function(response) {
+                console.log("----",response);
+                if (response.status == 'success') {
+                    $(".modal .close").click();
+                    location.reload(); 
+                } else {
+                    $(".show_all_error.invalid-feedback").show();
+                    $(".show_all_error.invalid-feedback").text(response.message);
+                }
+                return response;
+            },
+            error: function(response) {
+                console.log("====",response)
+                if (response.status === 422) {
+                    let errors = response.responseJSON.errors;
+                    Object.keys(errors).forEach(function(key) {
+                        $("#" + key + "Input input").addClass("is-invalid");
+                        $("#" + key + "Input span.invalid-feedback").children("strong").text(errors[key][0]);
+                        $("#" + key + "Input span.invalid-feedback").show();
+                    });
+                } else {
+                    $(".show_all_error.invalid-feedback").show();
+                    $(".show_all_error.invalid-feedback").text('Something went wrong, Please try Again.');
+                }
+                return response;
+            },
+            complete: function(){
+                $('.loader_box').hide();
             }
         });
     }

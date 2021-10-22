@@ -218,6 +218,7 @@ class ProductController extends BaseController
     {
         $product = Product::where('id', $id)->firstOrFail();
         $rule = array(
+            'product_name' => 'required|string',
             'sku' => 'required|unique:products,sku,'.$product->id,
             'url_slug' => 'required|unique:products,url_slug,'.$product->id,
         );
@@ -378,7 +379,8 @@ class ProductController extends BaseController
             }
         }
         $toaster = $this->successToaster('Success', 'Product  updated successfully.');
-        return redirect('client/vendor/catalogs/' . $product->vendor_id)->with('toaster', $toaster);
+        // return redirect('client/vendor/catalogs/' . $product->vendor_id)->with('toaster', $toaster);
+        return redirect()->back()->with('toaster', $toaster);
     }
 
     /**

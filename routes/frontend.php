@@ -22,24 +22,32 @@ Route::group(['middleware' => ['domain']], function () {
 
 		dd('send mail successfully !!');
 	});
+	Route::get('payment/gateway/returnResponse', 'Front\PaymentController@getGatewayReturnResponse')->name('payment.gateway.return.response');
+
+	// Stripe
 	Route::post('payment/stripe', 'Front\StripeGatewayController@postPaymentViaStripe')->name('payment.stripe');
 	Route::post('user/subscription/payment/stripe', 'Front\StripeGatewayController@subscriptionPaymentViaStripe')->name('user.subscription.payment.stripe');
+	
+	// Paypal
 	Route::post('payment/paypal', 'Front\PaypalGatewayController@paypalPurchase')->name('payment.paypalPurchase');
 	Route::get('payment/paypal/CompletePurchase', 'Front\PaypalGatewayController@paypalCompletePurchase')->name('payment.paypalCompletePurchase');
-
+	# for App side paypal payment
 	Route::get('payment/paypal/completeCheckout/{token?}/{action?}/{address?}', 'Front\PaymentController@paypalCompleteCheckout')->name('payment.paypalCompleteCheckout');
 	Route::get('payment/checkoutSuccess/{id}', 'Front\PaymentController@getCheckoutSuccess')->name('payment.getCheckoutSuccess');
-	Route::get('payment/paypal/notify', 'Front\PaypalGatewayController@paypalNotify')->name('payment.paypalNotify');
 
+	// Paystack
 	Route::post('payment/paystack', 'Front\PaystackGatewayController@paystackPurchase')->name('payment.paystackPurchase');
 	Route::post('payment/paystack/completePurchase', 'Front\PaystackGatewayController@paystackCompletePurchase')->name('payment.paystackCompletePurchase');
 
+	// Payfast
 	Route::post('payment/payfast', 'Front\PayfastGatewayController@payfastPurchase')->name('payment.payfastPurchase');
 	Route::post('payment/payfast/notify', 'Front\PayfastGatewayController@payfastNotify')->name('payment.payfastNotify');
-	// Route::get('payment/payfast/notify', function (Request $request) {
-	// 	return view('frontend.payfastNotify', ['name' => 'payment.payfastNotify']);
-	// });
+	Route::post('payment/payfast/notify/app', 'Front\PayfastGatewayController@payfastNotifyApp')->name('payment.payfastNotifyApp');
 	Route::post('payment/payfast/completePurchase', 'Front\PayfastGatewayController@payfastCompletePurchase')->name('payment.payfastCompletePurchase');
+
+	// Mobbex
+	Route::post('payment/mobbex', 'Front\MobbexGatewayController@mobbexPurchase')->name('payment.mobbexPurchase');
+	Route::post('payment/mobbex/notify', 'Front\MobbexGatewayController@mobbexNotify')->name('payment.mobbexNotify');
 
 	Route::post('payment/user/placeorder', 'Front\OrderController@postPaymentPlaceOrder')->name('user.postPaymentPlaceOrder');
 	Route::post('payment/user/wallet/credit', 'Front\WalletController@postPaymentCreditWallet')->name('user.postPaymentCreditWallet');
@@ -64,7 +72,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('/search-all/{keyword}', 'Front\SearchController@showSearchResults')->name('showSearchResults');
 	Route::get('/', 'Front\UserhomeController@index')->name('userHome');
 	Route::get('/homeTemplateOne', 'Front\UserhomeController@indexTemplateOne')->name('indexTemplateOne');
-	Route::get('page/driver-registration', 'Front\UserhomeController@driverSignup')->name('page/driver-registration');
+	//Route::get('page/driver-registration', 'Front\UserhomeController@driverSignup')->name('page/driver-registration');
 	Route::post('page/driverSignup', 'Front\OrderController@driverSignup')->name('page.driverSignup');
 	Route::get('driver-documents', 'Front\UserhomeController@driverDocuments')->name('driver-documents');
 	Route::get('page/{slug}', 'Front\UserhomeController@getExtraPage')->name('extrapage');
@@ -129,6 +137,7 @@ Route::group(['middleware' => ['domain']], function () {
 });
 Route::group(['middleware' => ['domain', 'webAuth']], function () {
 	Route::get('user/orders', 'Front\OrderController@orders')->name('user.orders');
+	Route::post('user/orders/tip-after-order', 'Front\OrderController@tipAfterOrder')->name('user.tip_after_order'); 
 	Route::post('user/store', 'Front\AddressController@store')->name('address.store');
 	Route::get('user/addAddress', 'Front\AddressController@add')->name('addNewAddress');
 	Route::get('user/address/{id}', 'Front\AddressController@address')->name('user.address');
@@ -190,7 +199,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function () {
 	// Return product 
 	Route::group(['prefix' => 'looking'], function () {
 		Route::get('/', 'Front\BookingController@index')->name('bookingIndex');
-		Route::get('details/{id}', 'Front\BookingController@bookingDetails')->name('front.booking.details');
+		Route::get('details/{id?}', 'Front\BookingController@bookingDetails')->name('front.booking.details');
 		Route::post('orderPlaceDetails/{id}', 'Front\BookingController@orderPlaceDetails')->name('front.booking.orderplacedetails');
 
 

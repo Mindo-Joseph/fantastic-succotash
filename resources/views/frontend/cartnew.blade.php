@@ -51,16 +51,18 @@
     </div>
 </script>
 <script type="text/template" id="empty_cart_template">
+<div class="container">
     <div class="row mt-2 mb-4 mb-lg-5">
         <div class="col-12 text-center">
             <div class="cart_img_outer">
                 <img src="{{asset('front-assets/images/empty_cart.png')}}">
             </div>
             <h3>{{__('Your Cart Is Empty!')}}</h3>
-            <p>Add items to it now.</p>
+            <p>{{__('Add items to it now.')}}</p>
             <a class="btn btn-solid" href="{{url('/')}}">{{__('Continue Shopping')}}</a>
         </div>
     </div>
+</div>
 </script>
 <div class="container">
     <div class="row">
@@ -307,11 +309,11 @@
                         <ul class="list-inline">
                             <li class="d-inline-block mr-1">
                                 <input type="radio" class="custom-control-input check" id="tasknow" name="task_type" value="now" <%= ((cart_details.schedule_type == 'now' || cart_details.schedule_type == '' || cart_details.schedule_type == null) ? 'checked' : '') %> >
-                                <label class="custom-control-label" for="tasknow">Now</label>
+                                <label class="btn btn-solid" for="tasknow">Now</label>
                             </li>
                             <li class="d-inline-block">
                                 <input type="radio" class="custom-control-input check" id="taskschedule" name="task_type" value="schedule" <%= ((cart_details.schedule_type == 'schedule') ? 'checked' : '') %> >
-                                <label class="custom-control-label" for="taskschedule">Schedule</label>
+                                <label class="btn btn-solid" for="taskschedule">Schedule</label>
                             </li>
                         </ul>
                     </div>
@@ -378,7 +380,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-4">
+                <div class="row mb-md-3">
                     <div class="col-6 mb-2 mb-sm-0">
                         <a class="btn btn-solid" href="{{ url('/') }}">{{__('Continue Shopping')}}</a>
                     </div>
@@ -409,39 +411,43 @@
 <script type="text/template" id="other_cart_products_template">
     <div class="container mt-3 mb-5">
         <% if(cart_details.upSell_products != ''){ %>
-            <h3 class="mb-4 mt-4">{{__('Frequently bought together')}}</h3>
+            <h3 class="mb-2 mt-4">{{__('Frequently bought together')}}</h3>
             <div class="row">
                 <div class="col-12 p-0">
                     <div class="product-4 product-m no-arrow">
-                        <% _.each(cart_details.upSell_products, function(prod, key){%>
-                            <div>
-                                <a class="card scale-effect text-center" href="{{route('productDetail')}}/<%= prod.url_slug %>">
-                                    <label class="product-tag"><%= prod.product_type %></label>
-                                    <div class="product-image">
-                                        <img src="<%= prod.product_media.image.path.proxy_url %>600/800<%= prod.product_media.image.path.image_path %>" alt="">
-                                    </div>
-                                    <div class="media-body align-self-center">
-                                        <div class="inner_spacing">
+                        <% _.each(cart_details.upSell_products, function(product, key){%>
+                            
+                            <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
+                                <div class="img-outer-box position-relative">
+                                    <img src="<%= product.product_media.image.path.proxy_url %>600/800<%= product.product_media.image.path.image_path %>" alt="">
+                                </div>    
+                                <div class="media-body align-self-center">
+                                    <div class="inner_spacing px-0">
+                                        <div class="product-description">
+                                            <h3 class="m-0"><%= product.translation_title %></h3>
+                                            <p><%= product.vendor_name %></p>
+                                            <p class="border-bottom pb-1">In <%= product.category_name %></p>
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <h3 class="m-0"><%= prod.translation_title %></h3>
+                                                <b><% if(product.inquiry_only == 0) { %>
+                                                    {{ Session::get('currencySymbol') }}<%= product.variant_price %>
+                                                <% } %></b>
+
                                                 @if($client_preference_detail)
                                                     @if($client_preference_detail->rating_check == 1)
-                                                        <% if(prod.averageRating > 0){ %>
-                                                            <span class="rating"><%= prod.averageRating %> <i class="fa fa-star text-white p-0"></i></span>
+                                                        <% if(product.averageRating > 0){%>
+                                                            <div class="rating-box">
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <span><%= product.averageRating %></span>
+                                                            </div>
                                                         <% } %>
                                                     @endif
-                                                @endif
-                                            </div>
-                                            <p><%= prod.vendor_name %></p>
-                                            <h4>
-                                                <% if(prod.inquiry_only == 0){ %>
-                                                    {{ Session::get('currencySymbol') }}<%= prod.variant_price %>
-                                                <% } %>
-                                            </h4>
+                                                @endif  
+                                            </div>                       
                                         </div>
                                     </div>
-                                </a>
-                            </div>
+                                </div>
+                            </a>
+
                         <% }); %>
                     </div>
                 </div>
@@ -449,39 +455,43 @@
         <% } %>
 
         <% if(cart_details.crossSell_products != ''){ %>
-            <h3 class="mb-4 mt-4">{{__('You might be interested in')}}</h3>
+            <h3 class="mb-2 mt-3">{{__('You might be interested in')}}</h3>
             <div class="row">
                 <div class="col-12 p-0">
                     <div class="product-4 product-m no-arrow">
-                        <% _.each(cart_details.crossSell_products, function(prod, key){%>
-                            <div>
-                                <a class="card scale-effect text-center" href="{{route('productDetail')}}/<%= prod.url_slug %>">
-                                    <label class="product-tag"><%= prod.product_type %></label>
-                                    <div class="product-image">
-                                        <img src="<%= prod.product_media.image.path.proxy_url %>600/800<%= prod.product_media.image.path.image_path %>" alt="">
-                                    </div>
-                                    <div class="media-body align-self-center">
-                                        <div class="inner_spacing">
+                        <% _.each(cart_details.crossSell_products, function(product, key){%>
+
+                            <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
+                                <div class="img-outer-box position-relative">
+                                    <img src="<%= product.product_media.image.path.proxy_url %>600/800<%= product.product_media.image.path.image_path %>" alt="">
+                                </div>    
+                                <div class="media-body align-self-center">
+                                    <div class="inner_spacing px-0">
+                                        <div class="product-description">
+                                            <h3 class="m-0"><%= product.translation_title %></h3>
+                                            <p><%= product.vendor_name %></p>
+                                            <p class="border-bottom pb-1">In <%= product.category_name %></p>
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <h3 class="m-0"><%= prod.translation_title %></h3>
+                                                <b><% if(product.inquiry_only == 0) { %>
+                                                    {{ Session::get('currencySymbol') }}<%= product.variant_price %>
+                                                <% } %></b>
+
                                                 @if($client_preference_detail)
                                                     @if($client_preference_detail->rating_check == 1)
-                                                        <% if(prod.averageRating > 0){ %>
-                                                            <span class="rating"><%= prod.averageRating %> <i class="fa fa-star text-white p-0"></i></span>
+                                                        <% if(product.averageRating > 0){%>
+                                                            <div class="rating-box">
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                                <span><%= product.averageRating %></span>
+                                                            </div>
                                                         <% } %>
                                                     @endif
-                                                @endif
-                                            </div>
-                                            <p><%= prod.vendor_name %></p>
-                                            <h4>
-                                                <% if(prod.inquiry_only == 0){ %>
-                                                    {{ Session::get('currencySymbol') }}<%= prod.variant_price %>
-                                                <% } %>
-                                            </h4>
+                                                @endif  
+                                            </div>                       
                                         </div>
                                     </div>
-                                </a>
-                            </div>
+                                </div>
+                            </a>
+
                         <% }); %>
                     </div>
                 </div>
@@ -543,7 +553,7 @@
                 <div class="alert p-0 m-0" role="alert"></div>
             </div>
             <h5 class="text-17 mb-2">{{__('Debit From')}}</h5>
-            <form method="POST" id="cart-payment-form">
+            <form method="POST" id="cart_payment_form">
                 @csrf
                 @method('POST')
                 <% _.each(payment_options, function(payment_option, k){%>
@@ -650,10 +660,17 @@
 </div> -->
 
 <!-- Modal -->
-<div class="modal fade login-modal" id="login_modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade login-modal" id="login_modal" tabindex="-1" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
           <div class="modal-body">
+            <form id="login-form-new" action="">
+              @csrf
+              <input type="hidden" name="device_type" value="web">
+              <input type="hidden" name="device_token" value="web">
+              <input type="hidden" id="dialCode" name="dialCode" value="{{ old('dialCode') ? old('dialCode') : Session::get('default_country_phonecode','1') }}">
+              <input type="hidden" id="countryData" name="countryData" value="{{ strtolower(Session::get('default_country_code','US')) }}">
+              
               <div class="login-with-username">
                 <div class="modal-header px-0 pt-0">
                     <h5 class="modal-title">{{ __('Log in') }}</h5>
@@ -661,23 +678,21 @@
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="login-form-new" action="">
-                    @csrf
-                    <input type="hidden" name="device_type" value="web">
-                    <input type="hidden" name="device_token" value="web">
-                    <div class="form-group">
-                        <input type="hidden" id="dialCode" name="dialCode" value="{{ old('dialCode') ? old('dialCode') : Session::get('default_country_phonecode','1') }}">
-                        <input type="hidden" id="countryData" name="countryData" value="{{ strtolower(Session::get('default_country_code','US')) }}">
-                        <input type="text" class="form-control" id="username" placeholder="{{ __('Email or Phone Number') }}" required="" name="username" value="{{ old('username')}}">
-                        <span id="error-msg" class="font-14 text-danger" style="display:none"></span>
-                    </div>
-                    <div class="form-group" id="password-wrapper" style="display:none">
-                        <input type="password" class="form-control" name="password" placeholder="{{ __('Password') }}">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-solid w-100 login_continue_btn" type="button">Continue</button>
-                    </div>
-                </form>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="username" placeholder="{{ __('Email or Phone Number') }}" required="" name="username" value="{{ old('username')}}">
+                </div>
+                <div class="form-group" id="password-wrapper" style="display:none; position:relative">
+                    <input type="password" class="form-control pr-3" name="password" placeholder="{{ __('Password') }}">
+                    <a class="font-14" href="javascript:void(0)" id="send_password_reset_link" style="position:absolute; right:10px; top:7px;">Forgot?</a>
+                </div>
+                <div class="form-group">
+                    <span id="error-msg" class="font-14 text-danger" style="display:none"></span>
+                    <span id="success-msg" class="font-14 text-success" style="display:none"></span>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-solid w-100 login_continue_btn" type="button">Continue</button>
+                </div>
+                
                 <div class="divider-line"><span>or</span></div>
                     {{-- <button class="login-button email-btn">
                         <i class="fa fa-envelope" aria-hidden="true"></i>
@@ -714,9 +729,9 @@
                     @endif
 
                 <div class="divider-line mb-2"></div>
-                <p class="new-user mb-0">New to Royo? <a href="{{route('customer.register')}}">Create account</a></p>
+                <p class="new-user mb-0">New to Royo? <a href="{{route('customer.register')}}">Create an account</a></p>
               </div>
-              <div class="login-with-mail">
+              {{-- <div class="login-with-mail">
                   <div class="modal-header px-0 pt-0">
                       <button type="button" class="close m-0 p-0 back-login">
                           <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -738,7 +753,38 @@
                           <button class="btn btn-solid w-100" type="submit">Login</button>
                       </div>
                   </form>
-              </div>                                 
+              </div> --}}
+              <div class="verify-login-code" style="display:none">
+                <div class="modal-header px-0 pt-0">
+                    <button type="button" class="close m-0 p-0 back-login">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                    </button>
+                    <h5 class="modal-title">Verify OTP</h5>
+                    <button type="button" class="close m-0 p-0" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div method="get" class="digit-group otp_inputs d-flex justify-content-between" data-group-name="digits" data-autosubmit="false" autocomplete="off">
+                    <input class="form-control" type="text" id="digit-1" name="digit-1" data-next="digit-2" onkeypress="return isNumberKey(event)"/>
+                    <input class="form-control" type="text" id="digit-2" name="digit-2" data-next="digit-3" data-previous="digit-1" onkeypress="return isNumberKey(event)"/>
+                    <input class="form-control" type="text" id="digit-3" name="digit-3" data-next="digit-4" data-previous="digit-2" onkeypress="return isNumberKey(event)"/>
+                    <input class="form-control" type="text" id="digit-4" name="digit-4" data-next="digit-5" data-previous="digit-3" onkeypress="return isNumberKey(event)"/>
+                    <input class="form-control" type="text" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4" onkeypress="return isNumberKey(event)"/>
+                    <input class="form-control" type="text" id="digit-6" name="digit-6" data-next="digit-7" data-previous="digit-5" onkeypress="return isNumberKey(event)"/>
+                </div>
+                <span class="invalid_phone_otp_error invalid-feedback2 w-100 d-block text-center text-danger"></span>
+                <span id="phone_otp_success_msg" class="font-14 text-success text-center w-100 d-block" style="display:none"></span>
+                <div class="row text-center mt-2">
+                    <div class="col-12 resend_txt">
+                        <p class="mb-1">{{__('If you didn’t receive a code?')}}</p>
+                        <a class="verifyPhone" href="javascript:void(0)"><u>{{__('RESEND')}}</u></a>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <button type="button" class="btn btn-solid" id="verify_phone_token">{{__('VERIFY')}}</button>
+                    </div>
+                </div>
+              </div>
+            </form>
           </div>
       </div>
     </div>
@@ -817,13 +863,17 @@
     var payment_paystack_url = "{{route('payment.paystackPurchase')}}";
     var payment_success_paystack_url = "{{route('payment.paystackCompletePurchase')}}";
     var payment_payfast_url = "{{route('payment.payfastPurchase')}}";
+    var payment_mobbex_url = "{{route('payment.mobbexPurchase')}}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
     var payment_option_list_url = "{{route('payment.option.list')}}";
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
     var update_cart_schedule = "{{route('cart.updateSchedule')}}";
-    var login_via_username_url = "{{route('customer.loginViaUsername')}}"
+    var login_via_username_url = "{{route('customer.loginViaUsername')}}";
+    var forgot_password_url = "{{route('customer.forgotPass')}}";
+    var order_success_return_url = "{{route('order.return.success')}}";
+    var my_orders_url = "{{route('user.orders')}}";
 
     $(document).on('click', '.showMapHeader', function(){
         var lats = document.getElementById('latitude').value;
@@ -876,21 +926,27 @@
         });
     });
 
-    $(document).delegate('#cart-payment-form input[name="cart_payment_method"]', 'change', function() {
+    $(document).delegate('#cart_payment_form input[name="cart_payment_method"]', 'change', function() {
         var method = $(this).attr('id');
         if(method.replace('radio-', '') == 'stripe'){
-            $("#cart-payment-form .stripe_element_wrapper").removeClass('d-none');
+            $("#cart_payment_form .stripe_element_wrapper").removeClass('d-none');
         }else{
-            $("#cart-payment-form .stripe_element_wrapper").addClass('d-none');
+            $("#cart_payment_form .stripe_element_wrapper").addClass('d-none');
         }
     });
-    $('.login-with-mail').hide();
+
+    $(document).delegate('#login_modal', 'shown.bs.modal', function() {
+        $('.login-with-mail').hide();
+        $('.verify-login-code').hide();
+    });
+
     $('.email-btn').click(function(){
         $('.login-with-mail').show();
         $('.login-with-username').hide();
     });
     $('.back-login').click(function(){
         $('.login-with-mail').hide();
+        $('.verify-login-code').hide();
         $('.login-with-username').show();
     });
 
@@ -900,20 +956,31 @@
         input.classList.remove("is-invalid");
         errorMsg.innerHTML = "";
         errorMsg.style.display = 'none';
+        $("#password-wrapper").hide();
+        $("#password-wrapper input").removeAttr("required");
+        $("#password-wrapper input").val('');
     };
 
     // here, the index maps to the error code returned from getValidationError - see readme
     var errorMap = ["Invalid phone number", "Invalid country code", "Phone number too short", "Phone number too long", "Invalid phone number"];
 
     var iti = '';
-    var phn_filter = /[0-9 -()+]+$/;
+    var phn_filter = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
     var email_filter = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+    $(document).delegate('input[name="password"]', 'input', function() {
+        $(this).parent('#password-wrapper').show();
+        $("#error-msg").hide();
+    });
+
     $(document).delegate("#username", "input", function(e){
-        $uname = $.trim($(this).val());
-        if(phn_filter.test($uname)){
+        var uname = $.trim($(this).val());
+        if(phn_filter.test(uname)){
             // get country flags when input is a number
             assignPhoneInput();
+            $("#password-wrapper").hide();
+            $("#password-wrapper input").removeAttr("required");
+            $("#password-wrapper input").val('');
         }else{
             // destroy country flags when input is a string
             if(iti != ''){
@@ -935,19 +1002,20 @@
             iti = '';
         }
         iti = intlTelInput(input, {
-            initialCountry: "{{ strtolower(Session::get('default_country_code','US')) }}",
+            initialCountry: country,
             separateDialCode: true,
             hiddenInput: "full_number",
             utilsScript: "{{asset('assets/js/utils.js')}}",
         });
+        $("input[name='full_number']").val(iti.getNumber());
     }
 
-    $(document).delegate(".login_continue_btn", "click", function(e){
+    $(document).delegate(".login_continue_btn, .verifyPhone", "click", function(e){
         var uname = $.trim($("#username").val());
         var error = 0;
-        var phone = '';
-        if($uname != ''){
-            if(phn_filter.test($uname)){
+        var phone = $("input[name='full_number']").val();
+        if(uname != ''){
+            if(phn_filter.test(uname)){
                 reset();
                 if (!iti.isValidNumber()) {
                     $("#username").addClass("is-invalid");
@@ -958,7 +1026,6 @@
                 }else{
                     $("#username").removeClass("is-invalid");
                     $("#error-msg").hide();
-                    phone = iti.getNumber();
                 }
             }
             else{
@@ -967,6 +1034,11 @@
                     $("#error-msg").hide();
                     $("#password-wrapper").show();
                     $("#password-wrapper input").attr("required", true);
+                    if($("#password-wrapper input").val() == ''){
+                        error = 1;
+                        $("#error-msg").show();
+                        $("#error-msg").html('Password field is required');
+                    }
                 }else{
                     error = 1;
                     $("#username").addClass("is-invalid");
@@ -982,7 +1054,6 @@
             $("#error-msg").html('Email or Phone Number Required');
         }
         if(!error){
-            // console.log('valid');
             var form_inputs = $("#login-form-new").serializeArray();
             $.each(form_inputs, function(i, input) {
                 if(input.name == 'full_number'){
@@ -996,14 +1067,29 @@
                 url: login_via_username_url,
                 success: function (response) {
                     if (response.status == "Success") {
-                        console.log(response);
+                        var data = response.data;
+                        if(data.is_phone != undefined && data.is_phone == 1){
+                            $('.login-with-username').hide();
+                            $('.login-with-mail').hide();
+                            $('.verify-login-code').show();
+                            $('.otp_inputs input').val('');
+                            $('#phone_otp_success_msg').html(response.message).show();
+                            setTimeout(function(){ 
+                                $('#phone_otp_success_msg').html('').hide();
+                            }, 5000);
+                        }
+                        else if(data.is_email != undefined && data.is_email == 1){
+                            window.location.reload();
+                        }else{
+                            $("#error-msg").html('Something went wrong');
+                            $("#error-msg").show();
+                        }
                     }
                 }, error: function (error) {
                     var response = $.parseJSON(error.responseText);
-                    let error_messages = response.message;
-                    $.each(error_messages, function (key, error_message) {
-                        console.log(error_message.message);
-                    });
+                    // let error_messages = response.message;
+                    $("#error-msg").html(response.message);
+                    $("#error-msg").show();
                 }
             });
         }
@@ -1032,24 +1118,88 @@
                verifyToken +=  $(this).val();
             }
         });
-        var dial_code =  $('#dial_code').val();
-        var phone_number =  $('#phone_number').val();
+        var form_inputs = $("#login-form-new").serializeArray();
+        form_inputs.push({name : 'verifyToken', value : verifyToken});
+        
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "{{ route('user.verifyToken') }}",
-            data: {'verifyToken':verifyToken, 'type': 'phone', phone_number:phone_number, dial_code:dial_code},
+            url: "{{ route('customer.verifyPhoneLoginOtp') }}",
+            data: form_inputs,
             success: function(response) {
-                $("#verify_phone_main_div").html('');
-                let phone_verified_template = _.template($('#phone_verified_template').html());
-                $("#verify_phone_main_div").append(phone_verified_template());
-                setTimeout(function(){location.reload(); }, 2000);
+                if(response.status == 'Success'){
+                    window.location.reload();
+                }else{
+                    $(".invalid_phone_otp_error").html(response.message);
+                    setTimeout(function(){ 
+                		$('.invalid_phone_otp_error').html('').hide();
+                	}, 5000);
+                }
             },
             error: function(data) {
-                $(".invalid_phone_otp_error").html(data.responseJSON.error);
+                $(".invalid_phone_otp_error").html(data.responseJSON.message);
+                setTimeout(function(){ 
+                    $('.invalid_phone_otp_error').html('').hide();
+                }, 5000);
             },
         });
     });
+
+    $('.digit-group').find('input').each(function() {
+        $(this).attr('maxlength', 1);
+        $(this).on('keyup', function(e) {
+            var parent = $($(this).parent());
+            if(e.keyCode === 8 || e.keyCode === 37) {
+                var prev = parent.find('input#' + $(this).data('previous'));
+                if(prev.length) {
+                    $(prev).select();
+                }
+            } else if((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode === 39) {
+                var next = parent.find('input#' + $(this).data('next'));
+                if( (next.length) && ($(this).val() != '') ) {
+                    $(next).select();
+                } else {
+                    if(parent.data('autosubmit')) {
+                        parent.submit();
+                    }
+                }
+            }
+        });
+    });
+
+    $('#send_password_reset_link').click(function(){
+        var that = $(this);
+        var email = $('#username').val();
+        $('.invalid-feedback').html('');
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: {"email": email},
+            url: forgot_password_url,
+            success: function(res) {
+                if(res.status == "Success"){
+                    $('#success-msg').html(res.message).show();
+                	setTimeout(function(){ 
+                		$('#success-msg').html('').hide();
+                	}, 5000);
+                }
+            },
+            error:function(error){
+            	var response = $.parseJSON(error.responseText);
+                let error_messages = response.errors;
+                $.each(error_messages, function(key, error_message) {
+                    $('#error-msg').html(error_message[0]).show();
+                });
+            }
+        });
+    });
+
+    function isNumberKey(evt){
+        var charCode = (evt.which) ? evt.which : evt.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
 </script>
 <script src="{{asset('js/payment.js')}}"></script>
 @endsection

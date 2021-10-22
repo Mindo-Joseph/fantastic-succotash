@@ -13,7 +13,7 @@
         @include('layouts.store/left-sidebar-template-one')
         @endif
 </header>
-<section class="section-b-space new-pages pb-250">
+<section class="section-b-space new-pages pb-265">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -65,7 +65,7 @@
                     </a>
                 </div>
 
-            {{-- <div class="col-xl-3 col-6 col-grid-box">
+            {{-- <div class="col-xl-3 col-6 col-grid-box mt-3">
                 <div class="product-box scale-effect text-center">
                     <div class="img-wrapper">
                         <div class="front">

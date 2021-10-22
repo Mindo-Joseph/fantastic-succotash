@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category, Product, ClientPreference, Wallet, UserLoyaltyPoint, LoyaltyCard, Order, Nomenclature};
+use App\Models\{Client, Category, Product, ClientPreference, ClientCurrency, Wallet, UserLoyaltyPoint, LoyaltyCard, Order, Nomenclature};
 
 class BaseController extends Controller{
     private $field_status = 2;
@@ -79,11 +79,69 @@ class BaseController extends Controller{
                         ->where('categories.is_core', 1)
                         ->where('cts.language_id', $lang_id)
                         ->orderBy('categories.parent_id', 'asc')
-                        ->withCount('products')->orderBy('categories.position', 'asc')->get();
+                        ->withCount('products')->orderBy('categories.position', 'asc')->groupBy('id')->get();
         if($categories){
             $categories = $this->buildTree($categories->toArray());
         }
         return $categories;
+    }
+
+    public function metaProduct($langId, $multiplier, $for = 'related', $productArray = []){
+        if(empty($productArray)){
+            return $productArray;
+        }
+        $productIds = array();
+        foreach ($productArray as $key => $value) {
+            if($for == 'related'){
+                $productIds[] = $value->related_product_id;
+            }
+            if($for == 'upSell'){
+                $productIds[] = $value->upsell_product_id;
+            }
+            if($for == 'crossSell'){
+                $productIds[] = $value->cross_product_id;
+            }
+        }
+        $products = Product::with([
+            'category.categoryDetail.translation' => function ($q) use ($langId) {
+                $q->where('category_translations.language_id', $langId);
+            },
+            'vendor', 'media' => function($q){
+                $q->groupBy('product_id');
+            }, 'media.image',
+            'translation' => function($q) use($langId){
+            $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+            },
+            'variant' => function($q) use($langId){
+                $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
+                $q->groupBy('product_id');
+            },
+        ])->select('id', 'sku', 'averageRating', 'url_slug', 'is_new', 'is_featured', 'vendor_id', 'inquiry_only')
+        ->whereIn('id', $productIds);
+        $products = $products->get();
+        if(!empty($products)){
+            foreach ($products as $key => $value) {
+                if($value->is_new == 1){
+                    $value->product_type = 'New Product';
+                }elseif($value->is_featured == 1){
+                    $value->product_type = 'Featured Product';
+                }else{
+                    $value->product_type ='On Sale';
+                }
+                $value->product_media = $value->media ? $value->media->first() : NULL;
+                $value->vendor_name = $value->vendor ? $value->vendor->name : '';
+                $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
+                $value->translation_description = (!empty($value->translation->first())) ? $value->translation->first()->body_html : $value->sku;
+                $value->variant_multiplier = $multiplier ? $multiplier : 1;
+                $value->variant_price = (!empty($value->variant->first())) ? number_format(($value->variant->first()->price * $multiplier),2,'.','') : 0;
+                $value->averageRating = number_format($value->averageRating, 1, '.', '');
+                $value->category_name = $value->category->categoryDetail->translation->first()->name;
+                // foreach ($value->variant as $k => $v) {
+                //     $value->variant[$k]->multiplier = $multiplier;
+                // }
+            }
+        }
+        return $products;
     }
 
     function getVendorDistanceWithTime($userLat='', $userLong='', $vendor, $preferences){
@@ -98,9 +156,10 @@ class BaseController extends Controller{
             $lat2   = $vendor->latitude;
             $long2  = $vendor->longitude;
             $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
+            $unit_abbreviation = ($distance_unit == 'mile') ? 'miles' : 'km';
             $distance_to_time_multiplier = (!empty($preferences->distance_to_time_multiplier)) ? $preferences->distance_to_time_multiplier : 2;
             $distance = $this->calulateDistanceLineOfSight($lat1, $long1, $lat2, $long2, $distance_unit);
-            $vendor->lineOfSightDistance = number_format($distance, 1, '.', '');
+            $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
             $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
         }
         return $vendor;
@@ -311,11 +370,11 @@ class BaseController extends Controller{
           $dist = acos($dist);
           $dist = rad2deg($dist);
           $miles = $dist * 60 * 1.1515;
-          $unit = strtoupper($unit);
+          $unit = strtolower($unit);
       
-          if ($unit == "K") {
+          if ($unit == "kilometer") {
             return ($miles * 1.609344);
-          } else if ($unit == "N") {
+          } else if ($unit == "nautical mile") {
             return ($miles * 0.8684);
           } else {
             return $miles;
@@ -345,7 +404,7 @@ class BaseController extends Controller{
         return $time;
     }
 
-    function getNomenclatureName($searchTerm, $langId, $plural = true){
+    public function getNomenclatureName($searchTerm, $langId, $plural = true){
         $result = Nomenclature::with(['translations' => function($q) use($langId) {
                     $q->where('language_id', $langId);
                 }])->where('label', 'LIKE', "%{$searchTerm}%")->first();
@@ -353,6 +412,23 @@ class BaseController extends Controller{
             $searchTerm = $result->translations->count() != 0 ? $result->translations->first()->name : ucfirst($searchTerm);
         }
         return $plural ? $searchTerm : rtrim($searchTerm, 's');
+    }
+
+    /* doller compare amount */
+    public function getDollarCompareAmount($amount, $customerCurrency='')
+    {
+        $user = Auth::user();
+        $customerCurrency = $user->currency ? $user->currency : '';
+        $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
+        if(empty($customerCurrency)){
+            $clientCurrency = $primaryCurrency;
+        }else{
+            $clientCurrency = ClientCurrency::where('currency_id', $customerCurrency)->first();
+        }
+        $divider = (empty($clientCurrency->doller_compare) || $clientCurrency->doller_compare < 0) ? 1 : $clientCurrency->doller_compare;
+        $amount = ($amount / $divider) * $primaryCurrency->doller_compare;
+        $amount = number_format($amount, 2);
+        return $amount;
     }
 
 }
