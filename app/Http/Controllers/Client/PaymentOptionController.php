@@ -23,7 +23,7 @@ class PaymentOptionController extends BaseController
      */
     public function index()
     {
-    $code = array('cod', 'wallet', 'layalty-points', 'paypal', 'stripe', 'paystack', 'payfast', 'mobbex'/*,'yoco','paylink'*/);
+    $code = array('cod', 'wallet', 'layalty-points', 'paypal', 'stripe', 'paystack', 'payfast', 'mobbex','yoco','paylink');
         $payOption = PaymentOption::whereIn('code', $code)->get();
         return view('backend/payoption/index')->with(['payOption' => $payOption]);
     }
