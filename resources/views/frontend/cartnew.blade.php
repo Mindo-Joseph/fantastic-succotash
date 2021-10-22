@@ -969,7 +969,7 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
             $("#cart_payment_form .yoco_element_wrapper").removeClass('d-none');
             // Create a new dropin form instance
 
-            var yoco_amount_payable = parseInt($("input[name='cart_total_payable_amount']").val());
+            var yoco_amount_payable = $("input[name='cart_total_payable_amount']").val();
         console.log( yoco_amount_payable*100);
             inline = sdk.inline({
                 layout: 'field',
