@@ -159,7 +159,6 @@ class VendorController extends FrontController
         }else{
             $page = 'products';
         }
-<<<<<<< HEAD
 
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if(Session::has('vendors')){
@@ -174,8 +173,6 @@ class VendorController extends FrontController
                 // abort(404);
             }
         }
-=======
->>>>>>> adc880dfe5e7b5b3e7a246736fa2024e2ff29813
         // $page = ($vendor->vendor_templete_id == 2) ? 'categories' : 'products';
         return view('frontend/vendor-'.$page)->with(['show_range' => $show_range, 'range_products' => $range_products, 'vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
     }
@@ -274,7 +271,6 @@ class VendorController extends FrontController
         }
         // $page = ($vendor->vendor_templete_id == 2) ? 'categories' : 'products';
         $range_products = Product::join('product_variants', 'product_variants.product_id', '=', 'products.id')->orderBy('product_variants.price', 'desc')->select('*')->where('is_live', 1)->where('vendor_id', $vendor->id)->get();
-<<<<<<< HEAD
         
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             if(Session::has('vendors')){
@@ -292,8 +288,6 @@ class VendorController extends FrontController
         }
         
         
-=======
->>>>>>> adc880dfe5e7b5b3e7a246736fa2024e2ff29813
         return view('frontend/vendor-'.$page)->with(['vendor' => $vendor, 'show_range' => $show_range, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands, 'range_products' => $range_products, 'vendor_category' => $slug2]);
     }
 
