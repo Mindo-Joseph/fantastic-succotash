@@ -122,6 +122,7 @@
         </div>
     </div>
 
+    @if(!empty($dynamicTutorials) && count($dynamicTutorials)>0)
     <div class="row">
         <div class="col-xl-6">
             <div class="card">
@@ -153,6 +154,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     <div class="row">
         <div class="col-xl-6">
