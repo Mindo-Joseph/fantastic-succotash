@@ -10,6 +10,7 @@ use Yoco\YocoClient;
 use Yoco\Exceptions\ApiKeyException;
 use Yoco\Exceptions\DeclinedException;
 use Yoco\Exceptions\InternalException;
+use Illuminate\Support\Facades\Redirect;
 use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
@@ -35,12 +36,11 @@ class YocoGatewayController extends BaseController
         $creds_arr = json_decode($yoco_creds->credentials);
         $secret_key = (isset($creds_arr->secret_key)) ? $creds_arr->secret_key : '';
         $public_key = (isset($creds_arr->public_key)) ? $creds_arr->public_key : '';
-        // $api_access_token = (isset($creds_arr->api_access_token)) ? $creds_arr->api_access_token : '';
+
         $this->test_mode = (isset($yoco_creds->test_mode) && ($yoco_creds->test_mode == '1')) ? true : false;
 
         $this->SECRET_KEY = $secret_key;
         $this->PUBLIC_KEY = $public_key;
-        // $this->API_ACCESS_TOKEN = $api_access_token;
 
 
     }
@@ -55,15 +55,7 @@ class YocoGatewayController extends BaseController
             $amount = $this->getDollarCompareAmount($request->amount);
             $amount = filter_var($amount, FILTER_SANITIZE_NUMBER_INT);
      
-            // $returnUrlParams = '?amount='.$amount;
-            // if($request->has('tip')){
-            //     $tip = $request->tip;
-            //     $returnUrlParams = $returnUrlParams.'&tip='.$tip;
-            // }
-            // if( ($request->has('address_id')) && ($request->address_id > 0) ){
-            //     $address_id = $request->address_id;
-            //     $returnUrlParams = $returnUrlParams.'&address_id='.$address_id;
-            // }
+          
             $returnUrlParams = '?gateway=yoco&order=' . $request->order_number;
 
             $returnUrl = route('order.return.success');
@@ -76,21 +68,12 @@ class YocoGatewayController extends BaseController
                 'amountInCents' => $amount,
                 'currency' => 'ZAR',
                 'description' => 'Order Checkout',
-                //'return_url' => url($request->returnUrl . $returnUrlParams),
+              
                 'reference' => $request->order_number,
-                //'webhook' => url('/payment/yoco/notify/'),
+            
                 'redirect' => false,
                 'test' => $this->test_mode, // True, testing, false, production
-                // 'options' => array(
-                //     'theme' => array(
-                //         'type' => 'light', // dark or light color scheme
-                //         'showHeader' => true,
-                //         'header' => array(
-                //             'name' => 'Your brand name',
-                //             'logo' => 'https://www.yourstore.com/store-logo.jpg', // Must be https!
-                //         ),
-                //     ),
-                // ),
+               
                 'customer' => array(
                     'email' => $user->email,
                     'name' => $user->name,
@@ -99,12 +82,7 @@ class YocoGatewayController extends BaseController
                 )
             );
 
-          //  $client = new YocoClient($this->SECRET_KEY, $this->PUBLIC_KEY);
-            // WebhookCall::create()
-            //     ->url('payment/yoco/notify')
-            //     ->payload($checkout_data)
-            //     ->useSecret($this->SECRET_KEY)
-            //     ->dispatch();
+       
             $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_URL, "https://online.yoco.com/v1/charges/");
@@ -122,19 +100,13 @@ class YocoGatewayController extends BaseController
             if ($result->status == 'successful') {
               $this->yocoSuccess($request,$result);
                 // $response = $this->mb->mobbex_checkout($checkout_data);
-                return $this->successResponse(url($returnUrl . $returnUrlParams));
+                return $this->successResponse(url($request->serverUrl . 'payment/gateway/returnResponse' . $returnUrlParams));
             }
             else {
                 $this->yocoFail($request);
                 return $this->errorResponse($result->status, 400);
             }
-            // if ($response['response']['result']) {
-            //     return $this->successResponse($response['response']['data']['url']);
-            // } elseif (!$response['response']['result']) {
-            //     return $this->errorResponse($response['response']['error'], 400);
-            // } else {
-            //     return $this->errorResponse($response->getMessage(), 400);
-            // }
+           
 
         } catch (\Exception $ex) {
             return $this->errorResponse($ex->getMessage(), 400);
@@ -143,11 +115,8 @@ class YocoGatewayController extends BaseController
 
     public function yocoSuccess($request, $result,$domain = '')
     {
-        // Notify Mobbex that information has been received
-        // header( 'HTTP/1.0 200 OK' );
-        // flush();
-       // Log::info('testing');
-
+       
+        
   
             $transactionId = $result->id;
             $order_number = $request->order_number;
@@ -212,6 +181,7 @@ class YocoGatewayController extends BaseController
         OrderVendor::where('order_id', $order->id)->delete();
         OrderTax::where('order_id', $order->id)->delete();
         Order::where('id', $order->id)->delete();
+        return Redirect::to(url('viewcart'));
     
     }
 
