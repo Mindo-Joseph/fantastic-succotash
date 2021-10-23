@@ -817,14 +817,9 @@ $(document).ready(function() {
                         placeOrder(address_id, payment_option_id, resp.data.id, tip);
                     } else if (path.indexOf("wallet") !== -1) {
                         creditWallet(total_amount, payment_option_id, resp.data.id);
-<<<<<<< HEAD
-                    } else if ((cabbookingwallet != undefined) && (cabbookingwallet == 1)) {
-                        creditWallet(total_amount, payment_option_id, resp.data.id);
-=======
-                    }
+		       }
                     else if (path.indexOf("subscription") !== -1) {
                         userSubscriptionPurchase(total_amount, payment_option_id, resp.data.id);
->>>>>>> f580d356dff9762bc88e2ac1bfd27c03be93b717
                     }else if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
                          
                         let order_number = $("#order_number").val();
