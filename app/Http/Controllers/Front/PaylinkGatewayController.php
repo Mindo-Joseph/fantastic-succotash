@@ -168,7 +168,6 @@ class PaylinkGatewayController extends FrontController
 
 
         if ($response->result->status == 'PAID') {
-
             // if ($request->succes == 'true') {
 
             if ($order) {
