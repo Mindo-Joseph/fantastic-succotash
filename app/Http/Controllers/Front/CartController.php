@@ -93,10 +93,10 @@ class CartController extends FrontController
         $client_preference_detail = ClientPreference::first();
         $public_key_yoco=PaymentOption::where('code','yoco')->first();
         if($public_key_yoco){
-            
-            $public_key_yoco= $public_key_yoco->credentials;
+
+            $public_key_yoco= $public_key_yoco->credentials??'';
             $public_key_yoco= json_decode($public_key_yoco);
-            $public_key_yoco= $public_key_yoco->public_key;
+            $public_key_yoco= $public_key_yoco->public_key??'';
         }
       
        
