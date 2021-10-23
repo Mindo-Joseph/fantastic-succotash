@@ -68,7 +68,7 @@ class PaylinkGatewayController extends FrontController
                 'reference' => $request->order_number,
 
 
-                'returnUrl' => url('payment/paylink/notify' . $notifyUrlParams),
+                'returnUrl' => $returnUrl,
 
                 'redirect' => true,
                 'test' => $this->test_mode, // True, testing, false, production
