@@ -252,6 +252,7 @@ class OrderController extends BaseController{
             $vendor_order_status_option_ids[]= $vendor_order_status->order_status_option_id;
         }
          return view('backend.order.view')->with(['vendor_id' => $vendor_id, 'order' => $order, 
+        'vendor_order_statuses' => $vendor_order_statuses,
         'vendor_order_status_option_ids' => $vendor_order_status_option_ids,
         'order_status_options' => $order_status_options, 
         'dispatcher_status_options' => $dispatcher_status_options, 
@@ -272,10 +273,10 @@ class OrderController extends BaseController{
             $timezone = Auth::user()->timezone;
             $vendor_order_status_check = VendorOrderStatus::where('order_id', $request->order_id)->where('vendor_id', $request->vendor_id)->where('order_status_option_id', $request->status_option_id)->first();
             $currentOrderStatus = OrderVendor::where(['vendor_id' => $request->vendor_id, 'order_id' => $request->order_id])->first();
-            if($currentOrderStatus->order_status_option_id == 2 && $request->status_option_id == 3){
+            if($currentOrderStatus->order_status_option_id == 2 && $request->status_option_id == 2){ //$request->status_option_id == 3){
                 return response()->json(['status' => 'error', 'message' => __('Order has already been accepted!!!')]);
             }
-            if($currentOrderStatus->order_status_option_id == 3 && $request->status_option_id == 2){
+            if($currentOrderStatus->order_status_option_id == 3 && $request->status_option_id == 3){ //$request->status_option_id == 2){
                 return response()->json(['status' => 'error', 'message' => __('Order has already been rejected!!!')]);
             }
             if (!$vendor_order_status_check) {

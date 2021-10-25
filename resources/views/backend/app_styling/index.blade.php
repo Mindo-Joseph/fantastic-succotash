@@ -122,6 +122,7 @@
         </div>
     </div>
 
+    @if(!empty($dynamicTutorials) && count($dynamicTutorials)>0)
     <div class="row">
         <div class="col-xl-6">
             <div class="card">
@@ -137,6 +138,11 @@
                                                 <label class="custom-control-label" for="">
                                                     <img class="card-img-top img-fluid" src="{{$dynamicTutorial->file_name['proxy_url'] . '215/400' . $dynamicTutorial->file_name['image_path']}}" alt="Image">
                                                 </label>
+                                                <form action="{{ route('styling.deleteTutorials',$dynamicTutorial->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger waves-effect waves-light mt-1" onclick="return confirm('Are you sure? You want to delete this tutorial.')" >Delete</button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -148,6 +154,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     <div class="row">
         <div class="col-xl-6">

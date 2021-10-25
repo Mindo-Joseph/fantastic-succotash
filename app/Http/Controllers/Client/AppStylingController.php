@@ -198,5 +198,12 @@ class AppStylingController extends BaseController
             'message' => __('Tutorials order updated Successfully!'),
         ]);
     }
+    
+    public function deleteTutorials(Request $request, $domain, $id)
+    {
+        $tutorialObj = AppDynamicTutorial::find($id);
+        $tutorialObj->delete();
+        return redirect()->back()->with('success', __("Tutorial deleted successfully"));
+    }
 
 }

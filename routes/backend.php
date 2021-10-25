@@ -110,6 +110,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::post('app-styling/updateSignupTagLine', 'Client\AppStylingController@updateSignupTagLine')->name('styling.updateSignupTagLine');
         Route::post('app-styling/addTutorials', 'Client\AppStylingController@addTutorials')->name('styling.addTutorials');
         Route::post('app_styling/saveOrderTutorials', 'Client\AppStylingController@saveOrderTutorials')->name('styling.saveOrderTutorials');
+        Route::delete('app-styling/deleteTutorials/{id}', 'Client\AppStylingController@deleteTutorials')->name('styling.deleteTutorials');
         Route::resource('category', 'Client\CategoryController');
         Route::post('categoryOrder', 'Client\CategoryController@updateOrder')->name('category.order');
         Route::get('category/delete/{id}', 'Client\CategoryController@destroy');
