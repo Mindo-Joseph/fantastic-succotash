@@ -1,7 +1,7 @@
 <?php
-Route::group(['prefix' => 'v1','middleware' => ['domain', 'apilogger']], function () {
+Route::group(['prefix' => 'v1','middleware' => ['apilogger','dbCheck','ApiLocalization','domain']], function () {
  
-        //Route::get('payment/yoco', 'Api\v1\YocoGatewayController@yocoWebView');
+        Route::get('payment/yoco', 'Api\v1\YocoGatewayController@yocoWebView');
     
 });
 Route::group(['prefix' => 'v1/auth', 'middleware' => ['ApiLocalization']], function () {
