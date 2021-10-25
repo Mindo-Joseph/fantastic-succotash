@@ -67,7 +67,7 @@ class PaylinkGatewayController extends BaseController
                 'reference' => $request->order_number,
 
 
-                'returnUrl' => url('payment/paylink/notify' . $notifyUrlParams),
+                'returnUrl' => url($request->serverUrl.'payment/paylink/notify' . $notifyUrlParams),
 
                 'redirect' => true,
                 'test' => $this->test_mode, // True, testing, false, production
@@ -211,7 +211,7 @@ class PaylinkGatewayController extends BaseController
                     $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
                     $returnUrlParams = '?gateway=paylink&order=' . $order->id;
                     $returnUrl = route('order.return.success');
-                    return Redirect::to(url($returnUrl . $returnUrlParams));
+                    return Redirect::to(url($request->serverUrl . 'payment/gateway/returnResponse' . $returnUrlParams));
                 }
 
                 // Send Email
@@ -228,7 +228,8 @@ class PaylinkGatewayController extends BaseController
             OrderVendor::where('order_id', $order->id)->delete();
             OrderTax::where('order_id', $order->id)->delete();
             Order::where('id', $order->id)->delete();
-            return Redirect::to(url('viewcart'));
+            $returnUrlParams = '?gateway=paylink&order=' . $order->id;
+            return Redirect::to(url($request->serverUrl . 'payment/gateway/returnResponse' . $returnUrlParams));
         }
     }
 
