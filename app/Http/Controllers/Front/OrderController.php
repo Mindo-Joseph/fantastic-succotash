@@ -15,7 +15,7 @@ use App\Models\Client as CP;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus, OrderTax, SubscriptionInvoicesUser, UserDevice, UserVendor, VendorOrderDispatcherStatus, Page, DriverRegistrationDocument, LuxuryOption};
+use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus, OrderTax, SubscriptionInvoicesUser, UserDevice, UserVendor, VendorOrderDispatcherStatus, Page, DriverRegistrationDocument, LuxuryOption,PaymentOption};
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Models\AutoRejectOrderCron;
@@ -148,9 +148,9 @@ class OrderController extends FrontController
             }
         }
         $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
-
-        //dd($pastOrders->toArray());
-        return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders' => $activeOrders, 'pastOrders' => $pastOrders, 'returnOrders' => $returnOrders, 'clientCurrency' => $clientCurrency]);
+        $payments = PaymentOption::where('credentials','!=','')->where('status',1)->count();
+       
+        return view('frontend/account/orders')->with(['payments' => $payments ,'navCategories' => $navCategories, 'activeOrders' => $activeOrders, 'pastOrders' => $pastOrders, 'returnOrders' => $returnOrders, 'clientCurrency' => $clientCurrency]);
     }
 
     public function getOrderSuccessPage(Request $request)
@@ -797,7 +797,7 @@ class OrderController extends FrontController
             // $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
             $this->sendSuccessSMS($request, $order, $vendor_id);
-            if($request->payment_option_id != 7||$request->payment_option_id != 8||$request->payment_option_id != 9){ // if not mobbex
+            if($request->payment_option_id != 7 && $request->payment_option_id != 8 && $request->payment_option_id != 9){ // if not mobbex
                 Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
                 CartAddon::where('cart_id', $cart->id)->delete();
                 CartCoupon::where('cart_id', $cart->id)->delete();
@@ -821,7 +821,7 @@ class OrderController extends FrontController
                 ]);
             }
             $order = $order->with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id', 'vendors.vendor'])->where('order_number', $order->order_number)->first();
-            if($request->payment_option_id != 7||$request->payment_option_id != 8||$request->payment_option_id != 9){ // if not mobbex
+            if($request->payment_option_id != 7 && $request->payment_option_id != 8 && $request->payment_option_id != 9){ // if not mobbex
                 if (!empty($order->vendors)) {
                     foreach ($order->vendors as $vendor_value) {
                         $vendorDetail = $vendor_value->vendor;
@@ -1694,6 +1694,36 @@ class OrderController extends FrontController
         unset($order->products);
         unset($order->paymentOption);
         return $order;
+    }
+
+
+    
+     /**
+     * Credit Money Into Wallet
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function tipAfterOrder(Request $request, $domain = '')
+    {
+      
+        $user = Auth::user();
+        
+        if($user){
+            $order_number = $request->order_number;
+            if ($order_number > 0) {
+                $tip = Order::where('order_number',$order_number)->update(['tip_amount' => $request->wallet_amount]);
+                $message = 'Tip has been submitted successfully';
+                $response['wallet_balance'] = $request->wallet_amount;
+                Session::put('success', $message);
+                return $this->successResponse($response, $message, 200);
+            }
+            else{
+                return $this->errorResponse('Amount is not sufficient', 400);
+            }
+        }
+        else{
+            return $this->errorResponse('Invalid User', 400);
+        }
     }
 
 }

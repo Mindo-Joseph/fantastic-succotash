@@ -73,6 +73,31 @@ $timezone = Auth::user()->timezone;
 <section class="section-b-space order-page">
     <div class="container">
         <div class="row">
+            <div class="col-sm-12">
+                <div class="text-sm-left" id="wallet_response">
+                    @if (\Session::has('success'))
+                        <div class="alert alert-success">
+                            <span>{!! \Session::get('success') !!}</span>
+                        </div>
+                        @php
+                            \Session::forget('success');
+                        @endphp
+                    @endif
+                    @if (\Session::has('error'))
+                        <div class="alert alert-danger">
+                            <span>{!! \Session::get('error') !!}</span>
+                        </div>
+                        @php
+                            \Session::forget('error');
+                        @endphp
+                    @endif
+                    <div class="message d-none">
+                        <div class="alert p-0"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-lg-3">
                 <div class="account-sidebar"><a class="popup-btn">{{ __('My Account') }}</a></div>
                 <div class="dashboard-left">
@@ -519,42 +544,45 @@ $timezone = Auth::user()->timezone;
                                                                 </li>
                                                             </ul>
 
-                                                            @if($client_preference_detail->tip_after_order == 1 && $order->tip_amount <= 0 && 1==2)
+                                                            @if($client_preference_detail->tip_after_order == 1 && $order->tip_amount <= 0 && $payments > 0 && 1==2) 
                                                             <hr>
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="mb-2">{{__('Do you want to give a tip?')}}</div>
                                                                     <div class="tip_radio_controls">
                                                                         @if($order->payable_amount > 0) 
-                                                                            <input type="radio" class="tip_radio" id="control_01" name="select" value="{{$order->payable_amount*0.05}}">
+                                                                            <input type="radio" class="tip_radio" id="control_01" name="select{{$order->order_number}}" value="{{$order->payable_amount*0.05}}">
                                                                             <label class="tip_label" for="control_01">
                                                                                 <h5 class="m-0" id="tip_5">{{Session::get('currencySymbol')}}{{$order->payable_amount*0.05}}</h5>
                                                                                 <p class="m-0">5%</p>
                                                                             </label>
                                                                         
-                                                                            <input type="radio" class="tip_radio" id="control_02" name="select" value="{{$order->payable_amount*0.10}}" >
+                                                                            <input type="radio" class="tip_radio" id="control_02" name="select{{$order->order_number}}" value="{{$order->payable_amount*0.10}}" >
                                                                             <label class="tip_label" for="control_02">
                                                                                 <h5 class="m-0" id="tip_10">{{Session::get('currencySymbol')}}{{$order->payable_amount*0.10}}</h5>
                                                                                 <p class="m-0">10%</p>
                                                                             </label>
                                                                         
-                                                                            <input type="radio" class="tip_radio" id="control_03" name="select" value="{{$order->payable_amount*0.15}}" >
+                                                                            <input type="radio" class="tip_radio" id="control_03" name="select{{$order->order_number}}" value="{{$order->payable_amount*0.15}}" >
                                                                             <label class="tip_label" for="control_03">
                                                                                 <h5 class="m-0" id="tip_15">{{Session::get('currencySymbol')}}{{$order->payable_amount*0.15}}</h5>
                                                                                 <p class="m-0">15%</p>
                                                                             </label>
                                                 
-                                                                            <input type="radio" class="tip_radio" id="custom_control" name="select" value="custom" >
-                                                                            <label class="tip_label" for="custom_control">
+                                                                            <input type="radio" class="tip_radio" id="custom_control{{$order->order_number}}" name="select{{$order->order_number}}" value="custom" >
+                                                                            <label class="tip_label" for="custom_control{{$order->order_number}}">
                                                                                 <h5 class="m-0">{{__('Custom')}}<br>{{__('Amount')}}</h5>
                                                                             </label>
+                                                                        @else
+                                                                            <input type="hidden" class="tip_radio" id="custom_control{{$order->order_number}}" name="select{{$order->order_number}}" value="custom" checked>
+                                                                            
                                                                         @endif
                                                                     </div>
                                                                     <div class="custom_tip mb-1 @if($order->payable_amount  > 0)  d-none @endif">
-                                                                        <input class="input-number form-control" name="custom_tip_amount" id="custom_tip_amount" placeholder="Enter Custom Amount" type="number" value="" step="0.1">
+                                                                        <input class="input-number form-control" name="custom_tip_amount{{$order->order_number}}" id="custom_tip_amount{{$order->order_number}}" placeholder="Enter Custom Amount" type="number" value="" step="0.1">
                                                                     </div>
                                                                     <div class="col-md-6 text-md-right text-center">
-                                                                        <button type="button" class="btn btn-solid topup_wallet_btn_tip" id="topup_wallet_btn" data-payableamount={{$order->payable_amount}} >{{__('Submit')}}</button>
+                                                                        <button type="button" class="btn btn-solid topup_wallet_btn_tip topup_wallet_btn_for_tip"  data-order_number={{$order->order_number}} data-payableamount={{$order->payable_amount}} >{{__('Submit')}}</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -810,30 +838,39 @@ $timezone = Auth::user()->timezone;
 
 @endsection
 @section('script')
-<script src="https://js.stripe.com/v3/"></script>
 <script src="{{asset('js/tip_after_order.js')}}"></script>
+<script src="https://js.stripe.com/v3/"></script>
+
 <script src="{{asset('js/payment.js')}}"></script>
 <script type="text/javascript">
  $(document).delegate(".topup_wallet_btn_tip", "click", function () {
      $('#topup_wallet').modal('show'); 
      var payable_amount = $(this).attr('data-payableamount');
-     var select_tip =  $(this).$('input[name="select"]:checked').val();
-     if(select_tip != 'custom'){
-        $('.wallet_balance').html(select_tip);
+     var order_number = $(this).attr('data-order_number');
+     var input_name = "select"+order_number;
+     var custom_tip_amount = "custom_tip_amount"+order_number;
+
+     var select_tip =  $('input[name="' + input_name + '"]:checked').val();
+     console.log(custom_tip_amount);
+     console.log(select_tip);
+
+     if(select_tip != 'custom' && select_tip != undefined){
+         $('.wallet_balance').html(select_tip);
         var tip_amount = select_tip;
     }
-     else{
-        $('.wallet_balance').html($('input[name="custom_tip_amount"]').val());
-        var tip_amount = $('input[name="custom_tip_amount"]').val();
-     }
-     $(this).("#wallet_amount").val(tip_amount);
-     $(this).$("#cart_tip_amount").val(tip_amount);
+    else{
+        $('.wallet_balance').html($('input[name="' + custom_tip_amount + '"]').val());
+        var tip_amount = $('input[name="' + custom_tip_amount + '"]').val();
+    }
+  
+     $("#wallet_amount").val(tip_amount);
+     $("#cart_tip_amount").val(tip_amount);
+     $("#order_number").val(order_number);
      
-
        
     });
     var ajaxCall = 'ToCancelPrevReq';
-    var credit_wallet_url = "{{route('user.creditWallet')}}";
+    var credit_tip_url = "{{route('user.tip_after_order')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
     var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
     var wallet_payment_options_url = "{{route('wallet.payment.option.list')}}";

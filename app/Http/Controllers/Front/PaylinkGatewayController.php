@@ -64,13 +64,9 @@ class PaylinkGatewayController extends FrontController
                 'amount' => $amount,
                 'currency' => 'AED',
                 'description' => 'Order Checkout',
-
                 'reference' => $request->order_number,
-
-
                 'returnUrl' => url('payment/paylink/notify' . $notifyUrlParams),
-
-                'redirect' => true,
+                'redirect' => false,
                 'test' => $this->test_mode, // True, testing, false, production
 
                 'customer' => array(
@@ -172,7 +168,6 @@ class PaylinkGatewayController extends FrontController
 
 
         if ($response->result->status == 'PAID') {
-
             // if ($request->succes == 'true') {
 
             if ($order) {
