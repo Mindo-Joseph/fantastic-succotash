@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-// use Log;
+ //use Log;
 use WebhookCall;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -30,20 +30,20 @@ class YocoGatewayController extends BaseController
     public $test_mode;
     // public $mb;
 
-    public function __construct()
-    {
-        $yoco_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'yoco')->where('status', 1)->first();
-        $creds_arr = json_decode($yoco_creds->credentials);
-        $secret_key = (isset($creds_arr->secret_key)) ? $creds_arr->secret_key : '';
-        $public_key = (isset($creds_arr->public_key)) ? $creds_arr->public_key : '';
+    // public function __construct()
+    // {
+    //     $yoco_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'yoco')->where('status', 1)->first();
+    //     $creds_arr = json_decode($yoco_creds->credentials);
+    //     $secret_key = (isset($creds_arr->secret_key)) ? $creds_arr->secret_key : '';
+    //     $public_key = (isset($creds_arr->public_key)) ? $creds_arr->public_key : '';
 
-        $this->test_mode = (isset($yoco_creds->test_mode) && ($yoco_creds->test_mode == '1')) ? true : false;
+    //     $this->test_mode = (isset($yoco_creds->test_mode) && ($yoco_creds->test_mode == '1')) ? true : false;
 
-        $this->SECRET_KEY = $secret_key;
-        $this->PUBLIC_KEY = $public_key;
+    //     $this->SECRET_KEY = $secret_key;
+    //     $this->PUBLIC_KEY = $public_key;
 
 
-    }
+    // }
 
     public function yocoPurchase(Request $request)
     {
@@ -56,12 +56,12 @@ class YocoGatewayController extends BaseController
             $amount = filter_var($amount, FILTER_SANITIZE_NUMBER_INT);
      
           
-            $returnUrlParams = '?gateway=yoco&order=' . $request->order_number;
+            // $returnUrlParams = '?gateway=yoco&order=' . $request->order_number;
 
-            $returnUrl = route('order.return.success');
-            if ($request->payment_form == 'wallet') {
-                $returnUrl = route('user.wallet');
-            }
+            // $returnUrl = route('order.return.success');
+            // if ($request->payment_form == 'wallet') {
+            //     $returnUrl = route('user.wallet');
+            // }
 
             $checkout_data = array(
                 'token' => $token,
@@ -93,14 +93,15 @@ class YocoGatewayController extends BaseController
 
             // send to yoco
             $result = curl_exec($ch);
+            Log::info($result);
             // return $result;
             $result = json_decode($result);
        
-          
+        
             if ($result->status == 'successful') {
               $this->yocoSuccess($request,$result);
                 // $response = $this->mb->mobbex_checkout($checkout_data);
-                return $this->successResponse(url($request->serverUrl . 'payment/gateway/returnResponse' . $returnUrlParams));
+                return $this->successResponse(url('https://sales.alerthire.com/'.'payment/gateway/returnResponse?status=0&gateway=yoco&order=' .$request->order_number));
             }
             else {
                 $this->yocoFail($request);
@@ -183,6 +184,20 @@ class YocoGatewayController extends BaseController
         Order::where('id', $order->id)->delete();
         return Redirect::to(url('viewcart'));
     
+    }
+    
+    public function yocoWebView(Request $request, $domain = '')
+    {
+
+        // $public_key_yoco=PaymentOption::where('code','yoco')->first();
+        // dd($public_key_yoco);
+        // $public_key_yoco= $public_key_yoco->credentials;
+        // $public_key_yoco= json_decode($public_key_yoco);
+        // $public_key_yoco= $public_key_yoco->public_key;
+        $amount=$request->amount;
+        $order_number=$request->order_number;
+        //return response()->json(['data'=>url('/api/v1/payment/yoco-webview')]);
+        return view('frontend.yoco_webview',compact(/*'public_key_yoco',*/'amount','order_number'));
     }
 
     
