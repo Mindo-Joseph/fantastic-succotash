@@ -7,10 +7,11 @@ use Session;
 use App\Models\Tax;
 use App\Models\Order;
 use App\Models\User;
-use App\Models\VendorOrderDispatcherStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
+use App\Models\VendorOrderDispatcherStatus;
 use App\Models\{OrderStatusOption,DispatcherStatusOption, VendorOrderStatus,ClientPreference, NotificationTemplate, OrderProduct,OrderVendor,UserAddress,Vendor,OrderReturnRequest, UserDevice, UserVendor, LuxuryOption};
 use DB;
 use GuzzleHttp\Client;
@@ -297,6 +298,11 @@ class OrderController extends BaseController{
                 }
                 OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id,'reject_reason'=>$request->reject_reason]);
                 $orderData = Order::find($request->order_id);
+
+                if(!empty($currentOrderStatus->dispatch_traking_url) && ($request->status_option_id == 3)){
+                    $dispatch_traking_url = str_replace('/order/','/order-cancel/', $currentOrderStatus->dispatch_traking_url);
+                    $response = Http::get($dispatch_traking_url);
+                }
                 DB::commit();
                 // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
                 $this->sendStatusChangePushNotificationCustomer([$currentOrderStatus->user_id], $orderData, $request->status_option_id);
