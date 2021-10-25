@@ -91,7 +91,20 @@ class CartController extends FrontController
             'action' => $action
         );
         $client_preference_detail = ClientPreference::first();
+<<<<<<< HEAD
         return view('frontend.cartnew')->with($data,$client_preference_detail);
+=======
+        $public_key_yoco=PaymentOption::where('code','yoco')->first();
+        if($public_key_yoco){
+
+            $public_key_yoco= $public_key_yoco->credentials??'';
+            $public_key_yoco= json_decode($public_key_yoco);
+            $public_key_yoco= $public_key_yoco->public_key??'';
+        }
+      
+       
+        return view('frontend.cartnew',compact('public_key_yoco'))->with($data,$client_preference_detail);
+>>>>>>> f8d1564c36f6ab573f07d124dc9a7b18bdfd0755
         // return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user]);
     }
 
