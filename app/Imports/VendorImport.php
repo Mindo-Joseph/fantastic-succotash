@@ -85,6 +85,7 @@ class VendorImport implements ToCollection
                         }
                         $insert_vendor_details[] = array(
                             'name' => $da[2],
+                            'slug' => str_replace(" ","_",trim(strtolower($da[2]))),
                             'latitude' => $latitude,
                             'longitude' => $longitude,
                             'dine_in' => ($da[5] == 'TRUE') ? 1 : 0,
