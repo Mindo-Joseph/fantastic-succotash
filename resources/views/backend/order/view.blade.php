@@ -60,39 +60,69 @@ $timezone = Auth::user()->timezone;
                                     else
                                     $open_option = [$order->vendors->first()->order_status_option_id + 1];
                                     @endphp
+                                    
+                                    <!-- List of completed order status -->
+                                    @foreach ($vendor_order_statuses as $key => $vendor_order_status)
+                                        @php
+                                            $order_status = $order_status_options->where('id', $vendor_order_status->order_status_option_id)->pluck('title')->first();
+                                            $glow = '';
+                                            if( $key < count($vendor_order_statuses)-1 ){
+                                                $glow = 'completed';
+                                            }
+                                            $date = isset($vendor_order_status_created_dates[$vendor_order_status->order_status_option_id]) ? $vendor_order_status_created_dates[$vendor_order_status->order_status_option_id] : '';
+                                        @endphp
 
-                                    @foreach($order_status_options as $order_status_option)
-                                    @php
-                                    $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'disabled': '';
-                                    if($order_status_option->id == $order->vendors->first()->order_status_option_id)
-                                    $glow = '';
-                                    else
-                                    $glow = 'completed';
-                                    $date = isset($vendor_order_status_created_dates[$order_status_option->id]) ? $vendor_order_status_created_dates[$order_status_option->id] : '';
-                                    @endphp
-                                    @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 2)
-                                    @continue
-                                    @endif
-                                    @if (in_array(2, $vendor_order_status_option_ids) && $order_status_option->id == 3)
-                                    @continue
-                                    @endif
-
-                                    <li class="{{$class}} {{$glow}}  @if(in_array($order_status_option->id, $open_option))open-for-update-status @else disabled @endif" data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
-                                        @if( ($order_status_option->id == 5) && (($order->luxury_option_id == 2) || ($order->luxury_option_id == 3)) )
-                                            <h5 class="mt-0 mb-1">{{__('Order Prepared')}}</h5>
-                                        @else
-                                            <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
-                                        @endif
-                                        <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
-                                            @if($date)
-                                                <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                        <li class="{{$glow}} disabled" data-status_option_id="{{$vendor_order_status->order_status_option_id}}" data-order_vendor_id="{{$vendor_order_status->vendor_id}}">
+                                            @if( ($vendor_order_status->order_status_option_id == 5) && (($order->luxury_option_id == 2) || ($order->luxury_option_id == 3)) )
+                                                <h5 class="mt-0 mb-1">{{__('Order Prepared')}}</h5>
+                                            @else
+                                                <h5 class="mt-0 mb-1">{{$order_status}}</h5>
                                             @endif
-                                        </p>
-                                    </li>
-                                    @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 3)
-                                    @break
-                                    @endif
+                                            <p class="text-muted" id="text_muted_{{$vendor_order_status->order_status_option_id}}">
+                                                @if($date)
+                                                    <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                                @endif
+                                            </p>
+                                        </li>
                                     @endforeach
+
+                                    <!-- List of incomplete order status if order is not rejected -->
+                                    @if(!in_array(3, $vendor_order_status_option_ids))
+                                        @foreach($order_status_options as $order_status_option)
+                                            @if(!in_array($order_status_option->id, $vendor_order_status_option_ids))
+                                                @php
+                                                    $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'disabled': '';
+                                                    if($order_status_option->id == $order->vendors->first()->order_status_option_id)
+                                                        $glow = '';
+                                                    else
+                                                        $glow = 'completed';
+                                                        $date = isset($vendor_order_status_created_dates[$order_status_option->id]) ? $vendor_order_status_created_dates[$order_status_option->id] : '';
+                                                @endphp
+                                                @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 2)
+                                                    @continue
+                                                @endif
+                                                @if (in_array(2, $vendor_order_status_option_ids) && $order_status_option->id == 3)
+                                                    @continue
+                                                @endif
+
+                                                <li class="{{$class}} {{$glow}}  @if(in_array($order_status_option->id, $open_option))open-for-update-status @else disabled @endif" data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
+                                                    @if( ($order_status_option->id == 5) && (($order->luxury_option_id == 2) || ($order->luxury_option_id == 3)) )
+                                                        <h5 class="mt-0 mb-1">{{__('Order Prepared')}}</h5>
+                                                    @else
+                                                        <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
+                                                    @endif
+                                                    <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
+                                                        @if($date)
+                                                            <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                                        @endif
+                                                    </p>
+                                                </li>
+                                                @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 3)
+                                                    @break
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 </ul>
                             </div>
 
@@ -132,7 +162,12 @@ $timezone = Auth::user()->timezone;
             <div class="col-lg-8 mb-3">
                 <div class="card mb-0 h-100">
                     <div class="card-body">
-                        <h4 class="header-title mb-3">{{ __("Items from Order") }} #{{$order->order_number}}</h4>
+                        <h4 class="header-title mb-3">
+                            @if($order->luxury_option_name != '')
+                                <span class="badge badge-info mr-2">{{$order->luxury_option_name}}</span>
+                            @endif
+                            {{ __("Items from Order") }} #{{$order->order_number}}
+                        </h4>
                         <div class="table-responsive">
                             <table class="table table-bordered table-centered mb-0">
                                 <thead class="table-light">
@@ -224,6 +259,17 @@ $timezone = Auth::user()->timezone;
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->address ? $order->address->address : ''}}</p>
                         <p class="mb-0"><span class="fw-semibold me-2">{{ __("Mobile") }}:</span> {{$order->user->phone_number}}</p>
+                    </div>
+                </div>
+            </div>
+            @elseif( ($order->luxury_option_id == 2) || ($order->luxury_option_id == 3) )
+            <div class="col-lg-6 mb-3">
+                <div class="card mb-0 h-100">
+                    <div class="card-body">
+                        <h4 class="header-title mb-3">{{ __("User Information") }}</h4>
+                        <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->user->address->first() ? $order->user->address->first()->address : 'Not Available'}}</p>
+                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Mobile") }}:</span> {{$order->user->phone_number ? $order->user->phone_number : 'Not Available'}}</p>
                     </div>
                 </div>
             </div>
