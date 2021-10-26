@@ -335,6 +335,9 @@ class UserhomeController extends FrontController
             }
             $value->categoriesList = $categoriesList;
         }
+        if (($preferences) && ($preferences->is_hyperlocal == 1)) {
+            $vendors = $vendors->sortBy('lineOfSightDistance')->values()->all();
+        }
         $now = Carbon::now()->toDateTimeString();
         $subscribed_vendors_for_trending = SubscriptionInvoicesVendor::with('features')->whereHas('features', function ($query) {
             $query->where(['subscription_invoice_features_vendor.feature_id' => 1]);
@@ -370,6 +373,9 @@ class UserhomeController extends FrontController
                 $value->categoriesList = $categoriesList;
             }
         }
+        if (($preferences) && ($preferences->is_hyperlocal == 1)) {
+            $trendingVendors = $trendingVendors->sortBy('lineOfSightDistance')->values()->all();
+        }
         $mostSellingVendors = Vendor::select('vendors.*',DB::raw('count(vendor_id) as max_sales'))->join('order_vendors','vendors.id','=','order_vendors.vendor_id')->whereIn('vendors.id',$vendor_ids)->where('vendors.status', 1)->groupBy('order_vendors.vendor_id')->orderBy(DB::raw('count(vendor_id)'),'desc')->get();
         if ((!empty($mostSellingVendors) && count($mostSellingVendors) > 0)) {
             foreach ($mostSellingVendors as $key => $value) {
@@ -390,6 +396,9 @@ class UserhomeController extends FrontController
                 }
                 $value->categoriesList = $categoriesList;
             }
+        }
+        if (($preferences) && ($preferences->is_hyperlocal == 1)) {
+            $mostSellingVendors = $mostSellingVendors->sortBy('lineOfSightDistance')->values()->all();
         }
 
         $navCategories = $this->categoryNav($language_id);
