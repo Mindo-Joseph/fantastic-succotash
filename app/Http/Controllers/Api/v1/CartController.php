@@ -376,6 +376,7 @@ class CartController extends BaseController
         $cartID = $cart->id;
         $upSell_products = collect();
         $crossSell_products = collect();
+        $delifproductnotexist = CartProduct::where('cart_id', $cartID)->doesntHave('product')->delete();
         $cartData = CartProduct::with([
             'vendor', 'coupon' => function ($qry) use ($cartID) {
                 $qry->where('cart_id', $cartID);
