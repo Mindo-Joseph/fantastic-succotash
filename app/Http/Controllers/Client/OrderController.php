@@ -502,8 +502,10 @@ class OrderController extends BaseController{
                         );
                         $response = json_decode($res->getBody(), true);
                         if($response && $response['task_id'] > 0){
-                            $up_web_hook_code = OrderVendor::where(['order_id' => $order->id,'vendor_id' => $vendor])
-                                    ->update(['web_hook_code' => $dynamic]);
+                            $dispatch_traking_url = $response['dispatch_traking_url']??'';
+                            $up_web_hook_code = OrderVendor::where(['order_id' => $order->id, 'vendor_id' => $vendor])
+                                ->update(['web_hook_code' => $dynamic,'dispatch_traking_url' => $dispatch_traking_url]);
+
                             return 1;
                         }
                         return 2;
@@ -597,8 +599,10 @@ class OrderController extends BaseController{
                         );
                         $response = json_decode($res->getBody(), true);
                         if($response && $response['task_id'] > 0){
-                            $up_web_hook_code = OrderVendor::where(['order_id' => $order->id,'vendor_id' => $vendor])
-                                    ->update(['web_hook_code' => $dynamic]);
+                            $dispatch_traking_url = $response['dispatch_traking_url']??'';
+                            $up_web_hook_code = OrderVendor::where(['order_id' => $order->id, 'vendor_id' => $vendor])
+                                ->update(['web_hook_code' => $dynamic,'dispatch_traking_url' => $dispatch_traking_url]);
+            
                             return 1;
                         }
                         return 2;
