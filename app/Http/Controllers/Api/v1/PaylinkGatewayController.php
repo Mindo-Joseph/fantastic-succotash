@@ -67,7 +67,7 @@ class PaylinkGatewayController extends BaseController
                 'reference' => $request->order_number,
 
 
-                'returnUrl' => url($request->serverUrl.'payment/paylink/notify' . $notifyUrlParams),
+                'returnUrl' => url( $request->serverUrl.'payment/paylink/notify' . $notifyUrlParams),
 
                 'redirect' => true,
                 'test' => $this->test_mode, // True, testing, false, production
