@@ -47,12 +47,12 @@ class PaylinkGatewayController extends BaseController
             $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($request->amount);
 
-            $returnUrlParams = '?gateway=paylink&order=' . $request->order_number;
+            // $returnUrlParams = '?gateway=paylink&order=' . $request->order_number;
 
-            $returnUrl = route('order.return.success');
-            if ($request->payment_form == 'wallet') {
-                $returnUrl = route('user.wallet');
-            }
+            // $returnUrl = route('order.return.success');
+            // if ($request->payment_form == 'wallet') {
+            //     $returnUrl = route('user.wallet');
+            // }
             $uniqid = uniqid();
 
             $notifyUrlParams = '?gateway=paylink&amount=' . $request->amount . '&cart_id=' . $request->cart_id . '&order=' . $request->order_number;

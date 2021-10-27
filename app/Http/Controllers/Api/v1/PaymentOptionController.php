@@ -25,7 +25,7 @@ class PaymentOptionController extends BaseController{
         if($page == 'wallet'){
             $code = array('paypal', 'stripe');
         }else{
-        $code = array('cod', 'paypal', 'payfast', 'stripe'/*, 'mobbex','yoco'*/);
+        $code = array('cod', 'paypal', 'payfast', 'stripe', 'mobbex','yoco','paylink');
         }
         $payment_options = PaymentOption::whereIn('code', $code)->where('status', 1)->get(['id', 'title', 'off_site']);
         return $this->successResponse($payment_options, '', 201);
@@ -35,7 +35,7 @@ class PaymentOptionController extends BaseController{
         if(!empty($gateway)){
             $code = $request->header('code');
             $client = Client::where('code',$code)->first();
-            $server_url = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/";
+            $server_url = "http://local.myorder.com"/*.$client->sub_domain.env('SUBMAINDOMAIN')."/"*/;
             $request->serverUrl = $server_url;
             $request->currencyId = $request->header('currency');
             $function = 'postPaymentVia_'.$gateway;
@@ -80,6 +80,11 @@ class PaymentOptionController extends BaseController{
     public function postPaymentVia_yoco(Request $request){
         $gateway = new YocoGatewayController();
         return $gateway->yocoPurchase($request);
+    }
+
+    public function postPaymentVia_paylink(Request $request){
+        $gateway = new PaylinkGatewayController();
+        return $gateway->paylinkPurchase($request);
     }
 
     public function postPaymentVia_paypal(Request $request){
