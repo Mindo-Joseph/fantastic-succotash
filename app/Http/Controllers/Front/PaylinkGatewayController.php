@@ -136,7 +136,7 @@ class PaylinkGatewayController extends FrontController
 
     public function paylinkNotify(Request $request, $domain = '')
     {
-dd($request->all());
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
