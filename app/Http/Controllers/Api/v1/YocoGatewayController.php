@@ -53,10 +53,10 @@ class YocoGatewayController extends BaseController
         $public_key_yoco = $public_key_yoco->public_key;
         $amount = $request['amount'];
         $order_number = $request['order_number'];
-        $params = '?amount=' . $amount . '&order_number=' . $order_number;
+        $params = '?amount=' . $amount . '&order_number=' . $order_number. '&public_key_yoco=' . $public_key_yoco;
         //return response()->json(['data'=>url('/api/v1/payment/yoco-webview')]);
         //return response()->view('frontend.yoco_webview', compact('amount', 'order_number'));
-        return $this->successResponse(url( $request->serverUrl.'/payment/yoco-webview'.$params));
+        return $this->successResponse(url( $request->serverUrl.'payment/yoco-webview'.$params));
 
 
         try {
@@ -112,7 +112,7 @@ class YocoGatewayController extends BaseController
             if ($result->status == 'successful') {
                 $this->yocoSuccess($request, $result);
                 // $response = $this->mb->mobbex_checkout($checkout_data);
-                return $this->successResponse(url( $request->serverUrl . 'payment/gateway/returnResponse?status=0&gateway=yoco&order=' . $request->order_number));
+                return $this->successResponse(url( $request->serverUrl . 'payment/gateway/returnResponse?status=200&gateway=yoco&order=' . $request->order_number));
             } else {
                 $this->yocoFail($request);
                 return $this->errorResponse($result->status, 400);
@@ -177,7 +177,7 @@ class YocoGatewayController extends BaseController
             if ($result->status == 'successful') {
                 $this->yocoSuccess($request, $result);
                 // $response = $this->mb->mobbex_checkout($checkout_data);
-                return $this->successResponse(url( $request->serverUrl . 'payment/gateway/returnResponse?status=0&gateway=yoco&order=' . $request->order_number));
+                return $this->successResponse(url( $request->serverUrl . 'payment/gateway/returnResponse?status=200&gateway=yoco&order=' . $request->order_number));
             } else {
                 $this->yocoFail($request);
                 return $this->errorResponse($result->status, 400);
