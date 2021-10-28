@@ -989,6 +989,65 @@ $(document).ready(function() {
         });
     }
 
+    function paymentViaYoco(token) {
+        let total_amount = 0;
+        let tip = 0;
+        let tipElement = $("#cart_tip_amount");
+        let cartElement = $("input[name='cart_total_payable_amount']");
+        let walletElement = $("input[name='wallet_amount']");
+        let ajaxData = {};
+        if (cartElement.length > 0) {
+            total_amount = cartElement.val();
+            tip = tipElement.val();
+            ajaxData.tip = tip;
+        } else if (walletElement.length > 0) {
+            total_amount = walletElement.val();
+        }
+        ajaxData.amount = total_amount;
+        ajaxData.token = token;
+        ajaxData.returnUrl = path;
+        ajaxData.cancelUrl = path;
+
+        if (typeof tip_for_past_order !== 'undefined') {
+            if (tip_for_past_order != undefined && tip_for_past_order == 1) {
+                let order_number = $("#order_number").val();
+                ajaxData.order_number = order_number;
+                order_number = order_number;
+            }
+
+        }
+
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: payment_yoco_url,
+            data: ajaxData,
+            success: function(response) {
+                if (response.status == "Success") {
+                    window.location.href = response.data;
+                } else {
+                    if (cartElement.length > 0) {
+                        success_error_alert('error', response.message, ".payment_response");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                    } else if (walletElement.length > 0) {
+                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                        $(".topup_wallet_confirm").removeAttr("disabled");
+                    }
+                }
+            },
+            error: function(error) {
+                var response = $.parseJSON(error.responseText);
+                if (cartElement.length > 0) {
+                    success_error_alert('error', response.message, ".payment_response");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                } else if (walletElement.length > 0) {
+                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                    $(".topup_wallet_confirm").removeAttr("disabled");
+                }
+            }
+        });
+    }
+
     function paymentSuccessViaPaypal(amount, token, payer_id, path, tip = 0, order_number = 0) {
         let address_id = 0;
         if (path.indexOf("cart") !== -1) {
@@ -1464,6 +1523,35 @@ $(document).ready(function() {
             paymentViaPayfast();
         } else if (payment_option_id == 9) {
             paymentViaPaylink();
+        } else if (payment_option_id == 8) {
+
+
+
+            inline.createToken().then(function(result) {
+
+                if (result.error) {
+
+                    $('#yoco_card_error').html(result.error.message);
+                    $("#order_placed_btn, .proceed_to_pay").attr("disabled", false);
+                } else {
+                    const token = result;
+                    // alert("card successfully tokenised: " + token.id);
+
+
+
+                    paymentViaYoco(token.id);
+                }
+
+
+
+            }).catch(function(error) {
+                // Re-enable button now that request is complete
+
+                alert("error occured: " + error);
+            });
+
+
+
         }
     });
     $(document).on("click", ".remove_promo_code_btn", function() {

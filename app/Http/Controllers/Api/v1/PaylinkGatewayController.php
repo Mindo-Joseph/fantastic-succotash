@@ -208,7 +208,7 @@ class PaylinkGatewayController extends BaseController
                     $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id);
                     $super_admin = User::where('is_superadmin', 1)->pluck('id');
                     $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
-                    $returnUrlParams = '?gateway=paylink&order=' . $order->id;
+                    $returnUrlParams = '?status=200&gateway=paylink&order='.$order->order_number;
                   
                     return Redirect::to(url($request->serverUrl . 'payment/gateway/returnResponse' . $returnUrlParams));
                 }
@@ -227,7 +227,7 @@ class PaylinkGatewayController extends BaseController
             OrderVendor::where('order_id', $order->id)->delete();
             OrderTax::where('order_id', $order->id)->delete();
             Order::where('id', $order->id)->delete();
-            $returnUrlParams = '?gateway=paylink&order=' . $order->id;
+            $returnUrlParams = '?status=200&gateway=paylink&order='.$order->order_number;
             return Redirect::to(url($request->serverUrl . 'payment/gateway/returnResponse' . $returnUrlParams));
         }
     }
