@@ -21,7 +21,7 @@ class ProfileController extends FrontController
     public function __construct()
     {
         $code = Client::orderBy('id','asc')->value('code');
-        $this->folderName = '/'.$code.'//profile/image';
+        $this->folderName = '/'.$code.'/profile/image';
     }
     /**
      * Display send refferal page
