@@ -242,9 +242,6 @@ class CategoryController extends FrontController{
                 }
                 $value->categoriesList = $categoriesList;
             }
-            // if (($preferences) && ($preferences->is_hyperlocal == 1)) {
-            //     $vendorData = $vendorData->appends(['sort' => 'lineOfSightDistance']);
-            // }
             return $vendorData;
         }
         elseif(strtolower($type) == 'brand'){
