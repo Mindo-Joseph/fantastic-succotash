@@ -112,7 +112,7 @@ class YocoGatewayController extends BaseController
             if ($result->status == 'successful') {
                 $this->yocoSuccess($request, $result);
                 // $response = $this->mb->mobbex_checkout($checkout_data);
-                return $this->successResponse(url( $request->serverUrl . 'payment/gateway/returnResponse?status=0&gateway=yoco&order=' . $request->order_number));
+                return $this->successResponse(url( $request->serverUrl . 'payment/gateway/returnResponse?status=200&gateway=yoco&order=' . $request->order_number));
             } else {
                 $this->yocoFail($request);
                 return $this->errorResponse($result->status, 400);
@@ -177,7 +177,7 @@ class YocoGatewayController extends BaseController
             if ($result->status == 'successful') {
                 $this->yocoSuccess($request, $result);
                 // $response = $this->mb->mobbex_checkout($checkout_data);
-                return $this->successResponse(url( $request->serverUrl . 'payment/gateway/returnResponse?status=0&gateway=yoco&order=' . $request->order_number));
+                return $this->successResponse(url( $request->serverUrl . 'payment/gateway/returnResponse?status=200&gateway=yoco&order=' . $request->order_number));
             } else {
                 $this->yocoFail($request);
                 return $this->errorResponse($result->status, 400);
