@@ -19,6 +19,7 @@ use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProduc
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Models\AutoRejectOrderCron;
+use Redirect;
 
 class OrderController extends FrontController
 {
@@ -160,6 +161,18 @@ class OrderController extends FrontController
         $navCategories = $this->categoryNav($langId);
         $order = Order::with(['products.pvariant.vset', 'products.pvariant.translation_one', 'address'])->findOrfail($request->order_id);
         // dd($order->toArray());
+
+
+       $order_vendors =  OrderVendor::where('order_id',$request->order_id)->whereNotNull('dispatch_traking_url')->get();
+       if(count($order_vendors)){
+        $home_service = ClientPreference::where('business_type','home_service')->where('id', '>', 0)->first();
+        if($home_service)
+        return Redirect::route('front.booking.details',$order->order_number);
+        
+     
+       }
+
+
         $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
         return view('frontend.order.success', compact('order', 'navCategories', 'clientCurrency'));
     }
