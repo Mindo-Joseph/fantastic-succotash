@@ -534,6 +534,10 @@ class FrontController extends Controller
         return $ReturnArray;
     }
 
+    public function getEvenOddTime($time) {
+        return ($time % 5 === 0) ? $time : ($time - ($time % 5));
+    }
+
     function getLineOfSightDistanceAndTime($vendor, $preferences){
         if (($preferences) && ($preferences->is_hyperlocal == 1)) {
             $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
@@ -542,6 +546,8 @@ class FrontController extends Controller
             $distance = $vendor->vendorToUserDistance;
             $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
             $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
+            $pretime = $this->getEvenOddTime($vendor->timeofLineOfSightDistance);
+            $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5);
         }
         return $vendor;
     }
@@ -564,6 +570,8 @@ class FrontController extends Controller
                 $distance = $this->calulateDistanceLineOfSight($lat1, $long1, $lat2, $long2, $distance_unit);
                 $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
                 $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
+                $pretime = $this->getEvenOddTime($vendor->timeofLineOfSightDistance);
+                $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5);
             }else{
                 $vendor->lineOfSightDistance = 0;
                 $vendor->timeofLineOfSightDistance = 0;

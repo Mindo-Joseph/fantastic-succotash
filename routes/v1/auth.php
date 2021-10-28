@@ -1,9 +1,5 @@
 <?php
-Route::group(['prefix' => 'v1','middleware' => ['apilogger','dbCheck','ApiLocalization','domain']], function () {
- 
-        Route::get('payment/yoco', 'Api\v1\YocoGatewayController@yocoWebView');
-    
-});
+
 Route::group(['prefix' => 'v1/auth', 'middleware' => ['ApiLocalization']], function () {
     Route::get('country-list', 'Api\v1\AuthController@countries');
     Route::group(['middleware' => ['dbCheck', 'AppAuth', 'apilogger']], function() {
@@ -60,6 +56,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
         Route::get('payment/options/{page}', 'Api\v1\PaymentOptionController@getPaymentOptions');
       
         Route::get('payment/{gateway}', 'Api\v1\PaymentOptionController@postPayment');
+        Route::get('payment/yoco-functionality', 'Api\v1\PaymentOptionController@postPayment')->name('payment.yocoFunctionality');
     
         Route::post('payment/place/order', 'Api\v1\PaymentOptionController@postPlaceOrder');
         Route::get('user/loyalty/info', 'Api\v1\LoyaltyController@index');
