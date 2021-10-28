@@ -56,7 +56,6 @@ class PaylinkGatewayController extends BaseController
             $uniqid = uniqid();
 
             $notifyUrlParams = '?gateway=paylink&amount=' . $request->amount . '&cart_id=' . $request->cart_id . '&order=' . $request->order_number;
-
             $data = array(
                 'requestId' => 'CHK-' . $uniqid,
                 'orderId' => 'CHK-100000214',
@@ -67,7 +66,7 @@ class PaylinkGatewayController extends BaseController
                 'reference' => $request->order_number,
 
 
-                'returnUrl' => url( $request->serverUrl.'payment/paylink/notify' . $notifyUrlParams),
+                'returnUrl' => url($request->serverUrl.'payment/paylink/notify'.$notifyUrlParams),
 
                 'redirect' => true,
                 'test' => $this->test_mode, // True, testing, false, production
@@ -210,7 +209,7 @@ class PaylinkGatewayController extends BaseController
                     $super_admin = User::where('is_superadmin', 1)->pluck('id');
                     $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
                     $returnUrlParams = '?gateway=paylink&order=' . $order->id;
-                    $returnUrl = route('order.return.success');
+                  
                     return Redirect::to(url($request->serverUrl . 'payment/gateway/returnResponse' . $returnUrlParams));
                 }
 

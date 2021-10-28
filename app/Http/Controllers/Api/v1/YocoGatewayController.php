@@ -56,7 +56,7 @@ class YocoGatewayController extends BaseController
         $params = '?amount=' . $amount . '&order_number=' . $order_number;
         //return response()->json(['data'=>url('/api/v1/payment/yoco-webview')]);
         //return response()->view('frontend.yoco_webview', compact('amount', 'order_number'));
-        return $this->successResponse(url( $request->serverUrl.'/payment/yoco-webview'.$params));
+        return $this->successResponse(url( $request->serverUrl.'payment/yoco-webview'.$params));
 
 
         try {
