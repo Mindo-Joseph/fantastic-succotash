@@ -154,13 +154,17 @@ class PaylinkGatewayController extends FrontController
                 'X-PointCheckout-Api-Secret:' . $this->API_SECRET_KEY,
             ),
         ));
-
+       
 
         $response = curl_exec($curl);
 
         curl_close($curl);
         $response = json_decode($response);
-
+        if ($request->payment_form == '') {
+            $returnUrl = route('user.wallet');
+            return Redirect::to(url($returnUrl));
+        }
+        
         //  dd($response);
         $transactionId = $request->checkout;
         $order_number = $request->order;
@@ -207,9 +211,7 @@ class PaylinkGatewayController extends FrontController
                     $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
                     $returnUrlParams = '?gateway=paylink&order=' . $order->id;
                     $returnUrl = route('order.return.success');
-                    if ($request->payment_form == 'wallet') {
-                        $returnUrl = route('user.wallet');
-                    }
+                    
                     return Redirect::to(url($returnUrl . $returnUrlParams));
                 }
 
