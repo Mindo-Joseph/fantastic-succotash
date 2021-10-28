@@ -147,6 +147,7 @@ class OrderController extends BaseController {
                         $order_vendor->user_id = $user->id;
                         $order_vendor->order_id = $order->id;
                         $order_vendor->vendor_id = $vendor_id;
+                        $order_vendor->vendor_dinein_table_id = $vendor_cart_products->unique('vendor_dinein_table_id')->first()->vendor_dinein_table_id;
                         $order_vendor->save();
                         foreach ($vendor_cart_products as $vendor_cart_product) {
                             $variant = $vendor_cart_product->product->variants->where('id', $vendor_cart_product->variant_id)->first();
@@ -857,6 +858,9 @@ class OrderController extends BaseController {
                     'vendors' => function ($q) use ($vendor_id) {
                         $q->where('vendor_id', $vendor_id);
                     },
+                    'vendors.dineInTable.translations' => function ($qry) use ($language_id) {
+                        $qry->where('language_id', $language_id);
+                    }, 'vendors.dineInTable.category',
                     'vendors.products' => function ($q) use ($vendor_id) {
                         $q->where('vendor_id', $vendor_id);
                     },
@@ -881,7 +885,10 @@ class OrderController extends BaseController {
                             $q->select('id', 'product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                             $q->where('language_id', $language_id);
                         },
-                        'vendors.products.pvariant.vset.optionData.trans', 'vendors.products.addon', 'vendors.coupon', 'address', 'vendors.products.productRating'
+                        'vendors.products.pvariant.vset.optionData.trans', 'vendors.products.addon', 'vendors.coupon', 'address', 'vendors.products.productRating',
+                        'vendors.dineInTable.translations' => function ($qry) use ($language_id) {
+                            $qry->where('language_id', $language_id);
+                        }, 'vendors.dineInTable.category'
                     ]
                 )
                 ->where(function ($q1) {
@@ -945,6 +952,11 @@ class OrderController extends BaseController {
                         $user_to_vendor_time = ($vendor->user_to_vendor_time > 0) ? $vendor->user_to_vendor_time : 0;
                         $ETA = $order_pre_time + $user_to_vendor_time;
                         $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : convertDateTimeInTimeZone($vendor->created_at, $user->timezone, 'h:i A');
+                    }
+                    if($vendor->dineInTable){
+                        $vendor->dineInTableName = $vendor->dineInTable->translations->first() ? $vendor->dineInTable->translations->first()->name : '';
+                        $vendor->dineInTableCapacity = $vendor->dineInTable->seating_number;
+                        $vendor->dineInTableCategory = $vendor->dineInTable->category->first() ? $vendor->dineInTable->category->first()->title : '';
                     }
         		}
                 if(!empty($order->scheduled_date_time)){
