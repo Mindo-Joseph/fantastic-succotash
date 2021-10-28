@@ -53,7 +53,7 @@ class YocoGatewayController extends BaseController
         $public_key_yoco = $public_key_yoco->public_key;
         $amount = $request['amount'];
         $order_number = $request['order_number'];
-        $params = '?amount=' . $amount . '&order_number=' . $order_number;
+        $params = '?amount=' . $amount . '&order_number=' . $order_number. '&public_key_yoco=' . $public_key_yoco;
         //return response()->json(['data'=>url('/api/v1/payment/yoco-webview')]);
         //return response()->view('frontend.yoco_webview', compact('amount', 'order_number'));
         return $this->successResponse(url( $request->serverUrl.'payment/yoco-webview'.$params));
