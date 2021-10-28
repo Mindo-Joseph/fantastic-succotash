@@ -226,7 +226,7 @@ class OrderController extends BaseController {
                                     $orderAddon->order_product_id = $order_product->id;
                                     $orderAddon->save();
                                 }
-                                if(($request->payment_option_id != 7) && ($request->payment_option_id != 6)&& ($request->payment_option_id != 8)&& ($request->payment_option_id != 9)){ // if not mobbex, payfast
+                                if(($request->payment_option_id != 7) && ($request->payment_option_id != 6)){ // if not mobbex, payfast
                                     CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                                 }
                             }
@@ -327,7 +327,7 @@ class OrderController extends BaseController {
                     }
                     $order->save();
                     $this->sendSuccessSMS($request, $order);
-                    if(($request->payment_option_id != 7) && ($request->payment_option_id != 6)&& ($request->payment_option_id != 8)&& ($request->payment_option_id != 9)){ // if not mobbex, payfast
+                    if(($request->payment_option_id != 7) && ($request->payment_option_id != 6)){ // if not mobbex, payfast
                         Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
                         CartCoupon::where('cart_id', $cart->id)->delete();
                         CartProduct::where('cart_id', $cart->id)->delete();
@@ -342,7 +342,7 @@ class OrderController extends BaseController {
                         ]);
                     }
                     $order = $order->with(['vendors:id,order_id,vendor_id', 'user_vendor', 'vendors.vendor'])->where('order_number', $order->order_number)->first();
-                    if(($request->payment_option_id != 7) && ($request->payment_option_id != 6)&& ($request->payment_option_id != 8)&& ($request->payment_option_id != 9)){ // if not mobbex, payfast
+                    if(($request->payment_option_id != 7) && ($request->payment_option_id != 6)){ // if not mobbex, payfast
                         $code = $request->header('code');
                         if (!empty($order->vendors)) {
                             foreach ($order->vendors as $vendor_value) {
@@ -391,32 +391,25 @@ class OrderController extends BaseController {
         }
     }
 
-    # if vendor selected auto accepted order 
+    # if vendor selected auto accepted order  
     public function autoAcceptOrderIfOn($order_id)
     {
         $order_vendors = OrderVendor::where('order_id', $order_id)->whereHas('vendor', function ($q) {
             $q->where('auto_accept_order', 1);
         })->get();
-        Log::info($order_vendors);
-        foreach ($order_vendors as $ov) {
-            Log::info($ov);
-            Log::info($ov->order_id);
-            $request = $ov;
+         foreach ($order_vendors as $ov) {
+             $request = $ov;
 
             DB::beginTransaction();
             //try {
 
             $request->order_id = $ov->order_id;
-            Log::info($ov->order_id);
-            Log::info($request->order_id);
             $request->vendor_id = $ov->vendor_id;
             $request->order_vendor_id = $ov->id;
             $request->status_option_id = 2;
             $timezone = Auth::user()->timezone;
-            Log::info($request);
             $vendor_order_status_check = VendorOrderStatus::where('order_id', $request->order_id)->where('vendor_id', $request->vendor_id)->where('order_status_option_id', $request->status_option_id)->first();
-            Log::info($vendor_order_status_check);
-            if (!$vendor_order_status_check) {
+             if (!$vendor_order_status_check) {
                 $vendor_order_status = new VendorOrderStatus();
                 $vendor_order_status->order_id = $request->order_id;
                 $vendor_order_status->vendor_id = $request->vendor_id;
@@ -424,7 +417,6 @@ class OrderController extends BaseController {
                 $vendor_order_status->order_status_option_id = $request->status_option_id;
                 $vendor_order_status->save();
                 if ($request->status_option_id == 2) {
-                    Log::info($request->status_option_id);
                     $order_dispatch = $this->checkIfanyProductLastMileon($request);
                     if ($order_dispatch && $order_dispatch == 1)
                         $stats = $this->insertInVendorOrderDispatchStatus($request);
@@ -442,7 +434,9 @@ class OrderController extends BaseController {
 
     /// ******************  check If any Product Last Mile on   ************************ ///////////////
     public function checkIfanyProductLastMileon($request)
-    {
+    {   
+       
+
         $order_dispatchs = 2;
         $checkdeliveryFeeAdded = OrderVendor::where(['order_id' => $request->order_id, 'vendor_id' => $request->vendor_id])->first();
         $dispatch_domain = $this->getDispatchDomain();
@@ -458,8 +452,9 @@ class OrderController extends BaseController {
 
         $dispatch_domain_ondemand = $this->getDispatchOnDemandDomain();
         if ($dispatch_domain_ondemand && $dispatch_domain_ondemand != false) {
+        
             $ondemand = 0;
-            Log::info($dispatch_domain_ondemand);
+       
             foreach ($checkdeliveryFeeAdded->products as $key => $prod) {
                 if (isset($prod->product_dispatcher_tag) && !empty($prod->product_dispatcher_tag) && $prod->product->category->categoryDetail->type_id == 8) {
                     $dispatch_domain_ondemand = $this->getDispatchOnDemandDomain();
@@ -495,7 +490,12 @@ class OrderController extends BaseController {
                 $payable_amount = 0.00;
             }
             $dynamic = uniqid($order->id . $vendor);
-            $call_back_url = route('dispatch-order-update', $dynamic);
+            $client = Client::orderBy('id','asc')->first();
+            if(isset($client->custom_domain) && !empty($client->custom_domain) && $client->custom_domain != $client->sub_domain)
+            $call_back_url = "https://".$client->custom_domain."/'dispatch-order-status-update/".$dynamic;
+            else
+            $call_back_url = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/'dispatch-order-status-update/".$dynamic;
+         //   $call_back_url = route('dispatch-order-update', $dynamic);
             $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
             $tasks = array();
             $meta_data = '';
@@ -542,7 +542,7 @@ class OrderController extends BaseController {
             ];
 
 
-            $client = new Client([
+            $client = new GCLIENT([
                 'headers' => [
                     'personaltoken' => $dispatch_domain->delivery_service_key,
                     'shortcode' => $dispatch_domain->delivery_service_key_code,
@@ -579,9 +579,7 @@ class OrderController extends BaseController {
     public function placeRequestToDispatchOnDemand($order, $vendor, $dispatch_domain)
     {
         try {
-            Log::info($order);
-            Log::info($vendor);
-            Log::info($dispatch_domain);
+           
             $order = Order::find($order);
             $customer = User::find($order->user_id);
             $cus_address = UserAddress::find($order->address_id);
@@ -594,14 +592,19 @@ class OrderController extends BaseController {
                 $payable_amount = 0.00;
             }
             $dynamic = uniqid($order->id . $vendor);
-            $call_back_url = route('dispatch-order-update', $dynamic);
+            $client = Client::orderBy('id','asc')->first();
+            if(isset($client->custom_domain) && !empty($client->custom_domain) && $client->custom_domain != $client->sub_domain)
+            $call_back_url = "https://".$client->custom_domain."/'dispatch-order-status-update/".$dynamic;
+            else
+            $call_back_url = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/'dispatch-order-status-update/".$dynamic;
+            // $call_back_url = route('dispatch-order-update', $dynamic);
+
             $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
             $tasks = array();
             $meta_data = '';
 
             $unique = Auth::user()->code;
             $team_tag = $unique . "_" . $vendor;
-
 
             $tasks[] = array(
                 'task_type_id' => 1,
@@ -640,7 +643,7 @@ class OrderController extends BaseController {
             ];
 
 
-            $client = new Client([
+            $client = new GClient([
                 'headers' => [
                     'personaltoken' => $dispatch_domain->dispacher_home_other_service_key,
                     'shortcode' => $dispatch_domain->dispacher_home_other_service_key_code,
@@ -654,7 +657,9 @@ class OrderController extends BaseController {
                 ['form_params' => ($postdata)]
             );
             $response = json_decode($res->getBody(), true);
+          
             if ($response && $response['task_id'] > 0) {
+              
                 $dispatch_traking_url = $response['dispatch_traking_url']??'';
                 $up_web_hook_code = OrderVendor::where(['order_id' => $order->id, 'vendor_id' => $vendor])
                     ->update(['web_hook_code' => $dynamic,'dispatch_traking_url' => $dispatch_traking_url]);
@@ -662,13 +667,11 @@ class OrderController extends BaseController {
                
                 return 1;
             }
+           
             return 2;
         } catch (\Exception $e) {
+          
             return 2;
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ]);
         }
     }
 
@@ -1053,7 +1056,7 @@ class OrderController extends BaseController {
     public function sendOrderPushNotificationVendors($user_ids, $orderData, $header_code)
     {
         $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
-        Log::info($devices);
+       
         $client_preferences = ClientPreference::select('fcm_server_key', 'favicon')->first();
         if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
             $from = $client_preferences->fcm_server_key;
@@ -1085,8 +1088,7 @@ class OrderController extends BaseController {
                     "priority" => "high"
                 ];
                 $dataString = $data;
-                Log::info(json_encode($data));
-                $ch = curl_init();
+                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -1094,8 +1096,7 @@ class OrderController extends BaseController {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataString));
                 $result = curl_exec($ch);
-                Log::info($result);
-                curl_close($ch);
+                 curl_close($ch);
             }
         }
     }
@@ -1103,7 +1104,7 @@ class OrderController extends BaseController {
     public function sendStatusChangePushNotificationCustomer($user_ids, $orderData, $order_status_id, $header_code)
     {
         $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
-        Log::info($devices);
+    
         $client_preferences = ClientPreference::select('fcm_server_key', 'favicon')->first();
         if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
             $from = $client_preferences->fcm_server_key;
@@ -1153,8 +1154,7 @@ class OrderController extends BaseController {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($dataString));
                 $result = curl_exec($ch);
-                Log::info($result);
-                curl_close($ch);
+                 curl_close($ch);
             }
         }
     }
