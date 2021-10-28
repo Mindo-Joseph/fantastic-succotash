@@ -749,14 +749,14 @@ $(document).ready(function() {
         });
     });
 
-    $(document).delegate(".topup_wallet_btn_for_tip", "click", function () {
+    $(document).delegate(".topup_wallet_btn_for_tip", "click", function() {
         $.ajax({
             data: {},
             type: "POST",
             async: false,
             dataType: 'json',
             url: wallet_payment_options_url,
-            success: function (response) {
+            success: function(response) {
                 if (response.status == "Success") {
                     $('#wallet_payment_methods').html('');
                     let payment_method_template = _.template($('#payment_method_template').html());
@@ -767,7 +767,8 @@ $(document).ready(function() {
                         stripeInitialize();
                     }
                 }
-            }, error: function (error) {
+            },
+            error: function(error) {
                 var response = $.parseJSON(error.responseText);
                 let error_messages = response.message;
             }
@@ -788,18 +789,18 @@ $(document).ready(function() {
             order_number = urlParams.get('ordernumber');
             console.log('ordernumber');
         }
-       
-        paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount,order_number);
+
+        paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount, order_number);
     }
 
     function paymentViaStripe(stripe_token, address_id, payment_option_id) {
-       let total_amount = 0;
+        let total_amount = 0;
         let tip = 0;
         let cartElement = $("input[name='cart_total_payable_amount']");
         let walletElement = $("input[name='wallet_amount']");
         let subscriptionElement = $("input[name='subscription_amount']");
         let tipElement = $("#cart_tip_amount");
-        
+
         let ajaxData = [];
         if (cartElement.length > 0) {
             total_amount = cartElement.val();
@@ -823,16 +824,15 @@ $(document).ready(function() {
                         placeOrder(address_id, payment_option_id, resp.data.id, tip);
                     } else if (path.indexOf("wallet") !== -1) {
                         creditWallet(total_amount, payment_option_id, resp.data.id);
-                    }
-                    else if (path.indexOf("subscription") !== -1) {
+                    } else if (path.indexOf("subscription") !== -1) {
                         userSubscriptionPurchase(total_amount, payment_option_id, resp.data.id);
-                    }else if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
-                         
+                    } else if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
+
                         let order_number = $("#order_number").val();
                         if (order_number.length > 0) {
                             order_number = order_number;
                         }
-                        creditTipAfterOrder(total_amount, payment_option_id, resp.data.id,order_number);
+                        creditTipAfterOrder(total_amount, payment_option_id, resp.data.id, order_number);
                     } else if ((cabbookingwallet != undefined) && (cabbookingwallet == 1)) {
                         creditWallet(total_amount, payment_option_id, resp.data.id);
                     }
@@ -892,22 +892,21 @@ $(document).ready(function() {
         ajaxData.cancelUrl = path;
 
         if (typeof tip_for_past_order !== 'undefined') {
-            if (tip_for_past_order != undefined && tip_for_past_order == 1) 
-                {
-                    let order_number = $("#order_number").val();
-                    ajaxData.order_number = order_number;
-                    order_number = order_number;
-                }
-           
-         }
-        
+            if (tip_for_past_order != undefined && tip_for_past_order == 1) {
+                let order_number = $("#order_number").val();
+                ajaxData.order_number = order_number;
+                order_number = order_number;
+            }
+
+        }
+
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: payment_paypal_url,
             data: ajaxData,
             success: function(response) {
-                 if (response.status == "Success") {
+                if (response.status == "Success") {
                     window.location.href = response.data;
                 } else {
                     if (cartElement.length > 0) {
@@ -932,7 +931,124 @@ $(document).ready(function() {
         });
     }
 
-    function paymentSuccessViaPaypal(amount, token, payer_id, path, tip = 0,order_number = 0) {
+    function paymentViaPaylink() {
+        let total_amount = 0;
+        let tip = 0;
+        let tipElement = $("#cart_tip_amount");
+        let cartElement = $("input[name='cart_total_payable_amount']");
+        let walletElement = $("input[name='wallet_amount']");
+        let ajaxData = {};
+        if (cartElement.length > 0) {
+            total_amount = cartElement.val();
+            tip = tipElement.val();
+            ajaxData.tip = tip;
+        } else if (walletElement.length > 0) {
+            total_amount = walletElement.val();
+        }
+        ajaxData.amount = total_amount;
+        ajaxData.returnUrl = path;
+        ajaxData.cancelUrl = path;
+
+        if (typeof tip_for_past_order !== 'undefined') {
+            if (tip_for_past_order != undefined && tip_for_past_order == 1) {
+                let order_number = $("#order_number").val();
+                ajaxData.order_number = order_number;
+                order_number = order_number;
+            }
+
+        }
+
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: payment_paylink_url,
+            data: ajaxData,
+            success: function(response) {
+                if (response.status == "Success") {
+                    window.location.href = response.data;
+                } else {
+                    if (cartElement.length > 0) {
+                        success_error_alert('error', response.message, ".payment_response");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                    } else if (walletElement.length > 0) {
+                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                        $(".topup_wallet_confirm").removeAttr("disabled");
+                    }
+                }
+            },
+            error: function(error) {
+                var response = $.parseJSON(error.responseText);
+                if (cartElement.length > 0) {
+                    success_error_alert('error', response.message, ".payment_response");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                } else if (walletElement.length > 0) {
+                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                    $(".topup_wallet_confirm").removeAttr("disabled");
+                }
+            }
+        });
+    }
+
+    function paymentViaYoco(token) {
+        let total_amount = 0;
+        let tip = 0;
+        let tipElement = $("#cart_tip_amount");
+        let cartElement = $("input[name='cart_total_payable_amount']");
+        let walletElement = $("input[name='wallet_amount']");
+        let ajaxData = {};
+        if (cartElement.length > 0) {
+            total_amount = cartElement.val();
+            tip = tipElement.val();
+            ajaxData.tip = tip;
+        } else if (walletElement.length > 0) {
+            total_amount = walletElement.val();
+        }
+        ajaxData.amount = total_amount;
+        ajaxData.token = token;
+        ajaxData.returnUrl = path;
+        ajaxData.cancelUrl = path;
+
+        if (typeof tip_for_past_order !== 'undefined') {
+            if (tip_for_past_order != undefined && tip_for_past_order == 1) {
+                let order_number = $("#order_number").val();
+                ajaxData.order_number = order_number;
+                order_number = order_number;
+            }
+
+        }
+
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: payment_yoco_url,
+            data: ajaxData,
+            success: function(response) {
+                if (response.status == "Success") {
+                    window.location.href = response.data;
+                } else {
+                    if (cartElement.length > 0) {
+                        success_error_alert('error', response.message, ".payment_response");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                    } else if (walletElement.length > 0) {
+                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                        $(".topup_wallet_confirm").removeAttr("disabled");
+                    }
+                }
+            },
+            error: function(error) {
+                var response = $.parseJSON(error.responseText);
+                if (cartElement.length > 0) {
+                    success_error_alert('error', response.message, ".payment_response");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                } else if (walletElement.length > 0) {
+                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                    $(".topup_wallet_confirm").removeAttr("disabled");
+                }
+            }
+        });
+    }
+
+    function paymentSuccessViaPaypal(amount, token, payer_id, path, tip = 0, order_number = 0) {
         let address_id = 0;
         if (path.indexOf("cart") !== -1) {
             // $('#order_placed_btn').trigger('click');
@@ -959,8 +1075,8 @@ $(document).ready(function() {
                         placeOrder(address_id, 3, response.data, tip);
                     } else if (path.indexOf("wallet") !== -1) {
                         creditWallet(amount, 3, response.data);
-                    }else if (path.indexOf("orders") !== -1) {
-                        creditTipAfterOrder(amount, 3, response.data,order_number);
+                    } else if (path.indexOf("orders") !== -1) {
+                        creditTipAfterOrder(amount, 3, response.data, order_number);
                     } else if ((cabbookingwallet != undefined) && (cabbookingwallet == 1)) {
                         creditWallet(amount, 3, response.data);
                     }
@@ -1405,6 +1521,37 @@ $(document).ready(function() {
             paymentViaPaystack();
         } else if (payment_option_id == 6) {
             paymentViaPayfast();
+        } else if (payment_option_id == 9) {
+            paymentViaPaylink();
+        } else if (payment_option_id == 8) {
+
+
+
+            inline.createToken().then(function(result) {
+
+                if (result.error) {
+
+                    $('#yoco_card_error').html(result.error.message);
+                    $("#order_placed_btn, .proceed_to_pay").attr("disabled", false);
+                } else {
+                    const token = result;
+                    // alert("card successfully tokenised: " + token.id);
+
+
+
+                    paymentViaYoco(token.id);
+                }
+
+
+
+            }).catch(function(error) {
+                // Re-enable button now that request is complete
+
+                alert("error occured: " + error);
+            });
+
+
+
         }
     });
     $(document).on("click", ".remove_promo_code_btn", function() {
@@ -2641,14 +2788,14 @@ $(document).ready(function() {
 
     ///////////////// tip after order place /////////////////////////////////
 
-    window.creditTipAfterOrder = function creditTipAfterOrder(amount, payment_option_id, transaction_id,order_number) {
+    window.creditTipAfterOrder = function creditTipAfterOrder(amount, payment_option_id, transaction_id, order_number) {
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: credit_tip_url,
-            data: { tip_amount: amount, payment_option_id: payment_option_id, transaction_id: transaction_id , order_number: order_number},
-            success: function (response) {
-               // var currentUrl = window.location.href;
+            data: { tip_amount: amount, payment_option_id: payment_option_id, transaction_id: transaction_id, order_number: order_number },
+            success: function(response) {
+                // var currentUrl = window.location.href;
                 location.href = path;
                 if (response.status == "Success") {
                     // $("#topup_wallet").modal("hide");
@@ -2663,13 +2810,13 @@ $(document).ready(function() {
                     $("#topup_wallet_btn, .topup_wallet_confirm").attr("disabled", false);
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 var response = $.parseJSON(error.responseText);
                 $("#wallet_response .message").removeClass('d-none');
                 success_error_alert('error', response.message, "#wallet_response .message");
                 $("#topup_wallet_btn, .topup_wallet_confirm").removeAttr("disabled");
             },
-            complete: function(data){
+            complete: function(data) {
                 $('.spinner-overlay').hide();
             }
         });
