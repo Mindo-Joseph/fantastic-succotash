@@ -56,7 +56,7 @@ class PaylinkGatewayController extends FrontController
             }
             $uniqid = uniqid();
 
-            $notifyUrlParams = '?gateway=paylink&amount=' . $request->amount . '&cart_id=' . $request->cart_id . '&order=' . $request->order_number;
+            $notifyUrlParams = '?gateway=paylink&amount=' . $request->amount . '&cart_id=' . $request->cart_id . '&order=' . $request->order_number. '&payment_form=' . $request->payment_form;
 
             $data = array(
                 'requestId' => 'CHK-' . $uniqid,
@@ -207,6 +207,9 @@ class PaylinkGatewayController extends FrontController
                     $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
                     $returnUrlParams = '?gateway=paylink&order=' . $order->id;
                     $returnUrl = route('order.return.success');
+                    if ($request->payment_form == 'wallet') {
+                        $returnUrl = route('user.wallet');
+                    }
                     return Redirect::to(url($returnUrl . $returnUrlParams));
                 }
 

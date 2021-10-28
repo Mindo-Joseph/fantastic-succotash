@@ -43,6 +43,7 @@ class PaylinkGatewayController extends BaseController
             $user = Auth::user();
             $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($request->amount);
+<<<<<<< HEAD
             // $returnUrlParams = '?amount='.$amount;
             // if($request->has('tip')){
             //     $tip = $request->tip;
@@ -53,13 +54,21 @@ class PaylinkGatewayController extends BaseController
             //     $returnUrlParams = $returnUrlParams.'&address_id='.$address_id;
             // }
             $returnUrlParams = '?gateway=paylink&order=' . $request->order_number;
+=======
 
-            $returnUrl = route('order.return.success');
-            if ($request->payment_form == 'wallet') {
-                $returnUrl = route('user.wallet');
-            }
+            // $returnUrlParams = '?gateway=paylink&order=' . $request->order_number;
+>>>>>>> f70fa067f9634e170feb8f4839ad3bb2eea9e264
+
+            // $returnUrl = route('order.return.success');
+            // if ($request->payment_form == 'wallet') {
+            //     $returnUrl = route('user.wallet');
+            // }
             $uniqid = uniqid();
 
+<<<<<<< HEAD
+=======
+            $notifyUrlParams = '?gateway=paylink&amount=' . $request->amount . '&cart_id=' . $request->cart_id . '&order=' . $request->order_number;
+>>>>>>> f70fa067f9634e170feb8f4839ad3bb2eea9e264
             $data = array(
                 'requestId' => 'CHK-' . $uniqid,
                 'orderId'=> 'CHK-100000214',
@@ -68,8 +77,15 @@ class PaylinkGatewayController extends BaseController
                 'description' => 'Order Checkout',
                 'returnUrl' =>url('payment/paylink/notify'),
                 'reference' => $request->order_number,
+<<<<<<< HEAD
               //  'webhook' => url('payment/paylink/notify'),
                // 'notifyUrl'=> url('payment/paylink/notify'),
+=======
+
+
+                'returnUrl' => url($request->serverUrl.'payment/paylink/notify'.$notifyUrlParams),
+
+>>>>>>> f70fa067f9634e170feb8f4839ad3bb2eea9e264
                 'redirect' => true,
                 'test' => $this->test_mode, // True, testing, false, production
                 // 'options' => array(
@@ -205,6 +221,7 @@ class PaylinkGatewayController extends BaseController
                         // Send Email
                        
                     }
+<<<<<<< HEAD
                 
             }
         
@@ -274,6 +291,32 @@ class PaylinkGatewayController extends BaseController
         $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
         foreach ($order_products as $order_prod) {
             OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
+=======
+                    $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id);
+                    $super_admin = User::where('is_superadmin', 1)->pluck('id');
+                    $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
+                    $returnUrlParams = '?gateway=paylink&order=' . $order->id;
+                  
+                    return Redirect::to(url($request->serverUrl . 'payment/gateway/returnResponse' . $returnUrlParams));
+                }
+
+                // Send Email
+                //   $this->successMail();
+            }
+        } else {
+            $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
+            foreach ($order_products as $order_prod) {
+                OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
+            }
+            OrderProduct::where('order_id', $order->id)->delete();
+            OrderProductPrescription::where('order_id', $order->id)->delete();
+            VendorOrderStatus::where('order_id', $order->id)->delete();
+            OrderVendor::where('order_id', $order->id)->delete();
+            OrderTax::where('order_id', $order->id)->delete();
+            Order::where('id', $order->id)->delete();
+            $returnUrlParams = '?gateway=paylink&order=' . $order->id;
+            return Redirect::to(url($request->serverUrl . 'payment/gateway/returnResponse' . $returnUrlParams));
+>>>>>>> f70fa067f9634e170feb8f4839ad3bb2eea9e264
         }
         OrderProduct::where('order_id', $order->id)->delete();
         OrderProductPrescription::where('order_id', $order->id)->delete();
