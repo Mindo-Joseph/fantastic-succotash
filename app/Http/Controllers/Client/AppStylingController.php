@@ -178,7 +178,8 @@ class AppStylingController extends BaseController
         if ($request->hasFile('file_name')) {    /* upload logo file */
             $file = $request->file('file_name');
             $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            $s3filePath = '/app_styling/tutorials/' . $file_name;
+            $code = Client::orderBy('id','asc')->value('code');
+            $s3filePath = '/'.$code.'/app_styling/tutorials/' . $file_name;
             $tutorialObj->file_name = Storage::disk('s3')->put($s3filePath, $file, 'public');
         }
         $tutorialObj->sort = (!empty($maxTutorialValue))?($maxTutorialValue+1):1;

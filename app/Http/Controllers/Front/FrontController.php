@@ -604,4 +604,9 @@ class FrontController extends Controller
         $time = Carbon::parse($datetime)->format($format);
         return $time;
     }
+
+    public function getClientCode(){
+        $code = Client::orderBy('id','asc')->value('code');
+        return $code;
+    }
 }
