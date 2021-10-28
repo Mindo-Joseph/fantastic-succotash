@@ -75,7 +75,7 @@ class YocoGatewayController extends FrontController
                 'amountInCents' => $amount,
                 'currency' => 'ZAR',
                 'description' => 'Order Checkout',
-                'return_url' => url($request->returnUrl . $returnUrlParams),
+                'return_url' => url($returnUrl . $returnUrlParams),
                 'reference' => $request->order_number,
                 'webhook' => url('/payment/yoco/notify/'),
                 'redirect' => false,
@@ -120,6 +120,9 @@ class YocoGatewayController extends FrontController
             if ($result->status == 'successful') {
               $this->yocoSuccess($request,$result);
                 // $response = $this->mb->mobbex_checkout($checkout_data);
+                if ($request->payment_form == '') {
+                    $returnUrl = route('user.wallet');
+                }
                 return $this->successResponse(url($returnUrl . $returnUrlParams));
             }
             else {
