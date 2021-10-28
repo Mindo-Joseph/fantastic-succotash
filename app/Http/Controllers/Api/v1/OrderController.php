@@ -341,7 +341,7 @@ class OrderController extends BaseController {
                             'balance_transaction' => $order->payable_amount,
                         ]);
                     }
-                    $order = $order->with(['vendors:id,order_id,vendor_id', 'user_vendor', 'vendors.vendor'])->where('order_number', $order->order_number)->first();
+                    $order = $order->with(['vendors:id,order_id,dispatch_traking_url,vendor_id', 'user_vendor', 'vendors.vendor'])->where('order_number', $order->order_number)->first();
                     if(($request->payment_option_id != 7) && ($request->payment_option_id != 6)&& ($request->payment_option_id != 8)&& ($request->payment_option_id != 9)){ // if not mobbex, payfast
                         $code = $request->header('code');
                         if (!empty($order->vendors)) {
