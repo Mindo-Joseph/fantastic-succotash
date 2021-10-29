@@ -160,9 +160,9 @@ class PaylinkGatewayController extends FrontController
 
         curl_close($curl);
         $response = json_decode($response);
+      
         if ($request->payment_form == '') {
-            $returnUrl = route('user.wallet');
-            return Redirect::to(url($returnUrl));
+            return $this->successResponse($response);
         }
         
         //  dd($response);
