@@ -947,8 +947,13 @@ $(document).ready(function() {
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
+
+                    //  creditWallet(total_amount, payment_option_id, data.result.id);
+
                     window.location.href = response.data;
-                    // creditWallet(total_amount, payment_option_id, response.data.id);
+
+
+
 
                 } else {
 

@@ -121,7 +121,7 @@ class PaylinkGatewayController extends FrontController
 
 
             if ($result->success == true) {
-                // $curl = curl_init();
+               
 
                 return $this->successResponse($result->result->redirectUrl, ['status' => $result->result->status]);
             } else {
@@ -161,9 +161,7 @@ class PaylinkGatewayController extends FrontController
         curl_close($curl);
         $response = json_decode($response);
       
-        if ($request->payment_form == '') {
-            return $this->successResponse($response);
-        }
+     
         
         //  dd($response);
         $transactionId = $request->checkout;
@@ -217,6 +215,11 @@ class PaylinkGatewayController extends FrontController
 
                 // Send Email
                 //   $this->successMail();
+            }
+            else
+            {
+                $returnUrl = route('user.wallet');
+                return Redirect::to(url($returnUrl));
             }
         } else {
             $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
