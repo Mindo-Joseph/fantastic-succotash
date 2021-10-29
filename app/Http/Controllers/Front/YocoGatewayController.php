@@ -11,7 +11,6 @@ use Yoco\Exceptions\ApiKeyException;
 use Yoco\Exceptions\DeclinedException;
 use Yoco\Exceptions\InternalException;
 use Omnipay\Omnipay;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
 use App\Http\Traits\ApiResponser;
@@ -54,6 +53,17 @@ class YocoGatewayController extends FrontController
             $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($request->amount);
             $amount = filter_var($amount, FILTER_SANITIZE_NUMBER_INT);
+     
+            // $returnUrlParams = '?amount='.$amount;
+            // if($request->has('tip')){
+            //     $tip = $request->tip;
+            //     $returnUrlParams = $returnUrlParams.'&tip='.$tip;
+            // }
+            // if( ($request->has('address_id')) && ($request->address_id > 0) ){
+            //     $address_id = $request->address_id;
+            //     $returnUrlParams = $returnUrlParams.'&address_id='.$address_id;
+            // }
+            $returnUrlParams = '?gateway=yoco&order=' . $request->order_number;
 
             $returnUrl = route('user.wallet');
             $returnUrlParams = '';
@@ -96,7 +106,6 @@ class YocoGatewayController extends FrontController
             $result = curl_exec($ch);
             // return $result;
             $result = json_decode($result);
-
             if ($result->status == 'successful') {
                 if ($request->payment_form == '') {
                     return $this->successResponse($result);

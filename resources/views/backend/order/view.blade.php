@@ -198,11 +198,11 @@ $timezone = Auth::user()->timezone;
                                                 @if(isset($product->scheduled_date_time)) {{convertDateTimeInTimeZone($product->scheduled_date_time, $timezone, 'l, F d, Y, H:i A')}} @endif
                                             <p>
                                                 @foreach($product->prescription as $pres)
-                                                <br><a target="_blank" href="{{ ($pres) ? $pres->prescription['proxy_url'].'74/100'.$pres->prescription['image_path'] : ''}}">{{($product->prescription) ? 'Prescription' : ''}}</a>
+                                                <br><a target="_blank" href="{{ ($pres) ? @$pres->prescription['proxy_url'].'74/100'.@$pres->prescription['image_path'] : ''}}">{{($product->prescription) ? 'Prescription' : ''}}</a>
                                                 @endforeach
                                         </th>
                                         <td>
-                                            <img src="{{$product->image_path['proxy_url'].'32/32'.$product->image_path['image_path']}}" alt="product-img" height="32">
+                                            <img src="{{@$product->image_path['proxy_url'].'32/32'.@$product->image_path['image_path']}}" alt="product-img" height="32">
                                         </td>
                                         <td>{{ $product->quantity }}</td>
                                         <td>$@money($product->price)</td>
@@ -258,7 +258,12 @@ $timezone = Auth::user()->timezone;
                         <h4 class="header-title mb-3">{{ __("Shipping Information") }}</h4>
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->address ? $order->address->address : ''}}</p>
-                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Mobile") }}:</span> {{$order->user->phone_number}}</p>
+                        @if(isset($order->address) && !empty($order->address->street))
+                        <p class="mb-2"><span class="fw-semibold me-2">{{__('Street')}}:</span> {{ $order->address ? $order->address->street : ''}}</p>
+                        @endif
+                        <p class="mb-2"><span class="fw-semibold me-2">{{__('City')}}:</span> {{ $order->address ? $order->address->city : ''}}</p>
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("State") }}:</span> {{ $order->address ? $order->address->state : ''}}</p>
+                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Pincode") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
                     </div>
                 </div>
             </div>
@@ -270,6 +275,13 @@ $timezone = Auth::user()->timezone;
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->user->address->first() ? $order->user->address->first()->address : 'Not Available'}}</p>
                         <p class="mb-0"><span class="fw-semibold me-2">{{ __("Mobile") }}:</span> {{$order->user->phone_number ? $order->user->phone_number : 'Not Available'}}</p>
+                        @if(isset($order->address) && !empty($order->address->street))
+                        <p class="mb-2"><span class="fw-semibold me-2">{{__('Street')}}:</span> {{ $order->address ? $order->address->street : ''}}</p>
+                        @endif
+                        <p class="mb-2"><span class="fw-semibold me-2">{{__('City')}}:</span> {{ $order->address ? $order->address->city : ''}}</p>
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("State") }}:</span> {{ $order->address ? $order->address->state : ''}}</p>
+                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Pincode") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
+                   
                     </div>
                 </div>
             </div>
