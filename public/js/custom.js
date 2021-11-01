@@ -92,7 +92,7 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
         infinite: false,
         variableWidth: true,
         speed: 300,
-        centerMode: true,
+        // centerMode: true,
     });
 }
 loadMainMenuSlider();

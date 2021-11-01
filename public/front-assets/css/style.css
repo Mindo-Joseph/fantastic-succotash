@@ -13902,6 +13902,7 @@ header.stickycls {
 
     .pixelstrap a .sub-arrow::before {
         content: "\f107";
+        content: none;
         font-family: FontAwesome;
         position: absolute;
         right: 0;

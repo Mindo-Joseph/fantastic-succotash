@@ -4950,9 +4950,9 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 
 .menu-slider .slick-list {
     overflow: visible;
-    -webkit-transform: translateX(-540px);
+    /* -webkit-transform: translateX(-540px);
     -moz-transform: translateX(-540px);
-    transform: translateX(-540px);
+    transform: translateX(-540px); */
 }
 
 .store-btn img{
