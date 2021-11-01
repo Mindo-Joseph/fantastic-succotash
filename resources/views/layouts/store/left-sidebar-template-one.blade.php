@@ -460,7 +460,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="row">
                     <div class="col-12">
                         
-                        <ul id="main-menu" class="sm pixelstrap sm-horizontal">
+                        <ul id="main-menu" class="sm pixelstrap sm-horizontal menu-slider">
                             <li>
                                 <div class="mobile-back text-end">{{__('Back')}}<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
                             </li>

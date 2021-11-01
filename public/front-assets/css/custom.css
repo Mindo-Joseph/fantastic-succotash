@@ -4937,6 +4937,28 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     z-index: 1;
 }
 
+/* .menu-slider .slick-track {
+    width: fit-content !important;
+    transform: none !important;
+    margin: auto !important;
+} */
+
+.menu-slider .slick-slide {
+    display: inline-block;
+    float: none;
+} 
+
+.menu-slider .slick-list {
+    overflow: visible;
+    -webkit-transform: translateX(-540px);
+    -moz-transform: translateX(-540px);
+    transform: translateX(-540px);
+}
+
+.store-btn img{
+    height: 40px;
+}
+
 @media screen and (max-width: 500px) {
     .step p {
         font-size: 11px;

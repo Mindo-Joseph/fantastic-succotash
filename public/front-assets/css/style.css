@@ -13904,6 +13904,7 @@ header.stickycls {
         content: "\f107";
         font-family: FontAwesome;
         position: absolute;
+        right: 0;
     }
 
     .pixelstrap ul {
