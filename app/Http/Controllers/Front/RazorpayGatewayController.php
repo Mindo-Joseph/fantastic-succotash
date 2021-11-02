@@ -61,7 +61,7 @@ class RazorpayGatewayController extends FrontController
             $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($amount);
             $amount = filter_var($amount, FILTER_SANITIZE_NUMBER_INT);
-           
+
             // $returnUrlParams = '?gateway=razorpay&order=' . $request->order_number;
 
             $returnUrl = route('order.return.success');
@@ -71,93 +71,95 @@ class RazorpayGatewayController extends FrontController
             //$notifyUrlParams = '?gateway=paylink&amount=' . $amount . '&order=' . $order_number;
 
             $orderData = [
-              
-                'amount'          => $amount/100,
+
+                'amount'          => $amount / 100,
 
                 'currency'        => 'INR'
             ];
 
-           // $razorpayOrder = $this->api->order->create($orderData);
+            // $razorpayOrder = $this->api->order->create($orderData);
             //dd($razorpayOrder);
-            $payment = $this->api->payment->fetch($request->razorpay_payment_id);
-           
-            if ($payment['status'] == 'authorized') {
-                return $this->razorpayNotify($payment, $amount, $order,$orderData);
+            $payment = $this->api->payment->fetch($request->razorpay_payment_id)->capture($orderData);
+
+            if ($payment['status'] == 'captured') {
+                return $this->razorpayNotify($payment, $amount, $order, $orderData);
             } else {
-                return $this->errorResponse('Payment Failed', 400);
+                return $this->razorpayNotify_fail($payment, $amount, $order, $orderData);
             }
         } catch (\Exception $ex) {
             return $this->errorResponse($ex->getMessage(), 400);
         }
     }
 
-    public function razorpayNotify($payment, $amount, $order,$orderData)
+    public function razorpayNotify($payment, $amount, $order, $orderData)
     {
-        $payment = $this->api->payment->fetch($payment['id'])->capture($orderData);
+
 
         $transactionId = $payment['id'];
 
         $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order)->first();
 
-        if ($payment['status'] == 'captured') {
-            if ($order) {
-                $order->payment_status = 1;
-                $order->save();
-                $payment_exists = Payment::where('transaction_id', $transactionId)->first();
-                if (!$payment_exists) {
-                    Payment::insert([
-                        'date' => date('Y-m-d'),
-                        'order_id' => $order->id,
-                        'transaction_id' => $transactionId,
-                        'balance_transaction' => $amount,
-                    ]);
 
-                    // Auto accept order
-                    $orderController = new OrderController();
-                    $orderController->autoAcceptOrderIfOn($order->id);
+        if ($order) {
+            $order->payment_status = 1;
+            $order->save();
+            $payment_exists = Payment::where('transaction_id', $transactionId)->first();
+            if (!$payment_exists) {
+                Payment::insert([
+                    'date' => date('Y-m-d'),
+                    'order_id' => $order->id,
+                    'transaction_id' => $transactionId,
+                    'balance_transaction' => $amount,
+                ]);
 
-                    // Remove cart
-                    $user = Auth::user();
-                    Cart::where('id', $user['cart_id'])->update(['schedule_type' => null, 'scheduled_date_time' => null]);
-                    CartAddon::where('cart_id', $user['cart_id'])->delete();
-                    CartCoupon::where('cart_id', $user['cart_id'])->delete();
-                    CartProduct::where('cart_id', $user['cart_id'])->delete();
-                    CartProductPrescription::where('cart_id', $user['cart_id'])->delete();
+                // Auto accept order
+                $orderController = new OrderController();
+                $orderController->autoAcceptOrderIfOn($order->id);
 
-                    // Send Notification
-                    if (!empty($order->vendors)) {
-                        foreach ($order->vendors as $vendor_value) {
-                            $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id, $vendor_value->vendor_id);
-                            $user_vendors = UserVendor::where(['vendor_id' => $vendor_value->vendor_id])->pluck('user_id');
-                            $orderController->sendOrderPushNotificationVendors($user_vendors, $vendor_order_detail);
-                        }
+                // Remove cart
+                $user = Auth::user();
+                Cart::where('id', $user['cart_id'])->update(['schedule_type' => null, 'scheduled_date_time' => null]);
+                CartAddon::where('cart_id', $user['cart_id'])->delete();
+                CartCoupon::where('cart_id', $user['cart_id'])->delete();
+                CartProduct::where('cart_id', $user['cart_id'])->delete();
+                CartProductPrescription::where('cart_id', $user['cart_id'])->delete();
+
+                // Send Notification
+                if (!empty($order->vendors)) {
+                    foreach ($order->vendors as $vendor_value) {
+                        $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id, $vendor_value->vendor_id);
+                        $user_vendors = UserVendor::where(['vendor_id' => $vendor_value->vendor_id])->pluck('user_id');
+                        $orderController->sendOrderPushNotificationVendors($user_vendors, $vendor_order_detail);
                     }
-                    $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id);
-                    $super_admin = User::where('is_superadmin', 1)->pluck('id');
-                    $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
-
-                    // Send Email
-                    //   $this->successMail();
                 }
-                $returnUrlParams = '?gateway=razorpay&order=' . $order->id;
-                $returnUrl = route('order.return.success');
+                $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id);
+                $super_admin = User::where('is_superadmin', 1)->pluck('id');
+                $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
 
-              return redirect()->to($returnUrl.$returnUrlParams);
-            } else {
-                return redirect()->to('/viewcart');
+                // Send Email
+                //   $this->successMail();
             }
+            $returnUrlParams = '?gateway=razorpay&order=' . $order->id;
+            $returnUrl = route('order.return.success');
+
+            return redirect()->to($returnUrl . $returnUrlParams);
         } else {
-            $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
-            foreach ($order_products as $order_prod) {
-                OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
-            }
-            OrderProduct::where('order_id', $order->id)->delete();
-            OrderProductPrescription::where('order_id', $order->id)->delete();
-            VendorOrderStatus::where('order_id', $order->id)->delete();
-            OrderVendor::where('order_id', $order->id)->delete();
-            OrderTax::where('order_id', $order->id)->delete();
-            Order::where('id', $order->id)->delete();
-            return Redirect::to('viewcart');
+            return redirect()->to('/viewcart');
         }
+    }
+
+    public function razorpayNotify_fail($payment, $amount, $order, $orderData)
+    {
+        $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
+        foreach ($order_products as $order_prod) {
+            OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
+        }
+        OrderProduct::where('order_id', $order->id)->delete();
+        OrderProductPrescription::where('order_id', $order->id)->delete();
+        VendorOrderStatus::where('order_id', $order->id)->delete();
+        OrderVendor::where('order_id', $order->id)->delete();
+        OrderTax::where('order_id', $order->id)->delete();
+        Order::where('id', $order->id)->delete();
+        return Redirect::to('viewcart');
     }
 }
