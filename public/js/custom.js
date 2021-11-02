@@ -662,6 +662,13 @@ $(document).ready(function() {
             success_error_alert('error', 'Please add a valid address to continue', ".cart_response");
             return false;
         }
+        if(vendor_type == 'dine_in'){
+            var dinein_table = $("#vendor_table").val();
+            if(dinein_table == ''){
+                success_error_alert('error', 'Please book a table to continue', ".cart_response");
+                return false;
+            }
+        }
         var task_type = $("input[name='task_type']:checked").val();
         var schedule_dt = $("#schedule_datetime").val();
         var now = new Date().toISOString();
