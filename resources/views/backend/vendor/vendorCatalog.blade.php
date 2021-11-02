@@ -367,7 +367,7 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group" id="skuInput">
-                                            {!! Form::label('title', __('SKU (Allowed Keys->a-z,A-Z,0-9,-,_)'), ['class' => 'control-label']) !!}
+                                            {!! Form::label('title', __('SKU'), ['class' => 'control-label']) !!}
                                             <span class="text-danger">*</span>
                                             {!! Form::text('sku', null, ['class' => 'form-control', 'id' => 'sku', 'onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
                                             <span class="invalid-feedback" role="alert">
