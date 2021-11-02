@@ -107,7 +107,7 @@
                             @if(in_array('vendors',$allowed) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="{{route('account.vendor.payout')}}">
-                                    <span class="icon-vendor"></span>
+                                    <span class="icon-dollar"></span>
                                     <span>{{ __('Payout') }}</span>
                                     </a>
                                 </li>

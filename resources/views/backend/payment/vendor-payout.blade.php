@@ -69,14 +69,14 @@
                             <thead>
                                 <tr>
                                     <th>{{ __("Vendor Name") }}</th>
+                                    <th>{{ __("Stripe Account") }}</th>
                                     <th >{{ __("Order Value") }} <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Order Value Without Delivery Fee."></i></th>
                                     {{-- <th>{{ __("Delivery Fees") }}</th> --}}
                                     <th>{{ __("Admin Commissions") }}</th>
                                     {{-- <th>{{ __("Promo [Vendor]") }}</th> --}}
                                     {{-- <th>{{ __("Promo [Admin]") }}</th> --}}
-                                    {{-- <th>{{ __("Cash Collected") }}</th> --}}
-                                    {{-- <th>{{ __("Payment Gateway") }}</th> --}}
                                     <th>{{ __("Vendor Earning") }}</th>
+                                    <th>Payout</th>
                                 </tr>
                             </thead>
                             <tbody id="accounting_vendor_tbody_list">
@@ -136,16 +136,25 @@
                 },
                 columns: [
                     {data: 'name', name: 'name', orderable: true, searchable: false, "mRender": function ( data, type, full ) {
-                      return "<a href='" + full.view_url + "' target='_blank'>"+full.name+"</a>";
-                      }},
+                        return "<a href='" + full.view_url + "' target='_blank'>"+full.name+"</a>";
+                      }
+                    },
+                    {"mRender": function ( data, type, full ) {
+                        var html = "<a class='stripe_account_setup_link' href=''>Stripe Connect</a>";
+                        return html;
+                      }
+                    },
                     {data: 'order_value', name: 'order_amt', orderable: false, searchable: false},
                     // {data: 'delivery_fee', name: 'delivery_fee', orderable: false, searchable: false},
                     {data: 'admin_commission_amount', name: 'admin_commission_amount', orderable: false, searchable: false},
                     // {data: 'promo_vendor_amount', name: 'promo_admin_amount', orderable: false, searchable: false},
                     // {data: 'promo_admin_amount', name: 'promo_admin_amount', orderable: false, searchable: false},
-                    // {data: 'cash_collected_amount', name: 'cash_collected_amount', orderable: false, searchable: false},
-                    // {data: 'payment_method', name: 'payment_method', orderable: false, searchable: false},
                     {data: 'vendor_earning', name: 'vendor_earning', orderable: false, searchable: false},
+                    {"mRender": function ( data, type, full ) {
+                        var html = "<a class='btn btn-sm btn-info waves-effect waves-light manual_payout_btn' href='javascript:void(0)'>Manual</a>";
+                        return html;
+                      }
+                    }
                 ]
             });            
 

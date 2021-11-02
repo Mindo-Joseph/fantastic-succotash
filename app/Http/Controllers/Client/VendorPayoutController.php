@@ -4,16 +4,29 @@ namespace App\Http\Controllers\Client;
 use DB;
 use Auth;
 use DataTables;
+use Omnipay\Omnipay;
 use Illuminate\Support\Str; 
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\OrderVendorListExport;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{User, Vendor, OrderVendor};
+use App\Models\{User, Vendor, OrderVendor, PaymentOption};
 
 class VendorPayoutController extends BaseController{
     use ApiResponser;
+    public $gateway;
+    public $currency;
+
+    public function __construct(){
+        $stripe_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'stripe')->where('status', 1)->first();
+        $creds_arr = json_decode($stripe_creds->credentials);
+        $api_key = (isset($creds_arr->api_key)) ? $creds_arr->api_key : '';
+        $testmode = (isset($stripe_creds->test_mode) && ($stripe_creds->test_mode == '1')) ? true : false;
+        $this->gateway = Omnipay::create('Stripe');
+        $this->gateway->setApiKey($api_key);
+        $this->gateway->setTestMode($testmode); //set it to 'false' when go live
+    }
 
     public function index(Request $request){
         $total_delivery_fees = OrderVendor::orderBy('id','desc');
