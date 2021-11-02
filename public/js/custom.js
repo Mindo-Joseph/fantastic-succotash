@@ -1594,6 +1594,7 @@ $(document).ready(function() {
         let amount = $(this).data('amount');
         let cart_id = $(this).data('cart_id');
         let vendor_id = $(this).data('vendor_id');
+        $(".invalid-feedback.manual_promocode").html("");
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -1601,14 +1602,18 @@ $(document).ready(function() {
             data: { vendor_id: vendor_id, amount: amount, cart_id: cart_id },
             success: function(response) {
                 $("#promo_code_list_main_div").html('');
+                $(document).find('.manual_promocode_input').val("");
                 if (response.status == "Success") {
+                    $('.validate_promo_code_btn').attr('data-vendor_id', vendor_id);
+                    $('.validate_promo_code_btn').attr('data-cart_id', cart_id);
+                    $('.validate_promo_code_btn').attr('data-amount', amount);
                     $('#refferal-modal').modal('show');
                     if (response.data.length != 0) {
                         let promo_code_template = _.template($('#promo_code_template').html());
                         $("#promo_code_list_main_div").append(promo_code_template({ promo_codes: response.data, vendor_id: vendor_id, cart_id: cart_id, amount: amount }));
                     } else {
-                        let no_promo_code_template = _.template($('#no_promo_code_template').html());
-                        $("#promo_code_list_main_div").append(no_promo_code_template());
+                        // let no_promo_code_template = _.template($('#no_promo_code_template').html());
+                        // $("#promo_code_list_main_div").append(no_promo_code_template());
                     }
                 }
             }
@@ -2844,4 +2849,39 @@ $(document).ready(function() {
     }
 
     // *****************************  End tip after order place ****************************///
+
+    $(document).on('click', '.validate_promo_code_btn', function() {
+        let amount = $(this).data('amount');
+        let cart_id = $(this).data('cart_id');
+        let vendor_id = $(this).data('vendor_id');
+        let promocode = $(document).find('.manual_promocode_input').val();
+        if (promocode && promocode != "") {
+            // let coupon_id = $(this).data('coupon_id');
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: validate_promocode_coupon_url,
+                data: { cart_id: cart_id, vendor_id: vendor_id, amount: amount, promocode: promocode },
+                success: function(response) {
+                    if (response.status == "Success") {
+                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-amount', amount);
+                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-cart_id', cart_id);
+                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-vendor_id', vendor_id);
+                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-coupon_id', response.data.id);
+                        $('.validate_promo_div').find('.apply_promo_code_btn').trigger('click');
+                        $('#refferal-modal').modal('hide');
+                        cartHeader();
+                    }
+                },
+                error: function(reject) {
+                    if (reject.status === 422) {
+                        var message = $.parseJSON(reject.responseText);
+                        $(".invalid-feedback.manual_promocode").html("<strong>" + message.message + "</strong>");
+                    }
+                }
+            });
+        } else {
+            $(".invalid-feedback.manual_promocode").html("<strong>Please enter promocode</strong>");
+        }
+    })
 });
