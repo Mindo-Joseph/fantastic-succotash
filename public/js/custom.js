@@ -937,6 +937,34 @@ $(document).ready(function() {
         });
     }
 
+    function paymentViaRazorpay_wallet(address_id, payment_option_id) {
+        let total_amount = 0;
+
+
+
+        let ajaxData = [];
+
+        total_amount = $("input[name='wallet_amount']").val();
+        ajaxData.push({ name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
+
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: payment_razorpay_url,
+            data: ajaxData,
+            success: function(response) {
+                if (response.status == "Success") {
+
+                    //  creditWallet(total_amount, payment_option_id, data.result.id);
+
+
+                    window.location.href = response.data;
+
+                }
+            }
+        });
+    }
+
     function paymentViaPaylink_wallet(address_id, payment_option_id) {
         let total_amount = 0;
 
@@ -1501,6 +1529,20 @@ $(document).ready(function() {
 
             creditWallet(urlParams.get('amount'), 9, urlParams.get('checkout'));
         }
+        if ((urlParams.get('gateway') == 'razorpay') && urlParams.has('checkout')) {
+            $('.spinner-overlay').show();
+
+            if (urlParams.has('checkout')) {
+
+                transaction_id = urlParams.get('checkout');
+            }
+            if (urlParams.has('amount')) {
+
+                total_amount = urlParams.get('amount');
+            }
+
+            creditWallet(urlParams.get('amount') / 10000, 9, urlParams.get('checkout'));
+        }
     });
 
 
@@ -1567,6 +1609,8 @@ $(document).ready(function() {
             paymentViaPayfast();
         } else if (payment_option_id == 9) {
             paymentViaPaylink_wallet('', payment_option_id);
+        } else if (payment_option_id == 10) {
+            paymentViaRazorpay_wallet('', payment_option_id);
         } else if (payment_option_id == 8) {
 
 

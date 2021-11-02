@@ -45,7 +45,9 @@ class RazorpayGatewayController extends FrontController
             $amount = $this->getDollarCompareAmount($request->amount);
             $amount = filter_var($amount, FILTER_SANITIZE_NUMBER_INT);
             $order_number = $request->order_number;
-
+            if (!isset($order_number)) {
+                $order_number = 0;
+            }
             $api_key = $this->API_KEY;
             return $this->successResponse(url('/payment/razorpay/view?amount=' . $amount . '&order=' . $order_number . '&api_key=' . $api_key));
         } catch (\Exception $ex) {
@@ -53,7 +55,7 @@ class RazorpayGatewayController extends FrontController
         }
     }
 
-    public function razorpayCompletePurchase(Request $request, $domain, $amount, $order)
+    public function razorpayCompletePurchase(Request $request, $domain, $amount, $order = null)
     {
 
         try {
@@ -144,7 +146,9 @@ class RazorpayGatewayController extends FrontController
 
             return redirect()->to($returnUrl . $returnUrlParams);
         } else {
-            return redirect()->to('/viewcart');
+            $returnUrlParams = '?gateway=razorpay&amount=' . $amount . '&checkout=' . $payment['id'];
+            $returnUrl = route('user.wallet');
+            return Redirect::to(url($returnUrl . $returnUrlParams));
         }
     }
 
