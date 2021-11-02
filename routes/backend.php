@@ -147,6 +147,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::post('vendor/saveConfig/{id}', 'Client\VendorController@updateConfig')->name('vendor.config.update');
         Route::post('vendor/activeCategory/{id}', 'Client\VendorController@activeCategory')->name('vendor.category.update');
         Route::post('vendor/addCategory/{id}', 'Client\TableBookingController@storeCategory')->name('vendor.addCategory');
+        Route::get('vendor/vendor_specific_categories/{id}', 'Client\VendorController@vendor_specific_categories')->name('vendor.specific_categories');
         Route::post('vendor/updateCategory/{id}', 'Client\TableBookingController@updateCategory')->name('vendor.updateCategory');
         Route::get('vendor/table/category/edit', 'Client\TableBookingController@editCategory')->name('vendor_table_category_edit');
         Route::get('vendor/table/number/edit', 'Client\TableBookingController@editTable')->name('vendor_table_edit');
