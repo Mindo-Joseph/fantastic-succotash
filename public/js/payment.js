@@ -21,23 +21,6 @@ $(document).ready(function() {
         paymentSuccessViaPaystack(urlParams.get('amount'), urlParams.get('trxref'), path, tipAmount, order_number);
     }
 
-    let queryString = window.location.search;
-    let path = window.location.pathname;
-    let urlParams = new URLSearchParams(queryString);
-    if ((urlParams.get('gateway') == 'paylink') && urlParams.has('checkout')) {
-        $('.spinner-overlay').show();
-
-        if (urlParams.has('checkout')) {
-
-            transaction_id = urlParams.get('checkout');
-        }
-        if (urlParams.has('amount')) {
-
-            total_amount = urlParams.get('amount');
-        }
-
-        creditWallet(urlParams.get('amount'), 9, urlParams.get('checkout'));
-    }
 
 
     window.paymentViaPaystack = function paymentViaPaystack() {

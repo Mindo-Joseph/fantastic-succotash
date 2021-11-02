@@ -1478,7 +1478,30 @@ $(document).ready(function() {
         });
     }
 
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        });
+        let queryString = window.location.search;
+        let path = window.location.pathname;
+        let urlParams = new URLSearchParams(queryString);
+        if ((urlParams.get('gateway') == 'paylink') && urlParams.has('checkout')) {
+            $('.spinner-overlay').show();
 
+            if (urlParams.has('checkout')) {
+
+                transaction_id = urlParams.get('checkout');
+            }
+            if (urlParams.has('amount')) {
+
+                total_amount = urlParams.get('amount');
+            }
+
+            creditWallet(urlParams.get('amount'), 9, urlParams.get('checkout'));
+        }
+    });
 
 
     function userSubscriptionPurchase(amount, payment_option_id, transaction_id) {
