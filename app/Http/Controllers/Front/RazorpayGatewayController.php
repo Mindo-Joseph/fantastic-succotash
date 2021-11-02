@@ -80,7 +80,7 @@ class RazorpayGatewayController extends FrontController
            // $razorpayOrder = $this->api->order->create($orderData);
             //dd($razorpayOrder);
             $payment = $this->api->payment->fetch($request->razorpay_payment_id);
-            if ($payment['status'] == 'authorized') {
+            if ($payment['status'] == 'authorized' || $payment['status'] == 'captured') {
                 return $this->razorpayNotify($payment, $amount, $order);
             } else {
                 return $this->errorResponse('Payment Failed', 400);
@@ -93,7 +93,7 @@ class RazorpayGatewayController extends FrontController
     public function razorpayNotify($payment, $amount, $order)
     {
         $payment = $this->api->payment->fetch($payment['id']);
-
+//dd($payment);
         $transactionId = $payment['id'];
 
         $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order)->first();
