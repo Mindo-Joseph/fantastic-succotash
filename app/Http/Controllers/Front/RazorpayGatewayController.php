@@ -61,7 +61,7 @@ class RazorpayGatewayController extends FrontController
             $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($amount);
             $amount = filter_var($amount, FILTER_SANITIZE_NUMBER_INT);
-
+           
             // $returnUrlParams = '?gateway=razorpay&order=' . $request->order_number;
 
             $returnUrl = route('order.return.success');
@@ -71,8 +71,8 @@ class RazorpayGatewayController extends FrontController
             //$notifyUrlParams = '?gateway=paylink&amount=' . $amount . '&order=' . $order_number;
 
             $orderData = [
-                'receipt'         => $order,
-                'amount'          => $amount,
+              
+                'amount'          => $amount/100,
 
                 'currency'        => 'INR'
             ];
@@ -80,8 +80,9 @@ class RazorpayGatewayController extends FrontController
            // $razorpayOrder = $this->api->order->create($orderData);
             //dd($razorpayOrder);
             $payment = $this->api->payment->fetch($request->razorpay_payment_id);
-            if ($payment['status'] == 'authorized' || $payment['status'] == 'captured') {
-                return $this->razorpayNotify($payment, $amount, $order);
+           
+            if ($payment['status'] == 'authorized') {
+                return $this->razorpayNotify($payment, $amount, $order,$orderData);
             } else {
                 return $this->errorResponse('Payment Failed', 400);
             }
@@ -90,10 +91,10 @@ class RazorpayGatewayController extends FrontController
         }
     }
 
-    public function razorpayNotify($payment, $amount, $order)
+    public function razorpayNotify($payment, $amount, $order,$orderData)
     {
-        $payment = $this->api->payment->fetch($payment['id']);
-//dd($payment);
+        $payment = $this->api->payment->fetch($payment['id'])->capture($orderData);
+
         $transactionId = $payment['id'];
 
         $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order)->first();
