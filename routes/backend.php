@@ -181,6 +181,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::get('customer/wallet/transactions', 'Client\UserController@filterWalletTransactions')->name('customer.filterWalletTransactions');
         Route::get('customer/export/export', 'Client\UserController@export')->name('customer.export');
         Route::resource('product', 'Client\ProductController');
+        Route::post('product/updateActions', 'Client\ProductController@updateActions')->name('product.update.action');   # update all product actions
         Route::post('product/importCSV', 'Client\ProductController@importCsv')->name('product.import');
         Route::post('product/validate', 'Client\ProductController@validateData')->name('product.validate');
         Route::get('product/add/{vendor_id}', 'Client\ProductController@create')->name('product.add');
