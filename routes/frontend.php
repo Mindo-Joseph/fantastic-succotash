@@ -58,7 +58,14 @@ Route::group(['middleware' => ['domain']], function () {
 	 });
 
 	Route::post('payment/paylink', 'Front\PaylinkGatewayController@paylinkPurchase')->name('payment.paylinkPurchase');
-	Route::post('payment/paylink/notify', 'Front\PaylinkGatewayController@paylinkNotify')->name('payment.paylinkNotify');
+	Route::get('payment/paylink/notify', 'Front\PaylinkGatewayController@paylinkNotify')->name('payment.paylinkNotify');
+
+	Route::post('payment/razorpay', 'Front\RazorpayGatewayController@razorpayPurchase')->name('payment.razorpayPurchase');
+	Route::get("/payment/razorpay/view", function(){
+		return View::make("frontend.razorpay_view");
+	 })->name('razorpay.view');
+	Route::post('payment/razorpay/pay/{amount}/{order}', 'Front\RazorpayGatewayController@razorpayCompletePurchase')->name('payment.razorpayCompletePurchase');
+	Route::get('payment/razorpay/notify', 'Front\RazorpayGatewayController@razorpayNotify')->name('payment.razorpayNotify');
 
 	Route::post('payment/user/placeorder', 'Front\OrderController@postPaymentPlaceOrder')->name('user.postPaymentPlaceOrder');
 	Route::post('payment/user/wallet/credit', 'Front\WalletController@postPaymentCreditWallet')->name('user.postPaymentCreditWallet');

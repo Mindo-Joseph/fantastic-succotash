@@ -13,6 +13,7 @@ use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Controllers\Api\v1\MobbexGatewayController;
 use App\Http\Controllers\Api\v1\YocoGatewayController;
+use App\Http\Controllers\Api\v1\RazorpayGatewayController;
 use App\Http\Requests\OrderStoreRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, Client, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, User, Payment, Transaction};
@@ -25,7 +26,7 @@ class PaymentOptionController extends BaseController{
         if($page == 'wallet'){
             $code = array('paypal', 'stripe');
         }else{
-        $code = array('cod', 'paypal', 'payfast', 'stripe', 'mobbex','yoco','paylink');
+        $code = array('cod', 'paypal', 'payfast', 'stripe', 'mobbex','yoco','paylink','razorpay');
         }
         $payment_options = PaymentOption::whereIn('code', $code)->where('status', 1)->get(['id', 'title', 'off_site']);
         return $this->successResponse($payment_options, '', 201);
@@ -85,6 +86,11 @@ class PaymentOptionController extends BaseController{
     public function postPaymentVia_paylink(Request $request){
         $gateway = new PaylinkGatewayController();
         return $gateway->paylinkPurchase($request);
+    }
+
+    public function postPaymentVia_razorpay(Request $request){
+        $gateway = new RazorpayGatewayController();
+        return $gateway->razorpayPurchase($request);
     }
 
     public function postPaymentVia_paypal(Request $request){

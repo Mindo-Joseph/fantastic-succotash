@@ -98,6 +98,7 @@ class CartController extends FrontController
             $public_key_yoco= json_decode($public_key_yoco);
             $public_key_yoco= $public_key_yoco->public_key??'';
         }
+       
       
        
         return view('frontend.cartnew',compact('public_key_yoco'))->with($data,$client_preference_detail);
