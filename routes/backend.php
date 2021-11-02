@@ -5,6 +5,7 @@ use App\Http\Controllers\Client\CMS\PageController;
 use App\Http\Controllers\Client\CMS\EmailController;
 use App\Http\Controllers\Client\CMS\NotificationController;
 use App\Http\Controllers\Client\SocialMediaController;
+use App\Http\Controllers\Client\VendorPayoutController;
 use App\Http\Controllers\Client\DownloadFileController;
 use App\Http\Controllers\Client\ProductImportController;
 use App\Http\Controllers\Client\Accounting\TaxController;
@@ -63,6 +64,8 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::get('account/loyalty', [LoyaltyController::class, 'index'])->name('account.loyalty');
         Route::get('account/tax', [TaxController::class, 'index'])->name('account.tax');
         Route::get('account/vendor', [VendorController::class, 'index'])->name('account.vendor');
+        Route::get('account/vendor/payout', [VendorPayoutController::class, 'index'])->name('account.vendor.payout');
+        Route::get('account/vendor/payout/filter', [VendorPayoutController::class, 'filter'])->name('account.vendor.payout.filter');
         Route::get('account/tax/filter', [TaxController::class, 'filter'])->name('account.tax.filter');
         Route::get('account/tax/export', [TaxController::class, 'export'])->name('account.tax.export');
         Route::get('account/vendor/filter', [VendorController::class, 'filter'])->name('account.vendor.filter');
