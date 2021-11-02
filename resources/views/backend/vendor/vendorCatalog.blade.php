@@ -710,6 +710,8 @@
                 data: {_token: CSRF_TOKEN,action_for:action_for,last_mile:last_mile, is_new: is_new, is_featured: is_featured, is_live: is_live, tax_category: tax_category, product_id: product_id},
                  success: function(resp) {
                     if (resp.status == 'success') {
+                        $.NotificationApp.send("Success", resp.message, "top-right", "#5ba035",
+                            "success");
                         location.reload();
                     }
                 },

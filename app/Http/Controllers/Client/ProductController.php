@@ -870,7 +870,7 @@ class ProductController extends BaseController
   
         return response()->json([
             'status' => 'success',
-            'message' => 'Product action Submitted successfully!'
+            'message' => __('Product action Submitted successfully!')
         ]);
     }
     
