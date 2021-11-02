@@ -892,5 +892,18 @@ class VendorController extends BaseController
         return $data;
     }
 
-    
+    public function vendor_specific_categories($domain = '', $id){
+        $product_categories = VendorCategory::with('category', 'category.translation_one')->where('status', 1)->where('vendor_id', $id)->get();
+        $p_categories = collect();
+        $product_categories_hierarchy = '';
+        if ($product_categories) {
+            foreach($product_categories as $pc){
+                $p_categories->push($pc->category);
+            }
+            $product_categories_build = $this->buildTree($p_categories->toArray());
+            $product_categories_hierarchy = $this->printCategoryOptionsHeirarchy($product_categories_build);
+        }
+        return response()->json(['status' => 1, 'message' => 'Product Categories', 'product_categories' => $product_categories_hierarchy]);
+    }
+
 }

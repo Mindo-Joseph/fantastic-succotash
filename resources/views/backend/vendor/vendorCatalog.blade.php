@@ -377,27 +377,39 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div class="form-group" id="categoryInput">
-                                        {!! Form::label('title', __('Category'),['class' => 'control-label']) !!}
-                                        <select class="form-control selectizeInput" id="category_list" name="category">
-                                            <option value="">{{ __("Select Category") }}...</option>
-                                            @foreach($product_categories as $product_category)
-                                                <option value="{{$product_category['id']}}">{{$product_category['hierarchy']}}</option>
-                                            @endforeach
-                                                
-                                            {{--@foreach($product_categories as $product_category)
-                                                @if($product_category->category)
-                                                    @if( ($product_category->category->type_id == 1) || ($product_category->category->type_id == 3) || ($product_category->category->type_id == 7))
-                                                        <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
-                                                    @endif
-                                                @endif
-                                            @endforeach --}}
-                                            </select>
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong></strong>
-                                            </span>
-                                        </div>
-                                    </div>
+                                    <div class="row">
+                                            <div class="col-6 mb-2">
+                                                <div class="form-group" id="url_slugInput">
+                                                    {!! Form::label('title', __('URL Slug'), ['class' => 'control-label']) !!}
+                                                    {!! Form::text('url_slug', null, ['class' => 'form-control', 'id' => 'url_slug', 'placeholder' => 'Apple iMac', 'onkeypress' => 'return slugify(event)']) !!}
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong></strong>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 mb-2">
+                                                    <div class="form-group" id="categoryInput">
+                                                    {!! Form::label('title', __('Category'),['class' => 'control-label']) !!}
+                                                    <select class="form-control selectizeInput" id="category_list" name="category">
+                                                        <option value="">{{ __("Select Category") }}...</option>
+                                                        @foreach($product_categories as $product_category)
+                                                            <option value="{{$product_category['id']}}">{{$product_category['hierarchy']}}</option>
+                                                        @endforeach
+                                                            
+                                                        {{--@foreach($product_categories as $product_category)
+                                                            @if($product_category->category)
+                                                                @if( ($product_category->category->type_id == 1) || ($product_category->category->type_id == 3) || ($product_category->category->type_id == 7))
+                                                                    <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
+                                                                @endif
+                                                            @endif
+                                                        @endforeach --}}
+                                                        </select>
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong></strong>
+                                                        </span>
+                                                    </div>
+                                            </div>
+                                    </div>        
                                 </div>
                             </div>
                         </div>
@@ -710,6 +722,8 @@
                 data: {_token: CSRF_TOKEN,action_for:action_for,last_mile:last_mile, is_new: is_new, is_featured: is_featured, is_live: is_live, tax_category: tax_category, product_id: product_id},
                  success: function(resp) {
                     if (resp.status == 'success') {
+                        $.NotificationApp.send("Success", resp.message, "top-right", "#5ba035",
+                            "success");
                         location.reload();
                     }
                 },
@@ -738,6 +752,21 @@
         });
 
         $('.addProductBtn').click(function() {
+            $.ajax({
+                type: "get",
+                url: "{{route('vendor.specific_categories',$vendor->id)}}",
+                success: function(response) {
+                    console.log(response.product_categories);
+                    if(response.status == 1){
+                        $("#category_list").find('option').not(':first').remove();
+                        $("#category_list").append(response.product_categories);
+                        $('#category_list').selectize()[0].selectize.destroy();
+                    }
+                },
+                error:function(error){
+
+                }
+            });
             $('#add-product').modal({
                 keyboard: false
             });
