@@ -7,6 +7,7 @@ use Log;
 use Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Razorpay\Api\Api;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Redirect;
@@ -52,7 +53,7 @@ class RazorpayGatewayController extends FrontController
         }
     }
 
-    public function razorpayCompletePurchase(Request $request,$domain, $amount,$order)
+    public function razorpayCompletePurchase(Request $request, $domain, $amount, $order)
     {
 
         try {
@@ -61,7 +62,7 @@ class RazorpayGatewayController extends FrontController
             $amount = $this->getDollarCompareAmount($amount);
             $amount = filter_var($amount, FILTER_SANITIZE_NUMBER_INT);
 
-           // $returnUrlParams = '?gateway=razorpay&order=' . $request->order_number;
+            // $returnUrlParams = '?gateway=razorpay&order=' . $request->order_number;
 
             $returnUrl = route('order.return.success');
             if ($request->payment_form == 'wallet') {
@@ -76,11 +77,11 @@ class RazorpayGatewayController extends FrontController
                 'currency'        => 'INR'
             ];
 
-            $razorpayOrder = $this->api->order->create($orderData);
+           // $razorpayOrder = $this->api->order->create($orderData);
             //dd($razorpayOrder);
-           $payment = $this->api->payment->fetch($request->razorpay_payment_id);
+            $payment = $this->api->payment->fetch($request->razorpay_payment_id);
             if ($payment['status'] == 'authorized') {
-                $this->razorpayNotify($payment, $amount, $order);
+                return $this->razorpayNotify($payment, $amount, $order);
             } else {
                 return $this->errorResponse('Payment Failed', 400);
             }
@@ -91,12 +92,13 @@ class RazorpayGatewayController extends FrontController
 
     public function razorpayNotify($payment, $amount, $order)
     {
+        $payment = $this->api->payment->fetch($payment['id']);
 
         $transactionId = $payment['id'];
 
         $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order)->first();
-        
-        if ($payment['status'] == 'authorized') {
+
+        if ($payment['status'] == 'captured') {
             if ($order) {
                 $order->payment_status = 1;
                 $order->save();
@@ -139,11 +141,9 @@ class RazorpayGatewayController extends FrontController
                 $returnUrlParams = '?gateway=razorpay&order=' . $order->id;
                 $returnUrl = route('order.return.success');
 
-                return $this->successResponse(url($returnUrl . $returnUrlParams));
-            }
-            else
-            {
-                return $this->successResponse(url('viewcart'));
+              return redirect()->to($returnUrl.$returnUrlParams);
+            } else {
+                return redirect()->to('/viewcart');
             }
         } else {
             $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
@@ -156,7 +156,7 @@ class RazorpayGatewayController extends FrontController
             OrderVendor::where('order_id', $order->id)->delete();
             OrderTax::where('order_id', $order->id)->delete();
             Order::where('id', $order->id)->delete();
-            return $this->successResponse(url('viewcart'));
+            return Redirect::to('viewcart');
         }
     }
 }
