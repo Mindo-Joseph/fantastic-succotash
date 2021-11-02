@@ -909,8 +909,16 @@ class VendorController extends BaseController
             }
             $product_categories_build = $this->buildTree($p_categories->toArray());
             $product_categories_hierarchy = $this->printCategoryOptionsHeirarchy($product_categories_build);
+
+            
         }
-        return response()->json(['status' => 1, 'message' => 'Product Categories', 'product_categories' => $product_categories_hierarchy]);
+        $options = [];
+        
+        foreach($product_categories_hierarchy as $product_category){
+            $options[] = "<option value=".$product_category['id'].">".$product_category['hierarchy']."</option>";
+        }
+       
+        return response()->json(['status' => 1, 'message' => 'Product Categories', 'product_categories' => $product_categories_hierarchy, 'options' => $options]);
     }
 
 }

@@ -754,10 +754,10 @@
                 type: "get",
                 url: "{{route('vendor.specific_categories',$vendor->id)}}",
                 success: function(response) {
-                    console.log(response.product_categories);
+                    console.log('ok');
                     if(response.status == 1){
-                        $("#category_list").find('option').not(':first').remove();
-                        $("#category_list").append(response.product_categories);
+                        $("#category_list").find('option').remove();
+                        $("#category_list").append(response.options);
                         $('#category_list').selectize()[0].selectize.destroy();
                     }
                 },
