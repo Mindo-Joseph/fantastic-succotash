@@ -89,16 +89,15 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
     $(".menu-slider").slick({
         arrows: false,
         dots: false,
-        infinite: true,
+        infinite: false,
         variableWidth: false,
         speed: 300,
-        slidesToShow: 12,
-        slidesToScroll: 6,
+        slidesToShow: 15,
+        slidesToScroll: 3,
         responsive: [
-            { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
-            { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
-            { breakpoint: 767, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 3, infinite: !0 } },
-            { breakpoint: 480, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
+            { breakpoint: 1400, settings: { slidesToShow: 12, slidesToScroll: 2 } },
+            { breakpoint: 1367, settings: { slidesToShow: 8, slidesToScroll: 2} },
+            { breakpoint: 1024, settings: { slidesToShow: 10, slidesToScroll: 4 } },
         ],
     });
 }
