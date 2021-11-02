@@ -379,6 +379,7 @@ class VendorController extends BaseController
         $type = Type::all();
         $categoryToggle = array();
         $vendor = Vendor::where('id',$id);
+        $langId = Session::has('adminLanguage') ? Session::get('adminLanguage') : 1;
         if (Auth::user()->is_superadmin == 0) {
             $vendor = $vendor->whereHas('permissionToUser', function ($query) {
                 $query->where('user_id', Auth::user()->id);
@@ -437,7 +438,10 @@ class VendorController extends BaseController
             $build = $this->buildTree($categories->toArray());
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
-        $product_categories = VendorCategory::with('category', 'category.translation_one')->where('status', 1)->where('vendor_id', $id)->get();
+        $product_categories = VendorCategory::with(['category', 'category.translation' => function($q) use($langId){
+            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+            ->where('category_translations.language_id', $langId);
+        }])->where('status', 1)->where('vendor_id', $id)->get();
         $p_categories = collect();
         $product_categories_hierarchy = '';
         if ($product_categories) {
@@ -446,6 +450,11 @@ class VendorController extends BaseController
             }
             $product_categories_build = $this->buildTree($p_categories->toArray());
             $product_categories_hierarchy = $this->printCategoryOptionsHeirarchy($product_categories_build);
+            foreach($product_categories_hierarchy as $k => $cat){
+                if ($cat['type_id'] != 1 && $cat['type_id'] != 3 && $cat['type_id'] != 7 && $cat['type_id'] != 8) {
+                    unset($product_categories_hierarchy[$k]);
+                }
+            }
         }
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
         $client_preferences = ClientPreference::first();
