@@ -105,9 +105,56 @@
                         <input type="text" class="form-control" data-id="{{ $signup_tag_line_text->id??'' }}" id="signup_tagline" name="signup_tagline" value="{{ $signup_tag_line_text->name??'' }}">
                     </div>
                 </div>
+                <div class="col-lg-3">
+                    <form action="{{ route('styling.addTutorials') }}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <div class="card card-box">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h4 class="header-title mb-0">{{ __('Upload Tutorials') }}</h4>
+                            </div>
+                            <input type="file" accept="image/*" data-plugins="dropify" name="file_name" class="dropify" data-default-file="" />
+                            {{-- <label class="logo-size text-right w-100">{{ __("Logo Size") }} 170x96</label> --}}
+                            <button type="submit" class="btn btn-info waves-effect waves-light mt-1">Submit</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
+    @if(!empty($dynamicTutorials) && count($dynamicTutorials)>0)
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="card-body" id="homepage_tutorial_dropzone">
+                    <h4 class="header-title">{{ __("Tutorial images") }}</h4>
+                    <div class="row tutorial_main_div">
+                        @foreach($dynamicTutorials as $dynamicTutorial)
+                            <div class="col-sm-6 col-md-4 col-lg-3 tutorial_inner_div" data-id="{{$dynamicTutorial->id}}" data-sort="{{$dynamicTutorial->sort}}">
+                                <div class="card mb-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-12 custom-control custom-radio radio_new p-0">
+                                                <label class="custom-control-label" for="">
+                                                    <img class="card-img-top img-fluid" src="{{$dynamicTutorial->file_name['proxy_url'] . '215/400' . $dynamicTutorial->file_name['image_path']}}" alt="Image">
+                                                </label>
+                                                <form action="{{ route('styling.deleteTutorials',$dynamicTutorial->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger waves-effect waves-light mt-1" onclick="return confirm('Are you sure? You want to delete this tutorial.')" >Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 
     <div class="row">
         <div class="col-xl-6">
@@ -136,6 +183,7 @@
             </div>
         </div>
     </div>
+    
 </div>
 
 @endsection
@@ -395,6 +443,39 @@
             }
         });
     });
+
+    $("#homepage_tutorial_dropzone .tutorial_main_div").sortable({
+        axis: 'x',
+        placeholder: "ui-state-highlight",
+        update: function(event, ui) {
+            var post_order_ids = new Array();
+            $('#homepage_tutorial_dropzone .tutorial_inner_div').each(function() {
+                post_order_ids.push({"row_id" : $(this).data("id"), "sort" : $(this).data("sort")});
+            });
+            saveTutorialOrder(post_order_ids);
+        }
+    });
+
+    function saveTutorialOrder(orderVal) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: "{{ url('client/app_styling/saveOrderTutorials') }}",
+            data: {
+                order: orderVal
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                }
+            },
+        });
+    }
 </script>
 
 @endsection

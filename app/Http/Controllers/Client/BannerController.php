@@ -9,12 +9,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Banner, Vendor, Category, ClientLanguage};
+use App\Models\{Banner, Vendor, Category, ClientLanguage,Client};
 
 class BannerController extends BaseController
 {
     private $folderName = 'banner';
     private $fstatus = 1;
+
+    public function __construct()
+    {
+        $code = Client::orderBy('id','asc')->value('code');
+        $this->folderName = '/'.$code.'/banner';
+    }
+
+    
     /**
      * Display a listing of the resource.
      *
@@ -38,13 +46,29 @@ class BannerController extends BaseController
             $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
             ->where('category_translations.language_id', $langId);
         }])
-        ->select('id', 'slug')->where('status', $this->fstatus)->where('can_add_products', 1)->where('id', '>', 1)->get();
+        ->where('status', 1)
+        // ->where('can_add_products', 1)
+        ->where('id', '>', 1)
+        ->whereNull('vendor_id')
+        ->orderBy('parent_id', 'asc')
+        ->orderBy('position', 'asc')
+        ->get();
         foreach($categories as $key => $category){
             $category->translation_name = ($category->translation->first()) ? $category->translation->first()->name : $category->slug;
-        }        
+        }
+        $categories_hierarchy = '';
+        if($categories){
+            $categories_build = $this->buildTree($categories->toArray());
+            $categories_hierarchy = $this->printCategoryOptionsHeirarchy($categories_build);
+            foreach($categories_hierarchy as $k => $cat){
+                if ($cat['can_add_products'] != 1) {
+                    unset($categories_hierarchy[$k]);
+                }
+            }
+        }
         $vendors = Vendor::select('id', 'name')->where('status', $this->fstatus)->get();
         $banner = new Banner();
-        $returnHTML = view('backend.banner.form')->with(['banner' => $banner,  'vendors' => $vendors, 'categories' => $categories])->render();
+        $returnHTML = view('backend.banner.form')->with(['banner' => $banner,  'vendors' => $vendors, 'categories' => $categories_hierarchy])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 
@@ -62,12 +86,28 @@ class BannerController extends BaseController
             $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
             ->where('category_translations.language_id', $langId);
         }])
-        ->select('id', 'slug')->where('status', $this->fstatus)->where('can_add_products', 1)->where('id', '>', 1)->get();
+        ->where('status', 1)
+        // ->where('can_add_products', 1)
+        ->where('id', '>', 1)
+        ->whereNull('vendor_id')
+        ->orderBy('parent_id', 'asc')
+        ->orderBy('position', 'asc')
+        ->get();
         foreach($categories as $key => $category){
             $category->translation_name = ($category->translation->first()) ? $category->translation->first()->name : $category->slug;
         }
+        $categories_hierarchy = '';
+        if($categories){
+            $categories_build = $this->buildTree($categories->toArray());
+            $categories_hierarchy = $this->printCategoryOptionsHeirarchy($categories_build);
+            foreach($categories_hierarchy as $k => $cat){
+                if ($cat['can_add_products'] != 1) {
+                    unset($categories_hierarchy[$k]);
+                }
+            }
+        }
         $vendors = Vendor::select('id', 'name')->where('status', $this->fstatus)->get();
-        $returnHTML = view('backend.banner.form')->with(['banner' => $banner,  'vendors' => $vendors, 'categories' => $categories])->render();
+        $returnHTML = view('backend.banner.form')->with(['banner' => $banner,  'vendors' => $vendors, 'categories' => $categories_hierarchy])->render();
         return response()->json(array('success' => true, 'html'=>$returnHTML));
     }
 

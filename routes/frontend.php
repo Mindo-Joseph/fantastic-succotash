@@ -24,10 +24,11 @@ Route::group(['middleware' => ['domain']], function () {
 	});
 	Route::get('payment/gateway/returnResponse', 'Front\PaymentController@getGatewayReturnResponse')->name('payment.gateway.return.response');
 
+
 	// Stripe
 	Route::post('payment/stripe', 'Front\StripeGatewayController@postPaymentViaStripe')->name('payment.stripe');
 	Route::post('user/subscription/payment/stripe', 'Front\StripeGatewayController@subscriptionPaymentViaStripe')->name('user.subscription.payment.stripe');
-	
+
 	// Paypal
 	Route::post('payment/paypal', 'Front\PaypalGatewayController@paypalPurchase')->name('payment.paypalPurchase');
 	Route::get('payment/paypal/CompletePurchase', 'Front\PaypalGatewayController@paypalCompletePurchase')->name('payment.paypalCompletePurchase');
@@ -48,6 +49,16 @@ Route::group(['middleware' => ['domain']], function () {
 	// Mobbex
 	Route::post('payment/mobbex', 'Front\MobbexGatewayController@mobbexPurchase')->name('payment.mobbexPurchase');
 	Route::post('payment/mobbex/notify', 'Front\MobbexGatewayController@mobbexNotify')->name('payment.mobbexNotify');
+
+
+	//Route::get('payment/yoco-webview', 'Api\v1\YocoGatewayController@yocoWebView')->name('payment.yoco-webview');
+	Route::post('payment/yoco', 'Front\YocoGatewayController@yocoPurchase')->name('payment.yocoPurchase');
+	Route::get('/payment/yoco-webview', function(){
+		return View::make('frontend.yoco_webview');
+	 });
+
+	Route::post('payment/paylink', 'Front\PaylinkGatewayController@paylinkPurchase')->name('payment.paylinkPurchase');
+	Route::post('payment/paylink/notify', 'Front\PaylinkGatewayController@paylinkNotify')->name('payment.paylinkNotify');
 
 	Route::post('payment/user/placeorder', 'Front\OrderController@postPaymentPlaceOrder')->name('user.postPaymentPlaceOrder');
 	Route::post('payment/user/wallet/credit', 'Front\WalletController@postPaymentCreditWallet')->name('user.postPaymentCreditWallet');
@@ -85,7 +96,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('user/loginData', 'Front\CustomerAuthController@login')->name('customer.loginData');
 	Route::post('user/register', 'Front\CustomerAuthController@register')->name('customer.register');
 	Route::post('user/loginViaUsername', 'Front\CustomerAuthController@loginViaUsername')->name('customer.loginViaUsername');
-    Route::post('user/verifyPhoneLoginOtp', 'Front\CustomerAuthController@verifyPhoneLoginOtp')->name('customer.verifyPhoneLoginOtp');
+	Route::post('user/verifyPhoneLoginOtp', 'Front\CustomerAuthController@verifyPhoneLoginOtp')->name('customer.verifyPhoneLoginOtp');
 	Route::post('vendor/register', 'Front\CustomerAuthController@postVendorregister')->name('vendor.register');
 	Route::post('user/forgotPassword', 'Front\ForgotPasswordController@postForgotPassword')->name('customer.forgotPass');
 	Route::post('user/resetPassword', 'Front\CustomerAuthController@resetPassword')->name('customer.resetPass');
@@ -130,9 +141,9 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('viewcart', 'Front\CartController@showCart')->name('showCart');
 	Route::post('/getTimeSlotsForOndemand', 'Front\CategoryController@getTimeSlotsForOndemand')->name('getTimeSlotsForOndemand');
 	Route::post('checkIsolateSingleVendor', 'Front\CartController@checkIsolateSingleVendor')->name('checkIsolateSingleVendor');
-	Route::get('viewcart','Front\CartController@showCart')->name('showCart');
-	Route::post('/getTimeSlotsForOndemand','Front\CategoryController@getTimeSlotsForOndemand')->name('getTimeSlotsForOndemand');
-	Route::post('checkIsolateSingleVendor','Front\CartController@checkIsolateSingleVendor')->name('checkIsolateSingleVendor');
+	Route::get('viewcart', 'Front\CartController@showCart')->name('showCart');
+	Route::post('/getTimeSlotsForOndemand', 'Front\CategoryController@getTimeSlotsForOndemand')->name('getTimeSlotsForOndemand');
+	Route::post('checkIsolateSingleVendor', 'Front\CartController@checkIsolateSingleVendor')->name('checkIsolateSingleVendor');
 	Route::get('firebase-messaging-sw.js', 'Front\FirebaseController@service_worker');
 });
 Route::group(['middleware' => ['domain', 'webAuth']], function () {
@@ -175,6 +186,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function () {
 	Route::get('order/success/{order_id}', 'Front\OrderController@getOrderSuccessPage')->name('order.success');
 	Route::get('order/return/success', 'Front\OrderController@getOrderSuccessReturnPage')->name('order.return.success');
 	Route::post('promocode/list', 'Front\PromoCodeController@postPromoCodeList')->name('verify.promocode.list');
+	Route::post('promocode/validate_code', 'Front\PromoCodeController@validate_code')->name('verify.promocode.validate_code');
 	Route::post('payment/option/list', 'Front\PaymentController@index')->name('payment.option.list');
 	Route::get('user/setPrimaryAddress/{id}', 'Front\AddressController@setPrimaryAddress')->name('setPrimaryAddress');
 	Route::post('user/submitPassword', 'Front\ProfileController@submitChangePassword')->name('user.submitChangePassword');

@@ -15,10 +15,11 @@ use App\Models\Client as CP;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus, OrderTax, SubscriptionInvoicesUser, UserDevice, UserVendor, VendorOrderDispatcherStatus, Page, DriverRegistrationDocument, LuxuryOption};
+use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus, OrderTax, SubscriptionInvoicesUser, UserDevice, UserVendor, VendorOrderDispatcherStatus, Page, DriverRegistrationDocument, LuxuryOption,PaymentOption};
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Models\AutoRejectOrderCron;
+use Redirect;
 
 class OrderController extends FrontController
 {
@@ -148,9 +149,9 @@ class OrderController extends FrontController
             }
         }
         $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
-
-        //dd($pastOrders->toArray());
-        return view('frontend/account/orders')->with(['navCategories' => $navCategories, 'activeOrders' => $activeOrders, 'pastOrders' => $pastOrders, 'returnOrders' => $returnOrders, 'clientCurrency' => $clientCurrency]);
+        $payments = PaymentOption::where('credentials','!=','')->where('status',1)->count();
+       
+        return view('frontend/account/orders')->with(['payments' => $payments ,'navCategories' => $navCategories, 'activeOrders' => $activeOrders, 'pastOrders' => $pastOrders, 'returnOrders' => $returnOrders, 'clientCurrency' => $clientCurrency]);
     }
 
     public function getOrderSuccessPage(Request $request)
@@ -160,6 +161,18 @@ class OrderController extends FrontController
         $navCategories = $this->categoryNav($langId);
         $order = Order::with(['products.pvariant.vset', 'products.pvariant.translation_one', 'address'])->findOrfail($request->order_id);
         // dd($order->toArray());
+
+
+       $order_vendors =  OrderVendor::where('order_id',$request->order_id)->whereNotNull('dispatch_traking_url')->get();
+       if(count($order_vendors)){
+        $home_service = ClientPreference::where('business_type','home_service')->where('id', '>', 0)->first();
+        if($home_service)
+        return Redirect::route('front.booking.details',$order->order_number);
+        
+     
+       }
+
+
         $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
         return view('frontend.order.success', compact('order', 'navCategories', 'clientCurrency'));
     }
@@ -797,7 +810,7 @@ class OrderController extends FrontController
             // $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
             $this->sendSuccessSMS($request, $order, $vendor_id);
-            if($request->payment_option_id != 7){ // if not mobbex
+            if($request->payment_option_id != 7||$request->payment_option_id != 8||$request->payment_option_id != 9){ // if not mobbex
                 Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
                 CartAddon::where('cart_id', $cart->id)->delete();
                 CartCoupon::where('cart_id', $cart->id)->delete();
@@ -821,7 +834,7 @@ class OrderController extends FrontController
                 ]);
             }
             $order = $order->with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id', 'vendors.vendor'])->where('order_number', $order->order_number)->first();
-            if($request->payment_option_id != 7){ // if not mobbex
+            if($request->payment_option_id != 7||$request->payment_option_id != 8||$request->payment_option_id != 9){ // if not mobbex
                 if (!empty($order->vendors)) {
                     foreach ($order->vendors as $vendor_value) {
                         $vendorDetail = $vendor_value->vendor;
@@ -1002,7 +1015,7 @@ class OrderController extends FrontController
                         'longitude' => $cus_address->longitude ?? 76.803508700000
                     );
                     $postdata =  ['locations' => $location];
-                    $client = new Client([
+                    $client = new GCLIENT([
                         'headers' => [
                             'personaltoken' => $dispatch_domain->delivery_service_key,
                             'shortcode' => $dispatch_domain->delivery_service_key_code,
@@ -1050,23 +1063,23 @@ class OrderController extends FrontController
         $order_vendors = OrderVendor::where('order_id', $order_id)->whereHas('vendor', function ($q) {
             $q->where('auto_accept_order', 1);
         })->get();
-        Log::info($order_vendors);
+      //  Log::info($order_vendors);
         foreach ($order_vendors as $ov) {
-            Log::info($ov);
-            Log::info($ov->order_id);
+       //     Log::info($ov);
+      //      Log::info($ov->order_id);
             $request = $ov;
 
             DB::beginTransaction();
             //try {
 
             $request->order_id = $ov->order_id;
-            Log::info($ov->order_id);
-            Log::info($request->order_id);
+     //       Log::info($ov->order_id);
+     //       Log::info($request->order_id);
             $request->vendor_id = $ov->vendor_id;
             $request->order_vendor_id = $ov->id;
             $request->status_option_id = 2;
             $timezone = Auth::user()->timezone;
-            Log::info($request);
+      //      Log::info($request);
             $vendor_order_status_check = VendorOrderStatus::where('order_id', $request->order_id)->where('vendor_id', $request->vendor_id)->where('order_status_option_id', $request->status_option_id)->first();
             Log::info($vendor_order_status_check);
             if (!$vendor_order_status_check) {
@@ -1077,7 +1090,7 @@ class OrderController extends FrontController
                 $vendor_order_status->order_status_option_id = $request->status_option_id;
                 $vendor_order_status->save();
                 if ($request->status_option_id == 2) {
-                    Log::info($request->status_option_id);
+       //             Log::info($request->status_option_id);
                     $order_dispatch = $this->checkIfanyProductLastMileon($request);
                     if ($order_dispatch && $order_dispatch == 1)
                         $stats = $this->insertInVendorOrderDispatchStatus($request);
@@ -1196,7 +1209,7 @@ class OrderController extends FrontController
             ];
 
 
-            $client = new Client([
+            $client = new GCLIENT([
                 'headers' => [
                     'personaltoken' => $dispatch_domain->delivery_service_key,
                     'shortcode' => $dispatch_domain->delivery_service_key_code,
@@ -1210,9 +1223,10 @@ class OrderController extends FrontController
                 ['form_params' => ($postdata)]
             );
             $response = json_decode($res->getBody(), true);
-            if ($response && $response['task_id'] > 0) {
+            if ($response && $response['task_id'] > 0) { 
+                $dispatch_traking_url = $response['dispatch_traking_url']??'';
                 $up_web_hook_code = OrderVendor::where(['order_id' => $order->id, 'vendor_id' => $vendor])
-                    ->update(['web_hook_code' => $dynamic]);
+                    ->update(['web_hook_code' => $dynamic,'dispatch_traking_url' => $dispatch_traking_url]);
                 return 1;
             }
             return 2;
@@ -1292,7 +1306,7 @@ class OrderController extends FrontController
             ];
 
 
-            $client = new Client([
+            $client = new GCLIENT([
                 'headers' => [
                     'personaltoken' => $dispatch_domain->dispacher_home_other_service_key,
                     'shortcode' => $dispatch_domain->dispacher_home_other_service_key_code,
@@ -1307,8 +1321,11 @@ class OrderController extends FrontController
             );
             $response = json_decode($res->getBody(), true);
             if ($response && $response['task_id'] > 0) {
+                $dispatch_traking_url = $response['dispatch_traking_url']??'';
                 $up_web_hook_code = OrderVendor::where(['order_id' => $order->id, 'vendor_id' => $vendor])
-                    ->update(['web_hook_code' => $dynamic]);
+                    ->update(['web_hook_code' => $dynamic,'dispatch_traking_url' => $dispatch_traking_url]);
+
+               
                 return 1;
             }
             return 2;
@@ -1699,7 +1716,7 @@ class OrderController extends FrontController
 
     
      /**
-     * Credit Money Into Wallet
+     * Credit Money Into order tip
      *
      * @return \Illuminate\Http\Response
      */
@@ -1709,19 +1726,11 @@ class OrderController extends FrontController
         $user = Auth::user();
         
         if($user){
-            $credit_amount = $request->wallet_amount;
-            $wallet = $user->wallet;
-            if ($credit_amount > 0) {
-                $saved_transaction = Transaction::where('meta', 'like', '%'.$request->transaction_id.'%')->first();
-                if($saved_transaction){
-                    return $this->errorResponse('Transaction has already been done', 400);
-                }
-
-                $wallet->depositFloat($credit_amount, ['Wallet has been <b>Credited</b> by transaction reference <b>'.$request->transaction_id.'</b>']);
-                $transactions = Transaction::where('payable_id', $user->id)->get();
-                $response['wallet_balance'] = $wallet->balanceFloat;
-                $response['transactions'] = $transactions;
-                $message = 'Tip has been credited successfully';
+            $order_number = $request->order_number;
+            if ($order_number > 0) {
+            //    $tip = Order::where('order_number',$order_number)->update(['tip_amount' => $request->tip_amount]);
+                $message = 'Tip has been submitted successfully';
+                $response['tip_amount'] = $request->tip_amount;
                 Session::put('success', $message);
                 return $this->successResponse($response, $message, 200);
             }

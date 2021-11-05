@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
 
 class CartController extends FrontController
 {
@@ -24,7 +24,7 @@ class CartController extends FrontController
     }
     public function showCart(Request $request, $domain = '')
     {
-        if(($request->has('gateway')) && ($request->gateway == 'mobbex')){
+        if(($request->has('gateway')) && (($request->gateway == 'mobbex')||($request->gateway == 'yoco')||($request->gateway == 'paypal'))){
             if($request->has('order')){
                 $order = Order::where('order_number', $request->order)->first();
                 if($order){
@@ -91,7 +91,16 @@ class CartController extends FrontController
             'action' => $action
         );
         $client_preference_detail = ClientPreference::first();
-        return view('frontend.cartnew')->with($data,$client_preference_detail);
+        $public_key_yoco=PaymentOption::where('code','yoco')->first();
+        if($public_key_yoco){
+
+            $public_key_yoco= $public_key_yoco->credentials??'';
+            $public_key_yoco= json_decode($public_key_yoco);
+            $public_key_yoco= $public_key_yoco->public_key??'';
+        }
+      
+       
+        return view('frontend.cartnew',compact('public_key_yoco'))->with($data,$client_preference_detail);
         // return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user]);
     }
 
@@ -623,6 +632,7 @@ class CartController extends FrontController
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
                     $prod->pvariant->price_in_cart = $prod->pvariant->price;
                     $prod->pvariant->price = number_format($price_in_currency, 2, '.', '');
+                    $prod->image_url = $this->loadDefaultImage();
                     $prod->pvariant->media_one = isset($prod->pvariant->media) ? $prod->pvariant->media->first() : [];
                     $prod->pvariant->media_second = isset($prod->product->media) ? $prod->product->media->first() : [];
                     $prod->pvariant->multiplier = ($customerCurrency) ? $customerCurrency->doller_compare : 1;

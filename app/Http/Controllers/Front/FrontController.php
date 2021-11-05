@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category, Product, ClientPreference,EmailTemplate, ClientCurrency, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser,Country,UserAddress,CartProduct, Vendor,ClientLanguage};
+use App\Models\{Client, Category, Product, ClientPreference,EmailTemplate, ClientCurrency, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser,Country,UserAddress,CartProduct, Vendor, VendorCategory, ClientLanguage};
 
 class FrontController extends Controller
 {
@@ -65,7 +65,6 @@ class FrontController extends Controller
             ->whereNull('categories.vendor_id')
             ->orderBy('categories.position', 'asc')
             ->orderBy('categories.parent_id', 'asc')->groupBy('id')->get();
-
         if ($categories) {
             $categories = $this->buildTree($categories->toArray());
         }
@@ -87,6 +86,42 @@ class FrontController extends Controller
             }
         }
         return $branch;
+    }
+
+    public function getChildCategoriesForVendor($category_id, $langId=1, $vid=0)
+    {
+        $category_list = array();
+
+        $categories = Category::with(['translation' => function($q) use($langId){
+                $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+                ->where('category_translations.language_id', $langId);
+            }, 'childs'])
+            ->select('id', 'icon', 'image', 'slug', 'type_id', 'can_add_products', 'parent_id')
+            ->where('parent_id', $category_id)->where('status', 1)->get();
+        if($categories){
+            foreach($categories as $cate){
+                if($cate->childs){
+                    foreach($cate->childs as $child){
+                        $vendorCategory = VendorCategory::with(['category.translation' => function($q) use($langId){
+                            $q->where('category_translations.language_id', $langId);
+                        }])->where('vendor_id', $vid)->where('category_id', $child->id)->where('status', 1)->first();
+                        if($vendorCategory){
+                            $category_list[] = $vendorCategory;
+                        }
+                        $this->getChildCategoriesForVendor($child->id, $langId, $vid);
+                    }
+                }
+                
+                $vendorCategory = VendorCategory::with(['category.translation' => function($q) use($langId){
+                    $q->where('category_translations.language_id', $langId);
+                }])->where('vendor_id', $vid)->where('category_id', $cate->id)->where('status', 1)->first();
+                if($vendorCategory){
+                    $category_list[] = $vendorCategory;
+                }
+                $this->getChildCategoriesForVendor($cate->id, $langId, $vid);
+            }
+        }
+        return $category_list;
     }
 
     public function getServiceAreaVendors(){
@@ -111,6 +146,14 @@ class FrontController extends Controller
         }
         Session::put('vendors', $vendors);
         return $vendors;
+    }
+
+    public function loadDefaultImage(){
+        $proxy_url = \Config::get('app.IMG_URL1');
+        $image_path = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png');
+        $image_fit = \Config::get('app.FIT_URl');
+        $default_url = $image_fit .'300/300'. $image_path;
+        return $default_url;
     }
 
     public function productList($vendorIds, $langId, $currency = 'USD', $where = '')
@@ -147,8 +190,8 @@ class FrontController extends Controller
                 foreach ($value->variant as $k => $v) {
                     $value->variant[$k]->multiplier = Session::get('currencyMultiplier');
                 }
-                
-                $value->category_name = $value->category->categoryDetail->translation->first() ? $value->category->categoryDetail->translation->first()->name :  $value->category->slug;
+                $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
+                $value->category_name = isset($value->category->categoryDetail->translation) ? $value->category->categoryDetail->translation->first()->name :  $value->category->slug;
             }
         }
         return $products;
@@ -204,6 +247,7 @@ class FrontController extends Controller
                 $value->variant_price = (!empty($value->variant->first())) ? number_format(($value->variant->first()->price * $multiplier),2,'.','') : 0;
                 $value->averageRating = number_format($value->averageRating, 1, '.', '');
                 $value->category_name = $value->category->categoryDetail->translation->first()->name;
+                $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '600/600' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                 // foreach ($value->variant as $k => $v) {
                 //     $value->variant[$k]->multiplier = $multiplier;
                 // }
@@ -491,6 +535,24 @@ class FrontController extends Controller
         return $ReturnArray;
     }
 
+    public function getEvenOddTime($time) {
+        return ($time % 5 === 0) ? $time : ($time - ($time % 5));
+    }
+
+    function getLineOfSightDistanceAndTime($vendor, $preferences){
+        if (($preferences) && ($preferences->is_hyperlocal == 1)) {
+            $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
+            $unit_abbreviation = ($distance_unit == 'mile') ? 'miles' : 'km';
+            $distance_to_time_multiplier = ($preferences->distance_to_time_multiplier > 0) ? $preferences->distance_to_time_multiplier : 2;
+            $distance = $vendor->vendorToUserDistance;
+            $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
+            $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
+            $pretime = $this->getEvenOddTime($vendor->timeofLineOfSightDistance);
+            $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5);
+        }
+        return $vendor;
+    }
+
     function getVendorDistanceWithTime($userLat='', $userLong='', $vendor, $preferences){
         if(($preferences) && ($preferences->is_hyperlocal == 1)){
             if( (empty($userLat)) && (empty($userLong)) ){
@@ -509,6 +571,8 @@ class FrontController extends Controller
                 $distance = $this->calulateDistanceLineOfSight($lat1, $long1, $lat2, $long2, $distance_unit);
                 $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
                 $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
+                $pretime = $this->getEvenOddTime($vendor->timeofLineOfSightDistance);
+                $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5);
             }else{
                 $vendor->lineOfSightDistance = 0;
                 $vendor->timeofLineOfSightDistance = 0;
@@ -560,5 +624,10 @@ class FrontController extends Controller
         // $time = convertDateTimeInTimeZone($datetime, Auth::user()->timezone, $format);
         $time = Carbon::parse($datetime)->format($format);
         return $time;
+    }
+
+    public function getClientCode(){
+        $code = Client::orderBy('id','asc')->value('code');
+        return $code;
     }
 }

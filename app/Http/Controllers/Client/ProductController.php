@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{CsvProductImport, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell, CartProduct, CartAddon, UserWishlist};
+use App\Models\{CsvProductImport, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell, CartProduct, CartAddon, UserWishlist,Client};
 use Illuminate\Support\Facades\Storage;
 use App\Http\Traits\ToasterResponser;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,6 +17,11 @@ use GuzzleHttp\Client as GCLIENT;
 class ProductController extends BaseController
 {
     private $folderName = 'prods';
+    public function __construct()
+    {
+        $code = Client::orderBy('id','asc')->value('code');
+        $this->folderName = '/'.$code.'/prods';
+    }
     use ToasterResponser;
     /**   Display   List of products  */
     public function index()
@@ -59,6 +64,7 @@ class ProductController extends BaseController
             'sku' => 'required|unique:products',
             'url_slug' => 'required',
             'category' => 'required',
+            'product_name' => 'required',
         );
         $validation = Validator::make($request->all(), $rules)->validate();
 
@@ -84,6 +90,7 @@ class ProductController extends BaseController
             'sku' => 'required|unique:products',
             'url_slug' => 'required',
             'category' => 'required',
+            'product_name' => 'required',
         );
         $validation  = Validator::make($request->all(), $rule);
         if ($validation->fails()) {
@@ -102,7 +109,7 @@ class ProductController extends BaseController
         $product->save();
         if ($product->id > 0) {
             $datatrans[] = [
-                'title' => '',
+                'title' => $request->product_name??null,
                 'body_html' => '',
                 'meta_title' => '',
                 'meta_keyword' => '',
@@ -817,5 +824,55 @@ class ProductController extends BaseController
         else
             return false;
     }
+
+    # update all products action  
+    public function updateActions(Request $request){
+        if(isset($request->is_new) && $request->is_new == 'true')
+        $is_new = 1;
+        else
+        $is_new = 0;
+
+        if (isset($request->is_featured) && $request->is_featured == 'true') { 
+            $is_featured = 1;
+        }
+        else
+        $is_featured = 0;
+
+        if (isset($request->last_mile) && $request->last_mile == 'true') { 
+            $Requires_last_mile  = 1;
+        }
+        else
+        $Requires_last_mile  = 0;
+
+        if(isset($request->action_for) && !empty($request->action_for)){
+            switch($request->action_for){
+                case "for_new":
+                $update_product = Product::whereIn('id',$request->product_id)->update(['is_new' => $is_new]);
+                break;
+                case "for_featured":
+                $update_product = Product::whereIn('id',$request->product_id)->update(['is_featured' => $is_featured]);
+                break;
+                case "for_last_mile":
+                    $update_product = Product::whereIn('id',$request->product_id)->update(['Requires_last_mile' => $Requires_last_mile]);
+                break;
+                case "for_live":
+                    $update_product = Product::whereIn('id',$request->product_id)->update(['is_live' => $request->is_live]);
+                break;
+                case "for_tax":
+                    $update_product = Product::whereIn('id',$request->product_id)->update(['tax_category_id' => $request->tax_category]);
+                break;
+                default:
+                '';
+            }
+
+        }
+
+  
+        return response()->json([
+            'status' => 'success',
+            'message' => __('Product action Submitted successfully!')
+        ]);
+    }
+    
 
 }

@@ -15,6 +15,11 @@ class CategoryController extends BaseController
 {
     private $blocking = '2';
     private $folderName = 'category/icon';
+    public function __construct()
+    {
+        $code = Client::orderBy('id','asc')->value('code');
+        $this->folderName = '/'.$code.'/category/icon';
+    }
     /**
      * Display a listing of the resource.
      *
@@ -64,9 +69,14 @@ class CategoryController extends BaseController
             case "taxi":
             $type =Type::where('title','Pickup/Delivery')->orderBY('sequence', 'ASC')->get();
             break;
+            case "food_grocery_ecommerce":
+            $type =Type::whereNotIn('title',['Pickup/Delivery','On Demand Service','Pickup/Parent'])->orderBY('sequence', 'ASC')->get();
+            break;
             default:
             $type = Type::where('title', '!=', 'Pickup/Parent')->orderBY('sequence', 'ASC')->get();
         }
+
+        
        
         $parCategory = Category::with('translation_one')->select('id', 'slug')->where('deleted_at', NULL)->whereIn('type_id', ['1', '3', '6', '8'])->where('is_core', 1)->where('status', 1)->get();
         $vendor_list = Vendor::select('id', 'name')->where('status', '!=', $this->blocking)->get();
@@ -146,6 +156,9 @@ class CategoryController extends BaseController
         switch($preference->business_type){
             case "taxi":
             $type =Type::where('title','Pickup/Delivery')->orderBY('sequence', 'ASC')->get();
+            break;
+            case "food_grocery_ecommerce":
+            $type =Type::whereNotIn('title',['Pickup/Delivery','On Demand Service','Pickup/Parent'])->orderBY('sequence', 'ASC')->get();
             break;
             default:
             $type = Type::where('title', '!=', 'Pickup/Parent')->orderBY('sequence', 'ASC')->get();

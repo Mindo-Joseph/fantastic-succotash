@@ -184,6 +184,7 @@
                                                     if(empty($data->vendor_templete_id) || ($data->vendor_templete_id == 1)){
                                                         $vendor_url = route('categoryVendorProducts', [$category->slug, $data->slug]);
                                                     }elseif($data->vendor_templete_id == 5){
+                                                        if(isset($data->slug) && isset($category->slug))
                                                         $vendor_url = route('vendorCategoryProducts', [$data->slug, $category->slug]);
                                                     }else{
                                                         $vendor_url = route('vendorDetail', $data->slug);
@@ -199,14 +200,14 @@
                                                                 <h6 class="mb-1">{{$data->name}}</h6>
                                                                 <p title="{{$data->categoriesList}}" class="vendor-cate border-bottom pb-1 mb-1 ellips">{{$data->categoriesList}}</p>
                                                                 <div class="product-timing">
-                                                                    <small title="{{$data->address}}" class="ellips d-block"><i class="fa fa-map-marker"></i> {{$data->address}}</small>
+                                                                    <small title="{{$data->address}}" class="ellips d-block"><span class="icon-location2"></span> {{$data->address}}</small>
                                                                     @if(isset($data->timeofLineOfSightDistance))
                                                                         <ul class="timing-box mb-1">
                                                                             <li>
-                                                                                <small class="d-block"><img class="d-inline-block mr-1" src="{{ asset('front-assets/images/distance.png') }}" alt=""> {{$data->lineOfSightDistance}}</small>
+                                                                                <small class="d-block"><span class="icon-location2"></span> {{$data->lineOfSightDistance}}</small>
                                                                             </li>
                                                                             <li>
-                                                                                <small class="d-block mx-1"><i class="fa fa-clock-o"></i> {{$data->timeofLineOfSightDistance}} min</small>
+                                                                                <small class="d-block mx-1"><span class="icon-clock"></span> {{$data->timeofLineOfSightDistance}} min</small>
                                                                             </li>
                                                                         </ul>
                                                                     @endif
@@ -232,7 +233,7 @@
                                                             </div>
                                                         </a>
 
-                                                        <!-- <div class="product-box">
+                                                        {{-- <div class="product-box">
                                                             <div class="img-wrapper">
                                                                 <div class="front">
                                                                     <a href="{{$vendor_url}}"><img class="img-fluid blur-up lazyload" alt="" src="{{$imagePath}}" width="300" height="300"></a>
@@ -252,7 +253,7 @@
                                                                     @endif
                                                                 </div>
                                                             </div>
-                                                        </div> -->
+                                                        </div> --}}
                                                     </div>
                                                 @endforeach
                                             @else
@@ -260,9 +261,11 @@
                                             @endif
                                             </div>
                                         </div>
+                                        @if(count($listData))
                                         <div class="pagination pagination-rounded justify-content-end mb-0">
                                             {{ $listData->links() }}
                                         </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
