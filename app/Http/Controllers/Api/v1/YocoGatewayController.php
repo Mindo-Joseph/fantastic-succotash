@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Api\v1\OrderController;
-use App\Models\{User, UserVendor, Cart, CartAddon, CartCoupon, CartProduct, CartProductPrescription, Payment, PaymentOption, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor, OrderTax};
+use App\Models\{User, UserVendor, ClientCurrency, Cart, CartAddon, CartCoupon, CartProduct, CartProductPrescription, Payment, PaymentOption, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor, OrderTax};
 
 class YocoGatewayController extends BaseController
 {
@@ -45,8 +45,8 @@ class YocoGatewayController extends BaseController
 
     public function yocoWebview(Request $request){
         $user = Auth::user();
-        $amount = $request['amount'];
-        $order_number = $request['order_number'];
+        $amount = $request->amount;
+        $order_number = $request->order_number;
         $params = '?amount=' . $amount . '&order_number=' . $order_number. '&public_key_yoco=' . $this->PUBLIC_KEY.'&auth_token='.$user->auth_token;
         return $this->successResponse(url($request->serverUrl.'payment/yoco-webview'.$params));
     }
