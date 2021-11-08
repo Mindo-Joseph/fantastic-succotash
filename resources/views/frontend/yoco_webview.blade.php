@@ -143,7 +143,7 @@
                     // success_error_alert('error', response.message, ".success-payment-message");
 
                 }
-                window.location.href = payment_return_url;
+                location.href = payment_return_url;
             },
             error: function(error) {
                 var response = $.parseJSON(error.responseText);
