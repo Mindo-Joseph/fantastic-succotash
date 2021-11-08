@@ -468,6 +468,13 @@ class VendorController extends BaseController
 
         $sku_url = array_reverse(explode('.',$sku_url));
         $sku_url = implode(".",$sku_url);
+        $vendor_name = $vendor->name;
+        $vendor_name = preg_replace('/\s+/', '', $vendor_name);
+        if(isset($vendor_name) && !empty($vendor_name))
+        $sku_url = $sku_url.".".$vendor_name;
+        
+        
+        
         $taxCate = TaxCategory::all();
         return view('backend.vendor.vendorCatalog')->with(['taxCate' => $taxCate,'sku_url' => $sku_url, 'new_products' => $new_products, 'featured_products' => $featured_products, 'last_mile_delivery' => $last_mile_delivery, 'published_products' => $published_products, 'product_count' => $product_count, 'client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories_hierarchy, 'builds' => $build, 'woocommerce_detail' => $woocommerce_detail]);
     }
@@ -892,5 +899,32 @@ class VendorController extends BaseController
         return $data;
     }
 
-    
+    public function vendor_specific_categories($domain = '', $id){
+        $langId = Session::has('adminLanguage') ? Session::get('adminLanguage') : 1;
+        $product_categories = VendorCategory::with(['category', 'category.translation' => function($q) use($langId){
+            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+            ->where('category_translations.language_id', $langId);
+        }])->where('status', 1)->where('vendor_id', $id)->get();
+        $p_categories = collect();
+        $product_categories_hierarchy = '';
+        if ($product_categories) {
+            foreach($product_categories as $pc){
+                $p_categories->push($pc->category);
+            }
+            $product_categories_build = $this->buildTree($p_categories->toArray());
+            $product_categories_hierarchy = $this->printCategoryOptionsHeirarchy($product_categories_build);
+            foreach($product_categories_hierarchy as $k => $cat){
+                if ($cat['type_id'] != 1 && $cat['type_id'] != 3 && $cat['type_id'] != 7 && $cat['type_id'] != 8) {
+                    unset($product_categories_hierarchy[$k]);
+                }
+            }
+        }
+        $options = [];
+        foreach($product_categories_hierarchy as $key => $product_category){
+            $options[] = "<option value=".$product_category['id'].">".$product_category['hierarchy']."</option>";
+        }
+       
+        return response()->json(['status' => 1, 'message' => 'Product Categories', 'product_categories' => $product_categories_hierarchy, 'options' => $options]);
+    }
+
 }
