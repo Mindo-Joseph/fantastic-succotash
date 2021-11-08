@@ -12,14 +12,6 @@ jQuery(window).scroll(function() {
     }
 });
 
-<<<<<<< HEAD
-=======
-
-
-
-
-
->>>>>>> de0ec2ce014eacace4f78876c9cebf60273d269d
 $(function() {
     document.ajax_loading = false;
     $.hasAjaxRunning = function() {
@@ -95,7 +87,7 @@ window.easyZoomInitialize = function easyZoomInitialize() {
 
 window.loadMainMenuSlider = function loadMainMenuSlider(){
     $(".menu-slider").slick({
-        arrows: false,
+        arrows: true,
         dots: false,
         infinite: false,
         variableWidth: false,

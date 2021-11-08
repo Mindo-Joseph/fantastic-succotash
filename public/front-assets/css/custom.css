@@ -84,7 +84,7 @@ header.site-header.fixed-bar {
 .pixelstrap a,
 .pixelstrap a:hover,
 .pixelstrap a:active {
-    padding: 10px 20px 10px 0;
+    padding: 10px 15px 10px 0;
 }
 
 .top-header .header-dropdown li:hover i {
@@ -4954,10 +4954,18 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 } 
 
 .menu-slider .slick-list {
-    overflow: visible;
+    overflow: hidden;
     /* -webkit-transform: translateX(-540px);
     -moz-transform: translateX(-540px);
     transform: translateX(-540px); */
+}
+
+.menu-slider .slick-next.slick-disabled:before,.menu-slider .slick-prev.slick-disabled:before{
+    opacity: 0;
+}
+
+.menu-slider .slick-next:before,.menu-slider .slick-prev:before{
+    color: var(--theme-deafult);
 }
 
 .store-btn img{
@@ -4978,7 +4986,14 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 
 /* Classes Page Css */
 .service-data .minus, .service-data .plus {
-    width: 3                    0px;
+    width: 30px;
+}
+.classes_wrapper .number {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.classes_wrapper .number input{
+    width: 50px !important;
 }
 .product-order span.ellips {
     width: 160px;
@@ -5327,6 +5342,7 @@ ul#main-nav-list {
     float: left;
     clear: left;
     width: 100%;
+    box-shadow: 0 16px 32px 0 rgb(0 0 0 / 5%) !important;
 }
 
 .cab-booking-header .top-header .header-dropdown li a,
@@ -6917,11 +6933,15 @@ body[dir="rtl"] .inner_spacing h3 {
     .main-menu .menu-right .icon-nav li.d-ipad {
         display: none !important;
     }
-    .slick-initialized .slick-slide:nth-child(1) {
+    .menu-slider.slick-initialized .slick-slide:nth-child(1) {
         display: none;
     }
     .menu-slider .slick-slide {
         width: max-content !important;
+    }
+    .menu-navigation ul.sm.pixelstrap.sm-horizontal {
+        width: calc(100% - 50px);
+        margin: auto;
     }
 }
 
