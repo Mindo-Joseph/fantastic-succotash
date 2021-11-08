@@ -328,7 +328,7 @@ class OrderController extends BaseController {
                     $order->save();
                     $this->sendSuccessSMS($request, $order);
                     $ex_gateways = [6,7,8]; // if mobbex, payfast, yoco
-                    if(!in_array($request->payment_option_id, $exclude_gateway)){
+                    if(!in_array($request->payment_option_id, $ex_gateways)){
                         Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
                         CartCoupon::where('cart_id', $cart->id)->delete();
                         CartProduct::where('cart_id', $cart->id)->delete();
@@ -343,7 +343,7 @@ class OrderController extends BaseController {
                         ]);
                     }
                     $order = $order->with(['vendors:id,order_id,dispatch_traking_url,vendor_id', 'user_vendor', 'vendors.vendor'])->where('order_number', $order->order_number)->first();
-                    if(!in_array($request->payment_option_id, $exclude_gateway)){
+                    if(!in_array($request->payment_option_id, $ex_gateways)){
                         $code = $request->header('code');
                         if (!empty($order->vendors)) {
                             foreach ($order->vendors as $vendor_value) {
