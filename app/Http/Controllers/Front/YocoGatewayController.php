@@ -34,14 +34,9 @@ class YocoGatewayController extends FrontController
         $creds_arr = json_decode($yoco_creds->credentials);
         $secret_key = (isset($creds_arr->secret_key)) ? $creds_arr->secret_key : '';
         $public_key = (isset($creds_arr->public_key)) ? $creds_arr->public_key : '';
-        // $api_access_token = (isset($creds_arr->api_access_token)) ? $creds_arr->api_access_token : '';
         $this->test_mode = (isset($yoco_creds->test_mode) && ($yoco_creds->test_mode == '1')) ? true : false;
-
         $this->SECRET_KEY = $secret_key;
         $this->PUBLIC_KEY = $public_key;
-        // $this->API_ACCESS_TOKEN = $api_access_token;
-
-
     }
 
     public function yocoPurchase(Request $request)
@@ -79,7 +74,7 @@ class YocoGatewayController extends FrontController
                 'amountInCents' => $amount,
                 'currency' => 'ZAR',
                 'description' => 'Order Checkout',
-                'return_url' => url($returnUrl . $returnUrlParams),
+                'return_url' => $returnUrl,
                 'reference' => $request->order_number,
 
                 'redirect' => false,
@@ -104,18 +99,12 @@ class YocoGatewayController extends FrontController
 
             // send to yoco
             $result = curl_exec($ch);
-            // return $result;
             $result = json_decode($result);
             if ($result->status == 'successful') {
                 if ($request->payment_form == '') {
                     return $this->successResponse($result);
-                
-                    //$returnUrl = route('user.wallet');
-                    // return 
                 }
                 $this->yocoSuccess($request, $result);
-                // $response = $this->mb->mobbex_checkout($checkout_data);
-
                 return $this->successResponse($result);
             } else {
                 $this->yocoFail($request);
@@ -126,10 +115,8 @@ class YocoGatewayController extends FrontController
         }
     }
 
-    public function yocoSuccess($request, $result, $domain = '')
+    public function yocoSuccess($request, $result)
     {
-
-
         $transactionId = $result->id;
         $order_number = $request->order_number;
         $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
@@ -177,7 +164,7 @@ class YocoGatewayController extends FrontController
     }
 
 
-    public function yocoFail($request, $domain = '')
+    public function yocoFail($request)
     {
         $order_number = $request->order_number;
         $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();

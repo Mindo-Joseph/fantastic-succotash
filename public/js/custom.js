@@ -1237,11 +1237,8 @@ $(document).ready(function() {
                 }
             });
         } else if (payment_option_id == 8) {
-
             var order;
-
             inline.createToken().then(function(result) {
-
                 if (result.error) {
 
                     $('#yoco_card_error').html(result.error.message);
@@ -1252,26 +1249,16 @@ $(document).ready(function() {
                     payment_option_id = 8;
 
                     order = placeOrderBeforePayment(address_id, payment_option_id, tip);
-                    paymentViaYoco(address_id, order, token.id);
+                    if(order != ''){
+                        paymentViaYoco(address_id, order, token.id);
+                    }else{
+                        return false;
+                    }
                 }
-
-
-
             }).catch(function(error) {
                 // Re-enable button now that request is complete
-
                 alert("error occured: " + error);
             });
-
-
-            //paymentViaYoco(address_id, order, );
-
-            // if (order != null) {
-
-
-            // } else {
-            //     return false;
-            // }
         } else if (payment_option_id == 10) {
 
 
@@ -1340,7 +1327,11 @@ $(document).ready(function() {
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
-                    window.location.href = response.data;
+                    if (cartElement.length > 0) {
+                        window.location.href = order_success_return_url;
+                    }else if (walletElement.length > 0) {
+                        window.location.reload();
+                    }
                 } else {
                     if (cartElement.length > 0) {
                         success_error_alert('error', response.message, "#cart_payment_form .payment_response");

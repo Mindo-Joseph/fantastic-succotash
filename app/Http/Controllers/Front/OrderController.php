@@ -655,8 +655,9 @@ class OrderController extends FrontController
                                     $longitude = Session::get('longitude');
                                     $vendor_cart_product->vendor = $this->getVendorDistanceWithTime($latitude, $longitude, $vendor_cart_product->vendor, $preferences);
                                     $OrderVendor->order_pre_time = ($vendor_cart_product->vendor->order_pre_time > 0) ? $vendor_cart_product->vendor->order_pre_time : 0;
+                                    $timeofLineOfSightDistance = ($vendor_cart_product->vendor->timeofLineOfSightDistance > 0) ? $vendor_cart_product->vendor->timeofLineOfSightDistance : 0;
                                     if ($vendor_cart_product->vendor->timeofLineOfSightDistance > 0) {
-                                        $OrderVendor->user_to_vendor_time = $vendor_cart_product->vendor->timeofLineOfSightDistance - $OrderVendor->order_pre_time;
+                                        $OrderVendor->user_to_vendor_time = intval($timeofLineOfSightDistance) - intval($OrderVendor->order_pre_time);
                                     }
                                 }
                             }

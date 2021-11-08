@@ -47,15 +47,12 @@ class YocoGatewayController extends BaseController
     {
 
         $public_key_yoco = PaymentOption::where('code', 'yoco')->first();
-        //dd($public_key_yoco);
         $public_key_yoco = $public_key_yoco->credentials;
         $public_key_yoco = json_decode($public_key_yoco);
         $public_key_yoco = $public_key_yoco->public_key;
         $amount = $request['amount'];
         $order_number = $request['order_number'];
         $params = '?amount=' . $amount . '&order_number=' . $order_number. '&public_key_yoco=' . $public_key_yoco;
-        //return response()->json(['data'=>url('/api/v1/payment/yoco-webview')]);
-        //return response()->view('frontend.yoco_webview', compact('amount', 'order_number'));
         return $this->successResponse(url( $request->serverUrl.'payment/yoco-webview'.$params));
 
 
@@ -79,9 +76,7 @@ class YocoGatewayController extends BaseController
                 'amountInCents' => $amount,
                 'currency' => 'ZAR',
                 'description' => 'Order Checkout',
-
                 'reference' => $request->order_number,
-
                 'redirect' => false,
                 'test' => $this->test_mode, // True, testing, false, production
 
