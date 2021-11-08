@@ -192,6 +192,13 @@ class AuthController extends BaseController
             }
         }
 
+        if(!empty($signReq->email)){
+            $userEmailCheck = User::where(['email' => $signReq->email])->first();
+            if($userEmailCheck){
+                return response()->json(['error' => 'The email has already been taken.' ], 422);
+            }
+        }
+
         $user = new User();
 
         foreach ($signReq->only('name', 'country_id', 'phone_number', 'dial_code') as $key => $value) {
