@@ -12,6 +12,14 @@ jQuery(window).scroll(function() {
     }
 });
 
+<<<<<<< HEAD
+=======
+
+
+
+
+
+>>>>>>> de0ec2ce014eacace4f78876c9cebf60273d269d
 $(function() {
     document.ajax_loading = false;
     $.hasAjaxRunning = function() {
@@ -836,6 +844,8 @@ $(document).ready(function() {
         paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount, order_number);
     }
 
+
+
     function paymentViaStripe(stripe_token, address_id, payment_option_id) {
         let total_amount = 0;
         let tip = 0;
@@ -974,32 +984,43 @@ $(document).ready(function() {
         });
     }
 
-    function paymentViaPaylink() {
+    function paymentViaRazorpay_wallet(address_id, payment_option_id) {
         let total_amount = 0;
-        let tip = 0;
-        let tipElement = $("#cart_tip_amount");
-        let cartElement = $("input[name='cart_total_payable_amount']");
-        let walletElement = $("input[name='wallet_amount']");
-        let ajaxData = {};
-        if (cartElement.length > 0) {
-            total_amount = cartElement.val();
-            tip = tipElement.val();
-            ajaxData.tip = tip;
-        } else if (walletElement.length > 0) {
-            total_amount = walletElement.val();
-        }
-        ajaxData.amount = total_amount;
-        ajaxData.returnUrl = path;
-        ajaxData.cancelUrl = path;
 
-        if (typeof tip_for_past_order !== 'undefined') {
-            if (tip_for_past_order != undefined && tip_for_past_order == 1) {
-                let order_number = $("#order_number").val();
-                ajaxData.order_number = order_number;
-                order_number = order_number;
+
+
+        let ajaxData = [];
+
+        total_amount = $("input[name='wallet_amount']").val();
+        ajaxData.push({ name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
+
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: payment_razorpay_url,
+            data: ajaxData,
+            success: function(response) {
+                if (response.status == "Success") {
+
+                    //  creditWallet(total_amount, payment_option_id, data.result.id);
+
+
+                    window.location.href = response.data;
+
+                }
             }
+        });
+    }
 
-        }
+    function paymentViaPaylink_wallet(address_id, payment_option_id) {
+        let total_amount = 0;
+
+
+
+        let ajaxData = [];
+
+        total_amount = $("input[name='wallet_amount']").val();
+        ajaxData.push({ name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
 
         $.ajax({
             type: "POST",
@@ -1008,88 +1029,48 @@ $(document).ready(function() {
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
+
+                    //  creditWallet(total_amount, payment_option_id, data.result.id);
+
+
                     window.location.href = response.data;
-                } else {
-                    if (cartElement.length > 0) {
-                        success_error_alert('error', response.message, ".payment_response");
-                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
-                    } else if (walletElement.length > 0) {
-                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                        $(".topup_wallet_confirm").removeAttr("disabled");
-                    }
-                }
-            },
-            error: function(error) {
-                var response = $.parseJSON(error.responseText);
-                if (cartElement.length > 0) {
-                    success_error_alert('error', response.message, ".payment_response");
-                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
-                } else if (walletElement.length > 0) {
-                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                    $(".topup_wallet_confirm").removeAttr("disabled");
+
                 }
             }
         });
     }
 
-    function paymentViaYoco(token) {
+    function paymentViaYoco_wallet(token, address_id, payment_option_id) {
         let total_amount = 0;
-        let tip = 0;
-        let tipElement = $("#cart_tip_amount");
-        let cartElement = $("input[name='cart_total_payable_amount']");
-        let walletElement = $("input[name='wallet_amount']");
-        let ajaxData = {};
-        if (cartElement.length > 0) {
-            total_amount = cartElement.val();
-            tip = tipElement.val();
-            ajaxData.tip = tip;
-        } else if (walletElement.length > 0) {
-            total_amount = walletElement.val();
-        }
-        ajaxData.amount = total_amount;
-        ajaxData.token = token;
-        ajaxData.returnUrl = path;
-        ajaxData.cancelUrl = path;
 
-        if (typeof tip_for_past_order !== 'undefined') {
-            if (tip_for_past_order != undefined && tip_for_past_order == 1) {
-                let order_number = $("#order_number").val();
-                ajaxData.order_number = order_number;
-                order_number = order_number;
-            }
 
-        }
 
+        let ajaxData = [];
+
+        total_amount = $("input[name='wallet_amount']").val();
+
+        ajaxData.push({ name: 'token', value: token }, { name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: payment_yoco_url,
             data: ajaxData,
             success: function(response) {
-                if (response.status == "Success") {
-                    window.location.href = response.data;
-                } else {
-                    if (cartElement.length > 0) {
-                        success_error_alert('error', response.message, ".payment_response");
-                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
-                    } else if (walletElement.length > 0) {
-                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                        $(".topup_wallet_confirm").removeAttr("disabled");
-                    }
-                }
+
+                // window.location.href = URL::to('user/wallet');
+                creditWallet(total_amount, payment_option_id, response.data.id);
+
             },
-            error: function(error) {
-                var response = $.parseJSON(error.responseText);
-                if (cartElement.length > 0) {
-                    success_error_alert('error', response.message, ".payment_response");
-                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
-                } else if (walletElement.length > 0) {
-                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                    $(".topup_wallet_confirm").removeAttr("disabled");
-                }
-            }
+
         });
     }
+
+
+
+
+
+
+
 
     function paymentSuccessViaPaypal(amount, token, payer_id, path, tip = 0, order_number = 0) {
         let address_id = 0;
@@ -1282,6 +1263,7 @@ $(document).ready(function() {
         //let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
         let payment_option_id = $("#cart_payment_form input[name='cart_payment_method']:checked").val();
 
+
         let tip = $("#cart_tip_amount").val();
         if (payment_option_id == 1) {
             placeOrder(address_id, payment_option_id, '', tip);
@@ -1295,11 +1277,8 @@ $(document).ready(function() {
                 }
             });
         } else if (payment_option_id == 8) {
-
             var order;
-
             inline.createToken().then(function(result) {
-
                 if (result.error) {
 
                     $('#yoco_card_error').html(result.error.message);
@@ -1310,26 +1289,25 @@ $(document).ready(function() {
                     payment_option_id = 8;
 
                     order = placeOrderBeforePayment(address_id, payment_option_id, tip);
-                    paymentViaYoco(address_id, order, token.id);
+                    if(order != ''){
+                        paymentViaYoco(address_id, order, token.id);
+                    }else{
+                        return false;
+                    }
                 }
-
-
-
             }).catch(function(error) {
                 // Re-enable button now that request is complete
-
                 alert("error occured: " + error);
             });
+        } else if (payment_option_id == 10) {
 
 
-            //paymentViaYoco(address_id, order, );
-
-            // if (order != null) {
-
-
-            // } else {
-            //     return false;
-            // }
+            var order = placeOrderBeforePayment('', payment_option_id, '');
+            if (order != '') {
+                paymentViaRazorpay(address_id, order);
+            } else {
+                return false;
+            }
         } else if (payment_option_id == 3) {
             paymentViaPaypal(address_id, payment_option_id);
         } else if (payment_option_id == 5) {
@@ -1389,7 +1367,11 @@ $(document).ready(function() {
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
-                    window.location.href = response.data;
+                    if (cartElement.length > 0) {
+                        window.location.href = order_success_return_url;
+                    }else if (walletElement.length > 0) {
+                        window.location.reload();
+                    }
                 } else {
                     if (cartElement.length > 0) {
                         success_error_alert('error', response.message, "#cart_payment_form .payment_response");
@@ -1468,6 +1450,65 @@ $(document).ready(function() {
         });
     }
 
+    window.paymentViaRazorpay = function paymentViaRazorpay(address_id, order) {
+        let total_amount = 0;
+        let tip = 0;
+        let tipElement = $("#cart_tip_amount");
+        let cartElement = $("input[name='cart_total_payable_amount']");
+        let cart_id = $("#cart_total_payable_amount").data("cart_id");
+
+        let walletElement = $("input[name='wallet_amount']");
+        let ajaxData = {};
+        if (cartElement.length > 0) {
+            total_amount = cartElement.val();
+            tip = tipElement.val();
+            ajaxData.tip = tip;
+            ajaxData.address_id = address_id;
+            ajaxData.payment_form = 'cart';
+            ajaxData.cart_id = cart_id;
+            ajaxData.order_number = order.order_number;
+        } else if (walletElement.length > 0) {
+            total_amount = walletElement.val();
+            ajaxData.payment_form = 'wallet';
+        }
+        ajaxData.amount = total_amount;
+        ajaxData.returnUrl = path;
+        ajaxData.cancelUrl = path;
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: payment_razorpay_url,
+            data: ajaxData,
+            success: function(response) {
+                if (response.status == "Success") {
+                    window.location.href = response.data;
+                } else {
+                    if (cartElement.length > 0) {
+                        success_error_alert('error', response.message, "#cart_payment_form .payment_response");
+                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                    } else if (walletElement.length > 0) {
+                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                        $(".topup_wallet_confirm").removeAttr("disabled");
+                    }
+                }
+            },
+            error: function(error) {
+                var response = $.parseJSON(error.responseText);
+                if (cartElement.length > 0) {
+                    success_error_alert('error', response.message, "#cart_payment_form .payment_response");
+                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+                } else if (walletElement.length > 0) {
+                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
+                    $(".topup_wallet_confirm").removeAttr("disabled");
+                }
+            }
+        });
+    }
+
+
+
+
+
 
     window.creditWallet = function creditWallet(amount, payment_option_id, transaction_id) {
         $.ajax({
@@ -1502,6 +1543,46 @@ $(document).ready(function() {
             }
         });
     }
+
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        });
+        let queryString = window.location.search;
+        let path = window.location.pathname;
+        let urlParams = new URLSearchParams(queryString);
+        if ((urlParams.get('gateway') == 'paylink') && urlParams.has('checkout')) {
+            $('.spinner-overlay').show();
+
+            if (urlParams.has('checkout')) {
+
+                transaction_id = urlParams.get('checkout');
+            }
+            if (urlParams.has('amount')) {
+
+                total_amount = urlParams.get('amount');
+            }
+
+            creditWallet(urlParams.get('amount'), 9, urlParams.get('checkout'));
+        }
+        if ((urlParams.get('gateway') == 'razorpay') && urlParams.has('checkout')) {
+            $('.spinner-overlay').show();
+
+            if (urlParams.has('checkout')) {
+
+                transaction_id = urlParams.get('checkout');
+            }
+            if (urlParams.has('amount')) {
+
+                total_amount = urlParams.get('amount');
+            }
+
+            creditWallet(urlParams.get('amount') / 10000, 9, urlParams.get('checkout'));
+        }
+    });
+
 
     function userSubscriptionPurchase(amount, payment_option_id, transaction_id) {
         var id = $("#subscription_payment_form #subscription_id").val();
@@ -1565,7 +1646,9 @@ $(document).ready(function() {
         } else if (payment_option_id == 6) {
             paymentViaPayfast();
         } else if (payment_option_id == 9) {
-            paymentViaPaylink();
+            paymentViaPaylink_wallet('', payment_option_id);
+        } else if (payment_option_id == 10) {
+            paymentViaRazorpay_wallet('', payment_option_id);
         } else if (payment_option_id == 8) {
 
 
@@ -1575,14 +1658,14 @@ $(document).ready(function() {
                 if (result.error) {
 
                     $('#yoco_card_error').html(result.error.message);
-                    $("#order_placed_btn, .proceed_to_pay").attr("disabled", false);
+                    $(".topup_wallet_confirm").attr("disabled", false);
                 } else {
                     const token = result;
                     // alert("card successfully tokenised: " + token.id);
 
 
 
-                    paymentViaYoco(token.id);
+                    paymentViaYoco_wallet(token.id, '', payment_option_id);
                 }
 
 
@@ -2872,12 +2955,12 @@ $(document).ready(function() {
 
     // *****************************  End tip after order place ****************************///
 
-    $(document).on('click', '.validate_promo_code_btn',function(){
+    $(document).on('click', '.validate_promo_code_btn', function() {
         let amount = $(this).data('amount');
         let cart_id = $(this).data('cart_id');
         let vendor_id = $(this).data('vendor_id');
         let promocode = $(document).find('.manual_promocode_input').val();
-        if(promocode && promocode != ""){
+        if (promocode && promocode != "") {
             // let coupon_id = $(this).data('coupon_id');
             $.ajax({
                 type: "POST",
@@ -2886,19 +2969,19 @@ $(document).ready(function() {
                 data: { cart_id: cart_id, vendor_id: vendor_id, amount: amount, promocode: promocode },
                 success: function(response) {
                     if (response.status == "Success") {
-                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-amount',amount);
-                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-cart_id',cart_id);
-                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-vendor_id',vendor_id);
-                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-coupon_id',response.data.id);
+                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-amount', amount);
+                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-cart_id', cart_id);
+                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-vendor_id', vendor_id);
+                        $('.validate_promo_div').find('.apply_promo_code_btn').attr('data-coupon_id', response.data.id);
                         $('.validate_promo_div').find('.apply_promo_code_btn').trigger('click');
                         $('#refferal-modal').modal('hide');
                         cartHeader();
-                    } 
+                    }
                 },
                 error: function(reject) {
                     if (reject.status === 422) {
                         var message = $.parseJSON(reject.responseText);
-                        $(".invalid-feedback.manual_promocode").html("<strong>"+message.message+"</strong>");
+                        $(".invalid-feedback.manual_promocode").html("<strong>" + message.message + "</strong>");
                     }
                 }
             });

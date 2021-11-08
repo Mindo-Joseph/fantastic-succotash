@@ -179,7 +179,7 @@ class AuthController extends BaseController
                     'email'  => 'email|unique:users'
                 ]);
             }
-            if(!empty($signReq->phone_number) && ($preferences->verify_phone == 0) && (!$validator->fails())){
+            if(!empty($signReq->phone_number) && ($preferences->verify_phone == 0)){
                 $validator = Validator::make($signReq->all(), [
                     'phone_number' => 'string|min:8|max:15|unique:users'
                 ]);
@@ -189,6 +189,13 @@ class AuthController extends BaseController
             foreach ($validator->errors()->toArray() as $error_key => $error_value) {
                 $errors['error'] = __($error_value[0]);
                 return response()->json($errors, 422);
+            }
+        }
+
+        if(!empty($signReq->email)){
+            $userEmailCheck = User::where(['email' => $signReq->email])->first();
+            if($userEmailCheck){
+                return response()->json(['error' => 'The email has already been taken.' ], 422);
             }
         }
 
@@ -261,7 +268,7 @@ class AuthController extends BaseController
                 if ($refferal_amounts) {
                     if ($refferal_amounts->reffered_by_amount != null && $refferal_amounts->reffered_to_amount != null) {
                         $reffered_by = UserRefferal::where('refferal_code', $signReq->refferal_code)->first();
-                        $user_refferd_by = $reffered_by->user_id;
+                        $user_refferd_by = $reffered_by->user_id??0;
                         $user_refferd_by = User::where('id', $reffered_by->user_id)->first();
                         if ($user_refferd_by) {
                             //user reffered by amount

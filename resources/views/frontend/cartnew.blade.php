@@ -890,6 +890,7 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
 <script>
     // Replace the supplied `publicKey` with your own.
     // Ensure that in production you use a production public_key.
+   
     var sdk = new window.YocoSDK({
         publicKey: 'pk_test_657b29ffyL0dlr389b04'
     });
@@ -912,6 +913,7 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
     var payment_mobbex_url = "{{route('payment.mobbexPurchase')}}";
     var payment_yoco_url = "{{route('payment.yocoPurchase')}}";
     var payment_paylink_url = "{{route('payment.paylinkPurchase')}}";
+    var payment_razorpay_url = "{{route('payment.razorpayPurchase')}}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
     var payment_option_list_url = "{{route('payment.option.list')}}";
@@ -989,10 +991,9 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
             // Create a new dropin form instance
 
             var yoco_amount_payable = $("input[name='cart_total_payable_amount']").val();
-        console.log( yoco_amount_payable*100);
             inline = sdk.inline({
                 layout: 'field',
-                amountInCents:  yoco_amount_payable*100,
+                amountInCents:  yoco_amount_payable * 100,
                 currency: 'ZAR'
             });
             // this ID matches the id of the element we created earlier.
