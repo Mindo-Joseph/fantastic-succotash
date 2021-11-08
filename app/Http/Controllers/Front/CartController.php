@@ -24,7 +24,7 @@ class CartController extends FrontController
     }
     public function showCart(Request $request, $domain = '')
     {
-        if(($request->has('gateway')) && (($request->gateway == 'mobbex')||($request->gateway == 'yoco')||($request->gateway == 'paypal'))){
+        if(($request->has('gateway')) && (($request->gateway == 'mobbex')||($request->gateway == 'yoco'))){
             if($request->has('order')){
                 $order = Order::where('order_number', $request->order)->first();
                 if($order){
@@ -98,6 +98,7 @@ class CartController extends FrontController
             $public_key_yoco= json_decode($public_key_yoco);
             $public_key_yoco= $public_key_yoco->public_key??'';
         }
+       
       
        
         return view('frontend.cartnew',compact('public_key_yoco'))->with($data,$client_preference_detail);
