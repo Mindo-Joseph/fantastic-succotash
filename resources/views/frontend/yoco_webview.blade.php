@@ -70,8 +70,8 @@
     if (urlParams.get('public_key_yoco') != '') {
         yoco_public_key = urlParams.get('public_key_yoco');
         yoco_amount_payable = urlParams.get('amount');
-        order_number = urlParams.get('order_number');
-        payment_return_url = payment_return_url + '&order_number=' + order_number;
+        order_number = urlParams.get('order');
+        payment_return_url = payment_return_url + '&order=' + order_number;
         auth_token = urlParams.get('auth_token');
 
         var sdk = new window.YocoSDK({
