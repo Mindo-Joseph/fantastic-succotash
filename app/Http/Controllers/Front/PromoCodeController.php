@@ -41,13 +41,13 @@ class PromoCodeController extends Controller{
             if($product_ids){
                 $promo_code_details = PromoCodeDetail::whereIn('refrence_id', $product_ids->toArray())->pluck('promocode_id');
                 if($promo_code_details->count() > 0){
-                    $result1 = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->where('restriction_on', 0)->where('restriction_type', 0)->where('is_deleted', 0)->get();
+                    $result1 = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->where('restriction_on', 0)->where('restriction_type', 0)->where('is_deleted', 0)->where(['promo_visibility' => 'public'])->get();
                     $promo_codes = $promo_codes->merge($result1);
                 }
                 $vendor_promo_code_details = PromoCodeDetail::whereHas('promocode')->where('refrence_id', $vendor_id)->pluck('promocode_id');
                 $result2 = Promocode::whereIn('id', $vendor_promo_code_details->toArray())->where('restriction_on', 1)->whereHas('details', function($q) use($vendor_id){
                     $q->where('refrence_id', $vendor_id);
-                })->where('restriction_on', 1)->where('is_deleted', 0)->whereDate('expiry_date', '>=', $now)->get();
+                })->where('restriction_on', 1)->where('is_deleted', 0)->whereDate('expiry_date', '>=', $now)->where(['promo_visibility' => 'public'])->get();
                 $promo_codes = $promo_codes->merge($result2);
             }
             foreach ($promo_codes as $key => $promo_code) {
@@ -155,9 +155,7 @@ class PromoCodeController extends Controller{
             // $order_vendor_coupon_list = OrderVendor::whereNotNull('coupon_id')->where('user_id', $user->id)->get([DB::raw('coupon_id'),  DB::raw('sum(coupon_id) as total')]);
             $now = Carbon::now()->toDateTimeString();
             $vendor_promo_code_details = PromoCodeDetail::whereHas('promocode')->where('refrence_id', $vendor_id)->pluck('promocode_id')->toArray();
-            $promo_result = Promocode::where(['name' => $request->promocode])->whereIn('id', $vendor_promo_code_details)->where('restriction_on', 1)->whereHas('details', function($q) use($vendor_id){
-                $q->where('refrence_id', $vendor_id);
-            })->where('restriction_on', 1)->where('is_deleted', 0)->whereDate('expiry_date', '>=', $now)->first();
+            $promo_result = Promocode::where(['name' => $request->promocode])->whereIn('id', $vendor_promo_code_details)->where('restriction_on', 1)->where('is_deleted', 0)->whereDate('expiry_date', '>=', $now)->first();
             if(!empty($promo_result)){
                 return $this->successResponse($promo_result, '', 200);
             } else {
