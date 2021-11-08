@@ -247,7 +247,7 @@
     </div>
 </div>
 <script type="text/template" id="no_order_template">
-    <div class="error-msg"><p>{{ __('You have not any order yet now.') }}</p></div>
+    <div class="error-msg"><p>{{ __("You don't have orders right now.") }}</p></div>
     </script>
 <div class="loader" id="order_list_order">
     <div class="spinner-border avatar-lg text-primary m-2" role="status"></div>

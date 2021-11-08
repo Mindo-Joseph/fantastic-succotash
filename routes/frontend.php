@@ -53,6 +53,7 @@ Route::group(['middleware' => ['domain']], function () {
 
 	//Route::get('payment/yoco-webview', 'Api\v1\YocoGatewayController@yocoWebView')->name('payment.yoco-webview');
 	Route::post('payment/yoco', 'Front\YocoGatewayController@yocoPurchase')->name('payment.yocoPurchase');
+	Route::post('payment/yoco/app', 'Front\YocoGatewayController@yocoPurchaseApp')->name('payment.yocoPurchaseApp');
 	Route::get('/payment/yoco-webview', function(){
 		return View::make('frontend.yoco_webview');
 	 });

@@ -56,7 +56,6 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
         Route::get('payment/options/{page}', 'Api\v1\PaymentOptionController@getPaymentOptions');
       
         Route::get('payment/{gateway}', 'Api\v1\PaymentOptionController@postPayment');
-        Route::get('payment/yoco-functionality', 'Api\v1\PaymentOptionController@postPayment')->name('payment.yocoFunctionality');
         Route::post('payment/razorpay/pay/{amount}/{order}', 'Api\v1\RazorpayGatewayController@razorpayCompletePurchase')->name('payment.razorpayCompletePurchase');
     
         Route::post('payment/place/order', 'Api\v1\PaymentOptionController@postPlaceOrder');

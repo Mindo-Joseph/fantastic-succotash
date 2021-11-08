@@ -80,7 +80,7 @@ class PaymentOptionController extends BaseController{
 
     public function postPaymentVia_yoco(Request $request){
         $gateway = new YocoGatewayController();
-        return $gateway->yocoPurchase($request);
+        return $gateway->yocoWebview($request);
     }
 
     public function postPaymentVia_paylink(Request $request){

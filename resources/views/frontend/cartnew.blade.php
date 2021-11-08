@@ -991,10 +991,9 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
             // Create a new dropin form instance
 
             var yoco_amount_payable = $("input[name='cart_total_payable_amount']").val();
-        console.log( yoco_amount_payable*100);
             inline = sdk.inline({
                 layout: 'field',
-                amountInCents:  yoco_amount_payable*100,
+                amountInCents:  yoco_amount_payable * 100,
                 currency: 'ZAR'
             });
             // this ID matches the id of the element we created earlier.

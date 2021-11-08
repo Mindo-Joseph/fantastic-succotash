@@ -24,9 +24,8 @@ class YocoGatewayController extends FrontController
     use ApiResponser;
     public $SECRET_KEY;
     public $PUBLIC_KEY;
-    // public $API_ACCESS_TOKEN;
     public $test_mode;
-    // public $mb;
+    public $currency;
 
     public function __construct()
     {
@@ -37,11 +36,13 @@ class YocoGatewayController extends FrontController
         $this->test_mode = (isset($yoco_creds->test_mode) && ($yoco_creds->test_mode == '1')) ? true : false;
         $this->SECRET_KEY = $secret_key;
         $this->PUBLIC_KEY = $public_key;
+
+        $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
+        $this->currency = (isset($primaryCurrency->currency->iso_code)) ? $primaryCurrency->currency->iso_code : 'USD';
     }
 
     public function yocoPurchase(Request $request)
     {
-
         try {
             $user = Auth::user();
             $token = $request->token;
@@ -64,10 +65,8 @@ class YocoGatewayController extends FrontController
             $returnUrlParams = '';
             if (isset($request->order_number)) {
                 $returnUrlParams = '?gateway=yoco&order=' . $request->order_number;
-
                 $returnUrl = route('order.return.success');
             }
-
 
             $checkout_data = array(
                 'token' => $token,
@@ -76,10 +75,8 @@ class YocoGatewayController extends FrontController
                 'description' => 'Order Checkout',
                 'return_url' => $returnUrl,
                 'reference' => $request->order_number,
-
                 'redirect' => false,
                 'test' => $this->test_mode, // True, testing, false, production
-
                 'customer' => array(
                     'email' => $user->email,
                     'name' => $user->name,
@@ -87,10 +84,8 @@ class YocoGatewayController extends FrontController
                     'cart_id' => $cart->id
                 )
             );
-
          
             $ch = curl_init();
-
             curl_setopt($ch, CURLOPT_URL, "https://online.yoco.com/v1/charges/");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
@@ -163,7 +158,6 @@ class YocoGatewayController extends FrontController
         }
     }
 
-
     public function yocoFail($request)
     {
         $order_number = $request->order_number;
@@ -179,5 +173,80 @@ class YocoGatewayController extends FrontController
         OrderTax::where('order_id', $order->id)->delete();
         Order::where('id', $order->id)->delete();
         return Redirect::to(url('viewcart'));
+    }
+
+    public function yocoPurchaseApp(Request $request)
+    {
+        try {
+            $user = User::where('auth_token', $request->auth_token)->first();
+            $token = $request->token;
+            $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
+            $amount = $this->getDollarCompareAmount($request->amount);
+            $amount = filter_var($amount, FILTER_SANITIZE_NUMBER_INT);
+     
+            // $returnUrlParams = '?amount='.$amount;
+            // if($request->has('tip')){
+            //     $tip = $request->tip;
+            //     $returnUrlParams = $returnUrlParams.'&tip='.$tip;
+            // }
+            // if( ($request->has('address_id')) && ($request->address_id > 0) ){
+            //     $address_id = $request->address_id;
+            //     $returnUrlParams = $returnUrlParams.'&address_id='.$address_id;
+            // }
+            $returnUrlParams = '?gateway=yoco&order=' . $request->order_number;
+
+            // $returnUrl = route('user.wallet');
+            // $returnUrlParams = '';
+            // if (isset($request->order_number)) {
+            //     $returnUrlParams = '?gateway=yoco&order=' . $request->order_number;
+
+            //     $returnUrl = route('order.return.success');
+            // }
+
+
+            $checkout_data = array(
+                'token' => $token,
+                'amountInCents' => $amount,
+                'currency' => 'ZAR',
+                'description' => 'Order Checkout',
+                // 'return_url' => $returnUrl,
+                'reference' => $request->order_number,
+
+                'redirect' => false,
+                'test' => $this->test_mode, // True, testing, false, production
+
+                'customer' => array(
+                    'email' => $user->email,
+                    'name' => $user->name,
+                    // 'identification' => '12123123',
+                    'cart_id' => $cart->id
+                )
+            );
+
+         
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, "https://online.yoco.com/v1/charges/");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $this->SECRET_KEY . ":");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($checkout_data));
+
+            // send to yoco
+            $result = curl_exec($ch);
+            $result = json_decode($result);
+            if ($result->status == 'successful') {
+                if ($request->payment_form == '') {
+                    return $this->successResponse($result);
+                }
+                $this->yocoSuccess($request, $result);
+                return $this->successResponse($result);
+            } else {
+                $this->yocoFail($request);
+                return $this->errorResponse($result->status, 400);
+            }
+        } catch (\Exception $ex) {
+            return $this->errorResponse($ex->getMessage(), 400);
+        }
     }
 }
