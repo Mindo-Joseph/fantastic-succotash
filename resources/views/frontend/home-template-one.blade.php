@@ -479,7 +479,7 @@
         </div>
        </section>
         @else
-        <div class="container render_full_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
+        <section class="container mb-0 render_full_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
             <div class="row">
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-0">
                     <h2 class="h2-heading">
@@ -510,7 +510,7 @@
                     @endif
                 </div>
             </div>
-        </div>
+        </section>
         @endif
         @endforeach
     </div>

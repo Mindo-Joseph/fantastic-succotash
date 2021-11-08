@@ -58,6 +58,7 @@ $(document).ready(function () {
     });
 
     $( document ).ready(function() {
+        $('.date-items').removeClass('hide');
         $('.date-items').slick({
             infinite: true,
             speed: 300,
@@ -68,21 +69,31 @@ $(document).ready(function () {
             autoplay: false,
             autoplaySpeed: 5000,
             rtl: false,
-            responsive: [{
+            responsive: [
+                {
                 breakpoint: 1200,
                 settings: {
                     slidesToShow: 2,
                     slidesToScroll: 2
                 }
-            },
-            {
-                breakpoint: 767,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    arrows: true
-                }
-            } ]
+                },
+                {
+                    breakpoint: 767,
+                    settings: {
+                        slidesToShow: 5,
+                        slidesToScroll: 1,
+                        arrows: true
+                    }
+                },
+                {
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                        arrows: true
+                    }
+                } 
+            ]
         });
         
         $('.booking-time').slick({

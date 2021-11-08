@@ -116,6 +116,7 @@ function resizeMenuSlider(){
         },100);
     }
 }
+
 resizeMenuSlider();
 $(window).resize(function() {
     resizeMenuSlider();

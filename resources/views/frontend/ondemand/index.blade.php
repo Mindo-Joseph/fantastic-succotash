@@ -14,9 +14,9 @@
 <section class="home-serivces">
     <div class="container">
         <div class="row mb-5">
-            <div class="col-md-8 offset-md-2">
+            <div class="col-lg-8 offset-lg-2">
                 <div class="step-indicator">
-                    
+
                     <div class="step step1 @if(app('request')->input('step') >= '1' || empty(app('request')->input('step'))) active @endif">
                         <div class="step-icon">1</div>
                         <p>Service Details</p>
@@ -44,7 +44,7 @@
                         @if((app('request')->input('step') == '1' || empty(app('request')->input('step'))) && app('request')->input('addons') != 1)
                                      
                          <!-- Start Main Nav -->
-                         <nav id='main-nav'>
+                        <nav id='main-nav'>
                             <ul id='main-nav-list'>
                                @if(!empty($category->childs) && count($category->childs) > 0)
                                     @foreach ($category->childs as $key => $childs)
@@ -169,7 +169,7 @@
                             @if(!empty($category->childs) && count($category->childs) == 0)
 
                                         @if(app('request')->input('step') == '1' || empty(app('request')->input('step')))
-                                        <div class="service-data-wrapper mb-5 @if(app('request')->input('addons') == 1) d-none @endif"  id="step-1-ondemand" >
+                                        <div class="service-data-wrapper @if(app('request')->input('addons') == 1) d-none @endif"  id="step-1-ondemand" >
                                             <div class="service-data mt-4">
                                                 <h4><b>{{ $category->translation_name }}</b></h4>
 
@@ -339,7 +339,7 @@
                                         <div  id="date_time_set_div{{$cart_data->id}}">
                                          
                                         <h4 class="mb-2"><b>When would you like your service?</b></h4>
-                                        <div class="date-items radio-btns">
+                                        <div class="date-items radio-btns hide">
                                             @foreach ($period as $key => $date)
                                                 <div>
                                                     <div class="radios">
@@ -420,33 +420,31 @@
                     
                         <div class="footer-card">
                             @if((app('request')->input('step') == '1' || empty(app('request')->input('step'))) && empty(app('request')->input('addons')))
-                            <a href="?step=2" id="next-button-ondemand-2" style="display: none;"><span class="btn btn-solid float-right">Next</span></a>
-                            @elseif(app('request')->input('step') == '1' && app('request')->input('addons') == '1')
-                            <a href="?step=1"><span class="btn btn-solid float-left"><</span></a> 
-                            <a href="?step=2&dateset=1&addons=1" id="next-button-ondemand-2"><span class="btn btn-solid float-right">Next</span></a>
-                            @elseif(app('request')->input('step') == '2' && empty(app('request')->input('addons')))
-                            <a href="?step=1"><span class="btn btn-solid float-left"><</span></a> 
-                                @if(Auth::guest())
-                                <a href="{{route('customer.login')}}" id="next-button-ondemand-3"><span class="btn btn-solid float-right">Continue</span></a>
-                                @else
-                                <a href="#" id="next-button-ondemand-3"><span class="btn btn-solid float-right">Continue</span></a>
-                                @endif
-                            @elseif(app('request')->input('step') == '2' && !empty(app('request')->input('dateset')))
-                                <a href="?step=1"><span class="btn btn-solid float-left"><</span></a> 
+                                <a href="?step=2" id="next-button-ondemand-2" style="display: none;"><span class="btn btn-solid float-right">Next</span></a>
+                                @elseif(app('request')->input('step') == '1' && app('request')->input('addons') == '1')
+                                    <a href="?step=1"><span class="btn btn-solid float-left"><</span></a> 
+                                    <a href="?step=2&dateset=1&addons=1" id="next-button-ondemand-2"><span class="btn btn-solid float-right">Next</span></a>
+                                @elseif(app('request')->input('step') == '2' && empty(app('request')->input('addons')))
+                                    <a href="?step=1"><span class="btn btn-solid float-left"><</span></a> 
                                     @if(Auth::guest())
-                                    <a href="{{route('customer.login')}}" id="next-button-ondemand-3" ><span class="btn btn-solid float-right">Continue</span></a>
+                                        <a href="{{route('customer.login')}}" id="next-button-ondemand-3"><span class="btn btn-solid float-right">Continue</span></a>
                                     @else
-                                    <a href="#" id="next-button-ondemand-3"><span class="btn btn-solid float-right">Continue</span></a>
-                                    @endif    
-                            @elseif(app('request')->input('step') == '3')
-                            <a href="?step=2"><span class="btn btn-solid"><</span></a>
-                            <a href="?step=3" id="next-button-ondemand-4"><span class="btn btn-solid float-right">Continue</span></a>
-                            @else
-                           
+                                        <a href="#" id="next-button-ondemand-3"><span class="btn btn-solid float-right">Continue</span></a>
+                                    @endif
+                                @elseif(app('request')->input('step') == '2' && !empty(app('request')->input('dateset')))
+                                        <a href="?step=1"><span class="btn btn-solid float-left"><</span></a> 
+                                        @if(Auth::guest())
+                                            <a href="{{route('customer.login')}}" id="next-button-ondemand-3" ><span class="btn btn-solid float-right">Continue</span></a>
+                                        @else
+                                            <a href="#" id="next-button-ondemand-3"><span class="btn btn-solid float-right">Continue</span></a>
+                                        @endif    
+                                @elseif(app('request')->input('step') == '3')
+                                    <a href="?step=2"><span class="btn btn-solid"><</span></a>
+                                    <a href="?step=3" id="next-button-ondemand-4"><span class="btn btn-solid float-right">Continue</span></a>
+                                @else                           
                             @endif
-                          
-                            
                         </div>
+                        
 
                     </div>
                     
