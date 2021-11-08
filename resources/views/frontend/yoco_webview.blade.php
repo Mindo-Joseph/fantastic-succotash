@@ -147,7 +147,7 @@
             },
             error: function(error) {
                 var response = $.parseJSON(error.responseText);
-                success_error_alert('error', response.message, ".success-payment-message");
+                // success_error_alert('error', response.message, ".success-payment-message");
             },
             complete: function(data) {
                 // Re-enable button now that request is complete
