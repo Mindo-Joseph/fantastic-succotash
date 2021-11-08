@@ -14139,7 +14139,7 @@ header.stickycls {
         top: 0;
         height: 100vh;
         right: -300px;
-        z-index: 99;
+        z-index: 9999999;
         -webkit-transition: all 0.3s ease;
         transition: all 0.3s ease;
         overflow: scroll;
