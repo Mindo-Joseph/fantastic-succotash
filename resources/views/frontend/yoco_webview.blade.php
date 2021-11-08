@@ -41,7 +41,8 @@
                         </div>
                     </div>
                     <br><br>
-                    <button class="btn btn-primary" type="submit" id="pay-button">Pay</button>
+                    <button class="btn btn-info" type="submit" id="pay-button">Pay</button>
+                    <button class="btn btn-danger" type="button" id="cancel-button">Cancel</button>
                 </form>
             </div>
         </div>
@@ -157,6 +158,10 @@
             }
         });
     }
+
+    $(document).delegate("#cancel-button", "click", function(){
+        location.href = payment_return_url + '&status=0';
+    });
 </script>
 
 </body>
