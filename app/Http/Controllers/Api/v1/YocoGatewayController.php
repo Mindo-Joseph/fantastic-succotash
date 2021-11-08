@@ -104,7 +104,7 @@ class YocoGatewayController extends BaseController
 
             // send to yoco
             $result = curl_exec($ch);
-            Log::info($result);
+        //    Log::info($result);
             // return $result;
             $result = json_decode($result);
 
@@ -169,7 +169,7 @@ class YocoGatewayController extends BaseController
 
             // send to yoco
             $result = curl_exec($ch);
-            Log::info($result);
+        //    Log::info($result);
             // return $result;
             $result = json_decode($result);
 

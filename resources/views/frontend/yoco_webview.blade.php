@@ -38,19 +38,11 @@
 
 <script>
     // Run our code when your form is submitted
-<<<<<<< HEAD
-   //var yoco_public_key = "<?php //echo $public_key_yoco; ?>";
-
-    // console.log(yoco_public_key);
-    var sdk = new window.YocoSDK({
-        publicKey: 'pk_test_657b29ffyL0dlr389b04'
-=======
    var yoco_public_key = "<?php echo $public_key_yoco; ?>";
 
     // console.log(yoco_public_key);
     var sdk = new window.YocoSDK({
         publicKey: yoco_public_key
->>>>>>> f70fa067f9634e170feb8f4839ad3bb2eea9e264
     });
     var yoco_amount_payable = "<?php echo $amount; ?>";
     // Create a new dropin form instance
@@ -61,11 +53,7 @@
     });
     // this ID matches the id of the element we created earlier.
     inline.mount('#card-frame');
-<<<<<<< HEAD
-    var payment_yoco_url = "{{route('payment.yocoPurchase')}}";
-=======
     var payment_yoco_url = "{{route('payment.yocoFunctionality')}}";
->>>>>>> f70fa067f9634e170feb8f4839ad3bb2eea9e264
     var form = document.getElementById('payment-form');
     var submitButton = document.getElementById('pay-button');
     form.addEventListener('submit', function(event) {
