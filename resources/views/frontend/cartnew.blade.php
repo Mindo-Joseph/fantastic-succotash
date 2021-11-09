@@ -890,14 +890,10 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
 <script>
     // Replace the supplied `publicKey` with your own.
     // Ensure that in production you use a production public_key.
-   
     var sdk = new window.YocoSDK({
-        publicKey: 'pk_test_657b29ffyL0dlr389b04'
+        publicKey: yoco_public_key
     });
-    var inline='';
-  
-
-   
+    var inline='';   
 </script>
 <script type="text/javascript">
    var guest_cart = {{ $guest_user ? 1 : 0 }};

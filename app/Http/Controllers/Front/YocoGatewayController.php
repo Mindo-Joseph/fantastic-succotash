@@ -50,16 +50,6 @@ class YocoGatewayController extends FrontController
             $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($request->amount);
             $amount = filter_var($amount, FILTER_SANITIZE_NUMBER_INT);
-     
-            // $returnUrlParams = '?amount='.$amount;
-            // if($request->has('tip')){
-            //     $tip = $request->tip;
-            //     $returnUrlParams = $returnUrlParams.'&tip='.$tip;
-            // }
-            // if( ($request->has('address_id')) && ($request->address_id > 0) ){
-            //     $address_id = $request->address_id;
-            //     $returnUrlParams = $returnUrlParams.'&address_id='.$address_id;
-            // }
             $returnUrlParams = '?gateway=yoco&order=' . $request->order_number;
 
             $returnUrl = route('user.wallet');
@@ -74,7 +64,7 @@ class YocoGatewayController extends FrontController
                 'amountInCents' => $amount,
                 'currency' => 'ZAR',
                 'description' => 'Order Checkout',
-                'return_url' => $returnUrl,
+                // 'return_url' => $returnUrl,
                 'reference' => $request->order_number,
                 'redirect' => false,
                 'test' => $this->test_mode, // True, testing, false, production
@@ -114,66 +104,82 @@ class YocoGatewayController extends FrontController
     public function yocoSuccess($request, $result)
     {
         $transactionId = $result->id;
-        $order_number = $request->order_number;
-        $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
-        if ($order) {
+        if ($request->payment_form == 'cart') {
+            $order_number = $request->order_number;
+            $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
+            if ($order) {
 
-            $order->payment_status = 1;
-            $order->save();
-            $payment_exists = Payment::where('transaction_id', $transactionId)->first();
-            if (!$payment_exists) {
-                Payment::insert([
-                    'date' => date('Y-m-d'),
-                    'order_id' => $order->id,
-                    'transaction_id' => $transactionId,
-                    'balance_transaction' => $request->amount,
-                ]);
+                $order->payment_status = 1;
+                $order->save();
+                $payment_exists = Payment::where('transaction_id', $transactionId)->first();
+                if (!$payment_exists) {
+                    Payment::insert([
+                        'date' => date('Y-m-d'),
+                        'order_id' => $order->id,
+                        'transaction_id' => $transactionId,
+                        'balance_transaction' => $request->amount,
+                    ]);
 
-                // Auto accept order
-                $orderController = new OrderController();
-                $orderController->autoAcceptOrderIfOn($order->id);
+                    // Auto accept order
+                    $orderController = new OrderController();
+                    $orderController->autoAcceptOrderIfOn($order->id);
 
-                // Remove cart
+                    // Remove cart
 
-                Cart::where('id', $request->cart_id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
-                CartAddon::where('cart_id', $request->cart_id)->delete();
-                CartCoupon::where('cart_id', $request->cart_id)->delete();
-                CartProduct::where('cart_id', $request->cart_id)->delete();
-                CartProductPrescription::where('cart_id', $request->cart_id)->delete();
+                    Cart::where('id', $request->cart_id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
+                    CartAddon::where('cart_id', $request->cart_id)->delete();
+                    CartCoupon::where('cart_id', $request->cart_id)->delete();
+                    CartProduct::where('cart_id', $request->cart_id)->delete();
+                    CartProductPrescription::where('cart_id', $request->cart_id)->delete();
 
-                // Send Notification
-                if (!empty($order->vendors)) {
-                    foreach ($order->vendors as $vendor_value) {
-                        $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id, $vendor_value->vendor_id);
-                        $user_vendors = UserVendor::where(['vendor_id' => $vendor_value->vendor_id])->pluck('user_id');
-                        $orderController->sendOrderPushNotificationVendors($user_vendors, $vendor_order_detail);
+                    // Send Notification
+                    if (!empty($order->vendors)) {
+                        foreach ($order->vendors as $vendor_value) {
+                            $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id, $vendor_value->vendor_id);
+                            $user_vendors = UserVendor::where(['vendor_id' => $vendor_value->vendor_id])->pluck('user_id');
+                            $orderController->sendOrderPushNotificationVendors($user_vendors, $vendor_order_detail);
+                        }
                     }
+                    $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id);
+                    $super_admin = User::where('is_superadmin', 1)->pluck('id');
+                    $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
+
+                    // Send Email
+
                 }
-                $vendor_order_detail = $orderController->minimize_orderDetails_for_notification($order->id);
-                $super_admin = User::where('is_superadmin', 1)->pluck('id');
-                $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
-
-                // Send Email
-
             }
+        }
+        elseif ($request->payment_form == 'wallet') {
+            
+        }
+        elseif ($request->payment_form == 'tip') {
+
         }
     }
 
     public function yocoFail($request)
     {
-        $order_number = $request->order_number;
-        $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
-        $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
-        foreach ($order_products as $order_prod) {
-            OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
+        if ($request->payment_form == 'cart') {
+            $order_number = $request->order_number;
+            $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
+            $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
+            foreach ($order_products as $order_prod) {
+                OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
+            }
+            OrderProduct::where('order_id', $order->id)->delete();
+            OrderProductPrescription::where('order_id', $order->id)->delete();
+            VendorOrderStatus::where('order_id', $order->id)->delete();
+            OrderVendor::where('order_id', $order->id)->delete();
+            OrderTax::where('order_id', $order->id)->delete();
+            Order::where('id', $order->id)->delete();
+            return Redirect::to(url('viewcart'));
         }
-        OrderProduct::where('order_id', $order->id)->delete();
-        OrderProductPrescription::where('order_id', $order->id)->delete();
-        VendorOrderStatus::where('order_id', $order->id)->delete();
-        OrderVendor::where('order_id', $order->id)->delete();
-        OrderTax::where('order_id', $order->id)->delete();
-        Order::where('id', $order->id)->delete();
-        return Redirect::to(url('viewcart'));
+        elseif ($request->payment_form == 'wallet') {
+            
+        }
+        elseif ($request->payment_form == 'tip') {
+            
+        }
     }
 
     public function yocoPurchaseApp(Request $request)
@@ -300,6 +306,9 @@ class YocoGatewayController extends FrontController
             $request->request->add(['wallet_amount' => $request->amount, 'transaction_id' => $transactionId]);
             $walletController->creditWallet($request);
         }
+        elseif ($request->payment_form == 'tip') {
+            
+        }
     }
 
     public function yocoFailApp($request)
@@ -319,6 +328,9 @@ class YocoGatewayController extends FrontController
             Order::where('id', $order->id)->delete();
         }
         elseif ($request->payment_form == 'wallet') {
+            
+        }
+        elseif ($request->payment_form == 'tip') {
             
         }
     }

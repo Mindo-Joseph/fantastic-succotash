@@ -840,7 +840,7 @@ $timezone = Auth::user()->timezone;
 @section('script')
 <script src="{{asset('js/tip_after_order.js')}}"></script>
 <script src="https://js.stripe.com/v3/"></script>
-
+<script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 <script src="{{asset('js/payment.js')}}"></script>
 <script type="text/javascript">
  $(document).delegate(".topup_wallet_btn_tip", "click", function () {
@@ -873,6 +873,7 @@ $timezone = Auth::user()->timezone;
     var credit_tip_url = "{{route('user.tip_after_order')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
     var payment_paypal_url = "{{route('payment.paypalPurchase')}}";
+    var payment_yoco_url = "{{route('payment.yocoPurchase')}}";
     var wallet_payment_options_url = "{{route('wallet.payment.option.list')}}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
     var payment_paystack_url = "{{route('payment.paystackPurchase')}}";
