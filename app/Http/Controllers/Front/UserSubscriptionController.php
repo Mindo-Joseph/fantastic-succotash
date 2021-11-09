@@ -185,6 +185,7 @@ class UserSubscriptionController extends FrontController
                 $payment->transaction_id = $request->transaction_id;
                 $payment->user_subscription_invoice_id = $subscription_invoice_id;
                 $payment->date = Carbon::now()->format('Y-m-d');
+                $payment->type = 'subscription';
                 $payment->save();
 
                 $subscription_invoice_features = array();
