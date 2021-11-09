@@ -1003,12 +1003,18 @@ body[dir="rtl"] #social-links li:last-child{
     .mobile-menu-btn,.d-ipad {
         display: none !important;
     }
+    .home-banner-slider .slick-prev {
+        left: -60px;
+    }
+    .home-banner-slider .slick-next {
+        right: -60px;
+    }
 }
 
 @media (min-width: 991px){
-    .home-banner-slider .slick-slide {
+    /* .home-banner-slider .slick-slide {
         height: 400px;
-    }
+    } */
     .home-banner-slider .slick-list {
         border-radius: 40px;
         overflow: hidden;
@@ -1056,6 +1062,7 @@ body[dir="rtl"] #social-links li:last-child{
 @media (max-width: 1199px){
     section.home-slider-wrapper {
         padding-top: 30px;
+        padding-bottom: 0 !important;
     }
     .offset-top {
         margin-top: 0;
