@@ -342,11 +342,11 @@ class YocoGatewayController extends FrontController
             $walletController = new WalletController();
             $walletController->creditWallet($request);
         }
-        elseif ($request->payment_form == 'tip') {
-            $request->request->add(['tip_amount' => $request->amount, 'transaction_id' => $transactionId]);
-            $orderController = new OrderController();
-            $orderController->tipAfterOrder($request);
-        }
+        // elseif ($request->payment_form == 'tip') {
+        //     $request->request->add(['tip_amount' => $request->amount, 'transaction_id' => $transactionId]);
+        //     $orderController = new OrderController();
+        //     $orderController->tipAfterOrder($request);
+        // }
     }
 
     public function yocoFailApp($request)
