@@ -202,7 +202,7 @@ $timezone = Auth::user()->timezone;
                                                                 <div class="row">
                                                                     <div class="col-5 col-sm-3">
                                                                         <h5 class="m-0">{{__('Order Status')}}</h5>
-                                                                        <ul class="status_box mt-3 pl-0"> 
+                                                                        <ul class="status_box mt-1 pl-0"> 
                                                                         @if(!empty($vendor->order_status))
                                                                             <li>
                                                                                 @if($vendor->order_status == 'placed')
@@ -400,7 +400,7 @@ $timezone = Auth::user()->timezone;
                                                                 <div class="row">
                                                                     <div class="col-5 col-sm-3">
                                                                         <h5 class="m-0">{{__('Order Status')}}</h5>
-                                                                        <ul class="status_box mt-3 pl-0">
+                                                                        <ul class="status_box mt-1 pl-0">
                                                                         @if(!empty($vendor->order_status))
                                                                             <li>
                                                                                 <img src="{{ asset('assets/images/driver_icon.svg') }}" alt="">
@@ -651,7 +651,7 @@ $timezone = Auth::user()->timezone;
                                                             <div class="row">
                                                                 <div class="col-5 col-sm-3">
                                                                     <h5 class="m-0"></h5>
-                                                                    <ul class="status_box mt-3 pl-0">
+                                                                    <ul class="status_box mt-1 pl-0">
                                                                         @if($vendor->dineInTable)
                                                                             <li>
                                                                                 <h5 class="mb-1">{{ __('Dine-in') }}</h5>

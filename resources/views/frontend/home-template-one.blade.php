@@ -287,7 +287,7 @@
             <div class="row">
                 <div class="col-5 col-sm-3">
                     <h5 class="m-0">{{__('Order Status')}}</h5>
-                    <ul class="status_box mt-3 pl-0"> 
+                    <ul class="status_box mt-1 pl-0"> 
                     <% if(vendor.order_status){ %>
                         <li>
                         <% if(vendor.order_status == 'placed'){ %>
@@ -419,7 +419,7 @@
     </div>
 </section>
 
-<section class="section-b-space ratio_asos d-none pb-0 pt-0" id="our_vendor_main_div">
+<section class="section-b-space ratio_asos d-none py-0 mt-0" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $key => $homePageLabel)
         @if($homePageLabel->slug == 'pickup_delivery') 

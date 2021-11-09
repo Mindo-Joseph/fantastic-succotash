@@ -187,7 +187,7 @@
                                                         <h5 class="mb-1"><b>{!! $data->translation_title !!}</b></h5>
                                                         <p class="mb-1">{!! $data->translation_description !!}</p>
                                                     </div>
-                                                    <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
+                                                    <div class="col-md-3 col-sm-4 mb-3">
                                                         <?php $imagePath = $imagePath2 = '';
                                                             $mediaCount = count($data->media);
                                                             for ($i = 0; $i < $mediaCount && $i < 2; $i++) { 
