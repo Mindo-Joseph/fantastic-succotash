@@ -919,8 +919,6 @@ $(document).ready(function() {
         });
     }
 
-
-
     function paymentViaPaypal() {
         let total_amount = 0;
         let tip = 0;
@@ -945,7 +943,6 @@ $(document).ready(function() {
                 ajaxData.order_number = order_number;
                 order_number = order_number;
             }
-
         }
 
         $.ajax({
@@ -981,11 +978,7 @@ $(document).ready(function() {
 
     function paymentViaRazorpay_wallet(address_id, payment_option_id) {
         let total_amount = 0;
-
-
-
         let ajaxData = [];
-
         total_amount = $("input[name='wallet_amount']").val();
         ajaxData.push({ name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
 
@@ -996,12 +989,8 @@ $(document).ready(function() {
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
-
                     //  creditWallet(total_amount, payment_option_id, data.result.id);
-
-
                     window.location.href = response.data;
-
                 }
             }
         });
@@ -1009,14 +998,9 @@ $(document).ready(function() {
 
     function paymentViaPaylink_wallet(address_id, payment_option_id) {
         let total_amount = 0;
-
-
-
         let ajaxData = [];
-
         total_amount = $("input[name='wallet_amount']").val();
         ajaxData.push({ name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
-
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -1024,48 +1008,12 @@ $(document).ready(function() {
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
-
                     //  creditWallet(total_amount, payment_option_id, data.result.id);
-
-
                     window.location.href = response.data;
-
                 }
             }
         });
     }
-
-    function paymentViaYoco_wallet(token, address_id, payment_option_id) {
-        let total_amount = 0;
-
-
-
-        let ajaxData = [];
-
-        total_amount = $("input[name='wallet_amount']").val();
-
-        ajaxData.push({ name: 'token', value: token }, { name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: payment_yoco_url,
-            data: ajaxData,
-            success: function(response) {
-
-                // window.location.href = URL::to('user/wallet');
-                creditWallet(total_amount, payment_option_id, response.data.id);
-
-            },
-
-        });
-    }
-
-
-
-
-
-
-
 
     function paymentSuccessViaPaypal(amount, token, payer_id, path, tip = 0, order_number = 0) {
         let address_id = 0;
@@ -1285,7 +1233,7 @@ $(document).ready(function() {
 
                     order = placeOrderBeforePayment(address_id, payment_option_id, tip);
                     if(order != ''){
-                        paymentViaYoco(address_id, order, token.id);
+                        paymentViaYoco(token.id, address_id, order);
                     }else{
                         return false;
                     }
@@ -1328,67 +1276,6 @@ $(document).ready(function() {
         }
     });
 
-
-    window.paymentViaYoco = function paymentViaYoco(address_id, order, token) {
-
-        let total_amount = 0;
-        let tip = 0;
-        let tipElement = $("#cart_tip_amount");
-        let cartElement = $("input[name='cart_total_payable_amount']");
-        let cart_id = $("#cart_total_payable_amount").data("cart_id");
-
-        let walletElement = $("input[name='wallet_amount']");
-        let ajaxData = {};
-        if (cartElement.length > 0) {
-            total_amount = cartElement.val();
-            tip = tipElement.val();
-            ajaxData.tip = tip;
-            ajaxData.address_id = address_id;
-            ajaxData.payment_form = 'cart';
-            ajaxData.token = token;
-            ajaxData.cart_id = cart_id;
-            ajaxData.order_number = order.order_number;
-        } else if (walletElement.length > 0) {
-            total_amount = walletElement.val();
-            ajaxData.payment_form = 'wallet';
-        }
-        ajaxData.amount = total_amount;
-        ajaxData.returnUrl = path;
-        ajaxData.cancelUrl = path;
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: payment_yoco_url,
-            data: ajaxData,
-            success: function(response) {
-                if (response.status == "Success") {
-                    if (cartElement.length > 0) {
-                        window.location.href = order_success_return_url;
-                    }else if (walletElement.length > 0) {
-                        window.location.reload();
-                    }
-                } else {
-                    if (cartElement.length > 0) {
-                        success_error_alert('error', response.message, "#cart_payment_form .payment_response");
-                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
-                    } else if (walletElement.length > 0) {
-                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                        $(".topup_wallet_confirm").removeAttr("disabled");
-                    }
-                }
-            },
-            error: function(error) {
-                var response = $.parseJSON(error.responseText);
-                if (cartElement.length > 0) {
-                    success_error_alert('error', response.message, "#cart_payment_form .payment_response");
-                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
-                } else if (walletElement.length > 0) {
-                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                    $(".topup_wallet_confirm").removeAttr("disabled");
-                }
-            }
-        });
-    }
 
     window.paymentViaPaylink = function paymentViaPaylink(address_id, order) {
         let total_amount = 0;
@@ -1645,34 +1532,18 @@ $(document).ready(function() {
         } else if (payment_option_id == 10) {
             paymentViaRazorpay_wallet('', payment_option_id);
         } else if (payment_option_id == 8) {
-
-
-
             inline.createToken().then(function(result) {
-
                 if (result.error) {
-
                     $('#yoco_card_error').html(result.error.message);
                     $(".topup_wallet_confirm").attr("disabled", false);
                 } else {
                     const token = result;
-                    // alert("card successfully tokenised: " + token.id);
-
-
-
-                    paymentViaYoco_wallet(token.id, '', payment_option_id);
+                    paymentViaYoco(token.id, '', '');
                 }
-
-
-
             }).catch(function(error) {
                 // Re-enable button now that request is complete
-
                 alert("error occured: " + error);
             });
-
-
-
         }
     });
     $(document).on("click", ".remove_promo_code_btn", function() {
@@ -1691,9 +1562,9 @@ $(document).ready(function() {
         });
     });
     $(document).on("click", ".promo_code_list_btn", function() {
-        let amount = $(this).data('amount');
-        let cart_id = $(this).data('cart_id');
-        let vendor_id = $(this).data('vendor_id');
+        let amount = $(this).attr('data-amount');
+        let cart_id = $(this).attr('data-cart_id');
+        let vendor_id = $(this).attr('data-vendor_id');
         $(".invalid-feedback.manual_promocode").html("");
         $.ajax({
             type: "POST",
@@ -2951,9 +2822,9 @@ $(document).ready(function() {
     // *****************************  End tip after order place ****************************///
 
     $(document).on('click', '.validate_promo_code_btn', function() {
-        let amount = $(this).data('amount');
-        let cart_id = $(this).data('cart_id');
-        let vendor_id = $(this).data('vendor_id');
+        let amount = $(this).attr('data-amount');
+        let cart_id = $(this).attr('data-cart_id');
+        let vendor_id = $(this).attr('data-vendor_id');
         let promocode = $(document).find('.manual_promocode_input').val();
         if (promocode && promocode != "") {
             // let coupon_id = $(this).data('coupon_id');
