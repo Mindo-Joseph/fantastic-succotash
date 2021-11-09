@@ -4,7 +4,7 @@ $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'
 $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('language_id', session()->get('customerLanguage') ??1);}])->whereHas('translations', function($q) {$q->where(['is_published' => 1, 'language_id' => session()->get('customerLanguage') ??1]);})->get();
 @endphp
 <footer class="footer-light">
-    <section class="section-b-space light-layout py-4">
+    <section class="section-b-space light-layout py-lg-4 py-0">
         <div class="container">
             <div class="row footer-theme partition-f">
                 @if(count($pages))
@@ -94,8 +94,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                         <div class="footer-contant">
                             <div class="store-btn mb-3">
-                                <a href="#"><img src="{{asset('front-assets/images/app-store.png')}}" alt=""></a>
-                                <a class="ml-xl-2 mt-2 mt-xl-0" href="#"><img src="{{asset('front-assets/images/google-play.png')}}" alt=""></a>
+                                <a href="#"><img src="{{asset('front-assets/images/app-store.svg')}}" alt=""></a>
+                                <a class="ml-xl-2 mt-2 mt-xl-0" href="#"><img src="{{asset('front-assets/images/google-play.svg')}}" alt=""></a>
                             </div>
 
                             @if(count($social_media_details))

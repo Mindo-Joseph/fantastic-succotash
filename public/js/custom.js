@@ -12,11 +12,6 @@ jQuery(window).scroll(function() {
     }
 });
 
-
-
-
-
-
 $(function() {
     document.ajax_loading = false;
     $.hasAjaxRunning = function() {
@@ -89,6 +84,46 @@ window.easyZoomInitialize = function easyZoomInitialize() {
     let productCarouselThumbsItemWith = thumbs.find('.swiper-slide').outerWidth();
     thumbs.css('height', productCarouselThumbsItemWith);
 }
+
+window.loadMainMenuSlider = function loadMainMenuSlider(){
+    $(".menu-slider").slick({
+        arrows: true,
+        dots: false,
+        infinite: false,
+        variableWidth: false,
+        speed: 300,
+        slidesToShow: 15,
+        slidesToScroll: 3,
+        responsive: [
+            { breakpoint: 1400, settings: { slidesToShow: 12, slidesToScroll: 2 } },
+            { breakpoint: 1367, settings: { slidesToShow: 8, slidesToScroll: 2} },
+            { breakpoint: 1024, settings: { slidesToShow: 10, slidesToScroll: 4 } },
+        ],
+    });
+}
+loadMainMenuSlider();
+
+function resizeMenuSlider(){
+    var windowWidth = $(window).width();
+    if(windowWidth < 1200){
+        // $('body').find('.menu-slider').removeClass().addClass('sm pixelstrap sm-horizontal');
+        $('.menu-slider').slick('unslick');
+        $('.menu-slider').removeClass('menu-slider');
+    }else{
+        $('#main-menu').addClass('menu-slider');
+        setTimeout(function(){
+            loadMainMenuSlider();
+        },100);
+    }
+    if ( $('.menu-slider .slick-slide').length > 10 ) {
+        $('.menu-slider').addClass('items-center');
+    }
+}
+
+resizeMenuSlider();
+$(window).resize(function() {
+    resizeMenuSlider();
+});
 
 window.initializeSlider = function initializeSlider() {
     $(".slide-6").slick({
