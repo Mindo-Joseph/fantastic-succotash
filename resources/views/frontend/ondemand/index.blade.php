@@ -415,8 +415,8 @@
                             @endif    
                            
                         </div> 
-                    
-                        <div class="footer-card">
+                        
+                         <div class="footer-card">
                             @if((app('request')->input('step') == '1' || empty(app('request')->input('step'))) && empty(app('request')->input('addons')))
                                 <a href="?step=2" id="next-button-ondemand-2" style="display: none;"><span class="btn btn-solid float-right">Next</span></a>
                                 @elseif(app('request')->input('step') == '1' && app('request')->input('addons') == '1')
@@ -442,7 +442,7 @@
                                 @else                           
                             @endif
                         </div>
-                        
+                       
 
                     </div>
                     
