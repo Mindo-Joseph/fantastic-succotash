@@ -91,6 +91,7 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
         dots: false,
         infinite: false,
         variableWidth: false,
+        autoplay:false,
         speed: 300,
         slidesToShow: 15,
         slidesToScroll: 3,

@@ -988,9 +988,7 @@ body[dir="rtl"] #social-links li:last-child{
 
 
 
-
-
-@media (min-width: 1367px){
+@media (min-width: 1500px){
     .home-banner-slider .slick-prev,.home-banner-slider .slick-prev:focus,.home-banner-slider  .slick-prev:hover{
         left: -60px;
     }    
@@ -999,16 +997,27 @@ body[dir="rtl"] #social-links li:last-child{
     }
 }
 
+
 @media (min-width: 1200px) {
     .mobile-menu-btn,.d-ipad {
         display: none !important;
     }
-    .home-banner-slider .slick-prev {
-        left: -60px;
+}
+
+@media(min-width: 1200px) and (max-width: 1499px){
+    section.home-slider-wrapper .col-12 {
+        padding: 0 50px;
     }
-    .home-banner-slider .slick-next {
-        right: -60px;
+    .home-banner-slider .slick-prev, .home-banner-slider .slick-next {
+        height: 35px;
+        width: 35px;
     }
+    .home-banner-slider .slick-prev, .home-banner-slider .slick-prev:focus, .home-banner-slider .slick-prev:hover {
+        left: -50px;
+    }
+    .home-banner-slider .slick-next, .home-banner-slider .slick-next:focus, .home-banner-slider .slick-next:hover {
+        right: -50px;
+    }   
 }
 
 @media (min-width: 991px){
@@ -1075,6 +1084,9 @@ body[dir="rtl"] #social-links li:last-child{
     }
     .store-btn a{
         display: block;
+    }
+    .small-slider .home-slider .home {
+        height: 30vh;
     }
 }
 
