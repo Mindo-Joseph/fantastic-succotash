@@ -4,10 +4,10 @@ $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'
 $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('language_id', session()->get('customerLanguage') ??1);}])->whereHas('translations', function($q) {$q->where(['is_published' => 1, 'language_id' => session()->get('customerLanguage') ??1]);})->get();
 @endphp
 <footer class="footer-light">
-    <section class="section-b-space light-layout py-lg-4 py-0">
+    <section class="section-b-space light-layout py-0">
         <div class="container">
-            <div class="row footer-theme partition-f">
-                @if(count($pages))
+            @if(count($pages))
+            <div class="row footer-theme partition-f py-lg-4 py-3">
                
                 <div class="col-lg-3 col-md-6">
                     <div class="sub-title">
@@ -150,8 +150,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     </div>
                 </div>
-                @endif
             </div>
+            @endif
         </div>
     </section>
     <div class="sub-footer">

@@ -2305,7 +2305,7 @@ button.btn.btn-outline:active {
     overflow: hidden;
 }
 
-.slick-slider.slick-slider {
+.home-banner-slider.slick-slider.slick-slider,.menu-slider {
     overflow: visible;
 }
 

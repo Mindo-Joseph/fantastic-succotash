@@ -2298,8 +2298,7 @@ div#test {
     font-size: 11px;
     color: #fff;
     background: orange;
-    padding: 2px 0;
-    width: 45px;
+    padding: 2px 5px;
     text-align: center;
 }
 
@@ -5562,7 +5561,7 @@ ul#main-nav-list {
     color: red;
     font-size: 12px;
     text-align: center;
-    bottom: -11px;
+    bottom: -16 px;
     left: 0;
     right: 0;
     font-weight: 100;
@@ -5584,7 +5583,7 @@ ul#main-nav-list {
 
 .fixed-bar .scrollspy-menu {
     position: sticky;
-    top: 0;
+    top: 150px;
     width: 300px;
     padding: 10px 0;
 }
@@ -5592,7 +5591,7 @@ ul#main-nav-list {
 .scrollspy-menu {
     top: 0;
     width: 100%;
-    height: 100%;
+    height: auto;
 }
 
 .scrollspy-menu ul {
@@ -5635,7 +5634,7 @@ ul#main-nav-list {
     width: 325px;
     max-width: 100%;
     position: sticky;
-    top: 0;
+    top: 150px;
 }
 
 .cart-main-box-inside {
