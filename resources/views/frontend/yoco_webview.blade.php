@@ -4,56 +4,80 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="_token" content="{{ csrf_token() }}">
-    <title>Complete Checkout</title>
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <title>Payment Checkout</title>
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/font-awesome.min.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/themify-icons.css')}}">
     <link href="{{asset('assets/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" id="bs-default-stylesheet" />
     <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/custom.css')}}">
+    <style>
+        .spinner-overlay .page-spinner .circle-border {
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 33%, rgba(255, 255, 255, 1) 100%);
+        }
+        @keyframes spin {
+            from {
+                transform:rotate(0deg);
+            }
+            to {
+                transform:rotate(360deg);
+            }
+        }
+    </style>
 </head>
 <body>
-    <section class="section-b-space">
-        <div class="container bg-light" style="margin:0 auto;margin-top:50px;">
-            <div class="col-md-12 text-center">
-                <div class="d-flex justify-content-center">
-                    <h2>Debit / Credit Card</h2>
-                </div>
+<section class="section-b-space">
+    <div class="container bg-light" style="margin:0 auto;margin-top:50px;">
+        <div class="col-md-12 text-center">
+            <div class="d-flex justify-content-center">
+                <h2>Debit / Credit Card</h2>
             </div>
-            <div class="col-md-12 text-center">
-                <div class="d-flex justify-content-center">
-                    <form id="payment-form" method="POST" style="border:1px solid black;padding:10px;">
-                        @csrf
-                        <div class="one-liner">
-                            <div id="card-frame">
-                                <!-- Yoco Inline form will be added here -->
-                            </div>
+        </div>
+        <div class="col-md-12 text-center">
+            <div class="d-flex justify-content-center">
+                <form id="payment-form" method="POST" style="border:1px solid black;padding:10px;">
+                    @csrf
+                    <div class="one-liner">
+                        <div id="card-frame">
+                            <!-- Yoco Inline form will be added here -->
                         </div>
-                        <br><br>
-                        <button class="btn btn-primary" type="submit" id="pay-button">Pay</button>
-                </div>
+                    </div>
+                    <br><br>
+                    <button class="btn btn-info" type="submit" id="pay-button">Pay</button>
+                    <button class="btn btn-danger" type="button" id="cancel-button">Cancel</button>
+                </form>
             </div>
         </div>
     </div>
-    <p class="success-payment-message" />
-    </form>
-
+</section>
+<p class="success-payment-message" />
+<div class="spinner-overlay">
+    <div class="page-spinner">
+        <div class="circle-border">
+            <div class="circle-core"></div>
+        </div>
+    </div>
+</div>
 <script src="{{asset('front-assets/js/jquery-3.3.1.min.js')}}"></script>
 <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
 <script>
     let payment_success_url = "{{route('payment.getCheckoutSuccess', ':id')}}";
+    let payment_return_url = "{{route('payment.gateway.return.response')}}/?gateway=yoco";
     let queryString = window.location.search;
     let path = window.location.pathname;
     let urlParams = new URLSearchParams(queryString);
     let yoco_public_key, order_number = '';
     let yoco_amount_payable = 0;
     let auth_token = '';
+    let action = '';
     if (urlParams.get('public_key_yoco') != '') {
         yoco_public_key = urlParams.get('public_key_yoco');
         yoco_amount_payable = urlParams.get('amount');
-        order_number = urlParams.get('order_number');
+        if(urlParams.has('order')){
+            order_number = urlParams.get('order');
+            payment_return_url = payment_return_url + '&order=' + order_number;
+        }
         auth_token = urlParams.get('auth_token');
+        action = urlParams.get('action');
+        payment_return_url = payment_return_url + '&action=' + action;
 
         var sdk = new window.YocoSDK({
             publicKey: yoco_public_key
@@ -72,20 +96,17 @@
         var submitButton = document.getElementById('pay-button');
         form.addEventListener('submit', function(event) {
             event.preventDefault();
+            $('.spinner-overlay').show();
             // Disable the button to prevent multiple clicks while processing
             submitButton.disabled = true;
             // This is the inline object we created earlier with the sdk
             inline.createToken().then(function(result) {
-                // Re-enable button now that request is complete
-                // (i.e. on success, on error and when auth is cancelled)
-                submitButton.disabled = false;
                 if (result.error) {
                     const errorMessage = result.error.message;
                     errorMessage && alert("error occured: " + errorMessage);
                 } else {
                     const token = result;
-                    paymentViaYoco(auth_token, order_number, token.id, yoco_amount_payable, 'cart');
-                    //alert("card successfully tokenised: " + token.id);
+                    paymentViaYoco(auth_token, order_number, token.id, yoco_amount_payable, action);
                 }
 
             }).catch(function(error) {
@@ -119,21 +140,34 @@
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
+                    payment_return_url = payment_return_url + '&status=200';
                     if(action == 'cart'){
-                        payment_success_url = payment_success_url.replace(':id', response.data.id);
-                        window.location.href = payment_success_url;
+                        // payment_success_url = payment_success_url.replace(':id', response.data.id);
                     }
                 } else {
-                    success_error_alert('error', response.message, ".success-payment-message");
+                    payment_return_url = payment_return_url + '&status=0';
+                    // success_error_alert('error', response.message, ".success-payment-message");
 
                 }
+                location.href = payment_return_url;
             },
             error: function(error) {
                 var response = $.parseJSON(error.responseText);
-                success_error_alert('error', response.message, ".success-payment-message");
+                // success_error_alert('error', response.message, ".success-payment-message");
+            },
+            complete: function(data) {
+                // Re-enable button now that request is complete
+                // (i.e. on success, on error and when auth is cancelled)
+                $("#pay-button").attr('disabled', false);
+                $('.spinner-overlay').hide();
             }
         });
     }
+
+    $(document).delegate("#cancel-button", "click", function(){
+        location.href = payment_return_url + '&status=0';
+    });
 </script>
 
 </body>
+</html>
