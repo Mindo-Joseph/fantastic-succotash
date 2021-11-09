@@ -187,7 +187,7 @@
                                                         <h5 class="mb-1"><b>{!! $data->translation_title !!}</b></h5>
                                                         <p class="mb-1">{!! $data->translation_description !!}</p>
                                                     </div>
-                                                    <div class="col-md-3 col-sm-4 mb-sm-0 mb-3">
+                                                    <div class="col-md-3 col-sm-4 mb-3">
                                                         <?php $imagePath = $imagePath2 = '';
                                                             $mediaCount = count($data->media);
                                                             for ($i = 0; $i < $mediaCount && $i < 2; $i++) { 
@@ -415,8 +415,8 @@
                             @endif    
                            
                         </div> 
-                    
-                        <div class="footer-card">
+                        
+                         <div class="footer-card">
                             @if((app('request')->input('step') == '1' || empty(app('request')->input('step'))) && empty(app('request')->input('addons')))
                                 <a href="?step=2" id="next-button-ondemand-2" style="display: none;"><span class="btn btn-solid float-right">Next</span></a>
                                 @elseif(app('request')->input('step') == '1' && app('request')->input('addons') == '1')
@@ -442,7 +442,7 @@
                                 @else                           
                             @endif
                         </div>
-                        
+                       
 
                     </div>
                     
