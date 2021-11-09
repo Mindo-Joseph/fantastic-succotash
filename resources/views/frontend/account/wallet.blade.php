@@ -293,8 +293,6 @@ $timezone = Auth::user()->timezone;
     var amount_required_error_msg = "{{__('Please enter amount.') }}";
     var payment_method_required_error_msg = "{{__('Please select payment method.')}}";
 
-    var yoco_public_key="<?php echo $public_key_yoco; ?>";
-    console.log(yoco_public_key);
     var sdk = new window.YocoSDK({
         publicKey: yoco_public_key
     });

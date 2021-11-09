@@ -140,7 +140,7 @@
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
-                    payment_return_url = payment_return_url + '&status=200';
+                    payment_return_url = payment_return_url + '&status=200&transaction_id=' + response.data.id;
                     if(action == 'cart'){
                         // payment_success_url = payment_success_url.replace(':id', response.data.id);
                     }

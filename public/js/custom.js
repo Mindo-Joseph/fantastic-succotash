@@ -12,11 +12,6 @@ jQuery(window).scroll(function() {
     }
 });
 
-
-
-
-
-
 $(function() {
     document.ajax_loading = false;
     $.hasAjaxRunning = function() {
@@ -89,6 +84,47 @@ window.easyZoomInitialize = function easyZoomInitialize() {
     let productCarouselThumbsItemWith = thumbs.find('.swiper-slide').outerWidth();
     thumbs.css('height', productCarouselThumbsItemWith);
 }
+
+window.loadMainMenuSlider = function loadMainMenuSlider(){
+    $(".menu-slider").slick({
+        arrows: true,
+        dots: false,
+        infinite: false,
+        variableWidth: false,
+        autoplay:false,
+        speed: 300,
+        slidesToShow: 15,
+        slidesToScroll: 3,
+        responsive: [
+            { breakpoint: 1400, settings: { slidesToShow: 12, slidesToScroll: 2 } },
+            { breakpoint: 1367, settings: { slidesToShow: 8, slidesToScroll: 2} },
+            { breakpoint: 1024, settings: { slidesToShow: 10, slidesToScroll: 4 } },
+        ],
+    });
+}
+loadMainMenuSlider();
+
+function resizeMenuSlider(){
+    var windowWidth = $(window).width();
+    if(windowWidth < 1200){
+        // $('body').find('.menu-slider').removeClass().addClass('sm pixelstrap sm-horizontal');
+        $('.menu-slider').slick('unslick');
+        $('.menu-slider').removeClass('menu-slider');
+    }else{
+        $('#main-menu').addClass('menu-slider');
+        setTimeout(function(){
+            loadMainMenuSlider();
+        },100);
+    }
+    if ( $('.menu-slider .slick-slide').length > 10 ) {
+        $('.menu-slider').addClass('items-center');
+    }
+}
+
+resizeMenuSlider();
+$(window).resize(function() {
+    resizeMenuSlider();
+});
 
 window.initializeSlider = function initializeSlider() {
     $(".slide-6").slick({
@@ -584,8 +620,21 @@ $(document).ready(function() {
                         paymentViaStripe(result.token.id, '', payment_option_id);
                     }
                 });
-            } else {
+            } else if (payment_option_id == 3) {
                 paymentViaPaypal('', payment_option_id);
+            } else if (payment_option_id == 8) {
+                inline.createToken().then(function(result) {
+                    if (result.error) {
+                        $('#yoco_card_error').html(result.error.message);
+                        _this.attr("disabled", false);
+                    } else {
+                        const token = result;
+                        paymentViaYoco(token.id, '', '');
+                    }
+                }).catch(function(error) {
+                    // Re-enable button now that request is complete
+                    alert("error occured: " + error);
+                });
             }
         } else {
             _this.attr("disabled", false);
@@ -884,8 +933,6 @@ $(document).ready(function() {
         });
     }
 
-
-
     function paymentViaPaypal() {
         let total_amount = 0;
         let tip = 0;
@@ -910,7 +957,6 @@ $(document).ready(function() {
                 ajaxData.order_number = order_number;
                 order_number = order_number;
             }
-
         }
 
         $.ajax({
@@ -946,11 +992,7 @@ $(document).ready(function() {
 
     function paymentViaRazorpay_wallet(address_id, payment_option_id) {
         let total_amount = 0;
-
-
-
         let ajaxData = [];
-
         total_amount = $("input[name='wallet_amount']").val();
         ajaxData.push({ name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
 
@@ -961,12 +1003,8 @@ $(document).ready(function() {
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
-
                     //  creditWallet(total_amount, payment_option_id, data.result.id);
-
-
                     window.location.href = response.data;
-
                 }
             }
         });
@@ -988,24 +1026,6 @@ $(document).ready(function() {
                     window.location.href = response.data;
                 }
             }
-        });
-    }
-
-    function paymentViaYoco_wallet(token, address_id, payment_option_id) {
-        let total_amount = 0;
-        let ajaxData = [];
-        total_amount = $("input[name='wallet_amount']").val();
-
-        ajaxData.push({ name: 'token', value: token }, { name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: payment_yoco_url,
-            data: ajaxData,
-            success: function(response) {
-                // window.location.href = URL::to('user/wallet');
-                creditWallet(total_amount, payment_option_id, response.data.id);
-            },
         });
     }
 
@@ -1227,7 +1247,7 @@ $(document).ready(function() {
 
                     order = placeOrderBeforePayment(address_id, payment_option_id, tip);
                     if(order != ''){
-                        paymentViaYoco(address_id, order, token.id);
+                        paymentViaYoco(token.id, address_id, order);
                     }else{
                         return false;
                     }
@@ -1270,67 +1290,6 @@ $(document).ready(function() {
         }
     });
 
-
-    window.paymentViaYoco = function paymentViaYoco(address_id, order, token) {
-
-        let total_amount = 0;
-        let tip = 0;
-        let tipElement = $("#cart_tip_amount");
-        let cartElement = $("input[name='cart_total_payable_amount']");
-        let cart_id = $("#cart_total_payable_amount").data("cart_id");
-
-        let walletElement = $("input[name='wallet_amount']");
-        let ajaxData = {};
-        if (cartElement.length > 0) {
-            total_amount = cartElement.val();
-            tip = tipElement.val();
-            ajaxData.tip = tip;
-            ajaxData.address_id = address_id;
-            ajaxData.payment_form = 'cart';
-            ajaxData.token = token;
-            ajaxData.cart_id = cart_id;
-            ajaxData.order_number = order.order_number;
-        } else if (walletElement.length > 0) {
-            total_amount = walletElement.val();
-            ajaxData.payment_form = 'wallet';
-        }
-        ajaxData.amount = total_amount;
-        ajaxData.returnUrl = path;
-        ajaxData.cancelUrl = path;
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: payment_yoco_url,
-            data: ajaxData,
-            success: function(response) {
-                if (response.status == "Success") {
-                    if (cartElement.length > 0) {
-                        window.location.href = order_success_return_url;
-                    }else if (walletElement.length > 0) {
-                        window.location.reload();
-                    }
-                } else {
-                    if (cartElement.length > 0) {
-                        success_error_alert('error', response.message, "#cart_payment_form .payment_response");
-                        $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
-                    } else if (walletElement.length > 0) {
-                        success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                        $(".topup_wallet_confirm").removeAttr("disabled");
-                    }
-                }
-            },
-            error: function(error) {
-                var response = $.parseJSON(error.responseText);
-                if (cartElement.length > 0) {
-                    success_error_alert('error', response.message, "#cart_payment_form .payment_response");
-                    $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
-                } else if (walletElement.length > 0) {
-                    success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
-                    $(".topup_wallet_confirm").removeAttr("disabled");
-                }
-            }
-        });
-    }
 
     window.paymentViaPaylink = function paymentViaPaylink(address_id, order) {
         let total_amount = 0;
@@ -1521,7 +1480,7 @@ $(document).ready(function() {
     });
 
 
-    function userSubscriptionPurchase(amount, payment_option_id, transaction_id) {
+    window.userSubscriptionPurchase = function userSubscriptionPurchase(amount, payment_option_id, transaction_id) {
         var id = $("#subscription_payment_form #subscription_id").val();
         if (id != '') {
             $.ajax({
@@ -1593,7 +1552,7 @@ $(document).ready(function() {
                     $(".topup_wallet_confirm").attr("disabled", false);
                 } else {
                     const token = result;
-                    paymentViaYoco_wallet(token.id, '', payment_option_id);
+                    paymentViaYoco(token.id, '', '');
                 }
             }).catch(function(error) {
                 // Re-enable button now that request is complete

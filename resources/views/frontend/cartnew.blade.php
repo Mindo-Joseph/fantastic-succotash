@@ -306,7 +306,7 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
             </div>
             <hr class="my-2">
             <% if(client_preference_detail.off_scheduling_at_cart != 1) { %>
-            <div class="row d-flex align-items-center arabic-lng no-gutters mt-2 mb-4" id="dateredio">
+            <div class="row d-flex align-items-center arabic-lng no-gutters mt-2 mb-md-4 mb-2" id="dateredio">
                 <div class="col-md-5 pr-md-2 mb-2 mb-md-0">
                     <div class="login-form">
                         <ul class="list-inline">
@@ -384,10 +384,10 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
                 </div>
 
                 <div class="row mb-md-3">
-                    <div class="col-6 mb-2 mb-sm-0">
+                    <div class="col-sm-6 mb-2 mb-sm-0">
                         <a class="btn btn-solid" href="{{ url('/') }}">{{__('Continue Shopping')}}</a>
                     </div>
-                    <div class="col-6 text-right">
+                    <div class="col-sm-6 text-sm-right">
                         <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button>
                     </div>
                 </div>
@@ -890,14 +890,10 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
 <script>
     // Replace the supplied `publicKey` with your own.
     // Ensure that in production you use a production public_key.
-   
     var sdk = new window.YocoSDK({
-        publicKey: 'pk_test_657b29ffyL0dlr389b04'
+        publicKey: yoco_public_key
     });
-    var inline='';
-  
-
-   
+    var inline='';   
 </script>
 <script type="text/javascript">
    var guest_cart = {{ $guest_user ? 1 : 0 }};
