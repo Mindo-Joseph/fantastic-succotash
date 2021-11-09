@@ -851,8 +851,6 @@ $timezone = Auth::user()->timezone;
      var custom_tip_amount = "custom_tip_amount"+order_number;
 
      var select_tip =  $('input[name="' + input_name + '"]:checked').val();
-     console.log(custom_tip_amount);
-     console.log(select_tip);
 
      if(select_tip != 'custom' && select_tip != undefined){
          $('.wallet_balance').html(select_tip);

@@ -584,8 +584,21 @@ $(document).ready(function() {
                         paymentViaStripe(result.token.id, '', payment_option_id);
                     }
                 });
-            } else {
+            } else if (payment_option_id == 3) {
                 paymentViaPaypal('', payment_option_id);
+            } else if (payment_option_id == 8) {
+                inline.createToken().then(function(result) {
+                    if (result.error) {
+                        $('#yoco_card_error').html(result.error.message);
+                        _this.attr("disabled", false);
+                    } else {
+                        const token = result;
+                        paymentViaYoco(token.id, '', '');
+                    }
+                }).catch(function(error) {
+                    // Re-enable button now that request is complete
+                    alert("error occured: " + error);
+                });
             }
         } else {
             _this.attr("disabled", false);
@@ -1431,7 +1444,7 @@ $(document).ready(function() {
     });
 
 
-    function userSubscriptionPurchase(amount, payment_option_id, transaction_id) {
+    window.userSubscriptionPurchase = function userSubscriptionPurchase(amount, payment_option_id, transaction_id) {
         var id = $("#subscription_payment_form #subscription_id").val();
         if (id != '') {
             $.ajax({
