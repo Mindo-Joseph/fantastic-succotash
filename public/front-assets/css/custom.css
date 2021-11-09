@@ -6826,6 +6826,9 @@ body[dir="rtl"] .inner_spacing h3 {
 
 
 @media (max-width: 1199px) {
+    .small-slider .home-slider .home {
+        height: 30vh;
+    }
     .step-indicator .step-icon {
         height: 30px;
         width: 30px;
@@ -6939,6 +6942,7 @@ body[dir="rtl"] .inner_spacing h3 {
     .menu-navigation ul.sm.pixelstrap.sm-horizontal {
         width: calc(100% - 50px);
         margin: auto;
+        white-space: nowrap;
     }
 }
 

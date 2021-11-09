@@ -102,11 +102,12 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
         ],
     });
 }
+
 loadMainMenuSlider();
 
 function resizeMenuSlider(){
     var windowWidth = $(window).width();
-    if(windowWidth < 1200){
+    if(windowWidth < 1180){
         // $('body').find('.menu-slider').removeClass().addClass('sm pixelstrap sm-horizontal');
         $('.menu-slider').slick('unslick');
         $('.menu-slider').removeClass('menu-slider');
