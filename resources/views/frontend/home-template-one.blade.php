@@ -419,7 +419,7 @@
     </div>
 </section>
 
-<section class="section-b-space ratio_asos d-none py-0 mt-0" id="our_vendor_main_div">
+<section class="section-b-space ratio_asos d-none pt-0 mt-0" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $key => $homePageLabel)
         @if($homePageLabel->slug == 'pickup_delivery') 
