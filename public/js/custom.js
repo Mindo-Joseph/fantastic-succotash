@@ -1656,9 +1656,9 @@ $(document).ready(function() {
         });
     });
     $(document).on("click", ".promo_code_list_btn", function() {
-        let amount = $(this).data('amount');
-        let cart_id = $(this).data('cart_id');
-        let vendor_id = $(this).data('vendor_id');
+        let amount = $(this).attr('data-amount');
+        let cart_id = $(this).attr('data-cart_id');
+        let vendor_id = $(this).attr('data-vendor_id');
         $(".invalid-feedback.manual_promocode").html("");
         $.ajax({
             type: "POST",
@@ -2916,9 +2916,9 @@ $(document).ready(function() {
     // *****************************  End tip after order place ****************************///
 
     $(document).on('click', '.validate_promo_code_btn', function() {
-        let amount = $(this).data('amount');
-        let cart_id = $(this).data('cart_id');
-        let vendor_id = $(this).data('vendor_id');
+        let amount = $(this).attr('data-amount');
+        let cart_id = $(this).attr('data-cart_id');
+        let vendor_id = $(this).attr('data-vendor_id');
         let promocode = $(document).find('.manual_promocode_input').val();
         if (promocode && promocode != "") {
             // let coupon_id = $(this).data('coupon_id');
