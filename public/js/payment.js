@@ -255,29 +255,50 @@ $(document).ready(function() {
         let tipElement = $("#cart_tip_amount");
         let cartElement = $("input[name='cart_total_payable_amount']");
         let cart_id = $("#cart_total_payable_amount").data("cart_id");
-
         let walletElement = $("input[name='wallet_amount']");
-        let ajaxData = {};
-        ajaxData.token = token;
-        if (cartElement.length > 0) {
+        let subscriptionElement = $("input[name='subscription_amount']");
+        let ajaxData = [];
+
+        if (path.indexOf("cart") !== -1) {
             total_amount = cartElement.val();
             tip = tipElement.val();
-            ajaxData.tip = tip;
-            ajaxData.address_id = address_id;
-            ajaxData.payment_form = 'cart';
-            ajaxData.cart_id = cart_id;
-            ajaxData.order_number = order.order_number;
-        } else if (walletElement.length > 0) {
+            ajaxData.push(
+                {name: 'tip', value: tip }, 
+                {name: 'address_id', value: address_id}, 
+                {name: 'payment_form', value: 'cart'},
+                {name: 'cart_id', value: cart_id},
+                {name: 'order_number', value: order_number}
+            );
+            // ajaxData.tip = tip;
+            // ajaxData.address_id = address_id;
+            // ajaxData.payment_form = 'cart';
+            // ajaxData.cart_id = cart_id;
+            // ajaxData.order_number = order.order_number;
+        } else if (path.indexOf("wallet") !== -1) {
             total_amount = walletElement.val();
-            ajaxData.payment_form = 'wallet';
-            if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
-                ajaxData.payment_form = 'tip';
-                ajaxData.order_number = $("#order_number").val();
-            }
+            // ajaxData.payment_form = 'wallet';
+            ajaxData.push({name: 'payment_form', value: 'wallet'});
+        } else if (path.indexOf("subscription") !== -1) {
+            total_amount = subscriptionElement.val();
+            ajaxData = $("#subscription_payment_form").serializeArray();
+            ajaxData.push({name: 'payment_form', value: 'subscription'});
+        } else if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
+            total_amount = walletElement.val();
+            ajaxData.push( 
+                {name: 'payment_form', value: 'tip'},
+                {name: 'order_number', value: $("#order_number").val()}
+            );
+            // ajaxData.payment_form = 'tip';
+            // ajaxData.order_number = $("#order_number").val();
         }
-        ajaxData.amount = total_amount;
-        ajaxData.returnUrl = path;
-        ajaxData.cancelUrl = path;
+        ajaxData.push(
+            {name: 'token', value: token }, 
+            {name: 'amount', value: total_amount}, 
+            {name: 'returnUrl', value: path}
+        );
+        // ajaxData.token = token;
+        // ajaxData.amount = total_amount;
+        // ajaxData.returnUrl = path;
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -285,26 +306,29 @@ $(document).ready(function() {
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
-                    if (cartElement.length > 0) {
+                    if (path.indexOf("cart") !== -1) {
                         window.location.href = order_success_return_url;
-                    }else if (walletElement.length > 0) {
-                        if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
-                            let order_number = $("#order_number").val();
-                            if (order_number.length > 0) {
-                                order_number = order_number;
-                            }
-                            creditTipAfterOrder(total_amount, 8, response.data.id, order_number);
-                        }else{
-                            window.location.reload();
+                    } else if (path.indexOf("wallet") !== -1) {
+                        creditWallet(total_amount, 8, response.data.id);
+                    } else if (path.indexOf("subscription") !== -1) {
+                        userSubscriptionPurchase(total_amount, 8, response.data.id);
+                    } else if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
+                        let order_number = $("#order_number").val();
+                        if (order_number.length > 0) {
+                            order_number = order_number;
                         }
+                        creditTipAfterOrder(total_amount, 8, response.data.id, order_number);
                     }
                 } else {
-                    if (cartElement.length > 0) {
+                    if (path.indexOf("cart") !== -1) {
                         success_error_alert('error', response.message, "#cart_payment_form .payment_response");
                         $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
-                    } else if (walletElement.length > 0) {
+                    } else if (path.indexOf("wallet") !== -1) {
                         success_error_alert('error', response.message, "#wallet_topup_form .payment_response");
                         $(".topup_wallet_confirm").removeAttr("disabled");
+                    } else if (path.indexOf("subscription") !== -1) {
+                        success_error_alert('error', response.message, "#subscription_payment_form .payment_response");
+                        $(".subscription_confirm_btn").removeAttr("disabled");
                     }
                 }
             },

@@ -408,6 +408,7 @@ class PaymentOptionController extends BaseController{
                             'order_id' => $order->id,
                             'transaction_id' => $request->transaction_id,
                             'balance_transaction' => $order->payable_amount,
+                            'type' => 'cart'
                         ]);
                     }
                     DB::commit();

@@ -340,6 +340,7 @@ class OrderController extends BaseController {
                             'order_id' => $order->id,
                             'transaction_id' => $request->transaction_id,
                             'balance_transaction' => $order->payable_amount,
+                            'type' => 'cart'
                         ]);
                     }
                     $order = $order->with(['vendors:id,order_id,dispatch_traking_url,vendor_id', 'user_vendor', 'vendors.vendor'])->where('order_number', $order->order_number)->first();
