@@ -67,12 +67,17 @@
     let yoco_public_key, order_number = '';
     let yoco_amount_payable = 0;
     let auth_token = '';
+    let action = '';
     if (urlParams.get('public_key_yoco') != '') {
         yoco_public_key = urlParams.get('public_key_yoco');
         yoco_amount_payable = urlParams.get('amount');
-        order_number = urlParams.get('order');
-        payment_return_url = payment_return_url + '&order=' + order_number;
+        if(urlParams.has('order')){
+            order_number = urlParams.get('order');
+            payment_return_url = payment_return_url + '&order=' + order_number;
+        }
         auth_token = urlParams.get('auth_token');
+        action = urlParams.get('action');
+        payment_return_url = payment_return_url + '&action=' + action;
 
         var sdk = new window.YocoSDK({
             publicKey: yoco_public_key
@@ -101,7 +106,7 @@
                     errorMessage && alert("error occured: " + errorMessage);
                 } else {
                     const token = result;
-                    paymentViaYoco(auth_token, order_number, token.id, yoco_amount_payable, 'cart');
+                    paymentViaYoco(auth_token, order_number, token.id, yoco_amount_payable, action);
                 }
 
             }).catch(function(error) {
