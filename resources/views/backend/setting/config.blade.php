@@ -1191,7 +1191,7 @@
    </div>
    
    <div class="row">
-      <div class="col-lg-6">
+      {{--<div class="col-lg-6">
          <div class="page-title-box">
             <h4 class="page-title text-uppercase">{{ __("Driver") }}</h4>
          </div>
@@ -1244,7 +1244,7 @@
                </table>
             </div>
          </div>
-      </div>
+      </div> --}}
       <div class="col-xl-6">
          <div class="page-title-box">
             <h4 class="page-title text-uppercase">{{__('Distance to Time Calculator')}}</h4>
@@ -1252,7 +1252,7 @@
          <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
             <input type="hidden" name="distance_to_time_calc_config" id="distance_to_time_calc_config" value="1">
             @csrf
-            <div class="card-box mb-0">
+            <div class="card-box mb-2">
                <div class="d-flex align-items-center justify-content-end">
                   <!-- <h4 class="header-title mb-0">Refer and Earn</h4> -->
                   <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
