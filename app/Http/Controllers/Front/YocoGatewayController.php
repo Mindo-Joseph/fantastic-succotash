@@ -176,7 +176,7 @@ class YocoGatewayController extends FrontController
             
         }
         elseif ($request->payment_form == 'tip') {
-
+            
         }
     }
 
@@ -215,40 +215,53 @@ class YocoGatewayController extends FrontController
             $amount = $this->getDollarCompareAmount($request->amount);
             $amount = filter_var($amount, FILTER_SANITIZE_NUMBER_INT);
      
-            // $returnUrlParams = '?amount='.$amount;
-            // if($request->has('tip')){
-            //     $tip = $request->tip;
-            //     $returnUrlParams = $returnUrlParams.'&tip='.$tip;
-            // }
-            // if( ($request->has('address_id')) && ($request->address_id > 0) ){
-            //     $address_id = $request->address_id;
-            //     $returnUrlParams = $returnUrlParams.'&address_id='.$address_id;
-            // }
-            $returnUrlParams = '?gateway=yoco&order=' . $request->order_number;
+            $customer_data = array(
+                'email' => $user->email,
+                'name' => $user->name,
+                // 'identification' => '12123123'
+            );
+            $reference_number = $description = '';
 
-            // $returnUrl = route('user.wallet');
-            // $returnUrlParams = '';
-            // if (isset($request->order_number)) {
-            //     $returnUrlParams = '?gateway=yoco&order=' . $request->order_number;
-
-            //     $returnUrl = route('order.return.success');
-            // }
+            if($request->payment_form == 'cart'){
+                $description = 'Order Checkout';
+                $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
+                $customer_data['cart_id'] = $cart->id;
+                if($request->has('order_number')){
+                    $reference_number = $request->order_number;
+                }
+            }
+            elseif($request->payment_form == 'wallet'){
+                $description = 'Wallet Checkout';
+                if($request->has('subscription_id')){
+                    $reference_number = $request->token;
+                }
+            }
+            if($request->payment_form == 'tip'){
+                $description = 'Tip Checkout';
+                $customer_data['order_number'] = $request->order_number;
+                if($request->has('order_number')){
+                    $reference_number = $request->order_number;
+                }
+            }
+            elseif($request->payment_form == 'subscription'){
+                $description = 'Subscription Checkout';
+                if($request->has('subscription_id')){
+                    $slug = $request->subscription_id;
+                    $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
+                    $customer_data['subscription_id'] = $subscription_plan->id;
+                    $reference_number = $request->subscription_id;
+                }
+            }
 
             $checkout_data = array(
                 'token' => $token,
                 'amountInCents' => $amount,
                 'currency' => 'ZAR',
-                'description' => 'Order Checkout',
-                // 'return_url' => $returnUrl,
-                'reference' => $request->order_number,
+                'description' => $description,
+                'reference' => $reference_number,
                 'redirect' => false,
                 'test' => $this->test_mode, // True, testing, false, production
-                'customer' => array(
-                    'email' => $user->email,
-                    'name' => $user->name,
-                    // 'identification' => '12123123',
-                    'cart_id' => $cart->id
-                )
+                'customer' => $customer_data
             );
 
             $ch = curl_init();
@@ -325,12 +338,14 @@ class YocoGatewayController extends FrontController
             }
         }
         elseif ($request->payment_form == 'wallet') {
-            $walletController = new WalletController();
             $request->request->add(['wallet_amount' => $request->amount, 'transaction_id' => $transactionId]);
+            $walletController = new WalletController();
             $walletController->creditWallet($request);
         }
         elseif ($request->payment_form == 'tip') {
-            
+            $request->request->add(['tip_amount' => $request->amount, 'transaction_id' => $transactionId]);
+            $orderController = new OrderController();
+            $orderController->tipAfterOrder($request);
         }
     }
 
