@@ -318,7 +318,7 @@ class VendorController extends BaseController{
         try{
             $paginate = $request->has('limit') ? $request->limit : 12;
             // $preferences = Session::get('preferences');
-            $vendor = Vendor::select('id', 'name', 'slug', 'desc', 'logo', 'show_slot', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id')->where('slug', $slug1)->where('status', 1)->firstOrFail();
+            $vendor = Vendor::select('id', 'name', 'slug', 'desc', 'logo', 'show_slot', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id')->where('slug', $slug1)->where('status', 1)->first();
             if(!empty($vendor)){
                 $vendor->is_vendor_closed = 0;
                 if($vendor->show_slot == 0){
@@ -499,7 +499,7 @@ class VendorController extends BaseController{
                             }, 'variant.checkIfInCartApp',
                         ])->select('id', 'sku', 'description', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating', 'inquiry_only');
                 if(!empty($slug2)){
-                    $category = Category::select('id')->where('slug', $slug2)->firstOrFail();
+                    $category = Category::select('id')->where('slug', $slug2)->first();
                     $products = $products->where('category_id', $category->id);
                 }
                 $products = $products->where('is_live', 1)->where('vendor_id', $vendor->id)->paginate($paginate);
