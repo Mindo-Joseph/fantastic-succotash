@@ -500,7 +500,7 @@ class VendorController extends BaseController{
                         ])->select('id', 'sku', 'description', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating', 'inquiry_only');
                 if(!empty($slug2)){
                     $category = Category::select('id')->where('slug', $slug2)->first();
-                    $products = $products->where('category_id', $category->id);
+                    $products = $products->where('category_id', $category->id??0);
                 }
                 $products = $products->where('is_live', 1)->where('vendor_id', $vendor->id)->paginate($paginate);
                 if(!empty($products)){
