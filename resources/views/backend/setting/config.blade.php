@@ -1080,6 +1080,7 @@
                            <tr>
                               <th>{{ __("Name") }}</th>
                               <th>{{ __("Type") }}</th>
+                              <th>{{ __("Is Required?") }}</th>
                               <th>{{ __("Action") }}</th>
                            </tr>
                         </thead>
@@ -1092,6 +1093,7 @@
                                  </a>   
                               </td>
                               <td>{{$vendor_registration_document->file_type}}</td>
+                              <td>{{ ($vendor_registration_document->is_required == 1)?"Yes":"No" }}</td>
                               <td>
                                  <div>
                                     <div class="inner-div" style="float: left;">
@@ -1413,15 +1415,25 @@
                   <div id="save_social_media">
                      <input type="hidden" name="vendor_registration_document_id" value="">
                      <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                            <div class="form-group position-relative">
                               <label for="">Type</label>
                               <div class="input-group mb-2">
                                  <select class="form-control" name="file_type">
-                                    @forelse($file_types as $k => $file_type)
-                                    <option value="{{$file_type}}">{{$file_type}}</option>
-                                    @empty
-                                    @endforelse
+                                    <option value="Text">Text</option>
+                                    <option value="Image">Image</option>
+                                    <option value="Pdf">PDF</option>
+                                 </select>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="form-group position-relative">
+                              <label for="">Is Required?</label>
+                              <div class="input-group mb-2">
+                                 <select class="form-control" name="is_required">
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
                                  </select>
                               </div>
                            </div>
@@ -1510,6 +1522,8 @@
    @section('script')
    <script type="text/javascript">
       $('#add_vendor_registration_document_modal_btn').click(function(e) {
+         document.getElementById("vendorRegistrationDocumentForm").reset();
+         $('#add_vendor_registration_document_modal input[name=vendor_registration_document_id]').val("");
          $('#add_vendor_registration_document_modal').modal('show');
          $('#add_vendor_registration_document_modal #standard-modalLabel').html('Add Vendor Registration Document');
       });
@@ -1576,10 +1590,11 @@
             url: "{{ route('vendor.registration.document.edit') }}",
             success: function(response) {
                if (response.status = 'Success') {
-                  $('#add_vendor_registration_document_modal').modal('show');
-                  $("#add_vendor_registration_document_modal input[name=file_type]").val(response.data.file_type).change();
+                  $(document).find("#add_vendor_registration_document_modal select[name=file_type]").val(response.data.file_type).change();
                   $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val(response.data.id);
+                  $(document).find("#add_vendor_registration_document_modal select[name=is_required]").val(response.data.is_required).change();
                   $('#add_vendor_registration_document_modal #standard-modalLabel').html('Update Vendor Registration Document');
+                  $('#add_vendor_registration_document_modal').modal('show');
                   $.each(response.data.translations, function( index, value ) {
                     $('#add_vendor_registration_document_modal #vendor_registration_document_name_'+value.language_id).val(value.name);
                   });
