@@ -211,7 +211,7 @@ class CustomerAuthController extends FrontController
             $phoneCode = mt_rand(100000, 999999);
             $emailCode = mt_rand(100000, 999999);
             $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
-            $email = (!empty($req->email)) ? $req->email : ('ro_'.Carbon::now()->timestamp . '.' . uniqid() . '@royoorders.com');
+            $email = (!empty($req->email)) ? $req->email : '';//('ro_'.Carbon::now()->timestamp . '.' . uniqid() . '@royoorders.com');
             $user->type = 1;
             $user->status = 1;
             $user->role_id = 1;
@@ -559,7 +559,7 @@ class CustomerAuthController extends FrontController
             $user = new User();
             $country = Country::where('code', strtoupper($req->countryData))->first();
             // $emailCode = mt_rand(100000, 999999);
-            $email = 'ro_'.Carbon::now()->timestamp . '.' . uniqid() . '@royoorders.com';
+            $email = ''; //'ro_'.Carbon::now()->timestamp . '.' . uniqid() . '@royoorders.com';
             $user->type = 1;
             $user->status = 1;
             $user->role_id = 1;
