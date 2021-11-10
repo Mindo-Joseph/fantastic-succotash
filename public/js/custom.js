@@ -114,7 +114,9 @@ function resizeMenuSlider(){
         // $('#main-menu').addClass('menu-slider');
         setTimeout(function(){
             loadMainMenuSlider();
-            if ( $('.menu-slider .slick-slide').length > 10 ) {
+        },100);
+        setTimeout(function(){
+           if ( $('.menu-slider .slick-slide').length > 10 ) {
                 $('.menu-slider').addClass('items-center');
             }
         },200);
