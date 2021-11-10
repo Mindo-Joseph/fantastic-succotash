@@ -84,7 +84,8 @@ header.site-header.fixed-bar {
 .pixelstrap a,
 .pixelstrap a:hover,
 .pixelstrap a:active {
-    padding: 10px 15px 10px 0;
+    padding: 10px 15px;
+    text-align: center;
 }
 
 .top-header .header-dropdown li:hover i {
