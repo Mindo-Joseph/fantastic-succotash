@@ -84,7 +84,8 @@ header.site-header.fixed-bar {
 .pixelstrap a,
 .pixelstrap a:hover,
 .pixelstrap a:active {
-    padding: 10px 15px 10px 0;
+    padding: 10px 7px;
+    text-align: center;
 }
 
 .top-header .header-dropdown li:hover i {
@@ -5561,7 +5562,7 @@ ul#main-nav-list {
     color: red;
     font-size: 12px;
     text-align: center;
-    bottom: -16 px;
+    bottom: -16px;
     left: 0;
     right: 0;
     font-weight: 100;
@@ -6826,6 +6827,9 @@ body[dir="rtl"] .inner_spacing h3 {
 
 
 @media (max-width: 1199px) {
+    .small-slider .home-slider .home {
+        height: 30vh;
+    }
     .step-indicator .step-icon {
         height: 30px;
         width: 30px;
@@ -6939,6 +6943,7 @@ body[dir="rtl"] .inner_spacing h3 {
     .menu-navigation ul.sm.pixelstrap.sm-horizontal {
         width: calc(100% - 50px);
         margin: auto;
+        white-space: nowrap;
     }
 }
 
