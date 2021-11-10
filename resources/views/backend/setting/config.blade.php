@@ -948,7 +948,7 @@
                      </div>
                   </div>
                </div>
-               @if($client_preference_detail->business_type != 'taxi')
+               @if($client_preference_detail->business_type != 'taxi' && $client_preference_detail->business_type != 'laundry' )
                <div class="col-xl-12 mb-4">
                   <div class="page-title-box">
                      <h4 class="page-title text-uppercase">{{ __("Vendor") }}</h4>
@@ -993,13 +993,15 @@
                @csrf
                <div class="row align-items-center">
                   @if($client_preference_detail->business_type != 'taxi')
+
+                  @if($client_preference_detail->business_type != 'laundry')
                   <div class="col-md-4">
                      <div class="form-group mb-3">
                         <label for="celebrity_check" class="mr-2 mb-0"> {{ __("Celebrity Mod") }}</label>
                         <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1')) checked='checked' @endif>
                      </div>
                   </div>
-                  <div class="col-md-4">
+                   <div class="col-md-4">
                      <div class="form-group mb-3">
                         <label for="pharmacy_check" class="mr-2 mb-0">{{ __('Pharmacy Mod') }}</label>
                         <input type="checkbox" data-plugin="switchery" name="pharmacy_check" id="pharmacy_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1')) checked='checked' @endif>
@@ -1011,6 +1013,7 @@
                         <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1')) checked='checked' @endif>
                      </div>
                   </div>
+                  @endif
                  
                   <div class="col-md-4">
                      <div class="form-group mb-3">
