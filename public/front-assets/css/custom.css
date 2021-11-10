@@ -1231,7 +1231,8 @@ label:hover~input:checked~.rate label
 } */
 
 #cart_main_page {
-    height: calc(100vh + 200px);
+    height: 100%;
+    min-height: 100vh;
 }
 
 .spinner-box {
