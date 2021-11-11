@@ -852,6 +852,11 @@ class ProductController extends BaseController
         else
         $Requires_last_mile  = 0;
 
+        if(isset($request->sell_when_out_of_stock) && $request->sell_when_out_of_stock == 'true')
+        $sell_when_out_of_stock = 1;
+        else
+        $sell_when_out_of_stock = 0;
+
         if(isset($request->action_for) && !empty($request->action_for)){
             switch($request->action_for){
                 case "for_new":
@@ -868,6 +873,9 @@ class ProductController extends BaseController
                 break;
                 case "for_tax":
                     $update_product = Product::whereIn('id',$request->product_id)->update(['tax_category_id' => $request->tax_category]);
+                break;
+                case "for_sell_when_out_of_stock":
+                    $update_product = Product::whereIn('id',$request->product_id)->update(['sell_when_out_of_stock' => $sell_when_out_of_stock]);
                 break;
                 default:
                 '';
