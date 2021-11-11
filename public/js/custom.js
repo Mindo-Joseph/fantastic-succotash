@@ -315,9 +315,9 @@ window.initializeSlider = function initializeSlider() {
 
 $(document).ready(function() {
 
-    $(".toggle-nav").click(function() {
-        $("body").toggleClass("overflow-hidden");
-    });
+    // $(".toggle-nav").click(function() {
+    //     $("body").toggleClass("overflow-hidden");
+    // });
     $(".mobile-search-btn").click(function() {
         $(".radius-bar").slideToggle();
     });
