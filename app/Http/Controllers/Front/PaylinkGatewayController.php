@@ -273,7 +273,8 @@ class PaylinkGatewayController extends FrontController
         curl_close($curl);
         $response = json_decode($response);
 
-        //  dd($response);
+        $user = User::where('auth_token', $request->auth_token)->first();
+        Auth::login($user);
         $transactionId = $request->checkout;
         $returnUrl = url('payment/gateway/returnResponse');
 
