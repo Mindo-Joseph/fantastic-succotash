@@ -91,7 +91,7 @@ class PaylinkGatewayController extends BaseController
                 'currency' => 'AED', //$this->currency
                 'description' => $description,
                 'reference' => $reference_number,
-                'returnUrl' => url('payment/paylink/return/app' . $returnUrlParams),
+                'returnUrl' => url($request->serverUrl.'payment/paylink/return/app' . $returnUrlParams),
                 'redirect' => false,
                 'test' => $this->test_mode, // True, testing, false, production
                 'customer' => $customer_data,
