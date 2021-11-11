@@ -103,23 +103,28 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
     });
 }
 
-loadMainMenuSlider();
+// loadMainMenuSlider();
 
 function resizeMenuSlider(){
     var windowWidth = $(window).width();
     if(windowWidth < 1183){
         // $('#main-menu').slick('unslick');
         // $('#main-menu').removeClass('menu-slider');
+        $('.menu-slider').removeClass('items-center');
+        $(".sm-horizontal").css("right", "-410px");
     }else{
         // $('#main-menu').addClass('menu-slider');
-        setTimeout(function(){
-            loadMainMenuSlider();
-        },100);
-        setTimeout(function(){
-           if ( $('.menu-slider .slick-slide').length > 10 ) {
-                $('.menu-slider').addClass('items-center');
-            }
-        },200);
+        if(!$('.menu-slider').hasClass('slick-initialized')){
+            setTimeout(function(){
+                loadMainMenuSlider();
+            },100);
+            setTimeout(function(){
+                $(".sm-horizontal").css("right", "0px");
+                if ( $('.menu-slider .slick-slide').length > 10 ) {
+                    $('.menu-slider').addClass('items-center');
+                }
+            },200);
+        }
     }
 }
 

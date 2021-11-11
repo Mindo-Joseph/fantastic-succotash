@@ -305,7 +305,9 @@ $(document).ready(function () {
                     let nav_categories_template = _.template($('#nav_categories_template').html());
                     $("#main-menu").append(nav_categories_template({ nav_categories: response.data.navCategories }));
                     $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
-                    loadMainMenuSlider();
+                    if($(window).width() >= 1183){
+                        loadMainMenuSlider();
+                    }
                     var path = window.location.pathname;
                     if (path == '/') {
                         $(".slide-6").slick('destroy');
