@@ -1020,25 +1020,6 @@ $(document).ready(function() {
         });
     }
 
-    function paymentViaPaylink_wallet(address_id, payment_option_id) {
-        let total_amount = 0;
-        let ajaxData = [];
-        total_amount = $("input[name='wallet_amount']").val();
-        ajaxData.push({ name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: payment_paylink_url,
-            data: ajaxData,
-            success: function(response) {
-                if (response.status == "Success") {
-                    //  creditWallet(total_amount, payment_option_id, data.result.id);
-                    window.location.href = response.data;
-                }
-            }
-        });
-    }
-
     function paymentSuccessViaPaypal(amount, token, payer_id, path, tip = 0, order_number = 0) {
         let address_id = 0;
         if (path.indexOf("cart") !== -1) {
@@ -1401,20 +1382,20 @@ $(document).ready(function() {
         let queryString = window.location.search;
         let path = window.location.pathname;
         let urlParams = new URLSearchParams(queryString);
-        if ((urlParams.get('gateway') == 'paylink') && urlParams.has('checkout')) {
-            $('.spinner-overlay').show();
+        // if ((urlParams.get('gateway') == 'paylink') && urlParams.has('checkout')) {
+        //     $('.spinner-overlay').show();
 
-            if (urlParams.has('checkout')) {
+        //     if (urlParams.has('checkout')) {
 
-                transaction_id = urlParams.get('checkout');
-            }
-            if (urlParams.has('amount')) {
+        //         transaction_id = urlParams.get('checkout');
+        //     }
+        //     if (urlParams.has('amount')) {
 
-                total_amount = urlParams.get('amount');
-            }
+        //         total_amount = urlParams.get('amount');
+        //     }
 
-            creditWallet(urlParams.get('amount'), 9, urlParams.get('checkout'));
-        }
+        //     creditWallet(urlParams.get('amount'), 9, urlParams.get('checkout'));
+        // }
         if ((urlParams.get('gateway') == 'razorpay') && urlParams.has('checkout')) {
             $('.spinner-overlay').show();
 
@@ -1494,7 +1475,7 @@ $(document).ready(function() {
         } else if (payment_option_id == 6) {
             paymentViaPayfast();
         } else if (payment_option_id == 9) {
-            paymentViaPaylink_wallet('', payment_option_id);
+            paymentViaPaylink('', '');
         } else if (payment_option_id == 10) {
             paymentViaRazorpay_wallet('', payment_option_id);
         } else if (payment_option_id == 8) {
