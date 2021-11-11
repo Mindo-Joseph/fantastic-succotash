@@ -40,7 +40,6 @@ class PaylinkGatewayController extends BaseController
     {
         try {
             $user = Auth::user();
-            $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($request->amount);
 
             $request->request->add(['payment_form' => $request->action]);

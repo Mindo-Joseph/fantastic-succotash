@@ -276,9 +276,11 @@ class YocoGatewayController extends FrontController
                     return $this->successResponse($result);
                 }
                 $this->yocoSuccessApp($request, $result);
+                Auth::logout();
                 return $this->successResponse($result);
             } else {
                 $this->yocoFailApp($request);
+                Auth::logout();
                 return $this->errorResponse($result->status, 400);
             }
         } catch (\Exception $ex) {
