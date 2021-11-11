@@ -366,13 +366,13 @@ class VendorController extends FrontController
                             $z->join('variant_translations as vt', 'vt.variant_id', 'vr.id');
                             $z->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title');
                             $z->where('vt.language_id', $langId);
-                            $z->where('product_variant_sets.product_id', $p_id)->orderBy('product_variant_sets.variant_type_id', 'asc');
+                            $z->where('product_variant_sets.product_id', $p_id)->where('vr.status', 1)->orderBy('product_variant_sets.variant_type_id', 'asc');
                         },'variantSet.option2'=> function ($zx) use ($langId, $p_id) {
                             $zx->where('vt.language_id', $langId)
                             ->where('product_variant_sets.product_id', $p_id);
                         }])->where('id', $p_id)->first();
                         $value->variantSet = $variantData->variantSet;
-                        $value->product_image = ($value->media->isNotEmpty()) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : '';
+                        $value->product_image = ($value->media->isNotEmpty()) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                         $value->translation_title = ($value->translation->isNotEmpty()) ? $value->translation->first()->title : $value->sku;
                         $value->translation_description = ($value->translation->isNotEmpty()) ? html_entity_decode(strip_tags($value->translation->first()->body_html)) : '';
                         $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
@@ -665,7 +665,7 @@ class VendorController extends FrontController
                     ->where('product_variant_sets.product_id', $p_id);
                 }])->where('id', $p_id)->first();
                 $value->variantSet = $variantData->variantSet;
-                $value->product_image = ($value->media->isNotEmpty()) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : '';
+                $value->product_image = ($value->media->isNotEmpty()) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                 $value->translation_title = ($value->translation->isNotEmpty()) ? $value->translation->first()->title : $value->sku;
                 $value->translation_description = ($value->translation->isNotEmpty()) ? strip_tags($value->translation->first()->body_html) : '';
                 $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
