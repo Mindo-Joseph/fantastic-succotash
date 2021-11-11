@@ -1084,7 +1084,7 @@ class OrderController extends FrontController
             $request->order_vendor_id = $ov->id;
             $request->status_option_id = 2;
             // $timezone = Auth::user()->timezone;
-                 Log::info(Auth::user());
+                //  Log::info(Auth::user());
             $vendor_order_status_check = VendorOrderStatus::where('order_id', $request->order_id)->where('vendor_id', $request->vendor_id)->where('order_status_option_id', $request->status_option_id)->first();
      //       Log::info($vendor_order_status_check);
             if (!$vendor_order_status_check) {
