@@ -324,7 +324,6 @@ class PaylinkGatewayController extends FrontController
             } elseif($request->payment_form == 'wallet'){
                 
             }
-            Auth::logout();
             $returnUrlParams = '?status=200&gateway=paylink&action=' .$request->payment_form. '&order=' . $order_number;
             return Redirect::to(url($returnUrl . $returnUrlParams));
         } 
@@ -342,7 +341,6 @@ class PaylinkGatewayController extends FrontController
                 OrderVendor::where('order_id', $order->id)->delete();
                 OrderTax::where('order_id', $order->id)->delete();
                 Order::where('id', $order->id)->delete();
-                Auth::logout();
                 $returnUrlParams = '?status=0&gateway=paylink&action=' .$request->payment_form. '&order=' . $order_number;
                 return Redirect::to(url($returnUrl . $returnUrlParams));
             }
