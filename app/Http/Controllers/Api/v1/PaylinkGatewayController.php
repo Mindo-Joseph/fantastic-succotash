@@ -53,7 +53,7 @@ class PaylinkGatewayController extends BaseController
                 // 'identification' => '12123123'
             );
             $reference_number = $description = '';
-            $returnUrlParams = '?gateway=paylink&amount=' . $request->amount . '&payment_form=' . $request->payment_form . '&auth_token=' . $request->auth_token;
+            $returnUrlParams = '?gateway=paylink&amount=' . $request->amount . '&payment_form=' . $request->payment_form . '&auth_token=' . $user->auth_token;
 
             if($request->payment_form == 'cart'){
                 $description = 'Order Checkout';
