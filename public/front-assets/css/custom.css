@@ -5711,9 +5711,23 @@ ul#main-nav-list {
     border-color: #ebebeb !important;
 }
 
+.add_vendor-fav{
+    vertical-align: top;
+    margin: 5px 10px 0 0;
+    display: inline-block;
+    opacity: 0;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.cart-box-outer.product_row:hover .add_vendor-fav,.cart-box-outer.product_row:focus .add_vendor-fav,.cart-box-outer.product_row:active .add_vendor-fav{
+    opacity: 1;
+}
+
 .productAddonSetOptions .checkbox {
-    width: 33%;
-    margin-right: 0;
+    width: 50%;
+    margin-right: -4px;
 }
 
 .productAddonSetOptions .checkbox label {
@@ -6310,6 +6324,7 @@ body .footer-theme .sub-title h4 {
     background-size: cover;
     min-height: 380px;
 } */
+
 
 
 
