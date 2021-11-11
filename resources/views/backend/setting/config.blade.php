@@ -319,7 +319,7 @@
                             {!! Form::label('title', __('Team Tag For Laundry Pickup'),['class' => 'control-label']) !!}
                             <select class="form-control" id="laundryPickupTeamList" name="laundry_pickup_team" data-toggle="select2" >
                               <option value="0">{{__('Select Team Tag')}}</option>
-                              @foreach($last_mile_teams as $nm)
+                              @foreach($laundry_teams as $nm)
                                  <option value="{{$nm['name']}}" @if($preference->laundry_pickup_team == $nm['name']) selected="selected" @endif>{{$nm['name']}}</option>
                               @endforeach
                               
@@ -332,7 +332,7 @@
                             {!! Form::label('title', __('Team Tag For Laundry Dropoff'),['class' => 'control-label']) !!}
                             <select class="form-control" id="laundryDropoffTeamList" name="laundry_dropoff_team" data-toggle="select2" >
                               <option value="0">{{__('Select Team Tag')}}</option>
-                              @foreach($last_mile_teams as $nm)
+                              @foreach($laundry_teams as $nm)
                                  <option value="{{$nm['name']}}" @if($preference->laundry_dropoff_team == $nm['name']) selected="selected" @endif>{{$nm['name']}}</option>
                               @endforeach
                               
