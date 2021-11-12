@@ -90,7 +90,7 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
         arrows: true,
         dots: false,
         infinite: false,
-        variableWidth: false,
+        variableWidth: true,
         autoplay:false,
         speed: 300,
         slidesToShow: 15,
@@ -98,7 +98,8 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
         responsive: [
             { breakpoint: 1400, settings: { slidesToShow: 12, slidesToScroll: 2 } },
             { breakpoint: 1367, settings: { slidesToShow: 8, slidesToScroll: 2} },
-            { breakpoint: 1200, settings: "unslick" },
+            { breakpoint: 767, settings: { slidesToShow: 4, slidesToScroll: 2} },
+            // { breakpoint: 1200, settings: "unslick" },
         ],
     });
 }
@@ -107,11 +108,10 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
 
 function resizeMenuSlider(){
     var windowWidth = $(window).width();
-    if(windowWidth < 1183){
-        // $('#main-menu').slick('unslick');
-        // $('#main-menu').removeClass('menu-slider');
-        $('.menu-slider').removeClass('items-center');
-        $(".sm-horizontal").css("right", "-410px");
+    // if(windowWidth < 1183){
+    if(windowWidth < 320){
+        // $('.menu-slider').removeClass('items-center');
+        // $(".sm-horizontal").css("right", "-410px");
     }else{
         // $('#main-menu').addClass('menu-slider');
         if(!$('.menu-slider').hasClass('slick-initialized')){
