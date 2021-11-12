@@ -6894,9 +6894,10 @@ body[dir="rtl"] .inner_spacing h3 {
     .pixelstrap a:active,
     .pixelstrap li a:hover {
         padding-left: 10px;
-        text-align: left;
+        text-align: center;
         font-weight: 400 !important;
         font-size: 13px !important;
+        width: max-content;
     }
 
     .pixelstrap li a,
@@ -6921,8 +6922,13 @@ body[dir="rtl"] .inner_spacing h3 {
     }
 
     .nav-cate-img {
-        display: none !important;
+        display: flex !important;
     }
+    .menu-navigation {
+        width: calc(100% - 30px);
+        margin: auto;
+    }
+
 }
 
 @media(min-width: 992px) {
@@ -7024,9 +7030,9 @@ body[dir="rtl"] .inner_spacing h3 {
         width: 61%;
     }
 
-    .pixelstrap li a img {
+    /* .pixelstrap li a img {
         display: none;
-    }
+    } */
 
     .pixelstrap>li>a>.sub-arrow {
         display: block;
