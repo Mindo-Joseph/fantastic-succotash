@@ -712,7 +712,7 @@ class OrderController extends BaseController{
     // place Request To Dispatch for Laundry
     public function placeRequestToDispatchLaundry($order,$vendor,$dispatch_domain,$team_tag,$colm){
         try {       
-            Log::info($order);
+          
                     $order = Order::find($order);
                     $customer = User::find($order->user_id);
                     $cus_address = UserAddress::find($order->address_id);
@@ -733,41 +733,52 @@ class OrderController extends BaseController{
                         $meta_data = '';
 
                         $unique = Auth::user()->code;
-                        if($colm == 1){     # 
+                        if($colm == 1){     # 1 for pickup from customer drop to vendor
                             $desc= $order->comment_for_pickup_driver??null;
-                            $type_first = 2;
-                            $type_second = 1;
-                            $startindex = 1; 
-                            $endindex = 0;
+                            $tasks[] = array('task_type_id' => 1,
+                            'latitude' => $cus_address->latitude??'',
+                            'longitude' => $cus_address->longitude??'',
+                            'short_name' => '',
+                            'address' => $cus_address->address??'',
+                            'post_code' => $cus_address->pincode??'',
+                            'barcode' => '',
+                            );
+                            $tasks[] = array('task_type_id' => 2,
+                            'latitude' => $vendor_details->latitude??'',
+                            'longitude' => $vendor_details->longitude??'',
+                            'short_name' => '',
+                            'address' => $vendor_details->address??'',
+                            'post_code' => '',
+                            'barcode' => '',
+                            );
+
+                           
                         }
                         
 
-                        if($colm == 2){
+                        if($colm == 2){ # 1 for pickup from vendor drop to customer
                             $desc= $order->comment_for_dropoff_driver??null;
-                            $type_first = 1;
-                            $type_second = 2;
-                            $startindex = 0; 
-                            $endindex = 1;
+                            $tasks[] = array('task_type_id' => 1,
+                            'latitude' => $vendor_details->latitude??'',
+                            'longitude' => $vendor_details->longitude??'',
+                            'short_name' => '',
+                            'address' => $vendor_details->address??'',
+                            'post_code' => '',
+                            'barcode' => '',
+                            );
+            
+                            $tasks[] = array('task_type_id' => 2,
+                            'latitude' => $cus_address->latitude??'',
+                            'longitude' => $cus_address->longitude??'',
+                            'short_name' => '',
+                            'address' => $cus_address->address??'',
+                            'post_code' => $cus_address->pincode??'',
+                            'barcode' => '',
+                            );
+                           
+            
                         }
-                       
-
-                        $tasks[$startindex] = array('task_type_id' => $type_first,
-                                                        'latitude' => $vendor_details->latitude??'',
-                                                        'longitude' => $vendor_details->longitude??'',
-                                                        'short_name' => '',
-                                                        'address' => $vendor_details->address??'',
-                                                        'post_code' => '',
-                                                        'barcode' => '',
-                                                        );
-                                        
-                        $tasks[$endindex] = array('task_type_id' => $type_second,
-                                                        'latitude' => $cus_address->latitude??'',
-                                                        'longitude' => $cus_address->longitude??'',
-                                                        'short_name' => '',
-                                                        'address' => $cus_address->address??'',
-                                                        'post_code' => $cus_address->pincode??'',
-                                                        'barcode' => '',
-                                                        );
+                      
                                    
                         $postdata =  ['customer_name' => $customer->name ?? 'Dummy Customer',
                                                         'customer_phone_number' => $customer->phone_number ?? rand(111111,11111),
