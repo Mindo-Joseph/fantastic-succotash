@@ -133,6 +133,11 @@ $(window).resize(function() {
     resizeMenuSlider();
 });
 
+if ($(window).width() < 767) {
+    $('.footer-contant').addClass('footer-mobile-contant');
+    $('.footer-contant').removeClass('footer-contant');
+ }
+
 window.initializeSlider = function initializeSlider() {
     $(".slide-6").slick({
         dots: !1,

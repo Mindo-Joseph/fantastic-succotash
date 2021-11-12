@@ -1071,7 +1071,6 @@ body[dir="rtl"] #social-links li:last-child{
 @media (max-width: 1199px){
     section.home-slider-wrapper {
         padding-top: 30px;
-        padding-bottom: 0 !important;
     }
     .offset-top {
         margin-top: 0;
