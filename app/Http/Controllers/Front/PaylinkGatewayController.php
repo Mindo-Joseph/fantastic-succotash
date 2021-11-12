@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\WalletController;
-use App\Models\{User, UserVendor, Cart, CartAddon, CartCoupon, CartProduct, CartProductPrescription, Payment, PaymentOption, Client, ClientPreference, ClientCurrency, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor, OrderTax};
+use App\Http\Controllers\Front\UserSubscriptionController;
+use App\Models\{User, UserVendor, Cart, CartAddon, CartCoupon, CartProduct, CartProductPrescription, Payment, PaymentOption, Client, ClientPreference, ClientCurrency, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor, OrderTax, SubscriptionPlansUser};
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class PaylinkGatewayController extends FrontController
@@ -91,6 +92,7 @@ class PaylinkGatewayController extends FrontController
                     $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
                     $customer_data['subscription_id'] = $subscription_plan->id;
                     $reference_number = $request->subscription_id;
+                    $returnUrlParams = $returnUrlParams . '&subscription=' . $request->subscription_id;
                 }
             }
 
@@ -239,6 +241,13 @@ class PaylinkGatewayController extends FrontController
                 $returnUrl = route('user.orders');
                 return Redirect::to(url($returnUrl));
             }
+            elseif($request->payment_form == 'subscription'){
+                $request->request->add(['payment_option_id' => 9, 'transaction_id' => $transactionId]);
+                $subscriptionController = new UserSubscriptionController();
+                $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription);
+                $returnUrl = route('user.subscription.plans');
+                return Redirect::to(url($returnUrl));
+            }
             return Redirect::to(route('order.return.success'));
         } 
         else {
@@ -260,6 +269,13 @@ class PaylinkGatewayController extends FrontController
             elseif($request->payment_form == 'wallet'){
                 return Redirect::to(route('user.wallet'));
             }
+            elseif($request->payment_form == 'tip'){
+                return Redirect::to(route('user.orders'));
+            }
+            elseif($request->payment_form == 'subscription'){
+                return Redirect::to(route('user.subscription.plans'));
+            }
+            return Redirect::to(route('order.return.success'));
         }
     }
 
