@@ -745,6 +745,9 @@ $(document).ready(function() {
             }
         }
         let cartAmount = $("input[name='cart_total_payable_amount']").val();
+        let comment_for_pickup_driver = $("input[name='comment_for_pickup_driver']").val(); //commnet for pickup
+        let comment_for_dropoff_driver = $("input[name='comment_for_dropoff_driver']").val(); //commnet for dropoff
+        let comment_for_vendor = $("input[name='comment_for_vendor']").val(); //commnet for vendor
         let tip = $("#cart_tip_amount").val();
         if (cartAmount == 0) {
             placeOrder(address, 1, '', tip);
@@ -754,7 +757,7 @@ $(document).ready(function() {
                 type: "POST",
                 dataType: 'json',
                 url: update_cart_schedule,
-                data: { task_type: task_type, schedule_dt: schedule_dt },
+                data: { task_type: task_type, schedule_dt: schedule_dt , comment_for_pickup_driver: comment_for_pickup_driver , comment_for_dropoff_driver: comment_for_dropoff_driver , comment_for_vendor: comment_for_vendor },
                 success: function(response) {
                     if (response.status == "Success") {
                         $.ajax({
@@ -1010,25 +1013,6 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: payment_razorpay_url,
-            data: ajaxData,
-            success: function(response) {
-                if (response.status == "Success") {
-                    //  creditWallet(total_amount, payment_option_id, data.result.id);
-                    window.location.href = response.data;
-                }
-            }
-        });
-    }
-
-    function paymentViaPaylink_wallet(address_id, payment_option_id) {
-        let total_amount = 0;
-        let ajaxData = [];
-        total_amount = $("input[name='wallet_amount']").val();
-        ajaxData.push({ name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: payment_paylink_url,
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
@@ -1401,20 +1385,20 @@ $(document).ready(function() {
         let queryString = window.location.search;
         let path = window.location.pathname;
         let urlParams = new URLSearchParams(queryString);
-        if ((urlParams.get('gateway') == 'paylink') && urlParams.has('checkout')) {
-            $('.spinner-overlay').show();
+        // if ((urlParams.get('gateway') == 'paylink') && urlParams.has('checkout')) {
+        //     $('.spinner-overlay').show();
 
-            if (urlParams.has('checkout')) {
+        //     if (urlParams.has('checkout')) {
 
-                transaction_id = urlParams.get('checkout');
-            }
-            if (urlParams.has('amount')) {
+        //         transaction_id = urlParams.get('checkout');
+        //     }
+        //     if (urlParams.has('amount')) {
 
-                total_amount = urlParams.get('amount');
-            }
+        //         total_amount = urlParams.get('amount');
+        //     }
 
-            creditWallet(urlParams.get('amount'), 9, urlParams.get('checkout'));
-        }
+        //     creditWallet(urlParams.get('amount'), 9, urlParams.get('checkout'));
+        // }
         if ((urlParams.get('gateway') == 'razorpay') && urlParams.has('checkout')) {
             $('.spinner-overlay').show();
 
@@ -1494,7 +1478,7 @@ $(document).ready(function() {
         } else if (payment_option_id == 6) {
             paymentViaPayfast();
         } else if (payment_option_id == 9) {
-            paymentViaPaylink_wallet('', payment_option_id);
+            paymentViaPaylink('', '');
         } else if (payment_option_id == 10) {
             paymentViaRazorpay_wallet('', payment_option_id);
         } else if (payment_option_id == 8) {
