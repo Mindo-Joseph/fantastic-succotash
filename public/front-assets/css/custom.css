@@ -5605,16 +5605,11 @@ ul#main-nav-list {
     width: calc(100% - 150px);
 }
 
-.fixed-bar .scrollspy-menu {
+.scrollspy-menu {
     position: sticky;
-    top: 150px;
+    top: 104px;
     width: 300px;
     padding: 10px 0;
-}
-
-.scrollspy-menu {
-    top: 0;
-    width: 100%;
     height: auto;
 }
 
@@ -5658,7 +5653,7 @@ ul#main-nav-list {
     width: 325px;
     max-width: 100%;
     position: sticky;
-    top: 150px;
+    top: 104px;
 }
 
 .cart-main-box-inside {
