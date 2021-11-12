@@ -237,11 +237,11 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
             <div class="row">
                 <div class="col-md-6">
                     <label for="">{{__('Schedule Pickup ')}}</label> 
-                    <input type="datetime-local" id="schedule_datetime_pickup" name="schedule_pickup" class="form-control" placeholder="Inline calendar" value="" min="{{ $now }}">
+                    <input type="datetime-local" id="schedule_datetime_pickup" name="schedule_pickup" class="form-control" placeholder="Inline calendar" value="{{ $cart->schedule_pickup }}" min="{{ $now }}">
                 </div>
                 <div class="col-md-6">
                     <label for="">{{__('Schedule Dropoff ')}} </label>
-                    <input type="datetime-local" id="schedule_datetime_dropoff" name="schedule_dropoff" class="form-control" placeholder="Inline calendar" value="" min="{{ $now }}">
+                    <input type="datetime-local" id="schedule_datetime_dropoff" name="schedule_dropoff" class="form-control" placeholder="Inline calendar" value="{{ $cart->schedule_dropoff }}" min="{{ $now }}">
                 </div>
             </div>
             @endif

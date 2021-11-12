@@ -751,8 +751,8 @@ $(document).ready(function() {
         let comment_for_pickup_driver = $("input[name='comment_for_pickup_driver']").val(); //commnet for pickup
         let comment_for_dropoff_driver = $("input[name='comment_for_dropoff_driver']").val(); //commnet for dropoff
         let comment_for_vendor = $("input[name='comment_for_vendor']").val(); //commnet for vendor
-        var schedule_pickup = $("#schedule_pickup").val();
-        var schedule_dropoff = $("#schedule_dropoff").val();
+        var schedule_pickup = $("#schedule_datetime_pickup").val();
+        var schedule_dropoff = $("#schedule_datetime_dropoff").val();
         let tip = $("#cart_tip_amount").val();
         if (cartAmount == 0) {
             placeOrder(address, 1, '', tip);
