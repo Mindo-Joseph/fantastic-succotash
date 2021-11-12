@@ -218,17 +218,17 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
     <% }); %>
     <div class="row">
         <div class="col-lg-5 col-xl-6">
-            @if($client_preference_detail->business_type == 'laundry')
+            @if($client_preference_detail->business_type == 'laundry' || 1 ==1 )
             <div class="row">
                 <div class="col-6">{{__('Coment for pickup driver ')}}</div> 
                 <div class="col-6"><input type="text" id="comment_for_pickup_driver" value ="" name="comment_for_pickup_driver"></div> 
             </div>
-
+            <hr class="my-2">
             <div class="row">
                 <div class="col-6">{{__('Coment for dropoff driver ')}}</div> 
                 <div class="col-6"><input type="text" id="comment_for_dropoff_driver" value =""  name="comment_for_dropoff_driver"></div> 
             </div>
-
+            <hr class="my-2">
             <div class="row">
                 <div class="col-6">{{__('Coment for Vendor ')}}</div> 
                 <div class="col-6"><input type="text" id="comment_for_vendor" value =""  name="comment_for_vendor"></div> 
