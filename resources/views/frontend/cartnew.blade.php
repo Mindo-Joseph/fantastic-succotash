@@ -221,17 +221,17 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
             @if(isset($cart) && !empty($cart) && $client_preference_detail->business_type == 'laundry')
             <div class="row">
                 <div class="col-4">{{__('Comment for Pickup Driver ')}}</div> 
-                <div class="col-8"><input class="form-control" type="text" id="comment_for_pickup_driver" value ="{{$cart->comment_for_pickup_driver??''}}" name="comment_for_pickup_driver"></div> 
+                <div class="col-8"><input class="form-control" type="text" placeholder="{{__('Eg. Please reach before time if possible')}}" id="comment_for_pickup_driver" value ="{{$cart->comment_for_pickup_driver??''}}" name="comment_for_pickup_driver"></div> 
             </div>
             <hr class="my-2">
             <div class="row">
                 <div class="col-4">{{__('Comment for Dropoff Driver ')}}</div> 
-                <div class="col-8"><input class="form-control" type="text" id="comment_for_dropoff_driver" value ="{{$cart->comment_for_dropoff_driver??''}}"  name="comment_for_dropoff_driver"></div> 
+                <div class="col-8"><input class="form-control" type="text" placeholder="{{__('Eg. Do call me before drop off')}}" id="comment_for_dropoff_driver" value ="{{$cart->comment_for_dropoff_driver??''}}"  name="comment_for_dropoff_driver"></div> 
             </div>
             <hr class="my-2">
             <div class="row">
                 <div class="col-4">{{__('Comment for Vendor ')}}</div> 
-                <div class="col-8"><input class="form-control" type="text" id="comment_for_vendor" value ="{{$cart->comment_for_vendor??''}}"  name="comment_for_vendor"></div> 
+                <div class="col-8"><input class="form-control" type="text"  placeholder="{{__('Eg. Please do the whites separately')}}" id="comment_for_vendor" value ="{{$cart->comment_for_vendor??''}}"  name="comment_for_vendor"></div> 
             </div>
             <hr class="my-2">
             <div class="row">
