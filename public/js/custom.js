@@ -133,11 +133,18 @@ $(window).resize(function() {
     resizeMenuSlider();
 });
 
+if ($(window).width() < 767) {
+    $('.footer-contant').addClass('footer-mobile-contant');
+    $('.footer-contant').removeClass('footer-contant');
+}
+
 window.initializeSlider = function initializeSlider() {
     $(".slide-6").slick({
         dots: !1,
         infinite: !0,
         speed: 300,
+        centerMode: true,
+        centerPadding: '40px',
         slidesToShow: 5,
         slidesToScroll: 6,
         responsive: [
@@ -152,6 +159,8 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !1,
         speed: 300,
+        centerMode: true,
+        centerPadding: '40px',
         slidesToShow: 6,
         slidesToScroll: 4,
         responsive: [
@@ -166,6 +175,8 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !1,
         speed: 300,
+        centerMode: true,
+        centerPadding: '40px',
         slidesToShow: 2.1,
         slidesToScroll: 2,
         responsive: [
@@ -180,6 +191,8 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !1,
         speed: 300,
+        centerMode: true,
+        centerPadding: '40px',
         slidesToShow: 4,
         slidesToScroll: 1,
         responsive: [{
@@ -223,6 +236,8 @@ window.initializeSlider = function initializeSlider() {
         speed: 300,
         slidesToShow: 5,
         slidesToScroll: 4,
+        centerMode: true,
+        centerPadding: '40px',
         arrows: false,
         dots: false,
         responsive: [{
@@ -256,7 +271,9 @@ window.initializeSlider = function initializeSlider() {
         arrows: !0,
         dots: !1,
         infinite: !1,
-        speed: 300,
+        speed: 300,        
+        centerMode: true,
+        centerPadding: '40px',
         slidesToShow: 6,
         slidesToScroll: 3,
         responsive: [
@@ -274,6 +291,8 @@ window.initializeSlider = function initializeSlider() {
         slidesToScroll: 3,
         autoplay: true,
         autoplaySpeed: 5000,
+        centerMode: true,
+        centerPadding: '40px',
         rtl: false,
         responsive: [{
                 breakpoint: 1200,
