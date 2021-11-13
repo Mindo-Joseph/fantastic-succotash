@@ -218,19 +218,19 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
     <% }); %>
     <div class="row">
         <div class="col-12">
-            @if($client_preference_detail->business_type == 'laundry' || 1 ==1 )
+            @if($client_preference_detail->business_type == 'laundry')
             <div class="row">
-                <div class="col-4">{{__('Coment for pickup driver ')}}</div> 
+                <div class="col-4">{{__('Comment for Pickup Driver ')}}</div> 
                 <div class="col-8"><input class="form-control" type="text" id="comment_for_pickup_driver" value ="{{$cart->comment_for_pickup_driver}}" name="comment_for_pickup_driver"></div> 
             </div>
             <hr class="my-2">
             <div class="row">
-                <div class="col-4">{{__('Coment for dropoff driver ')}}</div> 
+                <div class="col-4">{{__('Comment for Dropoff Driver ')}}</div> 
                 <div class="col-8"><input class="form-control" type="text" id="comment_for_dropoff_driver" value ="{{$cart->comment_for_dropoff_driver}}"  name="comment_for_dropoff_driver"></div> 
             </div>
             <hr class="my-2">
             <div class="row">
-                <div class="col-4">{{__('Coment for Vendor ')}}</div> 
+                <div class="col-4">{{__('Comment for Vendor ')}}</div> 
                 <div class="col-8"><input class="form-control" type="text" id="comment_for_vendor" value ="{{$cart->comment_for_vendor}}"  name="comment_for_vendor"></div> 
             </div>
             <hr class="my-2">
