@@ -196,6 +196,7 @@ class CategoryController extends FrontController{
             if($page == 'laundry')
             $page = 'product';
 
+         
             if(view()->exists('frontend/cate-'.$page.'s')){
                 return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
             }else{ 
@@ -234,10 +235,22 @@ class CategoryController extends FrontController{
                 $value = $this->getLineOfSightDistanceAndTime($value, $preferences);
                 $value->vendorRating = $this->vendorRating($value->products);
                 $vendorCategories = VendorCategory::with('category.translation_one')->where('vendor_id', $value->id)->where('status', 1)->get();
+                // $categoriesList = '';
+                // foreach ($vendorCategories as $key => $category) {
+                //     if ($category->category) {
+                //         $categoriesList = $categoriesList . $category->category->translation ? $category->category->translation->first()->name : $category->category->slug;
+                //         if ($key !=  $vendorCategories->count() - 1) {
+                //             $categoriesList = $categoriesList . ', ';
+                //         }
+                //     }
+                // }
+                // $value->categoriesList = $categoriesList;
+
                 $categoriesList = '';
                 foreach ($vendorCategories as $key => $category) {
                     if ($category->category) {
-                        $categoriesList = $categoriesList . $category->category->translation ? $category->category->translation->first()->name : $category->category->slug;
+                        $cat_name = isset($category->category->translation_one) ? $category->category->translation_one->name : $category->category->slug;
+                        $categoriesList = $categoriesList . $cat_name ?? '';
                         if ($key !=  $vendorCategories->count() - 1) {
                             $categoriesList = $categoriesList . ', ';
                         }
@@ -248,8 +261,20 @@ class CategoryController extends FrontController{
             return $vendorData;
         }
         elseif(strtolower($type) == 'brand'){
-            $brands = Brand::with('bc')
-                ->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->paginate($pagiNate);
+            // $brands = Brand::with('bc')
+            //     ->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->paginate($pagiNate);
+            $brands = Brand::with(['bc.categoryDetail', 'bc.categoryDetail.translation' =>  function ($q) use ($langId) {
+                $q->select('category_translations.name', 'category_translations.category_id', 'category_translations.language_id')->where('category_translations.language_id', $langId);
+            }, 'translation' => function ($q) use ($langId) {
+                $q->select('title', 'brand_id', 'language_id')->where('language_id', $langId);
+            }])
+            ->whereHas('bc.categoryDetail', function ($q){
+                $q->where('categories.status', 1);
+            })
+            ->wherehas('bc', function($q) use($category_id){
+                $q->where('category_id', $category_id);
+            })
+            ->select('id', 'title', 'image', 'image_banner')->where('status', 1)->orderBy('position', 'asc')->paginate($pagiNate);
             foreach ($brands as $brand) {
                 $brand->redirect_url = route('brandDetail', $brand->id);
             }
