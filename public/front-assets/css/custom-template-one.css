@@ -1095,6 +1095,12 @@ body[dir="rtl"] #social-links li:last-child {
         overflow: hidden;
     }
 
+    .home-banner-slider .slick-slide {
+        height: 450px;
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
     .home-banner-slider .slick-slide img {
         height: 100%;
         object-fit: cover;
