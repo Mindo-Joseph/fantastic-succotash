@@ -983,9 +983,13 @@ class OrderController extends BaseController {
             }
            // 12345
            if(isset($request->new_dispatch_traking_url) && !empty($request->new_dispatch_traking_url)){
-            $response = Http::get($request->new_dispatch_traking_url);
+               try{
+                $response = Http::get($request->new_dispatch_traking_url);
+               }catch(\Exception $ex){
+                }
+           
 
-            if($response->status() == 200){
+            if(isset($response) && $response->status() == 200){
             $response = $response->json();
             $order['order_data'] = $response;
             }
