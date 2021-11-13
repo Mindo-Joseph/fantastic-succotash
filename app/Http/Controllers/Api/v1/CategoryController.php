@@ -328,7 +328,23 @@ class CategoryController extends BaseController
             }
             $listData = $products;
             return $listData;
-        } else {
+        }
+        elseif($type == 'brand'){
+            $brands = Brand::with(['bc.categoryDetail', 'bc.categoryDetail.translation' =>  function ($q) use ($langId) {
+                $q->select('category_translations.name', 'category_translations.category_id', 'category_translations.language_id')->where('category_translations.language_id', $langId);
+            }, 'translation' => function ($q) use ($langId) {
+                $q->select('title', 'brand_id', 'language_id')->where('language_id', $langId);
+            }])
+            ->whereHas('bc.categoryDetail', function ($q){
+                $q->where('categories.status', 1);
+            })
+            ->wherehas('bc', function($q) use($category_id){
+                $q->where('category_id', $category_id);
+            })
+            ->select('id', 'title', 'image', 'image_banner')->where('status', 1)->orderBy('position', 'asc')->paginate($limit);
+            return $brands;
+        }
+        else {
             $arr = array();
             return $arr;
         }
