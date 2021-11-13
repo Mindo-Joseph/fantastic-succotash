@@ -143,8 +143,6 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !0,
         speed: 300,
-        centerMode: true,
-        centerPadding: '40px',
         slidesToShow: 5,
         slidesToScroll: 6,
         responsive: [
@@ -159,8 +157,6 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !1,
         speed: 300,
-        centerMode: true,
-        centerPadding: '40px',
         slidesToShow: 6,
         slidesToScroll: 4,
         responsive: [
@@ -175,8 +171,6 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !1,
         speed: 300,
-        centerMode: true,
-        centerPadding: '40px',
         slidesToShow: 2.1,
         slidesToScroll: 2,
         responsive: [
@@ -191,8 +185,6 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !1,
         speed: 300,
-        centerMode: true,
-        centerPadding: '40px',
         slidesToShow: 4,
         slidesToScroll: 1,
         responsive: [{
@@ -236,8 +228,6 @@ window.initializeSlider = function initializeSlider() {
         speed: 300,
         slidesToShow: 5,
         slidesToScroll: 4,
-        centerMode: true,
-        centerPadding: '40px',
         arrows: false,
         dots: false,
         responsive: [{
@@ -272,8 +262,6 @@ window.initializeSlider = function initializeSlider() {
         dots: !1,
         infinite: !1,
         speed: 300,        
-        centerMode: true,
-        centerPadding: '40px',
         slidesToShow: 6,
         slidesToScroll: 3,
         responsive: [
