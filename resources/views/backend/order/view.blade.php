@@ -336,11 +336,11 @@ $timezone = Auth::user()->timezone;
                         @endif
 
                         @if($order->schedule_pickup)
-                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Pickup') }} :</span> {{convertDateTimeInTimeZone($product->schedule_pickup, $timezone, 'l, F d, Y, H:i A')}} </p>
+                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Pickup') }} :</span> {{convertDateTimeInTimeZone($order->schedule_pickup, $timezone, 'l, F d, Y, H:i A')}} </p>
                         @endif
 
                         @if($order->schedule_dropoff)
-                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Dropoff') }} :</span> {{convertDateTimeInTimeZone($product->schedule_dropoff, $timezone, 'l, F d, Y, H:i A')}} </p>
+                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Dropoff') }} :</span> {{convertDateTimeInTimeZone($order->schedule_dropoff, $timezone, 'l, F d, Y, H:i A')}} </p>
                         @endif
                     </div>
                    
