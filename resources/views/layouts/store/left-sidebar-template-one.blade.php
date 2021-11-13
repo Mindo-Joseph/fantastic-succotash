@@ -85,8 +85,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     </li>
                                 </ul>
                             </li>
-
-                           
                             @endif
                         </ul>
                     </div>
@@ -140,7 +138,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         </ul>
                                     @endif 
                                 </div>
-                                <div class="col-8 mt-sm-2 ipad-view">                       
+                                <div class="col-8 my-sm-2 ipad-view">                       
                                     <div class="search_bar menu-right d-sm-flex d-block align-items-center justify-content-end w-100 ">
                                         @if( (Session::get('preferences')))
                                             @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
