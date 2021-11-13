@@ -34,6 +34,7 @@ class OrderController extends FrontController
     {
         $user = Auth::user();
         $currency_id = Session::get('customerCurrency');
+        
         $langId = Session::get('customerLanguage');
         $navCategories = $this->categoryNav($langId);
         $pastOrders = Order::with([
@@ -153,6 +154,10 @@ class OrderController extends FrontController
             }
         }
         $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
+
+        if(empty($clientCurrency))
+        $clientCurrency = ClientCurrency::where('is_primary', 1)->first();
+
         $payments = PaymentOption::where('credentials', '!=', '')->where('status', 1)->count();
 
         return view('frontend/account/orders')->with(['payments' => $payments, 'navCategories' => $navCategories, 'activeOrders' => $activeOrders, 'pastOrders' => $pastOrders, 'returnOrders' => $returnOrders, 'clientCurrency' => $clientCurrency]);
