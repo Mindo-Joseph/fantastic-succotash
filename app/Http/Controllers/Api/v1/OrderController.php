@@ -334,8 +334,7 @@ class OrderController extends BaseController {
                     $this->sendSuccessSMS($request, $order);
                     $ex_gateways = [6,7,8,9]; // if mobbex, payfast, yoco
                     if(!in_array($request->payment_option_id, $ex_gateways)){
-                        Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL,
-                        'comment_for_pickup_driver' => NULL, 'comment_for_dropoff_driver' => NULL,'comment_for_vendor' => NULL, 'schedule_pickup' => NULL, 'schedule_dropoff' => NULL]);
+                        Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL,'comment_for_pickup_driver' => NULL, 'comment_for_dropoff_driver' => NULL,'comment_for_vendor' => NULL, 'schedule_pickup' => NULL, 'schedule_dropoff' => NULL]);
                         CartCoupon::where('cart_id', $cart->id)->delete();
                         CartProduct::where('cart_id', $cart->id)->delete();
                         CartProductPrescription::where('cart_id', $cart->id)->delete();
