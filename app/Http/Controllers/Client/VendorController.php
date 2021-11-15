@@ -336,6 +336,7 @@ class VendorController extends BaseController
         $returnData['VendorCategory'] = $VendorCategory;
         $returnData['templetes'] = $templetes;
         $returnData['builds'] = $build;
+        $returnData['is_payout_enabled'] = $this->is_payout_enabled;
         if((isset($preferences['subscription_mode'])) && ($preferences['subscription_mode'] == 1)){
             $subscriptions_data = $this->getSubscriptionPlans($id);
             $returnData['subscription_plans'] = $subscriptions_data['sub_plans'];
@@ -380,7 +381,7 @@ class VendorController extends BaseController
             ->orderBy('is_primary', 'desc')->get();
         $client_preferences = ClientPreference::first();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend.vendor.vendorCategory')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build,'csvVendors'=> $csvVendors]);
+        return view('backend.vendor.vendorCategory')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build,'csvVendors'=> $csvVendors, 'is_payout_enabled'=>$this->is_payout_enabled]);
     }
 
     /**   show vendor page - catalog tab      */
