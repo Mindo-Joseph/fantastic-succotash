@@ -471,7 +471,8 @@ class PickupDeliveryController extends BaseController{
                                                     'order_team_tag' => $team_tag, 
                                                     'order_agent_tag' => $order_agent_tag,
                                                     'task' => $request->tasks,
-                                                    'order_time_zone' => $request->order_time_zone??null
+                                                    'order_time_zone' => $request->order_time_zone??null,
+                                                    'images_array' => $request->images_array??null
                                                     ];
 
                   
