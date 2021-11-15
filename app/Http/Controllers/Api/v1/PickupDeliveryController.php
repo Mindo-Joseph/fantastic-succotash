@@ -670,9 +670,9 @@ class PickupDeliveryController extends BaseController{
              $dispatch_domain = $this->checkIfPickupDeliveryOnCommon();
             if ($dispatch_domain && $dispatch_domain != false) {
                 $files = [];
-                $dispatch_domain->pickup_delivery_service_key_code ='745e3f';
-                $dispatch_domain->pickup_delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
-                $dispatch_domain->pickup_delivery_service_key_url ='http://192.168.96.20:8010';
+                // $dispatch_domain->pickup_delivery_service_key_code ='745e3f';
+                // $dispatch_domain->pickup_delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
+                // $dispatch_domain->pickup_delivery_service_key_url ='http://192.168.96.20:8010';
                 $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->pickup_delivery_service_key, 'shortcode' => $dispatch_domain->pickup_delivery_service_key_code]]);
                 $url = $dispatch_domain->pickup_delivery_service_key_url;
                
