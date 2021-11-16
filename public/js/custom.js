@@ -86,6 +86,7 @@ window.easyZoomInitialize = function easyZoomInitialize() {
 }
 
 window.loadMainMenuSlider = function loadMainMenuSlider(){
+    $('.menu-slider').show();
     $(".menu-slider").slick({
         arrows: true,
         dots: false,
@@ -228,6 +229,8 @@ window.initializeSlider = function initializeSlider() {
         speed: 300,
         slidesToShow: 5,
         slidesToScroll: 4,
+        centerMode: true,
+        centerPadding: '60px',
         arrows: false,
         dots: false,
         responsive: [{
