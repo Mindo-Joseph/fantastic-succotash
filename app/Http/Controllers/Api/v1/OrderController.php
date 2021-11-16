@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Requests\OrderStoreRequest;
+use Illuminate\Support\Facades\Validator;
 use Log;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, CartProductPrescription, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, VendorOrderDispatcherStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client, UserVendor, LuxuryOption};
 use App\Models\AutoRejectOrderCron;
@@ -71,9 +72,24 @@ class OrderController extends BaseController {
         else
             return false;
     }
-    public function postPlaceOrder(OrderStoreRequest $request)
+    public function postPlaceOrder(Request $request)
     {
         try {
+            $rules = [
+                'address_id'        => 'required:exists:user_addresses,id',
+                'payment_option_id' => 'required'
+            ];
+            $validator = Validator::make($request->all(), $rules, [
+                'address_id.required' => __('Address is required'),
+                'payment_option_id.required' => __('Payment Option is required')
+            ]);
+            if ($validator->fails()) {
+                foreach ($validator->errors()->toArray() as $error_key => $error_value) {
+                    $errors['error'] = __($error_value[0]);
+                    return response()->json($errors, 422);
+                }
+            }
+
             $total_amount = 0;
             $total_discount = 0;
             $taxable_amount = 0;
@@ -961,7 +977,7 @@ class OrderController extends BaseController {
                     if($vendor->dineInTable){
                         $vendor->dineInTableName = $vendor->dineInTable->translations->first() ? $vendor->dineInTable->translations->first()->name : '';
                         $vendor->dineInTableCapacity = $vendor->dineInTable->seating_number;
-                        $vendor->dineInTableCategory = $vendor->dineInTable->category->first() ? $vendor->dineInTable->category->first()->title : '';
+                        $vendor->dineInTableCategory = $vendor->dineInTable->category->title; //$vendor->dineInTable->category->first() ? $vendor->dineInTable->category->first()->title : '';
                     }
         		}
                 if(!empty($order->scheduled_date_time)){
@@ -981,6 +997,21 @@ class OrderController extends BaseController {
                 $order->luxury_option_name = $luxury_option_name;
     		    $order->order_item_count = $order_item_count;
             }
+           // 12345
+           if(isset($request->new_dispatch_traking_url) && !empty($request->new_dispatch_traking_url)){
+               try{
+                $response = Http::get($request->new_dispatch_traking_url);
+               }catch(\Exception $ex){
+                }
+           
+
+            if(isset($response) && $response->status() == 200){
+            $response = $response->json();
+            $order['order_data'] = $response;
+            }
+           }
+           
+
             return $this->successResponse($order, null, 201);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());

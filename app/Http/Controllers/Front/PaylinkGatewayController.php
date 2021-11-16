@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\OrderController;
-use App\Models\{User, UserVendor, Cart, CartAddon, CartCoupon, CartProduct, CartProductPrescription, Payment, PaymentOption, Client, ClientPreference, ClientCurrency, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor, OrderTax};
+use App\Http\Controllers\Front\WalletController;
+use App\Http\Controllers\Front\UserSubscriptionController;
+use App\Models\{User, UserVendor, Cart, CartAddon, CartCoupon, CartProduct, CartProductPrescription, Payment, PaymentOption, Client, ClientPreference, ClientCurrency, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor, OrderTax, SubscriptionPlansUser};
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class PaylinkGatewayController extends FrontController
@@ -46,8 +48,6 @@ class PaylinkGatewayController extends FrontController
             $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($request->amount);
 
-            $returnUrlParams = '?gateway=paylink&order=' . $request->order_number;
-
             $returnUrl = route('order.return.success');
             if ($request->payment_form == 'wallet') {
                 $returnUrl = route('user.wallet');
@@ -61,6 +61,7 @@ class PaylinkGatewayController extends FrontController
                 // 'identification' => '12123123'
             );
             $reference_number = $description = '';
+            $returnUrlParams = '?gateway=paylink&amount=' . $request->amount . '&payment_form=' . $request->payment_form;
 
             if($request->payment_form == 'cart'){
                 $description = 'Order Checkout';
@@ -70,6 +71,7 @@ class PaylinkGatewayController extends FrontController
                 if($request->has('order_number')){
                     $reference_number = $request->order_number;
                 }
+                $returnUrlParams = $returnUrlParams . '&cart_id=' . $cart->id . '&order=' . $request->order_number;
             }
             elseif($request->payment_form == 'wallet'){
                 $description = 'Wallet Checkout';
@@ -81,6 +83,7 @@ class PaylinkGatewayController extends FrontController
                 if($request->has('order_number')){
                     $reference_number = $request->order_number;
                 }
+                $returnUrlParams = $returnUrlParams . '&order=' . $request->order_number;
             }
             elseif($request->payment_form == 'subscription'){
                 $description = 'Subscription Checkout';
@@ -89,10 +92,9 @@ class PaylinkGatewayController extends FrontController
                     $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
                     $customer_data['subscription_id'] = $subscription_plan->id;
                     $reference_number = $request->subscription_id;
+                    $returnUrlParams = $returnUrlParams . '&subscription=' . $request->subscription_id;
                 }
             }
-
-            $returnUrlParams = '?gateway=paylink&amount=' . $request->amount . '&cart_id=' . $request->cart_id . '&order=' . $request->order_number . '&payment_form=' . $request->payment_form;
 
             $data = array(
                 'requestId' => 'CHK-' . $uniqid,
@@ -192,6 +194,7 @@ class PaylinkGatewayController extends FrontController
                             'order_id' => $order->id,
                             'transaction_id' => $transactionId,
                             'balance_transaction' => $request->amount,
+                            'type' => 'cart'
                         ]);
 
                         // Auto accept order
@@ -225,9 +228,25 @@ class PaylinkGatewayController extends FrontController
                     //   $this->successMail();
                 }
             } elseif($request->payment_form == 'wallet'){
-                $returnUrlParams = '';//'?gateway=paylink&amount=' . $request->amount . '&checkout=' . $request->checkout ;
+                $request->request->add(['wallet_amount' => $request->amount, 'transaction_id' => $transactionId]);
+                $walletController = new WalletController();
+                $walletController->creditWallet($request);
                 $returnUrl = route('user.wallet');
-                return Redirect::to(url($returnUrl . $returnUrlParams));
+                return Redirect::to(url($returnUrl));
+            }
+            elseif($request->payment_form == 'tip'){
+                $request->request->add(['order_number' => $request->order, 'tip_amount' => $request->amount, 'transaction_id' => $transactionId]);
+                $orderController = new OrderController();
+                $orderController->tipAfterOrder($request);
+                $returnUrl = route('user.orders');
+                return Redirect::to(url($returnUrl));
+            }
+            elseif($request->payment_form == 'subscription'){
+                $request->request->add(['payment_option_id' => 9, 'transaction_id' => $transactionId]);
+                $subscriptionController = new UserSubscriptionController();
+                $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription);
+                $returnUrl = route('user.subscription.plans');
+                return Redirect::to(url($returnUrl));
             }
             return Redirect::to(route('order.return.success'));
         } 
@@ -247,6 +266,16 @@ class PaylinkGatewayController extends FrontController
                 Order::where('id', $order->id)->delete();
                 return Redirect::to(route('showCart'));
             }
+            elseif($request->payment_form == 'wallet'){
+                return Redirect::to(route('user.wallet'));
+            }
+            elseif($request->payment_form == 'tip'){
+                return Redirect::to(route('user.orders'));
+            }
+            elseif($request->payment_form == 'subscription'){
+                return Redirect::to(route('user.subscription.plans'));
+            }
+            return Redirect::to(route('order.return.success'));
         }
     }
 
@@ -279,6 +308,7 @@ class PaylinkGatewayController extends FrontController
         $returnUrl = url('payment/gateway/returnResponse');
 
         if ($response->result->status == 'PAID') {
+            $returnUrlParams = '?status=200&gateway=paylink&action=' . $request->payment_form . '&transaction_id=' . $transactionId;
             if($request->payment_form == 'cart'){
                 $order_number = $request->order;
                 $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
@@ -292,6 +322,7 @@ class PaylinkGatewayController extends FrontController
                             'order_id' => $order->id,
                             'transaction_id' => $transactionId,
                             'balance_transaction' => $request->amount,
+                            'type' => 'cart'
                         ]);
 
                         // Auto accept order
@@ -320,14 +351,18 @@ class PaylinkGatewayController extends FrontController
 
                     // Send Email
                     //   $this->successMail();
+                    $returnUrlParams = $returnUrlParams . '&order=' . $order_number;
                 }
             } elseif($request->payment_form == 'wallet'){
-                
+                $request->request->add(['wallet_amount' => $request->amount, 'transaction_id' => $transactionId]);
+                $walletController = new WalletController();
+                $walletController->creditWallet($request);
             }
-            $returnUrlParams = '?status=200&gateway=paylink&action=' .$request->payment_form. '&order=' . $order_number;
+            
             return Redirect::to(url($returnUrl . $returnUrlParams));
         } 
         else {
+            $returnUrlParams = '?status=0&gateway=paylink&action=' .$request->payment_form;
             if($request->payment_form == 'cart'){
                 $order_number = $request->order;
                 $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
@@ -341,9 +376,9 @@ class PaylinkGatewayController extends FrontController
                 OrderVendor::where('order_id', $order->id)->delete();
                 OrderTax::where('order_id', $order->id)->delete();
                 Order::where('id', $order->id)->delete();
-                $returnUrlParams = '?status=0&gateway=paylink&action=' .$request->payment_form. '&order=' . $order_number;
-                return Redirect::to(url($returnUrl . $returnUrlParams));
+                $returnUrlParams = $returnUrlParams . '&order=' . $order_number;
             }
+            return Redirect::to(url($returnUrl . $returnUrlParams));
         }
     }
 

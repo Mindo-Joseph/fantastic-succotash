@@ -55,11 +55,11 @@ class CartController extends FrontController
         $langId = Session::get('customerLanguage');
         $guest_user = true;
         if ($user) {
-            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
+            $cart = Cart::select('id', 'is_gift', 'item_count','comment_for_pickup_driver','comment_for_dropoff_driver','comment_for_vendor')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
             $addresses = UserAddress::where('user_id', $user->id)->get();
             $guest_user = false;
         } else {
-            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
+            $cart = Cart::select('id', 'is_gift', 'item_count','comment_for_pickup_driver','comment_for_dropoff_driver','comment_for_vendor')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
             $addresses = collect();
         }
         if ($cart) {
@@ -101,7 +101,7 @@ class CartController extends FrontController
        
       
        
-        return view('frontend.cartnew',compact('public_key_yoco'))->with($data,$client_preference_detail);
+        return view('frontend.cartnew',compact('public_key_yoco','cart'))->with($data,$client_preference_detail);
         // return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user]);
     }
 
@@ -901,9 +901,9 @@ class CartController extends FrontController
         $langId = Session::get('customerLanguage');
         $address_id = 0;
         if ($user) {
-            $cart = Cart::select('id', 'is_gift', 'item_count', 'schedule_type', 'scheduled_date_time')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
+            $cart = Cart::select('id', 'is_gift', 'item_count', 'schedule_type', 'scheduled_date_time','schedule_pickup','schedule_dropoff')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
         } else {
-            $cart = Cart::select('id', 'is_gift', 'item_count', 'schedule_type', 'scheduled_date_time')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
+            $cart = Cart::select('id', 'is_gift', 'item_count', 'schedule_type', 'scheduled_date_time','schedule_pickup','schedule_dropoff')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
         if (isset($request->address_id) && !empty($request->address_id)) {
             $address_id = $request->address_id;
@@ -1019,7 +1019,21 @@ class CartController extends FrontController
                 }else{
                     $request->schedule_dt = Carbon::parse($request->schedule_dt, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
                 }
-                Cart::where('status', '0')->where('user_id', $user->id)->update(['specific_instructions' => $request->specific_instructions??null,'schedule_type' => $request->task_type, 'scheduled_date_time' => $request->schedule_dt]);
+
+                if(isset($request->schedule_pickup) && !empty($request->schedule_pickup))    # for pickup laundry
+                $request->schedule_pickup = Carbon::parse($request->schedule_pickup, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
+
+                if(isset($request->schedule_dropoff) && !empty($request->schedule_dropoff))  # for pickup laundry
+                $request->schedule_dropoff = Carbon::parse($request->schedule_dropoff, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
+
+                Cart::where('status', '0')->where('user_id', $user->id)->update(['specific_instructions' => $request->specific_instructions??null,
+                'schedule_type' => $request->task_type, 
+                'scheduled_date_time' => $request->schedule_dt??null,
+                'comment_for_pickup_driver' => $request->comment_for_pickup_driver??null,
+                'comment_for_dropoff_driver' => $request->comment_for_dropoff_driver??null,
+                'comment_for_vendor' => $request->comment_for_vendor??null,
+                'schedule_pickup' => $request->schedule_pickup??null,
+                'schedule_dropoff' => $request->schedule_dropoff??null]);
                 DB::commit();
                 return response()->json(['status'=>'Success', 'message'=>'Cart has been scheduled']);
             }

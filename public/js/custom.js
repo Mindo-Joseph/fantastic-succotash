@@ -90,7 +90,7 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
         arrows: true,
         dots: false,
         infinite: false,
-        variableWidth: false,
+        variableWidth: true,
         autoplay:false,
         speed: 300,
         slidesToShow: 15,
@@ -98,7 +98,8 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
         responsive: [
             { breakpoint: 1400, settings: { slidesToShow: 12, slidesToScroll: 2 } },
             { breakpoint: 1367, settings: { slidesToShow: 8, slidesToScroll: 2} },
-            { breakpoint: 1200, settings: "unslick" },
+            { breakpoint: 767, settings: { slidesToShow: 4, slidesToScroll: 2} },
+            // { breakpoint: 1200, settings: "unslick" },
         ],
     });
 }
@@ -107,11 +108,10 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
 
 function resizeMenuSlider(){
     var windowWidth = $(window).width();
-    if(windowWidth < 1183){
-        // $('#main-menu').slick('unslick');
-        // $('#main-menu').removeClass('menu-slider');
-        $('.menu-slider').removeClass('items-center');
-        $(".sm-horizontal").css("right", "-410px");
+    // if(windowWidth < 1183){
+    if(windowWidth < 320){
+        // $('.menu-slider').removeClass('items-center');
+        // $(".sm-horizontal").css("right", "-410px");
     }else{
         // $('#main-menu').addClass('menu-slider');
         if(!$('.menu-slider').hasClass('slick-initialized')){
@@ -132,6 +132,11 @@ resizeMenuSlider();
 $(window).resize(function() {
     resizeMenuSlider();
 });
+
+if ($(window).width() < 767) {
+    $('.footer-contant').addClass('footer-mobile-contant');
+    $('.footer-contant').removeClass('footer-contant');
+}
 
 window.initializeSlider = function initializeSlider() {
     $(".slide-6").slick({
@@ -256,7 +261,7 @@ window.initializeSlider = function initializeSlider() {
         arrows: !0,
         dots: !1,
         infinite: !1,
-        speed: 300,
+        speed: 300,        
         slidesToShow: 6,
         slidesToScroll: 3,
         responsive: [
@@ -274,6 +279,8 @@ window.initializeSlider = function initializeSlider() {
         slidesToScroll: 3,
         autoplay: true,
         autoplaySpeed: 5000,
+        centerMode: true,
+        centerPadding: '40px',
         rtl: false,
         responsive: [{
                 breakpoint: 1200,
@@ -315,9 +322,9 @@ window.initializeSlider = function initializeSlider() {
 
 $(document).ready(function() {
 
-    $(".toggle-nav").click(function() {
-        $("body").toggleClass("overflow-hidden");
-    });
+    // $(".toggle-nav").click(function() {
+    //     $("body").toggleClass("overflow-hidden");
+    // });
     $(".mobile-search-btn").click(function() {
         $(".radius-bar").slideToggle();
     });
@@ -643,8 +650,11 @@ $(document).ready(function() {
                     }
                 }).catch(function(error) {
                     // Re-enable button now that request is complete
+                    _this.attr("disabled", false);
                     alert("error occured: " + error);
                 });
+            } else if (payment_option_id == 9) {
+                paymentViaPaylink('', '');
             }
         } else {
             _this.attr("disabled", false);
@@ -744,9 +754,32 @@ $(document).ready(function() {
                 return false;
             }
         }
+      
+       
+
         let cartAmount = $("input[name='cart_total_payable_amount']").val();
+        let comment_for_pickup_driver = $("input[name='comment_for_pickup_driver']").val(); //commnet for pickup
+        let comment_for_dropoff_driver = $("input[name='comment_for_dropoff_driver']").val(); //commnet for dropoff
+        let comment_for_vendor = $("input[name='comment_for_vendor']").val(); //commnet for vendor
+        var schedule_pickup = $("#schedule_datetime_pickup").val();
+        var schedule_dropoff = $("#schedule_datetime_dropoff").val();
         let tip = $("#cart_tip_amount").val();
-        if (cartAmount == 0) {
+
+        if((schedule_pickup != undefined)) {
+            if(schedule_pickup == ''){
+                success_error_alert('error', 'Please select schedule pickup date & time', ".cart_response");
+                return false;
+            }
+        }
+
+        if((schedule_dropoff != undefined)) {
+            if(schedule_dropoff == ''){
+                success_error_alert('error', 'Please select schedule dropoff date & time', ".cart_response");
+                return false;
+            }
+        }
+       
+            if (cartAmount == 0) {
             placeOrder(address, 1, '', tip);
             return false;
         } else {
@@ -754,7 +787,7 @@ $(document).ready(function() {
                 type: "POST",
                 dataType: 'json',
                 url: update_cart_schedule,
-                data: { task_type: task_type, schedule_dt: schedule_dt },
+                data: { task_type: task_type,schedule_dropoff:schedule_dropoff, schedule_pickup:schedule_pickup,schedule_dt: schedule_dt , comment_for_pickup_driver: comment_for_pickup_driver , comment_for_dropoff_driver: comment_for_dropoff_driver , comment_for_vendor: comment_for_vendor },
                 success: function(response) {
                     if (response.status == "Success") {
                         $.ajax({
@@ -1010,25 +1043,6 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: payment_razorpay_url,
-            data: ajaxData,
-            success: function(response) {
-                if (response.status == "Success") {
-                    //  creditWallet(total_amount, payment_option_id, data.result.id);
-                    window.location.href = response.data;
-                }
-            }
-        });
-    }
-
-    function paymentViaPaylink_wallet(address_id, payment_option_id) {
-        let total_amount = 0;
-        let ajaxData = [];
-        total_amount = $("input[name='wallet_amount']").val();
-        ajaxData.push({ name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: payment_paylink_url,
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
@@ -1401,20 +1415,20 @@ $(document).ready(function() {
         let queryString = window.location.search;
         let path = window.location.pathname;
         let urlParams = new URLSearchParams(queryString);
-        if ((urlParams.get('gateway') == 'paylink') && urlParams.has('checkout')) {
-            $('.spinner-overlay').show();
+        // if ((urlParams.get('gateway') == 'paylink') && urlParams.has('checkout')) {
+        //     $('.spinner-overlay').show();
 
-            if (urlParams.has('checkout')) {
+        //     if (urlParams.has('checkout')) {
 
-                transaction_id = urlParams.get('checkout');
-            }
-            if (urlParams.has('amount')) {
+        //         transaction_id = urlParams.get('checkout');
+        //     }
+        //     if (urlParams.has('amount')) {
 
-                total_amount = urlParams.get('amount');
-            }
+        //         total_amount = urlParams.get('amount');
+        //     }
 
-            creditWallet(urlParams.get('amount'), 9, urlParams.get('checkout'));
-        }
+        //     creditWallet(urlParams.get('amount'), 9, urlParams.get('checkout'));
+        // }
         if ((urlParams.get('gateway') == 'razorpay') && urlParams.has('checkout')) {
             $('.spinner-overlay').show();
 
@@ -1494,7 +1508,7 @@ $(document).ready(function() {
         } else if (payment_option_id == 6) {
             paymentViaPayfast();
         } else if (payment_option_id == 9) {
-            paymentViaPaylink_wallet('', payment_option_id);
+            paymentViaPaylink('', '');
         } else if (payment_option_id == 10) {
             paymentViaRazorpay_wallet('', payment_option_id);
         } else if (payment_option_id == 8) {

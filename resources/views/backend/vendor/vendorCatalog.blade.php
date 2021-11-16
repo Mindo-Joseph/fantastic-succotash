@@ -141,6 +141,14 @@
                                 </a>
                             </li>
                         @endif
+                        @if ($is_payout_enabled == 1)
+                            <li class="nav-item">
+                                <a href="{{ route('vendor.payout', $vendor->id) }}" aria-expanded="false"
+                                    class="nav-link {{ $tab == 'payout' ? 'active' : '' }} {{ $vendor->status == 1 ? '' : 'disabled' }}">
+                                    {{ __('Payout') }}
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                     <div class="row mt-4">
                         <div class="col-12">

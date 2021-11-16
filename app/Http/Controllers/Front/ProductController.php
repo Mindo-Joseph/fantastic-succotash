@@ -12,6 +12,21 @@ use App\Http\Controllers\Front\FrontController;
 use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category, Vendor};
 class ProductController extends FrontController{
     private $field_status = 2;
+
+    public function __construct()
+    {
+        $customerCurrency = Session::get('customerCurrency');
+        if(isset($customerCurrency) && !empty($customerCurrency)){
+            $customerCurrency = Session::get('customerCurrency');
+        }
+        else{
+            $primaryCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+            Session::put('customerCurrency',$primaryCurrency->doller_compare);
+        }
+       
+    }
+
+    
     /**
      * Display product By Id
      *
@@ -73,6 +88,7 @@ class ProductController extends FrontController{
                 $z->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title');
                 $z->where('vt.language_id', $langId);
                 $z->where('product_variant_sets.product_id', $p_id);
+                $z->where('vr.status', 1);
             },
             'variantSet.option2' => function ($zx) use ($langId, $p_id) {
                 $zx->where('vt.language_id', $langId)
@@ -98,6 +114,9 @@ class ProductController extends FrontController{
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         if($clientCurrency){
             $doller_compare = $clientCurrency->doller_compare;
+        }else{
+            $clientCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+            $doller_compare = $clientCurrency->doller_compare ?? 1;
         }
         $product->related_products = $this->metaProduct($langId, $doller_compare, 'related', $product->related);
         foreach ($product->variant as $key => $value) {
