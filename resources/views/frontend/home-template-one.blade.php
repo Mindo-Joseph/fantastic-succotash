@@ -367,7 +367,7 @@
         <% }); %>
     </script>
 
-    <section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0">
+    <section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0" id="shimmer_effect">
         <div class="container">
             <div class="row">
                 <div class="grid-row grid-4-4">
