@@ -107,7 +107,7 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
 
 // loadMainMenuSlider();
 
-function resizeMenuSlider(){
+window.resizeMenuSlider = function resizeMenuSlider(){
     var windowWidth = $(window).width();
     // if(windowWidth < 1183){
     if(windowWidth < 320){
@@ -129,7 +129,10 @@ function resizeMenuSlider(){
     }
 }
 
-resizeMenuSlider();
+let path = window.location.pathname;
+if(path != '/'){
+    resizeMenuSlider();
+}
 $(window).resize(function() {
     resizeMenuSlider();
 });

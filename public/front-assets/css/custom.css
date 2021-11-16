@@ -7041,6 +7041,9 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(max-width:991px) {
+    .menu-slider .slick-track{
+        justify-content: space-between;
+    }
     .home-banner-slider img {
         border-radius: 5px !important;
     }
@@ -7243,7 +7246,7 @@ body[dir="rtl"] .inner_spacing h3 {
         flex: 0 0 100%;
         max-width: 100%;
     } */
-
+    
 
     .site-topbar .location-bar i, .site-topbar .location-bar span {
         font-size: 16px;
