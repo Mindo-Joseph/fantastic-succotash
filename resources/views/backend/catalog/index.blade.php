@@ -178,9 +178,10 @@
                                                 {{$cate->translation_one['name']??''}}
                                                 @endif
                                                 @endforeach --}}
-                                                
-                                                    {{ @$cat->categoryDetail->translation->first()->name ?? ''}}
-                                                
+                                                    @if(isset($cat->categoryDetail->translation) && !empty($cat->categoryDetail->translation))
+                                                      {{ $cat->categoryDetail->translation->first()->name ?? ''}}
+                                                    @endif
+
                                                 @endforeach
                                             </b></td>
                                         <td>
