@@ -14,10 +14,11 @@ use App\Http\Controllers\Client\Accounting\VendorController;
 use App\Http\Controllers\Client\Accounting\LoyaltyController;
 use App\Http\Controllers\Client\Accounting\PromoCodeController;
 use App\Http\Controllers\Client\VendorRegistrationDocumentController;
+use App\Http\Controllers\Client\TagController;
 use App\Http\Controllers\Client\DriverRegistrationDocumentController;
 
 Route::get('email-test', function () {
-    $details['email'] = 'pankaj@yopmail.com';
+    $details['email'] = 'testmail@yopmail.com';
     dispatch(new App\Jobs\SendVerifyEmailJob($details))->delay(now()->addSeconds(2))->onQueue('course_interactions');
     dd('done');
 });
@@ -128,6 +129,13 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::post('vendorregistrationdocument/create', [VendorRegistrationDocumentController::class, 'store'])->name('vendor.registration.document.create');
         Route::post('vendorregistrationdocument/update', [VendorRegistrationDocumentController::class, 'update'])->name('vendor.registration.document.update');
         Route::post('vendor/registration/document/delete', [VendorRegistrationDocumentController::class, 'destroy'])->name('vendor.registration.document.delete');
+
+        Route::resource('tag', 'Client\TagController');
+        Route::get('tag/edit', [TagController::class, 'show'])->name('tag.edit');
+        Route::post('tag/create', [TagController::class, 'store'])->name('tag.create');
+        Route::post('tag/update', [TagController::class, 'update'])->name('tag.update');
+        Route::post('tag/delete', [TagController::class, 'destroy'])->name('tag.delete');
+
         Route::resource('driverregistrationdocument', 'Client\DriverRegistrationDocumentController');
         Route::get('driver/registration/document/edit', [DriverRegistrationDocumentController::class, 'show'])->name('driver.registration.document.edit');
         Route::post('driverregistrationdocument/create', [DriverRegistrationDocumentController::class, 'store'])->name('driver.registration.document.create');
@@ -148,6 +156,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::DELETE('vendor/vendor-permission-del/{id}', 'Client\VendorController@userVendorPermissionDestroy')->name('user.vendor.permission.destroy');
         Route::get('vendor/catalogs/{id}', 'Client\VendorController@vendorCatalog')->name('vendor.catalogs');
         Route::get('vendor/payout/{id}', 'Client\VendorController@vendorPayout')->name('vendor.payout');
+        Route::get('vendor/payout/filter/{id}', 'Client\VendorController@payoutFilter')->name('vendor.payout.filter');
         Route::post('vendor/payout/create/{id}', 'Client\VendorController@vendorPayoutCreate')->name('vendor.payout.create');
         Route::post('vendor/saveConfig/{id}', 'Client\VendorController@updateConfig')->name('vendor.config.update');
         Route::post('vendor/activeCategory/{id}', 'Client\VendorController@activeCategory')->name('vendor.category.update');
@@ -237,6 +246,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
 
         Route::post('subscription/payment/stripe', 'Client\StripeGatewayController@subscriptionPaymentViaStripe')->name('subscription.payment.stripe');
         Route::get('verify/oauth/token/stripe', 'Client\StripeGatewayController@verifyOAuthToken')->name('verify.oauth.token.stripe');
+        Route::post('vendor/payout/stripe/{id}', 'Client\StripeGatewayController@vendorPayoutViaStripe')->name('vendor.payout.stripe');
 
         Route::get('/admin/signup', 'Client\AdminSignUpController@index')->name('admin.signup');
         Route::post('save_fcm_token', 'Client\UserController@save_fcm')->name('client.save_fcm');
