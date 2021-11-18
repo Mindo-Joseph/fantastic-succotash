@@ -121,13 +121,14 @@ class StripeGatewayController extends BaseController{
                         // Access the connected account id in the response
                         $connected_account_id = $response->stripe_user_id;
 
-                        VendorConnectedAccount::insert([
-                            'user_id' => $user->id,
-                            'vendor_id' => $vendor,
-                            'account_id' => $connected_account_id,
-                            'payment_option_id' => 2,
-                            'status' => 1
-                        ]);
+                        $connectdAccount = new VendorConnectedAccount();
+                        $connectdAccount->user_id = $user->id;
+                        $connectdAccount->vendor_id = $vendor;
+                        $connectdAccount->account_id = $connected_account_id;
+                        $connectdAccount->payment_option_id = 2;
+                        $connectdAccount->status = 1;
+                        $connectdAccount->save();
+                        
                         $msg = __('Stripe connect has been enabled successfully');
                         $toaster = $this->successToaster('Success', $msg);
                     }
@@ -154,30 +155,28 @@ class StripeGatewayController extends BaseController{
             $user = Auth::user();
             $connected_account = VendorConnectedAccount::where('vendor_id', $id)->first();
             if($connected_account && (!empty($connected_account->account_id))){
-
-                \Stripe\Stripe::setApiKey($this->payout_secret_key);
-
-                $payout = \Stripe\Payout::create([
-                    'amount' => $request->amount,
-                    'currency' => 'INR',
-                    // 'method' => 'instant',
-                ], [
-                    'stripe_account' => $connected_account->account_id,
-                ]);
-
+                
                 // $stripe = new \Stripe\StripeClient($this->payout_secret_key);
-                // $response = $stripe->transfers->create([
-                //     'amount' => $request->amount,
-                //     'currency' => 'INR', //$this->currency
-                //     'destination' => $connected_account->account_id,
-                //     'transfer_group' => 'transfer_'.$id,
+                // $payment_intent = $stripe->paymentIntents->create([
+                //     'payment_method_types' => ['card'],
+                //     'amount' => $request->amount * 100,
+                //     'currency' => 'INR',
+                //     'transfer_data' => [
+                //       'destination' => $connected_account->account_id,
+                //     ],
                 // ]);
-                dd($payout);
-                // if ($response->isSuccessful()) {
-                // }
-                // else {
-                //     return $this->errorResponse($response->getMessage(), 400);
-                // }
+                // $charge_id = $payment_intent->id;
+
+                // $response = $stripe->transfers->create([
+                //     'amount' => $request->amount * 100,
+                //     'currency' => 'INR', //$this->currency
+                //     // 'source_transaction' => $charge_id,
+                //     'destination' => $connected_account->account_id,
+                //     'transfer_group' => $charge_id,
+                // ]);
+                
+            }else{
+                return $this->errorResponse('You are not connected to stripe', 400);
             }
         }catch(\Exception $ex){
             return $this->errorResponse($ex->getMessage(), 400);
