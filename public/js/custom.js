@@ -2614,6 +2614,27 @@ $(document).ready(function() {
 
     });
 
+    $(document).delegate('#specific_instructions', 'blur focusout', function() {
+        var specific_instructions = $("#specific_instructions").val();
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: update_cart_schedule,
+            data: { specific_instructions: specific_instructions },
+            success: function(response) {
+                if (response.status == "Success") {
+                    // console.log(success);
+                }
+            },
+            error: function(error) {
+                var response = $.parseJSON(error.responseText);
+                success_error_alert('error', response.message, ".cart_response");
+
+            }
+        });
+
+    });
+
     // on demand add to cart 
     function getTimeSlots(cur_date, cart_product_id) {
         $("#show_date" + cart_product_id).html(cur_date);

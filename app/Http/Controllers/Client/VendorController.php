@@ -594,7 +594,7 @@ class VendorController extends BaseController
                 $query->where('user_id', $user->id);
             });
         }
-        $vendor_payouts = $vendor_payouts->sum('amount');
+        $vendor_payouts = $vendor_payouts->where('status', 1)->sum('amount');
 
         $past_payout_value = $vendor_payouts;
 
