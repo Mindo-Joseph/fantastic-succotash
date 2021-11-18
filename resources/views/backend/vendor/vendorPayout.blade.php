@@ -687,19 +687,19 @@
                 $("#payout_response .alert").html(message).show();
                 setTimeout(function(){
                     $("#payout_response .alert").hide();
-                },5000);
+                },8000);
                 return false;
             }
             var payout_opt = $('input[name="payout_option"]:checked').val();
-            if(payout_opt == 1){
-                $("#payout_option_id").val(payout_opt);
-                $("#transaction_id").val('');
-                $("#amount").val(amount);
-                $("#status").val(1);
+            // if(payout_opt == 1){
+                $("#new_vendor_payout_form #payout_option_id").val(payout_opt);
+                $("#new_vendor_payout_form #transaction_id").val('');
+                $("#new_vendor_payout_form #amount").val(amount);
+                $("#new_vendor_payout_form #status").val(0);
                 $("#new_vendor_payout_form").submit();
-            }else if(payout_opt == 2){
-                payoutViaStripe(amount, payout_opt)
-            }
+            // }else if(payout_opt == 2){
+                // payoutViaStripe(amount, payout_opt)
+            // }
         });
 
         function isNumberKey(evt) {
