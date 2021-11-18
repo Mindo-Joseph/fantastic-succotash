@@ -577,6 +577,7 @@ class OrderController extends FrontController
             $order->comment_for_vendor = $cart->comment_for_vendor??null;
             $order->schedule_pickup = $cart->schedule_pickup??null;
             $order->schedule_dropoff = $cart->schedule_dropoff??null;
+            $order->specific_instructions = $cart->specific_instructions??null;
             $order->save();
             $cart_prescriptions = CartProductPrescription::where('cart_id', $cart->id)->get();
             foreach ($cart_prescriptions as $cart_prescription) {
@@ -826,7 +827,7 @@ class OrderController extends FrontController
             $ex_gateways = [7,8,9,10]; // mobbex, yoco, pointcheckout, razorpay
             if(!in_array($request->payment_option_id, $ex_gateways)){
                 Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL,
-                'comment_for_pickup_driver' => NULL, 'comment_for_dropoff_driver' => NULL,'comment_for_vendor' => NULL, 'schedule_pickup' => NULL, 'schedule_dropoff' => NULL]);
+                'comment_for_pickup_driver' => NULL, 'comment_for_dropoff_driver' => NULL,'comment_for_vendor' => NULL, 'schedule_pickup' => NULL, 'schedule_dropoff' => NULL,'specific_instructions' => NULL]);
                 CartAddon::where('cart_id', $cart->id)->delete();
                 CartCoupon::where('cart_id', $cart->id)->delete();
                 CartProduct::where('cart_id', $cart->id)->delete();

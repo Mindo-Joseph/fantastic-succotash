@@ -769,6 +769,7 @@ $(document).ready(function() {
         let comment_for_vendor = $("input[name='comment_for_vendor']").val(); //commnet for vendor
         var schedule_pickup = $("#schedule_datetime_pickup").val();
         var schedule_dropoff = $("#schedule_datetime_dropoff").val();
+        var specific_instructions = $("#specific_instructions").val();
         let tip = $("#cart_tip_amount").val();
 
         if((schedule_pickup != undefined)) {
@@ -793,7 +794,7 @@ $(document).ready(function() {
                 type: "POST",
                 dataType: 'json',
                 url: update_cart_schedule,
-                data: { task_type: task_type,schedule_dropoff:schedule_dropoff, schedule_pickup:schedule_pickup,schedule_dt: schedule_dt , comment_for_pickup_driver: comment_for_pickup_driver , comment_for_dropoff_driver: comment_for_dropoff_driver , comment_for_vendor: comment_for_vendor },
+                data: { specific_instructions:specific_instructions,task_type: task_type,schedule_dropoff:schedule_dropoff, schedule_pickup:schedule_pickup,schedule_dt: schedule_dt , comment_for_pickup_driver: comment_for_pickup_driver , comment_for_dropoff_driver: comment_for_dropoff_driver , comment_for_vendor: comment_for_vendor },
                 success: function(response) {
                     if (response.status == "Success") {
                         $.ajax({
