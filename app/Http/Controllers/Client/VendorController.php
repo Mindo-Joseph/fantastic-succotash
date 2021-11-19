@@ -23,13 +23,18 @@ use App\Http\Controllers\Client\BaseController;
 use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorDineinCategory, VendorBlockDate, Category, ServiceArea, ClientLanguage, ClientCurrency, AddonSet, Client, ClientPreference, Product, Type, VendorCategory,UserPermissions, VendorDocs, SubscriptionPlansVendor, SubscriptionInvoicesVendor, SubscriptionInvoiceFeaturesVendor, SubscriptionFeaturesListVendor, VendorDineinTable, Woocommerce,TaxCategory, PayoutOption, VendorConnectedAccount, OrderVendor, VendorPayout};
 use GuzzleHttp\Client as GCLIENT;
 use DB;
+use App\Models\VendorRegistrationDocument;
+
 class VendorController extends BaseController
 {
     use ToasterResponser;
     use ApiResponser;
     public $is_payout_enabled;
+    private $folderName = '/vendor/extra_docs';
 
     public function __construct(){
+        $code = Client::orderBy('id','asc')->value('code');
+        $this->folderName = '/'.$code.'/vendor/extra_docs';
         $payoutOption = PayoutOption::where('status', 1)->get();
         if($payoutOption->isNotEmpty()){
             $this->is_payout_enabled = 1;
@@ -123,6 +128,7 @@ class VendorController extends BaseController
             }
         }
         $total_vendor_count = $vendors->count();
+        $vendor_registration_documents = VendorRegistrationDocument::get();
         if(count($vendors) == 1 && $user->is_superadmin == 0){
             return Redirect::route('vendor.catalogs', $vendors->first()->id);
         }else{
@@ -135,7 +141,8 @@ class VendorController extends BaseController
                 'active_vendor_count' => $active_vendor_count, 
                 'blocked_vendor_count' => $blocked_vendor_count, 
                 'available_vendors_count' => $available_vendors_count, 
-                'awaiting__Approval_vendor_count' => $awaiting__Approval_vendor_count, 
+                'awaiting__Approval_vendor_count' => $awaiting__Approval_vendor_count,
+                'vendor_registration_documents' => $vendor_registration_documents,
                 'vendors_product_count' => $vendors_product_count, 'vendors_active_order_count' => $vendors_active_order_count]);
         }
 
@@ -148,10 +155,16 @@ class VendorController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+        $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
         $rules = array(
             'name' => 'required|string|max:150|unique:vendors',
             'address' => 'required',
         );
+        foreach ($vendor_registration_documents as $vendor_registration_document) {
+            if($vendor_registration_document->is_required == 1){
+                $rules[$vendor_registration_document->primary->slug] = 'required';
+            }
+        }
         $validation  = Validator::make($request->all(), $rules)->validate();
         $vendor = new Vendor();
         $saveVendor = $this->save($request, $vendor, 'false');
@@ -195,6 +208,32 @@ class VendorController extends BaseController
         $vendor->phone_no = $request->phone_no;
         $vendor->slug = Str::slug($request->name, "-");
         $vendor->save();
+
+        $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
+        if ($vendor_registration_documents->count() > 0) {
+            foreach ($vendor_registration_documents as $vendor_registration_document) {
+                $doc_name = str_replace(" ", "_", $vendor_registration_document->primary->slug);
+                if ($vendor_registration_document->file_type != "Text") {
+                    if ($request->hasFile($doc_name)) {
+                        $vendor_docs =  new VendorDocs();
+                        $vendor_docs->vendor_id = $vendor->id;
+                        $vendor_docs->vendor_registration_document_id = $vendor_registration_document->id;
+                        $filePath = $this->folderName . '/' . Str::random(40);
+                        $file = $request->file($doc_name);
+                        $vendor_docs->file_name = Storage::disk('s3')->put($filePath, $file, 'public');
+                        $vendor_docs->save();
+                    }
+                } else {
+                    if (!empty($request->$doc_name)) {
+                        $vendor_docs =  new VendorDocs();
+                        $vendor_docs->vendor_id = $vendor->id;
+                        $vendor_docs->vendor_registration_document_id = $vendor_registration_document->id;
+                        $vendor_docs->file_name = $request->$doc_name;
+                        $vendor_docs->save();
+                    }
+                }
+            }
+        }
         return $vendor->id;
     }
 
@@ -208,7 +247,8 @@ class VendorController extends BaseController
         $vendor = Vendor::where('id', $id)->first();
         $client_preferences = ClientPreference::first();
         $vendor_docs = VendorDocs::where('vendor_id', $id)->get();
-        $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'vendor_docs' => $vendor_docs])->render();
+        $vendor_registration_documents = VendorRegistrationDocument::get();
+        $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'vendor_docs' => $vendor_docs, 'vendor_registration_documents' => $vendor_registration_documents])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
@@ -229,6 +269,22 @@ class VendorController extends BaseController
         $validation  = Validator::make($request->all(), $rules)->validate();
         $vendor = Vendor::where('id', $id)->first();
         $saveVendor = $this->save($request, $vendor, 'true');
+        $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
+        if ($vendor_registration_documents->count() > 0) {
+            foreach ($vendor_registration_documents as $vendor_registration_document) {
+                $doc_name = str_replace(" ", "_", $vendor_registration_document->primary->slug);
+                if ($vendor_registration_document->file_type != "Text") {
+                    if ($request->hasFile($doc_name)) {
+                        $filePath = $this->folderName . '/' . Str::random(40);
+                        $file = $request->file($doc_name);
+                        $file_name = Storage::disk('s3')->put($filePath, $file, 'public');
+                        VendorDocs::updateOrCreate(['vendor_id' => $id, 'vendor_registration_document_id' => $vendor_registration_document->id],['file_name' => $file_name]);
+                    }
+                } else {
+                    VendorDocs::updateOrCreate(['vendor_id' => $id, 'vendor_registration_document_id' => $vendor_registration_document->id],['file_name' => $request->$doc_name]);
+                }
+            }
+        }
         if ($saveVendor > 0) {
             return response()->json([
                 'status' => 'success',
@@ -381,7 +437,8 @@ class VendorController extends BaseController
             ->orderBy('is_primary', 'desc')->get();
         $client_preferences = ClientPreference::first();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend.vendor.vendorCategory')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build,'csvVendors'=> $csvVendors, 'is_payout_enabled'=>$this->is_payout_enabled]);
+        $vendor_registration_documents = VendorRegistrationDocument::get();
+        return view('backend.vendor.vendorCategory')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build,'csvVendors'=> $csvVendors, 'is_payout_enabled'=>$this->is_payout_enabled, 'vendor_registration_documents' => $vendor_registration_documents]);
     }
 
     /**   show vendor page - catalog tab      */
@@ -392,6 +449,7 @@ class VendorController extends BaseController
         $categoryToggle = array();
         $vendor = Vendor::where('id',$id);
         $langId = Session::has('adminLanguage') ? Session::get('adminLanguage') : 1;
+        $vendor_registration_documents = VendorRegistrationDocument::get();
         if (Auth::user()->is_superadmin == 0) {
             $vendor = $vendor->whereHas('permissionToUser', function ($query) {
                 $query->where('user_id', Auth::user()->id);
@@ -489,7 +547,7 @@ class VendorController extends BaseController
         
         $taxCate = TaxCategory::all();
         
-        return view('backend.vendor.vendorCatalog')->with(['taxCate' => $taxCate,'sku_url' => $sku_url, 'new_products' => $new_products, 'featured_products' => $featured_products, 'last_mile_delivery' => $last_mile_delivery, 'published_products' => $published_products, 'product_count' => $product_count, 'client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories_hierarchy, 'builds' => $build, 'woocommerce_detail' => $woocommerce_detail, 'is_payout_enabled'=>$this->is_payout_enabled]);
+        return view('backend.vendor.vendorCatalog')->with(['taxCate' => $taxCate,'sku_url' => $sku_url, 'new_products' => $new_products, 'featured_products' => $featured_products, 'last_mile_delivery' => $last_mile_delivery, 'published_products' => $published_products, 'product_count' => $product_count, 'client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories_hierarchy, 'builds' => $build, 'woocommerce_detail' => $woocommerce_detail, 'is_payout_enabled'=>$this->is_payout_enabled, 'vendor_registration_documents' => $vendor_registration_documents]);
     }
 
     /**   show vendor page - payout tab      */
