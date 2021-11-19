@@ -43,13 +43,9 @@ class SendOrderSuccessEmailJob implements ShouldQueue
      * @return void
      */
     public function handle(){
-        Log::info('herre');
         $email = new OrderSuccessEmail($this->details);
         if(!empty($this->details['admin_email'])){
-            Log::info('admin_mail');
-            Log::info($this->details['admin_email']);
-            $mailsent = Mail::to($this->details['email'])->cc($this->details['admin_email'])->send($email);
-            Log::info($mailsent);
+            Mail::to($this->details['email'])->cc($this->details['admin_email'])->send($email);
         } else {
             Mail::to($this->details['email'])->send($email);
         }
