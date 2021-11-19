@@ -202,6 +202,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::post('product/updateActions', 'Client\ProductController@updateActions')->name('product.update.action');   # update all product actions
         Route::post('product/importCSV', 'Client\ProductController@importCsv')->name('product.import');
         Route::post('product/validate', 'Client\ProductController@validateData')->name('product.validate');
+        Route::post('product/sku/validate', 'Client\ProductController@validateSku')->name('product.sku.validate');
         Route::get('product/add/{vendor_id}', 'Client\ProductController@create')->name('product.add');
         Route::post('product/getImages', 'Client\ProductController@getImages')->name('productImage.get');
         Route::post('product/deleteVariant', 'Client\ProductController@deleteVariant')->name('product.deleteVariant');
