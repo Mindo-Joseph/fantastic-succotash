@@ -8,14 +8,16 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{CsvProductImport, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell, CartProduct, CartAddon, UserWishlist,Client};
+use App\Models\{CsvProductImport, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell, CartProduct, CartAddon, UserWishlist,Client,Tag,ProductTag};
 use Illuminate\Support\Facades\Storage;
+use App\Http\Traits\ApiResponser;
 use App\Http\Traits\ToasterResponser;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductsImport;
 use GuzzleHttp\Client as GCLIENT;
 class ProductController extends BaseController
 {
+    use ApiResponser;
     private $folderName = 'prods';
     public function __construct()
     {
@@ -76,6 +78,22 @@ class ProductController extends BaseController
             return response()->json([
                 'status' => 'error',
             ]);
+        }
+    }
+
+    /**
+     * Validate product sku
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function validateSku(Request $request){
+        $sku = $request->sku;
+        $product = Product::where('sku', $sku)->first();
+        if($product){
+            return $this->errorResponse(__('Sku is not available'), 422);
+        }else{
+            return $this->successResponse('', __('Sku is available'));
         }
     }
 
@@ -209,9 +227,11 @@ class ProductController extends BaseController
             $agent_dispatcher_on_demand_tags = $this->getDispatcherOnDemandTags($vendor_id);
            
         }
-       
         
-        return view('backend/product/edit', ['agent_dispatcher_on_demand_tags' => $agent_dispatcher_on_demand_tags,'agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
+        $tags = Tag::with('primary')->get();
+        $set_product_tags = ProductTag::where('product_id',$product->id)->pluck('tag_id')->toArray();
+
+        return view('backend/product/edit', ['set_product_tags' => $set_product_tags,'tags' => $tags,'agent_dispatcher_on_demand_tags' => $agent_dispatcher_on_demand_tags,'agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }
 
     /**
@@ -301,12 +321,13 @@ class ProductController extends BaseController
                 }
             }
             ProductImage::insert($productImageSave);
-            $cat = $addonsArray = $upArray = $crossArray = $relateArray = array();
+            $cat = $addonsArray = $upArray = $crossArray = $relateArray = $tagSetArray = array();
             $delete = ProductAddon::where('product_id', $product->id)->delete();
             $delete = ProductUpSell::where('product_id', $product->id)->delete();
             $delete = ProductCrossSell::where('product_id', $product->id)->delete();
             $delete = ProductRelated::where('product_id', $product->id)->delete();
             $delete = ProductCelebrity::where('product_id', $product->id)->delete();
+            $delete = ProductTag::where('product_id', $product->id)->delete();
 
             if ($request->has('addon_sets') && count($request->addon_sets) > 0) {
                 foreach ($request->addon_sets as $key => $value) {
@@ -316,6 +337,16 @@ class ProductController extends BaseController
                     ];
                 }
                 ProductAddon::insert($addonsArray);
+            }
+
+            if ($request->has('tag_sets') && count($request->tag_sets) > 0) {
+                foreach ($request->tag_sets as $key => $value) {
+                    $tagSetArray[] = [
+                        'product_id' => $product->id,
+                        'tag_id' => $value
+                    ];
+                }
+                ProductTag::insert($tagSetArray);
             }
 
             if ($request->has('celebrities') && count($request->celebrities) > 0) {

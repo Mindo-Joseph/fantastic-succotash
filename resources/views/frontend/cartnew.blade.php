@@ -244,8 +244,12 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
                     <input type="datetime-local" id="schedule_datetime_dropoff" name="schedule_dropoff" class="form-control" placeholder="Inline calendar" value="{{ $cart->schedule_dropoff??'' }}" min="{{ $now }}">
                 </div>
             </div>
-            @endif
-           
+            @else
+            <div class="row">
+                <div class="col-4">{{__('Specific instructions')}}</div> 
+                <div class="col-8"><input class="form-control" type="text"  placeholder="{{__('Do you want to add any instructions ?')}}" id="specific_instructions" value ="{{$cart->specific_instructions??''}}"  name="specific_instructions"></div> 
+            </div>
+           @endif
             
         </div>
         <div class="offset-lg-5 col-lg-7 offset-xl-6 col-xl-6 mt-3">
@@ -910,6 +914,21 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
 
 </div>
 <?php ?>
+
+{{-- <form action="{{ route('payment.razorpayCompletePurchase',[app('request')->input('amount'),app('request')->input('order')]) }}" method="POST" id="razorpay_gateway">
+    @csrf
+    <script src="https://checkout.razorpay.com/v1/checkout.js" 
+        data-key="<?php echo app('request')->input('api_key'); ?>" 
+        data-amount="<?php echo app('request')->input('amount'); ?>" 
+        data-buttontext="Pay" 
+        data-name="Razorpay Payment gateway" 
+        data-description="Rozerpay" 
+        data-prefill.name="name" 
+        data-prefill.email="email" 
+        data-theme.color="#ff7529">
+    </script>
+</form> --}}
+
 @endsection
 
 @section('script')
