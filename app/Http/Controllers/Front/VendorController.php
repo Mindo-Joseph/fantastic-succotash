@@ -306,8 +306,8 @@ class VendorController extends FrontController
             $clientCurrency = ClientCurrency::where('currency_id', $cur_ids)->first();
             else
             {
-                $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
-                $cur_ids = $primaryCurrency->id;
+                $primaryCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+                $cur_ids = $primaryCurrency->currency_id;
                 $clientCurrency = ClientCurrency::where('currency_id', $cur_ids)->first();
             }
 
