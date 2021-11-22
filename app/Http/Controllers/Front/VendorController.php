@@ -16,19 +16,7 @@ class VendorController extends FrontController
 {
     private $field_status = 2;
 
-    public function __construct()
-    {
-        $customerCurrency = Session::get('customerCurrency');
-        if(isset($customerCurrency) && !empty($customerCurrency)){
-            $customerCurrency = Session::get('customerCurrency');
-        }
-        else{
-            $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
-            Session::put('customerCurrency',$primaryCurrency->doller_compare);
-        }
-       
-    }
-
+  
     public function viewAll(){
         $langId = Session::get('customerLanguage');
         $preferences = Session::get('preferences');
