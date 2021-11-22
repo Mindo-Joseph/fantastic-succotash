@@ -10,7 +10,7 @@
         padding-bottom: 20px;
     }
 
-    #shimmer_effect {
+    .shimmer_effect {
         overflow: hidden;
     }
 
@@ -20,41 +20,41 @@
         grid-gap: 20px;
     }
 
-    #shimmer_effect .card_image {
+    .shimmer_effect .card_image {
         width: 100%;
         height: 100%;
     }
 
-    #shimmer_effect .card_image.loading {
+    .shimmer_effect .card_image.loading {
         width: 100%;
         height: 180px;
     }
 
-    #shimmer_effect .card_title.loading {
+    .shimmer_effect .card_title.loading {
         width: 50%;
         height: 1rem;
-        margin: 1rem;
+        margin: 1rem 0;
         border-radius: 3px;
         position: relative;
     }
 
-    #shimmer_effect .card_description {
+    .shimmer_effect .card_description {
         padding: 8px;
         font-size: 16px;
     }
 
-    #shimmer_effect .card_description.loading {
+    .shimmer_effect .card_description.loading {
         height: 3rem;
-        margin: 1rem;
+        margin: 1rem 0;
         border-radius: 3px;
     }
 
-    #shimmer_effect .loading {
+    .shimmer_effect .loading {
         position: relative;
         background: #cccccc86;
     }
 
-    #shimmer_effect .loading:after {
+    .shimmer_effect .loading:after {
         content: "";
         display: block;
         position: absolute;
@@ -85,7 +85,7 @@
 </button>
 
 @if(count($banners))
-<section class="home-slider-wrapper pb-4">
+<section class="home-slider-wrapper">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -370,7 +370,7 @@
     <% }); %>
 </script>
 
-    <section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0" id="shimmer_effect">
+    <section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0 shimmer_effect">
         <div class="container">
             <div class="grid-row grid-4-4">
                 <div class="cards">

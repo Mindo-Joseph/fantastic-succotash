@@ -144,11 +144,14 @@ if ($(window).width() < 767) {
 
 window.initializeSlider = function initializeSlider() {
     $(".slide-6").slick({
-        dots: !1,
-        infinite: !0,
+        arrows: false,
+        dots: false,
+        infinite: true,
         speed: 300,
+        centerMode: true,
+        centerPadding: '60px',
         slidesToShow: 5,
-        slidesToScroll: 6,
+        slidesToScroll: 2,
         responsive: [
             { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
             { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
@@ -157,12 +160,14 @@ window.initializeSlider = function initializeSlider() {
         ],
     });
     $(".product-4").slick({
-        arrows: !0,
-        dots: !1,
-        infinite: !1,
+        arrows: false,
+        dots: false,
+        infinite: true,
         speed: 300,
-        slidesToShow: 6,
-        slidesToScroll: 4,
+        centerMode: true,
+        centerPadding: '60px',
+        slidesToShow: 5,
+        slidesToScroll: 2,
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
@@ -171,12 +176,14 @@ window.initializeSlider = function initializeSlider() {
         ],
     });
     $(".recent-orders").slick({
-        arrows: !0,
-        dots: !1,
-        infinite: !1,
+        arrows: false,
+        dots: false,
+        infinite: true,
         speed: 300,
-        slidesToShow: 2.1,
-        slidesToScroll: 2,
+        centerMode: true,
+        centerPadding: '60px',
+        slidesToShow: 2,
+        slidesToScroll: 1,
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
@@ -231,7 +238,7 @@ window.initializeSlider = function initializeSlider() {
         infinite: true,
         speed: 300,
         slidesToShow: 5,
-        slidesToScroll: 4,
+        slidesToScroll: 2,
         centerMode: true,
         centerPadding: '60px',
         arrows: false,
@@ -264,12 +271,14 @@ window.initializeSlider = function initializeSlider() {
         ]
     });
     $(".product-5").slick({
-        arrows: !0,
-        dots: !1,
-        infinite: !1,
+        dots: false,
+        infinite: true,
+        dots: false,
         speed: 300,        
         slidesToShow: 6,
         slidesToScroll: 3,
+        centerMode: true,
+        centerPadding: '60px',
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },

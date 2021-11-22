@@ -97,7 +97,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="container d-block">
                     <div class="row align-items-center position-initial">
                         <div class="col-lg-12">
-                            <div class="row mobile-header align-items-center">
+                            <div class="row mobile-header align-items-center my-sm-2">
                                 <div class="col-4 d-flex align-items-center justify-content-sm-between"> 
                                     <a class="navbar-brand mr-3 d-none d-sm-inline-block" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                                     @if($mod_count > 1)
@@ -123,13 +123,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             @if($client_preference_detail->takeaway_check == 1)
                                             <li class="navigation-tab-item" role="presentation">
 
-
                                                 @php
                                                 $Takeaway = getNomenclatureName('Takeaway', true);
                                                 $Takeaway = ($Takeaway === 'Takeaway') ? __('Takeaway') : $Takeaway;
                                                 @endphp
-            
-            
             
                                                 <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ $Takeaway }}</a>
                                             </li>
@@ -138,7 +135,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         </ul>
                                     @endif 
                                 </div>
-                                <div class="col-8 my-sm-2 ipad-view">                       
+                                <div class="col-8 ipad-view">                       
                                     <div class="search_bar menu-right d-sm-flex d-block align-items-center justify-content-end w-100 ">
                                         @if( (Session::get('preferences')))
                                             @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )

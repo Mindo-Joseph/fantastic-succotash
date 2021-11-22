@@ -68,12 +68,12 @@
             <div class="row">
                 <div class="col-sm-3 collection-filter">
                     <!-- side-bar colleps block stat -->
-                    <div class="collection-filter-block">
-                        <div class="collection-mobile-back">
-                            <span class="filter-back">
+                    <div class="collection-filter-block p-0 m-0">
+                        <!-- <div class="collection-mobile-back">
+                            <span class="filter-back d-lg-none d-inline-block">
                                 <i class="fa fa-angle-left" aria-hidden="true"></i> {{__('Back')}}
                             </span>
-                        </div>
+                        </div> -->
                         @if(!empty($category->brands) && count($category->brands) > 0)
                         <div class="collection-collapse-block open">
                             <h3 class="collapse-block-title">{{__('Brand')}}</h3>
@@ -125,7 +125,13 @@
                         @endif
                     </div>
                     <div class="theme-card">
-                        <h5 class="title-border">{{__('New Product')}}</h5>
+                        <h5 class="title-border d-flex align-items-center justify-content-between">
+                            <span>{{__('New Product')}}</span>  
+                            <span class="filter-back d-lg-none d-inline-block">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i> {{__('Back')}}
+                            </span>
+                        </h5>
+                       
                         <div class="offer-slider">
                             @if(!empty($newProducts) && count($newProducts) > 0)
                                 @foreach($newProducts as $newProds)

@@ -241,9 +241,8 @@
                                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                                     </span>
                                                                 </div>
-                                                            @else
-                                                          
-                                                                @if($variant_quantity > 0 || $prod->sell_when_out_of_stock == 1)
+                                                            @else                                                          
+                                                            @if($variant_quantity > 0 || $prod->sell_when_out_of_stock == 1)
                                                                 {{-- <a class="add_vendor-fav" href="#"><i class="fa fa-heart"></i></a> --}}
                                                                 <a class="add-cart-btn add_vendor_product" id="aadd_button_href{{$data->id}}" data-variant_id="{{$data->variant[0]->id}}" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="{{$data->vendor_id}}" data-product_id="{{$data->id}}" data-addon="{{$isAddonExist}}" href="javascript:void(0)">Add</a>
                                                                 <div class="number" style="display:none;" id="ashow_plus_minus{{$data->id}}">
@@ -255,9 +254,9 @@
                                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                                     </span>
                                                                 </div>
-                                                                @else
+                                                            @else
                                                                 <span class="text-danger">Out of stock</span>
-                                                                @endif
+                                                            @endif
                                                             @endif
                                                             @if( ($isAddonExist > 0) && ($variant_quantity > 0 || $prod->sell_when_out_of_stock == 1) )
                                                                 <div class="customizable-text">customizable</div>

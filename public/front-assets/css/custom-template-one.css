@@ -108,11 +108,11 @@ h6 {
 }
 
 .offset-top {
-    margin-top: 260px;
+    margin-top: 270px;
 }
 
 .inner-pages-offset {
-    margin-top: 177px;
+    margin-top: 207px;
 }
 
 .set-hide-nav-bar {
@@ -732,8 +732,13 @@ footer ul.social-links li a i,
 }
 
 
+.cab-banner-area{
+    margin-bottom: 0;
+}
 
-
+section#our_vendor_main_div {
+    padding-bottom: 0;
+}
 
 
 
@@ -1242,10 +1247,6 @@ body[dir="rtl"] #social-links li:last-child {
         bottom: -60px;
         right: 0;
         left: 0;
-    }
-
-    .popular-brands {
-        margin: 0;
     }
 
     .home-slider-wrapper {
