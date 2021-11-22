@@ -1288,9 +1288,7 @@ $(document).ready(function() {
                 alert("error occured: " + error);
             });
         } else if (payment_option_id == 10) {
-
-
-            var order = placeOrderBeforePayment('', payment_option_id, '');
+            var order = placeOrderBeforePayment(address_id, payment_option_id, tip);
             if (order != '') {
                 paymentViaRazorpay(address_id, order);
             } else {

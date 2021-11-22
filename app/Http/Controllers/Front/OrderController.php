@@ -508,6 +508,7 @@ class OrderController extends FrontController
     }
     public function placeOrder(Request $request, $domain = '')
     {
+        // dd($request->all());
         // if ($request->input("payment-group") == '1') {
         //     $langId = Session::get('customerLanguage');
         //     $navCategories = $this->categoryNav($langId);

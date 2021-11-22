@@ -501,7 +501,14 @@ $(document).ready(function() {
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
-                    window.location.href = response.data;
+                    razorpay_options.key = response.data.api_key;
+                    razorpay_options.amount = response.data.amount;
+                    razorpay_options.order_id = response.data.order_id;
+                    razorpay_options.currency = response.data.currency;
+                    $('#proceed_to_pay_modal').hide();
+                    razourPayView();
+                    return false;
+                    // window.location.href = response.data;
                 } else {
                     if (cartElement.length > 0) {
                         success_error_alert('error', response.message, "#cart_payment_form .payment_response");
@@ -524,4 +531,19 @@ $(document).ready(function() {
             }
         });
     }
+     // RazourPay payment gateway
+    window.razourPayView = function razourPayView() {
+        var rzp1 = new Razorpay(razorpay_options);
+        rzp1.on('payment.failed', function (response){
+                alert(response.error.code);
+                alert(response.error.description);
+                alert(response.error.source);
+                alert(response.error.step);
+                alert(response.error.reason);
+                alert(response.error.metadata.order_id);
+                alert(response.error.metadata.payment_id);
+        });
+        rzp1.open();
+    }
+     // RazourPay payment gateway
 });

@@ -39,7 +39,7 @@ class RazorpayGatewayController extends FrontController
         $this->currency = (isset($primaryCurrency->currency->iso_code)) ? $primaryCurrency->currency->iso_code : 'USD';
     }
 
-    public function razorpayPurchase(Request $request)
+    public function razorpayPurchase(Request $request) 
     {
         try {
             $user = Auth::user();
@@ -51,7 +51,15 @@ class RazorpayGatewayController extends FrontController
                 $order_number = 0;
             }
             $api_key = $this->API_KEY;
-            return $this->successResponse(url('/payment/razorpay/view?amount=' . $amount . '&order=' . $order_number . '&api_key=' . $api_key));
+            $orderResponse = $this->api->order->create(array('amount' => $amount, 'currency' => 'INR'));
+            $data['api_key'] = $api_key;
+            $data['order_id'] = $orderResponse->id;
+            $data['amount'] = $orderResponse->amount;
+            $data['currency'] = $orderResponse->currency;
+            // dd($orderResponse);
+
+            return $this->successResponse($data);
+            // return $this->successResponse(url('/payment/razorpay/view?amount=' . $amount . '&order=' . $order_number . '&api_key=' . $api_key));
         } catch (\Exception $ex) {
             return $this->errorResponse($ex->getMessage(), 400);
         }
