@@ -1596,7 +1596,7 @@
                         <div class="col-md-3">
                            <label>{{ __('Upload Icon') }}</label>
                            <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify" />
-                           <label class="logo-size text-right w-100">{{ __("Icon Size") }} 170x96</label>
+                           <label class="logo-size text-right w-100">{{ __("Icon Size") }} 100X100</label>
                        </div> 
 
                         @forelse($client_languages as $k => $client_language)

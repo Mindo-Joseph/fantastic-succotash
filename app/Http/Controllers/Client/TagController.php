@@ -9,6 +9,7 @@ use App\Models\Tag;
 use App\Http\Controllers\Client\BaseController;
 use App\Models\TagTranslation;
 use App\Models\Client;
+use Illuminate\Support\Facades\Storage;
 
 class TagController extends BaseController{
     use ApiResponser;
