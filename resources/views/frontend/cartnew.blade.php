@@ -943,36 +943,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
 
-<!-- RazourPay Payment Gateway -->
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-var razorpay_options = {
-    "key": "YOUR_KEY_ID", // Enter the Key ID generated from the Dashboard
-    "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-    "currency": "INR",
-    "name": "{{$client_detail->company_name}}",
-    "description": "Test Transaction",
-    "image": "{{$urlImg}}",
-    "order_id": "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-    "handler": function (response){
-        alert(response.razorpay_payment_id);
-        alert(response.razorpay_order_id);
-        alert(response.razorpay_signature)
-    },
-    "prefill": {
-        "name": "{{Auth::user()->name??''}}",
-        "email": "{{Auth::user()->email??''}}",
-        "contact": "{{Auth::user()->phone_number??''}}"
-    },
-    "notes": {
-        "address": "Razorpay Corporate Office"
-    },
-    "theme": {
-        "color": "{{$client_preference_detail->web_color}}"
-    }
-};
-</script>
-<!-- RazourPay Payment Gateway -->
+
 
 
 

@@ -1053,8 +1053,11 @@ $(document).ready(function() {
             data: ajaxData,
             success: function(response) {
                 if (response.status == "Success") {
-                    //  creditWallet(total_amount, payment_option_id, data.result.id);
-                    window.location.href = response.data;
+                    razorpay_options.amount = response.data.amount;
+                    razorpay_options.order_id = response.data.order_id;
+                    razorpay_options.currency = response.data.currency;
+                    $('#proceed_to_pay_modal').hide();
+                    razourPayView(response.data,'wallet');
                 }
             }
         });
@@ -1235,11 +1238,10 @@ $(document).ready(function() {
                 $('.spinner-overlay').hide();
             }
         });
-
         return orderResponse;
     }
     $(document).on("click", ".proceed_to_pay", function() {
-
+        // startLoader('body',"{{getClientPreferenceDetail()->wb_color_rgb}}");
         $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
 
         let address_id = $("input:radio[name='address_id']:checked").val();
@@ -1290,7 +1292,7 @@ $(document).ready(function() {
         } else if (payment_option_id == 10) {
             var order = placeOrderBeforePayment(address_id, payment_option_id, tip);
             if (order != '') {
-                paymentViaRazorpay(address_id, order);
+                paymentViaRazorpay(address_id, order,'cart');
             } else {
                 return false;
             }
