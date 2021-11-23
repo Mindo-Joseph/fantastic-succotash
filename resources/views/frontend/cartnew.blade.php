@@ -102,6 +102,7 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
                         </div>
                     </div>
                 <% } %>
+               
             </div>
         </div>
         <hr class="mt-2">
@@ -179,6 +180,20 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
                             <% }); %>
                         <% } %>
                     </div>
+
+                    <% if( (vendor_product.product.delay_order_hrs != undefined && vendor_product.product.delay_order_min != undefined ) &&  ((vendor_product.product.delay_order_hrs != 0) || (vendor_product.product.delay_order_hrs != 0))) { %>
+                        <div class="col-12">
+                            <div class="text-danger" style="font-size:12px;">
+                                <i class="fa fa-exclamation-circle"></i>This Product will deliver After 
+                                <% if(vendor_product.product.delay_order_hrs > 0) { %>
+                                    <%= vendor_product.product.delay_order_hrs %> Hrs
+                                <% } %>
+                                <% if(vendor_product.product.delay_order_min > 0) { %>
+                                    <%= vendor_product.product.delay_order_min %> Minutes
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } %>
                 </div>
                 
                 <hr>
