@@ -166,7 +166,7 @@
                             @endif
                             <div class="form-row">
                                 @foreach($vendor_registration_documents as $vendor_registration_document)
-                                @if(isset($vendor_registration_document->primary) && !empty($vendor_registration_document->primary))
+                                    @if(isset($vendor_registration_document->primary->slug) && !empty($vendor_registration_document->primary->slug))
                                         <div class="col-md-6 mb-3" id="{{$vendor_registration_document->primary->slug??''}}Input">
                                             <label for="">{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</label>
                                             @if(strtolower($vendor_registration_document->file_type) == 'text')
