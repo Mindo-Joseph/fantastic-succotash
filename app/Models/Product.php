@@ -3,7 +3,8 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Carbon\Carbon;
+use Auth;
 
 class Product extends Model{
       use SoftDeletes;
@@ -122,7 +123,23 @@ class Product extends Model{
 
     public function getDelayHrsMinAttribute()
     {
-        
+       $delay_order_hrs = $this->attributes['delay_order_hrs'];
+       $delay_order_min = $this->attributes['delay_order_min'];
+
+       if($delay_order_hrs > 0 || $delay_order_min > 0){
+         $total_minutues = ($delay_order_hrs * 60) + $delay_order_min;
+
+         $date = Carbon::now()
+              ->addMinutes($total_minutues)
+              ->format('Y-m-d\TH:i');
+        if(Auth::user()){
+                 $timezone = Auth::user()->timezone;
+                 $date = convertDateTimeInTimeZone($date, $timezone, 'Y-m-d\TH:i');
+                 }
+         return $date;
+       }
+       return 0;
+      
     }
 
     
