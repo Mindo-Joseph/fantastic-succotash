@@ -666,7 +666,7 @@ class VendorController extends BaseController
             $creds_arr = json_decode($payout_creds->credentials);
             $client_id = (isset($creds_arr->client_id)) ? $creds_arr->client_id : '';
         }
-        $test_mode = (isset($paylink_creds->test_mode) && ($paylink_creds->test_mode == '1')) ? true : false;
+        // $test_mode = (isset($paylink_creds->test_mode) && ($paylink_creds->test_mode == '1')) ? true : false;
         // $client = Session::has('client_config') ? Session::get('client_config')->code : '';
 
         $payout_options = PayoutOption::where('status', 1)->get();
