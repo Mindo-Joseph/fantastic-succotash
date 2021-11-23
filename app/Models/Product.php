@@ -120,6 +120,10 @@ class Product extends Model{
         return $this->belongsTo('App\Models\TaxCategory', 'tax_category_id', 'id')->select('id', 'title', 'code');
     }
 
+    public function tags(){
+      return $this->hasMany('App\Models\ProductTag', 'product_id', 'tag_id'); 
+    }
+
 
     public function getDelayHrsMinAttribute()
     {
