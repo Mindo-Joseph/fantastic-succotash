@@ -1101,7 +1101,6 @@ body[dir="rtl"] #social-links li:last-child {
     }
 
     .home-banner-slider .slick-slide {
-        height: 450px;
         border-radius: 50px;
         overflow: hidden;
     }
@@ -1178,7 +1177,7 @@ body[dir="rtl"] #social-links li:last-child {
     }
 
     .home-slider-wrapper .col-12 {
-        padding: 0 50px;
+        padding: 0;
     }
 
     .home-banner-slider .slick-prev,
@@ -1201,7 +1200,7 @@ body[dir="rtl"] #social-links li:last-child {
     }
 
     .pixelstrap li>a {
-        padding: 10px 15px;
+        padding: 10px 0;
     }
 
     .top-header .header-dropdown li span:last-child {
@@ -1268,7 +1267,7 @@ body[dir="rtl"] #social-links li:last-child {
     }
 
     .home-slider-wrapper .col-12 {
-        padding: 0 40px;
+        padding: 0 15px;
     }
 
     .home-banner-slider .slick-prev,

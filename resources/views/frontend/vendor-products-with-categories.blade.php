@@ -76,7 +76,7 @@
                 </div>
                 <div class="product-bottom-bar">
                   <div class="row">
-                    <div class="col-md-8 col-lg-5 order-0">
+                    <div class="col-md-12 col-lg-5 order-0">
                         <div class="card-box vendor-details-left px-2 py-3">
                             <div class="d-sm-flex">
                                 <div class="vender-icon mr-sm-1 text-center text-sm-left mb-2 mb-sm-0">
@@ -191,7 +191,7 @@
                                             </div>
                                         </div>
                                         <div class="col-10">
-                                            <div class="row price_head pl-2">
+                                            <div class="row price_head pl-3 pl-sm-2">
                                                 <div class="col-sm-12 pl-2">
                                                     <div class="d-flex align-items-start justify-content-between">    
                                                         <h5 class="mt-0">

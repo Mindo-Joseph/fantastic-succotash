@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-3 collection-filter">
+                <div class="collection-filter">
                     <div class="collection-filter-block">
                         <!-- <div class="collection-mobile-back">
                             <span class="filter-back d-lg-none d-inline-block">

@@ -94,6 +94,8 @@ header.site-header.fixed-bar {
 .pixelstrap a:active {
     padding: 10px 7px;
     text-align: center;
+    width: 120px;
+    white-space: normal;
 }
 
 .top-header .header-dropdown li:hover i {
@@ -6156,10 +6158,6 @@ section.royo-business .title-36 {
     align-items: center;
 }
 
-.displayProducts .suppliers-img-outer {
-    height: auto;
-}
-
 .offer-slider .img-outer-box {
     width: 100px;
     height: 110px;
@@ -6351,8 +6349,93 @@ body .footer-theme .sub-title h4 {
 } */
 
 
+.home-slider-wrapper .loading{
+    height:300px;
+    border-radius: 20px;
+}
 
 
+/* Shimmer effect Start Form Here */
+
+.shimmer_effect .menu-slider span .loading{
+    width: calc(100% - 20px);
+    height: 10px;
+    display: block;
+    margin: auto;
+}
+
+.shimmer_effect {
+    overflow: hidden;
+}
+
+.grid-row.grid-4-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+}
+
+.shimmer_effect .card_image {
+    width: 100%;
+    height: 100%;
+}
+
+.shimmer_effect .card_image.loading {
+    width: 100%;
+    height: 180px;
+}
+
+.shimmer_effect .card_title.loading {
+    width: 50%;
+    height: 10px;
+    margin: 1rem 0;
+    border-radius: 3px;
+    position: relative;
+}
+.shimmer_effect .card_content.loading {
+    width: 80%;
+    height: 10px;
+    margin: 1rem 0;
+    border-radius: 3px;
+    position: relative;
+}
+
+.shimmer_effect .card_description {
+    padding: 8px;
+    font-size: 16px;
+}
+
+.shimmer_effect .card_description.loading {
+    height: 2rem;
+    margin: 1rem 0;
+    border-radius: 3px;
+}
+
+.shimmer_effect .loading {
+    position: relative;
+    background: #cccccc86;
+}
+
+.shimmer_effect .loading:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-100px);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: loading 0.8s infinite;
+}
+
+@keyframes loading {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.shimmer_effect{
+    display: none;
+}
 
 
 
@@ -6884,11 +6967,11 @@ body[dir="rtl"] .inner_spacing h3 {
     .mobile-search-btn {
         display: block;
         background-color: #f7f7f7;
-        width: 48px;
-        line-height: 48px;
+        width: 38px;
+        line-height: 33px;
         text-align: center;
         border-radius: 8px;
-        font-size: 24px;
+        font-size: 14px;
     }
 
     .icon-nav .btn.btn-solid {
@@ -6935,7 +7018,7 @@ body[dir="rtl"] .inner_spacing h3 {
         text-align: center;
         font-weight: 400 !important;
         font-size: 13px !important;
-        width: max-content;
+        /* width: max-content; */
     }
 
     .pixelstrap li a,
@@ -7041,6 +7124,13 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(max-width:991px) {
+    
+    .home-slider-wrapper .loading{
+        height:120px;
+    }
+    .product-banner-img {
+        height: 200px;
+    }
     .menu-slider .slick-track{
         justify-content: space-between;
     }
@@ -7164,11 +7254,12 @@ body[dir="rtl"] .inner_spacing h3 {
         height: auto !important;
     }
 
-    .fixed-bar .scrollspy-menu {
+    .scrollspy-menu {
         width: 100%;
         z-index: 111;
         background: #fff;
         height: auto;
+        top: 0;
     }
 
     .scrollspy-menu {
@@ -7333,7 +7424,7 @@ body[dir="rtl"] .inner_spacing h3 {
     }
 
     .common-banner {
-        height: auto;
+        height: 150px;
     }
 
     .loalty-title {
@@ -7443,6 +7534,10 @@ body[dir="rtl"] .inner_spacing h3 {
         height: 100%;
         width: 100%;
         object-fit: cover;
+    }
+    .supplier-rating h6 {
+        font-size: 14px;
+        line-height: 22px;
     }
 }
 

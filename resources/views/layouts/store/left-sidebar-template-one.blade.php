@@ -462,6 +462,24 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+
+                        <div class="shimmer_effect">
+                            <ul class="sm pixelstrap sm-horizontal menu-slider">
+                                @foreach($navCategories as $cate)
+                                    @if($cate['name'])
+                                    <li>                                    
+                                        <a href="{{route('categoryDetail', $cate['slug'])}}">
+                                            @if($client_preference_detail->show_icons == 1 && \Request::route()->getName() == 'userHome')
+                                            <div class="nav-cate-img loading">
+                                                
+                                            </div>
+                                            @endif
+                                            <span><span class="loading"></span></span></a>
+                                    </li>
+                                    @endif
+                                @endforeach
+                            </ul>   
+                        </div>                                         
                         
                         <ul id="main-menu" class="sm pixelstrap sm-horizontal menu-slider">
                             <li>
