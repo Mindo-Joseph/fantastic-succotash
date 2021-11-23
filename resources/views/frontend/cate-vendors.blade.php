@@ -67,7 +67,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="collection-filter">
+                <div class="collection-filter col-xl-3">
                     <div class="theme-card">
                         <h5 class="title-border d-flex align-items-center justify-content-between">
                             <span>{{__('New Product')}}</span>  

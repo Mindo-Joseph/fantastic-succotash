@@ -343,7 +343,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                 
                                             </div>
                                             @endif
-                                            <span><span class="loading"></span></span></a>
+                                            <span><span class="loading"></span></span>
+                                        </a>
                                     </li>
                                     @endif
                                 @endforeach

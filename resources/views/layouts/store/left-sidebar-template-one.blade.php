@@ -136,7 +136,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     @endif 
                                 </div>
                                 <div class="col-8 ipad-view">                       
-                                    <div class="search_bar menu-right d-sm-flex d-block align-items-center justify-content-end w-100 ">
+                                    <div class="search_bar menu-right d-sm-flex d-block align-items-center justify-content-end w-100">
                                         @if( (Session::get('preferences')))
                                             @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
                                                 <div class="location-bar d-none align-items-center justify-content-start ml-md-2 my-2 my-lg-0 dropdown-toggle" href="#edit-address" data-toggle="modal">
@@ -150,7 +150,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                 </div>
                                             @endif
                                         @endif  
-                                        <div class="radius-bar d-xl-inline mr-2">
+                                        <div class="radius-bar d-xl-inline mr-sm-2">
                                             <div class="search_form d-flex align-items-center justify-content-between">
                                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
                                                 @php
@@ -164,12 +164,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             </div>
                                         </div>
                                         <script type="text/template" id="search_box_main_div_template">
-                                            <a class="text-right d-block mr-2 mb-3" id="search_viewall" href="#">{{ __("View All") }}</a>
+                                            <a class="text-right d-block mr-2 mb-1" id="search_viewall" href="#">{{ __("View All") }}</a>
                                             <div class="row mx-0">
                                                 <% _.each(results, function(result, k){ %>
-                                                    <a class="col-md-4 text-center list-items mb-2" href="<%= result.redirect_url %>">
+                                                    <a class="col-12 text-center list-items mb-2" href="<%= result.redirect_url %>">
                                                     <img src="<%= result.image_url%>" alt="">
-                                                    <span><%= result.name %></span>
+                                                    <div class="result-item-name"><b><%= result.name %></b> <span>Dish</span> </div>
                                                     </a>
                                                 <% }); %>
                                             </div>
@@ -183,7 +183,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             </div>
                                         @endif
                                         @endif
-                                        <div class="icon-nav">
+                                        <div class="icon-nav d-none d-sm-inline-block">
                                             <form name="filterData" id="filterData" action="{{route('changePrimaryData')}}">
                                                 @csrf
                                                 <input type="hidden" id="cliLang" name="cliLang" value="{{session('customerLanguage')}}">
@@ -474,7 +474,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                 
                                             </div>
                                             @endif
-                                            <span><span class="loading"></span></span></a>
+                                            <span><span class="loading"></span></span>
+                                        </a>
                                     </li>
                                     @endif
                                 @endforeach

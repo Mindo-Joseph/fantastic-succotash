@@ -105,7 +105,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="collection-filter">
+                <div class="collection-filter col-xl-3">
                     <div class="collection-filter-block mb-3">
                         <div class="collection-mobile-back pt-0 border-0"><span class="filter-back d-lg-none d-inline-block"><i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}</span></div>
                         <div class="collection-collapse-block open">
