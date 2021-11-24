@@ -85,15 +85,22 @@ class ProfileController extends BaseController{
                 $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                 $q->groupBy('product_id');
             },
-        ])->select( "id", "user_id", "product_id")->where('user_id', $user->id)->paginate($paginate);
+        ])
+        ->whereHas('product.category.categoryDetail', function($q){
+            $q->whereNotNull('products.category_id')->whereNull('categories.deleted_at');
+        })
+        ->select( "id", "user_id", "product_id")->where('user_id', $user->id)->paginate($paginate);
     	if($user_wish_details){
     		foreach ($user_wish_details as $user_wish_detail) {
-                $user_wish_detail->product->is_wishlist = $user_wish_detail->product->category->categoryDetail->show_wishlist ?? null;
-    			if($user_wish_detail->product->variant){
-		    		foreach ($user_wish_detail->product->variant as $variant) {
-			            $variant->multiplier = $clientCurrency->doller_compare;
-			        }
+                if(isset($user_wish_detail->product) && !empty($user_wish_detail->product->category)){
+                    $user_wish_detail->product->is_wishlist = isset($user_wish_detail->product->category) ? $user_wish_detail->product->category->categoryDetail->show_wishlist : null;
+                    if($user_wish_detail->product->variant){
+                        foreach ($user_wish_detail->product->variant as $variant) {
+                            $variant->multiplier = $clientCurrency->doller_compare;
+                        }
 		    	}
+                }
+                
 	        }
     	}
     	return response()->json(['data' => $user_wish_details]);
@@ -214,7 +221,8 @@ class ProfileController extends BaseController{
             Storage::disk('s3')->delete($user->image); 
         }
         $imgType = ($request->has('type')) ? $request->type : 'jpg';
-        $imageName = 'profile/'.$user->id.substr(md5(microtime()), 0, 15).'.'.$imgType;
+        $code = Client::orderBy('id','asc')->value('code');
+        $imageName = '/'.$code.'/profile/'.$user->id.substr(md5(microtime()), 0, 15).'.'.$imgType;
         $save = Storage::disk('s3')->put($imageName, $img, 'public');
         $user->image = $imageName;
         $user->save();

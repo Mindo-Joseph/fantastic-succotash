@@ -21,11 +21,11 @@ class VendorImport implements ToCollection
                 $checker = 0;
                 if ($row[0] != "Logo") {
                     if ($row[2] != "") {
-                        $vendor_check = Vendor::where('name', $row[2])->first();
-                        if ($vendor_check) { //if not empty, then is it already exists
-                            $error[] = "Row " . $i . " : Vendor name already Exist";
-                            $checker = 1;
-                        }
+                        // $vendor_check = Vendor::where('name', $row[2])->first();
+                        // if ($vendor_check) { //if not empty, then is it already exists
+                        //     $error[] = "Row " . $i . " : Vendor name already Exist";
+                        //     $checker = 1;
+                        // }
                     } else {
                         $error[] = "Row " . $i . " : Name cannot be empty";
                         $checker = 1;
@@ -85,6 +85,7 @@ class VendorImport implements ToCollection
                         }
                         $insert_vendor_details[] = array(
                             'name' => $da[2],
+                            'slug' => preg_replace("/[^A-Za-z0-9\-]/","_",trim(strtolower($da[2]))),
                             'latitude' => $latitude,
                             'longitude' => $longitude,
                             'dine_in' => ($da[5] == 'TRUE') ? 1 : 0,

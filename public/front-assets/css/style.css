@@ -658,7 +658,7 @@ label {
 ==========================**/
 section,
 .section-t-space {
-    padding-top: 20px;
+    padding-top: 35px;
 }
 
 .section-b-space {
@@ -2305,7 +2305,7 @@ button.btn.btn-outline:active {
     overflow: hidden;
 }
 
-.slick-slider.slick-slider {
+.home-banner-slider.slick-slider.slick-slider,.menu-slider {
     overflow: visible;
 }
 
@@ -10550,6 +10550,7 @@ header.header-style .onhover-dropdown:before {
     display: flex;
     font-size: 15px;
     padding: 0;
+    font-family: Lato, sans-serif !important;
 }
 
 .top-header .header-dropdown .onhover-dropdown .onhover-show-div li a,
@@ -13340,7 +13341,7 @@ header.stickycls {
 .pixelstrap a:hover,
 .pixelstrap a:active {
     color: #222222;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 400;
     line-height: 23px;
     text-decoration: none;
@@ -13902,8 +13903,10 @@ header.stickycls {
 
     .pixelstrap a .sub-arrow::before {
         content: "\f107";
+        content: none;
         font-family: FontAwesome;
         position: absolute;
+        right: 0;
     }
 
     .pixelstrap ul {
@@ -14128,8 +14131,16 @@ header.stickycls {
         right: -60px;
     }
 
-    .sm-horizontal {
-        position: fixed;
+    .menu-slider .slick-slide {
+        width: max-content !important;
+    }
+
+    .menu-slider .slick-slide:first-child{
+        display: none !important;
+    }
+
+    /* .sm-horizontal {
+        position: fixed !important;
         background-color: #fff;
         width: 300px;
         border-radius: 0;
@@ -14137,11 +14148,11 @@ header.stickycls {
         top: 0;
         height: 100vh;
         right: -300px;
-        z-index: 99;
+        z-index: 9999999;
         -webkit-transition: all 0.3s ease;
         transition: all 0.3s ease;
         overflow: scroll;
-    }
+    } */
 
     .sm-horizontal .mobile-back {
         padding: 20px;
@@ -14366,6 +14377,11 @@ header.stickycls {
 @media (max-width: 991px) {
     .top-header .header-contact {
         display: none;
+    }
+    .pixelstrap li > a {
+        padding: 10px 10px;
+        width: max-content;
+        text-align: center;
     }
 }
 

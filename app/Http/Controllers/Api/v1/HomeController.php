@@ -31,16 +31,21 @@ class HomeController extends BaseController
     {
         try {
             $homeData = array();
-            $langId = ($request->hasHeader('language')) ? $request->header('language') : 1;
+            $client_language = ClientLanguage::select('language_id')->where(['is_primary'=>1, 'is_active'=>1])->first();
+            $langId = ($request->hasHeader('language') && !empty($request->header('language'))) ? $request->header('language') : (($client_language) ? $client_language->language_id : 1);
             $homeData['profile'] = Client::with(['preferences', 'country:id,name,code,phonecode'])->select('country_id', 'company_name', 'code', 'sub_domain', 'logo', 'company_address', 'phone_number', 'email')->first();
             $app_styling_detail = AppStyling::getSelectedData();
             foreach ($app_styling_detail as $app_styling) {
                 $key = $app_styling['key'];
                 $homeData['profile']->preferences->$key = __($app_styling['value']);
             }
+            $delivery_nomenclature = $this->getNomenclatureName('Delivery', $langId, false);
+            $dinein_nomenclature = $this->getNomenclatureName('Dine-In', $langId, false);
             $takeaway_nomenclature = $this->getNomenclatureName('Takeaway', $langId, false);
             $search_nomenclature = $this->getNomenclatureName('Search', $langId, false);
             $vendors_nomenclature = $this->getNomenclatureName('Vendors', $langId, false);
+            $homeData['profile']->preferences->delivery_nomenclature = $delivery_nomenclature;
+            $homeData['profile']->preferences->dinein_nomenclature = $dinein_nomenclature;
             $homeData['profile']->preferences->takeaway_nomenclature = $takeaway_nomenclature;
             $homeData['profile']->preferences->search_nomenclature = $search_nomenclature;
             $homeData['profile']->preferences->vendors_nomenclature = $vendors_nomenclature;
@@ -206,7 +211,8 @@ class HomeController extends BaseController
                 $categoriesList = '';
                 foreach ($vendorCategories as $key => $category) {
                     if ($category->category) {
-                        $categoriesList = $categoriesList . $category->category->translation_one->name ?? '';
+                        $cat_name = isset($category->category->translation_one) ? $category->category->translation_one->name : $category->category->slug;
+                        $categoriesList = $categoriesList . $cat_name ?? '';
                         if ($key !=  $vendorCategories->count() - 1) {
                             $categoriesList = $categoriesList . ', ';
                         }
@@ -218,6 +224,9 @@ class HomeController extends BaseController
                 if (($preferences) && ($preferences->is_hyperlocal == 1) && ($latitude) && ($longitude)) {
                     $vendor = $this->getVendorDistanceWithTime($latitude, $longitude, $vendor, $preferences);
                 }
+            }
+            if (($preferences) && ($preferences->is_hyperlocal == 1) && ($latitude) && ($longitude)) {
+                $vendorData = $vendorData->sortBy('lineOfSightDistance')->values()->all();
             }
 
             $on_sale_product_details = $this->vendorProducts($vends, $langId, $clientCurrency, '', $type);
@@ -281,10 +290,18 @@ class HomeController extends BaseController
             $homeData['on_sale_products'] = $on_sale_product_details;
             $homeData['new_products'] = $new_product_details;
             $homeData['featured_products'] = $feature_product_details;
-            $homeData['brands'] = Brand::with(['translation' => function ($q) use ($langId) {
-                $q->select('brand_id', 'title')->where('language_id', $langId);
-            }])->select('id', 'image', 'image_banner')->where('status', '!=', $this->field_status)
-                ->orderBy('position', 'asc')->get();
+            
+            $brands = Brand::with(['bc.categoryDetail', 'bc.categoryDetail.translation' =>  function ($q) use ($langId) {
+                $q->select('category_translations.name', 'category_translations.category_id', 'category_translations.language_id')->where('category_translations.language_id', $langId);
+            }, 'translation' => function ($q) use ($langId) {
+                $q->select('title', 'brand_id', 'language_id')->where('language_id', $langId);
+            }])
+            ->whereHas('bc.categoryDetail', function ($q){
+                $q->where('categories.status', 1);
+            })
+            ->select('id', 'image', 'image_banner')->where('status', 1)->orderBy('position', 'asc')->get();
+
+            $homeData['brands'] = $brands;
             $user_vendor_count = UserVendor::where('user_id', $user->id)->count();
             $homeData['is_admin'] = $user_vendor_count > 0 ? 1 : 0;
             return $this->successResponse($homeData);
@@ -312,7 +329,11 @@ class HomeController extends BaseController
                 $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                 $q->groupBy('product_id');
             },
-        ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating', 'inquiry_only');
+        ])
+        ->whereHas('category.categoryDetail', function($q){
+            $q->whereNull('categories.deleted_at');
+        })
+        ->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating', 'inquiry_only');
         if ($where !== '') {
             $products = $products->where($where, 1);
         }
@@ -323,7 +344,7 @@ class HomeController extends BaseController
         if ($pndCategories) {
             $products = $products->whereNotIn('category_id', $pndCategories);
         }
-        $products = $products->where('is_live', 1)->take(10)->inRandomOrder()->get();
+        $products = $products->whereNotNull('category_id')->where('is_live', 1)->take(10)->inRandomOrder()->get();
         if (!empty($products)) {
             foreach ($products as $key => $value) {
                 foreach ($value->variant as $k => $v) {

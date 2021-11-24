@@ -146,6 +146,11 @@
                                                     <a href="{{route('account.vendor')}}">{{ $VendorsTrans }}</a>
                                                 </li>
                                             @endif
+                                            @if(Auth::user()->is_superadmin == 1)
+                                                <li>
+                                                    <a href="{{route('account.vendor.payout.requests')}}">{{ __('Payout Requests') }}</a>
+                                                </li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </li> 
@@ -357,7 +362,7 @@
                             </a>
                             <ul class="nav-second-level">
                                 {{-- @if(!empty($client_preference) && $client_preference->celebrity_check == 1) --}}
-                                @if(Auth::user()->is_superadmin == 1)   
+                                @if(Auth::user()->is_superadmin == 1 && $client_preference->celebrity_check == 1)   
                                     @if(in_array('celebrity',$allowed) || Auth::user()->is_superadmin == 1)
                                         <li>
                                             <a href="{{ route('celebrity.index') }}">

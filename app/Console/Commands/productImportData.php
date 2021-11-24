@@ -30,6 +30,8 @@ class productImportData extends Command{
     private $folderName = 'prods';
     protected $signature = 'command:productImportData';
 
+   
+
     /**
      * The console command description.
      *
@@ -45,6 +47,8 @@ class productImportData extends Command{
     public function __construct()
     {
         parent::__construct();
+        $code = Client::orderBy('id','asc')->value('code');
+        $this->folderName = '/'.$code.'/prods';
     }
 
     /**
@@ -150,7 +154,7 @@ class productImportData extends Command{
                         });
                     }
                     
-                Log::info('End command:productImportData !'.time());
+            //    Log::info('End command:productImportData !'.time());
             }catch(Exception $ex){
                 $this->info($ex->getMessage());
                 continue;

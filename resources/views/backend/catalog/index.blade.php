@@ -167,17 +167,21 @@
                                 </thead>
                                 <tbody>
                                     @foreach($brands as $key => $brand)
-                                    @if(!empty($brand->translation_one))
+                                    @if(isset($brand->translation) && !empty($brand->translation))
                                     <tr class="brandList" data-row-id="{{$brand->id}}">
                                         <td><span class="dragula-handle"></span></td>
                                         <td><img class="rounded-circle" src="{{$brand->image['proxy_url'].'30/30'.$brand->image['image_path']}}"></td>
                                         <td><a class="editBrandBtn" dataid="{{$brand->id}}" href="javascript:void(0);">{{$brand->title}}</a> <br> <b>
                                                 @foreach($brand->bc as $cat)
-                                                @foreach($categories as $cate)
+                                                {{-- @foreach($categories as $cate)
                                                 @if($cat->category_id == $cate->id && $cat->brand_id==$brand->id)
                                                 {{$cate->translation_one['name']??''}}
                                                 @endif
-                                                @endforeach
+                                                @endforeach --}}
+                                                    @if(isset($cat->categoryDetail->translation) && !empty($cat->categoryDetail->translation))
+                                                      {{ $cat->categoryDetail->translation->first()->name ?? ''}}
+                                                    @endif
+
                                                 @endforeach
                                             </b></td>
                                         <td>

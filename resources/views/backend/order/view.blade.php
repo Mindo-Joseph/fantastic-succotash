@@ -60,39 +60,69 @@ $timezone = Auth::user()->timezone;
                                     else
                                     $open_option = [$order->vendors->first()->order_status_option_id + 1];
                                     @endphp
+                                    
+                                    <!-- List of completed order status -->
+                                    @foreach ($vendor_order_statuses as $key => $vendor_order_status)
+                                        @php
+                                            $order_status = $order_status_options->where('id', $vendor_order_status->order_status_option_id)->pluck('title')->first();
+                                            $glow = '';
+                                            if( $key < count($vendor_order_statuses)-1 ){
+                                                $glow = 'completed';
+                                            }
+                                            $date = isset($vendor_order_status_created_dates[$vendor_order_status->order_status_option_id]) ? $vendor_order_status_created_dates[$vendor_order_status->order_status_option_id] : '';
+                                        @endphp
 
-                                    @foreach($order_status_options as $order_status_option)
-                                    @php
-                                    $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'disabled': '';
-                                    if($order_status_option->id == $order->vendors->first()->order_status_option_id)
-                                    $glow = '';
-                                    else
-                                    $glow = 'completed';
-                                    $date = isset($vendor_order_status_created_dates[$order_status_option->id]) ? $vendor_order_status_created_dates[$order_status_option->id] : '';
-                                    @endphp
-                                    @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 2)
-                                    @continue
-                                    @endif
-                                    @if (in_array(2, $vendor_order_status_option_ids) && $order_status_option->id == 3)
-                                    @continue
-                                    @endif
-
-                                    <li class="{{$class}} {{$glow}}  @if(in_array($order_status_option->id, $open_option))open-for-update-status @else disabled @endif" data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
-                                        @if( ($order_status_option->id == 5) && (($order->luxury_option_id == 2) || ($order->luxury_option_id == 3)) )
-                                            <h5 class="mt-0 mb-1">{{__('Order Prepared')}}</h5>
-                                        @else
-                                            <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
-                                        @endif
-                                        <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
-                                            @if($date)
-                                                <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                        <li class="{{$glow}} disabled" data-status_option_id="{{$vendor_order_status->order_status_option_id}}" data-order_vendor_id="{{$vendor_order_status->vendor_id}}">
+                                            @if( ($vendor_order_status->order_status_option_id == 5) && (($order->luxury_option_id == 2) || ($order->luxury_option_id == 3)) )
+                                                <h5 class="mt-0 mb-1">{{__('Order Prepared')}}</h5>
+                                            @else
+                                                <h5 class="mt-0 mb-1">{{$order_status}}</h5>
                                             @endif
-                                        </p>
-                                    </li>
-                                    @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 3)
-                                    @break
-                                    @endif
+                                            <p class="text-muted" id="text_muted_{{$vendor_order_status->order_status_option_id}}">
+                                                @if($date)
+                                                    <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
+                                                @endif
+                                            </p>
+                                        </li>
                                     @endforeach
+
+                                    <!-- List of incomplete order status if order is not rejected -->
+                                    @if(!in_array(3, $vendor_order_status_option_ids))
+                                        @foreach($order_status_options as $order_status_option)
+                                            @if(!in_array($order_status_option->id, $vendor_order_status_option_ids))
+                                                @php
+                                                    $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'disabled': '';
+                                                    if($order_status_option->id == $order->vendors->first()->order_status_option_id)
+                                                        $glow = '';
+                                                    else
+                                                        $glow = 'completed';
+                                                        $date = isset($vendor_order_status_created_dates[$order_status_option->id]) ? $vendor_order_status_created_dates[$order_status_option->id] : '';
+                                                @endphp
+                                                @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 2)
+                                                    @continue
+                                                @endif
+                                                @if (in_array(2, $vendor_order_status_option_ids) && $order_status_option->id == 3)
+                                                    @continue
+                                                @endif
+
+                                                <li class="{{$class}} {{$glow}}  @if(in_array($order_status_option->id, $open_option))open-for-update-status @else disabled @endif" data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
+                                                    @if( ($order_status_option->id == 5) && (($order->luxury_option_id == 2) || ($order->luxury_option_id == 3)) )
+                                                        <h5 class="mt-0 mb-1">{{__('Order Prepared')}}</h5>
+                                                    @else
+                                                        <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
+                                                    @endif
+                                                    <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
+                                                        @if($date)
+                                                            <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
+                                                        @endif
+                                                    </p>
+                                                </li>
+                                                @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 3)
+                                                    @break
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 </ul>
                             </div>
 
@@ -115,7 +145,7 @@ $timezone = Auth::user()->timezone;
                                         <h5 class="mt-0 mb-1">{{$dispatcher_status_option->title}}</h5>
                                         <p class="text-muted" id="dispatch_text_muted_{{$dispatcher_status_option->id}}">
                                             @if($date)
-                                            <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                            <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
                                             @endif
                                         </p>
                                     </li>
@@ -132,7 +162,17 @@ $timezone = Auth::user()->timezone;
             <div class="col-lg-8 mb-3">
                 <div class="card mb-0 h-100">
                     <div class="card-body">
-                        <h4 class="header-title mb-3">{{ __("Items from Order") }} #{{$order->order_number}}</h4>
+                        <h4 class="header-title mb-3">
+                            @if($order->luxury_option_name != '')
+                                <span class="badge badge-info mr-2">{{$order->luxury_option_name}}</span>
+                            @endif
+                            {{ __("Items from Order") }} #{{$order->order_number}}
+                        </h4>
+                        @if($order->luxury_option_id == 2)
+                            @foreach($order->vendors as $vendor)
+                                <p>{{ $vendor->dineInTableName }} | Category : {{ $vendor->dineInTableCategory }} | Capacity : {{ $vendor->dineInTableCapacity }}</p>
+                            @endforeach
+                        @endif
                         <div class="table-responsive">
                             <table class="table table-bordered table-centered mb-0">
                                 <thead class="table-light">
@@ -155,24 +195,42 @@ $timezone = Auth::user()->timezone;
                                     @if($product->order_id == $order->id)
                                     @php
                                     $taxable_amount += $product->taxable_amount;
-                                    $sub_total += $product->quantity * $product->price;
+                                    // $sub_total += $product->quantity * $product->price;
+                                    $sub_total += $product->total_amount;
                                     @endphp
                                     <tr>
                                         <th scope="row">{{$product->product_name}}
-                                            <p>
-                                                @if(isset($product->scheduled_date_time)) {{convertDateTimeInTimeZone($product->scheduled_date_time, $timezone, 'l, F d, Y, H:i A')}} @endif
-                                            <p>
+                                            <p class="p-0 m-0">
+                                                @if(isset($product->scheduled_date_time)) {{dateTimeInUserTimeZone($product->scheduled_date_time, $timezone)}} @endif
+                                            </p>
                                                 @foreach($product->prescription as $pres)
-                                                <br><a target="_blank" href="{{ ($pres) ? $pres->prescription['proxy_url'].'74/100'.$pres->prescription['image_path'] : ''}}">{{($product->prescription) ? 'Prescription' : ''}}</a>
+                                                <br><a target="_blank" href="{{ ($pres) ? @$pres->prescription['proxy_url'].'74/100'.@$pres->prescription['image_path'] : ''}}">{{($product->prescription) ? 'Prescription' : ''}}</a>
                                                 @endforeach
+
+                                            @if($product->addon)
+                                                <hr class="my-2">
+                                                <h6 class="m-0 pl-0"><b>{{__('Add Ons')}}</b></h6>
+                                                @foreach($product->addon as $addon)
+                                                    <p class="p-0 m-0">{{ $addon->option->translation_one->title }}</p>
+                                                @endforeach
+                                            @endif
                                         </th>
                                         <td>
-                                            <img src="{{$product->image_path['proxy_url'].'32/32'.$product->image_path['image_path']}}" alt="product-img" height="32">
+                                            <img src="{{@$product->image_path['proxy_url'].'32/32'.@$product->image_path['image_path']}}" alt="product-img" height="32">
                                         </td>
                                         <td>{{ $product->quantity }}</td>
-                                        <td>$@money($product->price)</td>
+                                        <td>
+                                            $@money($product->price)
+                                            @if($product->addon)
+                                                <hr class="my-2">
+                                                @foreach($product->addon as $addon)
+                                                    <p class="p-0 m-0">${{ $addon->option->price_in_cart }}</p>
+                                                    {{-- <p class="p-0 m-0">${{ $addon->option->quantity_price }}</p> --}}
+                                                @endforeach
+                                            @endif
+                                        </td>
 
-                                        <td>$@money($product->quantity * $product->price)</td>
+                                        <td>$@money($product->total_amount)</td>
                                     </tr>
                                     @endif
                                     @endforeach
@@ -223,7 +281,30 @@ $timezone = Auth::user()->timezone;
                         <h4 class="header-title mb-3">{{ __("Shipping Information") }}</h4>
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->address ? $order->address->address : ''}}</p>
-                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Mobile") }}:</span> {{$order->user->phone_number}}</p>
+                        @if(isset($order->address) && !empty($order->address->street))
+                        <p class="mb-2"><span class="fw-semibold me-2">{{__('Street')}}:</span> {{ $order->address ? $order->address->street : ''}}</p>
+                        @endif
+                        <p class="mb-2"><span class="fw-semibold me-2">{{__('City')}}:</span> {{ $order->address ? $order->address->city : ''}}</p>
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("State") }}:</span> {{ $order->address ? $order->address->state : ''}}</p>
+                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Zip Code") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
+                    </div>
+                </div>
+            </div>
+            @elseif( ($order->luxury_option_id == 2) || ($order->luxury_option_id == 3) )
+            <div class="col-lg-6 mb-3">
+                <div class="card mb-0 h-100">
+                    <div class="card-body">
+                        <h4 class="header-title mb-3">{{ __("User Information") }}</h4>
+                        <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->user->address->first() ? $order->user->address->first()->address : 'Not Available'}}</p>
+                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Mobile") }}:</span> {{$order->user->phone_number ? $order->user->phone_number : 'Not Available'}}</p>
+                        @if(isset($order->address) && !empty($order->address->street))
+                        <p class="mb-2"><span class="fw-semibold me-2">{{__('Street')}}:</span> {{ $order->address ? $order->address->street : ''}}</p>
+                        @endif
+                        <p class="mb-2"><span class="fw-semibold me-2">{{__('City')}}:</span> {{ $order->address ? $order->address->city : ''}}</p>
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("State") }}:</span> {{ $order->address ? $order->address->state : ''}}</p>
+                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Zip Code") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
+                   
                     </div>
                 </div>
             </div>
@@ -238,8 +319,41 @@ $timezone = Auth::user()->timezone;
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __('Transaction Id') }} :</span> {{ $order->payment  ? $order->payment->transaction_id : ''}}</p>
                         @endif
                     </div>
+
+                   
+                    <div class="card-body">
+                        <h4 class="header-title mb-3">{{ __('Comment/Schedule Information') }}</h4>
+                        @if($order->comment_for_pickup_driver)
+                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Comment for Pickup Driver') }} :</span> {{ $order->comment_for_pickup_driver ?? ''}}</p>
+                        @endif
+
+                        @if($order->comment_for_dropoff_driver)
+                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Comment for Dropoff Driver') }} :</span> {{ $order->comment_for_dropoff_driver ?? ''}}</p>
+                        @endif
+
+                        @if($order->comment_for_vendor)
+                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Comment for Vendor') }} :</span> {{ $order->comment_for_vendor ?? ''}}</p>
+                        @endif
+
+                        @if($order->schedule_pickup)
+                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Pickup') }} :</span> {{dateTimeInUserTimeZone($order->schedule_pickup, $timezone)}} </p>
+                        @endif
+
+                        @if($order->schedule_dropoff)
+                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Dropoff') }} :</span> {{dateTimeInUserTimeZone($order->schedule_dropoff, $timezone)}} </p>
+                        @endif
+
+                        @if($order->specific_instructions)
+                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Specific instructions') }} :</span> {{ $order->specific_instructions ?? ''}}</p>
+                        @endif
+                        
+                    </div>
+                   
+
                 </div>
             </div>
+
+            
         </div>
 
 

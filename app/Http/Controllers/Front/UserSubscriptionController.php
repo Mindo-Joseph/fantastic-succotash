@@ -25,7 +25,7 @@ class UserSubscriptionController extends FrontController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __construct(request $request)
+    public function __construct()
     {
         $preferences = ClientPreference::where(['id' => 1])->first();
         if((isset($preferences->subscription_mode)) && ($preferences->subscription_mode == 0)){
@@ -97,7 +97,7 @@ class UserSubscriptionController extends FrontController
         else{
             return response()->json(["status"=>"Error", "message" => __("Subscription plan not active")]);
         }
-        $code = array('stripe');
+        $code = array('stripe', 'yoco', 'paylink');
         $ex_codes = array('cod');
         $payment_options = PaymentOption::select('id', 'code', 'title', 'credentials')->whereIn('code', $code)->where('status', 1)->get();
         foreach ($payment_options as $k => $payment_option) {
@@ -185,6 +185,7 @@ class UserSubscriptionController extends FrontController
                 $payment->transaction_id = $request->transaction_id;
                 $payment->user_subscription_invoice_id = $subscription_invoice_id;
                 $payment->date = Carbon::now()->format('Y-m-d');
+                $payment->type = 'subscription';
                 $payment->save();
 
                 $subscription_invoice_features = array();

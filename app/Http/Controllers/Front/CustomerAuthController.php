@@ -24,10 +24,19 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs, VendorRegistrationDocument, EmailTemplate, NotificationTemplate, UserDevice};
 use Kutia\Larafirebase\Facades\Larafirebase;
-
+use Math;
 class CustomerAuthController extends FrontController
 {
     use ApiResponser;
+
+    private $folderName = '/vendor/extra_docs';
+
+    public function __construct(Request $request)
+    {   
+        $code = Client::orderBy('id','asc')->value('code');
+        $this->folderName = '/'.$code.'/vendor/extra_docs';
+    }
+
     public function getTestHtmlPage()
     {
         return view('test');
@@ -185,12 +194,17 @@ class CustomerAuthController extends FrontController
                 ]);
             }
             else{
-                if(!empty($req->email) && (session('preferences')->verify_email == 0)){
+
+                $preferences = ClientPreference::first();
+                if(!empty($req->email) && ($preferences->verify_email == 0)){
+
                     $validator = $req->validate([
                         'email'  => 'email|unique:users'
                     ]);
                 }
-                if(!empty($signReq->phone_number) && ($preferences->verify_phone == 0) && (!$validator->fails())){
+
+                if(!empty($req->phone_number) && isset($preferences) && ($preferences->verify_phone == 0)){
+
                     $validator = $req->validate([
                         'phone_number' => 'string|min:8|max:15|unique:users'
                     ]);
@@ -201,7 +215,7 @@ class CustomerAuthController extends FrontController
             $phoneCode = mt_rand(100000, 999999);
             $emailCode = mt_rand(100000, 999999);
             $sendTime = \Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
-            $email = (!empty($req->email)) ? $req->email : ('ro_'.Carbon::now()->timestamp . '.' . uniqid() . '@royoorders.com');
+            $email = (!empty($req->email)) ? $req->email : '';//('ro_'.Carbon::now()->timestamp . '.' . uniqid() . '@royoorders.com');
             $user->type = 1;
             $user->status = 1;
             $user->role_id = 1;
@@ -549,7 +563,7 @@ class CustomerAuthController extends FrontController
             $user = new User();
             $country = Country::where('code', strtoupper($req->countryData))->first();
             // $emailCode = mt_rand(100000, 999999);
-            $email = 'ro_'.Carbon::now()->timestamp . '.' . uniqid() . '@royoorders.com';
+            $email = ''; //'ro_'.Carbon::now()->timestamp . '.' . uniqid() . '@royoorders.com';
             $user->type = 1;
             $user->status = 1;
             $user->role_id = 1;
@@ -646,7 +660,9 @@ class CustomerAuthController extends FrontController
                     'check_conditions' => 'required',
                 ];
                 foreach ($vendor_registration_documents as $vendor_registration_document) {
-                    $rules_array[$vendor_registration_document->primary->slug] = 'required';
+                    if($vendor_registration_document->is_required == 1){
+                        $rules_array[$vendor_registration_document->primary->slug] = 'required';
+                    }
                 }
                 $request->validate(
                     $rules_array,
@@ -722,16 +738,28 @@ class CustomerAuthController extends FrontController
             $vendor->slug = Str::slug($request->name, "-");
             $vendor->save();
             $permission_details = Permissions::whereIn('id', [1,2,3,12,17,18,19,20,21])->get();
-            if($vendor_registration_documents->count() > 0){
+            if ($vendor_registration_documents->count() > 0) {
                 foreach ($vendor_registration_documents as $vendor_registration_document) {
-                    $vendor_registration_document_id = $vendor_registration_document->id;
-                    $name = $vendor_registration_document->primary->slug;
-                    $vendor_registration_document = $request->$name;
-                    $vendor_docs =  new VendorDocs();
-                    $vendor_docs->vendor_id = $vendor->id;
-                    $vendor_docs->vendor_registration_document_id = $vendor_registration_document_id;
-                    $vendor_docs->file_name = Storage::disk('s3')->put('/vendor', $vendor_registration_document, 'public');
-                    $vendor_docs->save();
+                    $doc_name = str_replace(" ", "_", $vendor_registration_document->primary->slug);
+                    if ($vendor_registration_document->file_type != "Text") {
+                        if ($request->hasFile($doc_name)) {
+                            $vendor_docs =  new VendorDocs();
+                            $vendor_docs->vendor_id = $vendor->id;
+                            $vendor_docs->vendor_registration_document_id = $vendor_registration_document->id;
+                            $filePath = $this->folderName . '/' . Str::random(40);
+                            $file = $request->file($doc_name);
+                            $vendor_docs->file_name = Storage::disk('s3')->put($filePath, $file, 'public');
+                            $vendor_docs->save();
+                        }
+                    } else {
+                        if (!empty($request->$doc_name)) {
+                            $vendor_docs =  new VendorDocs();
+                            $vendor_docs->vendor_id = $vendor->id;
+                            $vendor_docs->vendor_registration_document_id = $vendor_registration_document->id;
+                            $vendor_docs->file_name = $request->$doc_name;
+                            $vendor_docs->save();
+                        }
+                    }
                 }
             }
             UserVendor::create(['user_id' => $user->id, 'vendor_id' => $vendor->id]);
@@ -813,4 +841,6 @@ class CustomerAuthController extends FrontController
         }
         return redirect()->route('customer.login');
     }
+
+    
 }

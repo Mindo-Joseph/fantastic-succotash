@@ -217,7 +217,13 @@
                             {{ __('Categories & Add Ons') }}
                         </a>
                     </li>
-
+                    @if ($is_payout_enabled == 1)
+                        <li class="nav-item">
+                            <a href="{{ route('vendor.payout', $vendor->id) }}" aria-expanded="false" class="nav-link {{ $tab == 'payout' ? 'active' : '' }} {{ $vendor->status == 1 ? '' : 'disabled' }}">
+                                {{ __('Payout') }}
+                            </a>
+                        </li>
+                    @endif
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane {{($tab == 'configuration') ? 'active show' : '' }} " id="configuration">
@@ -342,6 +348,26 @@
                                                 </table>
                                             </div>
 
+
+                                            <form action="{{  route('draw.circle.with.radius',$vendor->id) }}" method="post">
+                                                @csrf()
+                                             <div class="row">   
+                                                <div class="col-md-4"> 
+                                                {!! Form::label('title', 'Draw area with radius(Miles)',['class' => 'control-label']) !!}
+                                                </div>
+                                                <div class="col-md-4"> 
+                                                      
+                                                    <div class="form-group" id="commission_monthlyInput">
+                                                        <input class="form-control"  name="radius" type="number" required>
+                                                        
+                                                    </div>
+                                                </div>  
+                                                <div class="col-md-4">
+                                                    <button type="submit" class="btn btn-info"> {{ __('Go') }}</button>
+                                                </div>
+                                             </div>   
+                                            </form>
+
                                         </div>
                                         <div class="col-md-8">
 
@@ -384,7 +410,7 @@
                         </div>
                         @endif
 
-                        @if($vendor->dine_in == 1)
+                        @if(($client_preferences->dinein_check == 1) && ($vendor->dine_in == 1))
                         <div class="card-box">
                             <div class="row">
                                 <h4 class="mb-4 "> {{ __('Table Booking ') }}</h4>
@@ -774,7 +800,7 @@
 <script type="text/javascript">
     var all_coordinates = @json($all_coordinates);
     var areajson_json = all_coordinates; //{all_coordinates};
-
+   
     /*function gm_authFailure() {
 
         $('.excetion_keys').append('<span><i class="mdi mdi-block-helper mr-2"></i> <strong>Google Map</strong> key is not valid</span><br/>');
@@ -787,8 +813,8 @@
 
         // var myLatlng = new google.maps.LatLng("{{ $center['lat'] }}","{{ $center['lng']  }}");
         //console.log(myLatlng);
-        var latitude = parseFloat("{{ $center['lat'] }}");
-        var longitude = parseFloat("{{ $center['lng'] }}");
+        var latitude = parseFloat("{{ $vendor['latitude'] }}");
+        var longitude = parseFloat("{{ $vendor['longitude'] }}");
         var myOptions = {
             zoom: parseInt(10),
             center: {
@@ -801,8 +827,8 @@
         const marker = new google.maps.Marker({
             map: map,
             position: {
-                lat: latitude,
-                lng: longitude
+                lat: 30.7333,
+                lng: 76.7794
             },
         });
 
@@ -1052,7 +1078,7 @@
                 paths: triangleCoords,
                 draggable: true, // turn off if it gets annoying
                 editable: true,
-                strokeColor: '#bb3733',
+                strokeColor: '#424fsd',
                 //strokeOpacity: 0.8,
                 //strokeWeight: 2,
                 fillColor: '#bb3733',
@@ -1116,13 +1142,13 @@
                 {
                     hour: '2-digit',
                     minute: '2-digit',
-                    hour12: false
+                    hour12: "{{$hour12}}"
                 }
             ],
             eventTimeFormat: { // like '14:30:00'
                 hour: '2-digit',
                 minute: '2-digit',
-                hour12: false
+                hour12: "{{$hour12}}"
             },
             navLinks: true,
             selectable: true,
@@ -1205,8 +1231,14 @@
                         var events = [];
                         $.each(response, function(index, data){
                             var slotDay = parseInt(moment(data.start).format('d')) + 1;
-                            var slotStartTime = moment(data.start).format('h:mm A');
-                            var slotEndTime = moment(data.end).format('h:mm A');
+                            @if($hour12)
+                                var slotStartTime = moment(data.start).format('h:mm A');
+                                var slotEndTime = moment(data.end).format('h:mm A');
+                            @else
+                                var slotStartTime = moment(data.start).format('H:mm');
+                                var slotEndTime = moment(data.end).format('H:mm');
+                            @endif
+                            
                             $.each(days, function(key, value){
                                 if(slotDay == key + 1){
                                     if(slotDayList.includes(slotDay)){
@@ -1222,7 +1254,14 @@
                             events.push({
                                 title: data.title,
                                 start: data.start,
-                                end: data.end
+                                end: data.end,
+                                type: data.type,
+                                color: data.color,
+                                type_id: data.type_id,
+                                slot_id: data.slot_id,
+                                slot_dine_in: data.slot_dine_in,
+                                slot_takeaway: data.slot_takeaway,
+                                slot_delivery: data.slot_delivery,
                             });
                         });
                         successCallback(events);

@@ -6,11 +6,12 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
         Route::post('homepage', 'Api\v1\HomeController@homepage');
         Route::post('header', 'Api\v1\HomeController@headerContent');
         Route::get('product/{id}', 'Api\v1\ProductController@productById');
+        Route::get('getAllProductTags', 'Api\v1\ProductController@getAllProductTags');
         Route::post('get-products', 'Api\v1\ProductController@productList');
         Route::get('cms/page/list', 'Api\v1\CMSPageController@getPageList');
         Route::get('brand/{id?}', 'Api\v1\BrandController@productsByBrand');
         Route::get('category/{id?}', 'Api\v1\CategoryController@categoryData');
-        Route::get('vendor/{id?}/{category_slug?}', 'Api\v1\VendorController@productsByVendor');
+        Route::get('vendor/{id?}', 'Api\v1\VendorController@productsByVendor');
         Route::post('search/{type}/{id?}', 'Api\v1\HomeController@globalSearch');
         Route::post('cms/page/detail', 'Api\v1\CMSPageController@getPageDetail');
         Route::post('brand/filters/{id?}', 'Api\v1\BrandController@brandFilters');
@@ -26,6 +27,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
         // Route::get('vendor/category/productsFilter/{slug1}/{slug2}', 'Api\v1\VendorController@vendorCategoryProductsFilter');
         Route::post('productByVariant/{id}','Api\v1\ProductController@getVariantData')->name('productVariant');
         Route::post('contact-us', 'Api\v1\HomeController@contactUs');
+
+        Route::post('upload-image-pickup', 'Api\v1\PickupDeliveryController@uploadImagePickup');  ////// upload image while pickup delivery
     });
     Route::group(['middleware' => ['dbCheck','systemAuth', 'apilogger']], function() {
         Route::get('cart/empty', 'Api\v1\CartController@emptyCart');
@@ -36,6 +39,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
         Route::post('promo-code/list', 'Api\v1\PromoCodeController@postPromoCodeList');
         Route::post('promo-code/verify', 'Api\v1\PromoCodeController@postVerifyPromoCode');
         Route::post('promo-code/remove', 'Api\v1\PromoCodeController@postRemovePromoCode');
+        Route::post('promo-code/validate_promo_code', 'Api\v1\PromoCodeController@validate_promo_code');
+        Route::post('promo-code/vendor_promo_code', 'Api\v1\PromoCodeController@vendorPromoCodeList');
         Route::post('cart/product-schedule/update', 'Api\v1\CartController@updateProductSchedule');
     });
 });

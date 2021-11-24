@@ -20,13 +20,29 @@ use App\Http\Traits\ToasterResponser;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorDineinCategory, VendorBlockDate, Category, ServiceArea, ClientLanguage, AddonSet, Client, ClientPreference, Product, Type, VendorCategory,UserPermissions, VendorDocs, SubscriptionPlansVendor, SubscriptionInvoicesVendor, SubscriptionInvoiceFeaturesVendor, SubscriptionFeaturesListVendor, VendorDineinTable, Woocommerce};
+use App\Models\{CsvProductImport, Vendor, CsvVendorImport, VendorSlot, VendorDineinCategory, VendorBlockDate, Category, ServiceArea, ClientLanguage, ClientCurrency, AddonSet, Client, ClientPreference, Product, Type, VendorCategory,UserPermissions, VendorDocs, SubscriptionPlansVendor, SubscriptionInvoicesVendor, SubscriptionInvoiceFeaturesVendor, SubscriptionFeaturesListVendor, VendorDineinTable, Woocommerce,TaxCategory, PayoutOption, VendorConnectedAccount, OrderVendor, VendorPayout};
 use GuzzleHttp\Client as GCLIENT;
 use DB;
+use App\Models\VendorRegistrationDocument;
+
 class VendorController extends BaseController
 {
     use ToasterResponser;
     use ApiResponser;
+    public $is_payout_enabled;
+    private $folderName = '/vendor/extra_docs';
+
+    public function __construct(){
+        $code = Client::orderBy('id','asc')->value('code');
+        $this->folderName = '/'.$code.'/vendor/extra_docs';
+        $payoutOption = PayoutOption::where('status', 1)->get();
+        if($payoutOption->isNotEmpty()){
+            $this->is_payout_enabled = 1;
+        }else{
+            $this->is_payout_enabled = 0;
+        }
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -112,6 +128,7 @@ class VendorController extends BaseController
             }
         }
         $total_vendor_count = $vendors->count();
+        $vendor_registration_documents = VendorRegistrationDocument::get();
         if(count($vendors) == 1 && $user->is_superadmin == 0){
             return Redirect::route('vendor.catalogs', $vendors->first()->id);
         }else{
@@ -124,7 +141,8 @@ class VendorController extends BaseController
                 'active_vendor_count' => $active_vendor_count, 
                 'blocked_vendor_count' => $blocked_vendor_count, 
                 'available_vendors_count' => $available_vendors_count, 
-                'awaiting__Approval_vendor_count' => $awaiting__Approval_vendor_count, 
+                'awaiting__Approval_vendor_count' => $awaiting__Approval_vendor_count,
+                'vendor_registration_documents' => $vendor_registration_documents,
                 'vendors_product_count' => $vendors_product_count, 'vendors_active_order_count' => $vendors_active_order_count]);
         }
 
@@ -137,10 +155,16 @@ class VendorController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+        $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
         $rules = array(
-            'name' => 'required|string|max:150|unique:vendors',
+            // 'name' => 'required|string|max:150|unique:vendors',
             'address' => 'required',
         );
+        foreach ($vendor_registration_documents as $vendor_registration_document) {
+            if($vendor_registration_document->is_required == 1){
+                $rules[$vendor_registration_document->primary->slug] = 'required';
+            }
+        }
         $validation  = Validator::make($request->all(), $rules)->validate();
         $vendor = new Vendor();
         $saveVendor = $this->save($request, $vendor, 'false');
@@ -184,6 +208,32 @@ class VendorController extends BaseController
         $vendor->phone_no = $request->phone_no;
         $vendor->slug = Str::slug($request->name, "-");
         $vendor->save();
+
+        $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
+        if ($vendor_registration_documents->count() > 0) {
+            foreach ($vendor_registration_documents as $vendor_registration_document) {
+                $doc_name = str_replace(" ", "_", $vendor_registration_document->primary->slug);
+                if ($vendor_registration_document->file_type != "Text") {
+                    if ($request->hasFile($doc_name)) {
+                        $vendor_docs =  new VendorDocs();
+                        $vendor_docs->vendor_id = $vendor->id;
+                        $vendor_docs->vendor_registration_document_id = $vendor_registration_document->id;
+                        $filePath = $this->folderName . '/' . Str::random(40);
+                        $file = $request->file($doc_name);
+                        $vendor_docs->file_name = Storage::disk('s3')->put($filePath, $file, 'public');
+                        $vendor_docs->save();
+                    }
+                } else {
+                    if (!empty($request->$doc_name)) {
+                        $vendor_docs =  new VendorDocs();
+                        $vendor_docs->vendor_id = $vendor->id;
+                        $vendor_docs->vendor_registration_document_id = $vendor_registration_document->id;
+                        $vendor_docs->file_name = $request->$doc_name;
+                        $vendor_docs->save();
+                    }
+                }
+            }
+        }
         return $vendor->id;
     }
 
@@ -197,7 +247,8 @@ class VendorController extends BaseController
         $vendor = Vendor::where('id', $id)->first();
         $client_preferences = ClientPreference::first();
         $vendor_docs = VendorDocs::where('vendor_id', $id)->get();
-        $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'vendor_docs' => $vendor_docs])->render();
+        $vendor_registration_documents = VendorRegistrationDocument::get();
+        $returnHTML = view('backend.vendor.form')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'vendor_docs' => $vendor_docs, 'vendor_registration_documents' => $vendor_registration_documents])->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
@@ -218,6 +269,22 @@ class VendorController extends BaseController
         $validation  = Validator::make($request->all(), $rules)->validate();
         $vendor = Vendor::where('id', $id)->first();
         $saveVendor = $this->save($request, $vendor, 'true');
+        $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
+        if ($vendor_registration_documents->count() > 0) {
+            foreach ($vendor_registration_documents as $vendor_registration_document) {
+                $doc_name = str_replace(" ", "_", $vendor_registration_document->primary->slug);
+                if ($vendor_registration_document->file_type != "Text") {
+                    if ($request->hasFile($doc_name)) {
+                        $filePath = $this->folderName . '/' . Str::random(40);
+                        $file = $request->file($doc_name);
+                        $file_name = Storage::disk('s3')->put($filePath, $file, 'public');
+                        VendorDocs::updateOrCreate(['vendor_id' => $id, 'vendor_registration_document_id' => $vendor_registration_document->id],['file_name' => $file_name]);
+                    }
+                } else {
+                    VendorDocs::updateOrCreate(['vendor_id' => $id, 'vendor_registration_document_id' => $vendor_registration_document->id],['file_name' => $request->$doc_name]);
+                }
+            }
+        }
         if ($saveVendor > 0) {
             return response()->json([
                 'status' => 'success',
@@ -312,6 +379,7 @@ class VendorController extends BaseController
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
         $returnData = array();
         $returnData['client_preferences'] = $client_preferences;
+        $returnData['hour12'] = ($client_preferences->time_format == '12') ? true : false;
         $returnData['vendor'] = $vendor;
         $returnData['center'] = $center;
         $returnData['tab'] = 'configuration';
@@ -325,6 +393,7 @@ class VendorController extends BaseController
         $returnData['VendorCategory'] = $VendorCategory;
         $returnData['templetes'] = $templetes;
         $returnData['builds'] = $build;
+        $returnData['is_payout_enabled'] = $this->is_payout_enabled;
         if((isset($preferences['subscription_mode'])) && ($preferences['subscription_mode'] == 1)){
             $subscriptions_data = $this->getSubscriptionPlans($id);
             $returnData['subscription_plans'] = $subscriptions_data['sub_plans'];
@@ -369,7 +438,8 @@ class VendorController extends BaseController
             ->orderBy('is_primary', 'desc')->get();
         $client_preferences = ClientPreference::first();
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
-        return view('backend.vendor.vendorCategory')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build,'csvVendors'=> $csvVendors]);
+        $vendor_registration_documents = VendorRegistrationDocument::get();
+        return view('backend.vendor.vendorCategory')->with(['client_preferences' => $client_preferences, 'vendor' => $vendor, 'tab' => 'category', 'html' => $tree, 'languages' => $langs, 'addon_sets' => $addons, 'VendorCategory' => $VendorCategory, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build,'csvVendors'=> $csvVendors, 'is_payout_enabled'=>$this->is_payout_enabled, 'vendor_registration_documents' => $vendor_registration_documents]);
     }
 
     /**   show vendor page - catalog tab      */
@@ -379,6 +449,8 @@ class VendorController extends BaseController
         $type = Type::all();
         $categoryToggle = array();
         $vendor = Vendor::where('id',$id);
+        $langId = Session::has('adminLanguage') ? Session::get('adminLanguage') : 1;
+        $vendor_registration_documents = VendorRegistrationDocument::get();
         if (Auth::user()->is_superadmin == 0) {
             $vendor = $vendor->whereHas('permissionToUser', function ($query) {
                 $query->where('user_id', Auth::user()->id);
@@ -414,7 +486,7 @@ class VendorController extends BaseController
             ->where('vendor_id', $id)->get();
         $categories = Category::with('translation_one')->select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
             ->where('id', '>', '1')
-            ->where('is_core', 1)
+            // ->where('is_core', 1)
             ->whereNotIn('type_id', [4, 5])
             ->where(function ($q) use ($id) {
                 $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
@@ -437,7 +509,10 @@ class VendorController extends BaseController
             $build = $this->buildTree($categories->toArray());
             $categoryToggle = $this->printTreeToggle($build, $active);
         }
-        $product_categories = VendorCategory::with('category', 'category.translation_one')->where('status', 1)->where('vendor_id', $id)->get();
+        $product_categories = VendorCategory::with(['category', 'category.translation' => function($q) use($langId){
+            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+            ->where('category_translations.language_id', $langId);
+        }])->where('status', 1)->where('vendor_id', $id)->groupBy('category_id')->get();
         $p_categories = collect();
         $product_categories_hierarchy = '';
         if ($product_categories) {
@@ -446,11 +521,294 @@ class VendorController extends BaseController
             }
             $product_categories_build = $this->buildTree($p_categories->toArray());
             $product_categories_hierarchy = $this->printCategoryOptionsHeirarchy($product_categories_build);
+            foreach($product_categories_hierarchy as $k => $cat){
+                $myArr = array(1,3,7,8,9);
+                if (isset($cat['type_id']) && !in_array($cat['type_id'], $myArr)) {
+                    unset($product_categories_hierarchy[$k]);
+                }
+               
+            }
         }
         $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
         $client_preferences = ClientPreference::first();
         $woocommerce_detail = Woocommerce::first();
-        return view('backend.vendor.vendorCatalog')->with(['new_products' => $new_products, 'featured_products' => $featured_products, 'last_mile_delivery' => $last_mile_delivery, 'published_products' => $published_products, 'product_count' => $product_count, 'client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories_hierarchy, 'builds' => $build, 'woocommerce_detail' => $woocommerce_detail]);
+
+        $client = Client::orderBy('id','asc')->first();
+        if(isset($client->custom_domain) && !empty($client->custom_domain) && $client->custom_domain != $client->sub_domain)
+        $sku_url =  ($client->custom_domain);
+        else
+        $sku_url =  ($client->sub_domain.env('SUBMAINDOMAIN'));
+
+        $sku_url = array_reverse(explode('.',$sku_url));
+        $sku_url = implode(".",$sku_url);
+        $vendor_name = $vendor->name;
+        $vendor_name = preg_replace('/\s+/', '', $vendor_name);
+        if(isset($vendor_name) && !empty($vendor_name))
+        $sku_url = $sku_url.".".$vendor_name;
+        
+        $taxCate = TaxCategory::all();
+        
+        return view('backend.vendor.vendorCatalog')->with(['taxCate' => $taxCate,'sku_url' => $sku_url, 'new_products' => $new_products, 'featured_products' => $featured_products, 'last_mile_delivery' => $last_mile_delivery, 'published_products' => $published_products, 'product_count' => $product_count, 'client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory,'csvProducts' => $csvProducts, 'csvVendors' => $csvVendors, 'products' => $products, 'tab' => 'catalog', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'product_categories' => $product_categories_hierarchy, 'builds' => $build, 'woocommerce_detail' => $woocommerce_detail, 'is_payout_enabled'=>$this->is_payout_enabled, 'vendor_registration_documents' => $vendor_registration_documents]);
+    }
+
+    /**   show vendor page - payout tab      */
+    public function vendorPayout($domain = '', $id){
+        $product_categories = [];
+        $active = array();
+        $type = Type::all();
+        $categoryToggle = array();
+        $vendor = Vendor::where('id',$id);
+        $langId = Session::has('adminLanguage') ? Session::get('adminLanguage') : 1;
+        $user = Auth::user();
+        if ($user->is_superadmin == 0) {
+            $vendor = $vendor->whereHas('permissionToUser', function ($query) use($user) {
+                $query->where('user_id', $user->id);
+            });
+        }
+        $vendor  =  $vendor->first();
+        if(empty($vendor)){
+            abort(404);
+        }
+        
+        $VendorCategory = VendorCategory::where('vendor_id', $id)->where('status', 1)->pluck('category_id')->toArray();
+        
+        $categories = Category::with('translation_one')->select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
+            ->where('id', '>', '1')
+            // ->where('is_core', 1)
+            ->whereNotIn('type_id', [4, 5])
+            ->where(function ($q) use ($id) {
+                $q->whereNull('vendor_id')->orWhere('vendor_id', $id);
+            })->orderBy('position', 'asc')
+            ->orderBy('id', 'asc')
+            ->where('status', 1)
+            ->orderBy('parent_id', 'asc')->get();
+        
+        /*    get active category list also with parent     */
+        foreach ($categories as $category) {
+            if (in_array($category->id, $VendorCategory) && $category->parent_id == 1) {
+                $active[] = $category->id;
+            }
+            if (in_array($category->id, $VendorCategory) && in_array($category->parent_id, $VendorCategory)) {
+                $active[] = $category->id;
+            }
+        }
+        if ($categories) {
+            $build = $this->buildTree($categories->toArray());
+            $categoryToggle = $this->printTreeToggle($build, $active);
+        }
+        
+        $templetes = \DB::table('vendor_templetes')->where('status', 1)->get();
+        $client_preferences = ClientPreference::first();
+        $woocommerce_detail = Woocommerce::first();
+
+        $client = Client::orderBy('id','asc')->first();
+        if(isset($client->custom_domain) && !empty($client->custom_domain) && $client->custom_domain != $client->sub_domain)
+        $sku_url =  ($client->custom_domain);
+        else
+        $sku_url =  ($client->sub_domain.env('SUBMAINDOMAIN'));
+
+        $sku_url = array_reverse(explode('.',$sku_url));
+        $sku_url = implode(".",$sku_url);
+        $vendor_name = $vendor->name;
+        $vendor_name = preg_replace('/\s+/', '', $vendor_name);
+        if(isset($vendor_name) && !empty($vendor_name)){
+            $sku_url = $sku_url.".".$vendor_name;
+        }
+
+        $total_delivery_fees = OrderVendor::where('vendor_id', $id)->orderBy('id','desc');
+        if ($user->is_superadmin == 0) {
+            $total_delivery_fees = $total_delivery_fees->whereHas('vendor.permissionToUser', function ($query) use($user) {
+                $query->where('user_id', $user->id);
+            });
+        }
+        $total_delivery_fees = $total_delivery_fees->sum('delivery_fee');
+
+        $total_promo_amount = OrderVendor::where('vendor_id', $id)->orderBy('id','desc');
+        if ($user->is_superadmin == 0) {
+            $total_promo_amount = $total_promo_amount->whereHas('vendor.permissionToUser', function ($query) use($user) {
+                $query->where('user_id', $user->id);
+            });
+        }
+        $total_promo_amount = $total_promo_amount->where('coupon_paid_by', 0)->sum('discount_amount');
+
+        $total_admin_commissions = OrderVendor::where('vendor_id', $id)->orderBy('id','desc');
+        if ($user->is_superadmin == 0) {
+            $total_admin_commissions = $total_admin_commissions->whereHas('vendor.permissionToUser', function ($query) use($user) {
+                $query->where('user_id', $user->id);
+            });
+        }
+        $total_admin_commissions = $total_admin_commissions->sum(DB::raw('admin_commission_percentage_amount + admin_commission_fixed_amount'));
+
+        $total_order_value = OrderVendor::where('vendor_id', $id)->orderBy('id','desc');
+        if ($user->is_superadmin == 0) {
+            $total_order_value = $total_order_value->whereHas('vendor.permissionToUser', function ($query) use($user) {
+                $query->where('user_id', $user->id);
+            });
+        }
+        $total_order_value = $total_order_value->sum('payable_amount') - $total_delivery_fees;
+
+        $vendor_payouts = VendorPayout::where('vendor_id', $id)->orderBy('id','desc');
+        if($user->is_superadmin == 0){
+            $vendor_payouts = $vendor_payouts->whereHas('vendor.permissionToUser', function ($query) use($user) {
+                $query->where('user_id', $user->id);
+            });
+        }
+        $vendor_payouts = $vendor_payouts->where('status', 1)->sum('amount');
+
+        $past_payout_value = $vendor_payouts;
+
+        $available_funds = $total_order_value - $total_admin_commissions - $total_promo_amount - $past_payout_value;
+        
+        //stripe connected account details
+        $stripe_connect_url = '';
+        $codes = ['stripe'];
+        $payout_creds = PayoutOption::whereIn('code', $codes)->where('status', 1)->first();
+        if(!empty($payout_creds->credentials)){
+            $creds_arr = json_decode($payout_creds->credentials);
+            $client_id = (isset($creds_arr->client_id)) ? $creds_arr->client_id : '';
+        }
+        // $test_mode = (isset($paylink_creds->test_mode) && ($paylink_creds->test_mode == '1')) ? true : false;
+        // $client = Session::has('client_config') ? Session::get('client_config')->code : '';
+
+        $payout_options = PayoutOption::where('status', 1)->get();
+
+        $is_stripe_connected = 0;
+        $checkIfStripeAccountExists = VendorConnectedAccount::where('vendor_id', $id)->first();
+        if($checkIfStripeAccountExists && (!empty($checkIfStripeAccountExists->account_id))){
+            $is_stripe_connected = 1;
+        }
+        $server_url = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/";
+        $stripe_redirect_url = $server_url."client/verify/oauth/token/stripe";
+
+        if((!empty($payout_creds->credentials)) && ($client_id != '')){
+            $stripe_connect_url = 'https://connect.stripe.com/oauth/v2/authorize?response_type=code&state='.$id.'&client_id='.$client_id.'&scope=read_write&redirect_uri='.$stripe_redirect_url;
+        }
+        
+        $taxCate = TaxCategory::all();
+        return view('backend.vendor.vendorPayout')->with(['taxCate' => $taxCate,'sku_url' => $sku_url, 'client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory, 'tab' => 'payout', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build, 'woocommerce_detail' => $woocommerce_detail, 'stripe_connect_url'=> $stripe_connect_url, 'is_payout_enabled'=>$this->is_payout_enabled, 'is_stripe_connected'=>$is_stripe_connected, 'total_order_value' => number_format($total_order_value, 2), 'total_admin_commissions' => number_format($total_admin_commissions, 2), 'total_promo_amount'=>$total_promo_amount, 'past_payout_value'=>$past_payout_value, 'available_funds'=>$available_funds, 'payout_options' => $payout_options]);
+    }
+
+    public function vendorPayoutCreate(Request $request, $domain = '', $id){
+        try{
+            DB::beginTransaction();
+            $vendor = Vendor::where('id',$id);
+            $langId = Session::has('adminLanguage') ? Session::get('adminLanguage') : 1;
+            $user = Auth::user();
+            if ($user->is_superadmin == 0) {
+                $vendor = $vendor->whereHas('permissionToUser', function ($query) use($user) {
+                    $query->where('user_id', $user->id);
+                });
+            }
+            $vendor = $vendor->first();
+            if(empty($vendor)){
+                abort(404);
+            }
+
+            $total_delivery_fees = OrderVendor::where('vendor_id', $id)->orderBy('id','desc');
+            if ($user->is_superadmin == 0) {
+                $total_delivery_fees = $total_delivery_fees->whereHas('vendor.permissionToUser', function ($query) use($user) {
+                    $query->where('user_id', $user->id);
+                });
+            }
+            $total_delivery_fees = $total_delivery_fees->sum('delivery_fee');
+
+            $total_promo_amount = OrderVendor::where('vendor_id', $id)->orderBy('id','desc');
+            if ($user->is_superadmin == 0) {
+                $total_promo_amount = $total_promo_amount->whereHas('vendor.permissionToUser', function ($query) use($user) {
+                    $query->where('user_id', $user->id);
+                });
+            }
+            $total_promo_amount = $total_promo_amount->where('coupon_paid_by', 0)->sum('discount_amount');
+
+            $total_admin_commissions = OrderVendor::where('vendor_id', $id)->orderBy('id','desc');
+            if ($user->is_superadmin == 0) {
+                $total_admin_commissions = $total_admin_commissions->whereHas('vendor.permissionToUser', function ($query) use($user) {
+                    $query->where('user_id', $user->id);
+                });
+            }
+            $total_admin_commissions = $total_admin_commissions->sum(DB::raw('admin_commission_percentage_amount + admin_commission_fixed_amount'));
+
+            $total_order_value = OrderVendor::where('vendor_id', $id)->orderBy('id','desc');
+            if ($user->is_superadmin == 0) {
+                $total_order_value = $total_order_value->whereHas('vendor.permissionToUser', function ($query) use($user) {
+                    $query->where('user_id', $user->id);
+                });
+            }
+            $total_order_value = $total_order_value->sum('payable_amount') - $total_delivery_fees;
+
+            $vendor_payouts = VendorPayout::where('vendor_id', $id)->orderBy('id','desc');
+            if($user->is_superadmin == 0){
+                $vendor_payouts = $vendor_payouts->whereHas('vendor.permissionToUser', function ($query) use($user) {
+                    $query->where('user_id', $user->id);
+                });
+            }
+            $vendor_payouts = $vendor_payouts->sum('amount');
+
+            $past_payout_value = $vendor_payouts;
+            $available_funds = $total_order_value - $total_admin_commissions - $total_promo_amount - $past_payout_value;
+
+            if($request->amount > $available_funds){
+                $toaster = $this->errorToaster('Error', __('Payout amount is greater than available funds'));
+                return Redirect()->back()->with('toaster', $toaster);
+            }
+
+            $client_currency = ClientCurrency::select('currency_id')->where('is_primary', 1)->first();
+
+            $pay_option = $request->payment_option_id;
+
+            $payout = new VendorPayout();
+            $payout->vendor_id = $id;
+            $payout->payout_option_id = $request->payout_option_id;
+            $payout->transaction_id = ($pay_option != 1) ? $request->transaction_id : '';
+            $payout->amount = $request->amount;
+            $payout->currency = $client_currency->currency_id;
+            $payout->requested_by = $user->id;
+            $payout->status = $request->status;
+            $payout->save();
+            DB::commit();
+            $toaster = $this->successToaster('Success', __('Payout is created successfully'));
+        }
+        catch(Exception $ex){
+            DB::rollback();
+            $toaster = $this->errorToaster('Error', $ex->message());
+        }
+        return Redirect()->back()->with('toaster', $toaster);
+    }
+
+    public function payoutFilter(Request $request, $domain='', $id){
+        $from_date = "";
+        $to_date = "";
+        $user = Auth::user();
+        if (!empty($request->get('date_filter'))) {
+            $date_date_filter = explode(' to ', $request->get('date_filter'));
+            $to_date = (!empty($date_date_filter[1]))?$date_date_filter[1]:$date_date_filter[0];
+            $from_date = $date_date_filter[0];
+        }
+        $vendor_payouts = VendorPayout::with(['vendor', 'user', 'payoutOption'])->where('vendor_id', $id)->orderBy('id','desc');
+        if($user->is_superadmin == 0){
+            $vendor_payouts = $vendor_payouts->whereHas('vendor.permissionToUser', function ($query) use($user) {
+                $query->where('user_id', $user->id);
+            });
+        }
+
+        $vendor_payouts = $vendor_payouts->get();
+        foreach ($vendor_payouts as $payout) {
+            $payout->date = Carbon::parse($payout->created_at)->format('M d, Y h:i A');
+            $payout->amount = $payout->amount;
+            $payout->type = $payout->payoutOption->title;
+        }
+        return Datatables::of($vendor_payouts)
+            ->addIndexColumn()
+            ->filter(function ($instance) use ($request) {
+                // if (!empty($request->get('search'))) {
+                //     $instance->collection = $instance->collection->filter(function ($row) use ($request){
+                //         if (Str::contains(Str::lower($row['name']), Str::lower($request->get('search')))){
+                //             return true;
+                //         }
+                //         return false;
+                //     });
+                // }
+            })->make(true);
     }
 
     /**       delete vendor       */
@@ -873,5 +1231,117 @@ class VendorController extends BaseController
         return $data;
     }
 
+    public function vendor_specific_categories($domain = '', $id){
+        $langId = Session::has('adminLanguage') ? Session::get('adminLanguage') : 1;
+        $product_categories = VendorCategory::with(['category', 'category.translation' => function($q) use($langId){
+            $q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+            ->where('category_translations.language_id', $langId);
+        }])->where('status', 1)->where('vendor_id', $id)->groupBy('category_id')->get(); 
+        $p_categories = collect();
+        $product_categories_hierarchy = '';
+        if ($product_categories) {
+            foreach($product_categories as $pc){
+                $p_categories->push($pc->category);
+            }
+            $product_categories_build = $this->buildTree($p_categories->toArray());
+            $product_categories_hierarchy = $this->printCategoryOptionsHeirarchy($product_categories_build); 
+            foreach($product_categories_hierarchy as $k => $cat){
+                $myArr = array(1,3,7,8,9);
+                if (isset($cat['type_id']) && !in_array($cat['type_id'], $myArr)) {
+                    unset($product_categories_hierarchy[$k]);
+                }
+            }
+        }
+        $options = [];
+        foreach($product_categories_hierarchy as $key => $product_category){
+            $options[] = "<option value=".$product_category['id'].">".$product_category['hierarchy']."</option>";
+        }
+       
+        return response()->json(['status' => 1, 'message' => 'Product Categories', 'product_categories' => $product_categories_hierarchy, 'options' => $options]);
+    }
+
+
+        /**
+     *update Create Vendor In Dispatch On demand
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateCreateVendorInDispatchLaundry(Request $request)
+    {  
+        DB::beginTransaction();
+        try {
+                    $dispatch_domain = $this->checkIfLaundryOnCommon();
+                    if ($dispatch_domain && $dispatch_domain != false) {
+                        $dispatch_domain['vendor_id'] = $request->id;
+                        $token = $request->input('_token') ?: $request->header('X-CSRF-TOKEN');
+                        $dispatch_domain['token'] = $token;
+                        $data = [];
+                        $request_from_dispatch = $this->checkUpdateVendorToDispatchLaundry($dispatch_domain);
+                        if ($request_from_dispatch && isset($request_from_dispatch['status']) && $request_from_dispatch['status'] == 200) {
+                            DB::commit();
+                            $request_from_dispatch['url'] = $request_from_dispatch['url']."?set_unique_order_login=".$token;
+                            return $request_from_dispatch;
+                        } else {
+                            DB::rollback();
+                            return $request_from_dispatch;
+                        }
+                    } else {
+                        return response()->json([
+                        'status' => 'error',
+                        'message' => 'Laundry service in not available.'
+                    ]);
+                    }
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+            }
+    }
+
+    // check and update in dispatcher panel laundry
+    public function checkUpdateVendorToDispatchLaundry($dispatch_domain){
+        try {
+                 
+                $vendor = Vendor::find($dispatch_domain->vendor_id);
+                $unique = Auth::user()->code;
+                $postdata =  ['vendor_id' => $dispatch_domain->vendor_id ?? 0,
+                'name' => $vendor->name ?? "Manager".$dispatch_domain->vendor_id,
+                'phone_number' =>  $vendor->phone_no ?? rand('11111','458965'),
+                'email' => $unique.$vendor->id."_royodispatch@dispatch.com",
+                'team_tag' => $unique."_".$vendor->id,
+                'public_session' => $dispatch_domain->token];
+           
+                $client = new GClient(['headers' => ['personaltoken' => $dispatch_domain->laundry_service_key,
+                                                    'shortcode' => $dispatch_domain->laundry_service_key_code,
+                                                    'content-type' => 'application/json']
+                                                        ]);
+                                     
+                $url = $dispatch_domain->laundry_service_key_url;
+                $res = $client->post(
+                    $url.'/api/update-create-vendor-order',
+                    ['form_params' => (
+                            $postdata
+                        )]
+                );
+                $response = json_decode($res->getBody(), true);
+                if ($response) {
+                   return $response;
+                }
+                return $response;
+                
+            }catch(\Exception $e)
+                    {   
+                        $data = [];
+                        $data['status'] = 400;
+                        $data['message'] =  $e->getMessage();
+                        return $data;
+                                
+                    }
+                
+        }
     
+
 }

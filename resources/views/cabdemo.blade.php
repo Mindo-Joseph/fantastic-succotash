@@ -1,7 +1,235 @@
 @extends('layouts.store', ['title' => 'Product'])
 @section('content')
 
+<style>
+    
+/* Jet Taxi Home Page Css */
+.jet-taxi-banner {
+    background: linear-gradient(180deg, rgb(248 242 255), #FFFFFF 99.91%);
+    padding: 63px 0 36px;
+}
 
+.jet-banner-right {
+    height: 430px;
+    margin: auto;  
+    width: auto; 
+}
+
+.jet-banner-right img {
+    height: 100%;
+}
+
+.jet-taxi-banner h1 {
+    color: #000000;
+    /* font-family: "Gill Sans"; */
+    font-size: 56px;
+    font-weight: 600;
+    letter-spacing: 0;
+    margin-bottom: 21px;
+    line-height: 67px;
+}
+
+.jet-taxi-banner p {
+    color: #3A3A3A;
+    /* font-family: "Gill Sans"; */
+    font-size: 24px;
+    letter-spacing: 0;
+    line-height: 32px;
+    margin-bottom: 23px;
+}
+
+
+.work-box {
+    border: 1px solid rgba(151, 151, 151, 0.22);
+    border-radius: 4px;
+    background-color: #FDFBFF;
+    box-shadow: 0 15px 25px 0 rgba(70, 44, 103, 0.07);
+    padding: 40px 28px;
+    height: 100%;
+}
+
+.work-box h3 {
+    color: #000000;
+    /* font-family: "Gill Sans"; */
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0;
+    margin: 32px 0 12px;
+    line-height: 29px;
+}
+
+.work-box p {
+    color: #3A3A3A;
+    /* font-family: "Gill Sans"; */
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 22px;
+    text-align: center;
+}
+
+.app-content {
+    width: 270px;
+    max-width: 100%;
+}
+
+.app-content .number {
+    height: 56px;
+    line-height: 56px;
+    width: 56px;
+    border-radius: 3.2px;
+    background-color: rgba(207,172,255,0.29);
+    color: #7C1EFF;
+    /* font-family: "Gill Sans"; */
+    font-size: 25.6px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-align: center;
+}
+
+.app-content h4 {
+    color: #000000;
+    /* font-family: "Gill Sans"; */
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 24px;
+}
+
+.app-content p {
+    opacity: 0.68;
+    color: #000000;
+    /* font-family: "Gill Sans"; */
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: 19px;
+}
+
+@media(max-width: 767px){
+    .app-content{
+        width: 100%;
+    }
+    .app-content{
+        margin-top: 30px;
+    }
+}
+
+</style>
+
+    <!-- royo default demo -->
+    
+    <div class="cab-content-area">
+
+        <!-- Royo Business Start From Here -->
+        <section class="royo-business p-0">
+            <div class="container p-64">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="title-36">Royo for Business</h2>
+                        <div class="description-text">
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, labore!</p>
+                        </div>
+                        <a class="btn btn-solid new-btn d-inline-block" href="#">See how</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Royo Business Start From Here -->
+        <section class="royo-rental p-0">
+            <div class="container">                
+               
+                <div class="row align-items-center p-64">
+                    <div class="col-sm-6">
+                        <div class="cab-img-box">
+                            <img class="img-fluid" src="{{asset('front-assets/images/gettyimages-1139275491-2048x2048_With-Mask.jpg')}}" alt="">
+                        </div>
+                    </div>
+                    <div class="offset-md-1 col-sm-6 col-md-5 pl-lg-4">
+                        <div class="">
+                            <h2 class="title-52">Royo for Business</h2>
+                            <div class="description-text">
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem nisi officiis numquam!</p>
+                            </div>
+                            <a class="learn-more bottom-line" href="#">Learn more</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-center p-64">
+                    <div class="col-sm-6 order-md-1">
+                        <div class="cab-img-box">
+                            <img class="img-fluid" src="{{asset('front-assets/images/rentals-iindia.jpg')}}" alt="">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 order-md-0">
+                        <div class="pr-lg-5 mr-lg-5">
+                            <h2 class="title-52">Royo Intercity </h2>
+                            <div class="description-text">
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem nisi officiis numquam!</p>
+                            </div>
+                            <a class="learn-more" href="#">Learn more</a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- Focused On Safety Start From Here -->
+        <section class="focused-on-safety p-0">
+            <div class="container p-64">
+                <div class="row mb-4 pb-2">
+                    <div class="col-12">
+                        <div class="title-36">Focused on safety, wherever you go</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="safety-box">
+                            <div class="safety-img">
+                                <img class="img-fluid" src="{{asset('front-assets/images/Safety_Home_Img2x.jpg')}}" alt="">
+                            </div>
+                            <div class="safety-content">
+                                <h3 class="mt-0">Our commitment to your safety</h3>
+                                <div class="safety-text">
+                                    <p>With every safety feature and every standard in our Community Guidelines, we're committed to helping to create a safe environment for our users.</p>
+                                </div>
+                                <div class="safety-links">
+                                    <a class="bottom-line" href="#">
+                                        <span>Read about our Community Guidelines</span>
+                                    </a>
+                                    <a class="bottom-line" href="#">
+                                        <span>See all safety features</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="safety-box">
+                            <div class="safety-img">
+                                <img class="img-fluid" src="{{asset('front-assets/images/Safety_Home_Img2x.jpg')}}" alt="">
+                            </div>
+                            <div class="safety-content">
+                                <h3 class="mt-0">Setting 10,000+ cities in motion</h3>
+                                <div class="safety-text">
+                                    <p>With every safety feature and every standard in our Community Guidelines, we're committed to helping to create a safe environment for our users.</p>
+                                </div>
+                                <div class="safety-links">
+                                    <a class="bottom-line" href="#">
+                                        <span>View all cities</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- end royo default demo -->
 
 
     <!-- Cab Booking Start From Here -->

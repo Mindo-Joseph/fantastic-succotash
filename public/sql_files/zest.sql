@@ -13,6 +13,7 @@
 --
 -- Dumping data for table `vendors`
 --
+
 INSERT INTO `vendors` (`id`, `name`, `slug`, `desc`, `logo`, `banner`, `address`, `email`, `website`, `phone_no`, `latitude`, `longitude`, `order_min_amount`, `order_pre_time`, `auto_reject_time`, `commission_percent`, `commission_fixed_per_order`, `commission_monthly`, `dine_in`, `takeaway`, `delivery`, `status`, `add_category`, `setting`, `is_show_vendor_details`, `created_at`, `updated_at`, `show_slot`, `vendor_templete_id`, `auto_accept_order`) VALUES
 (1, 'Aramex', 'aramex', NULL, 'vendor/jUKjbs8NML5OiZ7lMJGJtJt2Gp8qDSuxy5ISumw4.png', 'vendor/LScwOAff8dQYbXUFUj3i2L8UYJsmAXGqg4OX5auH.png', 'Chandigarh, India', 'aramex123@support.com', NULL, '8596365478', '30.733314800000', '76.779417900000', '0.00', NULL, NULL, 1, '0.00', '0.00', 0, 1, 1, 1, 1, 0, 0, NULL, '2021-09-29 06:52:30', 1, NULL, 0),
 (2, 'Green Cab', 'green-cab', NULL, 'vendor/WcPwyD9QS3traKxqhCcKUDxOCWV4vGFovcnRaSoX.jpg', 'vendor/uVJNBtJSqmXdnEa8I9FYnw9fNTQlgRN7todvIDcY.jpg', 'Chandigarh, India', 'green@support.com', NULL, '7485587489', '30.733314800000', '76.779417900000', '0.00', NULL, NULL, 1, '0.00', '0.00', 0, 0, 1, 2, 1, 0, 0, '2021-09-29 06:53:39', '2021-09-29 07:16:52', 1, NULL, 0);
@@ -141,7 +142,6 @@ INSERT INTO `category_translations` (`id`, `name`, `trans-slug`, `meta_title`, `
 (14, 'Cab Service', NULL, 'Cab Service', NULL, NULL, 14, 1, '2021-09-29 06:47:56', '2021-09-29 07:09:51'),
 (15, 'Moto Service', NULL, 'Moto Service', NULL, NULL, 15, 1, '2021-09-29 06:48:47', '2021-09-29 07:09:51'),
 (16, 'Auto Service', NULL, 'Auto Service', NULL, NULL, 16, 1, '2021-09-29 06:49:21', '2021-09-29 07:09:51');
-
 
 -- --------------------------------------------------------
 
@@ -355,7 +355,7 @@ INSERT INTO `vendor_categories` (`id`, `vendor_id`, `category_id`, `status`, `cr
 -- --------------------------------------------------------
 
 INSERT INTO `mobile_banners` (`id`, `name`, `description`, `image`, `validity_on`, `sorting`, `status`, `start_date_time`, `end_date_time`, `redirect_category_id`, `redirect_vendor_id`, `link`, `created_at`, `updated_at`) VALUES
-(1, 'Taxi 1', NULL, 'banner/UKarszRa3k84hl0d7uFJO8MWxeTTuqTqq140iQ0W.jpg', 0, 1, 1, '2021-09-29 12:36:00', '2022-09-30 12:00:00', NULL, NULL, NULL, NULL, '2021-09-29 07:07:34');
+(1, 'Taxi 1', NULL, 'banner/nFuSarlIxDSvaxCWepwKicgzG5ZXER7tZrcAp3E4.jpg', 0, 1, 1, '2021-09-29 12:36:00', '2022-09-30 12:00:00', NULL, NULL, NULL, NULL, '2021-09-29 07:07:34');
 
 
 INSERT INTO `cab_booking_layouts` (`id`, `title`, `slug`, `order_by`, `is_active`, `created_at`, `updated_at`) VALUES
@@ -385,10 +385,56 @@ INSERT INTO `cab_booking_layout_transaltions` (`id`, `title`, `cab_booking_layou
 (8, NULL, 8, 1, '2021-10-14 01:06:39', '2021-10-14 01:06:39', '<div class=\"cab-content-area\">\n\n        <!-- Royo Business Start From Here -->\n        <section class=\"royo-business p-0\">\n            <div class=\"container p-64\">\n                <div class=\"row\">\n                    <div class=\"col-12\">\n                        <h2 class=\"title-36\">Royo for Business</h2>\n                        <div class=\"description-text\">\n                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, labore!</p>\n                        </div>\n                        <a class=\"btn btn-solid new-btn d-inline-block\" href=\"#\">See how</a>\n                    </div>\n                </div>\n            </div>\n        </section>\n\n        <!-- Royo Business Start From Here -->\n        <section class=\"royo-rental p-0\">\n            <div class=\"container\">                \n               \n                <div class=\"row align-items-center p-64\">\n                    <div class=\"col-sm-6\">\n                        <div class=\"cab-img-box\">\n                            <img class=\"img-fluid\" src=\"https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_1116,h_744/v1624484990/assets/fa/f20c42-425a-4243-866b-b480d3bd68b4/original/gettyimages-1139275491-2048x2048_With-Mask.png\" alt=\"\">\n                        </div>\n                    </div>\n                    <div class=\"offset-md-1 col-sm-6 col-md-5 pl-lg-4\">\n                        <div class=\"\">\n                            <h2 class=\"title-52\">Royo for Business</h2>\n                            <div class=\"description-text\">\n                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem nisi officiis numquam!</p>\n                            </div>\n                            <a class=\"learn-more bottom-line\" href=\"#\">Learn more</a>\n                        </div>\n                    </div>\n                </div>\n\n                <div class=\"row align-items-center p-64\">\n                    <div class=\"col-sm-6 order-md-1\">\n                        <div class=\"cab-img-box\">\n                            <img class=\"img-fluid\" src=\"https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_558,h_372/v1623719981/assets/4d/b05e4c-7340-40c4-a3e9-da0de41f14fc/original/rentals-iindia.jpg\" alt=\"\">\n                        </div>\n                    </div>\n                    <div class=\"col-sm-6 order-md-0\">\n                        <div class=\"pr-lg-5 mr-lg-5\">\n                            <h2 class=\"title-52\">Royo Intercity </h2>\n                            <div class=\"description-text\">\n                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem nisi officiis numquam!</p>\n                            </div>\n                            <a class=\"learn-more\" href=\"#\">Learn more</a>\n                        </div>\n                    </div>\n                </div>\n                \n            </div>\n        </section>\n\n        <!-- Focused On Safety Start From Here -->\n        <section class=\"focused-on-safety p-0\">\n            <div class=\"container p-64\">\n                <div class=\"row mb-4 pb-2\">\n                    <div class=\"col-12\">\n                        <div class=\"title-36\">Focused on safety, wherever you go</div>\n                    </div>\n                </div>\n                <div class=\"row\">\n                    <div class=\"col-md-6\">\n                        <div class=\"safety-box\">\n                            <div class=\"safety-img\">\n                                <img class=\"img-fluid\" src=\"https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_558,h_372/v1613520218/assets/3e/e98625-31e6-4536-8646-976a1ee3f210/original/Safety_Home_Img2x.png\" alt=\"\">\n                            </div>\n                            <div class=\"safety-content\">\n                                <h3 class=\"mt-0\">Our commitment to your safety</h3>\n                                <div class=\"safety-text\">\n                                    <p>With every safety feature and every standard in our Community Guidelines, we\'re committed to helping to create a safe environment for our users.</p>\n                                </div>\n                                <div class=\"safety-links\">\n                                    <a class=\"bottom-line\" href=\"#\">\n                                        <span>Read about our Community Guidelines</span>\n                                    </a>\n                                    <a class=\"bottom-line\" href=\"#\">\n                                        <span>See all safety features</span>\n                                    </a>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"col-md-6\">\n                        <div class=\"safety-box\">\n                            <div class=\"safety-img\">\n                                <img class=\"img-fluid\" src=\"https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_558,h_372/v1613520218/assets/3e/e98625-31e6-4536-8646-976a1ee3f210/original/Safety_Home_Img2x.png\" alt=\"\">\n                            </div>\n                            <div class=\"safety-content\">\n                                <h3 class=\"mt-0\">Setting 10,000+ cities in motion</h3>\n                                <div class=\"safety-text\">\n                                    <p>With every safety feature and every standard in our Community Guidelines, we\'re committed to helping to create a safe environment for our users.</p>\n                                </div>\n                                <div class=\"safety-links\">\n                                    <a class=\"bottom-line\" href=\"#\">\n                                        <span>View all cities</span>\n                                    </a>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </section>\n\n    </div>');
 
 
+INSERT INTO `loyalty_cards` (`id`, `name`, `description`, `image`, `minimum_points`, `per_order_minimum_amount`, `per_order_points`, `per_purchase_minimum_amount`, `amount_per_loyalty_point`, `redeem_points_per_primary_currency`, `status`, `created_at`, `updated_at`, `loyalty_check`) VALUES
+(1, 'Gold Plan', 'Gold Loyalty Card', '2f3120/loyalty/image/im5953PjFoo5xub5X4JKes2yV2CwnoAaBiy8ACh1.png', 400, NULL, 5, NULL, 10, 10, '0', '2021-11-16 05:03:53', '2021-11-16 05:15:49', '0'),
+(2, 'Silver Plan', 'Silver Loyalty Card', '2f3120/loyalty/image/EAJdZtUl3sjzDLyvZfAjadapVc1S3eAQBSAqvjbr.png', 600, NULL, 8, NULL, 14, 10, '0', '2021-11-16 05:04:29', '2021-11-16 05:15:49', '0'),
+(3, 'Platinum Plan', 'Platinum Loyalty Card', '2f3120/loyalty/image/rHwJcu9Q1NWp7TXnANRWoBOhdlWBPVbrBZgS2w1g.png', 800, NULL, 10, NULL, 20, 10, '0', '2021-11-16 05:07:24', '2021-11-16 05:15:49', '0');
 
+INSERT INTO `app_stylings` (`id`, `name`, `type`, `created_at`, `updated_at`) VALUES
+(1, 'Regular Font', 2, NULL, NULL),
+(2, 'Medium Font', 2, NULL, NULL),
+(3, 'Bold Font', 2, NULL, NULL),
+(4, 'Primary Color', 4, NULL, NULL),
+(5, 'Secondary Color', 4, NULL, NULL),
+(6, 'Tertiary Color', 4, NULL, NULL),
+(7, 'Tab Bar Style', 3, NULL, NULL),
+(8, 'Home Page Style', 3, NULL, NULL),
+(9, 'Home Tag Line', 1, NULL, NULL);
+
+
+INSERT INTO `app_styling_options` (`id`, `app_styling_id`, `name`, `image`, `is_selected`, `created_at`, `updated_at`, `template_id`) VALUES
+(1, 1, 'CircularStd-Book', NULL, 1, NULL, NULL, NULL),
+(2, 1, 'SFProText-Regular', NULL, 0, NULL, NULL, NULL),
+(3, 1, 'Futura-Normal', NULL, 0, NULL, NULL, NULL),
+(4, 1, 'Eina02-Regular', NULL, 0, NULL, NULL, NULL),
+(5, 2, 'CircularStd-Medium', NULL, 1, NULL, NULL, NULL),
+(6, 2, 'SFProText-Medium', NULL, 0, NULL, NULL, NULL),
+(7, 2, 'Futura-Medium', NULL, 0, NULL, NULL, NULL),
+(8, 2, 'Eina02-SemiBold', NULL, 0, NULL, NULL, NULL),
+(9, 3, 'CircularStd-Bold', NULL, 1, NULL, NULL, NULL),
+(10, 3, 'SFProText-Bold', NULL, 0, NULL, NULL, NULL),
+(11, 3, 'FuturaBT-Heavy', NULL, 0, NULL, NULL, NULL),
+(12, 3, 'Eina02-Bold', NULL, 0, NULL, NULL, NULL),
+(13, 4, '#406FCE', NULL, 1, NULL, '2021-10-04 07:36:23', NULL),
+(14, 5, '#fff', NULL, 1, NULL, NULL, NULL),
+(15, 6, '#fff', NULL, 1, NULL, NULL, NULL),
+(16, 7, 'Tab 1', 'bar.png', 0, NULL, '2021-10-06 11:33:15', 1),
+(17, 7, 'Tab 2', 'bar_two.png', 0, NULL, '2021-10-06 11:33:15', 2),
+(18, 7, 'Tab 3', 'bar_three.png', 0, NULL, '2021-10-06 11:33:15', 3),
+(19, 7, 'Tab 4', 'bar_four.png', 1, NULL, '2021-10-06 11:33:15', 4),
+(20, 7, 'Tab 5', 'bar_five.png', 0, NULL, '2021-10-06 11:33:15', 5),
+(21, 8, 'Home Page 1', 'home.png', 0, NULL, '2021-10-06 11:33:16', 1),
+(22, 8, 'Home Page 4', 'home_four.png', 0, NULL, '2021-10-06 11:33:16', 2),
+(23, 8, 'Home Page 5', 'home_five.png', 0, NULL, '2021-10-06 11:33:16', 3),
+(24, 9, 'Create a free account and join us!', NULL, 1, NULL, NULL, NULL),
+(25, 8, 'Home Page 6', 'home_six.png', 1, '2021-10-12 14:10:13', '2021-10-12 14:10:13', 4);
 
 
 
 UPDATE `client_preferences` SET `business_type` = 'taxi' WHERE `client_preferences`.`id` = 1;
 
 UPDATE `client_preferences` SET `is_hyperlocal` = 0 WHERE `client_preferences`.`id` = 1;
+
+UPDATE `app_styling_options` SET `is_selected` = 0 WHERE `app_styling_options`.`app_styling_id` = 8;
+
+UPDATE `app_styling_options` SET `is_selected` = 1 WHERE `app_styling_options`.`image` = 'home_six.png';

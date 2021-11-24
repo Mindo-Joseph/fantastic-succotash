@@ -166,7 +166,15 @@ trait ApiResponser
 			return false;
 	}
 
-
+	# check if laundry on
+	public function checkIfLaundryOnCommon()
+	{
+		$preference = ClientPreference::select('id', 'need_laundry_service', 'laundry_service_key', 'laundry_service_key_code', 'laundry_service_key_url')->first();
+		if ($preference->need_laundry_service == 1 && !empty($preference->laundry_service_key) && !empty($preference->laundry_service_key_code) && !empty($preference->laundry_service_key_url))
+			return $preference;
+		else
+			return false;
+	}
 
 	# check if on demand service  on 
 	public function checkIfOnDemandOnCommon()
@@ -178,12 +186,38 @@ trait ApiResponser
 			return false;
 	}
 
+
+	# set currency in session 
+	public function setCurrencyInSesion(){
+		$currency_id = Session::get('customerCurrency');
+		if(isset($currency_id) && !empty($currency_id)){
+            $all = ClientCurrency::orderBy('is_primary','desc')->where('currency_id',$currency_id)->first();
+            if(empty($all)){
+                $primaryCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+                Session::put('customerCurrency',$primaryCurrency->currency_id);
+				Session::put('currencySymbol',$primaryCurrency->currency->symbol);
+                $currency_id = $primaryCurrency->currency_id ;
+            }else{
+                $currency_id = (int)$currency_id;
+                Session::put('customerCurrency',$currency_id);
+            }
+        }
+        else{
+            $primaryCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+            Session::put('customerCurrency',$primaryCurrency->currency_id);
+			Session::put('currencySymbol',$primaryCurrency->currency->symbol);
+            $currency_id = $primaryCurrency->currency_id ;
+        }
+
+		return  $currency_id;
+	}
+
 	public function getCart($cart, $address_id = 0)
 	{
 		$cart_id = $cart->id;
 		$user = Auth::user();
-		$langId = Session::get('customerLanguage');
-		$curId = Session::get('customerCurrency');
+		$langId = Auth::user()->language;
+        $curId = Auth::user()->language;
 		$pharmacy = ClientPreference::first();
 		$cart->pharmacy_check = $pharmacy->pharmacy_check;
 		$customerCurrency = ClientCurrency::where('currency_id', $curId)->first();

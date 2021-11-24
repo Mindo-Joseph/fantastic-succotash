@@ -117,7 +117,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                             @if($client_preferences->dinein_check == 1)
-                                                {!! Form::label('title', __('Dine In'),['class' => 'control-label']) !!} 
+                                                {!! Form::label('title', getNomenclatureName('Dine-In', true),['class' => 'control-label']) !!} 
                                                 <div class="mt-md-1">
                                                     <input type="checkbox" data-plugin="switchery" name="dine_in" class="form-control validity" data-color="#43bee1" checked='checked'>
                                                 </div>
@@ -127,7 +127,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                             @if($client_preferences->takeaway_check == 1)
-                                                {!! Form::label('title', __('Takeaway'),['class' => 'control-label']) !!} 
+                                                {!! Form::label('title', getNomenclatureName('Takeaway', true),['class' => 'control-label']) !!} 
                                                 <div class="mt-md-1">
                                                     <input type="checkbox" data-plugin="switchery" name="takeaway" class="form-control validity" data-color="#43bee1" checked='checked'>
                                                 </div>
@@ -137,7 +137,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                             @if($client_preferences->delivery_check == 1)
-                                                {!! Form::label('title', __('Delivery'),['class' => 'control-label']) !!} 
+                                                {!! Form::label('title', getNomenclatureName('Delivery', true) ,['class' => 'control-label']) !!} 
                                                 <div class="mt-md-1">
                                                     <input type="checkbox" data-plugin="switchery" name="delivery" class="form-control validity" data-color="#43bee1" checked='checked'>
                                                 </div>
@@ -146,6 +146,29 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                @foreach($vendor_registration_documents as $vendor_registration_document)
+                                    @if(isset($vendor_registration_document->primary) && !empty($vendor_registration_document->primary))
+                                    <div class="col-md-6" >
+                                        <div class="form-group" id="{{$vendor_registration_document->primary->slug??''}}Input">
+                                            <label for="">{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</label>
+                                            @if(strtolower($vendor_registration_document->file_type) == 'text')
+                                                <input id="input_file_logo_{{$vendor_registration_document->id}}" type="text" name="{{$vendor_registration_document->primary->slug}}" class="form-control">
+                                            @else
+                                                @if(strtolower($vendor_registration_document->file_type) == 'image')
+                                                <input type="file" accept="image/*" data-plugins="dropify" name="{{$vendor_registration_document->primary->slug}}" class="dropify" data-default-file="" />
+                                                @else
+                                                <input type="file" accept=".pdf" data-plugins="dropify" name="{{$vendor_registration_document->primary->slug}}" class="dropify" data-default-file="" />
+                                                @endif
+                                            @endif
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong></strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    @endif
+                                 @endforeach
                             </div>
                         </div>
                     </div>

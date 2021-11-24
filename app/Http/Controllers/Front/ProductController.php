@@ -12,6 +12,14 @@ use App\Http\Controllers\Front\FrontController;
 use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, ProductVariant, ProductVariantSet,OrderProduct,VendorOrderStatus,OrderProductRating,Category, Vendor};
 class ProductController extends FrontController{
     private $field_status = 2;
+
+    public function __construct()
+    {
+        
+       
+    }
+
+    
     /**
      * Display product By Id
      *
@@ -21,7 +29,15 @@ class ProductController extends FrontController{
         $user = Auth::user();
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
+        $customerCurrency = Session::get('customerCurrency');
+        if(isset($customerCurrency) && !empty($customerCurrency)){
+        }
+        else{
+            $primaryCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+            Session::put('customerCurrency', $primaryCurrency->currency_id);
+        }
         $curId = Session::get('customerCurrency');
+
         $navCategories = $this->categoryNav($langId);
         $product = Product::select('id', 'vendor_id')->where('url_slug', $url_slug)->firstOrFail();
         $product_in_cart = CartProduct::where(["product_id" => $product->id]);
@@ -73,6 +89,7 @@ class ProductController extends FrontController{
                 $z->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title');
                 $z->where('vt.language_id', $langId);
                 $z->where('product_variant_sets.product_id', $p_id);
+                $z->where('vr.status', 1);
             },
             'variantSet.option2' => function ($zx) use ($langId, $p_id) {
                 $zx->where('vt.language_id', $langId)
@@ -90,7 +107,7 @@ class ProductController extends FrontController{
                 $query->where('user_wishlists.user_id', $user->id);
             });
         }
-        $product = $product->with('related')->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating')
+        $product = $product->with('related')->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating','sell_when_out_of_stock' )
             ->where('url_slug', $url_slug)
             ->where('is_live', 1)
             ->firstOrFail();
@@ -98,6 +115,9 @@ class ProductController extends FrontController{
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         if($clientCurrency){
             $doller_compare = $clientCurrency->doller_compare;
+        }else{
+            $clientCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+            $doller_compare = $clientCurrency->doller_compare ?? 1;
         }
         $product->related_products = $this->metaProduct($langId, $doller_compare, 'related', $product->related);
         foreach ($product->variant as $key => $value) {
@@ -237,6 +257,13 @@ class ProductController extends FrontController{
      * @return \Illuminate\Http\Response
      */
     public function getVariantData(Request $request, $domain = '', $sku){
+        $customerCurrency = Session::get('customerCurrency');
+        if(isset($customerCurrency) && !empty($customerCurrency)){
+        }
+        else{
+            $primaryCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+            Session::put('customerCurrency', $primaryCurrency->currency_id);
+        }
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         $product = Product::select('id')->where('sku', $sku)->firstOrFail();
         $pv_ids = array();

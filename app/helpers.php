@@ -88,4 +88,29 @@ function convertDateTimeInTimeZone($date, $timezone, $format = 'Y-m-d H:i:s'){
     $date->setTimezone($timezone);
     return $date->format($format);
 }
-
+function dateTimeInUserTimeZone($date, $timezone, $showDate=true, $showTime=true, $showSeconds=false){
+    $preferences = ClientPreference::select('date_format', 'time_format')->where('id', '>', 0)->first();
+    $date_format = (!empty($preferences->date_format)) ? $preferences->date_format : 'YYYY-MM-DD';
+    $time_format = (!empty($preferences->time_format)) ? $preferences->time_format : '24';
+    $date = Carbon::parse($date, 'UTC');
+    $date->setTimezone($timezone);
+    $secondsKey = '';
+    $timeFormat = '';
+    $dateFormat = '';
+    if($showDate){
+        $dateFormat = $date_format;
+    }
+    if($showTime){
+        if($showSeconds){
+            $secondsKey = ':ss';
+        }
+        if($time_format == '12'){
+            $timeFormat = ' hh:mm'.$secondsKey.' A';
+        }else{
+            $timeFormat = ' HH:mm'.$secondsKey;
+        }
+    }
+    
+    $format = $dateFormat . $timeFormat;
+    return $date->isoFormat($format);
+}

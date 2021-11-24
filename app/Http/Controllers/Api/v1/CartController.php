@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet, UserAddress, ClientPreference, LuxuryOption, Vendor, LoyaltyCard, SubscriptionInvoicesUser, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation, OrderVendor, OrderProductAddon, OrderTax, OrderProduct, OrderProductPrescription, VendorOrderStatus};
 use GuzzleHttp\Client as GCLIENT;
-
+use Log;
 class CartController extends BaseController
 {
     use ApiResponser;
@@ -376,6 +376,7 @@ class CartController extends BaseController
         $cartID = $cart->id;
         $upSell_products = collect();
         $crossSell_products = collect();
+        $delifproductnotexist = CartProduct::where('cart_id', $cartID)->doesntHave('product')->delete();
         $cartData = CartProduct::with([
             'vendor', 'coupon' => function ($qry) use ($cartID) {
                 $qry->where('cart_id', $cartID);
@@ -416,6 +417,8 @@ class CartController extends BaseController
             }
             $user = User::find($cart->user_id);
             $cart->scheduled_date_time = !empty($cart->scheduled_date_time) ? convertDateTimeInTimeZone($cart->scheduled_date_time, $user->timezone, 'Y-m-d\TH:i') : NULL;
+            $cart->schedule_pickup = !empty($cart->schedule_pickup) ? convertDateTimeInTimeZone($cart->schedule_pickup, $user->timezone, 'Y-m-d\TH:i') : NULL;
+            $cart->schedule_dropoff = !empty($cart->schedule_dropoff) ? convertDateTimeInTimeZone($cart->schedule_dropoff, $user->timezone, 'Y-m-d\TH:i') : NULL;
             $address = UserAddress::where('user_id', $cart->user_id)->where('is_primary', 1)->first();
             $address_id = ($address) ? $address->id : 0;
         }
@@ -431,18 +434,13 @@ class CartController extends BaseController
             $vendor_details = [];
             $tax_details = [];
             $is_vendor_closed = 0;
+            $delay_date = 0;
             foreach ($cartData as $ven_key => $vendorData) {
+             
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
 
-                // if(Session::has('vendorTable')){
-                //     if((Session::has('vendorTableVendorId')) && (Session::get('vendorTableVendorId') == $vendorData->vendor_id)){
-                //         $cart_dinein_table_id = Session::get('vendorTable');
-                //     }
-                //     Session::forget(['vendorTable', 'vendorTableVendorId']);
-                // }else{
                 $cart_dinein_table_id = $vendorData->vendor_dinein_table_id;
-                // }
 
                 if ($action != 'delivery') {
                     $vendor_details['vendor_address'] = $vendorData->vendor->select('id', 'latitude', 'longitude', 'address')->where('id', $vendorData->vendor_id)->first();
@@ -502,7 +500,11 @@ class CartController extends BaseController
                         }
                     }
                 }
+                
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
+                    if(isset($prod->product) && !empty($prod->product)){   
+
+
                     $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0;
                     $variantsData = $taxData = $vendorAddons = array();
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
@@ -516,6 +518,12 @@ class CartController extends BaseController
                     } else {
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
+
+                    if($prod->product->delay_hrs_min != 0){
+                        if($prod->product->delay_hrs_min > $delay_date)
+                        $delay_date = $prod->product->delay_hrs_min;
+                    }
+
                     if ($prod->pvariant) {
                         $variantsData['price']              = $price_in_currency;
                         $variantsData['id']                 = $prod->pvariant->id;
@@ -613,7 +621,7 @@ class CartController extends BaseController
                     $prod->variant_options = $variant_options;
                     $payable_amount = $payable_amount;
                     $prod->product_addons = $vendorAddons;
-
+                //    Log::info($prod);
                     $product = Product::with([
                         'variant' => function ($sel) {
                             $sel->groupBy('product_id');
@@ -633,7 +641,11 @@ class CartController extends BaseController
                     if($cross_prods){
                         $crossSell_products->push($cross_prods);
                     }
+                
+                
                 }
+            }
+
                 $couponApplied = 0;
                 if (!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 1)) {
                     $minimum_spend = $vendorData->coupon->promo->minimum_spend * $clientCurrency->doller_compare;
@@ -753,6 +765,7 @@ class CartController extends BaseController
         $cart->cart_dinein_table_id = $cart_dinein_table_id;
         $cart->upSell_products = ($upSell_products) ? $upSell_products->first() : collect();
         $cart->crossSell_products = ($crossSell_products) ? $crossSell_products->first() : collect();
+        $cart->delay_date =  $delay_date??0;
         return $cart;
     }
 
@@ -834,9 +847,24 @@ class CartController extends BaseController
                 if ($request->task_type == 'now') {
                     $request->schedule_dt = Carbon::now()->format('Y-m-d H:i:s');
                 } else {
+                    if(isset($request->schedule_dt) && !empty($request->schedule_dt))
                     $request->schedule_dt = Carbon::parse($request->schedule_dt, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
                 }
-                Cart::where('status', '0')->where('user_id', $user->id)->update(['specific_instructions' => $request->specific_instructions ?? null, 'schedule_type' => $request->task_type, 'scheduled_date_time' => $request->schedule_dt]);
+
+                if(isset($request->schedule_pickup) && !empty($request->schedule_pickup))    # for pickup laundry
+                $request->schedule_pickup = Carbon::parse($request->schedule_pickup, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
+
+                if(isset($request->schedule_dropoff) && !empty($request->schedule_dropoff))  # for pickup laundry
+                $request->schedule_dropoff = Carbon::parse($request->schedule_dropoff, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
+
+                Cart::where('status', '0')->where('user_id', $user->id)->update(['specific_instructions' => $request->specific_instructions ?? null, 
+                'schedule_type' => $request->task_type??null, 
+                'scheduled_date_time' => $request->schedule_dt??null,
+                'comment_for_pickup_driver' => $request->comment_for_pickup_driver??null,
+                'comment_for_dropoff_driver' => $request->comment_for_dropoff_driver??null,
+                'comment_for_vendor' => $request->comment_for_vendor??null,
+                'schedule_pickup' => $request->schedule_pickup??null,
+                'schedule_dropoff' => $request->schedule_dropoff??null]);
                 DB::commit();
                 return response()->json(['status' => 'Success', 'message' => 'Cart has been scheduled']);
             } else {

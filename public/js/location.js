@@ -58,6 +58,7 @@ $(document).ready(function () {
     });
 
     $( document ).ready(function() {
+        $('.date-items').removeClass('hide');
         $('.date-items').slick({
             infinite: true,
             speed: 300,
@@ -68,21 +69,31 @@ $(document).ready(function () {
             autoplay: false,
             autoplaySpeed: 5000,
             rtl: false,
-            responsive: [{
+            responsive: [
+                {
                 breakpoint: 1200,
                 settings: {
                     slidesToShow: 2,
                     slidesToScroll: 2
                 }
-            },
-            {
-                breakpoint: 767,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    arrows: true
-                }
-            } ]
+                },
+                {
+                    breakpoint: 767,
+                    settings: {
+                        slidesToShow: 5,
+                        slidesToScroll: 1,
+                        arrows: true
+                    }
+                },
+                {
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                        arrows: true
+                    }
+                } 
+            ]
         });
         
         $('.booking-time').slick({
@@ -268,6 +279,9 @@ $(document).ready(function () {
             vendor_type = vtype;
         }
         let selected_address = $("#address-input").val();
+        // console.log(latitude);
+        // console.log(selected_address);
+        // return 0;
         let selected_place_id = $("#address-place-id").val();
         $(".homepage-address span").text(selected_address).attr({ "title": selected_address, "data-original-title": selected_address });
         $("#edit-address").modal('hide');
@@ -283,13 +297,26 @@ $(document).ready(function () {
             type: "POST",
             dataType: 'json',
             url: home_page_data_url,
+            beforeSend: function(){
+                $("#shimmer_effect").show();
+            },
             success: function (response) {
                 if (response.status == "Success") {
-                    $('#main-menu').smartmenus('destroy');
-                    $("#main-menu").html('');
+                    // if($('.menu-slider').hasClass('slick-initialized')){
+                    //     $('.menu-slider').slick('destroy');
+                    // }
+                    // $('#main-menu').smartmenus('destroy');
+                     $("#main-menu").html('');
                     let nav_categories_template = _.template($('#nav_categories_template').html());
-                    $("#main-menu").append(nav_categories_template({ nav_categories: response.data.navCategories }));
-                    $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
+                     $("#main-menu").append(nav_categories_template({ nav_categories: response.data.navCategories }));
+                    // $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
+                //     if($(window).width() >= 320){
+                //         if(!$('.menu-slider').hasClass('slick-initialized')){
+                //             loadMainMenuSlider();
+                //         }
+                //    }
+                    resizeMenuSlider();
+                  
                     var path = window.location.pathname;
                     if (path == '/') {
                         $(".slide-6").slick('destroy');
@@ -360,32 +387,49 @@ $(document).ready(function () {
                     }
                 } else {
                 }
-            }
+            },
+            complete:function(data){
+                // Hide image container
+                $("#shimmer_effect").hide();
+               }
         });
     }
 
     function getLocation() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, null);
+            navigator.geolocation.getCurrentPosition(showPosition, defaultPosition);
         } else {
             alert("Geolocation is not supported by this browser.");
         }
     }
 
     function showPosition(position) {
-        let lat = position.coords.latitude;
-        let long = position.coords.longitude;
-        displayLocation(lat, long);
+        let lat = $("#address-latitude").val();
+        let long = $("#address-longitude").val();
+        let selectedPlaceId = $("#address-place-id").val();
+        let selectedAddress = $("#address-input").val();
+        if((lat != '') && (long != '')){
+            // console.log('location exists');
+            displayLocation(lat, long, selectedPlaceId, selectedAddress);
+        }else{
+            let lat = position.coords.latitude;
+            let long = position.coords.longitude;
+            displayLocation(lat, long);
+        }
+    }
+
+    function defaultPosition(){
+        displayLocation(defaultLatitude, defaultLongitude, '', defaultLocationName);
     }
 
     if (is_hyperlocal) {
-        if (!selected_address) {
+        // if (!selected_address) {
             getLocation();
-        }
-        let lat = $("#address-latitude").val();
-        let long = $("#address-longitude").val();
-        let placeId = $("#address-place-id").val();
-        displayLocation(lat, long, placeId);
+        // }
+        // let lat = $("#address-latitude").val();
+        // let long = $("#address-longitude").val();
+        // let placeId = $("#address-place-id").val();
+        // displayLocation(lat, long, placeId);
     }
 
     $(document).delegate(".confirm_address_btn", "click", function () {
@@ -440,7 +484,11 @@ $(document).ready(function () {
         });
     }
 
-    function displayLocation(latitude, longitude, placeId='') {
+    function displayLocation(latitude, longitude, placeId='', location='') {
+        // console.log(latitude);
+        // console.log(longitude);
+        // console.log(placeId);
+        // console.log(location);
         var geocoder;
         geocoder = new google.maps.Geocoder();
         var latlng = new google.maps.LatLng(latitude, longitude);
@@ -457,7 +505,8 @@ $(document).ready(function () {
 
         var geodata = { 'latLng': latlng };
         if(placeId != ''){
-            geodata.placeId = placeId;
+            geodata = { 'placeId': placeId };
+            // geodata.placeId = placeId;
         }
 
         geocoder.geocode(geodata,
@@ -466,13 +515,22 @@ $(document).ready(function () {
                     if (results[0]) {
                         var add = results[0].formatted_address;
                         var value = add.split(",");
+                        if(placeId == ''){
+                            placeId = results[0].place_id;
+                        }
+                        if(location != ''){
+                            add = location;
+                        }
 
                         count = value.length;
                         country = value[count - 1];
                         state = value[count - 2];
                         city = value[count - 3];
                         if (!selected_address) {
+                            $("#address-place-id").val(placeId);
                             $("#address-input").val(add);
+                            $("#address-latitude").val(latitude);
+                            $("#address-longitude").val(longitude);
                             $(".homepage-address span").text(value).attr({ "title": value, "data-original-title": value });
                             getHomePage(latitude, longitude);
                         }

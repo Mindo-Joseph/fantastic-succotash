@@ -11,11 +11,13 @@
     <div class="col-lg-6">
         <h4 class="page-title m-0">{{ __($label.' Address') }} </h4>
     </div>
+    @if($action != 'dine_in' && $action != 'takeaway')
     <div class="col-lg-6 mt-2 mt-lg-0 text-center" id="add_new_address_btn">
         <a class="add-address w-100 mx-auto" href="javascript:void(0)">
             <i class="fa fa-plus mr-1" aria-hidden="true"></i>{{__('Add New Address')}}
         </a>
     </div>
+    @endif
 </div>
 @if($action != 'delivery')
     @if(isset($vendor_details['vendor_address']))
@@ -37,6 +39,7 @@
             <h4>Book a table</h4>
             @if($vendor_details['vendor_tables']->isNotEmpty())
                 <select name="vendor_table" id="vendor_table" data-id="{{ $vendor_details['vendor_address']->id }}" class="form-control">
+                    <option value="">{{__('Select...')}}</option>
                     @foreach($vendor_details['vendor_tables'] as $k => $table)
                         <option value="{{$table->id}}" {{ ($cart_dinein_table_id == $table->id) ? 'selected' : '' }}>Category : {{ $table->category->title }} | Table : {{ $table->table_number }} | Seat Capacity : {{ $table->seating_number }}</option>
                     @endforeach
@@ -155,8 +158,8 @@
                         <span class="text-danger" id="country_error"></span>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="pincode">{{__('Pincode')}}</label>
-                        <input type="text" class="form-control" id="pincode" placeholder="{{__('Pincode')}}" value="">
+                        <label for="pincode">{{__('Zip Code')}}</label>
+                        <input type="text" class="form-control" id="pincode" placeholder="{{__('Zip Code')}}" value="">
                         <span class="text-danger" id="pincode_error"></span>
                     </div>
                     <div class="col-md-12 mt-3">

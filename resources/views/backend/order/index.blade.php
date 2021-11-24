@@ -69,19 +69,25 @@
                                         <div id="update-single-status">
                                             <% if(vendor.order_status_option_id == 1) { %>
                                                 <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>" data-count="<%= ve %>" data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="2" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Accept') }}</button>
-                                                <button class="update-status btn-danger" id="reject" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>
+                                                <!--<button class="update-status btn-danger" id="reject" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>-->
                                             <% } else if(vendor.order_status_option_id == 2) { %>
-                                                <button class="update-status btn-warning" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="4" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Processing') }}</button>
+                                                <button class="update-status btn-warning" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="4" data-order_vendor_id="<%= vendor.order_vendor_id %>" data-order_luxury_option="<%= order.luxury_option_id %>">{{ __('Processing') }}</button>
                                             <% } else if(vendor.order_status_option_id == 4) { %>
-                                                    <button class="update-status btn-success" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="5" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Out For Delivery') }}</button>
+                                                    <button class="update-status btn-success" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="5" data-order_vendor_id="<%= vendor.order_vendor_id %>">
+                                                        <% if( (order.luxury_option_id == 2) || (order.luxury_option_id == 3) ){ %>
+                                                            {{ __('Order Prepared') }}
+                                                        <% }else{ %>
+                                                            {{ __('Out For Delivery') }}
+                                                        <% } %>
+                                                    </button>
                                             <% } else if(vendor.order_status_option_id == 5) { %>
                                                 <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="6" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Delivered') }}</button>
                                             <% } else { %>
                                                     
                                             <% } %> 
-                                            <!--<% if((vendor.order_status_option_id == 1) || ((vendor.order_status_option_id != 6) && (vendor.order_status_option_id != 3))) { %>
+                                            <% if((vendor.order_status_option_id == 1) || ((vendor.order_status_option_id != 6) && (vendor.order_status_option_id != 3))) { %>
                                                 <button class="update-status btn-danger" id="reject" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>
-                                            <% } %>-->
+                                            <% } %>
                                         </div>
 
                                         <a href="<%= vendor.vendor_detail_url %>" class="row order_detail order_detail_data align-items-top pb-1 mb-0 card-box no-gutters h-100">
@@ -102,7 +108,7 @@
                                             </span>
                                             <div class="col-5 col-sm-3">
                                                 <h5 class="m-0"><%= vendor.vendor_name %></h5>
-                                                <ul class="status_box mt-3 pl-0">
+                                                <ul class="status_box mt-1 pl-0">
                                                     <li>
                                                         <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
 
@@ -241,7 +247,7 @@
     </div>
 </div>
 <script type="text/template" id="no_order_template">
-    <div class="error-msg"><p>{{ __('You have not any order yet now.') }}</p></div>
+    <div class="error-msg"><p>{{ __("You don't have orders right now.") }}</p></div>
     </script>
 <div class="loader" id="order_list_order">
     <div class="spinner-border avatar-lg text-primary m-2" role="status"></div>
@@ -497,6 +503,7 @@
             var full_div = that.data("full_div");
             var single_div = that.data("single_div");
             var status_option_id = that.data("status_option_id");
+            var luxury_option = that.data("order_luxury_option");
             var status_option_id_next = status_option_id + 1;
             var order_vendor_id = that.data("order_vendor_id");
             var order_id = that.data("order_id");
@@ -519,10 +526,15 @@
                         success: function(response) {
 
                             if (status_option_id == 4 || status_option_id == 5) {
-                                if (status_option_id == 4)
-                                    var next_status = 'Out For Delivery';
-                                else
+                                if (status_option_id == 4){
+                                    if((luxury_option == 2) || (luxury_option == 3)){
+                                        var next_status = 'Order Prepared';
+                                    }else{
+                                        var next_status = 'Out For Delivery';
+                                    }
+                                }else{
                                     var next_status = 'Delivered';
+                                }
                                 that.replaceWith("<button class='update-status btn-warning' data-full_div='" + full_div + "' data-single_div='" + single_div + "'  data-count='" + count + "'  data-order_id='" + order_id + "'  data-vendor_id='" + vendor_id + "'  data-status_option_id='" + status_option_id_next + "' data-order_vendor_id=" + order_vendor_id + ">" + next_status + "</button>");
                                 return false;
                             } else {

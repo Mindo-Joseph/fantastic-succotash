@@ -15,6 +15,11 @@ class CategoryController extends BaseController
 {
     private $blocking = '2';
     private $folderName = 'category/icon';
+    public function __construct()
+    {
+        $code = Client::orderBy('id','asc')->value('code');
+        $this->folderName = '/'.$code.'/category/icon';
+    }
     /**
      * Display a listing of the resource.
      *
@@ -22,10 +27,20 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-
+        $langId = Session::has('adminLanguage') ? Session::get('adminLanguage') : 1;
         $celebrity_check = ClientPreference::first()->value('celebrity_check');
 
-        $brands = Brand::with('bc.cate.primary')->with('translation_one')->where('status', '!=', 2)->orderBy('position', 'asc')->with('bc')->get();
+        // $brands = Brand::with('bc.cate.primary')->with('translation_one')->where('status', '!=', 2)->orderBy('position', 'asc')->with('bc')->get();
+        $brands = Brand::with(['bc.categoryDetail', 'bc.categoryDetail.translation' =>  function ($q) use ($langId) {
+            $q->select('category_translations.name', 'category_translations.category_id', 'category_translations.language_id')->where('category_translations.language_id', $langId);
+        }, 'translation' => function ($q) use ($langId) {
+            $q->select('title', 'brand_id', 'language_id')->where('language_id', $langId);
+        }])
+        ->whereHas('bc.categoryDetail', function ($q){
+            $q->where('categories.status', 1);
+        })
+        ->where('status', 1)->orderBy('position', 'asc')->get();
+
         $variants = Variant::with('option', 'varcategory.cate.primary','translation_one')->where('status', '!=', 2)->orderBy('position', 'asc')->get();
         $categories = Category::with('translation_one')->where('id', '>', '1')->where('is_core', 1)->orderBy('parent_id', 'asc')->orderBy('position', 'asc')->where('deleted_at', NULL)->where('status', 1);
 
@@ -64,11 +79,19 @@ class CategoryController extends BaseController
             case "taxi":
             $type =Type::where('title','Pickup/Delivery')->orderBY('sequence', 'ASC')->get();
             break;
+            case "food_grocery_ecommerce":
+            $type =Type::whereNotIn('title',['Pickup/Delivery','On Demand Service','Pickup/Parent'])->orderBY('sequence', 'ASC')->get();
+            break;
+            case "laundry":
+            $type =Type::whereNotIn('title',['Pickup/Delivery','Pickup/Parent','On Demand Service'])->orderBY('sequence', 'ASC')->get();
+            break;
             default:
             $type = Type::where('title', '!=', 'Pickup/Parent')->orderBY('sequence', 'ASC')->get();
         }
+
+        
        
-        $parCategory = Category::with('translation_one')->select('id', 'slug')->where('deleted_at', NULL)->whereIn('type_id', ['1', '3', '6', '8'])->where('is_core', 1)->where('status', 1)->get();
+        $parCategory = Category::with('translation_one')->select('id', 'slug')->where('deleted_at', NULL)->whereIn('type_id', ['1', '3', '6', '8','9'])->where('is_core', 1)->where('status', 1)->get();
         $vendor_list = Vendor::select('id', 'name')->where('status', '!=', $this->blocking)->get();
         $langs = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
             ->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.client_code', 'client_languages.is_primary')
@@ -147,6 +170,12 @@ class CategoryController extends BaseController
             case "taxi":
             $type =Type::where('title','Pickup/Delivery')->orderBY('sequence', 'ASC')->get();
             break;
+            case "food_grocery_ecommerce":
+            $type =Type::whereNotIn('title',['Pickup/Delivery','On Demand Service','Pickup/Parent'])->orderBY('sequence', 'ASC')->get();
+            break;
+            case "laundry":
+            $type =Type::whereNotIn('title',['Pickup/Delivery','Pickup/Parent','On Demand Service'])->orderBY('sequence', 'ASC')->get();
+            break;
             default:
             $type = Type::where('title', '!=', 'Pickup/Parent')->orderBY('sequence', 'ASC')->get();
         }
@@ -168,7 +197,7 @@ class CategoryController extends BaseController
         foreach ($category->translationSetUnique as $key => $value) {
             $existlangs[] = $value->language_id;
         }
-        $parCategory = Category::with('translation_one')->select('id', 'slug')->where('categories.id', '!=', $id)->where('status', '!=', $this->blocking)->whereIn('type_id', ['1', '3', '6', '8'])->where('deleted_at', NULL)->get();
+        $parCategory = Category::with('translation_one')->select('id', 'slug')->where('categories.id', '!=', $id)->where('status', '!=', $this->blocking)->whereIn('type_id', ['1', '3', '6', '8','9'])->where('deleted_at', NULL)->get();
         $dispatcher_warning_page_options = DispatcherWarningPage::where('status', 1)->get();
         $dispatcher_template_type_options = DispatcherTemplateTypeOption::where('status', 1)->get();
 

@@ -83,10 +83,12 @@
                                 <select class="form-control" id="date_format" name="date_format">
                                     <option value="DD-MM-YYYY" {{ ($preference && $preference->date_format =="DD-MM-YYYY")? "selected" : "" }}>
                                         DD-MM-YYYY</option>
-                                    <option value="DD/MM/YYYY" {{ ($preference && $preference->date_format =="DD/MM/YYYY")? "selected" : "" }}>
-                                        DD/MM/YYYY</option>
+                                    {{-- <option value="DD/MM/YYYY" {{ ($preference && $preference->date_format =="DD/MM/YYYY")? "selected" : "" }}>
+                                        DD/MM/YYYY</option> --}}
                                     <option value="YYYY-MM-DD" {{ ($preference && $preference->date_format =="YYYY-MM-DD")? "selected" : "" }}>
                                         YYYY-MM-DD</option>
+                                    <option value="MM/DD/YYYY" {{ ($preference && $preference->date_format =="MM/DD/YYYY")? "selected" : "" }}>
+                                        MM/DD/YYYY</option>
                                 </select>
                                 @if($errors->has('date_format'))
                                 <span class="text-danger" role="alert">
@@ -344,6 +346,60 @@
                                     <input type="text" name="search_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 4)}}">
                                     @if($k == 0)
                                         @if($errors->has('search_names.0'))
+                                            <span class="text-danger" role="alert">
+                                                <strong>{{ __("The primary language name field is required.") }}</strong>
+                                            </span>
+                                        @endif
+                                    @endif
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        <div class="row mb-2 flex-nowrap">
+                            @foreach($client_languages as $k => $client_language)
+                            <div class="col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label for="custom_domain">{{ __("Wishlist") }}({{$client_language->langName}})</label>
+                                    <input type="hidden" name="wishlist_language_ids[]" value="{{$client_language->langId}}">
+                                    <input type="text" name="wishlist_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 5)}}">
+                                    @if($k == 0)
+                                        @if($errors->has('wishlist_names.0'))
+                                            <span class="text-danger" role="alert">
+                                                <strong>{{ __("The primary language name field is required.") }}</strong>
+                                            </span>
+                                        @endif
+                                    @endif
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        <div class="row mb-2 flex-nowrap">
+                            @foreach($client_languages as $k => $client_language)
+                            <div class="col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label for="custom_domain">{{ __("Dine-In") }}({{$client_language->langName}})</label>
+                                    <input type="hidden" name="dinein_language_ids[]" value="{{$client_language->langId}}">
+                                    <input type="text" name="dinein_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 6)}}">
+                                    @if($k == 0)
+                                        @if($errors->has('dinein_names.0'))
+                                            <span class="text-danger" role="alert">
+                                                <strong>{{ __("The primary language name field is required.") }}</strong>
+                                            </span>
+                                        @endif
+                                    @endif
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        <div class="row mb-2 flex-nowrap">
+                            @foreach($client_languages as $k => $client_language)
+                            <div class="col-sm-3">
+                                <div class="form-group mb-3">
+                                    <label for="custom_domain">{{ __("Delivery") }}({{$client_language->langName}})</label>
+                                    <input type="hidden" name="delivery_language_ids[]" value="{{$client_language->langId}}">
+                                    <input type="text" name="delivery_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 7)}}">
+                                    @if($k == 0)
+                                        @if($errors->has('delivery_names.0'))
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ __("The primary language name field is required.") }}</strong>
                                             </span>

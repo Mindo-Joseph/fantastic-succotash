@@ -25,6 +25,10 @@ class WebStylingController extends BaseController{
             $home_page_labels = HomePageLabel::whereIn('slug',['dynamic_page','pickup_delivery'])->with('translations')->orderBy('order_by');
             $cab_booking_layouts = CabBookingLayout::whereIn('slug',['dynamic_page','pickup_delivery'])->with('translations');
             break;
+            case "laundry":
+            $home_page_labels = HomePageLabel::whereNotin('slug',['pickup_delivery'])->with('translations')->orderBy('order_by');
+            $cab_booking_layouts = CabBookingLayout::whereNotin('slug',['pickup_delivery'])->with('translations');
+            break;
             default:
             $home_page_labels = HomePageLabel::with('translations')->orderBy('order_by');
             $cab_booking_layouts = CabBookingLayout::with('translations');
@@ -340,11 +344,11 @@ class WebStylingController extends BaseController{
 
             if(isset($request->categories[$key]) && !empty($request->categories[$key])){
                 $is_cat =  $request->categories[$key]['check'];
-                Log::info($is_cat);
+            //    Log::info($is_cat);
             }
             else{
                 $is_cat =  0;
-                Log::info($is_cat);
+            //    Log::info($is_cat);
             }
            
 

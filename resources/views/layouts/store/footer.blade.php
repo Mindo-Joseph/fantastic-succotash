@@ -30,6 +30,7 @@
     @endif
     var autocomplete_url = "{{ route('autocomplete') }}";
     let stripe_publishable_key = '{{ $stripe_publishable_key }}';
+    let yoco_public_key = '{{ $yoco_public_key }}';
     var login_url = "{{ route('customer.login') }}";
     if(currentRouteName == 'indexTemplateOne')
     var home_page_url = "{{ route('indexTemplateOne') }}";
@@ -66,11 +67,19 @@
     @if(Session::has('selectedAddress'))
         selected_address = 1;
     @endif
-    @if( Session::has('preferences') )
-        @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) ) 
-            is_hyperlocal = 1;
-        @endif;
-    @endif;
+    // @if( Session::has('preferences') )
+    //     @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) ) 
+    //         is_hyperlocal = 1;
+    //     @endif;
+    // @endif;
+    
+    @if($client_preference_detail->is_hyperlocal == 1)
+        is_hyperlocal = 1;
+        var defaultLatitude = "{{$client_preference_detail->Default_latitude}}";
+        var defaultLongitude = "{{$client_preference_detail->Default_longitude}}";
+        var defaultLocationName = "{{$client_preference_detail->Default_location_name}}";
+    @endif
+
 </script>
 <script src="{{asset('assets/js/constants.js')}}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{$mapKey}}&v=3.exp&libraries=places,drawing"></script>
