@@ -434,11 +434,11 @@ class CartController extends BaseController
             $vendor_details = [];
             $tax_details = [];
             $is_vendor_closed = 0;
-           
+            $delay_date = 0;
             foreach ($cartData as $ven_key => $vendorData) {
              
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
-                $delivery_count = 0;$delay_date = 0;
+                $delivery_count = 0;
 
                 $cart_dinein_table_id = $vendorData->vendor_dinein_table_id;
 
