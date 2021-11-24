@@ -994,26 +994,26 @@
                <div class="row align-items-center">
                   @if($client_preference_detail->business_type != 'taxi')
 
-                  @if($client_preference_detail->business_type != 'laundry')
-                  <div class="col-md-4">
-                     <div class="form-group mb-3">
-                        <label for="celebrity_check" class="mr-2 mb-0"> {{ __("Celebrity Mod") }}</label>
-                        <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1')) checked='checked' @endif>
+                     @if($client_preference_detail->business_type != 'laundry')
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="celebrity_check" class="mr-2 mb-0"> {{ __("Celebrity Mod") }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1')) checked='checked' @endif>
+                        </div>
                      </div>
-                  </div>
-                   <div class="col-md-4">
-                     <div class="form-group mb-3">
-                        <label for="pharmacy_check" class="mr-2 mb-0">{{ __('Pharmacy Mod') }}</label>
-                        <input type="checkbox" data-plugin="switchery" name="pharmacy_check" id="pharmacy_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1')) checked='checked' @endif>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="pharmacy_check" class="mr-2 mb-0">{{ __('Pharmacy Mod') }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="pharmacy_check" id="pharmacy_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1')) checked='checked' @endif>
+                        </div>
                      </div>
-                  </div>
-                  <div class="col-md-4">
-                     <div class="form-group mb-3">
-                        <label for="enquire_mode" class="mr-2 mb-0">{{ __("Inquiry Mod") }}</label>
-                        <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1')) checked='checked' @endif>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="enquire_mode" class="mr-2 mb-0">{{ __("Inquiry Mod") }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1')) checked='checked' @endif>
+                        </div>
                      </div>
-                  </div>
-                  @endif
+                     @endif
                  
                   <div class="col-md-4">
                      <div class="form-group mb-3">
@@ -1046,6 +1046,12 @@
                      <div class="form-group mb-3">
                         <label for="tip_after_order" class="mr-2 mb-0">{{__('Tip After Order')}}</label>
                         <input type="checkbox" data-plugin="switchery" name="tip_after_order" id="tip_after_order" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->tip_after_order == '1')) checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="form-group mb-3">
+                        <label for="delay_order" class="mr-2 mb-0">{{__('Delay Order')}}</label>
+                        <input type="checkbox" data-plugin="switchery" name="delay_order" id="delay_order" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delay_order == '1')) checked='checked' @endif>
                      </div>
                   </div>
                   <div class="col-md-12">
@@ -1175,12 +1181,12 @@
                <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
                   @csrf
                   <div class="card-box mb-0 pb-1">
-                  <h4 class="header-title text-uppercase">{{ __('Admin Email') }}</h4> 
+                  <h4 class="header-title text-uppercase">{{ __('Order Email Notification') }}</h4> 
                      <div class="d-flex align-items-center justify-content-end">
                         <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
                      </div>
                      <div class="col-xl-12 my-2" id="addCur-160">
-                        <label class="primaryCurText">{{ __('Admin Email') }}</label>
+                        <label class="primaryCurText">{{ __('Email') }}</label>
                         <input class="form-control" type="email" id="admin_email" name="admin_email" value="{{ old('admin_email', $preference->admin_email)}}">
                      </div>
                   </div>
@@ -1202,6 +1208,7 @@
                         <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
                            <thead>
                               <tr>
+                                 <th>{{ __("Icon") }}</th>
                                  <th>{{ __("Name") }}</th>
                                  <th>{{ __("Action") }}</th>
                               </tr>
@@ -1209,6 +1216,9 @@
                            <tbody id="post_list">
                               @forelse($tags as $tag)
                               <tr>
+                                 <td>
+                                    <img src="{{ $tag->icon['proxy_url'].'100/100'.$tag->icon['image_path'] }}"> 
+                                 </td>
                                  <td>
                                     <a class="edit_product_tag_btn" data-tag_id="{{$tag->id}}" href="javascript:void(0)">   
                                        {{$tag->primary ? $tag->primary->name : ''}}
@@ -1588,12 +1598,17 @@
                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
-               <form id="productTagForm" method="POST" action="javascript:void(0)">
+               <form id="productTagForm" method="POST" action="javascript:void(0)" enctype="multipart/form-data">
                   @csrf
                   <div id="save_product_tag">
                      <input type="hidden" name="tag_id" value="">
                      <div class="row">
-                       
+                        <div class="col-md-3">
+                           <label>{{ __('Upload Icon') }}</label>
+                           <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify"  />
+                           <label class="logo-size text-right w-100">{{ __("Icon Size") }} 100X100</label>
+                       </div> 
+
                         @forelse($client_languages as $k => $client_language)
                         <div class="col-md-6 mb-2">
                            <div class="row">
@@ -1785,7 +1800,7 @@
             success: function(response) {
                if (response.status = 'Success') {
                   $("#add_product_tag_modal input[name=tag_id]").val(response.data.id);
-                  $('#add_product_tag_modal #standard-modalLabel').html('Update Vendor Registration Document');
+                  $('#add_product_tag_modal #standard-modalLabel').html('Update Product Tag');
                   $('#add_product_tag_modal').modal('show');
                   $.each(response.data.translations, function( index, value ) {
                     $('#add_product_tag_modal #product_tag_name_'+value.language_id).val(value.name);

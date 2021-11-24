@@ -210,11 +210,12 @@ class ProductController extends BaseController
             }
         }
         $otherProducts = Product::with('primary')->select('id', 'sku')->where('is_live', 1)->where('id', '!=', $product->id)->where('vendor_id', $product->vendor_id)->get();
-        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode','need_dispacher_home_other_service')->first();
+        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode','need_dispacher_home_other_service','delay_order')->first();
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
         
         $agent_dispatcher_tags = [];
         $agent_dispatcher_on_demand_tags = [];
+        $pro_tags = [];
 
          if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 7) # if type is pickup delivery then get dispatcher tags
         {   
@@ -228,10 +229,12 @@ class ProductController extends BaseController
            
         }
         
-        $tags = Tag::with('primary')->get();
+        $pro_tags = Tag::with('primary')->whereHas('primary')->get();
+
+        
         $set_product_tags = ProductTag::where('product_id',$product->id)->pluck('tag_id')->toArray();
 
-        return view('backend/product/edit', ['set_product_tags' => $set_product_tags,'tags' => $tags,'agent_dispatcher_on_demand_tags' => $agent_dispatcher_on_demand_tags,'agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
+        return view('backend/product/edit', ['set_product_tags' => $set_product_tags,'pro_tags' => $pro_tags,'agent_dispatcher_on_demand_tags' => $agent_dispatcher_on_demand_tags,'agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }
 
     /**
@@ -285,6 +288,8 @@ class ProductController extends BaseController
         $product->Requires_last_mile        = ($request->has('last_mile') && $request->last_mile == 'on') ? 1 : 0;
         $product->need_price_from_dispatcher = ($request->has('need_price_from_dispatcher') && $request->need_price_from_dispatcher == 'on') ? 1 : 0;
         $product->mode_of_service        = $request->mode_of_service??null;
+        $product->delay_order_hrs        = $request->delay_order_hrs??0;
+        $product->delay_order_min        = $request->delay_order_min??0;
         if (empty($product->publish_at)) {
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }
@@ -294,7 +299,7 @@ class ProductController extends BaseController
             $product->sell_when_out_of_stock = 1;
         }
         $product->save();
-        
+      
         if ($product->id > 0) {
             $trans = ProductTranslation::where('product_id', $product->id)->where('language_id', $request->language_id)->first();
             if (!$trans) {

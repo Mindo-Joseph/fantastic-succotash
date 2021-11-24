@@ -10,7 +10,7 @@ class Tag extends Model
     use HasFactory;
     
     public function primary(){
-      $langData = $this->hasOne('App\Models\TagTranslation')->join('client_languages as cl', 'cl.language_id', 'tag_translations.language_id')->where('cl.is_primary', 1);
+      $langData = $this->hasOne('App\Models\TagTranslation')->whereHas('primary');
       return $langData;
     }
 
@@ -19,4 +19,23 @@ class Tag extends Model
       $langData = $this->hasMany('App\Models\TagTranslation');
       return $langData;
     }
+
+
+    public function getIconAttribute($value){
+      $values = array();
+      $img = 'default/default_image.png';
+      if(!empty($value)){
+        $img = $value;
+      }
+      $values['proxy_url'] = \Config::get('app.IMG_URL1');
+      if (substr($img, 0, 7) == "http://" || substr($img, 0, 8) == "https://"){
+        $values['image_path'] = \Config::get('app.IMG_URL2').'/'.$img;
+      } else {
+        $values['image_path'] = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url($img);
+      }
+      $values['image_fit'] = \Config::get('app.FIT_URl');
+      return $values;
+    }
+
+
 }

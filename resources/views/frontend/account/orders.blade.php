@@ -154,7 +154,8 @@ $timezone = Auth::user()->timezone;
                                                 </div>
                                                 <div class="row no-gutters order_data">
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
-                                                    <div class="col-md-3">{{convertDateTimeInTimeZone($order->created_at, $timezone, 'l, F d, Y, h:i A')}}</div>
+                                                    {{-- <div class="col-md-3">{{convertDateTimeInTimeZone($order->created_at, $timezone, 'l, F d, Y, h:i A')}}</div> --}}
+                                                    <div class="col-md-3">{{dateTimeInUserTimeZone($order->created_at, $timezone)}}</div>
                                                     <div class="col-md-3">
                                                         <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                     </div>
@@ -197,7 +198,7 @@ $timezone = Auth::user()->timezone;
                                                                         @endif
                                                                         @if(!empty($order->scheduled_date_time))
                                                                             <span class="badge badge-success ml-2">Scheduled</span>
-                                                                            <span class="ml-2">{{convertDateTimeInTimeZone($order->scheduled_date_time, $timezone, 'M d, Y h:i A')}}</span>
+                                                                            <span class="ml-2">{{dateTimeInUserTimeZone($order->scheduled_date_time, $timezone)}}</span>
                                                                         @elseif(!empty($vendor->ETA))
                                                                             <span class="ml-2">Your order will arrive by {{$vendor->ETA}}</span>
                                                                         @endif
@@ -375,7 +376,7 @@ $timezone = Auth::user()->timezone;
                                                 </div>
                                                 <div class="row no-gutters order_data">
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
-                                                    <div class="col-md-3">{{$order->created_at->format('D M d, Y h:m A')}}</div>
+                                                    <div class="col-md-3">{{dateTimeInUserTimeZone($order->created_at, $timezone)}}</div>
                                                     <div class="col-md-3">
                                                         <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                     </div>
@@ -626,7 +627,7 @@ $timezone = Auth::user()->timezone;
                                             </div>
                                             <div class="row no-gutters order_data">
                                                 <div class="col-md-3">#{{$order->order_number}}</div>
-                                                <div class="col-md-3">{{$order->created_at->format('D M d, Y h:m A')}}</div>
+                                                <div class="col-md-3">{{dateTimeInUserTimeZone($order->created_at, $timezone)}}</div>
                                                 <div class="col-md-3">
                                                     <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                 </div>

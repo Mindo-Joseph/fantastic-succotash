@@ -7,7 +7,7 @@ use Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
+use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand,TagTranslation,Tag};
 use Validation;
 use DB;
 use App\Http\Traits\ApiResponser;
@@ -378,6 +378,24 @@ class ProductController extends BaseController
             unset($variantData->media);
             unset($variantData->product->media);
             return $this->successResponse($variantData);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
+
+    # get all product tags 
+
+    public function getAllProductTags(Request $request)
+    {
+        try{
+            $langId = Auth::user()->language;
+            $userid = Auth::user()->id;
+           
+            $get_all_tags = Tag::with(['translations' =>  function($q)use($langId){
+                $q->where('language_id',$langId);
+            }])->get();
+
+            return $this->successResponse($get_all_tags);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }
