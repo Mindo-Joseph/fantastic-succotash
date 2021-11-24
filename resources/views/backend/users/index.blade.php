@@ -112,6 +112,7 @@
                                 <th>{{ __("Phone OTP") }}</th>
                                 <th>{{ __('Wallet')}}</th>
                                 <th>{{ __('Orders')}}</th>
+                                 <th>{{ __('Loyalty Card')}}</th>
                                 <th>{{ __('Active Orders') }}</th>
                                 <th>{{ __('Status')}}</th>
                                 <th>{{ __('Action')}}</th>
@@ -301,6 +302,12 @@
                         {
                             data: 'orders_count',
                             name: 'orders_count',
+                            orderable: false,
+                            searchable: false
+                        },
+                         {
+                            data: 'loyalty_name',
+                            name: 'loyalty_name',
                             orderable: false,
                             searchable: false
                         },

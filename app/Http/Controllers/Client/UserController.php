@@ -33,6 +33,7 @@ class UserController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function index(){
+       
         $roles = Role::all();
         $countries = Country::all();
         $active_users = User::where('status', 1)->where('is_superadmin', '!=', 1)->count();
@@ -50,6 +51,7 @@ class UserController extends BaseController{
                 $social_logins++;
             }
         }
+       
         return view('backend/users/index')->with(['inactive_users' => $inactive_users, 'social_logins' => $social_logins, 'active_users' => $active_users, 'users' => $users, 'roles' => $roles, 'countries' => $countries]);
     }
     public function getFilterData(Request $request){
