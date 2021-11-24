@@ -128,7 +128,7 @@ class ServiceAreaController extends BaseController{
                 $points = [];
                 $centerX = $vendor->latitude;
                 $centerY = $vendor->longitude;
-                $steps = 30;
+                $steps = 20;
                 $distance = $request->radius;
                 $for_lat_deg = (1/69)*$distance;
                 $for_lng_deg = (1/54)*$distance;
@@ -145,7 +145,7 @@ class ServiceAreaController extends BaseController{
 
                 $area = new ServiceArea();
                 $area->vendor_id        = $vendor->id;
-                $area->name             = "Circle - ".$request->radius." Miles";
+                $area->name             = "Area - ".$request->radius." Mile Radius";
                 $area->geo_array        = $pointse;
                 $area->zoom_level       = $request->zoom_level??3;
                 $area->description      = $request->description??null;
