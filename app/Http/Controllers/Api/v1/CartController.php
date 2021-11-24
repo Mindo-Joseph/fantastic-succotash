@@ -440,14 +440,7 @@ class CartController extends BaseController
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;$delay_date = 0;
 
-                // if(Session::has('vendorTable')){
-                //     if((Session::has('vendorTableVendorId')) && (Session::get('vendorTableVendorId') == $vendorData->vendor_id)){
-                //         $cart_dinein_table_id = Session::get('vendorTable');
-                //     }
-                //     Session::forget(['vendorTable', 'vendorTableVendorId']);
-                // }else{
                 $cart_dinein_table_id = $vendorData->vendor_dinein_table_id;
-                // }
 
                 if ($action != 'delivery') {
                     $vendor_details['vendor_address'] = $vendorData->vendor->select('id', 'latitude', 'longitude', 'address')->where('id', $vendorData->vendor_id)->first();
