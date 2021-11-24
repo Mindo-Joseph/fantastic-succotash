@@ -438,7 +438,7 @@ class CartController extends BaseController
             foreach ($cartData as $ven_key => $vendorData) {
              
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
-                $delivery_count = 0;
+                $delivery_count = 0;$delay_date = 0;
 
                 // if(Session::has('vendorTable')){
                 //     if((Session::has('vendorTableVendorId')) && (Session::get('vendorTableVendorId') == $vendorData->vendor_id)){
@@ -525,6 +525,12 @@ class CartController extends BaseController
                     } else {
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
+
+                    if($prod->product->delay_hrs_min != 0){
+                        if($prod->product->delay_hrs_min > $delay_date)
+                        $delay_date = $prod->product->delay_hrs_min;
+                    }
+
                     if ($prod->pvariant) {
                         $variantsData['price']              = $price_in_currency;
                         $variantsData['id']                 = $prod->pvariant->id;
@@ -766,6 +772,7 @@ class CartController extends BaseController
         $cart->cart_dinein_table_id = $cart_dinein_table_id;
         $cart->upSell_products = ($upSell_products) ? $upSell_products->first() : collect();
         $cart->crossSell_products = ($crossSell_products) ? $crossSell_products->first() : collect();
+        $cart->delay_date =  $delay_date??0;
         return $cart;
     }
 
