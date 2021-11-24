@@ -1142,13 +1142,13 @@
                 {
                     hour: '2-digit',
                     minute: '2-digit',
-                    hour12: false
+                    hour12: "{{$hour12}}"
                 }
             ],
             eventTimeFormat: { // like '14:30:00'
                 hour: '2-digit',
                 minute: '2-digit',
-                hour12: false
+                hour12: "{{$hour12}}"
             },
             navLinks: true,
             selectable: true,
@@ -1231,8 +1231,14 @@
                         var events = [];
                         $.each(response, function(index, data){
                             var slotDay = parseInt(moment(data.start).format('d')) + 1;
-                            var slotStartTime = moment(data.start).format('h:mm A');
-                            var slotEndTime = moment(data.end).format('h:mm A');
+                            @if($hour12)
+                                var slotStartTime = moment(data.start).format('h:mm A');
+                                var slotEndTime = moment(data.end).format('h:mm A');
+                            @else
+                                var slotStartTime = moment(data.start).format('H:mm');
+                                var slotEndTime = moment(data.end).format('H:mm');
+                            @endif
+                            
                             $.each(days, function(key, value){
                                 if(slotDay == key + 1){
                                     if(slotDayList.includes(slotDay)){
