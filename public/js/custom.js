@@ -629,8 +629,10 @@ $(document).ready(function() {
         var _this = $(".subscription_confirm_btn");
         _this.attr("disabled", true);
         var selected_option = $("input[name='subscription_payment_method']:checked");
+        // var subscription_id = $('#subscription_payment_form #subscription_id').val();
         var payment_option_id = selected_option.data("payment_option_id");
         if ((selected_option.length > 0) && (payment_option_id > 0)) {
+            $('#subscription_payment').modal('hide');
             if (payment_option_id == 4) {
                 stripe.createToken(card).then(function(result) {
                     if (result.error) {
@@ -661,6 +663,8 @@ $(document).ready(function() {
                 });
             } else if (payment_option_id == 9) {
                 paymentViaPaylink('', '');
+            }else if (payment_option_id == 10) {
+                paymentViaRazorpay_wallet('', payment_option_id);
             }
         } else {
             _this.attr("disabled", false);
@@ -1076,8 +1080,6 @@ $(document).ready(function() {
             {name: 'returnUrl', value: path}
         );
         ajaxData.push({ name: 'payment_option_id', value: payment_option_id });
-        console.log('Ajax Data : ');
-        console.log(ajaxData);
 
         $.ajax({
             type: "POST",
@@ -1473,6 +1475,8 @@ $(document).ready(function() {
 
 
         $(".topup_wallet_confirm").attr("disabled", true);
+
+        $('#topup_wallet').modal('hide');
 
         if (payment_option_id == 4) {
             stripe.createToken(card).then(function(result) {

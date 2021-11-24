@@ -52,6 +52,7 @@ class RazorpayGatewayController extends FrontController
             }
             $api_key = $this->API_KEY;
             $orderResponse = $this->api->order->create(array('amount' => $amount, 'currency' => 'INR'));
+            $data = $request->all();
             $data['order_number'] = $order_number;
             $data['order_id'] = $orderResponse->id;
             $data['amount'] = $orderResponse->amount;
@@ -85,9 +86,9 @@ class RazorpayGatewayController extends FrontController
             $payment = $this->api->payment->fetch($request->razorpay_payment_id);
             // $capture = $payment->capture(['amount'=>$payment['amount']]);
             if ($payment['status'] == 'captured') {
-                $response =  $this->razorpayNotify($payment, $amount, $request, $orderData);
+                $response =  $this->razorpayNotify($payment, $amount/100, $request, $orderData);
             } else {
-                $response = $this->razorpayNotify_fail($payment, $amount, $request, $orderData);
+                $response = $this->razorpayNotify_fail($payment, $amount/100, $request, $orderData);
             }
             return $this->successResponse($response);
         } catch (\Exception $ex) {
@@ -110,7 +111,7 @@ class RazorpayGatewayController extends FrontController
                         'date' => date('Y-m-d'),
                         'order_id' => $order->id,
                         'transaction_id' => $transactionId,
-                        'balance_transaction' => (int)$amount/100,
+                        'balance_transaction' => (int)$amount,
                     ]);
 
                     // Auto accept order
@@ -152,7 +153,7 @@ class RazorpayGatewayController extends FrontController
             }
         }elseif($request->payment_from == 'wallet')
         {
-            $request->request->add(['wallet_amount' => $amount/100, 'transaction_id' => $transactionId]);
+            $request->request->add(['wallet_amount' => $amount, 'transaction_id' => $transactionId]);
             $walletController = new WalletController();
             $walletController->creditWallet($request);
             $returnUrl = route('user.wallet');
@@ -163,23 +164,42 @@ class RazorpayGatewayController extends FrontController
             $orderController->tipAfterOrder($request);
             $returnUrl = route('user.orders');
             return $returnUrl;
+        }elseif($request->payment_from == 'subscription'){
+            $request->request->add(['payment_option_id' => 10, 'transaction_id' => $transactionId, 'amount' => $request->amount/100]);
+            $subscriptionController = new UserSubscriptionController();
+            $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription_id);
+            $returnUrl = route('user.subscription.plans');
+            return $returnUrl;
         }
+        return route('order.return.success');
     }
 
     public function razorpayNotify_fail($payment, $amount, $request, $orderData)
     {
-        $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $request->order_number)->first();
-        $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
-        foreach ($order_products as $order_prod) {
-            OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
-        }
-        OrderProduct::where('order_id', $order->id)->delete();
-        OrderProductPrescription::where('order_id', $order->id)->delete();
-        VendorOrderStatus::where('order_id', $order->id)->delete();
-        OrderVendor::where('order_id', $order->id)->delete();
-        OrderTax::where('order_id', $order->id)->delete();
-        Order::where('id', $order->id)->delete();
-        $returnUrl = route('viewcart');
-        return $returnUrl;
+        if($request->payment_from == 'cart'){
+                $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $request->order_number)->first();
+                $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
+                foreach ($order_products as $order_prod) {
+                    OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
+                }
+                OrderProduct::where('order_id', $order->id)->delete();
+                OrderProductPrescription::where('order_id', $order->id)->delete();
+                VendorOrderStatus::where('order_id', $order->id)->delete();
+                OrderVendor::where('order_id', $order->id)->delete();
+                OrderTax::where('order_id', $order->id)->delete();
+                Order::where('id', $order->id)->delete();
+                $returnUrl = route('viewcart');
+                return $returnUrl;
+            }
+            elseif($request->payment_from == 'wallet'){
+                return route('user.wallet');
+            }
+            elseif($request->payment_from == 'tip'){
+                return route('user.orders');
+            }
+            elseif($request->payment_from == 'subscription'){
+                return route('user.subscription.plans');
+            }
+            return route('order.return.success');
     }
 }

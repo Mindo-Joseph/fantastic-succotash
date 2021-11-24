@@ -533,7 +533,7 @@ $(document).ready(function() {
                     razorpay_options.amount = response.data.amount;
                     razorpay_options.order_id = response.data.order_id;
                     razorpay_options.currency = response.data.currency;
-                    $('#proceed_to_pay_modal').hide();
+                    $('#proceed_to_pay_modal').modal('hide');
                     razourPayView(response.data);
                     // window.location.href = response.data;
                 } else {
@@ -560,16 +560,12 @@ $(document).ready(function() {
     }
 
     window.razourPayCompletePayment = function razourPayCompletePayment(data, response) {
+        data.razorpay_payment_id = response.razorpay_payment_id;
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: razorpay_complete_payment_url,
-            data: {
-                'order_number' : data.order_number,
-                'amount' : data.amount,
-                'razorpay_payment_id' : response.razorpay_payment_id,
-                'payment_from' : data.payment_from
-            },
+            data: data,
             success: function(response) {
                 console.log(response);
                 if (response.status == "Success") {
