@@ -77,6 +77,10 @@ else if($client_preference_detail->show_dark_mode == 2){
     .cab-booking-header{
          display: none;
      }
+    .swal2-icon.swal2-warning{
+      color: {{getClientPreferenceDetail()->web_color}} !important;
+      border-color: {{getClientPreferenceDetail()->web_color}} !important;
+     }
  </style>
 @endif
 

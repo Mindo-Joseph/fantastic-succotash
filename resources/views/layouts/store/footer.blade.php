@@ -54,6 +54,7 @@
     var url1 = "{{ route('config.update') }}";
     var url2 = "{{ route('config.get') }}";
     var razorpay_complete_payment_url = "{{ route('payment.razorpayCompletePurchase') }}";
+    var payment_razorpay_url = "{{route('payment.razorpayPurchase')}}";
     var featured_product_language = "{{ __('Featured Product') }}";
     var new_product_language = "{{ __('New Product') }}";
     var on_sale_product_language = "{{ __('On Sale') }}";
@@ -124,6 +125,9 @@
 <script src="{{asset('js/waitMe.min.js')}}"></script>
 <script src="{{asset('js/developer.js')}}"></script>
 <!--WaitMe Loader Script -->
+
+<!-- SweetAlert Script -->
+<script src="{{asset('js/sweetalert2.min.js')}}"></script>
 
 <script src="{{asset('assets/js/pages/form-pickers.init.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>

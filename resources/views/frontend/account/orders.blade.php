@@ -14,6 +14,11 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
+    input:invalid,
+    input:out-of-range {
+        border-color:hsl(0, 50%, 50%);
+        background:hsl(0, 50%, 90%);
+    }
 </style>
 @endsection
 @section('content')
@@ -551,21 +556,21 @@ $timezone = Auth::user()->timezone;
                                                                     <div class="mb-2">{{__('Do you want to give a tip?')}}</div>
                                                                     <div class="tip_radio_controls">
                                                                         @if($order->payable_amount > 0) 
-                                                                            <input type="radio" class="tip_radio" id="control_01" name="select{{$order->order_number}}" value="{{$order->payable_amount*0.05}}">
+                                                                            <input type="radio" class="tip_radio" id="control_01" name="select{{$order->order_number}}" value="{{round($order->payable_amount*0.05,2)}}">
                                                                             <label class="tip_label" for="control_01">
-                                                                                <h5 class="m-0" id="tip_5">{{Session::get('currencySymbol')}}{{$order->payable_amount*0.05}}</h5>
+                                                                                <h5 class="m-0" id="tip_5">{{Session::get('currencySymbol')}}{{round($order->payable_amount*0.05,2)}}</h5>
                                                                                 <p class="m-0">5%</p>
                                                                             </label>
                                                                         
-                                                                            <input type="radio" class="tip_radio" id="control_02" name="select{{$order->order_number}}" value="{{$order->payable_amount*0.10}}" >
+                                                                            <input type="radio" class="tip_radio" id="control_02" name="select{{$order->order_number}}" value="{{round($order->payable_amount*0.10,2)}}" >
                                                                             <label class="tip_label" for="control_02">
-                                                                                <h5 class="m-0" id="tip_10">{{Session::get('currencySymbol')}}{{$order->payable_amount*0.10}}</h5>
+                                                                                <h5 class="m-0" id="tip_10">{{Session::get('currencySymbol')}}{{round($order->payable_amount*0.10,2)}}</h5>
                                                                                 <p class="m-0">10%</p>
                                                                             </label>
                                                                         
-                                                                            <input type="radio" class="tip_radio" id="control_03" name="select{{$order->order_number}}" value="{{$order->payable_amount*0.15}}" >
+                                                                            <input type="radio" class="tip_radio" id="control_03" name="select{{$order->order_number}}" value="{{round($order->payable_amount*0.15,2)}}" >
                                                                             <label class="tip_label" for="control_03">
-                                                                                <h5 class="m-0" id="tip_15">{{Session::get('currencySymbol')}}{{$order->payable_amount*0.15}}</h5>
+                                                                                <h5 class="m-0" id="tip_15">{{Session::get('currencySymbol')}}{{round($order->payable_amount*0.15,2)}}</h5>
                                                                                 <p class="m-0">15%</p>
                                                                             </label>
                                                 
@@ -579,7 +584,7 @@ $timezone = Auth::user()->timezone;
                                                                         @endif
                                                                     </div>
                                                                     <div class="custom_tip mb-1 @if($order->payable_amount  > 0)  d-none @endif">
-                                                                        <input class="input-number form-control" name="custom_tip_amount{{$order->order_number}}" id="custom_tip_amount{{$order->order_number}}" placeholder="Enter Custom Amount" type="number" value="" step="0.1">
+                                                                        <input class="input-number form-control" name="custom_tip_amount{{$order->order_number}}" id="custom_tip_amount{{$order->order_number}}" placeholder="Enter Custom Amount" type="number" value="" min="0.01" step="0.01">
                                                                     </div>
                                                                     <div class="col-md-6 text-md-right text-center">
                                                                         <button type="button" class="btn btn-solid topup_wallet_btn_tip topup_wallet_btn_for_tip"  data-order_number={{$order->order_number}} data-payableamount={{$order->payable_amount}} >{{__('Submit')}}</button>
@@ -844,8 +849,12 @@ $timezone = Auth::user()->timezone;
 <script src="{{asset('js/payment.js')}}"></script>
 <script type="text/javascript">
  $(document).delegate(".topup_wallet_btn_tip", "click", function () {
-     $('#topup_wallet').modal('show'); 
+    $('#topup_wallet').modal('show'); 
      var payable_amount = $(this).attr('data-payableamount');
+    //  if(payable_amount > 0)
+    //  {
+    //     $('#topup_wallet').modal('show');
+    //  }
      var order_number = $(this).attr('data-order_number');
      var input_name = "select"+order_number;
      var custom_tip_amount = "custom_tip_amount"+order_number;
@@ -865,7 +874,6 @@ $timezone = Auth::user()->timezone;
      $("#cart_tip_amount").val(tip_amount);
      $("#order_number").val(order_number);
      
-       
     });
     var ajaxCall = 'ToCancelPrevReq';
     var credit_tip_url = "{{route('user.tip_after_order')}}";

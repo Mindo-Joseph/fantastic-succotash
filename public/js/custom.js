@@ -860,6 +860,17 @@ $(document).ready(function() {
     });
 
     $(document).delegate(".topup_wallet_btn_for_tip", "click", function() {
+        // var order_number = $(this).data('order_number');
+        // var tip_radio = $("input:radio.tip_radio:checked").val();
+        // var custom_tip = $('#custom_tip_amount'+order_number).val();
+        // if(tip_radio == 'custom')
+        // {
+        //     if(custom_tip <= 0 )
+        //     {
+        //         // swal('Waring!','Tip must be greater than 0','warning');
+        //         // return false;
+        //     }
+        // }
         $.ajax({
             data: {},
             type: "POST",
@@ -1041,10 +1052,32 @@ $(document).ready(function() {
     }
 
     function paymentViaRazorpay_wallet(address_id, payment_option_id) {
+        let walletElement = $("input[name='wallet_amount']");
+        let subscriptionElement = $("input[name='subscription_amount']");
         let total_amount = 0;
         let ajaxData = [];
-        total_amount = $("input[name='wallet_amount']").val();
-        ajaxData.push({ name: 'amount', value: total_amount }, { name: 'payment_option_id', value: payment_option_id });
+        if (path.indexOf("wallet") !== -1) {
+            total_amount = walletElement.val();
+            // ajaxData.payment_from = 'wallet';
+            ajaxData.push({name: 'payment_from', value: 'wallet'});
+        } else if (path.indexOf("subscription") !== -1) {
+            total_amount = subscriptionElement.val();
+            ajaxData = $("#subscription_payment_form").serializeArray();
+            ajaxData.push({name: 'payment_from', value: 'subscription'});
+        } else if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
+            total_amount = walletElement.val();
+            ajaxData.push( 
+                {name: 'payment_from', value: 'tip'},
+                {name: 'order_number', value: $("#order_number").val()}
+            );
+        }
+        ajaxData.push(
+            {name: 'amount', value: total_amount}, 
+            {name: 'returnUrl', value: path}
+        );
+        ajaxData.push({ name: 'payment_option_id', value: payment_option_id });
+        console.log('Ajax Data : ');
+        console.log(ajaxData);
 
         $.ajax({
             type: "POST",
@@ -1057,7 +1090,7 @@ $(document).ready(function() {
                     razorpay_options.order_id = response.data.order_id;
                     razorpay_options.currency = response.data.currency;
                     $('#proceed_to_pay_modal').hide();
-                    razourPayView(response.data,'wallet');
+                    razourPayView(response.data);
                 }
             }
         });

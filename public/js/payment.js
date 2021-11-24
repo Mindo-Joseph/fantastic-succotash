@@ -519,6 +519,7 @@ $(document).ready(function() {
             // );
         }
         ajaxData.amount = total_amount;
+        ajaxData.payment_from = 'cart';
         ajaxData.returnUrl = path;
         ajaxData.cancelUrl = path;
         $.ajax({
@@ -533,7 +534,7 @@ $(document).ready(function() {
                     razorpay_options.order_id = response.data.order_id;
                     razorpay_options.currency = response.data.currency;
                     $('#proceed_to_pay_modal').hide();
-                    razourPayView(response.data,payment_from);
+                    razourPayView(response.data);
                     // window.location.href = response.data;
                 } else {
                     if (cartElement.length > 0) {
@@ -558,7 +559,7 @@ $(document).ready(function() {
         });
     }
 
-    window.razourPayCompletePayment = function razourPayCompletePayment(data, response,payment_from) {
+    window.razourPayCompletePayment = function razourPayCompletePayment(data, response) {
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -567,7 +568,7 @@ $(document).ready(function() {
                 'order_number' : data.order_number,
                 'amount' : data.amount,
                 'razorpay_payment_id' : response.razorpay_payment_id,
-                'payment_from' : payment_from
+                'payment_from' : data.payment_from
             },
             success: function(response) {
                 console.log(response);
@@ -583,9 +584,9 @@ $(document).ready(function() {
         });
     }
      // RazourPay payment gateway
-    window.razourPayView = function razourPayView(data,payment_from) {
+    window.razourPayView = function razourPayView(data) {
         razorpay_options.handler = function (response){
-            razourPayCompletePayment(data,response,payment_from);
+            razourPayCompletePayment(data,response);
             // alert(response.razorpay_payment_id);
             // alert(response.razorpay_order_id);
             // alert(response.razorpay_signature);

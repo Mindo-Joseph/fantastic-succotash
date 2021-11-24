@@ -56,6 +56,7 @@ class RazorpayGatewayController extends FrontController
             $data['order_id'] = $orderResponse->id;
             $data['amount'] = $orderResponse->amount;
             $data['currency'] = $orderResponse->currency;
+            $data['payment_from'] = $request->payment_from;
             // dd($orderResponse);
 
             return $this->successResponse($data);
@@ -74,11 +75,11 @@ class RazorpayGatewayController extends FrontController
             $amount = filter_var($amount, FILTER_SANITIZE_NUMBER_INT);
             $amount = $amount/100;
             $returnUrl = route('order.return.success');
-            if ($request->payment_form == 'wallet') {
+            if ($request->payment_from == 'wallet') {
                 $returnUrl = route('user.wallet');
             }
             $orderData = [
-                'amount'          => (int)$amount,
+                'amount'          => (int)$amount/100,
                 'currency'        => 'INR'
             ];
             $payment = $this->api->payment->fetch($request->razorpay_payment_id);
@@ -86,7 +87,7 @@ class RazorpayGatewayController extends FrontController
             if ($payment['status'] == 'captured') {
                 $response =  $this->razorpayNotify($payment, $amount, $request, $orderData);
             } else {
-                $response = $this->razorpayNotify_fail($payment, $amount, $request->all(), $orderData);
+                $response = $this->razorpayNotify_fail($payment, $amount, $request, $orderData);
             }
             return $this->successResponse($response);
         } catch (\Exception $ex) {
@@ -99,7 +100,7 @@ class RazorpayGatewayController extends FrontController
         $transactionId = $payment['id'];
         if($request->payment_from == 'cart')
         {
-            $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $data['order_number'])->first();
+            $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $request->order_number)->first();
             if ($order) {
                 $order->payment_status = 1;
                 $order->save();
@@ -156,11 +157,18 @@ class RazorpayGatewayController extends FrontController
             $walletController->creditWallet($request);
             $returnUrl = route('user.wallet');
             return $returnUrl;
+        }elseif($request->payment_from == 'tip'){
+            $request->request->add(['order_number' => $request->order_number, 'tip_amount' => $amount, 'transaction_id' => $transactionId]);
+            $orderController = new OrderController();
+            $orderController->tipAfterOrder($request);
+            $returnUrl = route('user.orders');
+            return $returnUrl;
         }
     }
 
-    public function razorpayNotify_fail($payment, $amount, $order, $orderData)
+    public function razorpayNotify_fail($payment, $amount, $request, $orderData)
     {
+        $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $request->order_number)->first();
         $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
         foreach ($order_products as $order_prod) {
             OrderProductAddon::where('order_product_id', $order_prod->id)->delete();
