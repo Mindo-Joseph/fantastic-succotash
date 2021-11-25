@@ -68,7 +68,7 @@
     var logged_in_user_phone = "{{Auth::user()->phone_number??''}}";
     var logged_in_user_dial_code = "{{Auth::user()->dial_code??'91'}}";
 // Payment Gateway Key Detail
-    var razorpay_api_key = "{{getRazorPayApiKey()}}";
+    var razorpay_api_key = "{{getRazorPayApiKey()??''}}";
 
 // Client Perference  Detail
     var client_preference_web_color = "{{getClientPreferenceDetail()->web_color}}";
