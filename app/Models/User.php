@@ -47,8 +47,9 @@ class User extends Authenticatable implements Wallet, WalletFloat
         $count_loyalty_points_earned = $this->hasMany('App\Models\Order', 'user_id', 'id')->sum('loyalty_points_earned'); 
         $loyalty_name = LoyaltyCard::getLoyaltyName($count_loyalty_points_earned);
         
-       
-        return $loyalty_name;  
+        $data['loyalty_name'] = $loyalty_name;
+        $data['count_loyalty_points_earned'] = $count_loyalty_points_earned;
+        return $data;  
     } 
 
     public function country(){

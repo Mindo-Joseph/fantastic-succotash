@@ -309,7 +309,10 @@
                             data: 'loyalty_name',
                             name: 'loyalty_name',
                             orderable: false,
-                            searchable: false
+                            searchable: false,  
+                            "mRender": function(data, type, full) {
+                                return  data.loyalty_name +" ("+ data.count_loyalty_points_earned+")" ;
+                            }
                         },
                         {
                             data: 'currently_working_orders_count',
