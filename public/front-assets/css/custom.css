@@ -5015,9 +5015,9 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     margin: auto !important;
 }
 
-.menu-slider.items-center .slick-track {
+/* .menu-slider.items-center .slick-track {
     justify-content: space-between;
-}
+} */
 
 .menu-slider .slick-slide {
     display: inline-block;
@@ -7141,6 +7141,7 @@ body[dir="rtl"] .inner_spacing h3 {
     .menu-navigation ul.sm.pixelstrap.sm-horizontal {
         width: calc(100% - 50px);
         margin: auto;
+        justify-content: center;
         white-space: nowrap;
     }
 }
