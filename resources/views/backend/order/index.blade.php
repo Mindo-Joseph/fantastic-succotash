@@ -45,8 +45,10 @@
                         <div class="col-md-3"><h4>{{ __("Customer") }}</h4></div>
                         <div class="col-md-3"><h4>{{ __("Address") }}</h4></div>
                     </div>
+                    {{-- <%= order.is_gift %> is gift  --}}
                     <div class="row no-gutters order_data mb-lg-2">
-                        <div class="col-md-3"><h6 class="m-0">#<%= order.order_number %></h6></div>
+                        <div class="col-md-3"><h6 class="m-0">#<%= order.order_number %> </h6></div>
+
                         <div class="col-md-3"><%= order.created_date %></div>
                         <div class="col-md-3">
                             <a class="text-capitalize" href="#"><%= order.user.name %></a>
@@ -93,9 +95,16 @@
                                         <a href="<%= vendor.vendor_detail_url %>" class="row order_detail order_detail_data align-items-top pb-1 mb-0 card-box no-gutters h-100">
                                             <% if(order.scheduled_date_time || (order.luxury_option_name != '')) { %>
                                             <div class="col-sm-12">
-                                                <div class="progress-order font-12">
+                                                <div class="progress-order font-12  d-flex align-items-center justify-content-between pr-2">
                                                     <% if(order.luxury_option_name != '') { %>
-                                                        <span class="badge badge-info ml-2"><%= order.luxury_option_name %></span>
+                                                        
+                                                        <span class="badge badge-info ml-2 my-1"><%= order.luxury_option_name %></span>
+                                                    <% } %>
+                                                    <% if(order.is_gift == '1') { %>
+                                                        <div class="gifted-icon">
+                                                            <img class="p-1 align-middle" src="{{ asset('assets/images/gifts_icon.png') }}" alt="">
+                                                            <span class="align-middle">This is a gift.</span>    
+                                                        </div>                                                                                                              
                                                     <% } %>
                                                     <% if(order.scheduled_date_time) { %>
                                                         <span class="badge badge-success ml-2">Scheduled</span>

@@ -1135,6 +1135,10 @@ label:hover~input:checked~.rate label
     border-color: var(--theme-deafult);
 }
 
+.cart-page-layout .custom-checkbox .custom-control-label::before, .custom-checkbox .custom-control-input:checked~.custom-control-label::after {
+    top: 5px;
+}
+
 .cart-table .btn.btn-solid {
     padding: 6px 15px 8.2px;
     text-transform: capitalize;

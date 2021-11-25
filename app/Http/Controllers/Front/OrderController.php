@@ -515,7 +515,7 @@ class OrderController extends FrontController
         //     $navCategories = $this->categoryNav($langId);
         //     return view('frontend/orderPayment')->with(['navCategories' => $navCategories, 'first_name' => $request->first_name, 'last_name' => $request->last_name, 'email_address' => $request->email_address, 'phone' => $request->phone, 'total_amount' => $request->total_amount, 'address_id' => $request->address_id]);
         // }
-
+       
         $order_response = $this->orderSave($request, "1");
         $response = $order_response->getData();
         if ($response->status == 'Success') {
@@ -583,6 +583,7 @@ class OrderController extends FrontController
             $order->schedule_pickup = $cart->schedule_pickup??null;
             $order->schedule_dropoff = $cart->schedule_dropoff??null;
             $order->specific_instructions = $cart->specific_instructions??null;
+            $order->is_gift = $request->is_gift??0;
             $order->save();
             $cart_prescriptions = CartProductPrescription::where('cart_id', $cart->id)->get();
             foreach ($cart_prescriptions as $cart_prescription) {

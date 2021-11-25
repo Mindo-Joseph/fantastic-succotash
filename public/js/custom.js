@@ -1180,6 +1180,8 @@ $(document).ready(function() {
     window.placeOrder = function placeOrder(address_id = 0, payment_option_id, transaction_id = 0, tip = 0) {
         var task_type = $("input[name='task_type']:checked").val();
         var schedule_dt = $("#schedule_datetime").val();
+        var is_gift = $('#is_gift:checked').val() ?? 0;
+       
         if ((task_type == 'schedule') && (schedule_dt == '')) {
             $("#proceed_to_pay_modal").modal('hide');
             $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
@@ -1190,7 +1192,7 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: place_order_url,
-            data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt },
+            data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt,is_gift:is_gift },
             success: function(response) {
                 if (response.status == "Success") {
                     var ip_address = window.location.host;
@@ -1236,6 +1238,7 @@ $(document).ready(function() {
     window.placeOrderBeforePayment = function placeOrderBeforePayment(address_id = 0, payment_option_id, tip = 0) {
         var task_type = $("input[name='task_type']:checked").val();
         var schedule_dt = $("#schedule_datetime").val();
+        var is_gift = $('#is_gift:checked').val() ?? 0;
 
         if ((task_type == 'schedule') && (schedule_dt == '')) {
             $("#proceed_to_pay_modal").modal('hide');
@@ -1249,7 +1252,7 @@ $(document).ready(function() {
             dataType: 'json',
             async: false,
             url: place_order_url,
-            data: { address_id: address_id, payment_option_id: payment_option_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt },
+            data: { address_id: address_id, payment_option_id: payment_option_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt,is_gift:is_gift },
             success: function(response) {
                 if (response.status == "Success") {
                     // var ip_address = window.location.host;
