@@ -182,7 +182,7 @@ $timezone = Auth::user()->timezone;
                                                             @endphp
                                                             <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
                                                                 @if(($vendor->delivery_fee > 0) || (!empty($order->scheduled_date_time)) || ($order->luxury_option_id > 0))
-                                                                    <div class="progress-order font-12">
+                                                                    <div class="progress-order font-12  d-flex align-items-center justify-content-between pr-2">
                                                                         @if($order->luxury_option_id > 0)
                                                                             @php
                                                                                 $luxury_option = \App\Models\LuxuryOption::where('id', $order->luxury_option_id)->first();
@@ -194,13 +194,19 @@ $timezone = Auth::user()->timezone;
                                                                                     $luxury_option_name = 'Delivery';
                                                                                 }
                                                                             @endphp
-                                                                            <span class="badge badge-info ml-2">{{$luxury_option_name}}</span>
+                                                                            <span class="badge badge-info ml-2 my-1">{{$luxury_option_name}}</span>
                                                                         @endif
                                                                         @if(!empty($order->scheduled_date_time))
                                                                             <span class="badge badge-success ml-2">Scheduled</span>
                                                                             <span class="ml-2">{{dateTimeInUserTimeZone($order->scheduled_date_time, $timezone)}}</span>
                                                                         @elseif(!empty($vendor->ETA))
                                                                             <span class="ml-2">Your order will arrive by {{$vendor->ETA}}</span>
+                                                                        @endif
+                                                                        @if($order->is_gift == '1')
+                                                                            <div class="gifted-icon">
+                                                                                <img class="p-1 align-middle" src="{{ asset('assets/images/gifts_icon.png') }}" alt="">
+                                                                                <span class="align-middle">This is a gift.</span>    
+                                                                            </div>                                                                                                              
                                                                         @endif
                                                                     </div>
                                                                 @endif

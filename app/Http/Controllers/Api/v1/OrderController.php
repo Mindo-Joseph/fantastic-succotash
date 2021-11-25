@@ -153,6 +153,7 @@ class OrderController extends BaseController {
                     $order->schedule_pickup = $cart->schedule_pickup??null;
                     $order->schedule_dropoff = $cart->schedule_dropoff??null;
                     $order->specific_instructions = $cart->specific_instructions??null;
+                    $order->is_gift = $request->is_gift??0;
                     $order->save();
                     $customerCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
                     $clientCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
