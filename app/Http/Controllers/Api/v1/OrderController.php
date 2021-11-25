@@ -222,6 +222,14 @@ class OrderController extends BaseController {
                             $order_product->product_id = $vendor_cart_product->product_id;
                             $order_product->created_by = $vendor_cart_product->created_by;
                             $order_product->variant_id = $vendor_cart_product->variant_id;
+                            
+                            if(!empty($vendor_cart_product->product->title))
+                            $vendor_cart_product->product->title = $vendor_cart_product->product->title;
+                            elseif(empty($vendor_cart_product->product->title)  && !empty($vendor_cart_product->product->translation))
+                            $vendor_cart_product->product->title = $vendor_cart_product->product->translation[0]->title;
+                            else
+                            $vendor_cart_product->product->title = $vendor_cart_product->product->sku;
+
                             $order_product->product_name = $vendor_cart_product->product->title ?? $vendor_cart_product->product->sku;
                             $order_product->product_dispatcher_tag = $vendor_cart_product->product->tags;
                             if ($vendor_cart_product->product->pimage) {

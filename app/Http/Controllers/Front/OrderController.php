@@ -696,7 +696,18 @@ class OrderController extends FrontController
                     }
                     $order_product->created_by = $vendor_cart_product->created_by;
                     $order_product->variant_id = $vendor_cart_product->variant_id;
+
+                    if(!empty($vendor_cart_product->product->title))
+                    $vendor_cart_product->product->title = $vendor_cart_product->product->title;
+                    elseif(empty($vendor_cart_product->product->title)  && !empty($vendor_cart_product->product->translation))
+                    $vendor_cart_product->product->title = $vendor_cart_product->product->translation[0]->title;
+                    else
+                    $vendor_cart_product->product->title = $vendor_cart_product->product->sku;
+
+
+
                     $order_product->product_name = $vendor_cart_product->product->title ?? $vendor_cart_product->product->sku;
+                  
                     $order_product->product_dispatcher_tag = $vendor_cart_product->product->tags;
                     $order_product->schedule_type = $vendor_cart_product->schedule_type ?? null;
                     $order_product->scheduled_date_time = $vendor_cart_product->schedule_type == 'schedule' ? $vendor_cart_product->scheduled_date_time : null;
@@ -824,11 +835,11 @@ class OrderController extends FrontController
             }
             $order->save();
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
-                $this->sendSuccessEmail($request, $order, $vendor_id);
+        //        $this->sendSuccessEmail($request, $order, $vendor_id);
             }
             // $this->sendOrderNotification($user->id, $vendor_ids);
-            $this->sendSuccessEmail($request, $order);
-            $this->sendSuccessSMS($request, $order, $vendor_id);
+        //    $this->sendSuccessEmail($request, $order);
+        //    $this->sendSuccessSMS($request, $order, $vendor_id);
             $ex_gateways = [7,8,9,10]; // mobbex, yoco, pointcheckout, razorpay
             if(!in_array($request->payment_option_id, $ex_gateways)){
                 Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL,
