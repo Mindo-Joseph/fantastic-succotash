@@ -100,19 +100,12 @@ class CartController extends FrontController
             $public_key_yoco= json_decode($public_key_yoco);
             $public_key_yoco= $public_key_yoco->public_key??'';
         }
-        $razorpay_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'razorpay')->where('status', 1)->first();
-        if($razorpay_creds)
-        {
-            $creds_arr_razorpay = json_decode($razorpay_creds->credentials);
-            $api_key_razorpay = (isset($creds_arr_razorpay->api_key)) ? $creds_arr_razorpay->api_key : '';
-            // dd($razorpay_creds,$creds_arr_razorpay->api_key,$api_key_razorpay);
-        }
 
 
        
       
        
-        return view('frontend.cartnew',compact('public_key_yoco','cart','client_detail','api_key_razorpay'))->with($data,$client_preference_detail,$client_detail);
+        return view('frontend.cartnew',compact('public_key_yoco','cart','client_detail'))->with($data,$client_preference_detail,$client_detail);
         // return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user]);
     }
 
