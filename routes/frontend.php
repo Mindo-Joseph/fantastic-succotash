@@ -121,6 +121,8 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('paginateValue', 'Front\UserhomeController@changePaginate')->name('changePaginate');
 	Route::get('/product/{id?}', 'Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}', 'Front\ProductController@getVariantData')->name('productVariant');
+	Route::post('cart/product/lastAdded', 'Front\CartController@getLastAddedProductVariant')->name('getLastAddedProductVariant');
+	Route::post('cart/product/variant/different-addons', 'Front\CartController@getProductVariantWithDifferentAddons')->name('getProductVariantWithDifferentAddons');
 	Route::post('add/product/cart', 'Front\CartController@postAddToCart')->name('addToCart');
 	Route::post('add/product/cart-addons', 'Front\CartController@postAddToCartAddons')->name('addToCartAddons');
 	Route::post('add/wishlist/cart', 'Front\CartController@addWishlistToCart')->name('addWishlistToCart');
