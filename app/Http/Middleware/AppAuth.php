@@ -43,18 +43,20 @@ class AppAuth{
         } 
        
         if(isset($user) && $user->status != 1){
-                Auth::logout();
-                $blockToken = new BlockedToken();
-                $header = $request->header();
-                $blockToken->token = $header['authorization'][0];
-                $blockToken->expired = '1';
-                $blockToken->save();
+            Auth::logout();
+            if (!empty(Session::get('current_fcm_token'))) {
+                UserDevice::where('device_token', Session::get('current_fcm_token'))->delete();
+                Session::forget('current_fcm_token');
+            }
 
-                $del_token = UserDevice::where('access_token', $header['authorization'][0])->delete();
+            $blockToken = new BlockedToken();
+            $header = $request->header();
+            $blockToken->token = $header['authorization'][0];
+            $blockToken->expired = '1';
+            $blockToken->save();
 
-                return response()->json([
-                    'message' => __('Successfully logged out')
-                ]);
+            $del_token = UserDevice::where('access_token', $header['authorization'][0])->delete();
+            return $next($request);
         }
 
         $timezone = $user->timezone;
