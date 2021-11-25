@@ -194,12 +194,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             </div>
                         </div>
                         <script type="text/template" id="search_box_main_div_template">
-                            <a class="text-right d-block mr-2 mb-3" id="search_viewall" href="#">{{ __("View All") }}</a>
+                            <a class="text-right d-block mr-2 mb-1" id="search_viewall" href="#">{{ __("View All") }}</a>
                             <div class="row mx-0">
                                 <% _.each(results, function(result, k){ %>
-                                    <a class="col-md-4 text-center list-items mb-2" href="<%= result.redirect_url %>">
+                                    <a class="col-12 text-center list-items pt-2" href="<%= result.redirect_url %>">
                                     <img src="<%= result.image_url%>" alt="">
-                                    <span><%= result.name %></span>
+                                    <div class="result-item-name"><b><%= result.name %></b> <span>Dish</span> </div>
                                     </a>
                                 <% }); %>
                             </div>
