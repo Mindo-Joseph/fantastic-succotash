@@ -76,7 +76,7 @@
                 </div>
                 <div class="product-bottom-bar">
                   <div class="row">
-                    <div class="col-md-12 col-lg-5 order-0">
+                    <div class="col-md-8 col-lg-5 order-0">
                         <div class="card-box vendor-details-left px-2 py-3">
                             <div class="d-sm-flex">
                                 <div class="vender-icon mr-sm-1 text-center text-sm-left mb-2 mb-sm-0">
@@ -193,7 +193,7 @@
                                             </div>
                                         </div>
                                         <div class="col-10">
-                                            <div class="row price_head pl-3 pl-sm-2">
+                                            <div class="row price_head pl-2">
                                                 <div class="col-sm-12 pl-2">
                                                     <div class="d-flex align-items-start justify-content-between">    
                                                         <h5 class="mt-0">
@@ -282,8 +282,9 @@
                                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                                     </span>
                                                                 </div>
-                                                            @else                                                          
-                                                            @if($variant_quantity > 0 || $prod->sell_when_out_of_stock == 1)
+                                                            @else
+                                                          
+                                                                @if($variant_quantity > 0 || $prod->sell_when_out_of_stock == 1)
                                                                 {{-- <a class="add_vendor-fav" href="#"><i class="fa fa-heart"></i></a> --}}
                                                                 <a class="add-cart-btn add_vendor_product" id="aadd_button_href{{$data->id}}" 
                                                                     data-variant_id="{{$data->variant[0]->id}}" 
@@ -308,9 +309,9 @@
                                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                                     </span>
                                                                 </div>
-                                                            @else
+                                                                @else
                                                                 <span class="text-danger">Out of stock</span>
-                                                            @endif
+                                                                @endif
                                                             @endif
                                                             @if( $is_customizable )
                                                                 <div class="customizable-text">customizable</div>
@@ -574,11 +575,11 @@
             <a class="add_vendor-fav" href="#"><i class="fa fa-heart"></i></a>
             <a class="add-cart-btn add_vendor_product" style="display:none;" id="add_button_href<%= variant.check_if_in_cart.id %>" data-variant_id="<%= variant.id %>" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" href="javascript:void(0)">Add</a>
             <div class="number" id="show_plus_minus<%= variant.check_if_in_cart.id %>">
-                <span class="minus qty-minus-product <% if(is_customizable){ %> remove-customize <% } %>"  data-parent_div_id="show_plus_minus<%= variant.check_if_in_cart.id %>" data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" data-cart="<%= variant.check_if_in_cart.cart_id %>">
+                <span class="minus qty-minus-product"  data-parent_div_id="show_plus_minus<%= variant.check_if_in_cart.id %>" data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" data-cart="<%= variant.check_if_in_cart.cart_id %>">
                     <i class="fa fa-minus" aria-hidden="true"></i>
                 </span>
                 <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="<%= variant.check_if_in_cart.quantity %>" class="input-number" step="0.01" id="quantity_ondemand_<%= variant.check_if_in_cart.id %>" readonly>
-                <span class="plus qty-plus-product <% if(is_customizable){ %> repeat-customize <% } %>"  data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" data-cart="<%= variant.check_if_in_cart.cart_id %>">
+                <span class="plus qty-plus-product"  data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" data-cart="<%= variant.check_if_in_cart.cart_id %>">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                 </span>
             </div>
