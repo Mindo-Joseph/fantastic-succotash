@@ -207,7 +207,8 @@ $timezone = Auth::user()->timezone;
                                                 <br><a target="_blank" href="{{ ($pres) ? @$pres->prescription['proxy_url'].'74/100'.@$pres->prescription['image_path'] : ''}}">{{($product->prescription) ? 'Prescription' : ''}}</a>
                                                 @endforeach
 
-                                            @if($product->addon)
+                                                <p class="p-0 m-0">{{ substr($product->product_variant_sets, 0, -2) }}</p>
+                                            @if($product->addon && count($product->addon))
                                                 <hr class="my-2">
                                                 <h6 class="m-0 pl-0"><b>{{__('Add Ons')}}</b></h6>
                                                 @foreach($product->addon as $addon)
