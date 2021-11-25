@@ -3,7 +3,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Routing\Route;
-use App\Models\{BlockedToken, User, ClientLanguage, ClientCurrency};
+use App\Models\{BlockedToken, User, ClientLanguage, ClientCurrency,UserDevice};
 use Illuminate\Support\Facades\Cache;
 use Request;
 use Config;
@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 use JWT\Token;
 use Auth;
 use Session;
-use UserDevice;
 class CheckAuth
 {
     /**
