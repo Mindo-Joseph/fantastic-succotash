@@ -9,7 +9,7 @@ use JWT\Token;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-use App\Models\{BlockedToken, User, ClientLanguage, ClientCurrency};
+use App\Models\{BlockedToken, User, ClientLanguage, ClientCurrency,UserDevice};
 
 class AppAuth{
     /**
