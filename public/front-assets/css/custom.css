@@ -6459,6 +6459,9 @@ body .footer-theme .sub-title h4 {
     display: none;
 }
 
+.custom-checkbox .custom-control-input:checked~.custom-control-label::after{
+    background-color: var(--theme-deafult);
+}
 
 
 

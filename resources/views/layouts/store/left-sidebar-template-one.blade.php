@@ -157,7 +157,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                     $searchPlaceholder = getNomenclatureName('Search product, vendor, item', true);
                                                     $searchPlaceholder = ($searchPlaceholder === 'Search product, vendor, item') ? __('Search product, vendor, item') : $searchPlaceholder;  
                                                 @endphp
-                                                <input class="form-control border-0 typeahead" type="search" placeholder="{{ $searchPlaceholder }}" id="main_search_box">
+                                                <input class="form-control border-0 typeahead" type="search" placeholder="{{ $searchPlaceholder }}" id="main_search_box" autocomplete="off">
                                             </div>
                                             <div class="list-box style-4" style="display:none;" id="search_box_main_div">
                                                 
