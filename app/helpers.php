@@ -106,6 +106,7 @@ function getClientDetail()
 function getRazorPayApiKey()
 {
     $razorpay_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'razorpay')->where('status', 1)->first();
+    $api_key_razorpay = "";
     if($razorpay_creds)
     {
         $creds_arr_razorpay = json_decode($razorpay_creds->credentials);
