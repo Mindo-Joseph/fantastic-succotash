@@ -40,7 +40,23 @@ class AppAuth{
         if(!$user){
             return response()->json(['error' => 'Invalid Session', 'message' => 'Invalid Token or session has been expired.'], 401);
             abort(404);
+        } 
+       
+        if(isset($user) && $user->status != 1){
+                Auth::logout();
+                $blockToken = new BlockedToken();
+                $header = $request->header();
+                $blockToken->token = $header['authorization'][0];
+                $blockToken->expired = '1';
+                $blockToken->save();
+
+                $del_token = UserDevice::where('access_token', $header['authorization'][0])->delete();
+
+                return response()->json([
+                    'message' => __('Successfully logged out')
+                ]);
         }
+
         $timezone = $user->timezone;
         $languages = ClientLanguage::where('is_primary', 1)->first();
         $primary_cur = ClientCurrency::where('is_primary', 1)->first();
