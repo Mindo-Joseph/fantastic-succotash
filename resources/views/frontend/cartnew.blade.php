@@ -29,6 +29,10 @@ if(Auth::user()){
 $timezone = Auth::user()->timezone;
 $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
 }
+$clientData = \App\Models\Client::select('id', 'logo')->where('id', '>', 0)->first();
+$urlImg =  $clientData ? $clientData->logo['image_fit'].'150/92'.$clientData->logo['image_path'] : " ";
+$languageList = \App\Models\ClientLanguage::with('language')->where('is_active', 1)->orderBy('is_primary', 'desc')->get();
+$currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primary', 'desc')->get();
 @endphp
 
 <header>
@@ -956,6 +960,11 @@ $now = convertDateTimeInTimeZone($now, $timezone, 'Y-m-d\TH:i');
 <script src="https://js.stripe.com/v3/"></script>
 
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
+
+
+
+
+
 <script>
     // Replace the supplied `publicKey` with your own.
     // Ensure that in production you use a production public_key.

@@ -77,6 +77,10 @@ else if($client_preference_detail->show_dark_mode == 2){
     .cab-booking-header{
          display: none;
      }
+    .swal2-icon.swal2-warning{
+      color: {{getClientPreferenceDetail()->web_color}} !important;
+      border-color: {{getClientPreferenceDetail()->web_color}} !important;
+     }
  </style>
 @endif
 
@@ -115,5 +119,16 @@ else if($client_preference_detail->show_dark_mode == 2){
   @if(isset($set_template)  && $set_template->template_id == 1)
   <script src="{{asset('front-assets/js/custom-template-one.js')}}"></script>
   @endif
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5LPF1QP3Y3"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-5LPF1QP3Y3');
+</script>
+
 </body>
 </html>
