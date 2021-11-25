@@ -1,4 +1,4 @@
-function startLoader(element,color) {
+function startLoader(element,loader_text) {
     // check if the element is not specified
     if(typeof element == 'undefined') {
         console.log(element);
@@ -6,12 +6,12 @@ function startLoader(element,color) {
     }
 
     // set the wait me loader
-    $(element).waitMe({
+    $(element).waitMe({ 
         effect : 'rotateplane',
-        text : 'Processing ....',
+        text : loader_text,
         bg : 'rgb(2, 2, 2, 0.7)',
         //color : 'rgb(66,35,53)',
-        color : element+' !important',// change color if want any color for loader
+        color : 'rgb(242, 242, 242) !important',// change color if want any color for loader
         sizeW : '150px',
         sizeH : '150px',
         source : ''

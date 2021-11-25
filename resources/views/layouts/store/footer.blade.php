@@ -72,6 +72,7 @@
 
 // Client Perference  Detail
     var client_preference_web_color = "{{getClientPreferenceDetail()->web_color}}";
+    var client_preference_web_rgb_color = "{{getClientPreferenceDetail()->wb_color_rgb}}"; 
 
 // Client Detail
     var client_company_name = "{{getClientDetail()->company_name}}";

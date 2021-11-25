@@ -582,6 +582,7 @@ $(document).ready(function() {
      // RazourPay payment gateway
     window.razourPayView = function razourPayView(data) {
         razorpay_options.handler = function (response){
+            startLoader('body','We are processing your transaction...');
             razourPayCompletePayment(data,response);
             // alert(response.razorpay_payment_id);
             // alert(response.razorpay_order_id);
