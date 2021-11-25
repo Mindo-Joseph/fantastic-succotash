@@ -15,7 +15,7 @@ use App\Models\Client as CP;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus, OrderTax, SubscriptionInvoicesUser, UserDevice, UserVendor, VendorOrderDispatcherStatus, Page, DriverRegistrationDocument, LuxuryOption, PaymentOption};
+use App\Models\{Order, OrderProduct, EmailTemplate, Cart, CartAddon, OrderProductPrescription, CartProduct, User, Product, OrderProductAddon, Payment, ClientCurrency, OrderVendor, UserAddress, Vendor, CartCoupon, CartProductPrescription, LoyaltyCard, NotificationTemplate, VendorOrderStatus, OrderTax, SubscriptionInvoicesUser, UserDevice, UserVendor, VendorOrderDispatcherStatus, Page, DriverRegistrationDocument, LuxuryOption, PaymentOption,ProductVariantSet};
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Models\AutoRejectOrderCron;
@@ -425,7 +425,7 @@ class OrderController extends FrontController
                             $delivery_fee_charges = $deliver_charge;
                         }
                     }
-                }
+            }
                 if ($vendorData->coupon) {
                     if ($vendorData->coupon->promo->promo_type_id == 2) {
                         $total_discount_percent = $vendorData->coupon->promo->amount;
@@ -696,6 +696,17 @@ class OrderController extends FrontController
                     $order_product->created_by = $vendor_cart_product->created_by;
                     $order_product->variant_id = $vendor_cart_product->variant_id;
 
+                    // if(isset($vendor_cart_product->variant_id) && !empty($vendor_cart_product->variant_id))
+                    // {
+                    //     $var_sets = ProductVariantSet::where('product_variant_id',$vendor_cart_product->variant_id)->where('product_id',$vendor_cart_product->product->id)->get();
+                    //     if(count($var_sets)){
+                    //         foreach($var_sets as $set){
+
+                    //         }
+
+                    //     }
+                    // }
+
                     if(!empty($vendor_cart_product->product->title))
                     $vendor_cart_product->product->title = $vendor_cart_product->product->title;
                     elseif(empty($vendor_cart_product->product->title)  && !empty($vendor_cart_product->product->translation))
@@ -834,11 +845,11 @@ class OrderController extends FrontController
             }
             $order->save();
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
-        //        $this->sendSuccessEmail($request, $order, $vendor_id);
+                $this->sendSuccessEmail($request, $order, $vendor_id);
             }
             // $this->sendOrderNotification($user->id, $vendor_ids);
-        //    $this->sendSuccessEmail($request, $order);
-        //    $this->sendSuccessSMS($request, $order, $vendor_id);
+            $this->sendSuccessEmail($request, $order);
+            $this->sendSuccessSMS($request, $order, $vendor_id);
             $ex_gateways = [7,8,9,10]; // mobbex, yoco, pointcheckout, razorpay
             if(!in_array($request->payment_option_id, $ex_gateways)){
                 Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL,
