@@ -7142,6 +7142,7 @@ body[dir="rtl"] .inner_spacing h3 {
         width: calc(100% - 50px);
         margin: auto;
         white-space: nowrap;
+        justify-content: center;
     }
 }
 
