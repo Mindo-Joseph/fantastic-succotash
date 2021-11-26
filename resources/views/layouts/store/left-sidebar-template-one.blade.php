@@ -97,9 +97,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="container d-block">
                     <div class="row align-items-center position-initial">
                         <div class="col-lg-12">
-                            <div class="row mobile-header align-items-center">
-                                <div class="col-4 d-flex align-items-center justify-content-sm-between"> 
-                                    <a class="navbar-brand mr-3 d-none d-sm-inline-block" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
+                            <div class="row mobile-header align-items-center my-sm-2">
+                                <div class="col-12 col-sm-4 d-flex align-items-center justify-content-sm-between mt-2 mt-md-0"> 
+                                    <a class="navbar-brand mr-3 p-0 d-none d-sm-inline-block" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                                     @if($mod_count > 1)
                                         <ul class="nav nav-tabs navigation-tab nav-material tab-icons mr-md-3 vendor_mods" id="top-tab" role="tablist">
                                             @if($client_preference_detail->delivery_check == 1)
@@ -123,13 +123,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             @if($client_preference_detail->takeaway_check == 1)
                                             <li class="navigation-tab-item" role="presentation">
 
-
                                                 @php
                                                 $Takeaway = getNomenclatureName('Takeaway', true);
                                                 $Takeaway = ($Takeaway === 'Takeaway') ? __('Takeaway') : $Takeaway;
                                                 @endphp
-            
-            
             
                                                 <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ $Takeaway }}</a>
                                             </li>
@@ -138,8 +135,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         </ul>
                                     @endif 
                                 </div>
-                                <div class="col-8 my-sm-2 ipad-view">                       
-                                    <div class="search_bar menu-right d-sm-flex d-block align-items-center justify-content-end w-100 ">
+                                <div class="col-8 ipad-view">                       
+                                    <div class="search_bar menu-right d-sm-flex d-block align-items-center justify-content-end w-100">
                                         @if( (Session::get('preferences')))
                                             @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
                                                 <div class="location-bar d-none align-items-center justify-content-start ml-md-2 my-2 my-lg-0 dropdown-toggle" href="#edit-address" data-toggle="modal">
@@ -153,26 +150,26 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                 </div>
                                             @endif
                                         @endif  
-                                        <div class="radius-bar d-xl-inline mr-2">
+                                        <div class="radius-bar d-xl-inline mr-sm-2">
                                             <div class="search_form d-flex align-items-center justify-content-between">
                                                 <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
                                                 @php
                                                     $searchPlaceholder = getNomenclatureName('Search product, vendor, item', true);
                                                     $searchPlaceholder = ($searchPlaceholder === 'Search product, vendor, item') ? __('Search product, vendor, item') : $searchPlaceholder;  
                                                 @endphp
-                                                <input class="form-control border-0 typeahead" type="search" placeholder="{{ $searchPlaceholder }}" id="main_search_box">
+                                                <input class="form-control border-0 typeahead" type="search" placeholder="{{ $searchPlaceholder }}" id="main_search_box" autocomplete="off">
                                             </div>
                                             <div class="list-box style-4" style="display:none;" id="search_box_main_div">
                                                 
                                             </div>
                                         </div>
                                         <script type="text/template" id="search_box_main_div_template">
-                                            <a class="text-right d-block mr-2 mb-3" id="search_viewall" href="#">{{ __("View All") }}</a>
+                                            <a class="text-right d-block mr-2 mb-1" id="search_viewall" href="#">{{ __("View All") }}</a>
                                             <div class="row mx-0">
                                                 <% _.each(results, function(result, k){ %>
-                                                    <a class="col-md-4 text-center list-items mb-2" href="<%= result.redirect_url %>">
+                                                    <a class="col-12 text-center list-items pt-2" href="<%= result.redirect_url %>">
                                                     <img src="<%= result.image_url%>" alt="">
-                                                    <span><%= result.name %></span>
+                                                    <div class="result-item-name"><b><%= result.name %></b> <span>Dish</span> </div>
                                                     </a>
                                                 <% }); %>
                                             </div>
@@ -186,7 +183,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             </div>
                                         @endif
                                         @endif
-                                        <div class="icon-nav">
+                                        <div class="icon-nav d-none d-sm-inline-block">
                                             <form name="filterData" id="filterData" action="{{route('changePrimaryData')}}">
                                                 @csrf
                                                 <input type="hidden" id="cliLang" name="cliLang" value="{{session('customerLanguage')}}">
@@ -465,11 +462,30 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+
+                        <div class="shimmer_effect">
+                            <ul class="sm pixelstrap sm-horizontal menu-slider">
+                                @foreach($navCategories as $cate)
+                                    @if($cate['name'])
+                                    <li>                                    
+                                        <a href="{{route('categoryDetail', $cate['slug'])}}">
+                                            @if($client_preference_detail->show_icons == 1 && \Request::route()->getName() == 'userHome')
+                                            <div class="nav-cate-img loading">
+                                                
+                                            </div>
+                                            @endif
+                                            <span><span class="loading"></span></span>
+                                        </a>
+                                    </li>
+                                    @endif
+                                @endforeach
+                            </ul>   
+                        </div>                                         
                         
                         <ul id="main-menu" class="sm pixelstrap sm-horizontal menu-slider">
-                            <li>
+                            <!-- <li>
                                 <div class="mobile-back text-end">{{__('Back')}}<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
-                            </li>
+                            </li> -->
                             @foreach($navCategories as $cate)
                                 @if($cate['name'])
                                 <li>                                    
@@ -512,9 +528,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 </header>
 <div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div>
 <script type="text/template" id="nav_categories_template">
-    <li>
+    <!-- <li>
         <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
-    </li>
+    </li> -->
     <% _.each(nav_categories, function(category, key){ %>
         <li>
             <a href="{{route('categoryDetail')}}/<%= category.slug %>">

@@ -194,12 +194,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             </div>
                         </div>
                         <script type="text/template" id="search_box_main_div_template">
-                            <a class="text-right d-block mr-2 mb-3" id="search_viewall" href="#">{{ __("View All") }}</a>
+                            <a class="text-right d-block mr-2 mb-1" id="search_viewall" href="#">{{ __("View All") }}</a>
                             <div class="row mx-0">
                                 <% _.each(results, function(result, k){ %>
-                                    <a class="col-md-4 text-center list-items mb-2" href="<%= result.redirect_url %>">
+                                    <a class="col-12 text-center list-items pt-2" href="<%= result.redirect_url %>">
                                     <img src="<%= result.image_url%>" alt="">
-                                    <span><%= result.name %></span>
+                                    <div class="result-item-name"><b><%= result.name %></b> <span>Dish</span> </div>
                                     </a>
                                 <% }); %>
                             </div>
@@ -331,11 +331,30 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             <div class="container">
                 <div class="row">
                     <div class="col-12">
+
+                        <div class="shimmer_effect">
+                            <ul class="sm pixelstrap sm-horizontal menu-slider">
+                                @foreach($navCategories as $cate)
+                                    @if($cate['name'])
+                                    <li>                                    
+                                        <a href="{{route('categoryDetail', $cate['slug'])}}">
+                                            @if($client_preference_detail->show_icons == 1 && \Request::route()->getName() == 'userHome')
+                                            <div class="nav-cate-img loading">
+                                                
+                                            </div>
+                                            @endif
+                                            <span><span class="loading"></span></span>
+                                        </a>
+                                    </li>
+                                    @endif
+                                @endforeach
+                            </ul>   
+                        </div>  
                         
                         <ul id="main-menu" class="sm pixelstrap sm-horizontal">
-                            <li>
+                            <!-- <li>
                                 <div class="mobile-back text-end">{{__('Back')}}<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
-                            </li>
+                            </li> -->
                             @foreach($navCategories as $cate)
                                 @if($cate['name'])
                                 <li>                                    
@@ -372,9 +391,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 </header>
 <div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div>
 <script type="text/template" id="nav_categories_template">
-    <li>
+    <!-- <li>
         <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
-    </li>
+    </li> -->
     <% _.each(nav_categories, function(category, key){ %>
         <li>
             <a href="{{route('categoryDetail')}}/<%= category.slug %>">
