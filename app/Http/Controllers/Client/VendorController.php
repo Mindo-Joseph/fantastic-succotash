@@ -883,15 +883,17 @@ class VendorController extends BaseController
             if(isset($product_category->category) && !empty($product_category->category->translation_one))
             $product_category->category->title = $product_category->category ? $product_category->category->translation_one->name : '';
             
-
-            if($product_category->category->type_id == 7 || $product_category->category->type_id == "7")
-            {
-                $check_pickup_delivery_service = 1;
+            if(isset($product_category->category) && !empty($product_category->category)) {
+                        if($product_category->category->type_id == 7 || $product_category->category->type_id == "7")
+                    {
+                        $check_pickup_delivery_service = 1;
+                    }
+                    if($product_category->category->type_id == 8|| $product_category->category->type_id == "8")
+                    {
+                        $check_on_demand_service = 1;
+                    }
             }
-            if($product_category->category->type_id == 8|| $product_category->category->type_id == "8")
-            {
-                $check_on_demand_service = 1;
-            }
+            
         }
         $data['product_categories'] = $product_categories;
         $data['check_pickup_delivery_service'] = $check_pickup_delivery_service;
