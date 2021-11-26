@@ -1509,6 +1509,8 @@ $(document).ready(function() {
             paymentViaPaylink('', '');
         } else if (payment_option_id == 10) {
             paymentViaRazorpay_wallet('', payment_option_id);
+        }else if (payment_option_id == 11) {
+            paymentViaGCash('', payment_option_id);
         } else if (payment_option_id == 8) {
             inline.createToken().then(function(result) {
                 if (result.error) {
