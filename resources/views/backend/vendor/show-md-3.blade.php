@@ -477,7 +477,7 @@ $('#add_user_permission_vendor').submit(function(e) {
                     }
                     if(response.data.check_on_demand_service == 1)
                     {
-                        $('.for_on_demand_service_only').html('<button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcher" data-id="'+response.data.product_categories[0].vendor_id+'">{{__("Login Into Dispatcher (Pickup & Delivery)")}} </button>');
+                        $('.for_on_demand_service_only').html('<button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcherOnDemand" data-id="'+response.data.product_categories[0].vendor_id+'">{{__("Login Into Dispatcher (On Demand Services)")}} </button>');
                     }else{
                         $('.for_on_demand_service_only').html('');
                     }
