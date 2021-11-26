@@ -189,6 +189,12 @@
                                     </a>
                                 </li>
                             @endif
+                             <li>
+                                <a href="{{route('review.index')}}">
+                                    <span class="icon-customer-2"></span>
+                                    <span> {{ __('Product Reviews') }} </span>
+                                </a>
+                            </li>
                         </ul>
                 </li>
                 @endif

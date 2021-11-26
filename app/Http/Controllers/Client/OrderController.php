@@ -103,7 +103,16 @@ class OrderController extends BaseController{
             });
         })->count();
 
-        return view('backend.order.index', compact('return_requests', 'pending_order_count', 'active_order_count', 'past_order_count'));
+        // all vendors 
+        $vendors = Vendor::where('status', '!=', '2')->orderBy('id', 'desc');
+        if (Auth::user()->is_superadmin == 0) {
+            $vendors = $vendors->whereHas('permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
+        $vendors = $vendors->get();
+
+        return view('backend.order.index', compact('return_requests', 'pending_order_count', 'active_order_count', 'past_order_count', 'vendors'));
     }
 
     public function postOrderFilter(Request $request, $domain = ''){
@@ -118,6 +127,18 @@ class OrderController extends BaseController{
         }
         if(!empty($request->search_keyword)){
             $orders = $orders->where('order_number', 'like', '%'.$request->search_keyword.'%');
+        }
+        if (!empty($request->get('date_filter'))) {
+             $date_date_filter = explode(' to ', $request->get('date_filter'));
+             $to_date = (!empty($date_date_filter[1]))?$date_date_filter[1]:$date_date_filter[0];
+             $from_date = $date_date_filter[0];
+             
+            $orders->between($from_date." 00:00:00", $to_date." 23:59:59");
+        }
+        if (!empty($request->get('vendor_id'))) {
+            $orders = $orders->whereHas('vendors', function ($query)  use($request) {
+                $query->where('vendor_id', $request->get('vendor_id'));
+            });
         }
 
         $order_count = Order::with('vendors')->where(function ($q1) {
@@ -228,6 +249,7 @@ class OrderController extends BaseController{
                 $orders->forget($key);
             }
         }
+       
 
         return $this->successResponse(['orders'=> $orders,'pending_orders' => $pending_orders,'active_orders' => $active_orders,'orders_history' => $orders_history],'',201);
     }

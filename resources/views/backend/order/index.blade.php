@@ -240,6 +240,7 @@
 </script>
 <div class="container-fluid order-page">
     <div class="row">
+        
         <div class="col-12">
             <div class="page-title-box d-flex align-items-center justify-content-between">
                 <h4 class="page-title">{{ __('Orders') }}</h4>
@@ -250,7 +251,29 @@
                 </a>
             </div>
         </div>
-        <div class="offset-md-9 col-md-3 offset-lg-10 col-lg-2 mb-2">
+        
+        <div class="col-md-9 col-lg-10 mb-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <input type="text" id="range-datepicker" class="form-control flatpickr-input" placeholder="2018-10-03 to 2018-10-10" readonly="readonly">
+                </div>
+                <div class="col">
+                    <select class="form-control" id="vendor_select_box">
+                        <option value="">{{ __('Select Vendor') }}</option>
+                        @forelse($vendors as $vendor)
+                            <option value="{{$vendor->id}}">{{$vendor->name}}</option>
+                        @empty
+                        @endforelse
+                    </select>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-danger waves-effect waves-light" id="clear_filter_btn_icon">
+                        <i class="mdi mdi-close"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-lg-2 mb-3">
             <input type="search" class="form-control form-control-sm" placeholder="{{ __('Search By Order ID') }}" id="search_via_keyword">
         </div>
     </div>
@@ -332,15 +355,35 @@
             'X-CSRF-TOKEN': $('input[name="_token"]').val()
         }
     });
+    $("#range-datepicker").flatpickr({ 
+        mode: "range",
+        onClose: function(selectedDates, dateStr, instance) {
+            //initDataTable();
+            init("pending_orders", "{{ route('orders.filter') }}", '', false);
+        }
+    });
+    $("#vendor_select_box").change(function() {
+        init("pending_orders", "{{ route('orders.filter') }}", '', false);
+    });
+    $("#clear_filter_btn_icon").click(function() {
+        $('#range-datepicker').val('');
+        $('#vendor_select_box').val('');
+        init("pending_orders", "{{ route('orders.filter') }}", '', false);
+    });
+
 
     function init(filter_order_status, url, search_keyword = "", isOnload = false) {
+    var date_filter = $('#range-datepicker').val();
+    var vendor_id = $('#vendor_select_box option:selected').val();
         $.ajax({
             url: url,
             type: "POST",
             dataType: "JSON",
             data: {
                 filter_order_status: filter_order_status,
-                search_keyword: search_keyword
+                search_keyword: search_keyword,
+                vendor_id: vendor_id,
+                date_filter: date_filter
             },
             success: function(response) {
                 $('#order_list_order').hide();
