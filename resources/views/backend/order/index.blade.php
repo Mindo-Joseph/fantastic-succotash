@@ -359,11 +359,15 @@
         mode: "range",
         onClose: function(selectedDates, dateStr, instance) {
             //initDataTable();
-            init("pending_orders", "{{ route('orders.filter') }}", '', false);
+            var typ=  $("a.nav-link.active").data('rel');
+            init(typ, "{{ route('orders.filter') }}", '', false);
         }
     });
     $("#vendor_select_box").change(function() {
-        init("pending_orders", "{{ route('orders.filter') }}", '', false);
+      var typ=  $("a.nav-link.active").data('rel');
+     //   alert(typ);
+    
+        init(typ, "{{ route('orders.filter') }}", '', false);
     });
     $("#clear_filter_btn_icon").click(function() {
         $('#range-datepicker').val('');

@@ -33,22 +33,23 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
+            <div class="col-md-6">
                 <div class="card widget-inline">
-                    <div class="card-body p-2">
-                        <div class="row">
-                            <div class="col-6 col-md-6 mb-3 mb-md-0">
-                                <h5><b>{{ __('Product name') }}:</b>
-                                    <span>{{ $product->translation_one->title }}</span></h5>
-                                <h5><b>{{ __('Product Vendor name') }}:</b> <span>{{ $product->vendor->name }}</span>
-                                </h5>
-                            </div>
-                            <div class="col-6 col-md-6 mb-3 mb-md-0">
+                    <div class="card-body p-3">
+                        <div class="row align-items-center">
+                            <div class="review-product-img">
                                 @php
                                     $image = $product->media ? @$product->media->first()->image['path']['proxy_url'] . '74/100' . @$product->media->first()->image['path']['image_path'] : @$product->image['proxy_url'] . '74/100' . @$product->image['image_path'];
                                 @endphp
                                 <img src="{{ $image }}" class="img-fluid blur-up lazyloaded">
                             </div>
+                            <div class="review-product-decsription">
+                                <h5><b>{{ __('Product name') }}:</b>
+                                    <span>{{ $product->translation_one->title }}</span></h5>
+                                <h5><b>{{ __('Vendor name') }}:</b> <span>{{ $product->vendor->name }}</span>
+                                </h5>
+                            </div>
+                          
 
                         </div>
                     </div>
@@ -59,10 +60,10 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
+                    <div class="card review-table-responsive">
                         <div class="card-body position-relative">
     
-                            <div class="table-responsive">
+                            <div class="table-responsive ">
                                 <table id="review_table" class="table table-centered table-nowrap table-striped" width="100%">
                                     <thead>
                                         <tr>
@@ -88,9 +89,13 @@
                                             <i class="fa fa-star {{ $reviwe->rating >= 5 ? 'checked' : '' }}"></i>
                                         </td>
                                         <td>
-                                            @foreach ($reviwe->reviewFiles as $k => $image)
-                                                <img src="{{ $image['file']['image_fit'] . '74/100' . $image['file']['image_path'] }}" />
-                                            @endforeach
+                                            <div class="file-outer">
+                                                @foreach ($reviwe->reviewFiles as $k => $image)
+                                                    <div class="review-images-file">
+                                                        <img src="{{ $image['file']['image_fit'] . '74/100' . $image['file']['image_path'] }}" />
+                                                    </div>    
+                                                @endforeach
+                                            </div>
                                         </td>
                                     </tr>
                                         @endforeach
