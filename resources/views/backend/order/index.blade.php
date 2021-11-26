@@ -135,7 +135,7 @@
                                                                 <span class="item_no position-absolute">x<%= product.quantity %></span>
                                                             </div> 
                                                             <!-- <h6 class="mx-1 mb-0 mt-1 ellips">Vendor Name</h6>    -->
-                                                            <label class="items_price">$<%= product.price %></label>
+                                                            <label class="items_price">{{$clientCurrency->currency->symbol}}<%= product.price %></label>
                                                         </div>
                                                     <% }); %>                                    
                                                 </div>
@@ -145,29 +145,29 @@
                                                     <% if(vendor.subtotal_amount > 0 || vendor.subtotal_amount < 0) { %>
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Total') }}</label>
-                                                        <span>$<%= vendor.subtotal_amount %></span>
+                                                        <span>{{$clientCurrency->currency->symbol}}<%= vendor.subtotal_amount %></span>
                                                     </li>
                                                     <% } %> 
                                                     <% if(vendor.discount_amount > 0 || vendor.discount_amount < 0) { %>
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Promocode') }}</label>
-                                                        <span>$<%= vendor.discount_amount %></span>
+                                                        <span>{{$clientCurrency->currency->symbol}}<%= vendor.discount_amount %></span>
                                                     </li>
                                                     <% } %> 
                                                     <% if(vendor.delivery_fee > 0 || vendor.delivery_fee < 0) { %>
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Delivery') }}</label>
                                                         <% if(vendor.delivery_fee !== null) { %>
-                                                        <span>$<%= vendor.delivery_fee %></span>
+                                                        <span>{{$clientCurrency->currency->symbol}}<%= vendor.delivery_fee %></span>
                                                         <% }else { %>
-                                                            <span>$ 0.00</span>
+                                                            <span>{{$clientCurrency->currency->symbol}} 0.00</span>
                                                         <% } %> 
                                                     </li>
                                                     <% } %> 
                                                     
                                                     <li class="grand_total d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Amount') }}</label>
-                                                        <span>$<%= vendor.payable_amount %></span>
+                                                        <span>{{$clientCurrency->currency->symbol}}<%= vendor.payable_amount %></span>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -181,42 +181,42 @@
                                 <ul class="price_box_bottom m-0 pl-0 pt-1">
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Total') }}</label>
-                                        <span>$<%= order.total_amount %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= order.total_amount %></span>
                                     </li>
                                     <% if(order.loyalty_amount_saved > 0 || order.loyalty_amount_saved < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Loyalty Used') }}</label>
-                                        <span>$<%= order.loyalty_amount_saved %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= order.loyalty_amount_saved %></span>
                                     </li>
                                     <% } %> 
 
                                     <% if(order.taxable_amount > 0 || order.taxable_amount < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Tax') }}</label>
-                                        <span>$<%= order.taxable_amount %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= order.taxable_amount %></span>
                                     </li>
                                     <% } %> 
                                     <% if(order.total_delivery_fee > 0 || order.total_delivery_fee < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{__('Delivery Fee')}}</label>
-                                        <span>$<%= order.total_delivery_fee %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= order.total_delivery_fee %></span>
                                     </li>
                                     <% } %> 
                                     <% if(order.wallet_amount_used > 0 || order.wallet_amount_used < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{__('Wallet Amount Used')}}</label>
-                                        <span>$<%= order.wallet_amount_used %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= order.wallet_amount_used %></span>
                                     </li>
                                     <% } %> 
                                     <% if(order.total_discount_calculate > 0 || order.total_discount_calculate < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{__('Total Discount')}}</label>
-                                        <span>$<%= order.total_discount_calculate %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= order.total_discount_calculate %></span>
                                     </li>
                                     <% } %> 
                                     <li class="grand_total d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Payable') }} </label>
-                                        <span>$<%= order.payable_amount - order.total_discount_calculate%></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= order.payable_amount - order.total_discount_calculate%></span>
                                     </li>
                                 </ul>
                             </div>

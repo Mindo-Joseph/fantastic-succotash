@@ -6463,6 +6463,9 @@ body .footer-theme .sub-title h4 {
     display: none;
 }
 
+.custom-checkbox .custom-control-input:checked~.custom-control-label::after{
+    background-color: var(--theme-deafult);
+}
 
 
 
@@ -7147,6 +7150,7 @@ body[dir="rtl"] .inner_spacing h3 {
         margin: auto;
         justify-content: center;
         white-space: nowrap;
+        justify-content: center;
     }
 }
 
@@ -7363,6 +7367,9 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(max-width:767px) {
+    .main-menu .container {
+        max-width: 100%;
+    }
     /* .mobile-header>div {
         flex: 0 0 100%;
         max-width: 100%;
@@ -7391,6 +7398,8 @@ body[dir="rtl"] .inner_spacing h3 {
 
     .navigation-tab {
         margin: auto;
+        margin-block-start: 0;
+        margin-block-end: 0;
     }
 
     .p-64 {
