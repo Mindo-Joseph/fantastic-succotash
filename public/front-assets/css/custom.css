@@ -1135,6 +1135,10 @@ label:hover~input:checked~.rate label
     border-color: var(--theme-deafult);
 }
 
+.cart-page-layout .custom-checkbox .custom-control-label::before, .custom-checkbox .custom-control-input:checked~.custom-control-label::after {
+    top: 5px;
+}
+
 .cart-table .btn.btn-solid {
     padding: 6px 15px 8.2px;
     text-transform: capitalize;
@@ -6459,6 +6463,9 @@ body .footer-theme .sub-title h4 {
     display: none;
 }
 
+.custom-checkbox .custom-control-input:checked~.custom-control-label::after{
+    background-color: var(--theme-deafult);
+}
 
 
 
@@ -7141,6 +7148,7 @@ body[dir="rtl"] .inner_spacing h3 {
     .menu-navigation ul.sm.pixelstrap.sm-horizontal {
         width: calc(100% - 50px);
         margin: auto;
+        justify-content: center;
         white-space: nowrap;
         justify-content: center;
     }
