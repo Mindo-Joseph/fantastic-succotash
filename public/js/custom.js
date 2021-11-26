@@ -117,12 +117,13 @@ window.resizeMenuSlider = function resizeMenuSlider(){
         if(!$('.menu-slider').hasClass('slick-initialized')){
             setTimeout(function(){
                 loadMainMenuSlider();
-            },100);
-            setTimeout(function(){
-                $(".sm-horizontal").css("right", "0px");
                 if ( $('.menu-slider .slick-slide').length > 12 ) {
                     $('.menu-slider').addClass('items-center');
                 }
+            },100);
+            setTimeout(function(){
+                $(".sm-horizontal").css("right", "0px");
+               
             },200);
         }
     }
@@ -276,8 +277,8 @@ window.initializeSlider = function initializeSlider() {
         speed: 300,        
         slidesToShow: 6,
         slidesToScroll: 3,
-        centerMode: true,
-        centerPadding: '60px',
+        // centerMode: true,
+        // centerPadding: '60px',
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
