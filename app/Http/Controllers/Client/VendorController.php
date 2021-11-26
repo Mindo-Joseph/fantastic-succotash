@@ -880,7 +880,10 @@ class VendorController extends BaseController
         $check_pickup_delivery_service = 0;
         $check_on_demand_service = 0;
         foreach ($product_categories as $product_category) {
+            if(isset($product_category->category) && !empty($product_category->category))
             $product_category->category->title = $product_category->category ? $product_category->category->translation_one->name : '';
+            else
+            $product_category->category->title = '';
             if($product_category->category->type_id == 7 || $product_category->category->type_id == "7")
             {
                 $check_pickup_delivery_service = 1;
