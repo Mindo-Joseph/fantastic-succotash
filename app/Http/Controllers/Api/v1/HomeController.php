@@ -141,7 +141,7 @@ class HomeController extends BaseController
             if ($razorpay_creds) {
                 $razorpay_creds_arr = json_decode($razorpay_creds->credentials);
             }
-            $homeData['profile']->preferences->razorpay_api_key = (isset($creds_arr->api_key) && (!empty($creds_arr->api_key))) ? $creds_arr->api_key : '';
+            $homeData['profile']->preferences->razorpay_api_key = (isset($razorpay_creds_arr->api_key) && (!empty($razorpay_creds_arr->api_key))) ? $razorpay_creds_arr->api_key : '';
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
