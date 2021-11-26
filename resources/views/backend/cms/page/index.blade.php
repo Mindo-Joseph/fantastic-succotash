@@ -74,11 +74,14 @@
                             <!-- <label for="title" class="control-label">{{ __("Title") }}</label> -->
                             <!-- <input class="form-control" id="edit_title" name="meta_title" type="text"> -->
                             <div class="site_link position-relative px-0">
+                                @if(isset($page) && !empty($page))
                                 <a href="{{route('extrapage',['slug' => $page->slug])}}" target="_blank"><span id="pwd_spn" class="password-span">{{route('extrapage',['slug' => $page->slug])}}</span></a>
                                 <label class="copy_link float-right" id="cp_btn" title="copy">
                                     <img src="{{ asset('assets/icons/domain_copy_icon.svg')}}" alt="">
                                     <span class="copied_txt" id="show_copy_msg_on_click_copy" style="display:none;">Copied</span>
                                 </label>
+                                @endif   
+                               
                             </div>
                             <span class="text-danger error-text updatetitleError"></span>
                         </div>                       
