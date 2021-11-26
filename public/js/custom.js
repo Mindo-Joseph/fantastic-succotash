@@ -238,8 +238,8 @@ window.initializeSlider = function initializeSlider() {
         speed: 300,
         slidesToShow: 5,
         slidesToScroll: 2,
-        centerMode: true,
-        centerPadding: '60px',
+        // centerMode: true,
+        // centerPadding: '60px',
         arrows: false,
         dots: false,
         responsive: [{
