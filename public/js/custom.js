@@ -109,9 +109,8 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
 
 window.resizeMenuSlider = function resizeMenuSlider(){
     var windowWidth = $(window).width();
-    // if(windowWidth < 1183){
     if(windowWidth < 320){
-        // $('.menu-slider').removeClass('items-center');
+        $('.menu-slider').removeClass('items-center');
         // $(".sm-horizontal").css("right", "-410px");
     }else{
         // $('#main-menu').addClass('menu-slider');

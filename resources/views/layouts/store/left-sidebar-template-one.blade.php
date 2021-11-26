@@ -98,7 +98,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="row align-items-center position-initial">
                         <div class="col-lg-12">
                             <div class="row mobile-header align-items-center my-sm-2">
-                                <div class="col-4 d-flex align-items-center justify-content-sm-between"> 
+                                <div class="col-12 col-sm-4 d-flex align-items-center justify-content-sm-between mt-2 mt-md-0"> 
                                     <a class="navbar-brand mr-3 d-none d-sm-inline-block" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                                     @if($mod_count > 1)
                                         <ul class="nav nav-tabs navigation-tab nav-material tab-icons mr-md-3 vendor_mods" id="top-tab" role="tablist">

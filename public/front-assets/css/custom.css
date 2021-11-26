@@ -5015,9 +5015,9 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     margin: auto !important;
 }
 
-.menu-slider.items-center .slick-track {
+/* .menu-slider.items-center .slick-track {
     justify-content: space-between;
-}
+} */
 
 .menu-slider .slick-slide {
     display: inline-block;
@@ -7359,6 +7359,9 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(max-width:767px) {
+    .main-menu .container {
+        max-width: 100%;
+    }
     /* .mobile-header>div {
         flex: 0 0 100%;
         max-width: 100%;
@@ -7387,6 +7390,8 @@ body[dir="rtl"] .inner_spacing h3 {
 
     .navigation-tab {
         margin: auto;
+        margin-block-start: 0;
+        margin-block-end: 0;
     }
 
     .p-64 {

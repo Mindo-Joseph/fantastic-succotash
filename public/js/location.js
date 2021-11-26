@@ -394,9 +394,11 @@ $(document).ready(function () {
                 // Hide image container
                 $(".shimmer_effect").hide();
                 $(".home-banner-slider").show();
-               }
+            }
         });
     }
+
+  
 
     function getLocation() {
         if (navigator.geolocation) {
