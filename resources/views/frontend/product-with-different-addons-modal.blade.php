@@ -45,7 +45,7 @@
                                         data-cart="{{$cart_id}}">
                                         <i class="fa fa-minus" aria-hidden="true"></i>
                                     </span>
-                                    <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="{{$variant_quantity}}" class="input-number" step="0.01" class="addon_variant_quantity_{{$cart_product_id}}" readonly>
+                                    <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="{{$variant_quantity}}" class="input-number addon_variant_quantity_{{$cart_product_id}}" step="0.01" readonly>
                                     <span class="plus qty-plus-product repeat-customize m-open" 
                                         data-variant_id="{{$variant_id}}" 
                                         data-id="{{$cart_product_id}}" 
