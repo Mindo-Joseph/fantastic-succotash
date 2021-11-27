@@ -99,9 +99,9 @@
                                             <i class="icon-location"></i> {{$vendor->address}}
                                         </li>
                                         <li class="d-block vendor-timing">
-                                            <i class="icon-time"></i> 
+                                            <i class="icon-time"></i>
                                                 @if(($vendor->is_vendor_closed == 0) && ($vendor->show_slot == 0))
-                                                    {{$vendor->opening_time}} – {{$vendor->closing_time}} 
+                                                    {{$vendor->opening_time}} – {{$vendor->closing_time}}
                                                     <span class="badge badge-success">Open</span>
                                                 @elseif(($vendor->is_vendor_closed == 0) && ($vendor->show_slot == 1))
                                                     24 x 7 <span class="badge badge-success">Open</span>
@@ -111,7 +111,7 @@
                                             </span>
                                             {{-- <span data-toggle="tooltip" data-placement="right" title="Tooltip on right"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                                             <span class="tooltip-text d-none">Mon-Sun : 11am - 11pm</span>--}}
-                                            </span> 
+                                            </span>
                                         </li>
                                     </ul>
                                 </div>
@@ -132,7 +132,7 @@
                     </div>
                     <div class="col-md-4 col-lg-3 col-xl-2 order-xl-2 order-1">
                         <div class="vendor-reviwes">
-                           <div class="row">                             
+                           <div class="row">
                               <div class="col-12 d-flex align-items-center">
                                   @if($vendor->vendorRating > 0)
                                     <div class="rating-text-box ml-sm-auto">
@@ -154,7 +154,7 @@
         </div>
         <div class="position-relative">
             <div class="categories-product-list">
-               
+
                 <a id="side_menu_toggle" class="d-md-none d-flex" href="javascript:void(0)">
                    <div class="manu-bars">
                        <span class="bar-line"></span>
@@ -163,7 +163,7 @@
                    </div>
                     <span>Menu</span>
                 </a>
-                                                    
+
                <div class="row">
                   <div class="col-md-4"></div>
                   <div class="col-md-8"></div>
@@ -195,9 +195,9 @@
                                         <div class="col-10">
                                             <div class="row price_head pl-2">
                                                 <div class="col-sm-12 pl-2">
-                                                    <div class="d-flex align-items-start justify-content-between">    
+                                                    <div class="d-flex align-items-start justify-content-between">
                                                         <h5 class="mt-0">
-                                                            {{$prod->translation_title}} 
+                                                            {{$prod->translation_title}}
                                                         </h5>
                                                         <div class="product_variant_quantity_wrapper">
                                                         @php
@@ -217,7 +217,7 @@
                                                                 $isAddonExist = 1;
                                                             }
                                                         @endphp
-                
+
                                                         @foreach($data->variant as $var)
                                                             @if(isset($var->checkIfInCart) && (count($var->checkIfInCart) > 0))
                                                                 @php
@@ -240,7 +240,7 @@
                                                                 @break;
                                                             @endif
                                                         @endforeach
-                                                        
+
                                                         @if($vendor->is_vendor_closed == 0)
 
                                                             @php
@@ -252,59 +252,59 @@
 
                                                             @if($productVariantInCart > 0)
                                                                 {{-- <a class="add_vendor-fav" href="#"><i class="fa fa-heart"></i></a> --}}
-                                                                <a class="add-cart-btn add_vendor_product" style="display:none;" id="add_button_href{{$cartProductId}}" 
-                                                                    data-variant_id="{{$productVariantIdInCart}}" 
-                                                                    data-add_to_cart_url="{{ route('addToCart') }}" 
-                                                                    data-vendor_id="{{$vendor_id}}" 
-                                                                    data-product_id="{{$product_id}}" 
-                                                                    data-addon="{{$isAddonExist}}" 
+                                                                <a class="add-cart-btn add_vendor_product" style="display:none;" id="add_button_href{{$cartProductId}}"
+                                                                    data-variant_id="{{$productVariantIdInCart}}"
+                                                                    data-add_to_cart_url="{{ route('addToCart') }}"
+                                                                    data-vendor_id="{{$vendor_id}}"
+                                                                    data-product_id="{{$product_id}}"
+                                                                    data-addon="{{$isAddonExist}}"
                                                                     href="javascript:void(0)">Add</a>
                                                                 <div class="number" id="show_plus_minus{{$cartProductId}}">
                                                                     <span class="minus qty-minus-product"
-                                                                        data-variant_id="{{$productVariantIdInCart}}" 
-                                                                        data-parent_div_id="show_plus_minus{{$cartProductId}}" 
-                                                                        data-id="{{$cartProductId}}" 
-                                                                        data-base_price="{{$variant_price}}" 
+                                                                        data-variant_id="{{$productVariantIdInCart}}"
+                                                                        data-parent_div_id="show_plus_minus{{$cartProductId}}"
+                                                                        data-id="{{$cartProductId}}"
+                                                                        data-base_price="{{$variant_price}}"
                                                                         data-vendor_id="{{$vendor_id}}"
-                                                                        data-product_id="{{$product_id}}" 
+                                                                        data-product_id="{{$product_id}}"
                                                                         data-addon="{{$isAddonExist}}">
                                                                         <i class="fa fa-minus" aria-hidden="true"></i>
                                                                     </span>
                                                                     <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="{{$variant_quantity}}" class="input-number" step="0.01" id="quantity_ondemand_{{$cartProductId}}" readonly>
-                                                                    <span class="plus qty-plus-product" 
-                                                                        data-variant_id="{{$productVariantIdInCart}}" 
-                                                                        data-id="{{$cartProductId}}" 
-                                                                        data-base_price="{{$variant_price}}" 
+                                                                    <span class="plus qty-plus-product"
+                                                                        data-variant_id="{{$productVariantIdInCart}}"
+                                                                        data-id="{{$cartProductId}}"
+                                                                        data-base_price="{{$variant_price}}"
                                                                         data-vendor_id="{{$vendor_id}}"
-                                                                        data-product_id="{{$product_id}}" 
+                                                                        data-product_id="{{$product_id}}"
                                                                         data-cart="{{$cart_id}}"
                                                                         data-addon="{{$isAddonExist}}">
                                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                                     </span>
                                                                 </div>
                                                             @else
-                                                          
+
                                                                 @if($variant_quantity > 0 || $prod->sell_when_out_of_stock == 1)
                                                                 {{-- <a class="add_vendor-fav" href="#"><i class="fa fa-heart"></i></a> --}}
-                                                                <a class="add-cart-btn add_vendor_product" id="aadd_button_href{{$data->id}}" 
-                                                                    data-variant_id="{{$data->variant[0]->id}}" 
-                                                                    data-add_to_cart_url="{{ route('addToCart') }}" 
-                                                                    data-vendor_id="{{$data->vendor_id}}" 
-                                                                    data-product_id="{{$data->id}}" 
-                                                                    data-addon="{{$isAddonExist}}" 
+                                                                <a class="add-cart-btn add_vendor_product" id="aadd_button_href{{$data->id}}"
+                                                                    data-variant_id="{{$data->variant[0]->id}}"
+                                                                    data-add_to_cart_url="{{ route('addToCart') }}"
+                                                                    data-vendor_id="{{$data->vendor_id}}"
+                                                                    data-product_id="{{$data->id}}"
+                                                                    data-addon="{{$isAddonExist}}"
                                                                     href="javascript:void(0)">Add</a>
                                                                 <div class="number" style="display:none;" id="ashow_plus_minus{{$data->id}}">
                                                                     <span class="minus qty-minus-product"
-                                                                        data-parent_div_id="show_plus_minus{{$data->id}}" 
-                                                                        data-id="{{$data->id}}" 
-                                                                        data-base_price="{{$data->variant_price * $data->variant_multiplier}}" 
+                                                                        data-parent_div_id="show_plus_minus{{$data->id}}"
+                                                                        data-id="{{$data->id}}"
+                                                                        data-base_price="{{$data->variant_price * $data->variant_multiplier}}"
                                                                         data-vendor_id="{{$data->vendor_id}}">
                                                                         <i class="fa fa-minus" aria-hidden="true"></i>
                                                                     </span>
                                                                     <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" id="quantity_ondemand_d{{$data->id}}" readonly placeholder="1" type="text" value="1" class="input-number input_qty" step="0.01">
-                                                                    <span class="plus qty-plus-product"  
-                                                                        data-id="" 
-                                                                        data-base_price="{{$data->variant_price * $data->variant_multiplier}}" 
+                                                                    <span class="plus qty-plus-product"
+                                                                        data-id=""
+                                                                        data-base_price="{{$data->variant_price * $data->variant_multiplier}}"
                                                                         data-vendor_id="{{$data->vendor_id}}">
                                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                                     </span>
@@ -326,7 +326,7 @@
                                                         </div>
                                                     @endif
                                                     <p class="mb-1 product_price">
-                                                        {{Session::get('currencySymbol').(number_format($prod->variant_price * $prod->variant_multiplier, 2, '.', ''))}} 
+                                                        {{Session::get('currencySymbol').(number_format($prod->variant_price * $prod->variant_multiplier, 2, '.', ''))}}
                                                         @if($prod->variant[0]->compare_at_price > 0 )
                                                             <span class="org_price ml-1 font-14">{{Session::get('currencySymbol').(number_format($prod->variant[0]->compare_at_price * $prod->variant_multiplier, 2, '.', ''))}}</span>
                                                         @endif
@@ -375,7 +375,7 @@
                             @endforelse
                         </div>
                         <div class="col-12 col-lg-3 d-lg-inline-block d-none">
-                            <div class="card-box p-0 cart-main-box">                                
+                            <div class="card-box p-0 cart-main-box">
                                 <div class="p-2 d-flex align-items-center justify-content-between border-bottom">
                                     <h4 class="right-card-title">Cart</h4>
                                 </div>
@@ -406,7 +406,7 @@
                                         <span>Subtotalll</span>
                                         <span>£ 10.50</span>
                                     </div> -->
-                                    
+
                                     <div class="show-div shopping-cart flex-fill" id="header_cart_main_ul_ondemand"></div>
                                 </div>
                             </div>
@@ -421,7 +421,7 @@
    </div>
 </section>
 <script type="text/template" id="header_cart_template_ondemand">
-    <ul class="pl-2 pr-2 pb-2 pt-0">
+    <ul class="pl-2 pr-2 pb-2 pt-0 ">
     <% _.each(cart_details.products, function(product, key){%>
         <li class="p-0">
             <h6 class="d-flex justify-content-center badge badge-light font-14"><b><%= product.vendor.name %></b></h6>
@@ -436,13 +436,13 @@
                 </th>
             </li>
             <% } %>
-        <% _.each(product.vendor_products, function(vendor_product, vp){%>  
+        <% _.each(product.vendor_products, function(vendor_product, vp){%>
             <li class="p-0" id="cart_product_<%= vendor_product.id %>" data-qty="<%= vendor_product.quantity %>">
-                <div class='media-body'>                                                                
+                <div class='media-body'>
                     <h6 class="d-flex align-items-center justify-content-between m-0">
                         <span class="ellips"><%= vendor_product.quantity %>x <%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></span>
                         <span>
-                            {{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %>
+                            {{Session::get('currencySymbol')}}<%= Helper.formatPrice(vendor_product.pvariant.price) %>
                             <a class="action-icon remove_product_via_cart text-danger" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </a>
@@ -463,10 +463,10 @@
                         <p class="m-0 font-14 p-0"><%= vendor_product.quantity %>x <%= addon.option.title %></p>
                     </div>
                     <div class="col-md-3 col-sm-4 text-center">
-                        <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= addon.option.price_in_cart %></div>
+                        <div class="extra-items-price font-14">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(addon.option.price_in_cart) %></div>
                     </div>
                     <div class="col-md-3 col-sm-4 text-right">
-                        <div class="extra-items-price font-14 mr-3">{{Session::get('currencySymbol')}}<%= addon.option.quantity_price %></div>
+                        <div class="extra-items-price font-14 mr-3">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(addon.option.quantity_price) %></div>
                     </div>
                 </div>
                 <% }); %>
@@ -479,7 +479,7 @@
                     <h6 class="m-0 font-14"><b>{{__('Delivery fee')}}</b></h6>
                 </div>
                 <div class="col-md-6 col-sm-6 text-right">
-                    <div class="extra-items-price font-14 mr-3">{{Session::get('currencySymbol')}}<%= product.delivery_fee_charges %></div>
+                    <div class="extra-items-price font-14 mr-3">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(product.delivery_fee_charges) %></div>
                 </div>
             </div>
         <% } %>
@@ -488,16 +488,16 @@
 
     <h5 class="d-flex align-items-center justify-content-between pb-2">{{__('PRICE DETAILS')}} </h5>
     <li class="p-0">
-        <div class='media-body'>                                                                
+        <div class='media-body'>
             <h6 class="d-flex align-items-center justify-content-between">
                 <span class="ellips">{{__('Price')}}</span>
-                <span>{{Session::get('currencySymbol')}}<%= cart_details.gross_amount %></span>
+                <span >{{Session::get('currencySymbol')}}<%= Helper.formatPrice(cart_details.gross_amount) %></span>
             </h6>
         </div>
     </li>
 
     <li class="p-0">
-        <div class='media-body'>                                                                
+        <div class='media-body'>
             <h6 class="d-flex align-items-center justify-content-between">
                 <span class="ellips">{{__('Tax')}}</span>
                 <span>{{Session::get('currencySymbol')}}<%= cart_details.total_taxable_amount %></span>
@@ -507,7 +507,7 @@
 
     <% if(cart_details.total_subscription_discount != undefined) { %>
      <li class="p-0">
-        <div class='media-body'>                                                                
+        <div class='media-body'>
             <h6 class="d-flex align-items-center justify-content-between">
                 <span class="ellips">{{__('Subscription Discount')}}</span>
                 <span>{{Session::get('currencySymbol')}}<%= cart_details.total_subscription_discount %></span>
@@ -518,7 +518,7 @@
 
     <% if(cart_details.loyalty_amount > 0) { %>
     <li class="p-0">
-        <div class='media-body'>                                                                
+        <div class='media-body'>
             <h6 class="d-flex align-items-center justify-content-between">
                 <span class="ellips">{{__('Loyalty Amount')}} </span>
                 <span>{{Session::get('currencySymbol')}}<%= cart_details.loyalty_amount %></span>
@@ -529,7 +529,7 @@
 
     <% if(cart_details.wallet_amount_used > 0) { %>
     <li class="p-0">
-        <div class='media-body'>                                                                
+        <div class='media-body'>
             <h6 class="d-flex align-items-center justify-content-between">
                 <span class="ellips">{{__('Wallet Amount')}} </span>
                 <span>{{Session::get('currencySymbol')}}<%= cart_details.wallet_amount_used %></span>
@@ -565,9 +565,9 @@
 </script>
 <script type="text/template" id="variant_quantity_template">
     <% if(variant.quantity > 0){ %>
-        <% 
+        <%
         var is_customizable = false;
-        if(variant.isAddonExist > 0){ 
+        if(variant.isAddonExist > 0){
             is_customizable = true;
         }
         %>
@@ -705,7 +705,7 @@
 <div class="modal fade product-addon-modal" id="product_addon_modal" tabindex="-1" aria-labelledby="product_addonLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            
+
         </div>
     </div>
 </div>
@@ -737,7 +737,7 @@
 <div class="modal fade customize-repeated-item-modal" id="customize_repeated_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="customize_repeated_itemLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            
+
         </div>
     </div>
 </div>
@@ -750,7 +750,7 @@
 
     var get_product_addon_url = "{{ route('vendorProductAddons') }}"
 
-    jQuery(window).scroll(function() {    
+    jQuery(window).scroll(function() {
         var scroll = jQuery(window).scrollTop();
         if(scroll >= 900) {
             jQuery(".categories-product-list").addClass("fixed-bar");
@@ -794,7 +794,7 @@
 
 </script>
 <script>
-    
+
     var base_url = "{{url('/')}}";
     var place_order_url = "{{route('user.placeorder')}}";
     var payment_stripe_url = "{{route('payment.stripe')}}";
@@ -856,7 +856,7 @@
                         $(that).parents('.product_row').find('.product_price').html('');
                         let variant_template = _.template($('#variant_template').html());
                         $(that).parents('.product_row').find('.product_price').append(variant_template({variant:response.variant}));
-                    
+
                         $(that).parents('.product_row').find('.product_variant_quantity_wrapper').html('');
                         let variant_quantity_template = _.template($('#variant_quantity_template').html());
                         $(that).parents('.product_row').find('.product_variant_quantity_wrapper').append(variant_quantity_template({variant:response.variant}));
@@ -904,6 +904,6 @@
             });
         // }
     }
-   
+
 </script>
 @endsection

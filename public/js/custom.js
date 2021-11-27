@@ -123,7 +123,7 @@ window.resizeMenuSlider = function resizeMenuSlider(){
             },100);
             setTimeout(function(){
                 $(".sm-horizontal").css("right", "0px");
-               
+
             },200);
         }
     }
@@ -1769,7 +1769,9 @@ $(document).ready(function() {
                             if ($("#header_cart_template_ondemand").length != 0) {
                                 $("#header_cart_main_ul_ondemand").html('');
                                 let header_cart_template_ondemand = _.template($('#header_cart_template_ondemand').html());
-                                $("#header_cart_main_ul_ondemand").append(header_cart_template_ondemand({ cart_details: cart_details, show_cart_url: show_cart_url }));
+                                var CartTemplateOndemandData = _.extend({ Helper: Helper }, { cart_details: cart_details, show_cart_url: show_cart_url });
+
+                                $("#header_cart_main_ul_ondemand").append(header_cart_template_ondemand(CartTemplateOndemandData));
                                 $("#next-button-ondemand-2").show();
                                 $('#placeorder_form_ondemand .left_box').html('');
                                 $('#placeorder_form_ondemand .left_box').html(cart_details.left_section);
