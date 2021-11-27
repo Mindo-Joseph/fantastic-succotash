@@ -223,12 +223,12 @@
         <section class="country-flag pb-4">
             <div class="container">
                 <div class="row">
-                    <div class="col-12 col-sm-6 mb-3">
+                    <div class="col-12 col-sm-6 mb-3 text-center">
                         <div class="country-flag">
                             <img class="img-fluid" src="{{asset('front-assets/images/flag/united-states.png')}}" alt="">
                         </div>
                     </div>
-                    <div class="col-12 col-sm-6 mb-3">
+                    <div class="col-12 col-sm-6 mb-3 text-center">
                         <div class="country-flag">
                             <img class="img-fluid" src="{{asset('front-assets/images/flag/canada.png')}}" alt="">
                         </div>
