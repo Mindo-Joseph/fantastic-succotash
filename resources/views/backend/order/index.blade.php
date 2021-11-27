@@ -52,15 +52,15 @@
                         <div class="col-md-3"><%= order.created_date %></div>
                         <div class="col-md-3">
                             <a class="text-capitalize" href="#"><%= order.user.name %></a>
-                        </div>                        
+                        </div>
 
                         <% if(order.address !== null) { %>
                         <div class="col-md-3">
                             <p class="ellipsis mb-0" data-toggle="tooltip" data-placement="top" title="<%= order.address.address %>">
                                 <%= order.address.address %>
                             </p>
-                        </div>  
-                        <% } %>                  
+                        </div>
+                        <% } %>
                     </div>
                     <div class="row">
                         <div class="col-md-9">
@@ -85,8 +85,8 @@
                                             <% } else if(vendor.order_status_option_id == 5) { %>
                                                 <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"  data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="6" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Delivered') }}</button>
                                             <% } else { %>
-                                                    
-                                            <% } %> 
+
+                                            <% } %>
                                             <% if((vendor.order_status_option_id == 1) || ((vendor.order_status_option_id != 6) && (vendor.order_status_option_id != 3))) { %>
                                                 <button class="update-status btn-danger" id="reject" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>"  data-count="<%= ve %>"   data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>" data-status_option_id="3" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Reject') }}</button>
                                             <% } %>
@@ -97,14 +97,14 @@
                                             <div class="col-sm-12">
                                                 <div class="progress-order font-12  d-flex align-items-center justify-content-between pr-2">
                                                     <% if(order.luxury_option_name != '') { %>
-                                                        
+
                                                         <span class="badge badge-info ml-2 my-1"><%= order.luxury_option_name %></span>
                                                     <% } %>
                                                     <% if(order.is_gift == '1') { %>
                                                         <div class="gifted-icon">
                                                             <img class="p-1 align-middle" src="{{ asset('assets/images/gifts_icon.png') }}" alt="">
-                                                            <span class="align-middle">This is a gift.</span>    
-                                                        </div>                                                                                                              
+                                                            <span class="align-middle">This is a gift.</span>
+                                                        </div>
                                                     <% } %>
                                                     <% if(order.scheduled_date_time) { %>
                                                         <span class="badge badge-success ml-2">Scheduled</span>
@@ -121,7 +121,7 @@
                                                     <li>
                                                         <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
 
-                                                        
+
                                                         <label class="m-0 in-progress"><%= vendor.order_status %></label>
                                                     </li>
                                                 </ul>
@@ -133,11 +133,11 @@
                                                             <div class="list-img">
                                                                 <img src="<%= product.image_path.proxy_url %>74/100<%= product.image_path.image_path %>">
                                                                 <span class="item_no position-absolute">x<%= product.quantity %></span>
-                                                            </div> 
+                                                            </div>
                                                             <!-- <h6 class="mx-1 mb-0 mt-1 ellips">Vendor Name</h6>    -->
-                                                            <label class="items_price">{{$clientCurrency->currency->symbol}}<%= product.price %></label>
+                                                            <label class="items_price">{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(product.price) %></label>
                                                         </div>
-                                                    <% }); %>                                    
+                                                    <% }); %>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mt-md-0 mt-sm-2">
@@ -145,29 +145,29 @@
                                                     <% if(vendor.subtotal_amount > 0 || vendor.subtotal_amount < 0) { %>
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Total') }}</label>
-                                                        <span>{{$clientCurrency->currency->symbol}}<%= vendor.subtotal_amount %></span>
+                                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(vendor.subtotal_amount) %></span>
                                                     </li>
-                                                    <% } %> 
+                                                    <% } %>
                                                     <% if(vendor.discount_amount > 0 || vendor.discount_amount < 0) { %>
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Promocode') }}</label>
-                                                        <span>{{$clientCurrency->currency->symbol}}<%= vendor.discount_amount %></span>
+                                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(vendor.discount_amount) %></span>
                                                     </li>
-                                                    <% } %> 
+                                                    <% } %>
                                                     <% if(vendor.delivery_fee > 0 || vendor.delivery_fee < 0) { %>
                                                     <li class="d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Delivery') }}</label>
                                                         <% if(vendor.delivery_fee !== null) { %>
-                                                        <span>{{$clientCurrency->currency->symbol}}<%= vendor.delivery_fee %></span>
+                                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(vendor.delivery_fee) %></span>
                                                         <% }else { %>
                                                             <span>{{$clientCurrency->currency->symbol}} 0.00</span>
-                                                        <% } %> 
+                                                        <% } %>
                                                     </li>
-                                                    <% } %> 
-                                                    
+                                                    <% } %>
+
                                                     <li class="grand_total d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Amount') }}</label>
-                                                        <span>{{$clientCurrency->currency->symbol}}<%= vendor.payable_amount %></span>
+                                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(vendor.payable_amount) %></span>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -175,52 +175,52 @@
                                     </div>
                                 </div>
                             <% }); %>
-                        </div>   
+                        </div>
                         <div class="col-md-3 pl-0">
                             <div class="card-box p-2 mb-0 w-100 h-100">
                                 <ul class="price_box_bottom m-0 pl-0 pt-1">
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Total') }}</label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= order.total_amount %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_amount) %></span>
                                     </li>
                                     <% if(order.loyalty_amount_saved > 0 || order.loyalty_amount_saved < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Loyalty Used') }}</label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= order.loyalty_amount_saved %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.loyalty_amount_saved) %></span>
                                     </li>
-                                    <% } %> 
+                                    <% } %>
 
                                     <% if(order.taxable_amount > 0 || order.taxable_amount < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Tax') }}</label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= order.taxable_amount %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.taxable_amount) %></span>
                                     </li>
-                                    <% } %> 
+                                    <% } %>
                                     <% if(order.total_delivery_fee > 0 || order.total_delivery_fee < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{__('Delivery Fee')}}</label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= order.total_delivery_fee %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_delivery_fee) %></span>
                                     </li>
-                                    <% } %> 
+                                    <% } %>
                                     <% if(order.wallet_amount_used > 0 || order.wallet_amount_used < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{__('Wallet Amount Used')}}</label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= order.wallet_amount_used %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.wallet_amount_used) %></span>
                                     </li>
-                                    <% } %> 
+                                    <% } %>
                                     <% if(order.total_discount_calculate > 0 || order.total_discount_calculate < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{__('Total Discount')}}</label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= order.total_discount_calculate %></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_discount_calculate) %></span>
                                     </li>
-                                    <% } %> 
+                                    <% } %>
                                     <li class="grand_total d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Payable') }} </label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= order.payable_amount - order.total_discount_calculate%></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice( (order.payable_amount - order.total_discount_calculate))%></span>
                                     </li>
                                 </ul>
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </div>
             <% } %>
@@ -240,7 +240,7 @@
 </script>
 <div class="container-fluid order-page">
     <div class="row">
-        
+
         <div class="col-12">
             <div class="page-title-box d-flex align-items-center justify-content-between">
                 <h4 class="page-title">{{ __('Orders') }}</h4>
@@ -251,7 +251,7 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="col-md-9 col-lg-10 mb-3">
             <div class="row align-items-center">
                 <div class="col">
@@ -355,7 +355,7 @@
             'X-CSRF-TOKEN': $('input[name="_token"]').val()
         }
     });
-    $("#range-datepicker").flatpickr({ 
+    $("#range-datepicker").flatpickr({
         mode: "range",
         onClose: function(selectedDates, dateStr, instance) {
             //initDataTable();
@@ -366,7 +366,7 @@
     $("#vendor_select_box").change(function() {
       var typ=  $("a.nav-link.active").data('rel');
      //   alert(typ);
-    
+
         init(typ, "{{ route('orders.filter') }}", '', false);
     });
     $("#clear_filter_btn_icon").click(function() {
@@ -396,12 +396,18 @@
                         $(".tab-pane").html('');
                     }
                     if (response.data.orders.data.length != 0) {
+                        var Helper = { formatPrice: function(x){   //x=x.toFixed(2)
+                                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                 } };
+
+                        var orderData = _.extend({ Helper: Helper },{
+                                                                orders: response.data.orders.data,
+                                                                next_page_url: response.data.orders.next_page_url,
+                                                                filter_order_status: filter_order_status
+                                                            });
+
                         let order_page_template = _.template($('#order_page_template').html());
-                        $("#" + filter_order_status).append(order_page_template({
-                            orders: response.data.orders.data,
-                            next_page_url: response.data.orders.next_page_url,
-                            filter_order_status: filter_order_status
-                        }));
+                        $("#" + filter_order_status).append(order_page_template(orderData));
                     } else {
                         let no_order_template = _.template($('#no_order_template').html());
                         $("#" + filter_order_status).html(no_order_template({}));
@@ -551,7 +557,7 @@
 
 
 
-        // update status 
+        // update status
         $(document).on("click", ".update-status", function() {
 
             let that = $(this);

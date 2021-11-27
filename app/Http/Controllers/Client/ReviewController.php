@@ -29,15 +29,16 @@ class ReviewController extends BaseController
             return Datatables::of($product)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $view_url    =  route('review.show', [$row->sku]);
-           
-                    $btn  = ' <div class="form-ul"><div class="inner-div"><a href="'.$view_url.'" class="action-icon editIconBtn"><i class="mdi mdi-square-edit-outline" aria-hidden="true"></i></a>';
+
+                    $view_product  =   route('product.edit', $row->id);
+                    $btn  = '<div class="form-ul"><div class="inner-div"><a href="'.$view_product.'" class="action-icon editIconBtn"><i class="mdi mdi-square-edit-outline" aria-hidden="true"></i></a>';
 
                     return $btn;
                 })
                 ->addColumn('product_name', function ($row) {
-                    $view_product  =   route('product.edit', $row->id);
-                    $btn  = '<a href="'.$view_product.'" target="_blank" >'.$row->translation_one->title.'</a>';
+
+                    $view_url    =  route('review.show', [$row->sku]);
+                    $btn  = '<a href="'.$view_url.'" target="_blank" >'.$row->translation_one->title.'</a>';
 
                    // $btn  = $row->translation_one->title;
                     return $btn;
@@ -46,7 +47,7 @@ class ReviewController extends BaseController
                 ->make(true);
         }
         return view('backend.review.index');
- 
+
     }
 
     /**
@@ -55,7 +56,7 @@ class ReviewController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
-    {  
+    {
     }
 
     /**
@@ -66,7 +67,7 @@ class ReviewController extends BaseController
      */
     public function store(Request $request)
     {
-        
+
     }
 
     /**
@@ -124,8 +125,7 @@ class ReviewController extends BaseController
     {
 
     }
-   
-    
+
+
 }
 
-                    

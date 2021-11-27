@@ -273,7 +273,7 @@ window.initializeSlider = function initializeSlider() {
         dots: false,
         infinite: true,
         dots: false,
-        speed: 300,        
+        speed: 300,
         slidesToShow: 6,
         slidesToScroll: 3,
         centerMode: true,
@@ -421,7 +421,7 @@ $(document).ready(function() {
             });
         }
     }
-    // // Cabbooking Js Code 
+    // // Cabbooking Js Code
     //     $('.add-more-location').click(function(){
     //         $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");
     //         const height = document.querySelector('.location-box').offsetHeight;
@@ -441,7 +441,7 @@ $(document).ready(function() {
     //     });
     // // Cabbooking Js Code
 
-    // // Cabbooking Js Code 
+    // // Cabbooking Js Code
     //     $('.add-more-location').click(function(){
     //         $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");
     //         const height = document.querySelector('.location-box').offsetHeight;
@@ -459,7 +459,7 @@ $(document).ready(function() {
     //         var minheight = parseFloat(getheight + abc)+'px';
     //         $('.vehical-container').attr('style', 'height:calc(100vh - '+minheight+' !important');
     //     });
-    // // Cabbooking Js Code  
+    // // Cabbooking Js Code
 
 
     // top Moveble Tabbar on top js code
@@ -772,8 +772,8 @@ $(document).ready(function() {
                 return false;
             }
         }
-      
-       
+
+
 
         let cartAmount = $("input[name='cart_total_payable_amount']").val();
         let comment_for_pickup_driver = $("input[name='comment_for_pickup_driver']").val(); //commnet for pickup
@@ -797,7 +797,7 @@ $(document).ready(function() {
                 return false;
             }
         }
-       
+
             if (cartAmount == 0) {
             placeOrder(address, 1, '', tip);
             return false;
@@ -1078,13 +1078,13 @@ $(document).ready(function() {
             ajaxData.push({name: 'payment_from', value: 'subscription'});
         } else if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
             total_amount = walletElement.val();
-            ajaxData.push( 
+            ajaxData.push(
                 {name: 'payment_from', value: 'tip'},
                 {name: 'order_number', value: $("#order_number").val()}
             );
         }
         ajaxData.push(
-            {name: 'amount', value: total_amount}, 
+            {name: 'amount', value: total_amount},
             {name: 'returnUrl', value: path}
         );
         ajaxData.push({ name: 'payment_option_id', value: payment_option_id });
@@ -1180,7 +1180,7 @@ $(document).ready(function() {
         var task_type = $("input[name='task_type']:checked").val();
         var schedule_dt = $("#schedule_datetime").val();
         var is_gift = $('#is_gift:checked').val() ?? 0;
-       
+
         if ((task_type == 'schedule') && (schedule_dt == '')) {
             $("#proceed_to_pay_modal").modal('hide');
             $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
@@ -1723,11 +1723,23 @@ $(document).ready(function() {
                     var client_preference_detail = response.client_preference_detail;
                     if (response.cart_details.length != 0) {
                         if (response.cart_details.products.length != 0) {
+
+                            var Helper = { formatPrice: function(x){   //x=x.toFixed(2)
+                                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                 } };
+
+                            var headerCartData = _.extend({ Helper: Helper }, { cart_details: cart_details, show_cart_url: show_cart_url, client_preference_detail: client_preference_detail });
+
                             let header_cart_template = _.template($('#header_cart_template').html());
-                            $("#header_cart_main_ul").append(header_cart_template({ cart_details: cart_details, show_cart_url: show_cart_url, client_preference_detail: client_preference_detail }));
+                            $("#header_cart_main_ul").append(header_cart_template(headerCartData));
                             if ($('#cart_main_page').length != 0) {
+
+                                // simplified mock of the helpers
+
+                                var extendedData = _.extend({ Helper: Helper }, { cart_details: cart_details, client_preference_detail: client_preference_detail });
+
                                 let cart_template = _.template($('#cart_template').html());
-                                $("#cart_table").append(cart_template({ cart_details: cart_details, client_preference_detail: client_preference_detail }));
+                                $("#cart_table").append(cart_template(extendedData));
                                 $(".other_cart_products").html('');
                                 let other_cart_products_template = _.template($('#other_cart_products_template').html());
                                 $(".other_cart_products").append(other_cart_products_template({ cart_details: cart_details, client_preference_detail: client_preference_detail }));
@@ -2255,7 +2267,7 @@ $(document).ready(function() {
     });
 
     $(document).delegate(".product_addon_option", "click", function() {
-        //  add addons data 
+        //  add addons data
         var addonSet = $(this).parents('.productAddonSetOptions');
         var addon_minlimit = addonSet.attr("data-min");
         var addon_maxlimit = addonSet.attr("data-max");
@@ -2483,7 +2495,7 @@ $(document).ready(function() {
         var cart_product_id = '';
         let that = $(this);
 
-        //  add addons data 
+        //  add addons data
         let parentdiv = $(this).parents('.add-on-main-div');
         let addon_elem = parentdiv.find('.productAddonSetOptions');
 
@@ -2584,7 +2596,7 @@ $(document).ready(function() {
         });
     }
 
-    // on demand add to cart 
+    // on demand add to cart
     function addToCartOnDemand(ajaxCall, vendor_id, product_id, addonids, addonoptids, add_to_cart_url, variant_id, show_plus_minus, that) {
         $.ajax({
             type: "post",
@@ -2635,7 +2647,7 @@ $(document).ready(function() {
 
 
 
-    // get time slots according to date 
+    // get time slots according to date
     $(document).on('click', '.check-time-slots', function() {
         let cur_date = $(this).val();
         let cart_product_id = $(this).data("cart_product_id");
@@ -2701,7 +2713,7 @@ $(document).ready(function() {
 
     });
 
-    // on demand add to cart 
+    // on demand add to cart
     function getTimeSlots(cur_date, cart_product_id) {
         $("#show_date" + cart_product_id).html(cur_date);
         $.ajax({
@@ -2741,7 +2753,7 @@ $(document).ready(function() {
         });
     }
 
-    /// ***************************************       END show cart data for on demand services    ***************************************************************///////////////// 
+    /// ***************************************       END show cart data for on demand services    ***************************************************************/////////////////
 
 
 
@@ -2930,3 +2942,10 @@ $(document).ready(function() {
         }
     })
 });
+
+function numberWithCommas(x) {
+   // x=x.toFixed(2)
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+//   var number = 213242.3412;
+//   alert(numberWithCommas(number));

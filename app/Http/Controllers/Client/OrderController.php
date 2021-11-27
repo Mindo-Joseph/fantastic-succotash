@@ -32,6 +32,7 @@ class OrderController extends BaseController
      */
     public function index()
     {
+
         $user = Auth::user();
         // $orders = Order::with(['vendors.products','orderStatusVendor', 'address','user'])->orderBy('id', 'DESC');
         // if (Auth::user()->is_superadmin == 0) {
