@@ -681,7 +681,7 @@ $(document).ready(function() {
         }
     });
 
-    function productRemove(cartproduct_id, vendor_id) {
+    function productRemove(product_id, cartproduct_id, vendor_id) {
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -719,6 +719,14 @@ $(document).ready(function() {
                     if ($('#show_plus_minus' + cartproduct_id).length != 0) {
                         if($('.addon_variant_quantity_' + cartproduct_id).closest('.customized_product_row').length > 0){
                             $('.addon_variant_quantity_' + cartproduct_id).closest('.cart-box-outer').remove();
+                            var total_qty = $('.add_vendor_product[data-product_id="'+product_id+'"]').next().find('input').val();
+                            if(total_qty > 1){
+                                $('.add_vendor_product[data-product_id="'+product_id+'"]').next().find('input').val(--total_qty);
+                            }else{
+                                $('#customize_repeated_item_modal').modal('hide');
+                                $('.add_vendor_product[data-product_id="'+product_id+'"]').show();
+                                $('.add_vendor_product[data-product_id="'+product_id+'"]').next().hide();
+                            }
                         }
                         else{
                             $('#show_plus_minus' + cartproduct_id).find('.input_qty').val(1);
@@ -1603,7 +1611,7 @@ $(document).ready(function() {
     $(document).on("click", ".remove-product", function() {
         let vendor_id = $(this).data('vendor_id');
         let cartproduct_id = $(this).data('product');
-        productRemove(cartproduct_id, vendor_id);
+        productRemove(0, cartproduct_id, vendor_id);
     });
     $(document).on("click", ".remove_product_via_cart", function() {
         $('#remove_item_modal').modal('show');
@@ -1615,8 +1623,9 @@ $(document).ready(function() {
     $(document).on("click", "#remove_product_button", function() {
         $('#remove_item_modal').modal('hide');
         let vendor_id = $('#remove_item_modal #vendor_id').val();
+        let product_id = $('#remove_item_modal #product_id').val();
         let cartproduct_id = $('#remove_item_modal #cartproduct_id').val();
-        productRemove(cartproduct_id, vendor_id);
+        productRemove(product_id, cartproduct_id, vendor_id);
     });
 
     function capitalizeFirstLetter(string) {
@@ -2167,9 +2176,8 @@ $(document).ready(function() {
             $('#remove_item_modal').modal('show');
             let vendor_id = $(this).data('vendor_id');
             $('#remove_item_modal #vendor_id').val(vendor_id);
+            $('#remove_item_modal #product_id').val(product_id);
             $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
-
-
         }
     });
     $(document).on('click', '.qty-plus-product', function() {

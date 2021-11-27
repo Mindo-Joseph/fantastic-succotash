@@ -694,6 +694,7 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" id="vendor_id" value="">
+                <input type="hidden" id="product_id" value="">
                 <input type="hidden" id="cartproduct_id" value="">
                 <h6 class="m-0">{{__('Are You Sure You Want To Remove This Item?')}}</h6>
             </div>
