@@ -199,7 +199,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <% _.each(results, function(result, k){ %>
                                     <a class="col-12 text-center list-items pt-2" href="<%= result.redirect_url %>">
                                     <img src="<%= result.image_url%>" alt="">
-                                    <div class="result-item-name"><b><%= result.name %></b> <span>Dish</span> </div>
+                                    <div class="result-item-name"><b><%= result.name %></b> 
+                                         <!-- <span>Dish</span>  -->
+                                    </div>
                                     </a>
                                 <% }); %>
                             </div>
@@ -352,9 +354,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </div>  
                         
                         <ul id="main-menu" class="sm pixelstrap sm-horizontal">
-                            <li>
+                            <!-- <li>
                                 <div class="mobile-back text-end">{{__('Back')}}<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
-                            </li>
+                            </li> -->
                             @foreach($navCategories as $cate)
                                 @if($cate['name'])
                                 <li>                                    
@@ -391,9 +393,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 </header>
 <div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div>
 <script type="text/template" id="nav_categories_template">
-    <li>
+    <!-- <li>
         <div class="mobile-back text-end">Back<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
-    </li>
+    </li> -->
     <% _.each(nav_categories, function(category, key){ %>
         <li>
             <a href="{{route('categoryDetail')}}/<%= category.slug %>">
