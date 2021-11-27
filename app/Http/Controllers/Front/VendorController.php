@@ -466,8 +466,8 @@ class VendorController extends FrontController
                 },
                 'addOn.setoptions' => function ($q2) use ($langId) {
                     $q2->join('addon_option_translations as apt', 'apt.addon_opt_id', 'addon_options.id');
-                    $q2->select('addon_options.id', 'addon_options.title', 'addon_options.price', 'apt.title', 'addon_options.addon_id');
-                    $q2->where('apt.language_id', $langId);
+                    $q2->select('addon_options.id', 'addon_options.price', 'apt.title', 'addon_options.addon_id', 'apt.language_id');
+                    $q2->where('apt.language_id', $langId)->groupBy(['addon_options.id', 'apt.language_id']);
                 }
             ])->where('is_live', 1)->where('url_slug', $request->slug)->first();
         if(!empty($AddonData)){
