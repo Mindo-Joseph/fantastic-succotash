@@ -56,6 +56,9 @@ class VendorController extends FrontController
             $value->categoriesList = $categoriesList;
             $value->vendorRating = $this->vendorRating($value->products);
         }
+        if (($preferences) && ($preferences->is_hyperlocal == 1)) {
+            $vendors = $vendors->sortBy('lineOfSightDistance')->values()->all();
+        }
         return view('frontend/vendor-all')->with(['navCategories' => $navCategories,'vendors' => $vendors]);
     }
     /**
