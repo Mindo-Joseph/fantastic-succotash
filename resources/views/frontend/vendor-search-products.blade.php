@@ -128,7 +128,7 @@
                                     @endforeach
                                 @endif
                             </div>
-                            <div id="variant_response">
+                            <div class="variant_response">
                                 <span class="text-danger mb-2 mt-2 font-14"></span>
                             </div>
                         </div>

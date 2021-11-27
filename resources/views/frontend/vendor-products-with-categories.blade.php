@@ -260,18 +260,19 @@
                                                                     data-addon="{{$isAddonExist}}" 
                                                                     href="javascript:void(0)">Add</a>
                                                                 <div class="number" id="show_plus_minus{{$cartProductId}}">
-                                                                    <span class="minus qty-minus-product"
+                                                                    <span class="minus qty-minus-product {{$productVariantInCartWithDifferentAddons ? 'remove-customize' : ''}}"
                                                                         data-variant_id="{{$productVariantIdInCart}}" 
                                                                         data-parent_div_id="show_plus_minus{{$cartProductId}}" 
                                                                         data-id="{{$cartProductId}}" 
                                                                         data-base_price="{{$variant_price}}" 
                                                                         data-vendor_id="{{$vendor_id}}"
-                                                                        data-product_id="{{$product_id}}" 
+                                                                        data-product_id="{{$product_id}}"
+                                                                        data-cart="{{$cart_id}}" 
                                                                         data-addon="{{$isAddonExist}}">
                                                                         <i class="fa fa-minus" aria-hidden="true"></i>
                                                                     </span>
                                                                     <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="{{$variant_quantity}}" class="input-number" step="0.01" id="quantity_ondemand_{{$cartProductId}}" readonly>
-                                                                    <span class="plus qty-plus-product" 
+                                                                    <span class="plus qty-plus-product {{$is_customizable ? 'repeat-customize' : ''}}" 
                                                                         data-variant_id="{{$productVariantIdInCart}}" 
                                                                         data-id="{{$cartProductId}}" 
                                                                         data-base_price="{{$variant_price}}" 
@@ -321,7 +322,7 @@
                                                     </div>
                                                     @if($prod->averageRating > 0)
                                                         <div class="rating-text-box">
-                                                            <span>{{$prod->averageRating}} </span>
+                                                            <span>{{number_format($prod->averageRating, 1, '.', '')}} </span>
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                         </div>
                                                     @endif
@@ -357,7 +358,7 @@
                                                             @endforeach
                                                         @endif
                                                     </div>
-                                                    <div id="variant_response">
+                                                    <div class="variant_response">
                                                         <span class="text-danger mb-2 mt-2 font-14"></span>
                                                     </div>
                                                 </div>
@@ -442,7 +443,7 @@
                     <h6 class="d-flex align-items-center justify-content-between m-0">
                         <span class="ellips"><%= vendor_product.quantity %>x <%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></span>
                         <span>
-                            {{Session::get('currencySymbol')}}<%= vendor_product.pvariant.price %>
+                            {{Session::get('currencySymbol')}}<%= vendor_product.quantity_price %>
                             <a class="action-icon remove_product_via_cart text-danger" data-product="<%= vendor_product.id %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </a>
@@ -575,11 +576,11 @@
             <a class="add_vendor-fav" href="#"><i class="fa fa-heart"></i></a>
             <a class="add-cart-btn add_vendor_product" style="display:none;" id="add_button_href<%= variant.check_if_in_cart.id %>" data-variant_id="<%= variant.id %>" data-add_to_cart_url="{{ route('addToCart') }}" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" href="javascript:void(0)">Add</a>
             <div class="number" id="show_plus_minus<%= variant.check_if_in_cart.id %>">
-                <span class="minus qty-minus-product"  data-parent_div_id="show_plus_minus<%= variant.check_if_in_cart.id %>" data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" data-cart="<%= variant.check_if_in_cart.cart_id %>">
+                <span class="minus qty-minus-product <% if(is_customizable){ %> remove-customize <% } %>"  data-parent_div_id="show_plus_minus<%= variant.check_if_in_cart.id %>" data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" data-cart="<%= variant.check_if_in_cart.cart_id %>">
                     <i class="fa fa-minus" aria-hidden="true"></i>
                 </span>
                 <input style="text-align:center;width: 80px;margin:auto;height: 24px;padding-bottom: 3px;" placeholder="1" type="text" value="<%= variant.check_if_in_cart.quantity %>" class="input-number" step="0.01" id="quantity_ondemand_<%= variant.check_if_in_cart.id %>" readonly>
-                <span class="plus qty-plus-product"  data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" data-cart="<%= variant.check_if_in_cart.cart_id %>">
+                <span class="plus qty-plus-product <% if(is_customizable){ %> repeat-customize <% } %>"  data-id="<%= variant.check_if_in_cart.id %>" data-base_price="<%= variant.price * variant.variant_multiplier %>" data-vendor_id="<%= variant.check_if_in_cart.vendor_id %>" data-product_id="<%= variant.product_id %>" data-cart="<%= variant.check_if_in_cart.cart_id %>">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                 </span>
             </div>
@@ -681,7 +682,7 @@
         </div>
     <% } %>
 </script>
-<div class="modal fade remove-item-modal" id="remove_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_itemLabel" aria-hidden="true">
+<div class="modal fade remove-item-modal" id="remove_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="remove_itemLabel" aria-hidden="true"  style="background-color: rgba(0,0,0,0.8); z-index: 1051">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header pb-0">
@@ -692,6 +693,7 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" id="vendor_id" value="">
+                <input type="hidden" id="product_id" value="">
                 <input type="hidden" id="cartproduct_id" value="">
                 <h6 class="m-0">{{__('Are You Sure You Want To Remove This Item?')}}</h6>
             </div>
@@ -727,7 +729,7 @@
                 <input type="hidden" add_to_cart_url="cart" value="{{ route('addToCart') }}">
             </div>
             <div class="modal-footer flex-nowrap justify-content-center align-items-center">
-                <button type="button" class="btn btn-solid black-btn" id="repeat_item_new_addon_btn" data-dismiss="modal">{{__('Add new')}}</button>
+                <button type="button" class="btn btn-solid black-btn" id="repeat_item_with_new_addon_btn" data-dismiss="modal">{{__('Add new')}}</button>
                 <button type="button" class="btn btn-solid" id="repeat_item_btn">{{__('Repeat last')}}</button>
             </div>
         </div>
@@ -848,7 +850,7 @@
             },
             success: function(response) {
                 if(response.status == 'Success'){
-                    $(that).parents('.product_row').find("#variant_response span").html('');
+                    $(that).parents('.product_row').find(".variant_response span").html('');
                     if(response.variant != ''){
 
                         $(that).parents('.product_row').find(".add-cart-btn").attr('data-variant_id', response.variant.id);
@@ -867,7 +869,7 @@
                         $(that).parents('.product_row').find('.product_image').append(variant_image_template({media:response.variant}));
                     }
                 }else{
-                    $(that).parents('.product_row').find("#variant_response span").html(response.message);
+                    $(that).parents('.product_row').find(".variant_response span").html(response.message);
                     $(that).parents('.product_row').find(".add-cart-btn").hide();
                     $(that).parents('.product_row').find(".product_variant_quantity_wrapper .text-danger").remove();
                 }

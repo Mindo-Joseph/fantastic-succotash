@@ -159,7 +159,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </a>
                             </div>
                             <div class="col-4 col-md-2 text-right order-4">
-                                <div class="items-price">{{Session::get('currencySymbol')}}<%= vendor_product.pvariant.quantity_price %></div>
+                                <div class="items-price">{{Session::get('currencySymbol')}}<%= vendor_product.quantity_price %></div>
                             </div>
                         </div>
                         <% if(vendor_product.addon.length != 0) { %>
@@ -390,8 +390,15 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     </div>
                 </div>
                 <div class="col-md-7 datenow align-items-center justify-content-between" id="schedule_div" style="<%= ((cart_details.schedule_type == 'now' || cart_details.schedule_type == '' || cart_details.schedule_type == null) ? 'display:none!important' : '') %>">
+                    <% if(cart_details.delay_date != 0) { %>
                         <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%= ((cart_details.schedule_type == 'schedule') ? cart_details.scheduled_date_time : '') %>" 
                         min="<%= ((cart_details.delay_date != '0') ? cart_details.delay_date : '') %>">
+                        <% } else { %>
+                            <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%= ((cart_details.schedule_type == 'schedule') ? cart_details.scheduled_date_time : '') %>" 
+                            min="{{$now}}">
+                          
+                            <% } %>    
+                   
                 </div>
             </div>
             @endif
