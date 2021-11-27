@@ -6489,7 +6489,11 @@ body .footer-theme .sub-title h4 {
 }
 
 
-
+/* Dynamic HTML Css */
+.become-img img.img-fluid {
+    height: 200px;
+    margin: auto;
+}
 
 
 
@@ -7159,9 +7163,6 @@ body[dir="rtl"] .inner_spacing h3 {
     li.mobile-menu-btn.d-sm-inline-block.d-none,
     .main-menu .menu-right .icon-nav li.d-ipad {
         display: none !important;
-    }
-    .menu-slider.slick-initialized .slick-slide:nth-child(1) {
-        display: none;
     }
     .menu-slider .slick-slide {
         width: max-content !important;

@@ -1,6 +1,9 @@
 body {
     font-family: 'Zen Kaku Gothic Antique';
-    font-weight: 400;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{
+    font-weight: bold !important;
 }
 
 @font-face {
@@ -54,6 +57,20 @@ body {
     font-style: normal;
     font-display: swap;
 }
+
+@font-face {
+    font-family: 'Zen Kaku Gothic Antique';
+    src: url('../fonts/ZenKakuGothicAntique-Bold.eot');
+    src: url('../fonts/ZenKakuGothicAntique-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/ZenKakuGothicAntique-Bold.woff2') format('woff2'),
+        url('../fonts/ZenKakuGothicAntique-Bold.woff') format('woff'),
+        url('../fonts/ZenKakuGothicAntique-Bold.ttf') format('truetype'),
+        url('../fonts/ZenKakuGothicAntique-Bold.svg#ZenKakuGothicAntique-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
 
 
 @font-face {
