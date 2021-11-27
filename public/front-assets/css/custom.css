@@ -183,7 +183,7 @@ header.site-header.fixed-bar {
 }
 
 .country-flag {
-    background: #e5e5e5;
+    background: rgb(0 0 0 / 5%);
 }
 
 span.view-password {
