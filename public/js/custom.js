@@ -110,15 +110,16 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
 window.resizeMenuSlider = function resizeMenuSlider(){
     var windowWidth = $(window).width();
     if(windowWidth < 320){
-        $('.menu-slider').removeClass('items-center');
+        $('#main-menu').removeClass('items-center');
         // $(".sm-horizontal").css("right", "-410px");
     }else{
         // $('#main-menu').addClass('menu-slider');
         if(!$('.menu-slider').hasClass('slick-initialized')){
+            
             setTimeout(function(){
                 loadMainMenuSlider();
-                if ( $('.menu-slider .slick-slide').length > 12 ) {
-                    $('.menu-slider').addClass('items-center');
+                if ( $('#main-menu .slick-slide').length > 13 ) {
+                    $('#main-menu').addClass('items-center');
                 }
             },100);
             setTimeout(function(){
@@ -151,7 +152,7 @@ window.initializeSlider = function initializeSlider() {
         centerMode: true,
         centerPadding: '60px',
         slidesToShow: 5,
-        slidesToScroll: 2,
+        slidesToScroll: 4,
         responsive: [
             { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
             { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
@@ -167,7 +168,7 @@ window.initializeSlider = function initializeSlider() {
         centerMode: true,
         centerPadding: '60px',
         slidesToShow: 5,
-        slidesToScroll: 2,
+        slidesToScroll: 4,
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
@@ -183,7 +184,7 @@ window.initializeSlider = function initializeSlider() {
         centerMode: true,
         centerPadding: '60px',
         slidesToShow: 2,
-        slidesToScroll: 1,
+        slidesToScroll: 2,
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
@@ -197,7 +198,7 @@ window.initializeSlider = function initializeSlider() {
         infinite: !1,
         speed: 300,
         slidesToShow: 4,
-        slidesToScroll: 1,
+        slidesToScroll: 3,
         responsive: [{
                 breakpoint: 1367,
                 settings: {
@@ -238,7 +239,7 @@ window.initializeSlider = function initializeSlider() {
         infinite: true,
         speed: 300,
         slidesToShow: 5,
-        slidesToScroll: 2,
+        slidesToScroll: 4,
         // centerMode: true,
         // centerPadding: '60px',
         arrows: false,
@@ -247,7 +248,7 @@ window.initializeSlider = function initializeSlider() {
                 breakpoint: 1199,
                 settings: {
                     slidesToShow: 3,
-                    slidesToScroll: 1,
+                    slidesToScroll: 3,
                     infinite: true,
                     dots: false
                 }
@@ -256,7 +257,7 @@ window.initializeSlider = function initializeSlider() {
                 breakpoint: 767,
                 settings: {
                     slidesToShow: 2,
-                    slidesToScroll: 1,
+                    slidesToScroll: 2,
                     dots: false
                 }
             },

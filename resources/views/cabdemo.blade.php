@@ -223,14 +223,6 @@
         <section class="country-flag pb-4">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-4 text-center d-flex align-items-center justify-content-center">
-                        <div class="country-flag w-25 mr-4 mb-sm-0 mb-3">
-                            <img class="img-fluid" src="{{asset('front-assets/images/flag/flag_one.png')}}" alt="">
-                        </div>
-                        <div class="country-flag w-25 mb-sm-0 mb-3">
-                            <img class="img-fluid" src="{{asset('front-assets/images/flag/flag_two.png')}}" alt="">
-                        </div>
-                    </div>
                     <div class="col-sm-8">
                         <div class="country-content">
                             <p>
@@ -238,6 +230,14 @@
                                     Driveree acknowledges the traditional owners of country throughout Australia, & we pay our respects to them cultures, and to elders both past and present.
                                 </b>
                             </p>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 text-center d-flex align-items-center justify-content-center">
+                        <div class="country-flag w-25 mr-4 mb-sm-0 mb-3">
+                            <img class="img-fluid" src="{{asset('front-assets/images/flag/flag_one.png')}}" alt="">
+                        </div>
+                        <div class="country-flag w-25 mb-sm-0 mb-3">
+                            <img class="img-fluid" src="{{asset('front-assets/images/flag/flag_two.png')}}" alt="">
                         </div>
                     </div>
                 </div>
