@@ -503,7 +503,7 @@ class CartController extends FrontController
         $address = [];
         $cart_id = $cart->id;
         $user = Auth::user();
-        $langId = Session::get('customerLanguage');
+        $langId = Session::has('customerLanguage') ? Session::get('customerLanguage') : 1;
         $curId = Session::get('customerCurrency');
         $preferences = ClientPreference::with(['client_detail:id,code,country_id'])->first();
         $countries = Country::get();
@@ -549,7 +549,10 @@ class CartController extends FrontController
                 $qry->where('language_id', $langId);
             },
             'vendorProducts.addon.option' => function ($qry) use ($langId) {
-                $qry->where('language_id', $langId);
+                $qry->join('addon_option_translations as apt', 'apt.addon_opt_id', 'addon_options.id');
+                $qry->select('addon_options.id', 'addon_options.price', 'apt.title', 'addon_options.addon_id', 'apt.language_id');
+                $qry->where('apt.language_id', $langId)->groupBy(['addon_options.id', 'apt.language_id']);
+                // $qry->where('language_id', $langId);
             }, 'vendorProducts.product.taxCategory.taxRate',
         ])->select('vendor_id', 'luxury_option_id', 'vendor_dinein_table_id')->where('status', [0, 1])->where('cart_id', $cart_id)->groupBy('vendor_id')->orderBy('created_at', 'asc')->get();
         $loyalty_amount_saved = 0;
@@ -646,7 +649,7 @@ class CartController extends FrontController
                     $prod->pvariant->media_one = isset($prod->pvariant->media) ? $prod->pvariant->media->first() : [];
                     $prod->pvariant->media_second = isset($prod->product->media) ? $prod->product->media->first() : [];
                     $prod->pvariant->multiplier = ($customerCurrency) ? $customerCurrency->doller_compare : 1;
-                    $prod->pvariant->quantity_price = number_format($quantity_price, 2, '.', '');
+                    $prod->quantity_price = number_format($quantity_price, 2, '.', '');
                     $payable_amount = $payable_amount + $quantity_price;
                     $taxData = array();
                     if (!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0) {
@@ -871,21 +874,75 @@ class CartController extends FrontController
     {
         try{
             $langId = Session::get('customerLanguage');
+            $cur_ids = Session::get('customerCurrency');
+            if(isset($cur_ids) && !empty( $cur_ids)){
+                $clientCurrency = ClientCurrency::where('currency_id','=', $cur_ids)->first();
+            }else{
+                $clientCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+            }
+
             $cartProducts = CartProduct::with(['product.translation' => function ($qry) use ($langId) {
-                $qry->where('language_id', $langId);
-            }, 'addon.option' => function ($qry) use ($langId) {
-                $qry->where('language_id', $langId);
-            }])
+                $qry->where('language_id', $langId)->groupBy('product_translations.language_id');
+            },
+            //  'addon.option.translation' => function ($qry) use ($langId) {
+            //     $qry->where('language_id', $langId)->groupBy('addon_option_translations.language_id');
+            // }, 'addon.set' => function ($qry) use ($langId) {
+            //     $qry->where('language_id', $langId)->groupBy('addon_sets.id');
+            // },
+            'product.media.image',
+            'pvariant.media.pimage.image',
+            'vendor.slot.day', 'vendor.slotDate',
+            ])
             ->where('cart_id', $request->cart_id)
             ->where('product_id', $request->product_id)
-            ->where('variant_id', $request->variant_id)
-            ->orderByDesc('created_at')->get();
+            ->select('*','id as add_on_set_and_option')->orderByDesc('created_at')->get();
 
-            
+            $multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+            foreach ($cartProducts as $key => $cart) {
+                $cart->is_vendor_closed = 0;
+                $cart->variant_multiplier = $multiplier;
+                $variant_price = ($cart->pvariant) ? ($cart->pvariant->price * $multiplier) : 0;
+                
+                $product = $cart->product;
+                $product->translation_title = ($product->translation->isNotEmpty()) ? $product->translation->first()->title : $product->sku;
 
+                if($cart->pvariant && $cart->pvariant->media->isNotEmpty()){
+                    $image_fit = $cart->pvariant->media->first()->pimage->image->path['image_fit'];
+                    $image_path = $cart->pvariant->media->first()->pimage->image->path['image_path'];
+                    $product->product_image = $image_fit . '300/300' . $image_path;
+                }elseif($product->media->isNotEmpty()){
+                    $image_fit = $product->media->first()->image->path['image_fit'];
+                    $image_path = $product->media->first()->image->path['image_path'];
+                    $product->product_image = $image_fit . '300/300' . $image_path;
+                }else{
+                    $product->product_image = $this->loadDefaultImage();
+                }
 
-            dd($cartProducts->toArray());
-            return $this->successResponse($cartProducts, '', 200);            
+                $addon_set = $cart->add_on_set_and_option;
+                foreach ($addon_set as $skey => $set) {
+                    $set->addon_set_translation_title = ($set->translation->isNotEmpty()) ? $set->translation->first()->title : $set->title;
+                    foreach ($set->options as $okey => $option) {
+                        $option->option_translation_title = ($option->translation->isNotEmpty()) ? $option->translation->first()->title : $option->title;
+                        $opt_price_in_doller_compare = $option->price * $multiplier;
+                        $variant_price = $variant_price + $opt_price_in_doller_compare;
+                    }
+                }
+                $cart->variant_price = $variant_price;
+                $cart->addon_set = $addon_set;
+                $cart->total_variant_price = number_format($cart->quantity * $variant_price, 2, '.', '');
+
+                if($cart->vendor->show_slot == 0){
+                    if( ($cart->vendor->slotDate->isEmpty()) && ($cart->vendor->slot->isEmpty()) ){
+                        $cart->is_vendor_closed = 1;
+                    }else{
+                        $cart->is_vendor_closed = 0;
+                    }
+                }
+                unset($cartProducts[$key]->add_on_set_and_option);
+            }
+
+            $returnHTML = view('frontend.product-with-different-addons-modal')->with(['cartProducts'=>$cartProducts])->render();
+            return $this->successResponse($returnHTML, '', 200);            
         }
         catch(Exception $ex){
             return $this->errorResponse($ex->getMessage(), $ex->getCode());
