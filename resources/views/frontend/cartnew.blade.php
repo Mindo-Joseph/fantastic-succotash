@@ -159,7 +159,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </a>
                             </div>
                             <div class="col-4 col-md-2 text-right order-4">
-                                <div class="items-price">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(vendor_product.pvariant.quantity_price) %></div>
+                                <div class="items-price">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(vendor_product.quantity_price) %></div>
                             </div>
                         </div>
                         <% if(vendor_product.addon.length != 0) { %>

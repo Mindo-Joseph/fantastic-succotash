@@ -1727,9 +1727,13 @@ $(document).ready(function() {
                     if (response.cart_details.length != 0) {
                         if (response.cart_details.products.length != 0) {
 
-                            var Helper = { formatPrice: function(x){   //x=x.toFixed(2)
-                                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                                 } };
+                            var Helper = { formatPrice: function(x){
+                                if(x){
+                                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }
+                                return x;
+                                }
+                             };
 
                             var headerCartData = _.extend({ Helper: Helper }, { cart_details: cart_details, show_cart_url: show_cart_url, client_preference_detail: client_preference_detail });
 
