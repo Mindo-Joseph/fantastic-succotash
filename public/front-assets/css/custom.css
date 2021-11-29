@@ -186,10 +186,11 @@ header.site-header.fixed-bar {
     background: rgb(0 0 0 / 5%);
 }
 
-span.view-password {
+.toggle-password, .toggle-password+.font-14 {
     position: absolute;
-    top: 9px;
+    top: 50%;
     right: 70px;
+    transform: translateY(-50%);
 }
 
 .country-content p {

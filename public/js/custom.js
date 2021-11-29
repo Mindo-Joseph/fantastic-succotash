@@ -338,6 +338,18 @@ $(document).ready(function() {
     // $(".toggle-nav").click(function() {
     //     $("body").toggleClass("overflow-hidden");
     // });
+    
+    $(".toggle-password").click(function() {
+        $(this).toggleClass("fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+          input.attr("type", "text");
+        } else {
+          input.attr("type", "password");
+        }
+    });
+
+    
     $(".mobile-search-btn").click(function() {
         $(".radius-bar").slideToggle();
     });
