@@ -209,7 +209,7 @@ h6 {
 
 .navigation-tab,
 .navigation-tab-overlay {
-    border-radius: 8px;
+    border-radius: 4px;
 }
 
 .navigation-tab,
@@ -236,7 +236,7 @@ h6 {
 }
 
 .icon-nav .btn.btn-solid {
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 8px 10px;
 }
 
@@ -247,7 +247,7 @@ h6 {
 .navigation-tab-item .nav-link {
     color: rgba(0, 0, 0, 0.39);
     font-weight: 600;
-    padding: 5px 0;
+    padding: 3px 0 6px;
     text-align: center;
     line-height: 18px;
 }
@@ -287,7 +287,6 @@ h6 {
 
 .home-banner-slider img {
     width: 100%;
-    border-radius: 30px;
 }
 
 /* .home-banner-slider .slick-next:before,.home-banner-slider .slick-prev:before{
@@ -603,7 +602,8 @@ h6 {
 }
 
 .supplier-rating p {
-    font-size: 14px;
+    font-size: 12px;
+    font-weight: 500;
 }
 
 .supplier-rating i {
@@ -625,7 +625,7 @@ h6 {
     border-radius: 2px;
 }
 
-.menu-navigation {
+.menu   -navigation {
     background: transparent;
 }
 
@@ -1167,12 +1167,7 @@ body[dir="rtl"] #social-links li:last-child {
         height: 400px;
     } */
     .home-banner-slider .slick-list {
-        border-radius: 40px;
-        overflow: hidden;
-    }
-
-    .home-banner-slider .slick-slide {
-        border-radius: 50px;
+        border-radius: 4px;
         overflow: hidden;
     }
 

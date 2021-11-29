@@ -3805,7 +3805,7 @@ h4#driver_name {
     width: 26px;
     height: 26px;
     text-align: center;
-    background: rgb(0 0 0 / 13%);
+    background: #fff;
     line-height: 28px;
     border-radius: 50%;
     font-size: 12px;
