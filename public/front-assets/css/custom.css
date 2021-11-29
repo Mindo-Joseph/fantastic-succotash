@@ -5155,11 +5155,6 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     overflow: hidden;
 }
 
-.menu-slider.slides-transform .slick-track{
-    transform: none !important;
-}
-
-
 .menu-slider .slick-next.slick-disabled:before,.menu-slider .slick-prev.slick-disabled:before{
     opacity: 0;
 }
@@ -7294,9 +7289,6 @@ body[dir="rtl"] .inner_spacing h3 {
     }
     .product-banner-img {
         height: 200px;
-    }
-    .menu-slider .slick-track{
-        justify-content: space-between;
     }
     .home-banner-slider img {
         border-radius: 5px !important;
