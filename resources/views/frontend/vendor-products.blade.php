@@ -235,7 +235,7 @@
                     </div>
                     <!-- side-bar banner end here -->
                 </div>
-                <div class="collection-content col-md-9">
+                <div class="collection-content col-lg-9">
                     <div class="page-main-content">
                         <div class="row">
                             <div class="col-sm-12">
