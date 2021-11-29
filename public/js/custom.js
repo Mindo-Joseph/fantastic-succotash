@@ -2206,7 +2206,6 @@ $(document).ready(function() {
         let product_id = $(this).attr("data-product_id");
         let variant_id = $(this).attr("data-variant_id");
         let qty = $(this).next().val();
-        $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
         if (qty > 1) {
             if( $(this).hasClass('remove-customize') && $(this).hasClass('m-open') ){
                 $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
