@@ -600,14 +600,23 @@ class VendorController extends FrontController
 
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
 
-        // $vendor_categories = VendorCategory::with(['category.translation_one'])
-        // ->where('vendor_id', $vid)
-        // ->whereHas('category.translation_one', function ($query) use ($keyword){
-        //     $query->where('name', 'like', '%'.$keyword.'%');
-        // })
-        // ->whereHas('category', function($query) {
-        //         $query->whereIn('type_id', [1]);
-        // })->where('status', 1)->get();
+        $vendor = Vendor::with('slot.day', 'slotDate')
+            ->select('id','email', 'name', 'show_slot')->where('id', $vid)->where('status', 1)->firstOrFail();
+        $vendor->is_vendor_closed = 0;
+        if($vendor->show_slot == 0){
+            if( ($vendor->slotDate->isEmpty()) && ($vendor->slot->isEmpty()) ){
+                $vendor->is_vendor_closed = 1;
+            }else{
+                $vendor->is_vendor_closed = 0;
+                if($vendor->slotDate->isNotEmpty()){
+                    $vendor->opening_time = Carbon::parse($vendor->slotDate->first()->start_time)->format('g:i A');
+                    $vendor->closing_time = Carbon::parse($vendor->slotDate->first()->end_time)->format('g:i A');
+                }elseif($vendor->slot->isNotEmpty()){
+                    $vendor->opening_time = Carbon::parse($vendor->slot->first()->start_time)->format('g:i A');
+                    $vendor->closing_time = Carbon::parse($vendor->slot->first()->end_time)->format('g:i A');
+                }
+            }
+        }
 
         $vendorCategory = 0;
         if($vCat != ''){
@@ -711,7 +720,7 @@ class VendorController extends FrontController
         // dd($vendor_categories->toArray());
 
         $listData = $vendor_categories;
-        $returnHTML = view('frontend.vendor-search-products')->with(['listData'=>$listData])->render();
+        $returnHTML = view('frontend.vendor-search-products')->with(['vendor'=> $vendor, 'listData'=>$listData])->render();
         return response()->json(array('status'=>'Success', 'html'=>$returnHTML));
     }
 
