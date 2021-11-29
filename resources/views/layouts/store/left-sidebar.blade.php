@@ -199,7 +199,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <% _.each(results, function(result, k){ %>
                                     <a class="col-12 text-center list-items pt-2" href="<%= result.redirect_url %>">
                                     <img src="<%= result.image_url%>" alt="">
-                                    <div class="result-item-name"><b><%= result.name %></b> 
+                                    <div class="result-item-name"><b><%= result.name %></b>
                                          <!-- <span>Dish</span>  -->
                                     </div>
                                     </a>
@@ -257,7 +257,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                 </li>
                                             <% }); %>
                                         <% }); %>
-                                        <li><div class='total'><h5>{{__('Subtotal')}} : <span id='totalCart'><%=  Helper.formatPrice(cart_details.gross_amount) %></span></h5></div></li>
+                                        <li><div class='total'><h5>{{__('Subtotals')}} : <span id='totalCart'>{{Session::get('currencySymbol')}}<%=  Helper.formatPrice(cart_details.gross_amount) %></span></h5></div></li>
                                         <li><div class='buttons'><a href="<%= show_cart_url %>" class='view-cart'>{{__('View Cart')}}</a>
                                     </script>
                                     <ul class="show-div shopping-cart " id="header_cart_main_ul"></ul>
