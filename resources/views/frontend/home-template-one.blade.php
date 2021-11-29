@@ -96,7 +96,7 @@
                             </ul>
                         <% } %>
                     </div> -->
-                    @if($client_preference_detail)
+                    <!-- @if($client_preference_detail)
                         @if($client_preference_detail->rating_check == 1)
                             <% if(vendor.vendorRating > 0){%>
                                 <ul class="custom-rating m-0 p-0">
@@ -111,7 +111,7 @@
                                 </ul>
                             <% } %>
                         @endif
-                    @endif
+                    @endif -->
                 </div>
             </a>
         </div> 

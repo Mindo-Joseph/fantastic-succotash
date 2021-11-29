@@ -111,9 +111,7 @@ window.resizeMenuSlider = function resizeMenuSlider(){
     var windowWidth = $(window).width();
     if(windowWidth < 320){
         $('#main-menu').removeClass('items-center');
-        // $(".sm-horizontal").css("right", "-410px");
     }else{
-        // $('#main-menu').addClass('menu-slider');
         if(!$('.menu-slider').hasClass('slick-initialized')){
             
             setTimeout(function(){
@@ -284,7 +282,7 @@ window.initializeSlider = function initializeSlider() {
             { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
             { breakpoint: 420, settings: { slidesToShow: 1, arrows: true, slidesToScroll: 1 } },
-        ],
+        ]
     });
     $('.vendor-product').slick({
         infinite: true,
