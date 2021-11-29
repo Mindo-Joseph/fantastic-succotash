@@ -1712,7 +1712,6 @@ $(document).ready(function() {
             map: map,
             position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
         });
-
         // geocoder.geocode(
         //     { 'latLng': latlng },
         //     function (results, status) {
