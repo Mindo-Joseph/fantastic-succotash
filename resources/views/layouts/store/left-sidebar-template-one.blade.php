@@ -466,7 +466,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="col-12">
 
                         <div class="shimmer_effect">
-                            <ul class="sm pixelstrap sm-horizontal menu-slider">
+                            <ul class="sm pixelstrap sm-horizontal menu-slider slides-transform">
                                 @foreach($navCategories as $cate)
                                     @if($cate['name'])
                                     <li>
@@ -484,7 +484,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             </ul>
                         </div>
 
-                        <ul id="main-menu" class="sm pixelstrap sm-horizontal menu-slider">
+                        <ul id="main-menu" class="sm pixelstrap sm-horizontal menu-slider slides-transform">
                             <!-- <li>
                                 <div class="mobile-back text-end">{{__('Back')}}<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
                             </li> -->

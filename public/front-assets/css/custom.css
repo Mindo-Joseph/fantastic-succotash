@@ -5155,6 +5155,11 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     overflow: hidden;
 }
 
+.menu-slider.slides-transform .slick-track{
+    transform: none !important;
+}
+
+
 .menu-slider .slick-next.slick-disabled:before,.menu-slider .slick-prev.slick-disabled:before{
     opacity: 0;
 }

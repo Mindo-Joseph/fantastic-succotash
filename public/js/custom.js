@@ -118,6 +118,7 @@ window.resizeMenuSlider = function resizeMenuSlider(){
                 loadMainMenuSlider();
                 if ( $('#main-menu .slick-slide').length > 13 ) {
                     $('#main-menu').addClass('items-center');
+                    $('.menu-slider').removeClass('slides-transform');
                 }
             },100);
             setTimeout(function(){
