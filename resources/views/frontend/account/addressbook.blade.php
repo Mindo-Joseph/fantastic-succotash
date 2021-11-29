@@ -116,7 +116,7 @@
                                                     <h6 class="mt-0 mb-2"><i class="fa fa-{{ ($add->type == 1 || $add->type == 3) ? 'home' : 'building' }} mr-1" aria-hidden="true"></i> {{ ($add->type == 1) ? __('Home') : (($add->type == 2) ? __('Office') : __('Others')) }}</h6>
                                                 </div>
                                                 <div class="px-2">
-                                                    <p class="mb-1">{{$add->address}}</p>
+                                                    <p class="mb-1">{{ ($add->house_number ?? false) ? $add->house_number."," : '' }} {{$add->address}}</p>
                                                     <p class="mb-1">{{$add->street}}</p>
                                                     <p class="mb-1">{{$add->city}}, {{$add->state}} {{$add->pincode}}</p>
                                                     <p class="mb-1">{{$add->country  ? $add->country : ''}}</p>
@@ -226,9 +226,9 @@
                         </div>
                         <div class="form-row">
                             <div class="col-md-6 mb-2">
-                                <label for="street">{{ __('House / Apartment/ Flat number') }}</label>
+                                <label for="house_number">{{ __('House / Apartment/ Flat number') }}</label>
                                 <input type="text" class="form-control" id="house_number" placeholder="{{ __('House / Apartment/ Flat number') }}" name="house_number" value="<%= ((typeof address != 'undefined') && (address.house_number != null)) ? address.house_number : '' %>">
-                                <span class="text-danger" id="house_number"></span>
+                                <span class="text-danger" id="house_number_error"></span>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label for="street">{{ __('Street') }}</label>
