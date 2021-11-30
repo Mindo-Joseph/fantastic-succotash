@@ -1760,7 +1760,7 @@ $(document).ready(function() {
                                 $("#cart_table").append(cart_template(extendedData));
                                 $(".other_cart_products").html('');
                                 let other_cart_products_template = _.template($('#other_cart_products_template').html());
-                                $(".other_cart_products").append(other_cart_products_template({ cart_details: cart_details, client_preference_detail: client_preference_detail }));
+                                $(".other_cart_products").append(other_cart_products_template(extendedData));
                                 initializeSlider();
                                 $('#placeorder_form .left_box').html('');
                                 $('#placeorder_form .left_box').html(cart_details.left_section);
