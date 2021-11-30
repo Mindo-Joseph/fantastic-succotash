@@ -26,6 +26,7 @@ class SearchController extends FrontController{
         if (count($allowed_vendors) > 0) {
             $vendors = $vendors->whereIn('id', $allowed_vendors);
         }
+       
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                 $selectedAddress = $preferences->Default_location_name;
@@ -86,9 +87,9 @@ class SearchController extends FrontController{
         ->where(function ($q) use ($keyword) {
             $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
         })->where('products.is_live', 1);
-        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+        //if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             $products = $products->whereIn('vendor_id', $allowed_vendors);
-        }
+        //}
         $products = $products->whereNull('deleted_at')->groupBy('products.id')->get();
         foreach ($products as $product) {
             $redirect_url = route('productDetail', $product->url_slug);

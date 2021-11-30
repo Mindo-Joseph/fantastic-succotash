@@ -767,6 +767,10 @@ class CartController extends FrontController
                         $vendorData->is_vendor_closed = 0;
                     }
                 }
+                if($vendorData->vendor->$action == 0){
+                    $vendorData->is_vendor_closed = 1;
+                    $delivery_status = 0;
+                }
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
                 $total_discount_amount = $total_discount_amount + $discount_amount;
