@@ -273,14 +273,16 @@
                             <div class="row mb-2">
                                 @foreach($productVariants as $vk => $var)
                                 <div class="col-sm-3">
-                                    <label class="control-label">{{$var->title}}</label>
+                                    <label class="control-label">{{$var->title??null}}</label>
                                 </div>
                                 <div class="col-sm-9">
                                     @foreach($var->option as $key => $opt)
-                                    <div class="checkbox checkbox-success form-check-inline pr-3">
-                                        <input type="checkbox" name="variant{{$var->id}}" class="intpCheck" opt="{{$opt->id.';'.$opt->title}}" varId="{{$var->id.';'.$var->title}}" id="opt_vid_{{$opt->id}}" @if(in_array($opt->id, $existOptions)) checked @endif>
-                                        <label for="opt_vid_{{$opt->id}}">{{$opt->title}}</label>
-                                    </div>
+                                    @if(isset($opt) && !empty($opt->title) isset($var) && !empty($var->title) )
+                                        <div class="checkbox checkbox-success form-check-inline pr-3">
+                                            <input type="checkbox" name="variant{{$var->id}}" class="intpCheck" opt="{{$opt->id.';'.$opt->title}}" varId="{{$var->id.';'.$var->title}}" id="opt_vid_{{$opt->id}}" @if(in_array($opt->id, $existOptions)) checked @endif>
+                                            <label for="opt_vid_{{$opt->id}}">{{$opt->title}}</label>
+                                        </div>
+                                    @endif    
                                     @endforeach
                                 </div>
                                 @endforeach
@@ -330,7 +332,7 @@
                                         <td>
                                             <input type="hidden" name="variant_ids[]" value="{{$varnt->id}}">
                                             <input type="hidden" class="exist_sets" value="{{$existSet[(count($existSet) - 1)]}}">
-                                            <input type="text" name="variant_titles[]" value="{{$varnt->title}}">
+                                            <input type="text" name="variant_titles[]" value="{{$varnt->title??null}}">
                                         </td>
                                         <td>{{rtrim($vsets, ', ')}}</td>
                                         <td>
