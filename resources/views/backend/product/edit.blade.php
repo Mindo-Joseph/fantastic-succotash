@@ -277,7 +277,7 @@
                                 </div>
                                 <div class="col-sm-9">
                                     @foreach($var->option as $key => $opt)
-                                    @if(isset($opt) && !empty($opt->title) isset($var) && !empty($var->title) )
+                                    @if(isset($opt) && !empty($opt->title) && isset($var) && !empty($var->title) )
                                         <div class="checkbox checkbox-success form-check-inline pr-3">
                                             <input type="checkbox" name="variant{{$var->id}}" class="intpCheck" opt="{{$opt->id.';'.$opt->title}}" varId="{{$var->id.';'.$var->title}}" id="opt_vid_{{$opt->id}}" @if(in_array($opt->id, $existOptions)) checked @endif>
                                             <label for="opt_vid_{{$opt->id}}">{{$opt->title}}</label>
