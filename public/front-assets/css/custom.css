@@ -121,13 +121,23 @@ header.site-header.fixed-bar {
     color: #fff;
     font-size: 14px;
     line-height: 20px;
+    width: calc(100% - 11%);
+}
+
+.site-topbar .location-bar h2:after {
+    font: normal normal normal 28px/1 FontAwesome;
+    content: "\f107";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
 }
 
 .site-topbar .map-icon .yl-text {
     color: #fff;
     font-size: 14px;
     line-height: 20px;
-    vertical-align: text-bottom;
+    vertical-align: text-top;
 }
 
 .site-topbar .location-bar i {
@@ -190,7 +200,10 @@ header.site-header.fixed-bar {
     position: absolute;
     top: 50%;
     right: 70px;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
     transform: translateY(-50%);
+    cursor: pointer;
 }
 
 .country-content p {

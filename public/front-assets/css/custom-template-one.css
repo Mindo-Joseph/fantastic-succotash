@@ -201,6 +201,7 @@ h6 {
 
 .site-topbar .location-bar {
     background: transparent;
+    width: calc(100% - 20px);
 }
 
 .site-header .pb-3 {
@@ -228,11 +229,11 @@ h6 {
 .fav-button {
     display: block;
     background-color: #f7f7f7;
-    width: 48px;
-    line-height: 48px;
+    width: 38px;
+    line-height: 38px;
     text-align: center;
     border-radius: 8px;
-    font-size: 24px;
+    font-size: 16px;
 }
 
 .icon-nav .btn.btn-solid {
