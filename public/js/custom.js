@@ -113,7 +113,7 @@ window.resizeMenuSlider = function resizeMenuSlider(){
         $('#main-menu').removeClass('items-center');
     }else{
         if(!$('.menu-slider').hasClass('slick-initialized')){
-            
+
             setTimeout(function(){
                 loadMainMenuSlider();
                 if ( $('#main-menu .slick-slide').length > 13 ) {
@@ -1963,6 +1963,7 @@ $(document).ready(function() {
         let type = $("input[name='address_type']:checked").val();
         let latitude = $('#add_new_address_form #latitude').val();
         let longitude = $('#add_new_address_form #longitude').val();
+        let house_number = $('#add_new_address_form #house_number').val();
         $.ajax({
             type: "post",
             dataType: "json",
@@ -1971,11 +1972,13 @@ $(document).ready(function() {
                 "city": city,
                 "type": type,
                 "state": state,
+                "street": street,
                 "address": address,
                 "country": country,
                 "pincode": pincode,
                 "latitude": latitude,
                 "longitude": longitude,
+                "house_number": house_number,
             },
             beforeSend: function() {
                 if ($("#cart_table").length > 0) {
