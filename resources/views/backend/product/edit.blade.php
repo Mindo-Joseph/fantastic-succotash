@@ -317,7 +317,11 @@
                                     $vsets = '';
 
                                     foreach ($varnt->set as $vs) {
-                                        $vsets .= $vs->title . ', ';
+                                        if(isset($vs) && !empty($vs->title)){
+                                            $vsets .= $vs->title . ', ';
+                                        }
+                                        
+                                        
                                     }
                                     ?>
                                     <tr id="tr_{{$varnt->id}}">
@@ -431,9 +435,9 @@
                             {!! Form::label('title', __('Dispatcher Tags'),['class' => 'control-label']) !!}
                             <select class="selectize-select1 form-control" name="tags" required>
                                 @if($agent_dispatcher_on_demand_tags != null && count($agent_dispatcher_on_demand_tags))
-                                @foreach($agent_dispatcher_on_demand_tags as $key => $tags)
-                                <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
-                                @endforeach
+                                    @foreach($agent_dispatcher_on_demand_tags as $key => $tags)
+                                    <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
+                                    @endforeach
                                 @endif
                             </select>
                         </div>
@@ -467,7 +471,7 @@
                             <select class="form-control " id="brand_idBox" name="brand_id">
                                 <option value="">Select</option>
                                 @foreach($brands as $brand)
-                                <option value="{{$brand->id}}" @if(!empty($product->brand) && $product->brand->id == $brand->id) selected @endif>{{$brand->title}}</option>
+                                <option value="{{$brand->id}}" @if(!empty($product->brand) && $product->brand->id == $brand->id) selected @endif>{{$brand->title??null}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -478,7 +482,7 @@
                             <select class="form-control " id="typeSelectBox" name="tax_category">
                                 <option value="">Select</option>
                                 @foreach($taxCate as $cate)
-                                <option value="{{$cate->id}}" @if($product->variant[0]->tax_category_id == $cate->id) selected @endif>{{$cate->title}}</option>
+                                <option value="{{$cate->id}}" @if($product->variant[0]->tax_category_id == $cate->id) selected @endif>{{$cate->title??null}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -580,7 +584,7 @@
                             {!! Form::label('title', __('Select Addon Set'),['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="addon_sets[]" data-toggle="select2" multiple="multiple" placeholder="Select addon...">
                                 @foreach($addons as $set)
-                                 <option value="{{$set->id}}" @if(in_array($set->id, $addOn_ids)) selected @endif>{{$set->title}}</option>
+                                 <option value="{{$set->id}}" @if(in_array($set->id, $addOn_ids)) selected @endif>{{$set->title??null}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -589,7 +593,9 @@
                             {!! Form::label('title', __('Up Sell Products'),['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="up_cell[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)
-                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $upSell_ids)) selected @endif>{{$otherProduct->primary->title}}</option>
+                                    @if(isset($otherProduct) && !empty($otherProduct->primary))
+                                    <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $upSell_ids)) selected @endif>{{$otherProduct->primary->title??null}}</option>
+                                    @endif                                   
                                 @endforeach
                             </select>
                         </div>
@@ -598,7 +604,9 @@
                             {!! Form::label('title', __('Cross Sell Products'),['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="cross_cell[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)
-                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $crossSell_ids)) selected @endif>{{$otherProduct->primary->title}}</option>
+                                    @if(isset($otherProduct) && !empty($otherProduct->primary))
+                                    <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $crossSell_ids)) selected @endif>{{$otherProduct->primary->title??null}}</option>
+                                    @endif   
                                 @endforeach
                             </select>
                         </div>
@@ -606,7 +614,9 @@
                             {!! Form::label('title', __('Related Products'),['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="releted_product[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)
-                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $related_ids)) selected @endif>{{$otherProduct->primary->title}}</option>
+                                    @if(isset($otherProduct) && !empty($otherProduct->primary))
+                                    <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $related_ids)) selected @endif>{{$otherProduct->primary->title??null}}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -628,13 +638,12 @@
 
 
                 <!-- start product faqs -->
+                @if($configData->product_order_form == 1) 
                 <div class="row">
-                    
-                     
-                          <div class="col-lg-12">
+                    <div class="col-lg-12">
                              <div class="card-box pb-2">
                                 <div class="d-flex align-items-center justify-content-between">
-                                   <h4 class="header-title text-uppercase m-0">{{ __("Product Faqs") }}</h4>
+                                   <h4 class="header-title text-uppercase m-0">{{ __("Product Order Form") }}</h4>
                                    <a class="btn btn-info d-block" id="add_product_faq_modal_btn">
                                       <i class="mdi mdi-plus-circle mr-1"></i>{{ __("Add") }}
                                    </a>
@@ -643,7 +652,7 @@
                                    <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
                                       <thead>
                                          <tr>
-                                            <th>{{ __("Name") }}</th>
+                                            <th>{{ __("Question") }}</th>
                                             <th>{{ __("Is Required?") }}</th>
                                             <th>{{ __("Action") }}</th>
                                          </tr>
@@ -687,7 +696,8 @@
               
                        
                  </div>
-                <!-- end product faqs -->
+                 @endif
+                 <!-- end product faqs -->
 
             </div>
         </div>
@@ -719,7 +729,7 @@
     <div class="modal-dialog modal-dialog-centered">
        <div class="modal-content">
           <div class="modal-header border-bottom">
-             <h4 class="modal-title" id="standard-modalLabel">{{ __("Add Product Faq") }}</h4>
+             <h4 class="modal-title" id="standard-modalLabel">{{ __("Add Product Order Form Question") }}</h4>
              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           </div>
           <div class="modal-body">
@@ -745,7 +755,7 @@
                          <div class="row">
                             <div class="col-12">
                                <div class="form-group position-relative">
-                                  <label for="">{{ __("Name") }} ({{$client_language->langName}})</label>
+                                  <label for="">{{ __("Question") }} ({{$client_language->langName}})</label>
                                   <input class="form-control" name="language_id[{{$k}}]" type="hidden" value="{{$client_language->langId}}">
                                   <input class="form-control" name="name[{{$k}}]" type="text" id="product_faq_name_{{$client_language->langId}}">
                                </div>
@@ -1197,7 +1207,7 @@
          document.getElementById("productFaqForm").reset();
          $('#add_product_faq_modal input[name=product_faq_id]').val("");
          $('#add_product_faq_modal').modal('show');
-         $('#add_product_faq_modal #standard-modalLabel').html('Add Product Faq');
+         $('#add_product_faq_modal #standard-modalLabel').html('Add Product Order Form Question');
       });
 
       $(document).on("click", ".delete_product_faq_btn", function() {
@@ -1266,7 +1276,7 @@
                if (response.status = 'Success') {
                   $("#add_product_faq_modal input[name=product_faq_id]").val(response.data.id);
                   $(document).find("#add_product_faq_modal select[name=is_required]").val(response.data.is_required).change();
-                  $('#add_product_faq_modal #standard-modalLabel').html('Update Product Faq');
+                  $('#add_product_faq_modal #standard-modalLabel').html('Update Product Order Form Question');
                   $('#add_product_faq_modal').modal('show');
                   $.each(response.data.translations, function( index, value ) {
                     $('#add_product_faq_modal #product_faq_name_'+value.language_id).val(value.name);
