@@ -206,6 +206,10 @@ header.site-header.fixed-bar {
     cursor: pointer;
 }
 
+.fa-eye-slash.eye:before {
+    content: "\f06e";
+}
+
 .country-content p {
     font-size: 20px;
     line-height: 32px;

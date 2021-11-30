@@ -110,7 +110,7 @@
                             </div>
                             <div class="form-group" id="password-wrapper" style="display:none; position:relative">
                                 <input id="password-field" type="password" class="form-control pr-3" name="password" placeholder="{{ __('Password') }}">
-                                <span toggle="#password-field" class="fa fa-eye toggle-password" aria-hidden="true"></span>
+                                <span toggle="#password-field" class="fa fa-eye-slash toggle-password" aria-hidden="true"></span>
                                 <a class="font-14" href="javascript:void(0)" id="send_password_reset_link" style="right:10px;">Forgot?</a>
                             </div>
                             <div class="form-group">
