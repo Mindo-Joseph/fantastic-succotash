@@ -139,9 +139,11 @@ class FrontController extends Controller
             $serviceAreaVendors = $serviceAreaVendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
                     $query->select('vendor_id')
                     ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                })
-                ->where('status', 1)->get();
+                });
         }
+        $serviceAreaVendors = $serviceAreaVendors->where('status', 1)->get();
+
+
         if($serviceAreaVendors->isNotEmpty()){
             foreach($serviceAreaVendors as $value){
                 $vendors[] = $value->id;

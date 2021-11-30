@@ -20,11 +20,12 @@ class SearchController extends FrontController{
         $longitude = session('longitude');
         $selectedAddress = session('selectedPlaceId');
         $vendorType = Session::get('vendorType');
-        $allowed_vendors = [];
-        if(Session::has('vendors')){
-            $allowed_vendors = Session::get('vendors');
+        $allowed_vendors = $this->getServiceAreaVendors();
+       
+        $vendors = Vendor::select('id', 'name', 'logo','slug');
+        if (count($allowed_vendors) > 0) {
+            $vendors = $vendors->whereIn('id', $allowed_vendors);
         }
-        $vendors = Vendor::select('id', 'name', 'logo','slug')->where($vendorType,1);
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                 $selectedAddress = $preferences->Default_location_name;
