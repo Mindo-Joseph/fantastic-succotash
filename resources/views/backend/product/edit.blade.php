@@ -317,8 +317,10 @@
                                     $vsets = '';
 
                                     foreach ($varnt->set as $vs) {
-                                        if(isset($vs) && !empty($vs->title))
-                                        $vsets .= $vs->title . ', ';
+                                        if(isset($vs) && !empty($vs->title)){
+                                            $vsets .= $vs->title . ', ';
+                                        }
+                                        
                                         
                                     }
                                     ?>
@@ -433,9 +435,9 @@
                             {!! Form::label('title', __('Dispatcher Tags'),['class' => 'control-label']) !!}
                             <select class="selectize-select1 form-control" name="tags" required>
                                 @if($agent_dispatcher_on_demand_tags != null && count($agent_dispatcher_on_demand_tags))
-                                @foreach($agent_dispatcher_on_demand_tags as $key => $tags)
-                                <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
-                                @endforeach
+                                    @foreach($agent_dispatcher_on_demand_tags as $key => $tags)
+                                    <option value="{{ $tags['name'] }}" @if($product->tags == $tags['name']) selected="selected" @endif>{{ ucfirst($tags['name']) }}</option>
+                                    @endforeach
                                 @endif
                             </select>
                         </div>
@@ -591,8 +593,9 @@
                             {!! Form::label('title', __('Up Sell Products'),['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="up_cell[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)
-
+                                    @if(isset($otherProduct) && !empty($otherProduct->primary))
                                     <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $upSell_ids)) selected @endif>{{$otherProduct->primary->title??null}}</option>
+                                    @endif                                   
                                 @endforeach
                             </select>
                         </div>
@@ -611,11 +614,10 @@
                             {!! Form::label('title', __('Related Products'),['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="releted_product[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)
-                                @if(isset($otherProduct) && !empty($otherProduct->primary))
-                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $related_ids)) selected @endif>{{$otherProduct->primary->title??null}}</option>
-                                @endif
+                                    @if(isset($otherProduct) && !empty($otherProduct->primary))
+                                    <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $related_ids)) selected @endif>{{$otherProduct->primary->title??null}}</option>
+                                    @endif
                                 @endforeach
-                                @endif 
                             </select>
                         </div>
                         @endif
