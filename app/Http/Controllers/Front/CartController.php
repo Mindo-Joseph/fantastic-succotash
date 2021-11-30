@@ -854,11 +854,12 @@ class CartController extends FrontController
     public function getLastAddedProductVariant(Request $request, $domain='')
     {
         try{
-            $cartProduct = CartProduct::with('addon')->where('cart_id', $request->cart_id)->where('product_id', $request->product_id)->orderByDesc('created_at')->first();
+            $cartProduct = CartProduct::with('addon')
+                ->where('cart_id', $request->cart_id)
+                ->where('product_id', $request->product_id)
+                ->orderByDesc('created_at')->first();
 
             return $this->successResponse($cartProduct, '', 200);
-            // dd($cartProduct->toArray());
-
         }
         catch(Exception $ex){
             return $this->errorResponse($ex->getMessage(), $ex->getCode());
@@ -866,7 +867,7 @@ class CartController extends FrontController
     }
 
     /**
-     * Get Last added product variant
+     * Get current product variants with different addons
      *
      * @return \Illuminate\Http\Response
      */
