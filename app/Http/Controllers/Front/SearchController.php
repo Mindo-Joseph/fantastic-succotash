@@ -19,11 +19,12 @@ class SearchController extends FrontController{
         $latitude = session('latitude');
         $longitude = session('longitude');
         $selectedAddress = session('selectedPlaceId');
+        $vendorType = Session::get('vendorType');
         $allowed_vendors = [];
         if(Session::has('vendors')){
             $allowed_vendors = Session::get('vendors');
         }
-        $vendors = Vendor::select('id', 'name', 'logo','slug');
+        $vendors = Vendor::select('id', 'name', 'logo','slug')->where($vendorType,1);
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                 $selectedAddress = $preferences->Default_location_name;
@@ -81,9 +82,9 @@ class SearchController extends FrontController{
         $products = Product::with('media')->join('product_translations as pt', 'pt.product_id', 'products.id')
         ->select('products.id', 'products.sku', 'products.url_slug', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
         ->where('pt.language_id', $language_id)
-            ->where(function ($q) use ($keyword) {
-                $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
-            })->where('products.is_live', 1);
+        ->where(function ($q) use ($keyword) {
+            $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
+        })->where('products.is_live', 1);
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             $products = $products->whereIn('vendor_id', $allowed_vendors);
         }
@@ -102,7 +103,9 @@ class SearchController extends FrontController{
         $keyword = $keyword;
         $language_id = Session::get('customerLanguage');
         $preferences = Session::get('preferences');
-        $vendors = Vendor::select('id', 'name', 'logo','slug');
+        $vendorType = Session::get('vendorType');
+       
+        $vendors = Vendor::select('id', 'name', 'logo','slug')->where($vendorType,1);
         if($preferences){
             if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
                 $selectedAddress = $preferences->Default_location_name;
@@ -160,6 +163,9 @@ class SearchController extends FrontController{
         $products = Product::with('media')->join('product_translations as pt', 'pt.product_id', 'products.id')
                     ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
                     ->where('pt.language_id', $language_id)
+                    ->whereHas('vendor',function($query) use ($vendorType){
+                        $query->where($vendorType,1);
+                      })
                     ->where(function ($q) use ($keyword) {
                         $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
                     })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->get();
