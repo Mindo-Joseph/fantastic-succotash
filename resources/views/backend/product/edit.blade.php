@@ -317,7 +317,9 @@
                                     $vsets = '';
 
                                     foreach ($varnt->set as $vs) {
+                                        if(isset($vs) && !empty($vs->title))
                                         $vsets .= $vs->title . ', ';
+                                        
                                     }
                                     ?>
                                     <tr id="tr_{{$varnt->id}}">
@@ -467,7 +469,7 @@
                             <select class="form-control " id="brand_idBox" name="brand_id">
                                 <option value="">Select</option>
                                 @foreach($brands as $brand)
-                                <option value="{{$brand->id}}" @if(!empty($product->brand) && $product->brand->id == $brand->id) selected @endif>{{$brand->title}}</option>
+                                <option value="{{$brand->id}}" @if(!empty($product->brand) && $product->brand->id == $brand->id) selected @endif>{{$brand->title??null}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -478,7 +480,7 @@
                             <select class="form-control " id="typeSelectBox" name="tax_category">
                                 <option value="">Select</option>
                                 @foreach($taxCate as $cate)
-                                <option value="{{$cate->id}}" @if($product->variant[0]->tax_category_id == $cate->id) selected @endif>{{$cate->title}}</option>
+                                <option value="{{$cate->id}}" @if($product->variant[0]->tax_category_id == $cate->id) selected @endif>{{$cate->title??null}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -580,7 +582,7 @@
                             {!! Form::label('title', __('Select Addon Set'),['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="addon_sets[]" data-toggle="select2" multiple="multiple" placeholder="Select addon...">
                                 @foreach($addons as $set)
-                                 <option value="{{$set->id}}" @if(in_array($set->id, $addOn_ids)) selected @endif>{{$set->title}}</option>
+                                 <option value="{{$set->id}}" @if(in_array($set->id, $addOn_ids)) selected @endif>{{$set->title??null}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -589,7 +591,8 @@
                             {!! Form::label('title', __('Up Sell Products'),['class' => 'control-label']) !!}
                             <select class="form-control select2-multiple" name="up_cell[]" data-toggle="select2" multiple="multiple" placeholder="Select gear...">
                                 @foreach($otherProducts as $otherProduct)
-                                <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $upSell_ids)) selected @endif>{{$otherProduct->primary->title}}</option>
+
+                                    <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $upSell_ids)) selected @endif>{{$otherProduct->primary->title??null}}</option>
                                 @endforeach
                             </select>
                         </div>
