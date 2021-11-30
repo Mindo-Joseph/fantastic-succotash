@@ -211,7 +211,7 @@ class ProductController extends BaseController
             }
         }
         $otherProducts = Product::with('primary')->select('id', 'sku')->where('is_live', 1)->where('id', '!=', $product->id)->where('vendor_id', $product->vendor_id)->get();
-        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode','need_dispacher_home_other_service','delay_order')->first();
+        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode','need_dispacher_home_other_service','delay_order','product_order_form')->first();
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
         
         $agent_dispatcher_tags = [];
