@@ -26,22 +26,23 @@ class SearchController extends FrontController{
         if (count($allowed_vendors) > 0) {
             $vendors = $vendors->whereIn('id', $allowed_vendors);
         }
-        if($preferences){
-            if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
-                $selectedAddress = $preferences->Default_location_name;
-                $latitude = $preferences->Default_latitude;
-                $longitude = $preferences->Default_longitude;
-                Session::put('latitude', $latitude);
-                Session::put('longitude', $longitude);
-                Session::put('selectedAddress', $selectedAddress);
-            }
-            if(($preferences->is_hyperlocal == 1) && ($latitude) && ($longitude) ){
-                $vendors = $vendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                    $query->select('vendor_id')
-                    ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                });
-            }
-        }
+       
+        // if($preferences){
+        //     if( (empty($latitude)) && (empty($longitude)) && (empty($selectedAddress)) ){
+        //         $selectedAddress = $preferences->Default_location_name;
+        //         $latitude = $preferences->Default_latitude;
+        //         $longitude = $preferences->Default_longitude;
+        //         Session::put('latitude', $latitude);
+        //         Session::put('longitude', $longitude);
+        //         Session::put('selectedAddress', $selectedAddress);
+        //     }
+        //     if(($preferences->is_hyperlocal == 1) && ($latitude) && ($longitude) ){
+        //         $vendors = $vendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
+        //             $query->select('vendor_id')
+        //             ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+        //         });
+        //     }
+        // }
         $vendors = $vendors->where(function ($q) use ($keyword) {
                         $q->where('name', 'LIKE', "%$keyword%");
                     })->where('status', '!=', 2)->get();
@@ -86,9 +87,9 @@ class SearchController extends FrontController{
         ->where(function ($q) use ($keyword) {
             $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
         })->where('products.is_live', 1);
-        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+        //if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             $products = $products->whereIn('vendor_id', $allowed_vendors);
-        }
+        //}
         $products = $products->whereNull('deleted_at')->groupBy('products.id')->get();
         foreach ($products as $product) {
             $redirect_url = route('productDetail', $product->url_slug);
