@@ -14,8 +14,8 @@ class ProductFaqController extends BaseController{
     public function store(Request $request){
         try {
             $this->validate($request, [
-              'name.0' => 'required|string|max:60',
-            ],['name.0' => 'The default language name field is required.']);
+              'name.0' => 'required|string|max:255',
+            ],['name.0' => 'The default language question field is required.']);
             DB::beginTransaction();
             $product_faq = new ProductFaq();
             $product_faq->is_required = $request->is_required;
@@ -32,7 +32,7 @@ class ProductFaqController extends BaseController{
                 }
             }
             DB::commit();
-            return $this->successResponse($product_faq, 'Product Faq Added Successfully.');
+            return $this->successResponse($product_faq, 'Product Order Form Added Successfully.');
         } catch (Exception $e) {
             DB::rollback();
             return $this->errorResponse([], $e->getMessage());
@@ -65,8 +65,8 @@ class ProductFaqController extends BaseController{
     public function update(Request $request, ProductFaq $ProductFaq){
          try {
             $this->validate($request, [
-              'name.0' => 'required|string|max:60',
-            ],['name.0' => 'The default language name field is required.']);
+              'name.0' => 'required|string|max:255',
+            ],['name.0' => 'The default language question field is required.']);
             DB::beginTransaction();
             $product_faq_id = $request->product_faq_id;
             $product_faq = ProductFaq::where('id', $product_faq_id)->first();
@@ -85,7 +85,7 @@ class ProductFaqController extends BaseController{
                 }
             }
             DB::commit();
-            return $this->successResponse($product_faq, 'Product Faq Updated Successfully.');
+            return $this->successResponse($product_faq, 'Product Order Form Updated Successfully.');
         } catch (Exception $e) {
             DB::rollback();
             return $this->errorResponse([], $e->getMessage());
@@ -103,7 +103,7 @@ class ProductFaqController extends BaseController{
         try {
             ProductFaq::where('id', $request->product_faq_id)->delete();
             ProductFaqTranslation::where('product_faq_id', $request->product_faq_id)->delete();
-            return $this->successResponse([], 'Product Faq Deleted Successfully.');
+            return $this->successResponse([], 'Product Order Form Deleted Successfully.');
         } catch (Exception $e) {
             return $this->errorResponse([], $e->getMessage());
         }
