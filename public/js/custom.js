@@ -2204,27 +2204,29 @@ $(document).ready(function() {
         let product_id = $(this).attr("data-product_id");
         let variant_id = $(this).attr("data-variant_id");
         let qty = $(this).next().val();
-        if (qty > 1) {
-            if( $(this).hasClass('remove-customize') && $(this).hasClass('m-open') ){
-                $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
-                updateProductQuantity(product_id, cartproduct_id, --qty, base_price, this);
+        if(!$.hasAjaxRunning()){
+            if (qty > 1) {
+                if( $(this).hasClass('remove-customize') && $(this).hasClass('m-open') ){
+                    $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
+                    updateProductQuantity(product_id, cartproduct_id, --qty, base_price, this);
+                }
+                else if( $(this).hasClass('remove-customize') && !$(this).hasClass('m-open') ){
+                    $('#customize_repeated_item_modal').modal('show');
+                    getProductVariantWithDifferentAddons(this, cart_id, product_id);
+                }
+                else{
+                    $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
+                    $('#quantity_ondemand_' + cartproduct_id).val(--qty);
+                    updateProductQuantity(product_id, cartproduct_id, qty, base_price, this);
+                }
+            } else {
+                // alert('remove this product');
+                $('#remove_item_modal').modal('show');
+                let vendor_id = $(this).data('vendor_id');
+                $('#remove_item_modal #vendor_id').val(vendor_id);
+                $('#remove_item_modal #product_id').val(product_id);
+                $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
             }
-            else if( $(this).hasClass('remove-customize') && !$(this).hasClass('m-open') ){
-                $('#customize_repeated_item_modal').modal('show');
-                getProductVariantWithDifferentAddons(this, cart_id, product_id);
-            }
-            else{
-                $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
-                $('#quantity_ondemand_' + cartproduct_id).val(--qty);
-                updateProductQuantity(product_id, cartproduct_id, qty, base_price, this);
-            }
-        } else {
-            // alert('remove this product');
-            $('#remove_item_modal').modal('show');
-            let vendor_id = $(this).data('vendor_id');
-            $('#remove_item_modal #vendor_id').val(vendor_id);
-            $('#remove_item_modal #product_id').val(product_id);
-            $('#remove_item_modal #cartproduct_id').val(cartproduct_id);
         }
     });
     $(document).on('click', '.qty-plus-product', function() {
@@ -2236,16 +2238,18 @@ $(document).ready(function() {
         // let vendor_id = $(this).attr("data-vendor_id");
         let addon = $(this).attr("data-addon");
         let qty = $(this).prev().val();
-        if( $(this).hasClass('repeat-customize') && $(this).hasClass('m-open') ){
-            $(this).find('.fa').removeClass("fa-plus").addClass("fa-spinner fa-pulse");
-            updateProductQuantity(product_id, cartproduct_id, ++qty, base_price, this);
-        }
-        else if($(this).hasClass('repeat-customize') && !$(this).hasClass('m-open') ){
-            getLastAddedProductVariant(this, cart_id, product_id, addon);
-        }else{												  
-            $(this).prev().val(++qty);
-            $(this).find('.fa').removeClass("fa-plus").addClass("fa-spinner fa-pulse");
-            updateProductQuantity(product_id, cartproduct_id, qty, base_price, this);
+        if(!$.hasAjaxRunning()){
+            if( $(this).hasClass('repeat-customize') && $(this).hasClass('m-open') ){
+                $(this).find('.fa').removeClass("fa-plus").addClass("fa-spinner fa-pulse");
+                updateProductQuantity(product_id, cartproduct_id, ++qty, base_price, this);
+            }
+            else if($(this).hasClass('repeat-customize') && !$(this).hasClass('m-open') ){
+                getLastAddedProductVariant(this, cart_id, product_id, addon);
+            }else{												  
+                $(this).prev().val(++qty);
+                $(this).find('.fa').removeClass("fa-plus").addClass("fa-spinner fa-pulse");
+                updateProductQuantity(product_id, cartproduct_id, qty, base_price, this);
+            }
         }
     });
 
