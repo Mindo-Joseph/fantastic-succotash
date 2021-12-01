@@ -282,6 +282,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="col-6 text-right">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(cart_details.total_taxable_amount) %></div>
             </div>
             <hr class="my-2">
+            <% if(cart_details.total_service_fee > 0) { %>
+                <div class="row">
+                    <div class="col-6">{{__('Service Fee')}}</div>
+                    <div class="col-6 text-right">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(cart_details.total_service_fee) %></div>
+                </div>
+                <hr class="my-2">
+            <% } %>
             <% if(cart_details.total_subscription_discount != undefined) { %>
                 <div class="row">
                     <div class="col-6">{{__('Subscription Discount')}}</div>

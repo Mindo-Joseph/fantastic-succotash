@@ -851,6 +851,10 @@ class VendorController extends BaseController
             $vendor->show_slot         = ($request->has('show_slot') && $request->show_slot == 'on') ? 1 : 0;
             $msg = 'commission configuration';
         }
+        if ($request->has('service_fee_percent')) {
+            $vendor->service_fee_percent         = $request->service_fee_percent;
+            $msg = 'commission configuration';
+        }
         $vendor->save();
         return redirect()->back()->with('success', $msg . ' updated successfully!');
     }

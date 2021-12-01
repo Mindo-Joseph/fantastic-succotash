@@ -533,6 +533,7 @@ class CartController extends BaseController
             $tax_details = [];
             $is_vendor_closed = 0;
             $delay_date = 0;
+            $total_service_fee = 0;
             foreach ($cartData as $ven_key => $vendorData) {
              
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
@@ -770,6 +771,13 @@ class CartController extends BaseController
                 } else {
                     $vendorData->couponData = $couponData;
                 }
+                $vendor_service_fee_percentage_amount = 0;
+                if($vendorData->vendor->service_fee_percent > 0){
+                    $vendor_service_fee_percentage_amount = ($payable_amount * $vendorData->vendor->service_fee_percent) / 100 ;
+                    $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
+                }
+                $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
+                $vendorData->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
                 $vendorData->vendor_gross_total = $payable_amount;
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
@@ -818,6 +826,7 @@ class CartController extends BaseController
             $total_disc_amount = $total_disc_amount + $total_subscription_discount;
             $cart->total_subscription_discount = $total_subscription_discount * $clientCurrency->doller_compare;
         }
+        $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');
         $cart->total_tax = $total_tax;
         $cart->tax_details = $tax_details;
         $cart->gross_paybale_amount = $total_paying;
