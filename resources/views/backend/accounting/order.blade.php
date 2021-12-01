@@ -143,7 +143,7 @@
 
         function numberWithCommas(x) {
         // x=x.toFixed(2)
-            IF(x > 0){
+            if(x > 0){
                 return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }else{
                 return 0;
