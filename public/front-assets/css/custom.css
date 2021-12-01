@@ -7142,7 +7142,7 @@ body[dir="rtl"] .inner_spacing h3 {
         display: block;
         background-color: #f7f7f7;
         width: 38px;
-        line-height: 33px;
+        line-height: 38px;
         text-align: center;
         border-radius: 8px;
         font-size: 14px;
@@ -7560,7 +7560,6 @@ body[dir="rtl"] .inner_spacing h3 {
     }
 
     .icon-nav .btn.btn-solid {
-        padding: 10px !important;
         min-width: auto;
         margin-right: 10px;
         padding: 10px;
