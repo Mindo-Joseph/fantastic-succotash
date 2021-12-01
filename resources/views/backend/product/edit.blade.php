@@ -737,6 +737,7 @@
                 @csrf
                 <div id="save_social_media">
                    <input type="hidden" name="product_faq_id" value="">
+                   <input type="hidden" name="product_id" value="{{$product->id}}">
                    <div class="row">
                      
                       <div class="col-md-6">

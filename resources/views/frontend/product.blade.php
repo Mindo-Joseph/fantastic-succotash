@@ -911,10 +911,6 @@
             success: function(response) {
                 if(response.status == 'Success'){
                     $("#variant_response span").html('');
-                    // var res = response.variant;
-                    // $('#prod_variant_id').val(res.id);
-                    // $('#productPriceValue').html(res.productPrice);
-                    // $('#instock').html("In Stock (" + res.quantity + ")");
                     if(response.variant != ''){
                         $('#product_variant_wrapper').html('');
                         let variant_template = _.template($('#variant_template').html());

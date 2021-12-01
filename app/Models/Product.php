@@ -150,5 +150,10 @@ class Product extends Model{
       
     }
 
+    public function ProductFaq(){
+      return $this->hasMany('App\Models\ProductFaq', 'product_id', 'id'); 
+    }
+
+
     
 }
