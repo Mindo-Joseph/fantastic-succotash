@@ -232,7 +232,6 @@ $(document).ready(function () {
         }else{
             type = "delivery";
         }
-        // console.log()
         if(!$.hasAjaxRunning()){
             vendorType(latitude, longitude, type);
         }
@@ -279,8 +278,6 @@ $(document).ready(function () {
             vendor_type = vtype;
         }
         let selected_address = $("#address-input").val();
-        // console.log(latitude);
-        // console.log(selected_address);
         // return 0;
         let selected_place_id = $("#address-place-id").val();
         $(".homepage-address span").text(selected_address).attr({ "title": selected_address, "data-original-title": selected_address });
@@ -423,7 +420,6 @@ $(document).ready(function () {
         let selectedPlaceId = $("#address-place-id").val();
         let selectedAddress = $("#address-input").val();
         if((lat != '') && (long != '')){
-            // console.log('location exists');
             displayLocation(lat, long, selectedPlaceId, selectedAddress);
         }else{
             let lat = position.coords.latitude;
@@ -499,10 +495,6 @@ $(document).ready(function () {
     }
 
     function displayLocation(latitude, longitude, placeId='', location='') {
-        // console.log(latitude);
-        // console.log(longitude);
-        // console.log(placeId);
-        // console.log(location);
         var geocoder;
         geocoder = new google.maps.Geocoder();
         var latlng = new google.maps.LatLng(latitude, longitude);
