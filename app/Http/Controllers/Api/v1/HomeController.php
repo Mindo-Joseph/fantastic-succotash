@@ -133,7 +133,7 @@ class HomeController extends BaseController
             $homeData['mobile_banners'] = $mobile_banners;
             $homeData['currencies'] = ClientCurrency::with('currency')->select('currency_id', 'is_primary', 'doller_compare')->orderBy('is_primary', 'desc')->get();
             $homeData['dynamic_tutorial'] = AppDynamicTutorial::orderBy('sort')->get();
-
+            
             $payment_codes = ['stripe', 'razorpay'];
             $payment_creds = PaymentOption::select('code','credentials')->whereIn('code', $payment_codes)->where('status', 1)->get();
             if ($payment_creds) {
@@ -147,11 +147,6 @@ class HomeController extends BaseController
                     }
                 }
             }
-            // $razorpay_creds = PaymentOption::select('credentials')->where('code', 'razorpay')->where('status', 1)->first();
-            // if ($razorpay_creds) {
-            //     $razorpay_creds_arr = json_decode($razorpay_creds->credentials);
-            // }
-            // $homeData['profile']->preferences->razorpay_api_key = (isset($razorpay_creds_arr->api_key) && (!empty($razorpay_creds_arr->api_key))) ? $razorpay_creds_arr->api_key : '';
             return $this->successResponse($homeData);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
