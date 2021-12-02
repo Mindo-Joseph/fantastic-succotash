@@ -77,10 +77,11 @@ trait SquarePaymentManager{
         $result = json_encode($api_response->getResult());
         Log::info("Result");
         Log::info($result);
-        Log::info(typeof($result));
+        // Log::info(typeof($result));
         Log::info($api_response->getPaymentId());
         Log::info($api_response->getTransactionId());
         Log::info($api_response->getTransactionReference());
+        Log::info($result->payment);
         $payment = json_encode($result->getPayment());
         Log::info("Payment");
         Log::info($payment);
