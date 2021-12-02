@@ -574,7 +574,7 @@
             if (status_option_id == 3) {
                 return openRejectModal(order_id, vendor_id, status_option_id, order_vendor_id);
             } else {
-                if (confirm("Are you Sure?")) {
+                if (confirm("{{__('Are you Sure?')}}")) {
                     $.ajax({
                         url: "{{ route('order.changeStatus') }}",
                         type: "POST",
@@ -614,7 +614,7 @@
                                 }
                             }
                             if (status_option_id == 2)
-                                $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                                $.NotificationApp.send('{{__("Success")}}', response.message, "top-right", "#5ba035", "success");
                             // location.reload();
                         },
                     });

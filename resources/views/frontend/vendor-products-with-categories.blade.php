@@ -432,7 +432,7 @@
             <li class="border_0">
                 <th colspan="7">
                     <div class="text-danger">
-                        Products for this vendor are not deliverable at your area. Please change address or remove product.
+                        {{__('Products for this vendor are not deliverable at your area. Please change address or remove product.')}}
                     </div>
                 </th>
             </li>
