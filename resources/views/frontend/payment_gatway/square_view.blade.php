@@ -22,14 +22,8 @@
         .payment-top-haeder{
             background: {{getClientPreferenceDetail()->web_color}}; 
         }
-        .btn-solid{
-            padding: 13px 29px;
-            color: #ffffff !important;
-            letter-spacing: 0.05em;
-            border: 2px solid var(--theme-deafult);
-            background: {{getClientPreferenceDetail()->web_color}};
-            -webkit-transition: background 300ms ease-in-out;
-            transition: background 300ms ease-in-out;
+        button {
+            background-color: {{getClientPreferenceDetail()->web_color}} !important;
         }
     </style>
   <link rel="stylesheet" type="text/css" href="{{asset('square/css/style.css')}}">
