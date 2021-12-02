@@ -745,8 +745,8 @@
                             <label for="">Is Required?</label>
                             <div class="input-group mb-2">
                                <select class="form-control" name="is_required">
-                                  <option value="1">Yes</option>
-                                  <option value="0">No</option>
+                                  <option value="1">{{__('Yes')}}</option>
+                                  <option value="0">{{__('No')}}</option>
                                </select>
                             </div>
                          </div>
@@ -1251,7 +1251,7 @@
             success: function(response) {
                if (response.status == 'Success') {
                   $('#add_or_edit_social_media_modal').modal('hide');
-                  alert("{{__('Success')}}");
+
                   $.NotificationApp.send("{{__('Success')}}", response.message, "top-right", "#5ba035", "success");
                   setTimeout(function() {
                      location.reload()

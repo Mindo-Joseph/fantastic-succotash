@@ -311,7 +311,7 @@
                                                                     </span>
                                                                 </div>
                                                                 @else
-                                                                <span class="text-danger">Out of stock</span>
+                                                                <span class="text-danger">stock</span>
                                                                 @endif
                                                             @endif
                                                             @if( $is_customizable )
