@@ -66,21 +66,20 @@ class SquareController extends FrontController
                 $request['reference'] = $request->subscription_id;
             }
         }
-    	$payment = $this->createSquarePayment($request->all());
-    	dd($payment);
+    	$payment_id = $this->createSquarePayment($request->all());
     	$request['amount'] = $amount;
-    	if($payment->paymentStatus == 'APPROVED')
-    	{
-            $returnUrl = $this->sucessPayment($request,$payment);
-        } else{
-            $returnUrl = $this->failedPayment($request,$payment);
-        }
+	    if(isset($payment_id) && !is_null($payment_id))
+	    {
+	        $returnUrl = $this->sucessPayment($request,$payment_id);
+	    }
+	    else {
+	        $returnUrl = $this->failedPayment($request);
+	    }
+    	
         return Redirect::to(url($returnUrl));
     }
-    public function sucessPayment($request, $pamyent)
+    public function sucessPayment($request, $transactionId)
     {
-
-    	$transactionId = $pamyent->id;
     	if($request->payment_from == 'cart'){
             $order_number = $request->order_number;
             $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
@@ -146,7 +145,7 @@ class SquareController extends FrontController
         }
         return Redirect::to(route('order.return.success'));
     }
-    public function failedPayment($request, $pamyent)
+    public function failedPayment($request)
     {
     	if($request->payment_from == 'cart'){
             $order_number = $request->order_number;

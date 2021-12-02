@@ -8,6 +8,7 @@ use Square\Http\ApiResponse;
 use Square\Models\ListLocationsResponse;
 use Square\Models\CreateCustomerRequest;
 use Square\Models\CreatePaymentRequest;
+use Square\Models\Payment;
 use Square\Models\Money;
 
 use App\Models\PaymentOption;
@@ -71,13 +72,19 @@ trait SquarePaymentManager{
     $body->setNote($data['description']);
 
     $api_response = $client->getPaymentsApi()->createPayment($body);
-    dd($api_response);
-
+    $payment_id = null;
     if ($api_response->isSuccess()) {
         $result = $api_response->getResult();
+        $payment = $result->getPayment();
+        $payment_id = $payment->getId();
+        if($payment->getStatus() == "COMPLETED")
+        {
+          return $payment_id;
+        }
     } else {
         $errors = $api_response->getErrors();
     }
+    return $payment_id;
   }
 
   public function getLocationId($data)
