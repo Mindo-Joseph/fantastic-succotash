@@ -8,7 +8,7 @@ use App\Http\Controllers\Front\{UserSubscriptionController, OrderController, Wal
 use Auth, Log, Redirect;
 use App\Models\{PaymentOption, Cart, SubscriptionPlansUser, Order, Payment, CartAddon, CartCoupon, CartProduct, CartProductPrescription, UserVendor, User};
 
-class SquareController extends Controller
+class SquareController extends FrontController
 {
     use \App\Http\Traits\SquarePaymentManager;
 	use \App\Http\Traits\ApiResponser;
