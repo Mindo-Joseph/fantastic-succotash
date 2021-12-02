@@ -720,7 +720,6 @@ class CartController extends BaseController
                     }
                     $prod->variants = $variantsData;
                     $prod->variant_options = $variant_options;
-                    $payable_amount = $payable_amount;
                     $prod->product_addons = $vendorAddons;
                 //    Log::info($prod);
                     $product = Product::with([
