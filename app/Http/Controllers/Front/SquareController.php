@@ -26,7 +26,6 @@ class SquareController extends FrontController
 	}
 	public function beforePayment(Request $request)
     {
-    	// $pay = $this->getSquarePayment();
     	$data = $request->all();
     	$location  = $this->getLocation();
     	$data['application_id'] = $this->application_id;

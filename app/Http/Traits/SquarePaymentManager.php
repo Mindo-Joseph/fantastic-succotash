@@ -90,7 +90,7 @@ trait SquarePaymentManager{
         $result = $api_response->getResult();
         if($result->getPayment()->getStatus() == "COMPLETED")
         {
-          $payment_id = $result->getPayment(->getId();
+          $payment_id = $result->getPayment()->getId();
           return $payment_id;
         }
     } else {
