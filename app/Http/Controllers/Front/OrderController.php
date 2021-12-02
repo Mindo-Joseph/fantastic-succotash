@@ -679,10 +679,10 @@ class OrderController extends FrontController
                     $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
                     $payable_amount = $payable_amount + $quantity_price;
                     $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
-                    if (isset($vendor_cart_product->product['taxCategory'])) {
-                        foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
-                            if (!in_array($vendor_cart_product->product['taxCategory']['id'], $tax_category_ids)) {
-                                $tax_category_ids[] = $vendor_cart_product->product['taxCategory']['id'];
+                    if (isset($vendor_cart_product->product->taxCategory)) {
+                        foreach ($vendor_cart_product->product->taxCategory->taxRate as $tax_rate_detail) {
+                            if (!in_array($tax_rate_detail->id, $tax_category_ids)) {
+                                $tax_category_ids[] = $tax_rate_detail->id;
                             }
                             $rate = round($tax_rate_detail->tax_rate);
                             $tax_amount = ($price_in_dollar_compare * $rate) / 100;
@@ -713,12 +713,12 @@ class OrderController extends FrontController
                             }
                         }
                     }
+                    $taxable_amount += $product_taxable_amount;
+                    $vendor_taxable_amount += $taxable_amount;
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
                     $order_product->order_id = $order->id;
                     $order_product->price = $variant->price;
-                    $taxable_amount += $product_taxable_amount;
-                    $vendor_taxable_amount += $product_taxable_amount;
                     $order_product->order_vendor_id = $OrderVendor->id;
                     $order_product->taxable_amount = $product_taxable_amount;
                     $order_product->quantity = $vendor_cart_product->quantity;
@@ -813,12 +813,15 @@ class OrderController extends FrontController
                 $vendor_service_fee_percentage_amount = 0;
                 if($vendor_cart_product->vendor->service_fee_percent > 0){
                     $vendor_service_fee_percentage_amount = ($payable_amount * $vendor_cart_product->vendor->service_fee_percent) / 100 ;
-                    $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
+                    $vendor_payable_amount += $vendor_service_fee_percentage_amount;
+                    $payable_amount += $vendor_service_fee_percentage_amount;
                 }
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
-                $OrderVendor->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
+                $OrderVendor->service_fee_percentage_amount = $vendor_service_fee_percentage_amount;
 
                 $total_delivery_fee += $delivery_fee;
+                $vendor_payable_amount += $delivery_fee;
+
                 $OrderVendor->coupon_id = $coupon_id;
                 $OrderVendor->coupon_code = $coupon_name;
                 $OrderVendor->order_status_option_id = 1;
@@ -827,7 +830,7 @@ class OrderController extends FrontController
                 $OrderVendor->discount_amount = $vendor_discount_amount;
                 $OrderVendor->taxable_amount   = $vendor_taxable_amount;
                 $OrderVendor->payment_option_id = $request->payment_option_id;
-                $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
+                $OrderVendor->payable_amount = $vendor_payable_amount;
                 $vendor_info = Vendor::where('id', $vendor_id)->first();
                 if ($vendor_info) {
                     if (($vendor_info->commission_percent) != null && $vendor_payable_amount > 0) {

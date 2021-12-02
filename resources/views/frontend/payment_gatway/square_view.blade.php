@@ -23,7 +23,7 @@
             background: {{getClientPreferenceDetail()->web_color}}; 
         }
         button {
-            background-color: {{getClientPreferenceDetail()->web_color}} !important;
+            background-color: {{getClientPreferenceDetail()->web_color}} ;
         }
     </style>
   <link rel="stylesheet" type="text/css" href="{{asset('square/css/style.css')}}">
