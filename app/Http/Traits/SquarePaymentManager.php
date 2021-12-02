@@ -1,12 +1,15 @@
 <?php
 namespace App\Http\Traits;
 use Square\SquareClient;
+use Square\Environment;
 use Square\LocationsApi;
 use Square\Exceptions\ApiException;
 use Square\Http\ApiResponse;
 use Square\Models\ListLocationsResponse;
 use Square\Models\CreateCustomerRequest;
-use Square\Environment;
+use Square\Models\CreatePaymentRequest;
+use Square\Models\Money;
+
 use App\Models\PaymentOption;
 use Ramsey\Uuid\Uuid;
 use Auth;
@@ -131,16 +134,16 @@ trait SquarePaymentManager{
     $amount_money->setAmount(1000);
     $amount_money->setCurrency('USD');
 
-    $app_fee_money = new \Square\Models\Money();
-    $app_fee_money->setAmount(0);
-    $app_fee_money->setCurrency('USD');
+    // $app_fee_money = new \Square\Models\Money();
+    // $app_fee_money->setAmount(0);
+    // $app_fee_money->setCurrency('USD');
 
     $body = new \Square\Models\CreatePaymentRequest(
         'ccof:customer-card-id-ok',
         '084e23be-106d-4df5-b7d4-a382d77d7133',
         $amount_money
     );
-    $body->setAppFeeMoney($app_fee_money);
+    // $body->setAppFeeMoney($app_fee_money);
     $body->setAutocomplete(true);
 
     $api_response = $client->getPaymentsApi()->createPayment($body);
