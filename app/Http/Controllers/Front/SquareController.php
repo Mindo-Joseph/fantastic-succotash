@@ -38,6 +38,7 @@ class SquareController extends Controller
     }
     public function createPayment(Request $request)
     {
+    	dd($request->all());
     	$user = Auth::user();
     	$cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
         $amount = $this->getDollarCompareAmount($request->amount);

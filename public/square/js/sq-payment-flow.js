@@ -34,6 +34,9 @@ window.createPayment = async function(token) {
     token
   });
   console.log(dataJsonString);
+  console.log(token);
+  $('#source_id').val(token);
+  $('#fast-checkout').submit();
 
   // try {
   //   const response = await fetch('process-payment.php', {
