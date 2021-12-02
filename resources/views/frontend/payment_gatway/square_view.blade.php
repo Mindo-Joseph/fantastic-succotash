@@ -54,7 +54,7 @@
             </div>
         </div>
     </div>
-    <form class="payment-form" id="fast-checkout" action="{{route('payment.square.createPayment')}}">
+    <form class="payment-form" id="fast-checkout" method="POST" action="{{route('payment.square.createPayment')}}">
         <div class="wrapper">
           <div id="apple-pay-button" alt="apple-pay" type="button"></div>
           <div id="google-pay-button" alt="google-pay" type="button"></div>
