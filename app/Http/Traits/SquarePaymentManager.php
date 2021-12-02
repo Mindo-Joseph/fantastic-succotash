@@ -75,7 +75,9 @@ trait SquarePaymentManager{
     $payment_id = null;
     if ($api_response->isSuccess()) {
         $result = json_encode($api_response->getResult());
-        Log::info(json_encode($result->getResult()->getPayment()->getId());
+        Log::info(json_encode($result->getResult());
+          Log::info(json_encode($result->getResult()->getPayment());
+            Log::info(json_encode($result->getResult()->getPayment()->getId());
         Log::info("Result");
         Log::info($result);
         $payment = json_encode($result->getResult()->getPayment()->getId());
