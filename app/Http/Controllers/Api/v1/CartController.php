@@ -252,6 +252,8 @@ class CartController extends BaseController
             $cartData = $this->getCart($cart_detail, $user->language, $user->currency, $request->type);
             if ($cartData && !empty($cartData)) {
                 $cartData->cart_product_id = $cartProduct->id;
+                $product_total_quantity_in_cart = CartProduct::where(['cart_id'=>$cartProduct->cart_id,'product_id'=> $product->id])->sum('quantity');
+                $cartData->product_total_qty_in_cart = intval($product_total_quantity_in_cart);
                 return $this->successResponse($cartData);
             } else {
                 return $this->successResponse($cartData);
