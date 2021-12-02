@@ -160,7 +160,7 @@ class OrderController extends BaseController {
                     $customerCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
                     $clientCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
                     $cart_products = CartProduct::with('product.pimage', 'product.variants', 'product.taxCategory.taxRate', 'coupon', 'product.addon')->where('cart_id', $cart->id)->where('status', [0, 1])->where('cart_id', $cart->id)->orderBy('created_at', 'asc')->get();
-                    $total_subscription_discount = $total_delivery_fee = 0;
+                    $total_subscription_discount = $total_delivery_fee = $total_service_fee = 0;
                     foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                         $delivery_fee = 0;
                         $deliver_charge = $delivery_fee_charges = 0.00;
@@ -302,6 +302,14 @@ class OrderController extends BaseController {
                                 $vendor_discount_amount += $final_coupon_discount_amount;
                             }
                         }
+                        $vendor_service_fee_percentage_amount = 0;
+                        if($vendor_cart_product->vendor->service_fee_percent > 0){
+                            $vendor_service_fee_percentage_amount = ($payable_amount * $vendor_cart_product->vendor->service_fee_percent) / 100 ;
+                            $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
+                        }
+                        $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
+                        $order_vendor->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
+
                         $total_delivery_fee += $delivery_fee;
                         $order_vendor->coupon_id = $coupon_id;
                         $order_vendor->coupon_code = $coupon_name;
@@ -365,6 +373,7 @@ class OrderController extends BaseController {
                         $order->tip_amount = number_format($tip_amount, 2);
                     }
                     $payable_amount = $payable_amount + $tip_amount;
+                    $order->total_service_fee = $total_service_fee;
                     $order->total_delivery_fee = $total_delivery_fee;
                     $order->loyalty_points_used = $loyalty_points_used;
                     $order->loyalty_amount_saved = $loyalty_amount_saved;

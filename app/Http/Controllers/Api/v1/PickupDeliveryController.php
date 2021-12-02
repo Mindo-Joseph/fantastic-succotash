@@ -345,7 +345,13 @@ class PickupDeliveryController extends BaseController{
                 $order_product->created_by = null;
                 $order_product->variant_id = $variant->id;
                 $order_product->product_name = $product->sku;
-                $order_product->user_product_order_form = $request->user_product_order_form;
+                
+                if(isset($request->user_product_order_form) && !empty($request->user_product_order_form))
+                $user_product_order_form = json_encode($request->user_product_order_form);
+                else
+                $user_product_order_form = null;
+
+                $order_product->user_product_order_form = $user_product_order_form;
                 if ($product->pimage) {
                     $order_product->image = $product->pimage->first() ? $product->pimage->first()->path : '';
                 }
