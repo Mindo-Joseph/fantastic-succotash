@@ -211,10 +211,12 @@ class PaymentOptionController extends BaseController
                     $validatedData = $request->validate([
                         'square_application_id' => 'required',
                         'square_access_token' => 'required',
+                        'square_location_id' => 'required',
                     ]);
                     $json_creds = json_encode(array(
                         'application_id' => $request->square_application_id,
                         'api_access_token' => $request->square_access_token,
+                        'location_id' => $request->square_location_id,
                     ));
                 }
             }

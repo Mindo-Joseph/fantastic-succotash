@@ -8,27 +8,32 @@ use App\Http\Controllers\Front\{UserSubscriptionController, OrderController, Wal
 use Auth, Log, Redirect;
 use App\Models\{PaymentOption, Cart, SubscriptionPlansUser, Order, Payment, CartAddon, CartCoupon, CartProduct, CartProductPrescription, UserVendor, User};
 
-class SquareController extends Controller
+class SquareController extends FrontController
 {
     use \App\Http\Traits\SquarePaymentManager;
 	use \App\Http\Traits\ApiResponser;
 
-	private $public_key;
-	private $private_key;
+	private $application_id;
+	private $access_token;
 	public function __construct()
   	{
-		$gcash_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'square')->where('status', 1)->first();
-	    $creds_arr = json_decode($gcash_creds->credentials);
-	    $this->application_id = $creds_arr->application_id??'';
-	    $this->access_token = $creds_arr->api_access_token??'';
+		$this->square_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'square')->where('status', 1)->first();
+	    $this->creds_arr = json_decode($this->square_creds->credentials);
+	    $this->application_id = $this->creds_arr->application_id??'';
+	    $this->access_token = $this->creds_arr->api_access_token??'';
+	    $this->location_id = $this->creds_arr->location_id??'';
+	    $this->square_url = $this->square_creds->test_mode ? "https://sandbox.web.squarecdn.com/v1/square.js" : "https://web.squarecdn.com/v1/square.js";
 	}
 	public function beforePayment(Request $request)
     {
-
-    	// $this->createSquareCustomer($request->all());
     	$data = $request->all();
+    	$location  = $this->getLocation();
     	$data['application_id'] = $this->application_id;
-    	$data['location_id'] = 'LK0JR9366ZGCS';
+    	$data['location_id'] = $this->location_id;
+    	$data['currency'] = $location->getCurrency();
+    	$data['country'] = $location->getCountry();
+    	$data['square_url'] = $this->square_url;
+    	// dd($data);
     	return view('frontend.payment_gatway.square_view')->with(['data' => $data]);
     }
     public function createPayment(Request $request)
@@ -37,10 +42,8 @@ class SquareController extends Controller
     	$cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
         $amount = $this->getDollarCompareAmount($request->amount);
     	$data = $request->all();
-    	$request['username'] = $user->name;
-    	$request['email'] = $user->email;
-    	$request['source'] = 'WEB';
     	$request['amount'] = $amount*100;
+    	
         if($request->payment_from == 'cart'){
             $request['description'] = 'Order Checkout';
             if($request->has('order_number')){
@@ -60,11 +63,11 @@ class SquareController extends Controller
         elseif($request->payment_from == 'subscription'){
             $request['description'] = 'Subscription Checkout';
             if($request->has('subscription_id')){
-                $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $request->subscription_id)->where('status', '1')->first();
                 $request['reference'] = $request->subscription_id;
             }
         }
-    	$payment = $this->create_payment($request->all());
+    	$payment = $this->createSquarePayment($request->all());
+    	dd($payment);
     	$request['amount'] = $amount;
     	if($payment->paymentStatus == 'APPROVED')
     	{
