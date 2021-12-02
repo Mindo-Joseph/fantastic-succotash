@@ -75,8 +75,8 @@
         @forelse($data as $key=>$value)
         <input type="hidden" name="{{$key}}" value="{{$value}}">
         @empty
-        <input type="hidden" id="source_id" name="source_id" value="">
         @endforelse
+        <input type="hidden" id="source_id" name="source_id" value="">
     </form>
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
