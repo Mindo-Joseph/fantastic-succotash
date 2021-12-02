@@ -39,6 +39,19 @@ trait SquarePaymentManager{
       ]);
   }
 
+  public function getSquarePayment()
+  {
+    $client = $this->init();
+    $api_response = $client->getPaymentsApi()->getPayment('vnAYaa5HMfG4csdcIWgn0vkDiRIZY');
+    dd($api_response, $api_response->getResult(), $api_response->getResult()->getPayment(), $api_response->getResult()->getPayment()->getId());
+
+    if ($api_response->isSuccess()) {
+        $result = $api_response->getResult();
+    } else {
+        $errors = $api_response->getErrors();
+    }
+  }
+
   public function getLocation()
   {
     try{
@@ -74,19 +87,10 @@ trait SquarePaymentManager{
     $api_response = $client->getPaymentsApi()->createPayment($body);
     $payment_id = null;
     if ($api_response->isSuccess()) {
-        $result = json_decode($api_response->getResult(), true);
-        Log::info("Result");
-        Log::info($result);
-        Log::info($result['payment']['id']);
-        // Log::info($api_response->getId()??'N/A');
-        // Log::info($result->getPayment()->getId()??'N/A');
-        // Log::info($result->payment??'N/A');
-        // $payment = $result->getPayment();
-        // Log::info("Payment");
-        // Log::info($payment);
-        // $payment_id = $payment->getId();
-        if($payment->getStatus() == "COMPLETED")
+        $result = $api_response->getResult();
+        if($result->getPayment()->getStatus() == "COMPLETED")
         {
+          $payment_id = $result->getPayment(->getId();
           return $payment_id;
         }
     } else {
