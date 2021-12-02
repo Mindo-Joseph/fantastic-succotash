@@ -821,6 +821,7 @@ class OrderController extends FrontController
 
                 $total_delivery_fee += $delivery_fee;
                 $vendor_payable_amount += $delivery_fee;
+                $vendor_payable_amount += $vendor_taxable_amount;
 
                 $OrderVendor->coupon_id = $coupon_id;
                 $OrderVendor->coupon_code = $coupon_name;
