@@ -1530,15 +1530,6 @@ $(document).ready(function() {
             paymentViaPaystack();
         } else if (payment_option_id == 6) {
             paymentViaPayfast();
-        } else if (payment_option_id == 9) {
-            paymentViaPaylink('', '');
-        } else if (payment_option_id == 10) {
-            paymentViaRazorpay_wallet('', payment_option_id);
-        }else if (payment_option_id == 11) {
-            paymentViaGCash('', payment_option_id);
-        }
-        else if (payment_option_id == 12) {
-            paymentViaSimplify('', '');
         } else if (payment_option_id == 8) {
             inline.createToken().then(function(result) {
                 if (result.error) {
@@ -1552,6 +1543,16 @@ $(document).ready(function() {
                 // Re-enable button now that request is complete
                 alert("error occured: " + error);
             });
+        }else if (payment_option_id == 9) {
+            paymentViaPaylink('', '');
+        } else if (payment_option_id == 10) {
+            paymentViaRazorpay_wallet('', payment_option_id);
+        }else if (payment_option_id == 11) {
+            paymentViaGCash('', payment_option_id);
+        }else if (payment_option_id == 12) {
+            paymentViaSimplify('', '');
+        }else if (payment_option_id == 13) {
+            paymentViaSquare('', '');
         }
     });
     $(document).on("click", ".remove_promo_code_btn", function() {
