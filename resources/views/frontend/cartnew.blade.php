@@ -386,12 +386,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <% if(cart_details.delay_date == 0) { %>
                             <li class="d-inline-block mr-1">
                                 <input type="radio" class="custom-control-input check" id="tasknow" name="task_type" value="now" <%= ((cart_details.schedule_type == 'now' || cart_details.schedule_type == '' || cart_details.schedule_type == null) ? 'checked' : '') %> >
-                                <label class="btn btn-solid" for="tasknow">Now</label>
+                                <label class="btn btn-solid" for="tasknow">{{__('Now')}}</label>
                             </li>
                             <% } %>
                             <li class="d-inline-block">
                                 <input type="radio" class="custom-control-input check" id="taskschedule" name="task_type" value="schedule" <%= ((cart_details.schedule_type == 'schedule' || cart_details.delay_date != 0) ? 'checked' : '') %> >
-                                <label class="btn btn-solid" for="taskschedule">Schedule</label>
+                                <label class="btn btn-solid" for="taskschedule">{{__('Schedule')}}</label>
                             </li>
                         </ul>
                     </div>

@@ -544,7 +544,7 @@
         <span>{{__('Total')}}</span>
         <span>{{Session::get('currencySymbol')}}<%= cart_details.total_payable_amount %></span>
     </div>
-    <a class="checkout-btn text-center d-block" href="{{route('showCart')}}">Checkout</a>
+    <a class="checkout-btn text-center d-block" href="{{route('showCart')}}">{{__('Checkout')}}</a>
 </script>
 <script type="text/template" id="empty_cart_template">
     <div class="row">
