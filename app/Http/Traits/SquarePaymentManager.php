@@ -13,7 +13,7 @@ use Square\Models\Money;
 
 use App\Models\PaymentOption;
 use Ramsey\Uuid\Uuid;
-use Auth;
+use Auth, Log;
 trait SquarePaymentManager{
 
   private $application_id;
@@ -75,7 +75,11 @@ trait SquarePaymentManager{
     $payment_id = null;
     if ($api_response->isSuccess()) {
         $result = $api_response->getResult();
+        Log::info("Result");
+        Log::info($result);
         $payment = $result->getPayment();
+        Log::info("Payment");
+        Log::info($payment);
         $payment_id = $payment->getId();
         if($payment->getStatus() == "COMPLETED")
         {
@@ -84,6 +88,8 @@ trait SquarePaymentManager{
     } else {
         $errors = $api_response->getErrors();
     }
+    Log::info("Payment ID");
+    Log::info($payment_id);
     return $payment_id;
   }
 
