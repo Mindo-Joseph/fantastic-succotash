@@ -649,6 +649,7 @@ class OrderController extends FrontController
             $payable_amount = 0;
             $tax_category_ids = [];
             $vendor_ids = [];
+            $total_service_fee = 0;
             $total_delivery_fee = 0;
             $total_subscription_discount = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
@@ -809,6 +810,14 @@ class OrderController extends FrontController
                         $vendor_discount_amount += $percentage_amount;
                     }
                 }
+                $vendor_service_fee_percentage_amount = 0;
+                if($vendor_cart_product->vendor->service_fee_percent > 0){
+                    $vendor_service_fee_percentage_amount = ($payable_amount * $vendor_cart_product->vendor->service_fee_percent) / 100 ;
+                    $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
+                }
+                $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
+                $OrderVendor->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
+
                 $total_delivery_fee += $delivery_fee;
                 $OrderVendor->coupon_id = $coupon_id;
                 $OrderVendor->coupon_code = $coupon_name;
@@ -874,6 +883,7 @@ class OrderController extends FrontController
                 $order->tip_amount =$tip_amount;
             }
             $payable_amount = $payable_amount + $tip_amount;
+            $order->total_service_fee = $total_service_fee;
             $order->total_delivery_fee = $total_delivery_fee;
             $order->loyalty_points_used = $loyalty_points_used;
             $order->loyalty_amount_saved = $loyalty_amount_saved;
