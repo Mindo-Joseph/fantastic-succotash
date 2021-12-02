@@ -76,9 +76,9 @@ trait SquarePaymentManager{
     if ($api_response->isSuccess()) {
         $result = $api_response->getResult();
         Log::info("Result");
-        Log::info($result);
-        Log::info($result['payment']['id']);
-        Log::info($result->payment->id);
+        // Log::info($result);
+        // Log::info($result['payment']['id']);
+        Log::info($api_response->getTransaction()->getId());
         // $payment = $result->getPayment();
         // Log::info("Payment");
         // Log::info($payment);
