@@ -1002,7 +1002,7 @@ class CartController extends FrontController
         CartProduct::where('id', $request->cartproduct_id)->delete();
         CartCoupon::where('vendor_id', $request->vendor_id)->delete();
         CartAddon::where('cart_product_id', $request->cartproduct_id)->delete();
-        return response()->json(['status' => 'success', 'message' => 'Product deleted successfully.']);
+        return response()->json(['status' => 'success', 'message' => __('Product removed from cart successfully.') ]);
     }
 
     /**
