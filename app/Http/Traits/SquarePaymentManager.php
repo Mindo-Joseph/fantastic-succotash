@@ -48,6 +48,37 @@ trait SquarePaymentManager{
       dd("Recieved error while calling Square: " . $e->getMessage());
     } 
   }
+  public function createSquarePayment($data)
+  {
+    $client = $this->init();
+    $amount_money = new \Square\Models\Money();
+    $amount_money->setAmount($data['amount']);
+    $amount_money->setCurrency($data['currency']);
+
+    // $app_fee_money = new \Square\Models\Money();
+    // $app_fee_money->setAmount(0);
+    // $app_fee_money->setCurrency('USD');
+
+    $body = new \Square\Models\CreatePaymentRequest(
+        $data['source_id'],
+        Uuid::uuid4(),
+        $amount_money
+    );
+    // $body->setAppFeeMoney($app_fee_money);
+    $body->setReferenceId($data['reference']);
+    $body->setLocationId($data['location_id']);
+    $body->setAutocomplete(true);
+    $body->setNote($data['description']);
+
+    $api_response = $client->getPaymentsApi()->createPayment($body);
+    dd($api_response);
+
+    if ($api_response->isSuccess()) {
+        $result = $api_response->getResult();
+    } else {
+        $errors = $api_response->getErrors();
+    }
+  }
 
   public function getLocationId($data)
   {
@@ -127,34 +158,6 @@ trait SquarePaymentManager{
     } 
   }
 
-  public function createSquarePayment($data)
-  {
-    $client = $this->init();
-    $amount_money = new \Square\Models\Money();
-    $amount_money->setAmount(1000);
-    $amount_money->setCurrency('USD');
-
-    // $app_fee_money = new \Square\Models\Money();
-    // $app_fee_money->setAmount(0);
-    // $app_fee_money->setCurrency('USD');
-
-    $body = new \Square\Models\CreatePaymentRequest(
-        'ccof:customer-card-id-ok',
-        '084e23be-106d-4df5-b7d4-a382d77d7133',
-        $amount_money
-    );
-    // $body->setAppFeeMoney($app_fee_money);
-    $body->setAutocomplete(true);
-
-    $api_response = $client->getPaymentsApi()->createPayment($body);
-    dd($api_response);
-
-    if ($api_response->isSuccess()) {
-        $result = $api_response->getResult();
-    } else {
-        $errors = $api_response->getErrors();
-    }
-  }
   public function createOrderPayment($data)
   {
     $body_sourceId = 'ccof:GaJGNaZa8x4OgDJn4GB';

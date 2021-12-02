@@ -42,10 +42,8 @@ class SquareController extends Controller
     	$cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
         $amount = $this->getDollarCompareAmount($request->amount);
     	$data = $request->all();
-    	$request['username'] = $user->name;
-    	$request['email'] = $user->email;
-    	$request['source'] = 'WEB';
     	$request['amount'] = $amount*100;
+    	
         if($request->payment_from == 'cart'){
             $request['description'] = 'Order Checkout';
             if($request->has('order_number')){
@@ -65,11 +63,11 @@ class SquareController extends Controller
         elseif($request->payment_from == 'subscription'){
             $request['description'] = 'Subscription Checkout';
             if($request->has('subscription_id')){
-                $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $request->subscription_id)->where('status', '1')->first();
                 $request['reference'] = $request->subscription_id;
             }
         }
-    	$payment = $this->create_payment($request->all());
+    	$payment = $this->createSquarePayment($request->all());
+    	dd($payment);
     	$request['amount'] = $amount;
     	if($payment->paymentStatus == 'APPROVED')
     	{

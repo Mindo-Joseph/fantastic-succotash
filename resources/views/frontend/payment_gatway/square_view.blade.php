@@ -75,9 +75,11 @@
         @forelse($data as $key=>$value)
         <input type="hidden" name="{{$key}}" value="{{$value}}">
         @empty
+        <input type="hidden" id="source_id" name="source_id" value="">
         @endforelse
     </form>
 
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="{{asset('square/js/sq-ach.js')}}"></script>
     <script type="text/javascript" src="{{asset('square/js/sq-apple-pay.js')}}"></script>
     <script type="text/javascript" src="{{asset('square/js/sq-card-pay.js')}}"></script>
