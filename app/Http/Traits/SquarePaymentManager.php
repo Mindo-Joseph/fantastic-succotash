@@ -12,16 +12,20 @@ use Ramsey\Uuid\Uuid;
 use Auth;
 trait SquarePaymentManager{
 
-  private $public_key;
-  private $private_key;
-  private $client;
+  private $application_id;
+  private $access_token;
+  private $location_id, $idempotency_key;
   public function __construct()
   {
     $square_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'square')->where('status', 1)->first();
     $creds_arr = json_decode($square_creds->credentials);
     $this->application_id = $creds_arr->application_id??'';
     $this->access_token = $creds_arr->api_access_token??'';
+    $this->location_id = $creds_arr->location_id??'';
     $this->idempotency_key = Uuid::uuid4();
+
+
+
   }
   public function init()
   {
@@ -29,6 +33,17 @@ trait SquarePaymentManager{
         'accessToken' => $this->access_token,
         'environment' => Environment::SANDBOX,
       ]);
+  }
+
+  public function getLocation()
+  {
+    try{
+      $client = $this->init();
+      $location = $client->getLocationsApi()->retrieveLocation($this->location_id)->getResult()->getLocation();
+      return $location;
+    } catch (ApiException $e) {
+      dd("Recieved error while calling Square: " . $e->getMessage());
+    } 
   }
 
   public function getLocationId($data)
