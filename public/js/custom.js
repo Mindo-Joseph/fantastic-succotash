@@ -385,13 +385,11 @@ $(document).ready(function() {
     //     $('.search-overlay').slideUp();
     // });
     // $("#search_viewall").click(function () {
-    //     console.log("nsdhfjs");
     // });
     $(document).on("click", "#search_viewall", function(e) {
         let keyword = $("#main_search_box").val();
         let url = "/search-all/" + keyword;
         // url = url.replace(':id', keyword);
-        // console.log(url);
         // document.location.href=url;
         window.location.href = url;
         return false;
@@ -948,7 +946,6 @@ $(document).ready(function() {
         order_number = 0;
         if (urlParams.has('ordernumber')) {
             order_number = urlParams.get('ordernumber');
-            console.log('ordernumber');
         }
 
         paymentSuccessViaPaypal(urlParams.get('amount'), urlParams.get('token'), urlParams.get('PayerID'), path, tipAmount, order_number);
@@ -1306,7 +1303,6 @@ $(document).ready(function() {
                 $('.spinner-overlay').hide();
             }
         });
-        console.log(orderResponse);
         return orderResponse;
     }
     $(document).on("click", ".proceed_to_pay", function() {
@@ -1656,7 +1652,6 @@ $(document).ready(function() {
             var autocomplete = new google.maps.places.Autocomplete(input);
             google.maps.event.addListener(autocomplete, 'place_changed', function() {
                 var place = autocomplete.getPlace();
-                // console.log(place);
                 // document.getElementById('city').value = place.name;
                 document.getElementById('longitude').value = place.geometry.location.lng();
                 document.getElementById('latitude').value = place.geometry.location.lat();
@@ -2585,7 +2580,6 @@ $(document).ready(function() {
             var addonId = $(value).attr("addonId");
             var addonOptId = $(value).attr("addonOptId");
             if ($(value).is(":checked")) {
-                // console.log(addonoptids);
                 addonids.push(addonId);
                 addonoptids.push(addonOptId);
             }
@@ -2760,7 +2754,6 @@ $(document).ready(function() {
             data: { task_type: task_type, schedule_dt: schedule_dt, specific_instructions: specific_instructions, cart_product_id: cart_product_id },
             success: function(response) {
                 if (response.status == "Success") {
-                    // console.log(success);
                 }
             },
             error: function(error) {
@@ -2781,7 +2774,6 @@ $(document).ready(function() {
             data: { specific_instructions: specific_instructions },
             success: function(response) {
                 if (response.status == "Success") {
-                    // console.log(success);
                 }
             },
             error: function(error) {
