@@ -144,7 +144,7 @@
                                             <div class="img-outer-box position-relative">
                                                 <img src="{{$new['image_url']}}" alt="">
                                                 <div class="pref-timing">
-                                                    <span>5-10 min</span>
+                                                    <!--<span>5-10 min</span>-->
                                                 </div>
                                                 <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
                                             </div>    
@@ -153,7 +153,7 @@
                                                     <div class="product-description">
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <h6 class="card_title mb-1 ellips">{{ $new['translation_title'] }}</h6>                                                                                    
-                                                            <span class="rating-number">2.0</span>                                
+                                                            <!--<span class="rating-number">2.0</span>-->                                
                                                         </div>
                                                         <p>{{$new['vendor']['name']}}</p>
                                                         <p class="pb-1">In {{$new['category_name']}}</p>
