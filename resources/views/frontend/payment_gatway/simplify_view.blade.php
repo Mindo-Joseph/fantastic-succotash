@@ -94,6 +94,7 @@
                 <input type="hidden" name="{{$key}}" value="{{$value}}">
                 @empty
                 @endforelse
+                @csrf
                 <button id="process-payment-btn" class="btn btn-solid w-100 mt-4" type="submit">Process Payment</button>
             </form>
         </div>
