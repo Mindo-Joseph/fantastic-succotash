@@ -24,6 +24,12 @@
             margin: 0;
             padding: 0;
         }
+        .container {
+            padding: 0 33px;
+            max-width: 100%;
+            margin: 0 auto;
+            width: 600px;
+         }
 
         li {
             display: inline-block;
