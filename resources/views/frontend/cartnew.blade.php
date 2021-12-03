@@ -95,7 +95,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <% if( product.is_vendor_closed == 1 ) { %>
                     <div class="col-12">
                         <div class="text-danger">
-                            <i class="fa fa-exclamation-circle"></i> Vendor is not accepting orders right now.
+                            <i class="fa fa-exclamation-circle"></i> {{__('Vendor is not accepting orders right now.')}}
                         </div>
                     </div>
                 <% } %>

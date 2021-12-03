@@ -269,7 +269,7 @@
 
                     <div class="row" style="width:100%; overflow-x: scroll;">
                         <div id="variantAjaxDiv" class="col-12 mb-2">
-                            <h5 class="">Variant List</h5>
+                            <h5 class="">{{__('Variant List')}}</h5>
                             <div class="row mb-2">
                                 @foreach($productVariants as $vk => $var)
                                 <div class="col-sm-3">
