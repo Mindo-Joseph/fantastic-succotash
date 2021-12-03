@@ -7,15 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="icon" href="../assets/images/favicon/1.png" type="image/x-icon">
     <link rel="shortcut icon" href="../assets/images/favicon/1.png" type="image/x-icon">
-    <title>Royo Order | Email template </title>
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+    <title>Order </title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style type="text/css">
         body {
             text-align: center;
             margin: 0 auto;
             width: 650px;
-            font-family: 'Open Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: #e2e2e2;
             display: block;
         }
@@ -120,6 +120,7 @@
 </head>
 
 <body style="margin: 20px auto;max-width:100%;width:700px;">
+    <div class="container" style="background: #ECBA78;">
     {!! $mailData['email_template_content'] !!}
     <table class="main-bg-light text-center top-0" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
@@ -130,53 +131,11 @@
                     $currYear = substr($currYear, -2);
                 @endphp
                 <p>&copy; {{$prevYear}}-{{$currYear}} | All rights reserved</p>
-                {{-- <div>
-                    <h4 class="title" style="margin:0;text-align: center;">Follow us</h4>
-                </div>
-                <table border="0" cellpadding="0" cellspacing="0" class="footer-social-icon" align="center" class="text-center" style="margin-top:20px;">
-                    <tr>
-                        <td>
-                            <a href="#"><img src="../assets/images/email-temp/facebook.png" alt=""></a>
-                        </td>
-                        <td>
-                            <a href="#"><img src="../assets/images/email-temp/youtube.png" alt=""></a>
-                        </td>
-                        <td>
-                            <a href="#"><img src="../assets/images/email-temp/twitter.png" alt=""></a>
-                        </td>
-                        <td>
-                            <a href="#"><img src="../assets/images/email-temp/gplus.png" alt=""></a>
-                        </td>
-                        <td>
-                            <a href="#"><img src="../assets/images/email-temp/linkedin.png" alt=""></a>
-                        </td>
-                        <td>
-                            <a href="#"><img src="../assets/images/email-temp/pinterest.png" alt=""></a>
-                        </td>
-                    </tr>
-                </table>
-                <div style="border-top: 1px solid #ddd; margin: 20px auto 0;"></div>
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 20px auto 0;">
-                    <tr>
-                        <td>
-                            <a href="#" style="font-size:13px">Want to change how you receive these emails?</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p style="font-size:13px; margin:0;">2018 - 19 Copy Right by Themeforest powerd by Pixel
-                                Strap</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="#" style="font-size:13px; margin:0;text-decoration: underline;">Unsubscribe</a>
-                        </td>
-                    </tr>
-                </table> --}}
+                
             </td>
         </tr>
     </table>
+    </div>
 </body>
 
 </html>

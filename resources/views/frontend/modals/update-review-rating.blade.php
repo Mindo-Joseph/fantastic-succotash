@@ -94,7 +94,7 @@
         <div class="col-md-12 mb-3">
             <label for="review">Review</label>
             <textarea class="form-control"
-                placeholder="Wrire Your Testimonial Here"
+                placeholder="write Your Testimonial Here"
                 id="exampleFormControlTextarea1" rows="4"  name="review" maxlength="500">{{$rating_details->review??''}}</textarea>
         </div>
         <span class="text-danger" id="error-msg"></span>
