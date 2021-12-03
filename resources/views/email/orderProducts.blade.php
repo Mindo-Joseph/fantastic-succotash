@@ -21,7 +21,7 @@
                               </div>
                               <div style="display: flex;justify-content: space-between;flex-direction: column;height: 60px;padding: 0 0 0 15px;">
                                  <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;">{{$vendor_product['product']['translation_one']['title']}}</h3>
-                                 <p style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0;"> <span style="color: #777777;">Item price : </span> $90.00</p>
+                                 <p style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0;"> <span style="color: #777777;">{{__('Item price')}} : </span> {{ $currencySymbol . number_format(($vendor_product['pvariant']['price']*$vendor_product['quantity']), 2, '.', '')}}</p>
                               </div>
                            </div>
                         </td>
@@ -29,7 +29,7 @@
                         <td style="width: 35%;padding: 10px 0;  text-align: right;">
                            <div style="display: flex;justify-content: space-between;flex-direction: column;height: 60px;">
                               {{-- <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;"># 231</h3> --}}
-                              <p style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0;"> <span style="color: #777777;">Item price : </span> {{ $currencySymbol . number_format($vendor_product['pvariant']['price'], 2, '.', '')}}</p>
+                              <p style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0;"> <span style="color: #777777;">{{__('Item price')}} : </span> {{ $currencySymbol . number_format($vendor_product['pvariant']['price'], 2, '.', '')}}</p>
                            </div>
                            @php
                            $total_products += $vendor_product['pvariant']['price'];
