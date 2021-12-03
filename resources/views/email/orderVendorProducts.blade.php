@@ -19,11 +19,11 @@
                       </div>
                       <div class="flex-set" style="display:flex; justify-content:space-between; flex-direction:column; height:60px;padding: 0 0 0 15px;">
                         <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;">{{$vendor_product['product']['translation_one']['title']}}</h3>
-                         <p style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0;"> <span style="color: #777777;">{{__('Item price')}} : </span> $90.00</p>
+                         <p style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0;"> <span style="color: #777777;">{{__('Item price')}} : </span> {{ $currencySymbol . number_format(($vendor_product['pvariant']['price']*$vendor_product['quantity']), 2, '.', '')}}</p>
                       </div>
                    </div>
                 </td>
-                <td style="width: 20%;padding: 10px; text-align: center;">x {{$vendor_product['quantity']}}</td>
+                <td style="width: 20%;padding: 10px; text-align: center;">xd {{$vendor_product['quantity']}}</td>
                 <td style="width: 35%;padding: 10px 0;  text-align: right;">
                     <div class="flex-set-scd" style="display: flex; justify-content: end; align-items: end; flex-direction: column; height: 60px;">
                         {{-- <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;"># 231</h3> --}}

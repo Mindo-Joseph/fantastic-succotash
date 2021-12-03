@@ -25,7 +25,7 @@
                               </div>
                            </div>
                         </td>
-                        <td style="width: 20%;padding: 10px; text-align: center;">x {{$vendor_product['quantity']}}</td>
+                        <td style="width: 20%;padding: 10px; text-align: center;">xd {{$vendor_product['quantity']}}</td>
                         <td style="width: 35%;padding: 10px 0;  text-align: right;">
                            <div class="flex-set-scd"  style="display:flex; justify-content:end; align-items:end; flex-direction:column; height:60px;">
                               {{-- <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;"># 231</h3> --}}
