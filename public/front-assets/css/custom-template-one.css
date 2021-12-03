@@ -1164,9 +1164,9 @@ body[dir="rtl"] #social-links li:last-child {
 
 @media (min-width: 991px) {
 
-    /* .home-banner-slider .slick-slide {
-        height: 400px;
-    } */
+    .home-banner-slider,.home-banner-slider .slick-slide {
+        height: 550px;
+    }
     .home-banner-slider .slick-list {
         border-radius: 4px;
         overflow: hidden;

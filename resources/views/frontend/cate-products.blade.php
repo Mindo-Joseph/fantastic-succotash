@@ -68,7 +68,7 @@
             <div class="row">
                 <div class="collection-filter col-lg-3">
                     <!-- side-bar colleps block stat -->
-                    <div class="collection-filter-block p-0 m-0">
+                    <div class="collection-filter-block bg-transparent p-0 m-0">
                         <!-- <div class="collection-mobile-back">
                             <span class="filter-back d-lg-none d-inline-block">
                                 <i class="fa fa-angle-left" aria-hidden="true"></i> {{__('Back')}}

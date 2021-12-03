@@ -69,7 +69,7 @@
             </div>
             <div class="row">
                 <div class="collection-filter col-lg-3">
-                    <div class="collection-filter-block">
+                    <div class="collection-filter-block bg-transparent p-0">
                         <!-- <div class="collection-mobile-back">
                             <span class="filter-back d-lg-none d-inline-block">
                                 <i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}

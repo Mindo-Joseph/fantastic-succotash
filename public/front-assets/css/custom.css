@@ -3625,6 +3625,8 @@ header .homepage-address h2 {
     border: 0;
     background-color: transparent;
     color: #fff;
+    width: 100%;
+    display: block;
 }
 
 .nav-pills>li>a,
@@ -6587,6 +6589,7 @@ body .footer-theme .sub-title h4 {
 .shimmer_effect .loading {
     position: relative;
     background: #cccccc86;
+    overflow: hidden;
 }
 
 .shimmer_effect .loading:after {
@@ -7251,6 +7254,9 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(min-width: 992px) {
+    .home-slider-wrapper .loading{
+        height:550px;
+    }
     .pixelstrap>li {
         text-align: center;
     }

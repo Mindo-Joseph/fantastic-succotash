@@ -430,61 +430,6 @@ $(document).ready(function() {
             });
         }
     }
-    // // Cabbooking Js Code
-    //     $('.add-more-location').click(function(){
-    //         $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");
-    //         const height = document.querySelector('.location-box').offsetHeight;
-    //         var getheight = height;
-    //         var abc = 156;
-    //         var minheight = parseFloat(getheight + abc)+'px';
-    //         $('.location-list').attr('style', 'height:calc(100vh - '+minheight+' !important');
-    //     });
-
-    //     $('.location-inputs').on('click','.apremove',function(){
-    //         $(this).closest('.apdots').remove();
-    //         const height = document.querySelector('.location-box').offsetHeight;
-    //         var getheight = height;
-    //         var abc = 156;
-    //         var minheight = parseFloat(getheight + abc)+'px';
-    //         $('.location-list').attr('style', 'height:calc(100vh - '+minheight+' !important');
-    //     });
-    // // Cabbooking Js Code
-
-    // // Cabbooking Js Code
-    //     $('.add-more-location').click(function(){
-    //         $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");
-    //         const height = document.querySelector('.location-box').offsetHeight;
-    //         var getheight = height;
-    //         var abc = 190;
-    //         var minheight = parseFloat(getheight + abc)+'px';
-    //         $('.vehical-container').attr('style', 'height:calc(100vh - '+minheight+' !important');
-    //     });
-
-    //     $('.location-inputs').on('click','.apremove',function(){
-    //         $(this).closest('.apdots').remove();
-    //         const height = document.querySelector('.location-box').offsetHeight;
-    //         var getheight = height;
-    //         var abc = 190;
-    //         var minheight = parseFloat(getheight + abc)+'px';
-    //         $('.vehical-container').attr('style', 'height:calc(100vh - '+minheight+' !important');
-    //     });
-    // // Cabbooking Js Code
-
-
-    // top Moveble Tabbar on top js code
-    /*$(".navigation-tab-item").click(function() {
-        $(".navigation-tab-item").removeClass("active");
-        $(this).addClass("active");
-        if($('body').attr('dir') == 'rtl'){
-            $(".navigation-tab-overlay").css({
-                right: $(this).prevAll().length * 130 + "px"
-            });
-        }else{
-            $(".navigation-tab-overlay").css({
-                left: $(this).prevAll().length * 100 + "px"
-            });
-        }
-    });*/
 
     if ($('#cart_main_page').length > 0) {
         let address_checked = $("input:radio[name='address_id']").is(":checked");
