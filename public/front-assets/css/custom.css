@@ -3815,7 +3815,7 @@ h4#driver_name {
     font-weight: 700;
 }
 
-.suppliers-img-outer .fa.fa-heart-o {
+.suppliers-img-outer .fa.fa-heart-o,.fav-heart {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -3829,7 +3829,14 @@ h4#driver_name {
     font-size: 12px;
 }
 
-
+.card_title {
+    color: #000000;
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: 0;
+    line-height: 23px;
+    width: calc(100% - 40px);
+}
 
 
 
@@ -5169,9 +5176,9 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     float: none;
 } 
 
-.menu-slider .slick-list {
+/* .menu-slider .slick-list {
     overflow: hidden;
-}
+} */
 
 .menu-slider .slick-next.slick-disabled:before,.menu-slider .slick-prev.slick-disabled:before{
     opacity: 0;

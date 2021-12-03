@@ -507,11 +507,18 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
                                 <div class="img-outer-box position-relative">
                                     <img src="<%= product.image_url %>" alt="">
+                                    <div class="pref-timing">
+                                        <span>5-10 min</span>
+                                    </div>
+                                    <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
                                 </div>
                                 <div class="media-body align-self-center">
                                     <div class="inner_spacing px-0">
                                         <div class="product-description">
-                                            <h3 class="m-0"><%= product.translation_title %></h3>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="card_title mb-1 ellips"><%= product.translation_title %></h6>                                                                                    
+                                                <span class="rating-number">2.0</span>                                
+                                            </div>
                                             <p><%= product.vendor_name %></p>
                                             <p class="border-bottom pb-1">In <%= product.category_name %></p>
                                             <div class="d-flex align-items-center justify-content-between">
@@ -519,7 +526,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                     {{ Session::get('currencySymbol') }}<%= Helper.formatPrice(product.variant_price) %>
                                                 <% } %></b>
 
-                                                @if($client_preference_detail)
+                                                <!-- @if($client_preference_detail)
                                                     @if($client_preference_detail->rating_check == 1)
                                                         <% if(product.averageRating > 0){%>
                                                             <div class="rating-box">
@@ -528,7 +535,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                             </div>
                                                         <% } %>
                                                     @endif
-                                                @endif
+                                                @endif -->
                                             </div>
                                         </div>
                                     </div>
@@ -551,11 +558,19 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
                                 <div class="img-outer-box position-relative">
                                     <img src="<%= product.image_url %>" alt="">
+                                        <div class="pref-timing">
+                                            <span>5-10 min</span>
+                                        </div>
+                                        <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
                                 </div>
                                 <div class="media-body align-self-center">
                                     <div class="inner_spacing px-0">
                                         <div class="product-description">
-                                            <h3 class="m-0"><%= product.translation_title %></h3>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="card_title mb-1 ellips"><%= product.translation_title %></h6>                                                                                    
+                                                <span class="rating-number">2.0</span>                                
+                                            </div>
+                                            <!-- <h3 class="m-0"><%= product.translation_title %></h3> -->
                                             <p><%= product.vendor_name %></p>
                                             <p class="border-bottom pb-1">In <%= product.category_name %></p>
                                             <div class="d-flex align-items-center justify-content-between">
@@ -563,7 +578,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                     {{ Session::get('currencySymbol') }}<%= Helper.formatPrice(product.variant_price) %>
                                                 <% } %></b>
 
-                                                @if($client_preference_detail)
+                                                <!-- @if($client_preference_detail)
                                                     @if($client_preference_detail->rating_check == 1)
                                                         <% if(product.averageRating > 0){%>
                                                             <div class="rating-box">
@@ -572,7 +587,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                             </div>
                                                         <% } %>
                                                     @endif
-                                                @endif
+                                                @endif -->
                                             </div>
                                         </div>
                                     </div>

@@ -324,13 +324,13 @@ h6 {
 }
 
 .img-outer-box {
-    height: 160px;
+    height: 100px;
     position: relative;
 }
 
 .img-outer-box img {
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     width: 100%;
     object-position: center;
     border-radius: 10px;
@@ -1443,7 +1443,7 @@ body[dir="rtl"] #social-links li:last-child {
     .location-bar {
         width: calc(100% - 2%);
     }
-    
+
     .homepage-address {
         width: calc(100% - 160px);
     }
