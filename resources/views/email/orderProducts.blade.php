@@ -29,7 +29,7 @@
                         <td style="width: 35%;padding: 10px 0;  text-align: right;">
                            <div class="flex-set-scd"  style="display:block; justify-content:end; align-items:end; flex-direction:column; height:60px;">
                               {{-- <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;"># 231</h3> --}}
-                              <p style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0;"> <span style="color: #777777;">{{__('Item price')}} : </span> {{ $currencySymbol . number_format($vendor_product['pvariant']['price'], 2, '.', '')}}</p>
+                              <p style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0;padding: 50px 0 0;"> <span style="color: #777777;">{{__('Item price')}} : </span> {{ $currencySymbol . number_format($vendor_product['pvariant']['price'], 2, '.', '')}}</p>
                            </div>
                            @php
                            $total_products += $vendor_product['pvariant']['price'];
