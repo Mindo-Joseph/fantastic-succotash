@@ -31,6 +31,10 @@
             width: 600px;
          }
 
+         .container table{
+             width: 100% !important;
+         }
+
         li {
             display: inline-block;
             text-decoration: unset;
@@ -127,20 +131,20 @@
 
 <body style="margin: 20px auto;max-width:100%;width:700px;">
     <div class="container" style="background: #ECBA78;">
-    {!! $mailData['email_template_content'] !!}
-    <table class="main-bg-light text-center top-0" align="center" border="0" cellpadding="0" cellspacing="0" style="width:100%;">
-        <tr>
-            <td>
-                @php
-                    $currYear = \Carbon\Carbon::now()->year;
-                    $prevYear = $currYear - 1;
-                    $currYear = substr($currYear, -2);
-                @endphp
-                <p>&copy; {{$prevYear}}-{{$currYear}} | All rights reserved</p>
-                
-            </td>
-        </tr>
-    </table>
+        {!! $mailData['email_template_content'] !!}
+        <table class="main-bg-light text-center top-0" align="center" border="0" cellpadding="0" cellspacing="0" style="width: 100%">
+            <tr>
+                <td>
+                    @php
+                        $currYear = \Carbon\Carbon::now()->year;
+                        $prevYear = $currYear - 1;
+                        $currYear = substr($currYear, -2);
+                    @endphp
+                    <p>&copy; {{$prevYear}}-{{$currYear}} | All rights reserved</p>
+                    
+                </td>
+            </tr>
+        </table>
     </div>
 </body>
 

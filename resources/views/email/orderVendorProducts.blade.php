@@ -3,7 +3,7 @@
          @foreach($cartData->products as $product)
          @if($product['vendor_id'] == $id)
          <h4>Vendor: {{$product['vendor']['name']}}</h4>
-         <table class="order-detail" border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%;    margin-bottom: 50px;">
+         <table  border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%;margin-bottom: 50px;">
             <tr>
                 <td colspan="3" style="border-bottom: 1px solid rgb(151 151 151 / 23%);padding: 3px 0 10px;"></td>
              </tr>    
