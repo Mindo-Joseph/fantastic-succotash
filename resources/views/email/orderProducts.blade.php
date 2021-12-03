@@ -19,7 +19,7 @@
                               <div style=" height: 60px;width: 60px;background-color: #D8D8D8;">
                                  <img style="width: 100%;height: 100%;border-radius: 3px;object-fit: cover;" src="{{$vendor_product['product']['media'][0]['image']['path']['image_fit']}}100/100{{$vendor_product['product']['media'][0]['image']['path']['image_path']}}" alt="">
                               </div>
-                              <div style="display: flex; justify-content: space-between; flex-direction: column;height: 60px;padding: 0 0 0 15px;">
+                              <div style="display:flex; justify-content:space-between; flex-direction:column; height:60px; padding: 0 0 0 15px;">
                                  <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;">{{$vendor_product['product']['translation_one']['title']}}</h3>
                                  <p style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0;"> <span style="color: #777777;">{{__('Item price')}} : </span> {{ $currencySymbol . number_format(($vendor_product['pvariant']['price']*$vendor_product['quantity']), 2, '.', '')}}</p>
                               </div>
@@ -27,7 +27,7 @@
                         </td>
                         <td style="width: 20%;padding: 10px; text-align: center;">x {{$vendor_product['quantity']}}</td>
                         <td style="width: 35%;padding: 10px 0;  text-align: right;">
-                           <div style="display: flex; justify-content: end; align-items: end; flex-direction: column; height: 60px;">
+                           <div style="display:flex; justify-content:end; align-items:end; flex-direction:column; height:60px;">
                               {{-- <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;"># 231</h3> --}}
                               <p style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0;"> <span style="color: #777777;">{{__('Item price')}} : </span> {{ $currencySymbol . number_format($vendor_product['pvariant']['price'], 2, '.', '')}}</p>
                            </div>
