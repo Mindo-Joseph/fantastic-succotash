@@ -113,7 +113,7 @@
         </div>
     </div>
 </div>
-<div class="card-box">
+{{-- <div class="card-box">
     <div class="row text-left">
         <div class="col-md-12">
             <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" method="post">
@@ -138,7 +138,7 @@
             </form>
         </div>
     </div>
-</div>
+</div> --}}
 @if(Auth::user()->is_superadmin == 1)
 <div class="card-box">
     <div class="row text-left">
@@ -170,6 +170,12 @@
                             <input class="form-control" onkeypress="return isNumberKey(event)" name="commission_monthly" type="text" value="{{$vendor->commission_monthly}}">
                         </div>
                     </div> -->
+                    <div class="col-md-12">
+                        <div class="form-group" id="service_fee_percentInput">
+                            {!! Form::label('title', __('Service Fee Percent'),['class' => 'control-label']) !!}
+                            <input class="form-control" name="service_fee_percent" type="text" min="0" maxlength="5" value="{{$vendor->service_fee_percent}}" onkeypress="return isNumberKey(event)" onkeydown="if(this.value.length > 6) return false;">
+                        </div>
+                    </div>
                     <div class="col-12">
                         <button class="btn btn-info waves-effect waves-light w-100" {{$vendor->status == 1 ? '' : 'disabled'}}>{{ __("Save") }}</button>
                     </div>
