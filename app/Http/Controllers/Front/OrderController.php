@@ -660,7 +660,7 @@ class OrderController extends FrontController
                 $vendor_payable_amount = 0;
                 $vendor_discount_amount = 0;
                 $product_taxable_amount = 0;
-                $product_payable_amount = 0;
+                $vendor_products_total_amount = 0;
                 $vendor_taxable_amount = 0;
                 $OrderVendor = new OrderVendor();
                 $OrderVendor->status = 0;
@@ -678,6 +678,7 @@ class OrderController extends FrontController
                     $price_in_dollar_compare = $price_in_currency * $clientCurrency->doller_compare;
                     $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
                     $payable_amount = $payable_amount + $quantity_price;
+                    $vendor_products_total_amount = $vendor_products_total_amount + $quantity_price;
                     $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
                     if (isset($vendor_cart_product->product->taxCategory)) {
                         foreach ($vendor_cart_product->product->taxCategory->taxRate as $tax_rate_detail) {
@@ -810,12 +811,14 @@ class OrderController extends FrontController
                         $vendor_discount_amount += $percentage_amount;
                     }
                 }
+                //Start applying service fee on vendor products total
                 $vendor_service_fee_percentage_amount = 0;
                 if($vendor_cart_product->vendor->service_fee_percent > 0){
-                    $vendor_service_fee_percentage_amount = ($payable_amount * $vendor_cart_product->vendor->service_fee_percent) / 100 ;
+                    $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendor_cart_product->vendor->service_fee_percent) / 100 ;
                     $vendor_payable_amount += $vendor_service_fee_percentage_amount;
                     $payable_amount += $vendor_service_fee_percentage_amount;
                 }
+                //End applying service fee on vendor products total
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
                 $OrderVendor->service_fee_percentage_amount = $vendor_service_fee_percentage_amount;
 
@@ -906,7 +909,7 @@ class OrderController extends FrontController
             }
             // $this->sendOrderNotification($user->id, $vendor_ids);
            $this->sendSuccessEmail($request, $order);
-           $this->sendSuccessSMS($request, $order, $vendor_id);
+           $this->sendSuccessSMS($request, $order);
             $ex_gateways = [7,8,9,10]; // mobbex, yoco, pointcheckout, razorpay
             if (!in_array($request->payment_option_id, $ex_gateways)) {
                 Cart::where('id', $cart->id)->update(['schedule_type' => null, 'scheduled_date_time' => null,

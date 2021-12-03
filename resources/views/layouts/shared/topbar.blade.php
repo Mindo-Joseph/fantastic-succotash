@@ -105,7 +105,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <ul class="list-unstyled topnav-menu float-right mb-0">
             <li class="dropdown ">
                 <a class="nav-link dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                    Language
+                    {{__('Language')}}
                     {{ $applocale_admin }}
                     <i class="mdi mdi-chevron-down"></i>
                 </a>

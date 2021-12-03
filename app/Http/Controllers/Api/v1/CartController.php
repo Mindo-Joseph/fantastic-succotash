@@ -538,7 +538,7 @@ class CartController extends BaseController
             $total_service_fee = 0;
             foreach ($cartData as $ven_key => $vendorData) {
              
-                $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
+                $vendor_products_total_amount = $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
 
                 $cart_dinein_table_id = $vendorData->vendor_dinein_table_id;
@@ -614,6 +614,7 @@ class CartController extends BaseController
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
                     $item_count = $item_count + $prod->quantity;
                     $proSum = $proSum + $quantity_price;
+                    $vendor_products_total_amount = $vendor_products_total_amount + $quantity_price;
                     if (isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)) {
                         $prod->cartImg = $prod->pvariant->image->imagedata;
                     } else {
@@ -774,7 +775,7 @@ class CartController extends BaseController
                 }
                 $vendor_service_fee_percentage_amount = 0;
                 if($vendorData->vendor->service_fee_percent > 0){
-                    $vendor_service_fee_percentage_amount = ($payable_amount * $vendorData->vendor->service_fee_percent) / 100 ;
+                    $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendorData->vendor->service_fee_percent) / 100 ;
                     $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
                 }
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;

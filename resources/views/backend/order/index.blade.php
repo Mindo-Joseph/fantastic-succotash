@@ -183,6 +183,24 @@
                                         <label class="m-0">{{ __('Total') }}</label>
                                         <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_amount) %></span>
                                     </li>
+                                    <% if(order.taxable_amount > 0 || order.taxable_amount < 0) { %>
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">{{ __('Tax') }}</label>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.taxable_amount) %></span>
+                                    </li>
+                                    <% } %>
+                                    <% if(order.total_service_fee > 0 || order.total_service_fee < 0) { %>
+                                        <li class="d-flex align-items-center justify-content-between">
+                                            <label class="m-0">{{ __('Service Fee') }}</label>
+                                            <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_service_fee) %></span>
+                                        </li>
+                                        <% } %>
+                                    <% if(order.total_delivery_fee > 0 || order.total_delivery_fee < 0) { %>
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">{{__('Delivery Fee')}}</label>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_delivery_fee) %></span>
+                                    </li>
+                                    <% } %>
                                     <% if(order.loyalty_amount_saved > 0 || order.loyalty_amount_saved < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Loyalty Used') }}</label>
@@ -190,18 +208,6 @@
                                     </li>
                                     <% } %>
 
-                                    <% if(order.taxable_amount > 0 || order.taxable_amount < 0) { %>
-                                    <li class="d-flex align-items-center justify-content-between">
-                                        <label class="m-0">{{ __('Tax') }}</label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.taxable_amount) %></span>
-                                    </li>
-                                    <% } %>
-                                    <% if(order.total_delivery_fee > 0 || order.total_delivery_fee < 0) { %>
-                                    <li class="d-flex align-items-center justify-content-between">
-                                        <label class="m-0">{{__('Delivery Fee')}}</label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_delivery_fee) %></span>
-                                    </li>
-                                    <% } %>
                                     <% if(order.wallet_amount_used > 0 || order.wallet_amount_used < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{__('Wallet Amount Used')}}</label>
