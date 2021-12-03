@@ -596,9 +596,11 @@ class CartController extends FrontController
             $is_vendor_closed = 0;
             $deliver_charge = 0;
             $delay_date = 0;
+            $pickup_delay_date = 0;
+            $dropoff_delay_date = 0;
             $total_service_fee = 0;
             foreach ($cartData as $ven_key => $vendorData) {
-                $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
+                $vendor_products_total_amount = $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
 
                 if(Session::has('vendorTable')){
@@ -652,6 +654,7 @@ class CartController extends FrontController
                     $prod->pvariant->multiplier = ($customerCurrency) ? $customerCurrency->doller_compare : 1;
                     $prod->quantity_price = number_format($quantity_price, 2, '.', '');
                     $payable_amount = $payable_amount + $quantity_price;
+                    $vendor_products_total_amount = $vendor_products_total_amount + $quantity_price;
                     $taxData = array();
                     if (!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0) {
                         foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
@@ -693,6 +696,16 @@ class CartController extends FrontController
                     if($prod->product->delay_hrs_min != 0){
                         if($prod->product->delay_hrs_min > $delay_date)
                         $delay_date = $prod->product->delay_hrs_min;
+                    }
+
+                    if($prod->product->pickup_delay_hrs_min != 0){
+                        if($prod->product->pickup_delay_hrs_min > $delay_date)
+                        $pickup_delay_date = $prod->product->pickup_delay_hrs_min;
+                    }
+
+                    if($prod->product->dropoff_delay_hrs_min != 0){
+                        if($prod->product->dropoff_delay_hrs_min > $delay_date)
+                        $dropoff_delay_date = $prod->product->dropoff_delay_hrs_min;
                     }
 
                     if($action == 'delivery'){
@@ -743,11 +756,13 @@ class CartController extends FrontController
                     $subscription_discount = $subscription_discount + $delivery_fee_charges;
                 }
                 $payable_amount = $payable_amount + $deliver_charge;
+                //Start applying service fee on vendor products total
                 $vendor_service_fee_percentage_amount = 0;
                 if($vendorData->vendor->service_fee_percent > 0){
-                    $vendor_service_fee_percentage_amount = ($payable_amount * $vendorData->vendor->service_fee_percent) / 100 ;
+                    $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendorData->vendor->service_fee_percent) / 100 ;
                     $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
                 }
+                //end applying service fee on vendor products total
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
                 $vendorData->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
                 $vendorData->delivery_fee_charges = number_format($delivery_fee_charges, 2, '.', '');
@@ -850,6 +865,8 @@ class CartController extends FrontController
             $cart->upSell_products = ($upSell_products) ? $upSell_products->first() : collect();
             $cart->crossSell_products = ($crossSell_products) ? $crossSell_products->first() : collect();
             $cart->delay_date =  $delay_date??0;
+            $cart->pickup_delay_date =  $pickup_delay_date??0;
+            $cart->dropoff_delay_date =  $dropoff_delay_date??0;
             // dd($cart->toArray());
             $cart->products = $cartData->toArray();
         }

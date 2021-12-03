@@ -535,10 +535,12 @@ class CartController extends BaseController
             $tax_details = [];
             $is_vendor_closed = 0;
             $delay_date = 0;
+            $pickup_delay_date = 0;
+            $dropoff_delay_date = 0;
             $total_service_fee = 0;
             foreach ($cartData as $ven_key => $vendorData) {
              
-                $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
+                $vendor_products_total_amount = $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
 
                 $cart_dinein_table_id = $vendorData->vendor_dinein_table_id;
@@ -614,6 +616,7 @@ class CartController extends BaseController
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
                     $item_count = $item_count + $prod->quantity;
                     $proSum = $proSum + $quantity_price;
+                    $vendor_products_total_amount = $vendor_products_total_amount + $quantity_price;
                     if (isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)) {
                         $prod->cartImg = $prod->pvariant->image->imagedata;
                     } else {
@@ -623,6 +626,15 @@ class CartController extends BaseController
                     if($prod->product->delay_hrs_min != 0){
                         if($prod->product->delay_hrs_min > $delay_date)
                         $delay_date = $prod->product->delay_hrs_min;
+                    }
+                    if($prod->product->pickup_delay_hrs_min != 0){
+                        if($prod->product->pickup_delay_hrs_min > $delay_date)
+                        $pickup_delay_date = $prod->product->pickup_delay_hrs_min;
+                    }
+
+                    if($prod->product->dropoff_delay_hrs_min != 0){
+                        if($prod->product->dropoff_delay_hrs_min > $delay_date)
+                        $dropoff_delay_date = $prod->product->dropoff_delay_hrs_min;
                     }
 
                     if ($prod->pvariant) {
@@ -774,7 +786,7 @@ class CartController extends BaseController
                 }
                 $vendor_service_fee_percentage_amount = 0;
                 if($vendorData->vendor->service_fee_percent > 0){
-                    $vendor_service_fee_percentage_amount = ($payable_amount * $vendorData->vendor->service_fee_percent) / 100 ;
+                    $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendorData->vendor->service_fee_percent) / 100 ;
                     $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
                 }
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
@@ -874,6 +886,8 @@ class CartController extends BaseController
         $cart->upSell_products = ($upSell_products) ? $upSell_products->first() : collect();
         $cart->crossSell_products = ($crossSell_products) ? $crossSell_products->first() : collect();
         $cart->delay_date =  $delay_date??0;
+        $cart->pickup_delay_date =  $pickup_delay_date??0;
+        $cart->dropoff_delay_date =  $dropoff_delay_date??0;
         return $cart;
     }
 

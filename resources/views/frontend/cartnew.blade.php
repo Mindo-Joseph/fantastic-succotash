@@ -95,7 +95,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <% if( product.is_vendor_closed == 1 ) { %>
                     <div class="col-12">
                         <div class="text-danger">
-                            <i class="fa fa-exclamation-circle"></i> Vendor is not accepting orders right now.
+                            <i class="fa fa-exclamation-circle"></i> {{__('Vendor is not accepting orders right now.')}}
                         </div>
                     </div>
                 <% } %>
@@ -256,11 +256,19 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             <div class="row">
                 <div class="col-md-6">
                     <label for="">{{__('Schedule Pickup ')}}</label>
-                    <input type="datetime-local" id="schedule_datetime_pickup" name="schedule_pickup" class="form-control" placeholder="Inline calendar" value="{{ $cart->schedule_pickup??'' }}" min="{{ $now }}">
+                    <% if(cart_details.pickup_delay_date != 0) { %>
+                        <input type="datetime-local" id="schedule_datetime_pickup" name="schedule_pickup" class="form-control" placeholder="Inline calendar" value="<%= ((cart_details.schedule_pickup != '') ? cart_details.schedule_pickup : '') %>" min="<%= ((cart_details.pickup_delay_date != '0') ? cart_details.pickup_delay_date : '') %>">
+                    <% } else { %>
+                            <input type="datetime-local" id="schedule_datetime_pickup" name="schedule_pickup" class="form-control" placeholder="Inline calendar" value="{{ $cart->schedule_pickup??'' }}" min="{{ $now }}">
+                    <% } %>
                 </div>
                 <div class="col-md-6">
                     <label for="">{{__('Schedule Dropoff ')}} </label>
-                    <input type="datetime-local" id="schedule_datetime_dropoff" name="schedule_dropoff" class="form-control" placeholder="Inline calendar" value="{{ $cart->schedule_dropoff??'' }}" min="{{ $now }}">
+                    <% if(cart_details.dropoff_delay_date != 0) { %>
+                        <input type="datetime-local" id="schedule_datetime_dropoff" name="schedule_dropoff" class="form-control" placeholder="Inline calendar" value="<%= ((cart_details.schedule_dropoff != '') ? cart_details.schedule_dropoff : '') %>" min="<%= ((cart_details.dropoff_delay_date != '0') ? cart_details.dropoff_delay_date : '') %>">
+                    <% } else { %>
+                            <input type="datetime-local" id="schedule_datetime_dropoff" name="schedule_dropoff" class="form-control" placeholder="Inline calendar" value="{{ $cart->schedule_dropoff??'' }}" min="{{ $now }}">
+                    <% } %>
                 </div>
             </div>
             @else

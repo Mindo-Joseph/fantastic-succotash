@@ -183,6 +183,24 @@
                                         <label class="m-0">{{ __('Total') }}</label>
                                         <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_amount) %></span>
                                     </li>
+                                    <% if(order.taxable_amount > 0 || order.taxable_amount < 0) { %>
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">{{ __('Tax') }}</label>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.taxable_amount) %></span>
+                                    </li>
+                                    <% } %>
+                                    <% if(order.total_service_fee > 0 || order.total_service_fee < 0) { %>
+                                        <li class="d-flex align-items-center justify-content-between">
+                                            <label class="m-0">{{ __('Service Fee') }}</label>
+                                            <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_service_fee) %></span>
+                                        </li>
+                                        <% } %>
+                                    <% if(order.total_delivery_fee > 0 || order.total_delivery_fee < 0) { %>
+                                    <li class="d-flex align-items-center justify-content-between">
+                                        <label class="m-0">{{__('Delivery Fee')}}</label>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_delivery_fee) %></span>
+                                    </li>
+                                    <% } %>
                                     <% if(order.loyalty_amount_saved > 0 || order.loyalty_amount_saved < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Loyalty Used') }}</label>
@@ -190,18 +208,6 @@
                                     </li>
                                     <% } %>
 
-                                    <% if(order.taxable_amount > 0 || order.taxable_amount < 0) { %>
-                                    <li class="d-flex align-items-center justify-content-between">
-                                        <label class="m-0">{{ __('Tax') }}</label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.taxable_amount) %></span>
-                                    </li>
-                                    <% } %>
-                                    <% if(order.total_delivery_fee > 0 || order.total_delivery_fee < 0) { %>
-                                    <li class="d-flex align-items-center justify-content-between">
-                                        <label class="m-0">{{__('Delivery Fee')}}</label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_delivery_fee) %></span>
-                                    </li>
-                                    <% } %>
                                     <% if(order.wallet_amount_used > 0 || order.wallet_amount_used < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{__('Wallet Amount Used')}}</label>
@@ -574,7 +580,7 @@
             if (status_option_id == 3) {
                 return openRejectModal(order_id, vendor_id, status_option_id, order_vendor_id);
             } else {
-                if (confirm("Are you Sure?")) {
+                if (confirm("{{__('Are you Sure?')}}")) {
                     $.ajax({
                         url: "{{ route('order.changeStatus') }}",
                         type: "POST",
@@ -614,7 +620,7 @@
                                 }
                             }
                             if (status_option_id == 2)
-                                $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                                $.NotificationApp.send('{{__("Success")}}', response.message, "top-right", "#5ba035", "success");
                             // location.reload();
                         },
                     });

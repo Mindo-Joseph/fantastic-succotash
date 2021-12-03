@@ -128,8 +128,9 @@
             <div class="col-lg-6 text-center">
                 <h3 class="mb-md-5 mb-4">{{ __('New Customer') }}</h3>   
                 <div class="create_box">
-                    <h6>{{ __('Create An Account') }}</h6>
-                    <p>{{ __('Sign up for a free account at our store. Registration is quick and easy. It allows you to be able to order from our shop. To start shopping click register.') }}</p>
+                    {{-- <h6>{{ __('Create An Account') }}</h6> --}}
+                    {{-- <p>{{ __('Sign up for a free account at our store. Registration is quick and easy. It allows you to be able to order from our shop. To start shopping click register.') }}</p> --}}
+                    <h6>{{ __('Create a free account and join us!') }}</h6>
                     <a href="{{route('customer.register')}}" class="btn btn-solid mt-4">{{ __('Create An Account') }}</a>
                 </div>
             </div>
