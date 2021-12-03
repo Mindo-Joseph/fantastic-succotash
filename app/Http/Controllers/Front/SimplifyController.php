@@ -32,11 +32,19 @@ class SimplifyController extends FrontController
         {
             $data['come_from'] = 'web';
         }
-        // $data['come_from'] = 'app';
+        Log::info("Before Payment");
+        Log::info($data);
     	return view('frontend.payment_gatway.simplify_view')->with(['data' => $data]);
     }
     public function createPayment(Request $request)
     {
+        Log::info("Create Payment");
+        Log::info($request->all());
+        if($request->come_from == "app")
+        {
+            $user = User::where('auth_token', $request->auth_token)->first();
+            Auth::login($user);
+        }
     	$user = Auth::user();
     	$cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
         $amount = $this->getDollarCompareAmount($request->amount);
@@ -81,6 +89,12 @@ class SimplifyController extends FrontController
     }
     public function sucessPayment($request, $pamyent)
     {
+        if($request->come_from == "app")
+        {
+            $user = User::where('auth_token', $request->auth_token)->first();
+            Auth::login($user);
+        }
+        $user = Auth::user();
     	$transactionId = $pamyent->id;
     	if($request->payment_from == 'cart'){
             $order_number = $request->order_number;
@@ -101,13 +115,15 @@ class SimplifyController extends FrontController
                     // Auto accept order
                     $orderController = new OrderController();
                     $orderController->autoAcceptOrderIfOn($order->id);
+                    $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
+
 
                     // Remove cart
-                    Cart::where('id', $request->cart_id)->update(['schedule_type' => null, 'scheduled_date_time' => null]);
-                    CartAddon::where('cart_id', $request->cart_id)->delete();
-                    CartCoupon::where('cart_id', $request->cart_id)->delete();
-                    CartProduct::where('cart_id', $request->cart_id)->delete();
-                    CartProductPrescription::where('cart_id', $request->cart_id)->delete();
+                    Cart::where('id', $cart->id)->update(['schedule_type' => null, 'scheduled_date_time' => null]);
+                    CartAddon::where('cart_id', $cart->id)->delete();
+                    CartCoupon::where('cart_id', $cart->id)->delete();
+                    CartProduct::where('cart_id', $cart->id)->delete();
+                    CartProductPrescription::where('cart_id', $cart->id)->delete();
 
                     // Send Notification
                     if (!empty($order->vendors)) {
@@ -123,7 +139,7 @@ class SimplifyController extends FrontController
                 }
                 if($request->come_from == 'app')
                 {
-                    $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId;
+                    $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId.'&order='.$order_number;
                 }else{
                     $returnUrl = route('order.return.success');
                 }
@@ -155,7 +171,7 @@ class SimplifyController extends FrontController
             $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription_id);
             if($request->come_from == 'app')
             {
-                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId;
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId; 
             }else{
                 $returnUrl = route('user.subscription.plans');
             }
