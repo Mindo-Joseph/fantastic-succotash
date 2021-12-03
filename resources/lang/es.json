@@ -906,7 +906,6 @@
    "My Loyalty" : "Mis Puntos",
    "Available" : "Disponible",
    "Not Available" : "No Disponible",
-   "Pickup & Delivery  Dashboard" : "Panel de Delivery",
    "Revenue" :"Ingresos",
    "Sales" : "Ventas",
    "Net Revenue" : "Ingresos Netos",
@@ -918,7 +917,8 @@
    "This change will remove all your cart products. Do you really want to continue ?" : " Este cambio removerá los productos actuales en tu carrito. ¿Deseas continuar?",
    "Are you Sure?" : "Estas segura",
    "Order Status Updated Successfully.":"El estado del pedido se actualizó correctamente.",
-   "You don't have orders right now." : "No tienes pedidos en este momento."
+   "You don't have orders right now." : "No tienes pedidos en este momento.",
+   "Pickup & Delivery Dashboard" : "Panel de Delivery"
 
 
 
