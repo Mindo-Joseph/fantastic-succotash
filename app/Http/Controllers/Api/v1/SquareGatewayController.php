@@ -36,6 +36,6 @@ class SquareGatewayController extends BaseController
         if(($action == 'cart') || ($action == 'tip')){
             $params = $params . '&order=' . $request->order_number;
         }
-        return $this->successResponse(url('payment/square/page'.$params)); 
+        return $this->successResponse(url($request->serverUrl.'payment/square/page'.$params)); 
     }
 }

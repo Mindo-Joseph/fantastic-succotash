@@ -33,6 +33,6 @@ class SimplifyGatewayController extends BaseController
         if(($action == 'cart') || ($action == 'tip')){
             $params = $params . '&order=' . $request->order_number;
         }
-        return $this->successResponse(url('payment/simplify/page'.$params)); 
+        return $this->successResponse(url($request->serverUrl.'payment/simplify/page'.$params)); 
     }
 }
