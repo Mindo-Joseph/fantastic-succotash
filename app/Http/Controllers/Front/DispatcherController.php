@@ -174,6 +174,7 @@ class DispatcherController extends FrontController
     {
         try {
             $user = Auth::user();
+            $order_item_count = 0;
             $order_vendor = OrderVendor::where('web_hook_code',$web_hook_code)->first();
             if(isset($order_vendor) && !empty($order_vendor)){
                 $order = Order::where('id',$order_vendor->order_id)->first();
