@@ -668,19 +668,21 @@ class CartController extends FrontController
                         unset($prod->product->taxCategory);
                     }
                     $prod->taxdata = $taxData;
-                    foreach ($prod->addon as $ck => $addons) {
-                        $opt_price_in_currency = $addons->option->price;
-                        $opt_price_in_doller_compare = $addons->option->price;
-                        if($customerCurrency){
-                            $opt_price_in_currency = $addons->option->price / $divider;
-                            $opt_price_in_doller_compare = $opt_price_in_currency * $customerCurrency->doller_compare;
+                    if($prod->addon->isNotEmpty()){
+                        foreach ($prod->addon as $ck => $addons) {
+                            $opt_price_in_currency = $addons->option->price;
+                            $opt_price_in_doller_compare = $addons->option->price;
+                            if($customerCurrency){
+                                $opt_price_in_currency = $addons->option->price / $divider;
+                                $opt_price_in_doller_compare = $opt_price_in_currency * $customerCurrency->doller_compare;
+                            }
+                            $opt_quantity_price = number_format($opt_price_in_doller_compare * $prod->quantity, 2, '.', '');
+                            $addons->option->price_in_cart = $addons->option->price;
+                            $addons->option->price = number_format($opt_price_in_currency, 2, '.', '');
+                            $addons->option->multiplier = ($customerCurrency) ? $customerCurrency->doller_compare : 1;
+                            $addons->option->quantity_price = $opt_quantity_price;
+                            $payable_amount = $payable_amount + $opt_quantity_price;
                         }
-                        $opt_quantity_price = number_format($opt_price_in_doller_compare * $prod->quantity, 2, '.', '');
-                        $addons->option->price_in_cart = $addons->option->price;
-                        $addons->option->price = number_format($opt_price_in_currency, 2, '.', '');
-                        $addons->option->multiplier = ($customerCurrency) ? $customerCurrency->doller_compare : 1;
-                        $addons->option->quantity_price = $opt_quantity_price;
-                        $payable_amount = $payable_amount + $opt_quantity_price;
                     }
                     if (isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)) {
                         $prod->cartImg = $prod->pvariant->image->imagedata;
@@ -1002,7 +1004,7 @@ class CartController extends FrontController
         CartProduct::where('id', $request->cartproduct_id)->delete();
         CartCoupon::where('vendor_id', $request->vendor_id)->delete();
         CartAddon::where('cart_product_id', $request->cartproduct_id)->delete();
-        return response()->json(['status' => 'success', 'message' => 'Product deleted successfully.']);
+        return response()->json(['status' => 'success', 'message' => __('Product removed from cart successfully.') ]);
     }
 
     /**

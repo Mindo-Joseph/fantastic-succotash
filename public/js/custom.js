@@ -686,6 +686,9 @@ $(document).ready(function() {
             else if (payment_option_id == 12) {
                 paymentViaSimplify('', '');
             }
+            else if (payment_option_id == 13) {
+                paymentViaSquare('', '');
+            }
         } else {
             _this.attr("disabled", false);
             success_error_alert('error', 'Please select any payment option', "#subscription_payment .payment_response");
@@ -1385,6 +1388,14 @@ $(document).ready(function() {
             var order = placeOrderBeforePayment(address_id, payment_option_id, tip);
             if (order != '') {
                 paymentViaSimplify(address_id, order);
+            } else {
+                return false;
+            }
+        }
+        else if (payment_option_id == 13) {
+            var order = placeOrderBeforePayment(address_id, payment_option_id, tip);
+            if (order != '') {
+                paymentViaSquare(address_id, order);
             } else {
                 return false;
             }
