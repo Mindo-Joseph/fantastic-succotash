@@ -126,6 +126,15 @@
             margin-left: 5px;
             margin-right: 5px;
         }
+        .flex-set{
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .flex-set-scd{
+            flex-direction: column;
+            justify-content: end;
+            align-items: end;
+        }
     </style>
 </head>
 
