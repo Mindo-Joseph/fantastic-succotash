@@ -8,39 +8,56 @@ use App\Http\Controllers\Front\{UserSubscriptionController, OrderController, Wal
 use Auth, Log, Redirect;
 use App\Models\{PaymentOption, Cart, SubscriptionPlansUser, Order, Payment, CartAddon, CartCoupon, CartProduct, CartProductPrescription, UserVendor, User};
 
-class SquareController extends Controller
+class SquareController extends FrontController
 {
     use \App\Http\Traits\SquarePaymentManager;
 	use \App\Http\Traits\ApiResponser;
 
-	private $public_key;
-	private $private_key;
+	private $application_id;
+	private $access_token;
 	public function __construct()
   	{
-		$gcash_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'square')->where('status', 1)->first();
-	    $creds_arr = json_decode($gcash_creds->credentials);
-	    $this->application_id = $creds_arr->application_id??'';
-	    $this->access_token = $creds_arr->api_access_token??'';
+		$this->square_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'square')->where('status', 1)->first();
+	    $this->creds_arr = json_decode($this->square_creds->credentials);
+	    $this->application_id = $this->creds_arr->application_id??'';
+	    $this->access_token = $this->creds_arr->api_access_token??'';
+	    $this->location_id = $this->creds_arr->location_id??'';
+	    $this->square_url = $this->square_creds->test_mode ? "https://sandbox.web.squarecdn.com/v1/square.js" : "https://web.squarecdn.com/v1/square.js";
 	}
 	public function beforePayment(Request $request)
     {
-
-    	// $this->createSquareCustomer($request->all());
     	$data = $request->all();
+    	$location  = $this->getLocation();
     	$data['application_id'] = $this->application_id;
-    	$data['location_id'] = 'LK0JR9366ZGCS';
+    	$data['location_id'] = $this->location_id;
+    	$data['currency'] = $location->getCurrency();
+    	$data['country'] = $location->getCountry();
+    	$data['square_url'] = $this->square_url;
+        $data['come_from'] = 'app';
+        if($request->isMethod('post'))
+        {
+            $data['come_from'] = 'web';
+        }
+        Log::info("Square Before Payment");
+        Log::info($data);
+    	// dd($data);
     	return view('frontend.payment_gatway.square_view')->with(['data' => $data]);
     }
     public function createPayment(Request $request)
     {
+        Log::info("Square Create Payment");
+        Log::info($request->all());
+        if($request->come_from == "app")
+        {
+            $user = User::where('auth_token', $request->auth_token)->first();
+            Auth::login($user);
+        }
     	$user = Auth::user();
     	$cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
         $amount = $this->getDollarCompareAmount($request->amount);
     	$data = $request->all();
-    	$request['username'] = $user->name;
-    	$request['email'] = $user->email;
-    	$request['source'] = 'WEB';
     	$request['amount'] = $amount*100;
+    	
         if($request->payment_from == 'cart'){
             $request['description'] = 'Order Checkout';
             if($request->has('order_number')){
@@ -60,24 +77,29 @@ class SquareController extends Controller
         elseif($request->payment_from == 'subscription'){
             $request['description'] = 'Subscription Checkout';
             if($request->has('subscription_id')){
-                $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $request->subscription_id)->where('status', '1')->first();
                 $request['reference'] = $request->subscription_id;
             }
         }
-    	$payment = $this->create_payment($request->all());
+    	$payment_id = $this->createSquarePayment($request->all());
     	$request['amount'] = $amount;
-    	if($payment->paymentStatus == 'APPROVED')
-    	{
-            $returnUrl = $this->sucessPayment($request,$payment);
-        } else{
-            $returnUrl = $this->failedPayment($request,$payment);
-        }
+	    if(isset($payment_id) && !is_null($payment_id))
+	    {
+	        $returnUrl = $this->sucessPayment($request,$payment_id);
+	    }
+	    else {
+	        $returnUrl = $this->failedPayment($request);
+	    }
+    	
         return Redirect::to(url($returnUrl));
     }
-    public function sucessPayment($request, $pamyent)
+    public function sucessPayment($request, $transactionId)
     {
-
-    	$transactionId = $pamyent->id;
+        if($request->come_from == "app")
+        {
+            $user = User::where('auth_token', $request->auth_token)->first();
+            Auth::login($user);
+        }
+        $user = Auth::user();
     	if($request->payment_from == 'cart'){
             $order_number = $request->order_number;
             $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
@@ -99,11 +121,12 @@ class SquareController extends Controller
                     $orderController->autoAcceptOrderIfOn($order->id);
 
                     // Remove cart
-                    Cart::where('id', $request->cart_id)->update(['schedule_type' => null, 'scheduled_date_time' => null]);
-                    CartAddon::where('cart_id', $request->cart_id)->delete();
-                    CartCoupon::where('cart_id', $request->cart_id)->delete();
-                    CartProduct::where('cart_id', $request->cart_id)->delete();
-                    CartProductPrescription::where('cart_id', $request->cart_id)->delete();
+                    $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
+                    Cart::where('id', $cart->id)->update(['schedule_type' => null, 'scheduled_date_time' => null]);
+                    CartAddon::where('cart_id', $cart->id)->delete();
+                    CartCoupon::where('cart_id', $cart->id)->delete();
+                    CartProduct::where('cart_id', $cart->id)->delete();
+                    CartProductPrescription::where('cart_id', $cart->id)->delete();
 
                     // Send Notification
                     if (!empty($order->vendors)) {
@@ -117,33 +140,53 @@ class SquareController extends Controller
                     $super_admin = User::where('is_superadmin', 1)->pluck('id');
                     $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
                 }
-                $returnUrl = route('order.return.success');
+                if($request->come_from == 'app')
+                {
+                    $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId.'&order='.$order_number;
+                }else{
+                    $returnUrl = route('order.return.success');
+                }
                 return $returnUrl;
             }
         } elseif($request->payment_from == 'wallet'){
             $request->request->add(['wallet_amount' => $request->amount, 'transaction_id' => $transactionId]);
             $walletController = new WalletController();
             $walletController->creditWallet($request);
-            $returnUrl = route('user.wallet');
+            if($request->come_from == 'app')
+            {
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId;
+            }else{
+                $returnUrl = route('user.wallet');
+            }
             return $returnUrl;
         }
         elseif($request->payment_from == 'tip'){
             $request->request->add(['order_number' => $request->order_number, 'tip_amount' => $request->amount, 'transaction_id' => $transactionId]);
             $orderController = new OrderController();
             $orderController->tipAfterOrder($request);
-            $returnUrl = route('user.orders');
+            if($request->come_from == 'app')
+            {
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId;
+            }else{
+                $returnUrl = route('user.orders');
+            }
             return $returnUrl;
         }
         elseif($request->payment_from == 'subscription'){
             $request->request->add(['payment_option_id' => 12, 'transaction_id' => $transactionId]);
             $subscriptionController = new UserSubscriptionController();
             $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription_id);
-            $returnUrl = route('user.subscription.plans');
+            if($request->come_from == 'app')
+            {
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId;
+            }else{
+                $returnUrl = route('user.subscription.plans');
+            }
             return $returnUrl;
         }
         return Redirect::to(route('order.return.success'));
     }
-    public function failedPayment($request, $pamyent)
+    public function failedPayment($request)
     {
     	if($request->payment_from == 'cart'){
             $order_number = $request->order_number;
@@ -158,16 +201,40 @@ class SquareController extends Controller
             OrderVendor::where('order_id', $order->id)->delete();
             OrderTax::where('order_id', $order->id)->delete();
             Order::where('id', $order->id)->delete();
-            return route('showCart');
+            if($request->come_from == 'app')
+            {
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify&status=0';
+            }else{
+                $returnUrl = route('showCart');
+            }
+            return $returnUrl;
         }
         elseif($request->payment_form == 'wallet'){
-            return route('user.wallet');
+            if($request->come_from == 'app')
+            {
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify&status=0';
+            }else{
+                $returnUrl = route('user.wallet');
+            }
+            return $returnUrl;
         }
         elseif($request->payment_form == 'tip'){
-            return route('user.orders');
+            if($request->come_from == 'app')
+            {
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify&status=0';
+            }else{
+                $returnUrl = route('user.orders');
+            }
+            return $returnUrl;
         }
         elseif($request->payment_form == 'subscription'){
-            return route('user.subscription.plans');
+            if($request->come_from == 'app')
+            {
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify&status=0';
+            }else{
+                $returnUrl = route('user.subscription.plans');
+            }
+            return $returnUrl;
         }
         return route('order.return.success');
     }
