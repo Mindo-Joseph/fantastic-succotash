@@ -280,7 +280,7 @@ class DispatcherController extends FrontController
                             $order_pre_time = ($vendor->order_pre_time > 0) ? $vendor->order_pre_time : 0;
                             $user_to_vendor_time = ($vendor->user_to_vendor_time > 0) ? $vendor->user_to_vendor_time : 0;
                             $ETA = $order_pre_time + $user_to_vendor_time;
-                            $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : dateTimeInUserTimeZone($vendor->created_at, $user->timezone);
+                            $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time,$user) : dateTimeInUserTimeZone($vendor->created_at, $user->timezone);
                         }
                         if($vendor->dineInTable){
                             $vendor->dineInTableName = $vendor->dineInTable->translations->first() ? $vendor->dineInTable->translations->first()->name : '';

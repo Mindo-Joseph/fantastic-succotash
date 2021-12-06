@@ -418,7 +418,7 @@ class BaseController extends Controller{
         }
     }
 
-    public function formattedOrderETA($minutes, $order_vendor_created_at, $scheduleTime=''){
+    public function formattedOrderETA($minutes, $order_vendor_created_at, $scheduleTime='', $user=''){
         $d = floor ($minutes / 1440);
         $h = floor (($minutes - $d * 1440) / 60);
         $m = $minutes - ($d * 1440) - ($h * 60);
@@ -437,8 +437,11 @@ class BaseController extends Controller{
         // }
         // // $time = convertDateTimeInTimeZone($datetime, Auth::user()->timezone, $format);
         // $time = Carbon::parse($datetime)->format($format);
-        
+        if(isset($user) && !empty($user))
+        $user =  $user;
+        else
         $user = Auth::user();
+
         $timezone = $user->timezone;
         $preferences = ClientPreference::select('date_format', 'time_format')->where('id', '>', 0)->first();
         $date_format = $preferences->date_format;
