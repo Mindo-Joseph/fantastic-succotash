@@ -711,7 +711,7 @@ class CartController extends BaseController
                                 $vendorAddons[$ck]['addon_title'] = $addons->set->title;
                                 $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
                                 $vendorAddons[$ck]['option_title'] = $addons->option ? $addons->option->title : 0;
-                                $vendorAddons[$ck]['price_in_cart'] = $addons->option->price;
+                                $vendorAddons[$ck]['price_in_cart'] = $addons->option->price??0;
                                 $vendorAddons[$ck]['cart_product_id'] = $addons->cart_product_id;
                                 $vendorAddons[$ck]['multiplier'] = $clientCurrency->doller_compare;
                                 $ttAddon = $ttAddon + $opt_quantity_price;
