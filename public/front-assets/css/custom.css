@@ -6527,7 +6527,7 @@ body .footer-theme .sub-title h4 {
 
 .home-slider-wrapper .loading{
     height:300px;
-    border-radius: 20px;
+    border-radius: 4px;
 }
 
 
@@ -7291,8 +7291,8 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(min-width: 992px) {
-    .home-slider-wrapper .loading{
-        height:550px;
+    .home-banner-slider,.home-banner-slider .slick-slide,.home-slider-wrapper .loading{
+        height:400px;
     }
     .pixelstrap>li {
         text-align: center;

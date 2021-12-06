@@ -178,8 +178,8 @@ window.initializeSlider = function initializeSlider() {
         dots: false,
         infinite: true,
         speed: 300,
-        centerMode: true,
-        centerPadding: '60px',
+        // centerMode: true,
+        // centerPadding: '60px',
         slidesToShow: 2,
         slidesToScroll: 1,
         responsive: [
@@ -292,8 +292,8 @@ window.initializeSlider = function initializeSlider() {
         slidesToScroll: 2,
         autoplay: true,
         autoplaySpeed: 5000,
-        centerMode: true,
-        centerPadding: '40px',
+        // centerMode: true,
+        // centerPadding: '40px',
         rtl: false,
         responsive: [{
                 breakpoint: 1200,
