@@ -275,7 +275,7 @@ class CartController extends BaseController
                 ->where('cart_id', $request->cart_id)
                 ->where('product_id', $request->product_id)
                 ->orderByDesc('created_at')->first();
-            
+
             return $this->successResponse($cartProduct, '', 200);
         }
         catch(Exception $ex){
@@ -361,8 +361,8 @@ class CartController extends BaseController
         }
     }
 
-    /**        
-     *    update quantity in cart       
+    /**
+     *    update quantity in cart
      **/
     public function updateQuantity(Request $request)
     {
@@ -539,7 +539,7 @@ class CartController extends BaseController
             $dropoff_delay_date = 0;
             $total_service_fee = 0;
             foreach ($cartData as $ven_key => $vendorData) {
-             
+
                 $vendor_products_total_amount = $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
 
@@ -601,11 +601,12 @@ class CartController extends BaseController
                                 $couponProducts[] = $value->refrence_id;
                             }
                         }
+
                     }
                 }
-                
+
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
-                    if(isset($prod->product) && !empty($prod->product)){   
+                    if(isset($prod->product) && !empty($prod->product)){
 
 
                     $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0;
@@ -753,8 +754,8 @@ class CartController extends BaseController
                     if($cross_prods){
                         $crossSell_products->push($cross_prods);
                     }
-                
-                
+
+
                 }
             }
 
@@ -826,6 +827,10 @@ class CartController extends BaseController
                         $vendorData->vendor->is_vendor_closed = 0;
                     }
                 }
+                if($vendorData->vendor->$action == 0){
+                    $vendorData->is_vendor_closed = 1;
+                    $delivery_status = 0;
+                }
             }
         }
         $cart_product_luxury_id = CartProduct::where('cart_id', $cartID)->select('luxury_option_id', 'vendor_id')->first();
@@ -850,7 +855,7 @@ class CartController extends BaseController
         if ($cart->user_id > 0) {
             $loyalty_amount_saved = $this->getLoyaltyPoints($cart->user_id, $clientCurrency->doller_compare);
             // if($total_paying > $cart->loyalty_amount){
-            //    $cart->loyalty_amount = 0.00; 
+            //    $cart->loyalty_amount = 0.00;
             // }
             // $cart->wallet = $this->getWallet($cart->user_id, $clientCurrency->doller_compare, $currency);
         }
@@ -931,7 +936,7 @@ class CartController extends BaseController
         } catch (\Exception $e) {
         }
     }
-    # check if last mile delivery on 
+    # check if last mile delivery on
     public function checkIfLastMileOn()
     {
         $preference = ClientPreference::first();
@@ -979,8 +984,8 @@ class CartController extends BaseController
                 if(isset($request->schedule_dropoff) && !empty($request->schedule_dropoff))  # for pickup laundry
                 $request->schedule_dropoff = Carbon::parse($request->schedule_dropoff, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
 
-                Cart::where('status', '0')->where('user_id', $user->id)->update(['specific_instructions' => $request->specific_instructions ?? null, 
-                'schedule_type' => $request->task_type??null, 
+                Cart::where('status', '0')->where('user_id', $user->id)->update(['specific_instructions' => $request->specific_instructions ?? null,
+                'schedule_type' => $request->task_type??null,
                 'scheduled_date_time' => $request->schedule_dt??null,
                 'comment_for_pickup_driver' => $request->comment_for_pickup_driver??null,
                 'comment_for_dropoff_driver' => $request->comment_for_dropoff_driver??null,

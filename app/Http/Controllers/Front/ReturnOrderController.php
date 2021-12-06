@@ -304,8 +304,18 @@ class ReturnOrderController extends FrontController{
                     $dispatch_traking_url = str_replace('/order/', '/order-cancel/', $currentOrderStatus->dispatch_traking_url);
                     $response = Http::get($dispatch_traking_url);
                 }
+                
+                if($currentOrderStatus->payment_option_id != 1){
+                
+                $user = User::find(Auth::id());
+                $wallet = $user->wallet;
+                $credit_amount = $currentOrderStatus->payable_amount;
+                $wallet->depositFloat($credit_amount, ['Wallet has been <b>Credited</b> for return #'. $currentOrderStatus->orderDetail->order_number.' ('.$currentOrderStatus->vendor->name.')']);
+
+                }
+                
                 DB::commit();
-                $this->sendStatusChangePushNotificationCustomer([$currentOrderStatus->user_id], $orderData, $request->status_option_id);
+       //         $this->sendStatusChangePushNotificationCustomer([$currentOrderStatus->user_id], $orderData, $request->status_option_id);
                 return response()->json([
                     'status' => 'success',
                     'message' => __('Order Cancelled Successfully.')
