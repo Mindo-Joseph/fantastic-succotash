@@ -1299,16 +1299,7 @@
                                                                                         <span
                                                                                             class="badge badge-info ml-2 my-1">{{ $luxury_option_name }}</span>
                                                                                     @endif
-                                                                                    @if (!empty($order->scheduled_date_time))
-                                                                                        <span
-                                                                                            class="badge badge-success ml-2">Scheduled</span>
-                                                                                        <span
-                                                                                            class="ml-2">{{ dateTimeInUserTimeZone($order->scheduled_date_time, $timezone) }}</span>
-                                                                                    @elseif(!empty($vendor->ETA))
-                                                                                        <span class="ml-2">Your
-                                                                                            order will arrive by
-                                                                                            {{ $vendor->ETA }}</span>
-                                                                                    @endif
+
                                                                                     @if ($order->is_gift == '1')
                                                                                         <div class="gifted-icon">
                                                                                             <img class="p-1 align-middle"
@@ -1329,53 +1320,10 @@
                                                                                     <ul class="status_box mt-1 pl-0">
                                                                                         @if (!empty($vendor->order_status))
                                                                                             <li>
-                                                                                                @if ($vendor->order_status == 'placed')
-                                                                                                    <img src="{{ asset('assets/images/order-icon.svg') }}"
-                                                                                                        alt="">
-                                                                                                @elseif($vendor->order_status
-                                                                                                    == 'accepted')
-                                                                                                    <img src="{{ asset('assets/images/payment_icon.svg') }}"
-                                                                                                        alt="">
-                                                                                                @elseif($vendor->order_status
-                                                                                                    == 'processing')
-                                                                                                    <img src="{{ asset('assets/images/customize_icon.svg') }}"
-                                                                                                        alt="">
-                                                                                                @elseif($vendor->order_status
-                                                                                                    == 'out for delivery')
-                                                                                                    <img src="{{ asset('assets/images/driver_icon.svg') }}"
-                                                                                                        alt="">
-                                                                                                @endif
                                                                                                 <label class="m-0 in-progress">{{ ucfirst($vendor->order_status) }} </label>
                                                                                                 <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="{{$vendor->reject_reason}}" aria-hidden="true"></i>
                                                                                             </li>
                                                                                         @endif
-
-                                                                                        @if (!empty($vendor->dispatch_traking_url))
-                                                                                            <img src="{{ asset('assets/images/order-icon.svg') }}"
-                                                                                                alt="">
-                                                                                            <a href="{{ route('front.booking.details', $order->order_number) }}"
-                                                                                                target="_blank">{{ __('Details') }}</a>
-                                                                                        @endif
-
-                                                                                        @if ($vendor->dineInTable)
-                                                                                            <li>
-                                                                                                <h5 class="mb-1">
-                                                                                                    {{ __('Dine-in') }}
-                                                                                                </h5>
-                                                                                                <h6 class="m-0">
-                                                                                                    {{ $vendor->dineInTableName }}
-                                                                                                </h6>
-                                                                                                <h6 class="m-0">
-                                                                                                    Category :
-                                                                                                    {{ $vendor->dineInTableCategory }}
-                                                                                                </h6>
-                                                                                                <h6 class="m-0">
-                                                                                                    Capacity :
-                                                                                                    {{ $vendor->dineInTableCapacity }}
-                                                                                                </h6>
-                                                                                            </li>
-                                                                                        @endif
-
                                                                                     </ul>
 
                                                                                 </div>
@@ -1558,7 +1506,7 @@
                                                 @else
                                                     <div class="col-12">
                                                         <div class="no-gutters order_head">
-                                                            <h4 class="text-center">{{ __('No Past Order Found') }}
+                                                            <h4 class="text-center">{{ __('No Rejected/Cancel Order Found') }}
                                                             </h4>
                                                         </div>
                                                     </div>
