@@ -78,7 +78,7 @@
                                             <div class="img-outer-box position-relative">
                                                 <img src="{{$imagePath}}" alt="">
                                                 <div class="pref-timing">
-                                                    <span>5-10 min</span>
+                                                    <!--<span>5-10 min</span>-->
                                                 </div>
                                                 <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
                                             </div>    
@@ -87,7 +87,7 @@
                                                     <div class="product-description">
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <h6 class="card_title mb-1 ellips">{{ $new['translation_title'] }}</h6>                                                                                    
-                                                            <span class="rating-number">2.0</span>                                
+                                                            <!--<span class="rating-number">2.0</span>-->                                
                                                         </div>
                                                         <!-- <h3 class="mb-0 mt-2">{{ $new['translation_title'] }}</h3> -->
                                                         <p>{{$new['vendor']['name']}}</p>

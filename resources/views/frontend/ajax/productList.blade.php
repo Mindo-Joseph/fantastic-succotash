@@ -16,7 +16,7 @@
                         <div class="img-outer-box position-relative">
                             <img class="img-fluid blur-up lazyload" src="{{$data->image_url}}" alt="">
                             <div class="pref-timing">
-                                <span>5-10 min</span>
+                                <!--<span>5-10 min</span>-->
                             </div>
                             <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
                         </div>

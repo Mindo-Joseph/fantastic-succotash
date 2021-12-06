@@ -161,7 +161,7 @@
             <div class="img-outer-box position-relative">
                 <img src="<%= product.image_url %>" alt="">
                 <div class="pref-timing">
-                    <span>5-10 min</span>
+                    <!--<span>5-10 min</span>-->
                 </div>
                 <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
             </div>    
@@ -170,7 +170,7 @@
                     <div class="product-description">
                         <div class="d-flex align-items-center justify-content-between">
                             <h6 class="card_title mb-1 ellips"><%= product.title %></h6>                                                                                    
-                            <span class="rating-number">2.0</span>                                
+                            <!--<span class="rating-number">2.0</span>-->                                
                         </div>
                         <p><%= product.vendor_name %></p>
                         <p class="border-bottom pb-1">In <%= product.category %></p>

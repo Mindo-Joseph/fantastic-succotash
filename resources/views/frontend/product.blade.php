@@ -655,7 +655,7 @@
                     <div class="img-outer-box position-relative">
                         <img src="{{ $related_product->image_url }}" alt="">
                 <div class="pref-timing">
-                    <span>5-10 min</span>
+                    <!--<span>5-10 min</span>-->
                 </div>
                 <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
                     </div>    
@@ -665,7 +665,7 @@
                             <div class="product-description">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <h6 class="card_title mb-1 ellips">{{ $related_product->translation_title }}</h6>                                                                                    
-                                    <span class="rating-number">2.0</span>                                
+                                    <!--<span class="rating-number">2.0</span>-->                                
                                 </div>
                                 <!-- <h3 class="m-0">{{ $related_product->translation_title }}</h3> -->
                                 <p>{{ $related_product->vendor_name }}</p>

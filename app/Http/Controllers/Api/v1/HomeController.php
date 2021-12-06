@@ -404,6 +404,12 @@ class HomeController extends BaseController
             $keyword = $request->keyword;
             $langId = Auth::user()->language;
             $curId = Auth::user()->language;
+            $action =$request->has('type') && $request->type ? $request->type : null;
+
+            if(!$action){
+                return response()->json(['error' => 'Type should not be empty.'], 404);
+            }
+
             $response = array();
             if ($for == 'all') {
                 $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
@@ -438,7 +444,7 @@ class HomeController extends BaseController
                     $response[] = $brand;
                 }
 
-                $vendors = Vendor::select('id', 'name  as dataname', 'logo', 'slug', 'address');
+                $vendors = Vendor::select('id', 'name  as dataname', 'logo', 'slug', 'address')->where($action,1);
                 $vendors = $vendors->where(function ($q) use ($keyword) {
                     $q->where('name', 'LIKE', "%$keyword%")->orWhere('address', 'LIKE', '%' . $keyword . '%');
                 })->where('status', 1)->get();
@@ -459,6 +465,9 @@ class HomeController extends BaseController
                 }, 'media'])->join('product_translations as pt', 'pt.product_id', 'products.id')
                     ->select('products.id', 'products.sku', 'pt.title  as dataname', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
                     ->where('pt.language_id', $langId)
+                    ->whereHas('vendor',function($query) use ($action){
+                        $query->where($action,1);
+                      })
                     ->where(function ($q) use ($keyword) {
                         $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
                     })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->get();
@@ -472,6 +481,9 @@ class HomeController extends BaseController
                 $products = Product::join('product_translations as pt', 'pt.product_id', 'products.id')
                     ->select('products.id', 'products.sku', 'pt.title', 'pt.body_html', 'pt.meta_title', 'pt.meta_keyword', 'pt.meta_description')
                     ->where('pt.language_id', $langId)
+                    ->whereHas('vendor',function($query) use ($action){
+                        $query->where($action,1);
+                      })
                     ->where(function ($q) use ($keyword) {
                         $q->where('products.sku', ' LIKE', '%' . $keyword . '%')
                             ->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')
