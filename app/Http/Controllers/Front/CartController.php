@@ -760,7 +760,7 @@ class CartController extends FrontController
                 $vendor_service_fee_percentage_amount = 0;
                 if($vendorData->vendor->service_fee_percent > 0){
                     $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendorData->vendor->service_fee_percent) / 100 ;
-                    $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
+                    // $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
                 }
                 //end applying service fee on vendor products total
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
