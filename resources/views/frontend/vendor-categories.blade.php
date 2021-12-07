@@ -73,9 +73,14 @@
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-sm-3 collection-filter">
+                <div class="collection-filter col-lg-3">
                     <div class="theme-card">
-                        <h5 class="title-border">{{__('New Product')}}</h5>
+                        <h5 class="title-border d-flex align-items-center justify-content-between">
+                            <span>{{__('New Product')}}</span>  
+                            <span class="filter-back d-lg-none d-inline-block">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i> {{__('Back')}}
+                            </span>
+                        </h5>
                         <div class="offer-slider">
                             @if(!empty($newProducts) && count($newProducts) > 0)
                                 @foreach($newProducts as $newProds)
@@ -90,11 +95,19 @@
                                         <a class="common-product-box scale-effect border-bottom pb-2 mt-2 text-center" href="{{route('productDetail', $new['url_slug'])}}">
                                             <div class="img-outer-box position-relative">
                                                 <img src="{{$imagePath}}" alt="">
+                                                <div class="pref-timing">
+                                                    <!--<span>5-10 min</span>-->
+                                                </div>
+                                                <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
                                             </div>    
                                             <div class="media-body align-self-center">
                                                 <div class="inner_spacing px-0">
                                                     <div class="product-description">
-                                                        <h3 class="m-0">{{ $new['translation_title'] }}</h3>
+                                                        <div class="d-flex align-items-center justify-content-between">
+                                                            <h6 class="card_title mb-1 ellips">{{ $new['translation_title'] }}</h6>                                                                                    
+                                                            <!--<span class="rating-number">2.0</span>-->                                
+                                                        </div>
+                                                        <!-- <h3 class="m-0">{{ $new['translation_title'] }}</h3> -->
                                                         <p>{{$new['vendor']['name']}}</p>
                                                         <p class="pb-1">In {{$new['category_name']}}</p>
                                                         <div class="d-flex align-items-center justify-content-between">
@@ -105,7 +118,7 @@
                                                                 @endif
                                                             </b>
 
-                                                            @if($client_preference_detail)
+                                                            <!-- @if($client_preference_detail)
                                                                 @if($client_preference_detail->rating_check == 1)
                                                                     @if($new['averageRating'] > 0)
                                                                         <div class="rating-box">
@@ -114,7 +127,7 @@
                                                                         </div>
                                                                     @endif
                                                                 @endif
-                                                            @endif  
+                                                            @endif   -->
                                                         </div>                       
                                                     </div>
                                                 </div>
@@ -153,7 +166,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="collection-content col">
+                <div class="collection-content col-lg-9">
                     <div class="page-main-content">
                         <div class="row">
                             <div class="col-sm-12">

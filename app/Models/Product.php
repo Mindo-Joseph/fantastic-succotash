@@ -3,12 +3,13 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Carbon\Carbon;
+use Auth;
 
 class Product extends Model{
       use SoftDeletes;
   
-    protected $fillable = ['sku', 'title', 'url_slug', 'description', 'body_html', 'vendor_id', 'category_id', 'type_id', 'country_origin_id', 'is_new', 'is_featured', 'is_live', 'is_physical', 'weight', 'weight_unit', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'publish_at', 'inquiry_only','has_variant','averageRating','tags', 'pharmacy_check', 'deleted_at', 'celebrity_id', 'brand_id', 'tax_category_id','need_price_from_dispatcher','mode_of_service'];
+    protected $fillable = ['sku', 'title', 'url_slug', 'description', 'body_html', 'vendor_id', 'category_id', 'type_id', 'country_origin_id', 'is_new', 'is_featured', 'is_live', 'is_physical', 'weight', 'weight_unit', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'publish_at', 'inquiry_only','has_variant','averageRating','tags', 'pharmacy_check', 'deleted_at', 'celebrity_id', 'brand_id', 'tax_category_id','need_price_from_dispatcher','mode_of_service','delay_order_hrs','delay_order_min','pickup_delay_order_hrs','pickup_delay_order_min','dropoff_delay_order_hrs','dropoff_delay_order_min'];
     
     public function addOn(){
        return $this->hasMany('App\Models\ProductAddon')->select('product_id', 'addon_id'); 
@@ -98,6 +99,10 @@ class Product extends Model{
       return $this->hasMany('App\Models\ProductVariant')->select('id', 'sku', 'product_id', 'quantity', 'price', 'barcode'); 
     }
 
+    public function reviews(){
+      return $this->hasMany('App\Models\OrderProductRating', 'product_id', 'id'); 
+    }
+
     public function variant_list(){
        return $this->hasMany('App\Models\ProductVariantSet')
        ->join('variants as pv', 'pv.id', 'product_variant_sets.variant_type_id')
@@ -119,5 +124,92 @@ class Product extends Model{
         return $this->belongsTo('App\Models\TaxCategory', 'tax_category_id', 'id')->select('id', 'title', 'code');
     }
 
+    public function tags(){
+      return $this->hasMany('App\Models\ProductTag', 'product_id', 'id'); 
+    }
+
+
+    public function getDelayHrsMinAttribute()
+    {
+       $delay_order_hrs = $this->attributes['delay_order_hrs'];
+       $delay_order_min = $this->attributes['delay_order_min'];
+
+       if($delay_order_hrs > 0 || $delay_order_min > 0){
+         $total_minutues = ($delay_order_hrs * 60) + $delay_order_min;
+
+         $date = Carbon::now()
+              ->addMinutes($total_minutues)
+              ->format('Y-m-d\TH:i');
+        if(Auth::user()){
+                 $timezone = Auth::user()->timezone;
+                 $date = convertDateTimeInTimeZone($date, $timezone, 'Y-m-d\TH:i');
+                 }
+         return $date;
+       }
+       return 0;
+      
+    }
+
+    public function getPickupDelayHrsMinAttribute()
+    {
+       $delay_order_hrs = $this->attributes['pickup_delay_order_hrs'];
+       $delay_order_min = $this->attributes['pickup_delay_order_min'];
+
+       if($delay_order_hrs > 0 || $delay_order_min > 0){
+         $total_minutues = ($delay_order_hrs * 60) + $delay_order_min;
+
+         $date = Carbon::now()
+              ->addMinutes($total_minutues)
+              ->format('Y-m-d\TH:i');
+        if(Auth::user()){
+                 $timezone = Auth::user()->timezone;
+                 $date = convertDateTimeInTimeZone($date, $timezone, 'Y-m-d\TH:i');
+                 }
+         return $date;
+       }
+       return 0;
+      
+    }
+
+    public function getDropoffDelayHrsMinAttribute()
+    {
+       $delay_order_hrs = $this->attributes['dropoff_delay_order_hrs'];
+       $delay_order_min = $this->attributes['dropoff_delay_order_min'];
+
+       if($delay_order_hrs > 0 || $delay_order_min > 0){
+         $total_minutues = ($delay_order_hrs * 60) + $delay_order_min;
+
+         $date = Carbon::now()
+              ->addMinutes($total_minutues)
+              ->format('Y-m-d\TH:i');
+        if(Auth::user()){
+                 $timezone = Auth::user()->timezone;
+                 $date = convertDateTimeInTimeZone($date, $timezone, 'Y-m-d\TH:i');
+                 }
+         return $date;
+       }
+       return 0;
+      
+    }
+
+    public function ProductFaq(){
+      return $this->hasMany('App\Models\ProductFaq', 'product_id', 'id'); 
+    }
+
+    public function checkIfInCartApp()
+    { 
+        $user = Auth::user();
+        if ($user->id && $user->id > 0) {
+            $column = 'user_id';
+            $value = $user->id;
+        } else {
+            $column = 'unique_identifier';
+            $value = $user->system_user;
+        }
+
+        return $this->hasMany('App\Models\CartProduct', 'product_id', 'id')->whereHas('cart',function($qset)use($column,$value){
+            $qset->where($column,$value);
+        });
+    }
     
 }

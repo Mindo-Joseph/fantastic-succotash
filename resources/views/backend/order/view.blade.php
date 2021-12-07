@@ -60,7 +60,7 @@ $timezone = Auth::user()->timezone;
                                     else
                                     $open_option = [$order->vendors->first()->order_status_option_id + 1];
                                     @endphp
-                                    
+
                                     <!-- List of completed order status -->
                                     @foreach ($vendor_order_statuses as $key => $vendor_order_status)
                                         @php
@@ -80,7 +80,7 @@ $timezone = Auth::user()->timezone;
                                             @endif
                                             <p class="text-muted" id="text_muted_{{$vendor_order_status->order_status_option_id}}">
                                                 @if($date)
-                                                    <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                                    <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
                                                 @endif
                                             </p>
                                         </li>
@@ -113,7 +113,7 @@ $timezone = Auth::user()->timezone;
                                                     @endif
                                                     <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
                                                         @if($date)
-                                                            <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                                            <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
                                                         @endif
                                                     </p>
                                                 </li>
@@ -145,7 +145,7 @@ $timezone = Auth::user()->timezone;
                                         <h5 class="mt-0 mb-1">{{$dispatcher_status_option->title}}</h5>
                                         <p class="text-muted" id="dispatch_text_muted_{{$dispatcher_status_option->id}}">
                                             @if($date)
-                                            <small class="text-muted">{{convertDateTimeInTimeZone($date, $timezone, 'l, F d, Y, H:i A')}}</small>
+                                            <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
                                             @endif
                                         </p>
                                     </li>
@@ -194,20 +194,23 @@ $timezone = Auth::user()->timezone;
                                     @foreach($vendor->products as $product)
                                     @if($product->order_id == $order->id)
                                     @php
-                                    $taxable_amount += $product->taxable_amount;
+                                    // $taxable_amount += $product->taxable_amount;
                                     // $sub_total += $product->quantity * $product->price;
+                                    $taxable_amount = $vendor->taxable_amount;
+                                    $vendor_service_fee = $vendor->service_fee_percentage_amount;
                                     $sub_total += $product->total_amount;
                                     @endphp
                                     <tr>
                                         <th scope="row">{{$product->product_name}}
                                             <p class="p-0 m-0">
-                                                @if(isset($product->scheduled_date_time)) {{convertDateTimeInTimeZone($product->scheduled_date_time, $timezone, 'l, F d, Y, H:i A')}} @endif
+                                                @if(isset($product->scheduled_date_time)) {{dateTimeInUserTimeZone($product->scheduled_date_time, $timezone)}} @endif
                                             </p>
                                                 @foreach($product->prescription as $pres)
                                                 <br><a target="_blank" href="{{ ($pres) ? @$pres->prescription['proxy_url'].'74/100'.@$pres->prescription['image_path'] : ''}}">{{($product->prescription) ? 'Prescription' : ''}}</a>
                                                 @endforeach
 
-                                            @if($product->addon)
+                                                <p class="p-0 m-0">{{ substr($product->product_variant_sets, 0, -2) }}</p>
+                                            @if($product->addon && count($product->addon))
                                                 <hr class="my-2">
                                                 <h6 class="m-0 pl-0"><b>{{__('Add Ons')}}</b></h6>
                                                 @foreach($product->addon as $addon)
@@ -220,39 +223,45 @@ $timezone = Auth::user()->timezone;
                                         </td>
                                         <td>{{ $product->quantity }}</td>
                                         <td>
-                                            $@money($product->price)
-                                            @if($product->addon)
+                                            {{$clientCurrency->currency->symbol}}@money($product->price)
+                                            @if($product->addon->isNotEmpty())
                                                 <hr class="my-2">
                                                 @foreach($product->addon as $addon)
-                                                    <p class="p-0 m-0">${{ $addon->option->price_in_cart }}</p>
+                                                    <p class="p-0 m-0">{{$clientCurrency->currency->symbol}}{{ $addon->option->price_in_cart }}</p>
                                                     {{-- <p class="p-0 m-0">${{ $addon->option->quantity_price }}</p> --}}
                                                 @endforeach
                                             @endif
                                         </td>
 
-                                        <td>$@money($product->total_amount)</td>
+                                        <td>{{$clientCurrency->currency->symbol}}@money($product->total_amount)</td>
                                     </tr>
                                     @endif
                                     @endforeach
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">{{__('Delivery Fee')}} :</th>
-                                        <td>$@money($vendor->delivery_fee)</td>
+                                        <td>{{$clientCurrency->currency->symbol}}@money($vendor->delivery_fee)</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">{{ __("Sub Total") }} :</th>
                                         <td>
-                                            <div class="fw-bold">$@money($sub_total)</div>
+                                            <div class="fw-bold">{{$clientCurrency->currency->symbol}}@money($sub_total)</div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">{{__('Total Discount')}} :</th>
-                                        <td>$@money($vendor->discount_amount)</td>
+                                        <td>{{$clientCurrency->currency->symbol}}@money($vendor->discount_amount)</td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">{{ __("Estimated Tax") }} :</th>
-                                        <td>$@money($taxable_amount)</td>
+                                        <td>{{$clientCurrency->currency->symbol}}@money($taxable_amount)</td>
                                     </tr>
+                                    @if($vendor_service_fee > 0)
+                                        <tr>
+                                            <th scope="row" colspan="4" class="text-end">{{ __("Service Fee") }} :</th>
+                                            <td>{{$clientCurrency->currency->symbol}}@money($vendor_service_fee)</td>
+                                        </tr>
+                                    @endif
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">{{ __("Reject Reason") }} :</th>
                                         <td style="width:200px;">{{$vendor->reject_reason}}</td>
@@ -260,7 +269,7 @@ $timezone = Auth::user()->timezone;
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">{{ __("Total") }} :</th>
                                         <td>
-                                            <div class="fw-bold">$@money($vendor->payable_amount+$taxable_amount)</div>
+                                            <div class="fw-bold">{{$clientCurrency->currency->symbol}}@money($vendor->payable_amount * $clientCurrency->doller_compare)</div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -280,13 +289,15 @@ $timezone = Auth::user()->timezone;
                     <div class="card-body">
                         <h4 class="header-title mb-3">{{ __("Shipping Information") }}</h4>
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
-                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->address ? $order->address->address : ''}}</p>
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("Email") }}:</span> {{ $order->user->email ? $order->user->email : ''}}</p>
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __('Phone')}}:</span> {{'+'.$order->user->dial_code.$order->user->phone_number}}</p>
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->address->house_number ? $order->address->house_number."," : ''}} {{ $order->address ? $order->address->address : ''}}</p>
                         @if(isset($order->address) && !empty($order->address->street))
                         <p class="mb-2"><span class="fw-semibold me-2">{{__('Street')}}:</span> {{ $order->address ? $order->address->street : ''}}</p>
                         @endif
                         <p class="mb-2"><span class="fw-semibold me-2">{{__('City')}}:</span> {{ $order->address ? $order->address->city : ''}}</p>
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __("State") }}:</span> {{ $order->address ? $order->address->state : ''}}</p>
-                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Pincode") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
+                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Zip Code") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
                     </div>
                 </div>
             </div>
@@ -296,15 +307,15 @@ $timezone = Auth::user()->timezone;
                     <div class="card-body">
                         <h4 class="header-title mb-3">{{ __("User Information") }}</h4>
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
-                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->user->address->first() ? $order->user->address->first()->address : 'Not Available'}}</p>
-                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Mobile") }}:</span> {{$order->user->phone_number ? $order->user->phone_number : 'Not Available'}}</p>
+                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->user->address->first() ? $order->user->address->first()->address : __('Not Available')}}</p>
+                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Mobile") }}:</span> {{$order->user->phone_number ? $order->user->phone_number : __('Not Available')}}</p>
                         @if(isset($order->address) && !empty($order->address->street))
                         <p class="mb-2"><span class="fw-semibold me-2">{{__('Street')}}:</span> {{ $order->address ? $order->address->street : ''}}</p>
                         @endif
                         <p class="mb-2"><span class="fw-semibold me-2">{{__('City')}}:</span> {{ $order->address ? $order->address->city : ''}}</p>
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __("State") }}:</span> {{ $order->address ? $order->address->state : ''}}</p>
-                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Pincode") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
-                   
+                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Zip Code") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
+
                     </div>
                 </div>
             </div>
@@ -320,7 +331,7 @@ $timezone = Auth::user()->timezone;
                         @endif
                     </div>
 
-                   
+
                     <div class="card-body">
                         <h4 class="header-title mb-3">{{ __('Comment/Schedule Information') }}</h4>
                         @if($order->comment_for_pickup_driver)
@@ -336,19 +347,24 @@ $timezone = Auth::user()->timezone;
                         @endif
 
                         @if($order->schedule_pickup)
-                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Pickup') }} :</span> {{convertDateTimeInTimeZone($order->schedule_pickup, $timezone, 'l, F d, Y, H:i A')}} </p>
+                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Pickup') }} :</span> {{dateTimeInUserTimeZone($order->schedule_pickup, $timezone)}} </p>
                         @endif
 
                         @if($order->schedule_dropoff)
-                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Dropoff') }} :</span> {{convertDateTimeInTimeZone($order->schedule_dropoff, $timezone, 'l, F d, Y, H:i A')}} </p>
+                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Dropoff') }} :</span> {{dateTimeInUserTimeZone($order->schedule_dropoff, $timezone)}} </p>
                         @endif
+
+                        @if($order->specific_instructions)
+                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Specific instructions') }} :</span> {{ $order->specific_instructions ?? ''}}</p>
+                        @endif
+
                     </div>
-                   
+
 
                 </div>
             </div>
 
-            
+
         </div>
 
 

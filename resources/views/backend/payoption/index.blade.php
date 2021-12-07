@@ -66,14 +66,18 @@
                 $password = (isset($creds->password)) ? $creds->password : '';
                 $signature = (isset($creds->signature)) ? $creds->signature : '';
                 $api_key = (isset($creds->api_key)) ? $creds->api_key : '';
+                $location_id= (isset($creds->location_id)) ? $creds->location_id : '';
+                $application_id = (isset($creds->application_id)) ? $creds->application_id : '';
                 $api_access_token = (isset($creds->api_access_token)) ? $creds->api_access_token : '';
                 $api_secret_key = (isset($creds->api_secret_key)) ? $creds->api_secret_key : '';
                 $publishable_key = (isset($creds->publishable_key)) ? $creds->publishable_key : '';
                 $secret_key = (isset($creds->secret_key)) ? $creds->secret_key : '';
                 $public_key = (isset($creds->public_key)) ? $creds->public_key : '';
+                $private_key = (isset($creds->private_key)) ? $creds->private_key : '';
                 $merchant_id = (isset($creds->merchant_id)) ? $creds->merchant_id : '';
                 $merchant_key = (isset($creds->merchant_key)) ? $creds->merchant_key : '';
                 $passphrase = (isset($creds->passphrase)) ? $creds->passphrase : '';
+                $merchant_account = (isset($creds->merchant_account)) ? $creds->merchant_account : '';
                 ?>
 
                 <div class="card-box h-100">
@@ -87,7 +91,7 @@
                                 <input type="checkbox" data-id="{{$opt->id}}" data-title="{{$opt->code}}" data-plugin="switchery" name="active[{{$opt->id}}]" class="chk_box all_select" data-color="#43bee1" @if($opt->status == 1) checked @endif>
                             </div>
                         </div>
-                        @if ( (strtolower($opt->code) != 'cod') )
+                        @if ( (strtolower($opt->code) != 'cod') &&  (strtolower($opt->code) != 'razorpay') &&  (strtolower($opt->code) != 'simplify'))
                         <div class="col-6">
                             <div class="form-group mb-0 switchery-demo">
                                 <label for="" class="mr-3">{{ __('Sandbox') }}</label>
@@ -238,7 +242,7 @@
                             </div>
                         </div>
                     </div>
-                    @endif
+                    @endif 
 
                     @if ( (strtolower($opt->code) == 'razorpay') )
                     <div id="razorpay_fields_wrapper" @if($opt->status != 1) style="display:none" @endif>
@@ -246,13 +250,86 @@
                             <div class="col-12">
                                 <div class="form-group mb-0">
                                     <label for="razorpay_api_key" class="mr-3">{{ __("Api Key") }}</label>
-                                    <input type="password" name="razorpay_api_key" id="razorpay_api_key" class="form-control" value="{{$api_key}}" @if($opt->status == 1) required @endif>
+                                    <input type="text" name="razorpay_api_key" id="razorpay_api_key" class="form-control" value="{{$api_key}}" @if($opt->status == 1) required @endif>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group mb-0">
                                     <label for="razorpay_api_secret_key" class="mr-3">{{ __("Api Secret Key") }}</label>
-                                    <input type="password" name="razorpay_api_secret_key" id="razorpay_api_secret_key" class="form-control" value="{{$api_secret_key}}" @if($opt->status == 1) required @endif>
+                                    <input type="text" name="razorpay_api_secret_key" id="razorpay_api_secret_key" class="form-control" value="{{$api_secret_key}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if ( (strtolower($opt->code) == 'gcash') )
+                    <div id="gcash_fields_wrapper" @if($opt->status != 1) style="display:none" @endif>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="gcash_merchant_account" class="mr-3">{{ __("Merchant Account") }}</label>
+                                    <input type="text" name="gcash_merchant_account" id="gcash_merchant_account" class="form-control" value="{{$merchant_account}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="gcash_api_key" class="mr-3">{{ __("Api Key") }}</label>
+                                    <input type="password" name="gcash_api_key" id="gcash_api_key" class="form-control" value="{{$api_key}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="gcash_secret_key" class="mr-3">{{ __("Api Secret Key") }}</label>
+                                    <input type="text" name="gcash_secret_key" id="gcash_secret_key" class="form-control" value="{{$secret_key}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if ( (strtolower($opt->code) == 'simplify') )
+                    <div id="simplify_fields_wrapper" @if($opt->status != 1) style="display:none" @endif>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="simplify_public_key" class="mr-3">{{ __("Public Key") }}</label>
+                                    <input type="text" name="simplify_public_key" id="simplify_public_key" class="form-control" value="{{$public_key}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="simplify_private_key" class="mr-3">{{ __("Private Key") }}</label>
+                                    <input type="password" name="simplify_private_key" id="simplify_private_key" class="form-control" value="{{$private_key}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if ( (strtolower($opt->code) == 'square') )
+                    <div id="square_fields_wrapper" @if($opt->status != 1) style="display:none" @endif>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="square_application_id" class="mr-3">{{ __("Application ID") }}</label>
+                                    <input type="text" name="square_application_id" id="square_application_id" class="form-control" value="{{$application_id}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="square_access_token" class="mr-3">{{ __("Access Token") }}</label>
+                                    <input type="password" name="square_access_token" id="square_access_token" class="form-control" value="{{$api_access_token}}" @if($opt->status == 1) required @endif>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="square_location_id" class="mr-3">{{ __("Location ID") }}</label>
+                                    <input type="text" name="square_location_id" id="square_location_id" class="form-control" value="{{$location_id}}" @if($opt->status == 1) required @endif>
                                 </div>
                             </div>
                         </div>
@@ -308,7 +385,7 @@
                                 <input type="checkbox" data-id="{{$opt->id}}" data-title="{{$opt->code}}" data-plugin="switchery" name="active[{{$opt->id}}]" class="chk_box payout_all_select" data-color="#43bee1" @if($opt->status == 1) checked @endif>
                             </div>
                         </div>
-                        @if ( (strtolower($opt->code) != 'cod') )
+                        @if ( (strtolower($opt->code) != 'cash') )
                         <div class="col-6">
                             <div class="form-group mb-0 switchery-demo">
                                 <label for="" class="mr-3">{{ __('Sandbox') }}</label>

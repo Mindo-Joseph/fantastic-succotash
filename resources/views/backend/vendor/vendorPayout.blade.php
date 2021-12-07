@@ -17,6 +17,10 @@
             position: relative;
         }
 
+        .form-control:disabled, .form-control[readonly] {
+            background-color: #f2f2f2;
+        }
+
         span.inner-div {
             top: 50%;
             -webkit-transform: translateY(-50%);
@@ -153,7 +157,7 @@
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="card widget-inline">
-                                <div class="card-body">
+                                <div class="card-body p-2">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-3 col-lg mb-3 mb-md-0">
                                             <div class="text-center">
@@ -201,7 +205,7 @@
                                                 <p class="text-muted font-15 mb-0">{{ __('Available Funds') }}</p>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -238,21 +242,22 @@
                                         @else
                                             <button type="button" class="btn btn-info waves-effect text-sm-right" onclick="location.href='{{$stripe_connect_url}}'">{{ __("Connect to Stripe") }}</button>
                                         @endif
+                                        <button type="button" class="btn btn-info waves-effect text-sm-right ml-2" data-toggle="modal" data-target="#pay-receive-modal">{{ __("Payout") }}</button>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="table-responsive">
-                                            <table class="table table-centered table-nowrap table-striped" id="vendor_payout_history_datatable" width="100%">
+                                            <table class="table table-centered table-nowrap table-striped" id="vendor_payouts_datatable" width="100%">
                                                 <thead>
                                                     <tr>
                                                         <th>{{ __("Date") }}</th>
                                                         <th >{{ __("Amount") }}</th>
                                                         <th>{{ __("Type") }}</th>
-                                                        <th>{{ __("Action") }}</th>
+                                                        {{-- <th>{{ __("Action") }}</th> --}}
                                                         <th>{{ __("Status") }}</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id="vendor_payout_history_tbody_list">
-                                                    
+                                                <tbody id="vendor_payouts_tbody_list">
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -265,327 +270,89 @@
             </div>
         </div>
     </div>
-    <div class="row address" id="def" style="display: none;">
-        <input type="text" id="def-address" name="test" class="autocomplete form-control def_address">
-    </div>
-    <div id="add-product" class="modal fade add_product" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true" style="display: none;">
+
+    <div id="pay-receive-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none" aria-modal="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header border-bottom">
-                    <h4 class="modal-title">{{ __('Add Product') }}</h4>
+                <div class="modal-header border-0">
+                    <h4 class="modal-title">Payout</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
-                <form id="save_product_form" method="post" enctype="multipart/form-data"
-                    action="{{ route('product.store') }}">
+                <form id="payout_form">
                     @csrf
-                    <div class="modal-body pb-0">
-                      
-                                <div class="row">
-                                    <div class="col-12 mb-2">
-                                        <div class="form-group" id="product_nameInput">
-                                            {!! Form::label('title', __('Product Name'), ['class' => 'control-label']) !!}
-                                            <span class="text-danger">*</span>
-                                            {!! Form::text('product_name', null, ['class' => 'form-control', 'id' => 'product_name', 'onkeyup' => 'return setSkuFromName(event)', 'placeholder' => 'Apple iMac', 'autocomplete' => 'off']) !!}
-
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong></strong>
-                                            </span>
-                                        </div>
-                                    </div>
-                                   
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group" id="skuInput">
-                                            {!! Form::label('title', __('SKU'), ['class' => 'control-label']) !!}
-                                            <span class="text-danger">*</span>
-                                            {!! Form::text('sku', null, ['class' => 'form-control', 'id' => 'sku', 'onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong></strong>
-                                            </span>
-                                            {!! Form::hidden('type_id', 1) !!}
-                                            {!! Form::hidden('vendor_id', $vendor->id) !!}
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group" id="url_slugInput">
-                                            {!! Form::label('title', __('URL Slug'), ['class' => 'control-label']) !!}
-                                            {!! Form::text('url_slug', null, ['class' => 'form-control', 'id' => 'url_slug', 'placeholder' => 'Apple iMac', 'onkeypress' => 'return slugify(event)']) !!}
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong></strong>
-                                            </span>
-                                        </div>
-                                    </div>    
-
-                                    <div class="col-12">
-                                        <div class="form-group" id="categoryInput">
-                                            {!! Form::label('title', __('Category'),['class' => 'control-label']) !!}
-                                        <select class="form-control selectizeInput" id="category_list" name="category">
-                                            {{-- <option value="">{{ __("Select Category") }}...</option> --}}
-                                            @foreach($product_categories as $product_category)
-                                                <option value="{{$product_category['id']}}">{{$product_category['hierarchy']}}</option>
-                                            @endforeach
-                                                
-                                            {{--@foreach($product_categories as $product_category)
-                                                @if($product_category->category)
-                                                    @if( ($product_category->category->type_id == 1) || ($product_category->category->type_id == 3) || ($product_category->category->type_id == 7))
-                                                        <option value="{{$product_category->category_id}}">{{(isset($product_category->category->primary->name)) ? $product_category->category->primary->name : $product_category->category->slug}}</option>
-                                                    @endif
-                                                @endif
-                                            @endforeach --}}
-                                            </select>
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong></strong>
-                                            </span>
-                                        </div>
+                    <div class="modal-body px-3 py-0">
+                        <div class="row">
+                            {{-- <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="login-form setmodal">
+                                        <ul class="list-inline">
+                                            <li class="d-inline-block mr-2">
+                                                <input type="radio" id="teacher" name="payment_type" value="1" checked="">
+                                                <label for="teacher"><span class="showspan">Pay</span></label>
+                                                </li>
+                                            <li class="d-inline-block mr-2">
+                                                <input type="radio" id="student" name="payment_type" value="2">
+                                                <label for="student"><span class="showspan">Receive</span></label>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
-                       
+                            </div> --}}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="field-1" class="control-label">Amount</label>
+                                    <input name="payout_amount" id="payout_amount" type="text" class="form-control" placeholder="3000" required onkeypress="return isNumberKey(event)">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="field-2" class="control-label">Available Funds</label>
+                                    <input type="text" id="available_funds" class="form-control" value="{{ $available_funds }}" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            @foreach($payout_options as $opt)
+                                @if( ($is_stripe_connected && ($opt->code == 'stripe')) || ($opt->code == 'cash') )
+                                    <div class="col-md-12 mb-2">
+                                        <div class="radio radio-blue form-check-inline">
+                                            <input type="radio" id="{{$opt->code}}" value="{{$opt->id}}" name="payout_option">
+                                            <label for="{{$opt->code}}"> {{ $opt->title }} </label>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="payout_response">
+                                    <div class="alert alert-danger p-1" style="display:none"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button"
-                            class="btn btn-info waves-effect waves-light submitProduct">{{ __('Submit') }}</button>
+                    <div class="modal-footer border-0">
+                        <button type="submit" class="btn btn-info waves-effect waves-light">Continue</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div id="import-product" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header border-bottom">
-                    <h4 class="modal-title">{{ __('Add Product') }}</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
 
-                <div class="modal-body">
-                    <div class="row">
-
-
-                        <div class="col-md-12 text-center">
-
-                            <div id="import_csv" class="row align-items-center mb-3">
-                                <div class="col-12 text-right mb-2">
-                                    <button class="btn btn-info button" id="csv_button"
-                                        type="button">{{ __('Import form Woocommerce') }}</button>
-                                </div>
-                                <div class="col-md-12">
-                                    <form method="post" enctype="multipart/form-data" id="save_imported_products">
-                                        @csrf
-                                        <a
-                                            href="{{ url('file-download' . '/sample_product.csv') }}">{{ __('Download Sample file here!') }}</a>
-                                        <input type="hidden" value="{{ $vendor->id }}" name="vendor_id" />
-                                        <input type="file" accept=".csv" onchange="submitProductImportForm()"
-                                            data-plugins="dropify" name="product_excel" class="dropify" />
-                                    </form>
-                                </div>
-                            </div>
-
-                            <div id="import_woocommerce" class="row align-items-center mb-3">
-                                <div class="col-12 text-right mb-2">
-                                    <button class="btn btn-info button" id="woocommerce_button"
-                                        type="button">{{ __('Import CSV') }}</button>
-                                </div>
-                                <div class="col-md-12">
-                                    <form id="woocommerces_form">
-                                        <div class="form-group">
-                                            <input class="form-control" type="url" name="domain_name"
-                                                placeholder="Domain Name"
-                                                value="{{ $woocommerce_detail ? $woocommerce_detail->url : '' }}">
-                                            <span class="text-danger" id="domain_name_error"></span>
-                                        </div>
-                                        <div class="form-group">
-                                            <input class="form-control" type="text" name="consumer_key"
-                                                placeholder="Consumer Key"
-                                                value="{{ $woocommerce_detail ? $woocommerce_detail->consumer_key : '' }}">
-                                            <span class="text-danger" id="consumer_key_error"></span>
-                                        </div>
-                                        <div class="form-group">
-                                            <input class="form-control" type="text" name="consumer_secret"
-                                                placeholder="Consumer Secret"
-                                                value="{{ $woocommerce_detail ? $woocommerce_detail->consumer_secret : '' }}">
-                                            <span class="text-danger" id="consumer_secret_error"></span>
-                                        </div>
-                                        <button class="btn btn-info button" id="save_woocommerce_btn" type="button"
-                                            onclick="this.classList.toggle('button--loading')">Save</button>
-                                        <button class="btn btn-info button" id="import_product_from_woocomerce"
-                                            data-vendor="{{ $vendor->id }}"
-                                            onclick="this.classList.toggle('button--loading')">{{ __('Import Products From Woocommerce') }}</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-centered table-nowrap table-striped" id="">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>{{ __('File Name') }}</th>
-                                            <th colspan="2">{{ __('Status') }}</th>
-                                            <th>{{ __('Link') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="post_list">
-                                        @foreach ($csvProducts as $csv)
-                                            <tr data-row-id="{{ $csv->id }}">
-                                                <td> {{ $loop->iteration }}</td>
-                                                <td> {{ $csv->name }}</td>
-                                                @if ($csv->status == 1)
-                                                    <td>{{ __('Pending') }}</td>
-                                                    <td></td>
-                                                @elseif($csv->status == 2)
-                                                    <td>{{ __('Success') }}</td>
-                                                    <td></td>
-                                                @else
-                                                    <td>{{ __('Errors') }}</td>
-                                                    <td class="position-relative text-center">
-                                                        <i class="mdi mdi-exclamation-thick"></i>
-                                                        <ul class="tooltip_error">
-                                                            <?php $error_csv = json_decode($csv->error); ?>
-                                                            @foreach ($error_csv as $err)
-                                                                <li>
-                                                                    {{ $err }}
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </td>
-                                                @endif
-                                                <td> <a href="{{ $csv->path }}">{{ __('Download') }}</a> </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form id="new_vendor_payout_form" method="POST" action="{{route('vendor.payout.create', $vendor->id)}}">
+                @csrf
+                <input type="hidden" name="payout_option_id" id="payout_option_id" value="">
+                <input type="hidden" name="transaction_id" id="transaction_id" value="">
+                <input type="hidden" name="amount" id="amount" value="">
+                <input type="hidden" name="status" id="status" value="">
+            </form>
         </div>
     </div>
-
-    <!-- start product action popup -->
-    <div id="action-product-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header border-bottom">
-                    <h4 class="modal-title">{{ __('Product Action') }}</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-
-                <div class="modal-body">
-                 
-                        <div class="card-box">
-                            <form id="save_product_action_modal" method="post" enctype="multipart/form-data"
-                            action="#">
-                            @csrf
-
-                            <div class="row mb-2">
-                                <div class="col-md-6 mb-2">
-                                    {!! Form::label('title', __('Action For '), ['class' => 'control-label']) !!}
-                                    <select class="form-control" id="action_for" name="action_for" required>
-                                        <option value="0">{{__('Select')}}</option>
-                                        @if ($client_preferences->business_type != 'taxi')
-                                         <option value="for_new">{{__('For  New')}}</option>
-                                         <option value="for_featured">{{__('For Featured')}}</option>
-                                         @endif
-                                         @if ($client_preferences->need_delivery_service == 1)
-                                         <option value="for_last_mile">{{__('For Requires Last Mile Delivery')}}</option>
-                                         @endif
-                                         <option value="for_live">{{__('Draft/Published')}}</option>
-                                         <option value="for_tax">{{__('Tax Category')}}</option>
-                                         <option value="for_sell_when_out_of_stock">{{__('Sell when out of stock ')}}</option>
-                                    </select>
-                                </div>
-                                
-                               
-
-                            </div>
-
-                            <div class="row mb-2">
-                                @if ($client_preferences->business_type != 'taxi')
-                                    <div class="col-md-6 justify-content-between mb-2" id="for_new" style="display:none;">
-                                        {!! Form::label('title', __('New'), ['class' => 'control-label']) !!}
-                                        <input type="checkbox" id="is_new" data-plugin="switchery" name="is_new"
-                                            class="chk_box" data-color="#43bee1">
-                                    </div>
-                                      <div class="col-md-6 justify-content-between mb-2"   id="for_featured" style="display:none;">
-                                        {!! Form::label('title', __('Featured'), ['class' => 'control-label']) !!}
-                                        <input type="checkbox" id="is_featured" data-plugin="switchery" name="is_featured"
-                                            class="chk_box" data-color="#43bee1">
-                                    </div>
-                                @endif
-                                @if ($client_preferences->need_delivery_service == 1)
-                                     <div class="col-md-6  justify-content-between mb-2"    id="for_last_mile"  style="display:none;">
-                                        {!! Form::label('title', __('Requires Last Mile Delivery'), ['class' => 'control-label']) !!}
-                                        <input type="checkbox" id="last_mile" data-plugin="switchery" name="last_mile"
-                                            class="chk_box" data-color="#43bee1">
-                                    </div>
-                                @endif
-
-                            </div>
-                            <div class="row">
-                                  <div class="col-md-6 mb-2"  id="for_live"  style="display: none;">
-                                    {!! Form::label('title', __('Live'), ['class' => 'control-label']) !!}
-                                    <select class="selectizeInput form-control" id="is_live" name="is_live">
-                                        <option value="0">Draft</option>
-                                        <option value="1">Published</option>
-                                    </select>
-                                  </div>
-
-                            
-                                <div class="col-md-6 mb-2"  id="for_tax"  style="display: none;">
-                                    {!! Form::label('title', __('Tax Category'), ['class' => 'control-label']) !!}
-                                    <select class="form-control " id="tax_category_for" name="tax_category">
-                                        <option value="">Select</option>
-                                        @foreach ($taxCate as $cate)
-                                            <option value="{{ $cate->id }}">{{ $cate->title }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6 justify-content-between mb-2"   id="for_sell_when_out_of_stock" style="display:none;">
-                                    {!! Form::label('title', __('Sell when out of stock'), ['class' => 'control-label']) !!}
-                                    <input type="checkbox" id="sell_when_out_of_stock" data-plugin="switchery" name="sell_when_out_of_stock"
-                                        class="chk_box" data-color="#43bee1">
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button"
-                                    class="btn btn-info waves-effect waves-light submitProductAction">{{ __('Submit') }}</button>
-                            </div>
-
-                            </form>
-
-
-                        </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    {{-- <div id="stripe_account_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="stripeAccountLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12 text-center"><h3>Do you want to connect to stripe for payouts?</h3></div>
-                    </div>
-                </div>
-                <div class="modal-footer flex-nowrap justify-content-center align-items-center">
-                    <button type="button" class="btn btn-info waves-effect waves-light" onclick="location.href='{{$stripe_connect_url}}'">{{ __("Connect to Stripe") }}</button>
-                    <button type="button" class="btn btn-info waves-effect waves-light" data-dismiss="modal">{{ __("Later") }}</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
+    <script src="{{asset('assets/libs/datatables/datatables.min.js')}}"></script>
     <!-- end product popup -->
     <script type="text/javascript">
         $(".all-product_check").click(function() {
@@ -620,7 +387,7 @@
 
         ////////   *******************  Save product action data ******************* ////////////////////////
         // $('#save_product_action_modal').on('submit', function(e) {
-        //     e.preventDefault(); 
+        //     e.preventDefault();
         //     var is_new = $('#is_new').val();
         //     var is_featured = $('#is_featured').val();
         //     var is_live = $('#is_live').val();
@@ -630,7 +397,7 @@
         //         product_id[i] = $(this).val();
         //     });
         //     if (product_id.length == 0) {
-               
+
         //         $("#action-product-modal .close").click();
         //         return;
         //     }
@@ -660,14 +427,14 @@
                 product_id[i] = $(this).val();
             });
             if (product_id.length == 0) {
-               
+
                 $("#action-product-modal .close").click();
                 return;
             }
             if(action_for == 0){
                 return false;
             }
-            
+
             $.ajax({
                 type: "post",
                 url: '{{route("product.update.action")}}',
@@ -686,11 +453,11 @@
                     $(".loader_box").hide();
                 },
                 error: function(response) {
-                    
+
                         $(".show_all_error.invalid-feedback").show();
                         $(".show_all_error.invalid-feedback").text(
                             'Something went wrong, Please try Again.');
-                    
+
                     return response;
                 }
             });
@@ -898,8 +665,139 @@
                 }
             });
         });
+
+        $(document).delegate("#payout_form", "submit", function(e){
+            e.preventDefault();
+            var valid = true, message = '';
+            var amount = parseFloat($('#payout_amount').val());
+            var avl_funds = parseFloat($("#available_funds").val());
+            if (amount == '') {
+                message = "Please enter payout amount";
+                valid = false;
+            }
+            else if (!$('input[name="payout_option"]').is(":checked")) {
+                message = "Please select a valid payout option";
+                valid = false;
+            }
+            else if(amount > avl_funds){
+                message = "Payout amount is greater than available funds";
+                valid = false;
+            }
+            if(!valid) {
+                $("#payout_response .alert").html(message).show();
+                setTimeout(function(){
+                    $("#payout_response .alert").hide();
+                },8000);
+                return false;
+            }
+            var payout_opt = $('input[name="payout_option"]:checked').val();
+            // if(payout_opt == 1){
+                $("#new_vendor_payout_form #payout_option_id").val(payout_opt);
+                $("#new_vendor_payout_form #transaction_id").val('');
+                $("#new_vendor_payout_form #amount").val(amount);
+                $("#new_vendor_payout_form #status").val(0);
+                $("#new_vendor_payout_form").submit();
+            // }else if(payout_opt == 2){
+                // payoutViaStripe(amount, payout_opt)
+            // }
+        });
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function payoutViaStripe(amount, payment_option_id) {
+            let ajaxData = {};
+            ajaxData.amount = amount;
+            ajaxData.payment_option_id = payment_option_id;
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: "{{route('vendor.payout.stripe', $vendor->id)}}",
+                data: ajaxData,
+                success: function(resp) {
+                    if (resp.status == 'Success') {
+
+                    } else {
+                        $("#payout_response .alert").html(resp.message).show();
+                        setTimeout(function(){
+                            $("#payout_response .alert").hide();
+                        },5000);
+                        return false;
+                    }
+                },
+                error: function(error) {
+                    var response = $.parseJSON(error.responseText);
+                    $("#payout_response .alert").html(response.message).show();
+                    setTimeout(function(){
+                        $("#payout_response .alert").hide();
+                    },5000);
+                    return false;
+                }
+            });
+        }
+
+
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
+        initDataTable();
+
+        // $("#range-datepicker").flatpickr({
+        //     mode: "range",
+        //     onClose: function(selectedDates, dateStr, instance) {
+        //         initDataTable();
+        //     }
+        // });
+
+        function initDataTable() {
+            $('#vendor_payouts_datatable').DataTable({
+                "dom": '<"toolbar">rtip', //'<"toolbar">Bfrtip',
+                "destroy": true,
+                "processing": true,
+                "serverSide": true,
+                "iDisplayLength": 50,
+                // language: {
+                //     search: "",
+                //     paginate: { previous: "<i class='mdi mdi-chevron-left'>", next: "<i class='mdi mdi-chevron-right'>" },
+                //     searchPlaceholder: "Search By Vendor Name"
+                // },
+                drawCallback: function () {
+                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                },
+                // buttons:[{
+                //         className:'btn btn-success waves-effect waves-light',
+                //         text: '<span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV',
+                //         action: function ( e, dt, node, config ) {
+                //             window.location.href = "{{ route('account.vendor.export') }}";
+                //         }
+                // }],
+                ajax: {
+                  url: "{{route('vendor.payout.filter', $vendor->id)}}",
+                //   data: function (d) {
+                //     d.search = $('input[type="search"]').val();
+                //     d.date_filter = $('#range-datepicker').val();
+                //   }
+                },
+                columns: [
+                    {data: 'date', name: 'date', orderable: true, searchable: false},
+                    {data: 'amount', name: 'amount', orderable: false, searchable: false},
+                    {data: 'type', name: 'type', orderable: false, searchable: false},
+                    {data: 'status', name: 'status', orderable: false, searchable: false},
+                ]
+            });
+
+        }
+
     </script>
-    @include('backend.vendor.modals')
+    {{-- @include('backend.vendor.modals') --}}
 @endsection
 @section('script')
     @include('backend.vendor.pagescript')

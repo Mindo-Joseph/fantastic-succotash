@@ -48,7 +48,9 @@
                             <input type="hidden" name="orderDta" id="orderDta" value="" />
                         </form>
                         <div class="custom-dd-empty dd" id="nestable_list_3">
-                            <?php print_r($html); ?>
+                            <div class="outer-box">
+                                <?php print_r($html); ?>
+                            </div>    
                         </div>
                     </div>
                 </div>
@@ -84,7 +86,7 @@
                             @csrf
                             <input type="hidden" name="orderData" id="orderVariantData" value="" />
                         </form>
-                        <div class="table-responsive">
+                        <div class="table-responsive outer-box">
                             <table class="table table-centered table-nowrap table-striped" id="varient-datatable">
                                 <thead>
                                     <tr>
@@ -155,7 +157,7 @@
                             @csrf
                             <input type="hidden" name="orderData" id="orderBrandData" value="" />
                         </form>
-                        <div class="table-responsive">
+                        <div class="table-responsive outer-box">
                             <table class="table table-centered table-nowrap table-striped" id="brand-datatable">
                                 <thead>
                                     <tr>
@@ -167,7 +169,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach($brands as $key => $brand)
-                                    @if(!empty($brand->translation))
+                                    @if(isset($brand->translation) && !empty($brand->translation))
                                     <tr class="brandList" data-row-id="{{$brand->id}}">
                                         <td><span class="dragula-handle"></span></td>
                                         <td><img class="rounded-circle" src="{{$brand->image['proxy_url'].'30/30'.$brand->image['image_path']}}"></td>
@@ -178,9 +180,10 @@
                                                 {{$cate->translation_one['name']??''}}
                                                 @endif
                                                 @endforeach --}}
-                                                
-                                                    {{$cat->categoryDetail->translation->first()->name ?? ''}}
-                                                
+                                                    @if(isset($cat->categoryDetail->translation) && !empty($cat->categoryDetail->translation))
+                                                      {{ $cat->categoryDetail->translation->first()->name ?? ''}}
+                                                    @endif
+
                                                 @endforeach
                                             </b></td>
                                         <td>

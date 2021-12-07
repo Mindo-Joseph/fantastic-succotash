@@ -65,8 +65,8 @@
                                                         {{ $loyalty_points_earned }}
                                                     </div>
                                                     <div class="ponits-heading">
-                                                        Total Earned Points
-                                                    </div>                                                    
+                                                        {{ __('Total Points Earned') }}
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 text-center">
@@ -75,7 +75,7 @@
                                                         {{ $loyalty_points_used }}
                                                     </div>
                                                     <div class="ponits-heading">
-                                                        Spendable Points
+                                                        {{ __('Total Points Spent') }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -83,7 +83,7 @@
                                     </div>
                                 </div>
                             @else
-                                <div class="text-center">Not Available</div>
+                                <div class="text-center">{{__('Not Available')}}</div>
                             @endif
 
                            <div class="row">
@@ -91,7 +91,7 @@
                                     @if($upcoming_loyalty->isNotEmpty())
                                     <div class="row">
                                         <div class="col-12 mt-3">
-                                            <h2>Upcoming</h2>
+                                            <h2>{{__('Upcoming')}}</h2>
                                         </div>
                                         @foreach($upcoming_loyalty as $loyalty)
                                         <div class="col-md-6 mt-3 text-center">
@@ -108,7 +108,7 @@
                                </div>
                            </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>

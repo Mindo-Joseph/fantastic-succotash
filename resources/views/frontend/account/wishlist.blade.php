@@ -9,6 +9,9 @@
 </style>
 @endsection
 @section('content')
+@php
+$timezone = Auth::user()->timezone;
+@endphp
 <header>
     <div class="mobile-fix-option"></div>
     @if(isset($set_template)  && $set_template->template_id == 1)
@@ -77,7 +80,7 @@
             <div class="col-lg-3">
                 <div class="account-sidebar"><a class="popup-btn">{{__('My Account')}}</a></div>
                 <div class="dashboard-left">
-                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}</span></div>
+                    <div class="collection-mobile-back"><span class="filter-back d-lg-none d-inline-block"><i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}</span></div>
                     @include('layouts.store/profile-sidebar')
                 </div>
             </div>
@@ -138,8 +141,8 @@
                                                                 <h4 class="m-0">{{ $wish['product']['translation_title'] }}</h4>
                                                             </div>
                                                         </td>
-                                                        <td>{{ Session::get('currencySymbol') . $wish['product']['variant_price'] }}</td>
-                                                        <td>{{date('M d, Y', strtotime($wish['added_on']))}}</td>
+                                                        <td>{{ Session::get('currencySymbol') }}@money($wish['product']['variant_price'])</td>
+                                                        <td>{{ dateTimeInUserTimeZone($wish['added_on'], $timezone, true, false) }}</td>
                                                         <td>
                                                             @if(empty($wish['product']['deleted_at']))
                                                                 @if($wish['product']['variant_quantity'] > 0)

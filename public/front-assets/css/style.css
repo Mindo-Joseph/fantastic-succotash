@@ -5113,8 +5113,8 @@ button.btn.btn-outline:active {
     font-size: 10px;
     line-height: 15px;
     font-weight: 600;
-    top: -40px;
-    right: -20px;
+    top: -30px;
+    right: -15px;
     padding: 3px;
 }
 
@@ -5165,9 +5165,7 @@ button.btn.btn-outline:active {
     font-weight: 400;
 }
 
-/**=====================
-    category css start
-==========================**/
+/**===================== category css start ==========================**/
 .category-block .category-image {
     margin: 0 auto;
     text-align: center;
@@ -14135,10 +14133,6 @@ header.stickycls {
         width: max-content !important;
     }
 
-    .menu-slider .slick-slide:first-child{
-        display: none !important;
-    }
-
     /* .sm-horizontal {
         position: fixed !important;
         background-color: #fff;
@@ -19039,9 +19033,9 @@ header.stickycls {
     padding-bottom: 0;
 }
 
-.collection-collapse-block {
+/* .collection-collapse-block {
     padding-bottom: 24px;
-}
+} */
 
 .collection-collapse-block.open {
     margin-bottom: 0;
@@ -26279,12 +26273,6 @@ body.dark {
     border-color: #404040;
 }
 
-.dark .nav-tabs .nav-link.active {
-    background-color: #2b2b2b;
-    -webkit-transition: all 0.3s ease;
-    transition: all 0.3s ease;
-}
-
 .dark .tab-product .nav-material.nav-tabs .nav-item .nav-link {
     color: #cbcbcb;
 }
@@ -31061,8 +31049,8 @@ body[dir=rtl] .slick-slide {
     }
 
     .collection-filter .theme-card {
-        padding-left: 30px;
-        padding-right: 30px;
+        padding-left: 15px;
+        padding-right: 15px;
     }
 
     .collection-filter .collection-sidebar-banner {

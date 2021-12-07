@@ -69,7 +69,7 @@ class FrontController extends Controller
             $categories = $this->buildTree($categories->toArray());
         }
 
-      
+
         return $categories;
     }
 
@@ -111,7 +111,7 @@ class FrontController extends Controller
                         $this->getChildCategoriesForVendor($child->id, $langId, $vid);
                     }
                 }
-                
+
                 $vendorCategory = VendorCategory::with(['category.translation' => function($q) use($langId){
                     $q->where('category_translations.language_id', $langId);
                 }])->where('vendor_id', $vid)->where('category_id', $cate->id)->where('status', 1)->first();
@@ -125,19 +125,24 @@ class FrontController extends Controller
     }
 
     public function getServiceAreaVendors(){
+        $client_preferences = ClientPreference::where('id', '>', 0)->first();
         $latitude = Session::get('latitude');
         $longitude = Session::get('longitude');
         $vendorType = Session::get('vendorType');
+        $preferences = Session::has('preferences') ? Session::get('preferences') : $client_preferences;
         $serviceAreaVendors = Vendor::select('id');
         $vendors = [];
         if($vendorType){
             $serviceAreaVendors = $serviceAreaVendors->where($vendorType, 1);
         }
-        $serviceAreaVendors = $serviceAreaVendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                $query->select('vendor_id')
-                ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-            })
-            ->where('status', 1)->get();
+        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+            $serviceAreaVendors = $serviceAreaVendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                    $query->select('vendor_id')
+                    ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                });
+        }
+        $serviceAreaVendors = $serviceAreaVendors->where('status', 1)->get();
+
 
         if($serviceAreaVendors->isNotEmpty()){
             foreach($serviceAreaVendors as $value){
@@ -158,6 +163,8 @@ class FrontController extends Controller
 
     public function productList($vendorIds, $langId, $currency = 'USD', $where = '')
     {
+        $clientCurrency = ClientCurrency::where('currency_id', $currency)->first();
+        $multiplier = ($clientCurrency) ? $clientCurrency->doller_compare : 1;
         $products = Product::with([
             'category.categoryDetail.translation' => function ($q) use ($langId) {
                 $q->where('category_translations.language_id', $langId);
@@ -183,13 +190,18 @@ class FrontController extends Controller
                 $products = $products->whereIn('vendor_id', $vendorIds);
             }
             $products = $products->where('is_live', 1)->whereNotNull('category_id')->take(6)->get();
-        // pr($products->toArray());die;          
+        // pr($products->toArray());die;
         if (!empty($products)) {
             foreach ($products as $key => $value) {
-                $value->averageRating = number_format($value->averageRating, 1, '.', '');
                 foreach ($value->variant as $k => $v) {
                     $value->variant[$k]->multiplier = Session::get('currencyMultiplier');
                 }
+                $value->vendor_name = $value->vendor ? $value->vendor->name : '';
+                $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
+                $value->translation_description = (!empty($value->translation->first())) ? $value->translation->first()->body_html : $value->sku;
+                $value->variant_multiplier = $multiplier;
+                $value->variant_price = (!empty($value->variant->first())) ? number_format(($value->variant->first()->price * $multiplier),2,'.',',') : 0;
+                $value->averageRating = number_format($value->averageRating, 1, '.', '');
                 $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                 $value->category_name = ($value->category->categoryDetail->translation->first()) ? $value->category->categoryDetail->translation->first()->name :  $value->category->slug;
             }
@@ -245,7 +257,7 @@ class FrontController extends Controller
                 $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
                 $value->translation_description = (!empty($value->translation->first())) ? $value->translation->first()->body_html : $value->sku;
                 $value->variant_multiplier = $multiplier ? $multiplier : 1;
-                $value->variant_price = (!empty($value->variant->first())) ? number_format(($value->variant->first()->price * $multiplier),2,'.','') : 0;
+                $value->variant_price = (!empty($value->variant->first())) ? number_format(($value->variant->first()->price * $multiplier),2,'.',',') : 0;
                 $value->averageRating = number_format($value->averageRating, 1, '.', '');
                 $value->category_name = $value->category->categoryDetail->translation->first() ? $value->category->categoryDetail->translation->first()->name : '';
                 $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '600/600' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
@@ -448,7 +460,7 @@ class FrontController extends Controller
         }
         $divider = (empty($clientCurrency->doller_compare) || $clientCurrency->doller_compare < 0) ? 1 : $clientCurrency->doller_compare;
         $amount = ($amount / $divider) * $primaryCurrency->doller_compare;
-        $amount = number_format($amount, 2);
+        $amount = number_format($amount, 2,'.','');
         return $amount;
     }
 
@@ -461,7 +473,7 @@ class FrontController extends Controller
     }
 
 
-    // get cart data in on demand product listing page 
+    // get cart data in on demand product listing page
     public function getCartOnDemand($request)
     {
         $cartData = [];
@@ -498,7 +510,7 @@ class FrontController extends Controller
 
         $user = Auth::user();
         $timezone = $user->timezone ?? 'Asia/Kolkata';
-        
+
         $start_date = new DateTime("now", new  DateTimeZone($timezone) );
         $start_date =  $start_date->format('Y-m-d');
         $end_date = Date('Y-m-d', strtotime('+13 days'));
@@ -514,8 +526,8 @@ class FrontController extends Controller
 
     /////////// ***************    get all time slots *******************************  /////////////////////
     function SplitTime($StartTime, $EndTime, $Duration="30"){
-       
-       
+
+
         $ReturnArray = array ();// Define output
         if(date ("i", strtotime($StartTime)) > 30)
         $startwith = 00;
@@ -526,10 +538,10 @@ class FrontController extends Controller
         $StartTime    = strtotime ($StartTime); //Get Timestamp
         $EndTime      = strtotime ($EndTime); //Get Timestamp
         $AddMins  = $Duration * 30;
-       
-        
+
+
         while ($StartTime <= $EndTime) //Run loop
-        {   
+        {
             $ReturnArray[] = date ("G:i", $StartTime);
             $StartTime += $AddMins; //Endtime check
         }
@@ -594,7 +606,7 @@ class FrontController extends Controller
           $dist = rad2deg($dist);
           $miles = $dist * 60 * 1.1515;
           $unit = strtolower($unit);
-      
+
           if ($unit == "kilometer") {
             return ($miles * 1.609344);
           } else if ($unit == "nautical mile") {
@@ -605,26 +617,49 @@ class FrontController extends Controller
         }
     }
 
-    public function formattedOrderETA($minutes, $order_vendor_created_at, $scheduleTime=''){
+    public function formattedOrderETA($minutes, $order_vendor_created_at, $scheduleTime='', $user=''){
         $d = floor ($minutes / 1440);
         $h = floor (($minutes - $d * 1440) / 60);
         $m = $minutes - ($d * 1440) - ($h * 60);
         // return (($d > 0) ? $d.' days ' : '') . (($h > 0) ? $h.' hours ' : '') . (($m > 0) ? $m.' minutes' : '');
 
+        // if($scheduleTime != ''){
+        //     $datetime = Carbon::parse($scheduleTime)->setTimezone(Auth::user()->timezone)->toDateTimeString();
+        // }else{
+        //     $datetime = Carbon::parse($order_vendor_created_at)->setTimezone(Auth::user()->timezone)->addMinutes($minutes)->toDateTimeString();
+        // }
+
+        // if(Carbon::parse($datetime)->isToday()){
+        //     $format = 'h:i A';
+        // }else{
+        //     $format = 'M d, Y h:i A';
+        // }
+        // // $time = convertDateTimeInTimeZone($datetime, Auth::user()->timezone, $format);
+        // $time = Carbon::parse($datetime)->format($format);
+
+        if(isset($user) && !empty($user))
+        $user =  $user;
+        else
+        $user = Auth::user();
+        $timezone = $user->timezone;
+        $preferences = ClientPreference::select('date_format', 'time_format')->where('id', '>', 0)->first();
+        $date_format = $preferences->date_format;
+        $time_format = $preferences->time_format;
+
         if($scheduleTime != ''){
-            $datetime = Carbon::parse($scheduleTime)->setTimezone(Auth::user()->timezone)->toDateTimeString();
+            $datetime = dateTimeInUserTimeZone($scheduleTime, $timezone);
         }else{
-            $datetime = Carbon::parse($order_vendor_created_at)->setTimezone(Auth::user()->timezone)->addMinutes($minutes)->toDateTimeString();
+            $datetime = dateTimeInUserTimeZone($order_vendor_created_at, $timezone);
         }
-        
         if(Carbon::parse($datetime)->isToday()){
-            $format = 'h:i A';
-        }else{
-            $format = 'M d, Y h:i A';
+            if($time_format == '12'){
+                $time_format = 'hh:mm A';
+            }else{
+                $time_format = 'HH:mm';
+            }
+            $datetime = Carbon::parse($datetime)->isoFormat($time_format);
         }
-        // $time = convertDateTimeInTimeZone($datetime, Auth::user()->timezone, $format);
-        $time = Carbon::parse($datetime)->format($format);
-        return $time;
+        return $datetime;
     }
 
     public function getClientCode(){

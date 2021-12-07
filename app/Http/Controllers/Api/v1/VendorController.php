@@ -168,7 +168,10 @@ class VendorController extends BaseController{
                             'variant' => function($q) use($langId){
                                 $q->select('id','sku', 'product_id', 'quantity', 'price', 'barcode', 'compare_at_price')->orderBy('quantity', 'desc');
                                 // $q->groupBy('product_id');
-                            },'variant.checkIfInCartApp',
+                            },'variant.checkIfInCartApp', 'checkIfInCartApp',
+                             'tags.tag.translations' => function ($q) use ($langId) {
+                                $q->where('language_id', $langId);
+                            }
                         ])->select('id', 'sku', 'description', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating', 'inquiry_only');
                     $products = $products->where('is_live', 1)->where('category_id', $category->category_id)->where('vendor_id', $vid)->get();
                     
@@ -199,7 +202,7 @@ class VendorController extends BaseController{
                             $value->variantSet = $variantData->variantSet;
                             $value->product_image = ($value->media->isNotEmpty()) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : '';
                             $value->translation_title = ($value->translation->isNotEmpty()) ? $value->translation->first()->title : $value->sku;
-                            $value->translation_description = ($value->translation->isNotEmpty()) ? html_entity_decode(strip_tags($value->translation->first()->body_html)) : '';
+                            $value->translation_description = ($value->translation->isNotEmpty()) ? html_entity_decode(strip_tags($value->translation->first()->body_html),ENT_QUOTES) : '';
                             $value->translation_description = !empty($value->translation_description) ? mb_substr($value->translation_description, 0, 70) . '...' : '';
                             $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                             $value->variant_price = ($value->variant->isNotEmpty()) ? $value->variant->first()->price : 0;
@@ -261,7 +264,10 @@ class VendorController extends BaseController{
                         'variant' => function($q) use($langId){
                             $q->select('id','sku', 'product_id', 'title', 'quantity', 'price', 'barcode');
                             // $q->groupBy('product_id');
-                        }, 'variant.checkIfInCartApp',
+                        }, 'variant.checkIfInCartApp', 'checkIfInCartApp',
+                        'tags.tag.translations' => function ($q) use ($langId) {
+                            $q->where('language_id', $langId);
+                        }
                     ])->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'products.category_id')
                     ->where('products.vendor_id', $vid)
                     ->where('products.is_live', 1)->paginate($paginate);
@@ -295,7 +301,7 @@ class VendorController extends BaseController{
                         // $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                         $product->product_image = ($product->media->isNotEmpty()) ? $product->media->first()->image->path['image_fit'] . '300/300' . $product->media->first()->image->path['image_path'] : '';
                         $product->translation_title = ($product->translation->isNotEmpty()) ? $product->translation->first()->title : $product->sku;
-                        $product->translation_description = ($product->translation->isNotEmpty()) ? html_entity_decode(strip_tags($product->translation->first()->body_html)) : '';
+                        $product->translation_description = ($product->translation->isNotEmpty()) ? html_entity_decode(strip_tags($product->translation->first()->body_html),ENT_QUOTES) : '';
                         $product->translation_description = !empty($product->translation_description) ? mb_substr($product->translation_description, 0, 70) . '...' : '';
                         $product->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                         $product->variant_price = ($product->variant->isNotEmpty()) ? $product->variant->first()->price : 0;
@@ -412,7 +418,7 @@ class VendorController extends BaseController{
                             'variant' => function ($q) use ($langId) {
                                 $q->select('id', 'sku', 'product_id', 'quantity', 'price', 'barcode', 'compare_at_price')->orderBy('quantity', 'desc');
                             // $q->groupBy('product_id');
-                            },'variant.checkIfInCartApp',
+                            },'variant.checkIfInCartApp', 'checkIfInCartApp',
                         ])->select('id', 'sku', 'description', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating', 'inquiry_only');
                         $products = $products->where('is_live', 1)->where('category_id', $category->category_id)->where('vendor_id', $vid)->get();
                     
@@ -443,7 +449,7 @@ class VendorController extends BaseController{
                                 $value->variantSet = $variantData->variantSet;
                                 $value->product_image = ($value->media->isNotEmpty()) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : '';
                                 $value->translation_title = ($value->translation->isNotEmpty()) ? $value->translation->first()->title : $value->sku;
-                                $value->translation_description = ($value->translation->isNotEmpty()) ? html_entity_decode(strip_tags($value->translation->first()->body_html)) : '';
+                                $value->translation_description = ($value->translation->isNotEmpty()) ? html_entity_decode(strip_tags($value->translation->first()->body_html),ENT_QUOTES) : '';
                                 $value->translation_description = !empty($value->translation_description) ? mb_substr($value->translation_description, 0, 70) . '...' : '';
                                 $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                                 $value->variant_price = ($value->variant->isNotEmpty()) ? $value->variant->first()->price : 0;
@@ -506,7 +512,7 @@ class VendorController extends BaseController{
                             'variant' => function ($q) use ($langId) {
                                 $q->select('id', 'sku', 'product_id', 'title', 'quantity', 'price', 'barcode');
                             // $q->groupBy('product_id');
-                            }, 'variant.checkIfInCartApp',
+                            }, 'variant.checkIfInCartApp', 'checkIfInCartApp',
                         ])->select('id', 'sku', 'description', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating', 'inquiry_only');
                     if (!empty($slug2)) {
                         $category = Category::select('id')->where('slug', $slug2)->first();
@@ -544,7 +550,7 @@ class VendorController extends BaseController{
                             $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
                             $product->product_image = ($product->media->isNotEmpty()) ? $product->media->first()->image->path['image_fit'] . '300/300' . $product->media->first()->image->path['image_path'] : '';
                             $product->translation_title = ($product->translation->isNotEmpty()) ? $product->translation->first()->title : $product->sku;
-                            $product->translation_description = ($product->translation->isNotEmpty()) ? html_entity_decode(strip_tags($product->translation->first()->body_html)) : '';
+                            $product->translation_description = ($product->translation->isNotEmpty()) ? html_entity_decode(strip_tags($product->translation->first()->body_html),ENT_QUOTES) : '';
                             $product->translation_description = !empty($product->translation_description) ? mb_substr($product->translation_description, 0, 70) . '...' : '';
                             $product->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                             $product->variant_price = ($product->variant->isNotEmpty()) ? $product->variant->first()->price : 0;
@@ -575,7 +581,7 @@ class VendorController extends BaseController{
                 $response['vendor'] = $vendor;
                 $response['products'] = ($vendor->vendor_templete_id != 5) ? $products : [];
                 $response['categories'] = ($vendor->vendor_templete_id == 5) ? $listData : [];
-                $response['filterData'] = $variantSets;
+                $response['filterData'] = $variantSets??[];
             }else{
                 $response['vendor'] = [];
                 $response['products'] = [];

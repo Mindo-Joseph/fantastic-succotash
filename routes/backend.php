@@ -14,10 +14,12 @@ use App\Http\Controllers\Client\Accounting\VendorController;
 use App\Http\Controllers\Client\Accounting\LoyaltyController;
 use App\Http\Controllers\Client\Accounting\PromoCodeController;
 use App\Http\Controllers\Client\VendorRegistrationDocumentController;
+use App\Http\Controllers\Client\TagController;
 use App\Http\Controllers\Client\DriverRegistrationDocumentController;
+use App\Http\Controllers\Client\ProductFaqController;
 
 Route::get('email-test', function () {
-    $details['email'] = 'pankaj@yopmail.com';
+    $details['email'] = 'testmail@yopmail.com';
     dispatch(new App\Jobs\SendVerifyEmailJob($details))->delay(now()->addSeconds(2))->onQueue('course_interactions');
     dd('done');
 });
@@ -66,6 +68,9 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::get('account/vendor', [VendorController::class, 'index'])->name('account.vendor');
         // Route::get('account/vendor/payout', [VendorPayoutController::class, 'index'])->name('account.vendor.payout');
         // Route::get('account/vendor/payout/filter', [VendorPayoutController::class, 'filter'])->name('account.vendor.payout.filter');
+        Route::get('account/vendor/payout/requests', [VendorPayoutController::class, 'vendorPayoutRequests'])->name('account.vendor.payout.requests');
+        Route::get('account/vendor/payout/requests/filter', [VendorPayoutController::class, 'vendorPayoutRequestsFilter'])->name('account.vendor.payout.requests.filter');
+        Route::post('account/vendor/payout/request/complete/{id}', [VendorPayoutController::class, 'vendorPayoutRequestComplete'])->name('account.vendor.payout.request.complete');
         Route::get('account/tax/filter', [TaxController::class, 'filter'])->name('account.tax.filter');
         Route::get('account/tax/export', [TaxController::class, 'export'])->name('account.tax.export');
         Route::get('account/vendor/filter', [VendorController::class, 'filter'])->name('account.vendor.filter');
@@ -128,6 +133,23 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::post('vendorregistrationdocument/create', [VendorRegistrationDocumentController::class, 'store'])->name('vendor.registration.document.create');
         Route::post('vendorregistrationdocument/update', [VendorRegistrationDocumentController::class, 'update'])->name('vendor.registration.document.update');
         Route::post('vendor/registration/document/delete', [VendorRegistrationDocumentController::class, 'destroy'])->name('vendor.registration.document.delete');
+
+        Route::resource('tag', 'Client\TagController');
+        
+        Route::get('tag/edit', [TagController::class, 'show'])->name('tag.edit');
+        Route::post('tag/create', [TagController::class, 'store'])->name('tag.create');
+        Route::post('tag/update', [TagController::class, 'update'])->name('tag.update');
+        Route::post('tag/delete', [TagController::class, 'destroy'])->name('tag.delete');
+
+
+        Route::resource('productfaq', 'Client\ProductFaqController');
+        Route::get('product/faq/edit', [ProductFaqController::class, 'show'])->name('product.faq.edit');
+        Route::post('productfaq/create', [ProductFaqController::class, 'store'])->name('product.faq.create');
+        Route::post('productfaq/update', [ProductFaqController::class, 'update'])->name('product.faq.update');
+        Route::post('product/faq/delete', [ProductFaqController::class, 'destroy'])->name('product.faq.delete');
+
+
+
         Route::resource('driverregistrationdocument', 'Client\DriverRegistrationDocumentController');
         Route::get('driver/registration/document/edit', [DriverRegistrationDocumentController::class, 'show'])->name('driver.registration.document.edit');
         Route::post('driverregistrationdocument/create', [DriverRegistrationDocumentController::class, 'store'])->name('driver.registration.document.create');
@@ -148,6 +170,8 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::DELETE('vendor/vendor-permission-del/{id}', 'Client\VendorController@userVendorPermissionDestroy')->name('user.vendor.permission.destroy');
         Route::get('vendor/catalogs/{id}', 'Client\VendorController@vendorCatalog')->name('vendor.catalogs');
         Route::get('vendor/payout/{id}', 'Client\VendorController@vendorPayout')->name('vendor.payout');
+        Route::get('vendor/payout/filter/{id}', 'Client\VendorController@payoutFilter')->name('vendor.payout.filter');
+        Route::post('vendor/payout/create/{id}', 'Client\VendorController@vendorPayoutCreate')->name('vendor.payout.create');
         Route::post('vendor/saveConfig/{id}', 'Client\VendorController@updateConfig')->name('vendor.config.update');
         Route::post('vendor/activeCategory/{id}', 'Client\VendorController@activeCategory')->name('vendor.category.update');
         Route::post('vendor/addCategory/{id}', 'Client\TableBookingController@storeCategory')->name('vendor.addCategory');
@@ -169,6 +193,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::post('vendor/editArea/{vid}', 'Client\ServiceAreaController@edit')->name('vendor.serviceArea.edit');
         Route::post('vendor/updateArea/{id}', 'Client\ServiceAreaController@update');
         Route::post('vendor/deleteArea/{vid}', 'Client\ServiceAreaController@destroy')->name('vendor.serviceArea.delete');
+        Route::post('draw-circle-with-radius/{vid}', 'Client\ServiceAreaController@drawCircleWithRadius')->name('draw.circle.with.radius');
         Route::resource('order', 'Client\OrderController');
         Route::post('orders/filter', 'Client\OrderController@postOrderFilter')->name('orders.filter');
         Route::get('order/return/{status}', 'Client\OrderController@returnOrders')->name('backend.order.returns');
@@ -189,6 +214,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::post('product/updateActions', 'Client\ProductController@updateActions')->name('product.update.action');   # update all product actions
         Route::post('product/importCSV', 'Client\ProductController@importCsv')->name('product.import');
         Route::post('product/validate', 'Client\ProductController@validateData')->name('product.validate');
+        Route::post('product/sku/validate', 'Client\ProductController@validateSku')->name('product.sku.validate');
         Route::get('product/add/{vendor_id}', 'Client\ProductController@create')->name('product.add');
         Route::post('product/getImages', 'Client\ProductController@getImages')->name('productImage.get');
         Route::post('product/deleteVariant', 'Client\ProductController@deleteVariant')->name('product.deleteVariant');
@@ -236,6 +262,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
 
         Route::post('subscription/payment/stripe', 'Client\StripeGatewayController@subscriptionPaymentViaStripe')->name('subscription.payment.stripe');
         Route::get('verify/oauth/token/stripe', 'Client\StripeGatewayController@verifyOAuthToken')->name('verify.oauth.token.stripe');
+        Route::post('vendor/payout/stripe/{id}', 'Client\StripeGatewayController@vendorPayoutViaStripe')->name('vendor.payout.stripe');
 
         Route::get('/admin/signup', 'Client\AdminSignUpController@index')->name('admin.signup');
         Route::post('save_fcm_token', 'Client\UserController@save_fcm')->name('client.save_fcm');
@@ -246,6 +273,8 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
             Route::post('updateCreateVendorInDispatchOnDemand', 'Client\VendorController@updateCreateVendorInDispatchOnDemand')->name('update.Create.Vendor.In.Dispatch.OnDemand');
             Route::post('updateCreateVendorInDispatchLaundry', 'Client\VendorController@updateCreateVendorInDispatchLaundry')->name('update.Create.Vendor.In.Dispatch.Laundry');
         });
+
+        Route::resource('review', 'Client\ReviewController');
     });
 });
 

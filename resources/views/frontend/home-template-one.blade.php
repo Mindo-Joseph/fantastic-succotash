@@ -9,70 +9,8 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
-
-    #shimmer_effect {
-        overflow: hidden;
-    }
-
-    .grid-row.grid-4-4 {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-gap: 20px;
-    }
-
-    #shimmer_effect .card_image {
-        width: 100%;
-        height: 100%;
-    }
-
-    #shimmer_effect .card_image.loading {
-        width: 100%;
-        height: 180px;
-    }
-
-    #shimmer_effect .card_title.loading {
-        width: 50%;
-        height: 1rem;
-        margin: 1rem;
-        border-radius: 3px;
-        position: relative;
-    }
-
-    #shimmer_effect .card_description {
-        padding: 8px;
-        font-size: 16px;
-    }
-
-    #shimmer_effect .card_description.loading {
-        height: 3rem;
-        margin: 1rem;
-        border-radius: 3px;
-    }
-
-    #shimmer_effect .loading {
-        position: relative;
-        background: #cccccc86;
-    }
-
-    #shimmer_effect .loading:after {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        transform: translateX(-100px);
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        animation: loading 0.8s infinite;
-    }
-
-    @keyframes loading {
-        100% {
-            transform: translateX(100%);
-        }
-    }
 </style>
-@endsection 
+@endsection
 @section('content')
 <header>
     <div class="mobile-fix-option"></div>
@@ -84,11 +22,33 @@
   Launch demo modal
 </button>
 
-@if(count($banners))
-<section class="home-slider-wrapper pb-4">
+<section class="no-store-wrapper mb-3" style="display:none">
     <div class="container">
         <div class="row">
             <div class="col-12">
+                <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <h4>{{__('There are no stores available in your area currently.')}}</h4>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if(count($banners))
+<section class="home-slider-wrapper mb-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+
+                <!-- banner shimmer effect Start -->
+                <div class="shimmer_effect">
+                    <div class="loading"></div>
+                </div>
+                 <!-- banner shimmer effect End -->
+
                 <div class="home-banner-slider">
                     @foreach($banners as $banner)
                         @php
@@ -111,8 +71,8 @@
                         @if($url)
                     </a>
                     @endif
-                    @endforeach    
-                   
+                    @endforeach
+
                 </div>
             </div>
         </div>
@@ -120,23 +80,33 @@
 </section>
 @endif
 
-<div class="home-content-area">
-   
-</div>
-
-
 <script type="text/template" id="vendors_template">
     <% _.each(vendors, function(vendor, k){%>
 
         <div>
             <a class="suppliers-box d-block px-2" href="{{route('vendorDetail')}}/<%= vendor.slug %>">
-                <div class="suppliers-img-outer">
+                <div class="suppliers-img-outer position-relative">
                     <img class="fluid-img mx-auto" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
+                    <% if(vendor.timeofLineOfSightDistance != undefined){ %>
+                        <div class="pref-timing">
+                            <span><%= vendor.timeofLineOfSightDistance %> min</span>
+                        </div>
+                    <% } %>
+                    <i class="fa fa-heart-o" aria-hidden="true"></i>
                 </div>
                 <div class="supplier-rating">
-                    <h6 class="mb-1"><%= vendor.name %></h6>
-                    <p title="<%= vendor.categoriesList %>" class="vendor-cate border-bottom pb-1 mb-1 ellips"><%= vendor.categoriesList %></p>
-                    <div class="product-timing">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h6 class="mb-1 ellips"><%= vendor.name %></h6>
+                        @if($client_preference_detail)
+                            @if($client_preference_detail->rating_check == 1)
+                                <% if(vendor.vendorRating > 0){%>
+                                    <span class="rating-number"><%= vendor.vendorRating %></span>
+                                <% } %>
+                            @endif
+                        @endif
+                    </div>
+                    <p title="<%= vendor.categoriesList %>" class="vendor-cate mb-1 ellips"><%= vendor.categoriesList %></p>
+                    <!-- <div class="product-timing">
                         <small title="<%= vendor.address %>" class="ellips d-block"><span class="icon-location2"></span> <%= vendor.address %></small>
                         <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                             <ul class="timing-box mb-1">
@@ -148,8 +118,8 @@
                                 </li>
                             </ul>
                         <% } %>
-                    </div>
-                    @if($client_preference_detail)
+                    </div> -->
+                    <!-- @if($client_preference_detail)
                         @if($client_preference_detail->rating_check == 1)
                             <% if(vendor.vendorRating > 0){%>
                                 <ul class="custom-rating m-0 p-0">
@@ -164,13 +134,13 @@
                                 </ul>
                             <% } %>
                         @endif
-                    @endif
+                    @endif -->
                 </div>
             </a>
-        </div> 
+        </div>
 
     <% }); %>
-</script>   
+</script>
 
 <script type="text/template" id="banner_template">
     <% _.each(brands, function(brand, k){%>
@@ -190,11 +160,18 @@
         <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
             <div class="img-outer-box position-relative">
                 <img src="<%= product.image_url %>" alt="">
+                <div class="pref-timing">
+                    <!--<span>5-10 min</span>-->
+                </div>
+                <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
             </div>    
             <div class="media-body align-self-center">
                 <div class="inner_spacing px-0">
                     <div class="product-description">
-                        <h3 class="m-0"><%= product.title %></h3>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h6 class="card_title mb-1 ellips"><%= product.title %></h6>                                                                                    
+                            <!--<span class="rating-number">2.0</span>-->                                
+                        </div>
                         <p><%= product.vendor_name %></p>
                         <p class="border-bottom pb-1">In <%= product.category %></p>
                         <div class="d-flex align-items-center justify-content-between">
@@ -202,7 +179,7 @@
                                 <%= product.price %>
                             <% } %></b>
 
-                            @if($client_preference_detail)
+                            <!-- @if($client_preference_detail)
                                 @if($client_preference_detail->rating_check == 1)
                                     <% if(product.averageRating > 0){%>
                                         <div class="rating-box">
@@ -211,7 +188,7 @@
                                         </div>
                                     <% } %>
                                 @endif
-                            @endif  
+                            @endif   -->
                         </div>                       
                     </div>
                 </div>
@@ -227,6 +204,9 @@
             <a class="suppliers-box d-block px-2" href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                 <div class="suppliers-img-outer">
                     <img class="fluid-img mx-auto" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
+                    <div class="pref-timing">
+                        <span>35 min</span>
+                    </div>
                 </div>
                 <div class="supplier-rating">
                     <h6 class="mb-1"><%= vendor.name %></h6>
@@ -262,7 +242,7 @@
                     @endif
                 </div>
             </a>
-        </div> 
+        </div>
 
     <% }); %>
 </script>
@@ -287,7 +267,7 @@
             <div class="row">
                 <div class="col-5 col-sm-3">
                     <h5 class="m-0">{{__('Order Status')}}</h5>
-                    <ul class="status_box mt-1 pl-0"> 
+                    <ul class="status_box mt-1 pl-0">
                     <% if(vendor.order_status){ %>
                         <li>
                         <% if(vendor.order_status == 'placed'){ %>
@@ -302,7 +282,7 @@
                             <label class="m-0 in-progress"><%= (vendor.order_status).charAt(0).toUpperCase() + (vendor.order_status).slice(1) %></label>
                         </li>
                     <% } %>
-                    
+
                     <% if(vendor.dispatch_traking_url){ %>
                         <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
                         <a href="{{route('front.booking.details')}}/<%= order.order_number %>" target="_blank">{{ __('Details') }}</a>
@@ -370,48 +350,55 @@
     <% }); %>
 </script>
 
-<section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0" id="shimmer_effect">
-    <div class="row">
+    <section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0 shimmer_effect">
         <div class="container">
             <div class="grid-row grid-4-4">
                 <div class="cards">
                     <div class="card_image loading"></div>
                     <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
                     <div class="card_description loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
                     <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
                     <div class="card_description loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
                     <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
                     <div class="card_description loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
                     <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
                     <div class="card_description loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
                     <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
                     <div class="card_description loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
                     <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
                     <div class="card_description loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
                     <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
                     <div class="card_description loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
                     <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
                     <div class="card_description loading"></div>
                 </div>
             </div>
@@ -422,13 +409,13 @@
 <section class="section-b-space ratio_asos d-none pt-0 mt-0" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $key => $homePageLabel)
-        @if($homePageLabel->slug == 'pickup_delivery') 
-                @if(isset($homePageLabel->pickupCategories) && count($homePageLabel->pickupCategories)) 
+        @if($homePageLabel->slug == 'pickup_delivery')
+                @if(isset($homePageLabel->pickupCategories) && count($homePageLabel->pickupCategories))
                   @include('frontend.booking.cabbooking-single-module')
-                @endif 
+                @endif
         @elseif($homePageLabel->slug == 'dynamic_page')
                 @include('frontend.included_files.dynamic_page')
-        @elseif($homePageLabel->slug == 'brands')  
+        @elseif($homePageLabel->slug == 'brands')
         <section class="popular-brands left-shape position-relative">
             <div class="container">
                 <div class="row align-items-center">
@@ -444,19 +431,19 @@
                     </div>
                 </div>
             </div>
-        </section> 
+        </section>
         @elseif($homePageLabel->slug == 'vendors')
         <section class="suppliers-section pt-0 mb-2">
         <div class="container">
             <div class="row">
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-2">
                     <h2 class="h2-heading">{{ $homePageLabel->slug == 'vendors' ? getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2>
-                    <a class="btn btn-solid" href="{{route('vendor.all')}}">See all</a>
+                    <a class="btn btn-solid" href="{{route('vendor.all')}}">{{__("See all")}}</a>
                 </div>
-                <div class="col-12 px-0">
+                <div class="col-12">
                     <div class="suppliers-slider render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
 
-                       
+
                     </div>
                 </div>
             </div>
@@ -469,10 +456,10 @@
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-3">
                     <h2 class="h2-heading">{{ $homePageLabel->slug == 'trending_vendors' ? __('trending')." ".getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2>
                 </div>
-                <div class="col-12 px-0">
+                <div class="col-12">
                     <div class="suppliers-slider render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
 
-                       
+
                     </div>
                 </div>
             </div>
@@ -483,7 +470,7 @@
             <div class="row">
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-0">
                     <h2 class="h2-heading">
-                    @php    
+                    @php
                     if($homePageLabel->slug == 'vendors'){
                         echo getNomenclatureName('vendors', true);
                     } elseif($homePageLabel->slug == 'recent_orders'){
@@ -526,10 +513,10 @@
             <div class="modal-footer d-block">
                 <div class="row no-gutters">
                     <div class="col-6 pr-1">
-                        <button type="button" class="btn btn-solid w-100 age_restriction_yes" data-dismiss="modal">Yes</button>
+                        <button type="button" class="btn btn-solid w-100 age_restriction_yes" data-dismiss="modal">{{__('Yes')}}</button>
                     </div>
                     <div class="col-6 pl-1">
-                        <button type="button" class="btn btn-solid w-100 age_restriction_no" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-solid w-100 age_restriction_no" data-dismiss="modal">{{__('No')}}</button>
                     </div>
                 </div>
             </div>

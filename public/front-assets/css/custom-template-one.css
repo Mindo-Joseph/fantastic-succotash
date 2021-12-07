@@ -1,7 +1,77 @@
 body {
-    font-family: 'Eina02';
-    font-weight: 400;
+    font-family: 'Zen Kaku Gothic Antique';
 }
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{
+    font-weight: bold !important;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Regular.eot');
+    src: url('../fonts/Inter-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Inter-Regular.woff2') format('woff2'),
+        url('../fonts/Inter-Regular.woff') format('woff'),
+        url('../fonts/Inter-Regular.ttf') format('truetype'),
+        url('../fonts/Inter-Regular.svg#Inter-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat-Regular.eot');
+    src: url('../fonts/Montserrat-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Montserrat-Regular.woff2') format('woff2'),
+        url('../fonts/Montserrat-Regular.woff') format('woff'),
+        url('../fonts/Montserrat-Regular.ttf') format('truetype'),
+        url('../fonts/Montserrat-Regular.svg#Montserrat-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url('../fonts/Raleway-Regular.eot');
+    src: url('../fonts/Raleway-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Raleway-Regular.woff2') format('woff2'),
+        url('../fonts/Raleway-Regular.woff') format('woff'),
+        url('../fonts/Raleway-Regular.ttf') format('truetype'),
+        url('../fonts/Raleway-Regular.svg#Raleway-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Zen Kaku Gothic Antique';
+    src: url('../fonts/ZenKakuGothicAntique-Regular.eot');
+    src: url('../fonts/ZenKakuGothicAntique-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/ZenKakuGothicAntique-Regular.woff2') format('woff2'),
+        url('../fonts/ZenKakuGothicAntique-Regular.woff') format('woff'),
+        url('../fonts/ZenKakuGothicAntique-Regular.ttf') format('truetype'),
+        url('../fonts/ZenKakuGothicAntique-Regular.svg#ZenKakuGothicAntique-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Zen Kaku Gothic Antique';
+    src: url('../fonts/ZenKakuGothicAntique-Bold.eot');
+    src: url('../fonts/ZenKakuGothicAntique-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/ZenKakuGothicAntique-Bold.woff2') format('woff2'),
+        url('../fonts/ZenKakuGothicAntique-Bold.woff') format('woff'),
+        url('../fonts/ZenKakuGothicAntique-Bold.ttf') format('truetype'),
+        url('../fonts/ZenKakuGothicAntique-Bold.svg#ZenKakuGothicAntique-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+
 
 @font-face {
     font-family: 'Eina02';
@@ -108,11 +178,11 @@ h6 {
 }
 
 .offset-top {
-    margin-top: 260px;
+    margin-top: 270px;
 }
 
 .inner-pages-offset {
-    margin-top: 177px;
+    margin-top: 207px;
 }
 
 .set-hide-nav-bar {
@@ -131,6 +201,7 @@ h6 {
 
 .site-topbar .location-bar {
     background: transparent;
+    width: calc(100% - 20px);
 }
 
 .site-header .pb-3 {
@@ -139,7 +210,7 @@ h6 {
 
 .navigation-tab,
 .navigation-tab-overlay {
-    border-radius: 8px;
+    border-radius: 4px;
 }
 
 .navigation-tab,
@@ -158,16 +229,16 @@ h6 {
 .fav-button {
     display: block;
     background-color: #f7f7f7;
-    width: 48px;
-    line-height: 48px;
+    width: 38px;
+    line-height: 38px;
     text-align: center;
     border-radius: 8px;
-    font-size: 24px;
+    font-size: 16px;
 }
 
 .icon-nav .btn.btn-solid {
-    border-radius: 8px;
-    padding: 13px 10px;
+    border-radius: 4px;
+    padding: 8px 10px;
 }
 
 .navigation-tab-overlay {
@@ -177,14 +248,15 @@ h6 {
 .navigation-tab-item .nav-link {
     color: rgba(0, 0, 0, 0.39);
     font-weight: 600;
-    padding: 5px 0;
+    padding: 3px 0 6px;
     text-align: center;
     line-height: 18px;
 }
 
 .navigation-tab-item .nav-link.active {
-    color: #fff;
+    color:  #fff;
     font-weight: 600;
+    background-color: transparent;
 }
 
 .search_form input.form-control {
@@ -216,7 +288,6 @@ h6 {
 
 .home-banner-slider img {
     width: 100%;
-    border-radius: 30px;
 }
 
 /* .home-banner-slider .slick-next:before,.home-banner-slider .slick-prev:before{
@@ -253,13 +324,13 @@ h6 {
 }
 
 .img-outer-box {
-    height: 160px;
+    height: 100px;
     position: relative;
 }
 
 .img-outer-box img {
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     width: 100%;
     object-position: center;
     border-radius: 10px;
@@ -287,13 +358,13 @@ h6 {
     display: block;
 }
 
-.common-product-box:hover,
+/* .common-product-box:hover,
 .suppliers-box:hover,
 .product-box:hover {
     border-color: rgb(232, 232, 232);
     box-shadow: rgb(28 28 28 / 12%) 0px 0.4rem 1.8rem;
     box-sizing: border-box;
-}
+} */
 
 .product-box {
     padding: 5px 16px 0;
@@ -319,7 +390,7 @@ h6 {
 
 .product-description h3 {
     color: #000000;
-    font-family: 'Eina02';
+    font-family: 'Zen Kaku Gothic Antique';
     font-weight: 600;
     font-size: 17px;
     letter-spacing: 0;
@@ -329,7 +400,7 @@ h6 {
 .product-description p {
     opacity: 0.67;
     color: #000000;
-    font-family: 'Eina02';
+    font-family: 'Zen Kaku Gothic Antique';
     font-weight: 400;
     font-size: 13px;
     letter-spacing: 0;
@@ -342,7 +413,7 @@ h6 {
 
 .product-description b {
     color: #000;
-    font-family: 'Eina02';
+    font-family: 'Zen Kaku Gothic Antique';
     font-weight: 700;
     font-size: 16px;
     letter-spacing: 0;
@@ -351,7 +422,7 @@ h6 {
 
 .h2-heading {
     color: #000;
-    font-family: 'Eina02';
+    font-family: 'Zen Kaku Gothic Antique';
     font-weight: 700;
     font-size: 33px;
     letter-spacing: 0;
@@ -369,7 +440,7 @@ h6 {
     line-height: 35px;
     border-radius: 27.5px;
     color: #EC5837;
-    font-family: 'Eina02';
+    font-family: 'Zen Kaku Gothic Antique';
     font-weight: 600;
     font-size: 13px;
     letter-spacing: 0;
@@ -398,7 +469,7 @@ h6 {
     height: 40px;
     text-indent: -8px;
     line-height: 10px;
-    font-family: 'Eina02';
+    font-family: 'Zen Kaku Gothic Antique';
     display: flex;
     align-items: center;
     justify-content: center;
@@ -419,7 +490,7 @@ h6 {
 .royo-recommends {
     padding: 55px 0;
     z-index: 1;
-    margin: 30px 0 20px;
+    margin: 30px 0;
 }
 
 .popular-brands .brand-slider {
@@ -509,7 +580,7 @@ h6 {
 }
 
 .suppliers-img-outer {
-    height: 160px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -518,7 +589,7 @@ h6 {
 
 .suppliers-img-outer img {
     height: 100%;
-    object-fit: scale-down;
+    object-fit: cover;
     width: 100%;
 }
 
@@ -528,10 +599,12 @@ h6 {
     font-size: 17px;
     letter-spacing: 0;
     line-height: 23px;
+    width: calc(100% - 40px);
 }
 
 .supplier-rating p {
-    font-size: 14px;
+    font-size: 12px;
+    font-weight: 500;
 }
 
 .supplier-rating i {
@@ -553,7 +626,7 @@ h6 {
     border-radius: 2px;
 }
 
-.menu-navigation {
+.menu   -navigation {
     background: transparent;
 }
 
@@ -571,7 +644,6 @@ h6 {
 .nav-cate-img img {
     margin: 0 !important;
 }
-
 
 /* .pixelstrap a, .pixelstrap a:hover, .pixelstrap a:active{
     padding-top: 0;
@@ -732,8 +804,13 @@ footer ul.social-links li a i,
 }
 
 
+.cab-banner-area{
+    margin-bottom: 0;
+}
 
-
+section#our_vendor_main_div {
+    padding-bottom: 0;
+}
 
 
 
@@ -1087,17 +1164,11 @@ body[dir="rtl"] #social-links li:last-child {
 
 @media (min-width: 991px) {
 
-    /* .home-banner-slider .slick-slide {
-        height: 400px;
-    } */
-    .home-banner-slider .slick-list {
-        border-radius: 40px;
-        overflow: hidden;
+    .home-banner-slider,.home-banner-slider .slick-slide {
+        height: 550px;
     }
-
-    .home-banner-slider .slick-slide {
-        height: 450px;
-        border-radius: 50px;
+    .home-banner-slider .slick-list {
+        border-radius: 4px;
         overflow: hidden;
     }
 
@@ -1173,7 +1244,7 @@ body[dir="rtl"] #social-links li:last-child {
     }
 
     .home-slider-wrapper .col-12 {
-        padding: 0 50px;
+        padding: 0;
     }
 
     .home-banner-slider .slick-prev,
@@ -1196,7 +1267,7 @@ body[dir="rtl"] #social-links li:last-child {
     }
 
     .pixelstrap li>a {
-        padding: 10px 15px;
+        padding: 10px 0;
     }
 
     .top-header .header-dropdown li span:last-child {
@@ -1244,17 +1315,13 @@ body[dir="rtl"] #social-links li:last-child {
         left: 0;
     }
 
-    .popular-brands {
-        margin: 0;
-    }
-
     .home-slider-wrapper {
         padding-top: 0;
     }
 }
 
 @media (max-width: 767px) {
-
+    
     .home-banner-slider .slick-prev,
     .home-banner-slider .slick-next {
         height: 30px;
@@ -1267,7 +1334,7 @@ body[dir="rtl"] #social-links li:last-child {
     }
 
     .home-slider-wrapper .col-12 {
-        padding: 0 40px;
+        padding: 0 15px;
     }
 
     .home-banner-slider .slick-prev,
@@ -1356,7 +1423,7 @@ body[dir="rtl"] #social-links li:last-child {
     }
 
     .top-header.site-topbar {
-        padding: 10px 10px 10px 0;
+        padding: 10px 0 0 0;
         background: transparent;
     }
 
@@ -1374,6 +1441,10 @@ body[dir="rtl"] #social-links li:last-child {
     }
 
     .location-bar {
-        width: 100%;
+        width: calc(100% - 2%);
+    }
+
+    .homepage-address {
+        width: calc(100% - 160px);
     }
 }

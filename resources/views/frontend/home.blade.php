@@ -8,7 +8,7 @@
         padding-bottom: 20px;
     }
 
-    #shimmer_effect {
+    .shimmer_effect {
         overflow: hidden;
     }
 
@@ -18,17 +18,17 @@
         grid-gap: 20px;
     }
 
-    #shimmer_effect .card_image {
+    .shimmer_effect .card_image {
         width: 100%;
         height: 100%;
     }
 
-    #shimmer_effect .card_image.loading {
+    .shimmer_effect .card_image.loading {
         width: 100%;
         height: 180px;
     }
 
-    #shimmer_effect .card_title.loading {
+    .shimmer_effect .card_title.loading {
         width: 50%;
         height: 1rem;
         margin: 1rem;
@@ -36,23 +36,23 @@
         position: relative;
     }
 
-    #shimmer_effect .card_description {
+    .shimmer_effect .card_description {
         padding: 8px;
         font-size: 16px;
     }
 
-    #shimmer_effect .card_description.loading {
+    .shimmer_effect .card_description.loading {
         height: 3rem;
         margin: 1rem;
         border-radius: 3px;
     }
 
-    #shimmer_effect .loading {
+    .shimmer_effect .loading {
         position: relative;
         background: #cccccc86;
     }
 
-    #shimmer_effect .loading:after {
+    .shimmer_effect .loading:after {
         content: "";
         display: block;
         position: absolute;
@@ -83,6 +83,21 @@
     @endif
 </header>
 {{-- <div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div> --}}
+
+<section class="no-store-wrapper mb-3" style="display:none">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <h4>{{__('There are no stores available in your area currently.')}}</h4>
+            </div>
+        </div>
+    </div>
+</section>
 
 @if(count($banners))
 <section class="p-0 small-slider">
@@ -165,7 +180,7 @@
                 <label class="product-tag"><%= type %></label>
                 <div class="product-image">
                     <img src="<%= product.image_url %>" alt="">
-                </div>    
+                </div>
                 <div class="media-body align-self-center">
                     <div class="inner_spacing px-0">
                         <div class="d-flex align-items-center justify-content-between">
@@ -245,7 +260,7 @@
             <div class="row">
                 <div class="col-5 col-sm-3">
                     <h5 class="m-0">{{__('Order Status')}}</h5>
-                    <ul class="status_box mt-1 pl-0"> 
+                    <ul class="status_box mt-1 pl-0">
                     <% if(vendor.order_status){ %>
                         <li>
                         <% if(vendor.order_status == 'placed'){ %>
@@ -260,7 +275,7 @@
                             <label class="m-0 in-progress"><%= (vendor.order_status).charAt(0).toUpperCase() + (vendor.order_status).slice(1) %></label>
                         </li>
                     <% } %>
-                    
+
                     <% if(vendor.dispatch_traking_url){ %>
                         <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
                         <a href="{{route('front.booking.details')}}/<%= order.order_number %>" target="_blank">{{ __('Details') }}</a>
@@ -328,7 +343,7 @@
     <% }); %>
 </script>
 
-<section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0" id="shimmer_effect">
+<section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0 shimmer_effect">
     <div class="row">
         <div class="container">
             <div class="grid-row grid-4-4">
@@ -415,10 +430,10 @@
             <div class="modal-footer d-block">
                 <div class="row no-gutters">
                     <div class="col-6 pr-1">
-                        <button type="button" class="btn btn-solid w-100 age_restriction_yes" data-dismiss="modal">Yes</button>
+                        <button type="button" class="btn btn-solid w-100 age_restriction_yes" data-dismiss="modal">{{__('Yes')}}</button>
                     </div>
                     <div class="col-6 pl-1">
-                        <button type="button" class="btn btn-solid w-100 age_restriction_no" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-solid w-100 age_restriction_no" data-dismiss="modal">{{__('No')}}</button>
                     </div>
                 </div>
             </div>

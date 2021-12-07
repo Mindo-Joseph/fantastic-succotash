@@ -10,11 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\PaymentOption;
 use Omnipay\Common\CreditCard;
 use App\Http\Traits\ApiResponser;
-use App\Http\Controllers\Api\v1\BaseController;
-use App\Http\Controllers\Api\v1\StripeGatewayController;
-use App\Http\Controllers\Api\v1\MobbexGatewayController;
-use App\Http\Controllers\Api\v1\YocoGatewayController;
-use App\Http\Controllers\Api\v1\RazorpayGatewayController;
+use App\Http\Controllers\Api\v1\{BaseController, StripeGatewayController, MobbexGatewayController, YocoGatewayController, RazorpayGatewayController, SimplifyGatewayController, SquareGatewayController};
 use App\Http\Requests\OrderStoreRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, Client, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, User, Payment, Transaction};
@@ -25,11 +21,14 @@ class PaymentOptionController extends BaseController{
 
     public function getPaymentOptions(Request $request, $page = ''){
         if($page == 'wallet'){
-            $code = array('paypal', 'stripe', 'yoco', 'paylink');
+            $code = array('paypal', 'stripe', 'yoco', 'paylink','razorpay','simplify','square');
         }else{
-            $code = array('cod', 'paypal', 'payfast', 'stripe', 'mobbex','yoco','paylink','razorpay');
+            $code = array('cod', 'paypal', 'payfast', 'stripe', 'mobbex','yoco','paylink','razorpay','gcash','simplify','square');
         }
-        $payment_options = PaymentOption::whereIn('code', $code)->where('status', 1)->get(['id', 'title', 'off_site']);
+        $payment_options = PaymentOption::whereIn('code', $code)->where('status', 1)->get(['id', 'code', 'title', 'off_site']);
+        foreach($payment_options as $option){
+            $option->title = __($option->title);
+        }
         return $this->successResponse($payment_options, '', 201);
     }
 
@@ -97,6 +96,15 @@ class PaymentOptionController extends BaseController{
     public function postPaymentVia_razorpay(Request $request){
         $gateway = new RazorpayGatewayController();
         return $gateway->razorpayPurchase($request);
+    }
+
+    public function postPaymentVia_simplify(Request $request){
+        $gateway = new SimplifyGatewayController();
+        return $gateway->simplifyPurchase($request);
+    }
+    public function postPaymentVia_square(Request $request){
+        $gateway = new SquareGatewayController();
+        return $gateway->squarePurchase($request);
     }
 
     public function postPaymentVia_paypal(Request $request){

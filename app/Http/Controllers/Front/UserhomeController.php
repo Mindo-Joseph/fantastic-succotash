@@ -24,6 +24,7 @@ class UserhomeController extends FrontController
     use ApiResponser;
     private $field_status = 2;
 
+    
     public function setTheme(Request $request)
     {
         if ($request->theme_color == "dark") {
@@ -36,7 +37,7 @@ class UserhomeController extends FrontController
     {
         $client_preferences = ClientPreference::first();
         return response()->json(['success' => true, 'client_preferences' => $client_preferences]);
-        dd("neskjbf");
+        
     }
 
     public function getLastMileTeams()
@@ -102,11 +103,7 @@ class UserhomeController extends FrontController
             $dispatch_domain = $this->checkIfLastMileDeliveryOn();
             $url = $dispatch_domain->delivery_service_key_url;
             $endpoint =$url . "/api/send-documents";
-            // $endpoint = "http://192.168.99.177:8006/api/send-documents";
-            // $dispatch_domain = $this->checkIfLastMileDeliveryOn();
-           // $dispatch_domain->delivery_service_key_code = '1da2e9';
-           // $dispatch_domain->delivery_service_key = 'TMJdbQlNWkYl1JzMONzRgF4zQFuP8s';
-            $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
+             $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
 
             $response = $client->post($endpoint);
             $response = json_decode($response->getBody(), true);
@@ -126,8 +123,6 @@ class UserhomeController extends FrontController
         $client_preferences = ClientPreference::first();
         $navCategories = $this->categoryNav($language_id);
         $client = Auth::user();
-        // $ClientPreference = ClientPreference::where('client_code', $client->code)->first();
-        // $preference = $ClientPreference ? $ClientPreference : new ClientPreference();
         $page_detail = Page::with(['translations' => function ($q) {
             $q->where('language_id', session()->get('customerLanguage'));
         }])->where('slug', 'driver-registration')->firstOrFail();
@@ -135,9 +130,6 @@ class UserhomeController extends FrontController
 
         $tag = [];
         
-        // if (isset($preference) && $preference->need_delivery_service == '1') {
-        //     $last_mile_teams = $this->getLastMileTeams();
-        // }
         $showTag = implode(',', $tag);
         $driver_registration_documents = json_decode($this->driverDocuments());
         return view('frontend.driver-registration', compact('page_detail', 'navCategories', 'user', 'showTag', 'driver_registration_documents'));
@@ -169,14 +161,17 @@ class UserhomeController extends FrontController
             $q->where('language_id', session()->get('customerLanguage'));
         }])->where('slug', $request->slug)->firstOrFail();
         if ($page_detail->primary->type_of_form != 2) {
-            $vendor_registration_documents = VendorRegistrationDocument::get();
+            $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
             return view('frontend.extrapage', compact('page_detail', 'navCategories', 'client_preferences', 'user', 'vendor_registration_documents'));
         } else {
             $tag = [];
             $showTag = implode(',', $tag);
             $client = Client::with('country')->first();
-            $driver_registration_documents = json_decode($this->driverDocuments());
-            return view('frontend.driver-registration', compact('page_detail', 'navCategories', 'user', 'showTag', 'driver_registration_documents','client'));
+            $data = json_decode($this->driverDocuments());
+            $driver_registration_documents = $data->documents;
+            $teams = $data->all_teams;
+            $tags = $data->agent_tags;
+            return view('frontend.driver-registration', compact('page_detail', 'navCategories', 'user', 'showTag', 'driver_registration_documents','client', 'teams', 'tags'));
         }
     }
     public function index(Request $request)
@@ -209,16 +204,16 @@ class UserhomeController extends FrontController
                     $count++;
                 }
             }
-            if ($preferences) {
-                if ((empty($latitude)) && (empty($longitude)) && (empty($selectedAddress))) {
-                    $selectedAddress = $preferences->Default_location_name;
-                    $latitude = $preferences->Default_latitude;
-                    $longitude = $preferences->Default_longitude;
-                    Session::put('latitude', $latitude);
-                    Session::put('longitude', $longitude);
-                    Session::put('selectedAddress', $selectedAddress);
-                }
-            }
+            // if ($preferences) {
+            //     if ((empty($latitude)) && (empty($longitude)) && (empty($selectedAddress))) {
+            //         $selectedAddress = $preferences->Default_location_name;
+            //         $latitude = $preferences->Default_latitude;
+            //         $longitude = $preferences->Default_longitude;
+            //         Session::put('latitude', $latitude);
+            //         Session::put('longitude', $longitude);
+            //         Session::put('selectedAddress', $selectedAddress);
+            //     }
+            // }
             $banners = Banner::where('status', 1)->where('validity_on', 1)
                 ->where(function ($q) {
                     $q->whereNull('start_date_time')->orWhere(function ($q2) {
@@ -256,7 +251,7 @@ class UserhomeController extends FrontController
             if (isset($set_template)  && $set_template->template_id == 2)
                 return view('frontend.home')->with(['home' => $home, 'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
             else
-                return view('frontend.home')->with(['home' => $home, 'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+            return view('frontend.home-template-one')->with(['home' => $home,  'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
             pr($e->getCode());
             die;
@@ -285,6 +280,11 @@ class UserhomeController extends FrontController
         $preferences = Session::get('preferences');
         $currency_id = Session::get('customerCurrency');
         $language_id = Session::get('customerLanguage');
+
+       
+        $currency_id = $this->setCurrencyInSesion();
+
+        
         $brands = Brand::select('id', 'image', 'title')->with(['translation' => function ($q) use ($language_id) {
             $q->where('language_id', $language_id);
         }])->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
@@ -493,7 +493,7 @@ class UserhomeController extends FrontController
                         $order_pre_time = ($vendor->order_pre_time > 0) ? $vendor->order_pre_time : 0;
                         $user_to_vendor_time = ($vendor->user_to_vendor_time > 0) ? $vendor->user_to_vendor_time : 0;
                         $ETA = $order_pre_time + $user_to_vendor_time;
-                        $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : convertDateTimeInTimeZone($vendor->created_at, $user->timezone, 'h:i A');
+                        $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : dateTimeInUserTimeZone($vendor->created_at, $user->timezone);
                     }
                     if ($vendor->dineInTable) {
                         $vendor->dineInTableName = $vendor->dineInTable->translations->first() ? $vendor->dineInTable->translations->first()->name : '';
@@ -501,7 +501,7 @@ class UserhomeController extends FrontController
                         $vendor->dineInTableCategory = $vendor->dineInTable->category->first() ? $vendor->dineInTable->category->first()->title : '';
                     }
                 }
-                $order->converted_scheduled_date_time = convertDateTimeInTimeZone($order->scheduled_date_time, $user->timezone, 'M d, Y h:i A');
+                $order->converted_scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
             }
         }
 
@@ -641,16 +641,16 @@ class UserhomeController extends FrontController
                     $count++;
                 }
             }
-            if ($preferences) {
-                if ((empty($latitude)) && (empty($longitude)) && (empty($selectedAddress))) {
-                    $selectedAddress = $preferences->Default_location_name;
-                    $latitude = $preferences->Default_latitude;
-                    $longitude = $preferences->Default_longitude;
-                    Session::put('latitude', $latitude);
-                    Session::put('longitude', $longitude);
-                    Session::put('selectedAddress', $selectedAddress);
-                }
-            }
+            // if ($preferences) {
+            //     if ((empty($latitude)) && (empty($longitude)) && (empty($selectedAddress))) {
+            //         $selectedAddress = $preferences->Default_location_name;
+            //         $latitude = $preferences->Default_latitude;
+            //         $longitude = $preferences->Default_longitude;
+            //         Session::put('latitude', $latitude);
+            //         Session::put('longitude', $longitude);
+            //         Session::put('selectedAddress', $selectedAddress);
+            //     }
+            // }
             $banners = Banner::where('status', 1)->where('validity_on', 1)
                 ->where(function ($q) {
                     $q->whereNull('start_date_time')->orWhere(function ($q2) {
@@ -667,7 +667,7 @@ class UserhomeController extends FrontController
                 $q->where('language_id', $langId);
             }])->where('is_active', 1)->orderBy('order_by')->get();
 
-            dd($home_page_labels);
+           
             return view('frontend.home-template-one')->with(['home' => $home, 'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
             pr($e->getCode());

@@ -53,12 +53,42 @@
     var change_primary_data_url = "{{ route('changePrimaryData') }}";
     var url1 = "{{ route('config.update') }}";
     var url2 = "{{ route('config.get') }}";
+    var razorpay_complete_payment_url = "{{ route('payment.razorpayCompletePurchase') }}";
+    var payment_razorpay_url = "{{route('payment.razorpayPurchase')}}";
     var featured_product_language = "{{ __('Featured Product') }}";
     var new_product_language = "{{ __('New Product') }}";
     var on_sale_product_language = "{{ __('On Sale') }}";
     var best_seller_product_language = "{{ __('Best Seller') }}";
     var vendor_language = "{{ __('Vendors') }}";
     var brand_language = "{{ __('Brands') }}";
+/////GCash Payment Routes
+    var gcash_before_payment = "{{route('payment.gcash.beforePayment')}}"; 
+
+///////////////Simplify Payment Routes
+    var simplify_before_payment = "{{route('payment.simplify.beforePayment')}}";
+    var simplify_create_payment = "{{route('payment.simplify.createPayment')}}";
+
+//////////////Square payment Routes
+    var square_before_payment = "{{route('payment.square.beforePayment')}}";
+    var square_create_payment = "{{route('payment.square.createPayment')}}";
+
+// Logged In User Detail
+    var logged_in_user_name = "{{Auth::user()->name??''}}";
+    var logged_in_user_email = "{{Auth::user()->email??''}}";
+    var logged_in_user_phone = "{{Auth::user()->phone_number??''}}";
+    var logged_in_user_dial_code = "{{Auth::user()->dial_code??'91'}}";
+// Payment Gateway Key Detail
+    var razorpay_api_key = "{{getRazorPayApiKey()??''}}";
+
+// Client Perference  Detail
+    var client_preference_web_color = "{{getClientPreferenceDetail()->web_color}}";
+    var client_preference_web_rgb_color = "{{getClientPreferenceDetail()->wb_color_rgb}}"; 
+
+// Client Detail
+    var client_company_name = "{{getClientDetail()->company_name}}";
+    var client_logo_url = "{{getClientDetail()->logo_image_url}}";
+
+
     // if((home_page_url != window.location.href) && (home_page_url2 != window.location.href)){
     //     $('.vendor_mods').hide();}
     // else{
@@ -67,11 +97,27 @@
     @if(Session::has('selectedAddress'))
         selected_address = 1;
     @endif
-    @if( Session::has('preferences') )
-        @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) ) 
-            is_hyperlocal = 1;
-        @endif;
-    @endif;
+    // @if( Session::has('preferences') )
+    //     @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) ) 
+    //         is_hyperlocal = 1;
+    //     @endif;
+    // @endif;
+    
+    @if($client_preference_detail->is_hyperlocal == 1)
+        is_hyperlocal = 1;
+        var defaultLatitude = "{{$client_preference_detail->Default_latitude}}";
+        var defaultLongitude = "{{$client_preference_detail->Default_longitude}}";
+        var defaultLocationName = "{{$client_preference_detail->Default_location_name}}";
+    @endif
+
+    var NumberFormatHelper = { formatPrice: function(x){
+        if(x){
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        return x;
+        }
+    };
+
 </script>
 <script src="{{asset('assets/js/constants.js')}}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{$mapKey}}&v=3.exp&libraries=places,drawing"></script>
@@ -89,6 +135,18 @@
 <script src="{{asset('assets/libs/bootstrap-colorpicker/bootstrap-colorpicker.min.js')}}"></script>
 <script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
 <script src="{{asset('assets/libs/clockpicker/clockpicker.min.js')}}"></script>
+
+<!-- RazourPay Payment Gateway -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- RazourPay Payment Gateway -->
+
+<!--WaitMe Loader Script -->
+<script src="{{asset('js/waitMe.min.js')}}"></script>
+<script src="{{asset('js/developer.js')}}"></script>
+<!--WaitMe Loader Script -->
+
+<!-- SweetAlert Script -->
+<script src="{{asset('js/sweetalert2.min.js')}}"></script>
 
 <script src="{{asset('assets/js/pages/form-pickers.init.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>

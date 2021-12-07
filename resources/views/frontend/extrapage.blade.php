@@ -37,37 +37,37 @@
                                 <div class="col-md-4 mb-3" id="full_nameInput">
                                     <label for="fullname">{{__('Full Name')}}</label>
                                     <input type="text" class="form-control" name="full_name" value="{{$user ? $user->name : ''}}" {{$user ? 'disabled' : ''}}>
-                                    <div class="invalid-feedback" id="full_name_error"><strong></strong></div>
+                                    <span class="invalid-feedback" id="full_name_error"><strong></strong></span>
                                 </div>
                                 <div class="col-md-4 mb-3" id="phone_numberInput">
                                     <label for="validationCustom02">{{__('Phone No.')}}</label>
                                     <input type="tel" class="form-control" name="phone_number" value="{{$user ? '+'.$user->dial_code.''.$user->phone_number : ''}}" id="phone" {{$user ? 'disabled' : ''}}>
-                                    <div class="invalid-feedback" id="phone_number_error"><strong></strong></div>
+                                    <span class="invalid-feedback" id="phone_number_error"><strong></strong></span>
                                     <input type="hidden" id="countryData" name="countryData" value="us">
                                     <input type="hidden" id="dialCode" name="dialCode" value="{{$user ? $user->dial_code : ''}}">
                                 </div>
-                                <div class="col-md-4 mb-3" id="full_nameInput">
+                                <div class="col-md-4 mb-3" id="titleInput">
                                     <label for="fullname">{{__('Title')}}</label>
                                     <input type="text" class="form-control" name="title" value="{{$user ? $user->title : ''}}">
-                                    <div class="invalid-feedback" id="full_name_error"><strong></strong></div>
+                                    <span class="invalid-feedback" id="title_error"><strong></strong></span>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="col-md-4 mb-3" id="emailInput">
                                     <label for="email">{{__('Email')}}</label>
                                     <input type="text" class="form-control" name="email" value="{{$user ? $user->email :''}}" {{$user ? 'disabled' : ''}}>
-                                    <div class="invalid-feedback" id="email_error"><strong></strong></div>
+                                    <span class="invalid-feedback" id="email_error"><strong></strong></span>
                                 </div>
                                 @if(!$user)
                                     <div class="col-md-4 mb-3" id="passwordInput">
                                         <label for="password">{{__('Password')}}</label>
                                         <input type="password" class="form-control" name="password" value="" required="">
-                                        <div class="invalid-feedback" id="password_error"><strong></strong></div>
+                                        <span class="invalid-feedback" id="password_error"><strong></strong></span>
                                     </div>
                                      <div class="col-md-4 mb-3" id="confirm_passwordInput">
                                         <label for="confirm_password">{{__('Confirm Password')}}</label>
                                         <input type="password" class="form-control" name="confirm_password" value="" required="">
-                                        <div class="invalid-feedback" id="confirm_password_error"><strong></strong></div>
+                                        <span class="invalid-feedback" id="confirm_password_error"><strong></strong></span>
                                     </div>
                                 @endif
                             </div>
@@ -108,12 +108,12 @@
                                 <div class="col-md-12 mb-3" id="nameInput">
                                     <label for="validationCustom01">{{__('Vendor Name')}}</label>
                                     <input type="text" class="form-control" name="name" value="">
-                                    <div class="invalid-feedback" id="name_error"><strong></strong></div>
+                                    <span class="invalid-feedback" id="name_error"><strong></strong></span>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <label for="validationCustom02">{{__('Description')}}</label>
                                     <textarea class="form-control" name="vendor_description" cols="30" rows="3"></textarea>
-                                    <div class="invalid-feedback"></div>
+                                    <span class="invalid-feedback"></span>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -126,36 +126,48 @@
                                     <input type="hidden" class="form-control" name="city" value="" id="city">
                                     <input type="hidden" class="form-control" name="state" value="" id="state">
                                     <input type="hidden" class="form-control" name="country" value="" id="country">
-                                    <div class="invalid-feedback" id="address_error"><strong></strong></div>
+                                    <span class="invalid-feedback" id="address_error"><strong></strong></span>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="validationCustom02">{{__('Website')}}</label>
                                     <input type="text" class="form-control" name="website" value="">
-                                    <div class="valid-feedback"></div>
+                                    <span class="valid-feedback"></span>
                                 </div>
                             </div>
                             @if($mod_count > 1)
                             @if($client_preferences)
                                 <div class="form-row">
                                     @if($client_preferences->dinein_check == 1)
-                                        <div class="col-md-2 mb-3">
-                                            <label for="">Dine In</label>
+                                    @php
+                                    $Dine_In = getNomenclatureName('Dine-In', true);
+                                    $Dine_In = ($Dine_In === 'Dine-In') ? __('Dine-In') : $Dine_In;
+                                @endphp
+                                        <div class="col-md-2 mb-3"> 
+                                            <label for="">{{$Dine_In}}</label>
                                             <div class="toggle-icon">
                                                 <input type="checkbox" id="dine-in" name="dine_in"><label for="dine-in">Toggle</label>
                                             </div>
                                         </div>
                                     @endif
                                     @if($client_preferences->takeaway_check == 1)
+                                    @php
+                                    $Takeaway = getNomenclatureName('Takeaway', true);
+                                    $Takeaway = ($Takeaway === 'Takeaway') ? __('Takeaway') : $Takeaway;
+                                    @endphp
                                         <div class="col-md-2 mb-3">
-                                            <label for="">Takeaway</label>
+                                            <label for="">{{$Takeaway}}</label>
                                             <div class="toggle-icon">
                                                 <input type="checkbox" id="takeaway" name="takeaway"><label for="takeaway">Toggle</label>
                                             </div>
                                         </div>
                                     @endif
                                     @if($client_preferences->delivery_check == 1)
+                                    @php
+                                    $Delivery = getNomenclatureName('Delivery', true);
+                                    $Delivery = ($Delivery === 'Delivery') ? __('Delivery') : $Delivery;
+                                     @endphp
                                         <div class="col-md-2 mb-3">
-                                            <label for="">Delivery</label>
+                                            <label for="">{{$Delivery}}</label>
                                             <div class="toggle-icon">
                                                 <input type="checkbox" id="delivery" name="delivery"><label for="delivery">Toggle</label>
                                             </div>
@@ -166,37 +178,39 @@
                             @endif
                             <div class="form-row">
                                 @foreach($vendor_registration_documents as $vendor_registration_document)
-                                <div class="col-md-6 mb-3" id="{{$vendor_registration_document->primary->slug}}Input">
-                                    <label for="">{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</label>
-                                    @if(strtolower($vendor_registration_document->file_type) == 'text')
-                                    <input id="input_file_logo_{{$vendor_registration_document->id}}" type="text" name="{{$vendor_registration_document->primary->slug}}" class="form-control">
-                                    <div class="invalid-feedback" id="{{$vendor_registration_document->primary->slug}}_error"><strong></strong></div>
-                                    @else
-                                    <div class="file file--upload">
-                                        <label for="input_file_logo_{{$vendor_registration_document->id}}">
-                                            <span class="update_pic pdf-icon">
-                                                <img src=""  id="upload_logo_preview_{{$vendor_registration_document->id}}">
-                                            </span>
-                                            <span class="plus_icon" id="plus_icon_{{$vendor_registration_document->id}}">
-                                                <i class="fa fa-plus"></i>
-                                            </span>
-                                        </label>
-                                        @if(strtolower($vendor_registration_document->file_type) == 'image')
-                                            <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept="image/*" data-rel="{{$vendor_registration_document->id}}">
-                                        @else
-                                            <input id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept=".pdf" data-rel="{{$vendor_registration_document->id}}">
-                                        @endif
-                                        <div class="invalid-feedback" id="{{$vendor_registration_document->primary->slug}}_error"><strong></strong></div>
-                                    </div>
-                                    @endif
-                                </div>      
+                                    @if(isset($vendor_registration_document->primary->slug) && !empty($vendor_registration_document->primary->slug))
+                                        <div class="col-md-6 mb-3" id="{{$vendor_registration_document->primary->slug??''}}Input">
+                                            <label for="">{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</label>
+                                            @if(strtolower($vendor_registration_document->file_type) == 'text')
+                                            <input id="input_file_logo_{{$vendor_registration_document->id}}" type="text" name="{{$vendor_registration_document->primary->slug}}" class="form-control {{ (!empty($vendor_registration_document->is_required))?'required':''}}">
+                                            <span class="invalid-feedback" id="{{$vendor_registration_document->primary->slug??''}}_error"><strong></strong></span>
+                                            @else
+                                            <div class="file file--upload">
+                                                <label for="input_file_logo_{{$vendor_registration_document->id}}">
+                                                    <span class="update_pic pdf-icon">
+                                                        <img src=""  id="upload_logo_preview_{{$vendor_registration_document->id}}">
+                                                    </span>
+                                                    <span class="plus_icon" id="plus_icon_{{$vendor_registration_document->id}}">
+                                                        <i class="fa fa-plus"></i>
+                                                    </span>
+                                                </label>
+                                                @if(strtolower($vendor_registration_document->file_type) == 'image')
+                                                    <input class="{{ (!empty($vendor_registration_document->is_required))?'required':''}}" id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept="image/*" data-rel="{{$vendor_registration_document->id}}">
+                                                @else
+                                                    <input class="{{ (!empty($vendor_registration_document->is_required))?'required':''}}" id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept=".pdf" data-rel="{{$vendor_registration_document->id}}">
+                                                @endif
+                                                <span class="invalid-feedback" id="{{$vendor_registration_document->primary->slug}}_error"><strong></strong></span>
+                                            </div>
+                                            @endif
+                                        </div>    
+                                    @endif  
                                  @endforeach   
                             </div>
                             <div class="form-row">
                                 <div class="col-12 checkbox-input">
                                     <input type="checkbox" id="html" name="check_conditions" value="1">
                                     <label for="html">{{__('I accept the')}} <a href="{{url('page/terms-conditions')}}" target="_blank">{{__('Terms And Conditions')}}</a> {{__('and have read the')}} <a href="{{url('page/privacy-policy')}}" target="_blank"> {{__('Privacy Policy.')}}</a></label>
-                                    <div class="invalid-feedback" id="check_conditions_error"><strong></strong></div>
+                                    <span class="invalid-feedback" id="check_conditions_error"><strong></strong></span>
                                 </div>
                             </div>
                             <button class="btn btn-solid mt-3 w-100" dir="ltr" data-style="expand-right" id="register_btn" type="button">
@@ -346,7 +360,7 @@
                         $('input[type=file]').val('');
                         $("#vendor_signup_form")[0].reset();
                         $('#vendor_signup_form img').attr('src', '');
-                        $('html,body').animate({scrollTop: '0px'}, 1000);
+                        $('html,body').animate({scrollTop: '0px'}, 100);
                         $('#success_msg').html(data.message).show();
                         setTimeout(function() {
                             $('#success_msg').html('').hide();
@@ -355,14 +369,14 @@
                 },
                 error: function(response) {
                     that.attr('disabled', false);
-                    $('html,body').animate({scrollTop: '0px'}, 1000);
+                    $('html,body').animate({scrollTop: '0px'}, 100);
                     $('#register_btn_loader').hide();
                     if (response.status === 422) {
                         let errors = response.responseJSON.errors;
                         Object.keys(errors).forEach(function(key) {
                             $("#" + key + "Input input").addClass("is-invalid");
                             $("#" + key + "_error").children("strong").text(errors[key][0]).show();
-                            $("#" + key + "Input div.invalid-feedback").show();
+                            $("#" + key + "Input span.invalid-feedback").show();
                         });
                     } else {
                         $(".show_all_error.invalid-feedback").show();

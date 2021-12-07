@@ -24,7 +24,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs, VendorRegistrationDocument, EmailTemplate, NotificationTemplate, UserDevice};
 use Kutia\Larafirebase\Facades\Larafirebase;
-
+use Math;
 class CustomerAuthController extends FrontController
 {
     use ApiResponser;
@@ -194,13 +194,17 @@ class CustomerAuthController extends FrontController
                 ]);
             }
             else{
+
                 $preferences = ClientPreference::first();
                 if(!empty($req->email) && ($preferences->verify_email == 0)){
+
                     $validator = $req->validate([
                         'email'  => 'email|unique:users'
                     ]);
                 }
+
                 if(!empty($req->phone_number) && isset($preferences) && ($preferences->verify_phone == 0)){
+
                     $validator = $req->validate([
                         'phone_number' => 'string|min:8|max:15|unique:users'
                     ]);
@@ -620,18 +624,36 @@ class CustomerAuthController extends FrontController
             $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
             if (empty($request->input('user_id'))) {
                 if ($vendor_registration_documents->count() > 0) {
+                    $rules_array = [
+                        'address' => 'required',
+                        'full_name' => 'required',
+                        'email' => 'required|email|unique:users',
+                        // 'vendor_registration_document.*.did_visit' => 'required',
+                        'password' => 'required|string|min:6|max:50',
+                        'confirm_password' => 'required|same:password',
+                        'name' => 'required|string|max:150|unique:vendors',
+                        'phone_number' => 'required|string|min:6|max:15|unique:users',
+                        'check_conditions' => 'required',
+                    ];
+                    foreach ($vendor_registration_documents as $vendor_registration_document) {
+                        if($vendor_registration_document->is_required == 1){
+                            $rules_array[$vendor_registration_document->primary->slug] = 'required';
+                        }
+                    }
+
                     $request->validate(
-                        [
-                            'address' => 'required',
-                            'full_name' => 'required',
-                            'email' => 'required|email|unique:users',
-                            'vendor_registration_document.*.did_visit' => 'required',
-                            'password' => 'required|string|min:6|max:50',
-                            'confirm_password' => 'required|same:password',
-                            'name' => 'required|string|max:150|unique:vendors',
-                            'phone_number' => 'required|string|min:6|max:15|unique:users',
-                            'check_conditions' => 'required',
-                        ],
+                        // [
+                        //     'address' => 'required',
+                        //     'full_name' => 'required',
+                        //     'email' => 'required|email|unique:users',
+                        //     'vendor_registration_document.*.did_visit' => 'required',
+                        //     'password' => 'required|string|min:6|max:50',
+                        //     'confirm_password' => 'required|same:password',
+                        //     'name' => 'required|string|max:150|unique:vendors',
+                        //     'phone_number' => 'required|string|min:6|max:15|unique:users',
+                        //     'check_conditions' => 'required',
+                        // ],
+                        $rules_array,
                         ['check_conditions.required' => __('Please indicate that you have read and agree to the Terms and Conditions and Privacy Policy')]
                     );
                 } else {
@@ -837,4 +859,6 @@ class CustomerAuthController extends FrontController
         }
         return redirect()->route('customer.login');
     }
+
+    
 }

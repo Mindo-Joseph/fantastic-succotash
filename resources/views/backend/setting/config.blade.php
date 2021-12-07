@@ -139,7 +139,7 @@
                         </span>
                         @endif
                      </div>
-                     
+
                      @if($last_mile_teams != null && count($last_mile_teams))
                      <div class="form-group mt-3 mb-0" style="{{(isset($preference) && $preference->need_delivery_service == '1') ? '' : 'display: none;'}}" id="lastMileTeamListDiv">
                         <div class="form-group">
@@ -149,7 +149,7 @@
                               @foreach($last_mile_teams as $nm)
                                  <option value="{{$nm['name']}}" @if($preference->last_mile_team == $nm['name']) selected="selected" @endif>{{$nm['name']}}</option>
                               @endforeach
-                              
+
                             </select>
                         </div>
                      </div>
@@ -212,7 +212,7 @@
                   </div>
                </div>
             </div>
-         </div> 
+         </div>
          @endif
 
          @if($client_preference_detail->business_type == 'taxi' || $client_preference_detail->business_type == '' || $client_preference_detail->business_type == 'super_app' )
@@ -312,7 +312,7 @@
                         </span>
                         @endif
                      </div>
-                     
+
                      @if($laundry_teams != null && count($laundry_teams))
                      <div class="form-group mt-3 mb-0 laundryServiceFields" style="{{(isset($preference) && $preference->need_laundry_service == '1') ? '' : 'display: none;'}}" id="laundryPickupTeamListDiv">
                         <div class="form-group">
@@ -322,7 +322,7 @@
                               @foreach($laundry_teams as $nm)
                                  <option value="{{$nm['name']}}" @if($preference->laundry_pickup_team == $nm['name']) selected="selected" @endif>{{$nm['name']}}</option>
                               @endforeach
-                              
+
                             </select>
                         </div>
                      </div>
@@ -335,7 +335,7 @@
                               @foreach($laundry_teams as $nm)
                                  <option value="{{$nm['name']}}" @if($preference->laundry_dropoff_team == $nm['name']) selected="selected" @endif>{{$nm['name']}}</option>
                               @endforeach
-                              
+
                             </select>
                         </div>
                      </div>
@@ -347,7 +347,7 @@
             </div>
          </div>
          @endif
-        
+
          {{-- <div class="col-lg-3 col-md-6 mb-3">
             <div class="row h-100">
                <div class="col-12">
@@ -950,10 +950,9 @@
                </div>
                @if($client_preference_detail->business_type != 'taxi' && $client_preference_detail->business_type != 'laundry' )
                <div class="col-xl-12 mb-4">
-                  <div class="page-title-box">
-                     <h4 class="page-title text-uppercase">{{ __("Vendor") }}</h4>
-                  </div>
+
                   <div class="card-box mb-0">
+                     <h4 class="header-title text-uppercase">{{ __("Vendor") }}</h4>
                      <div class="row align-items-center">
                         <div class="col-md-3">
                            <div class="form-group mb-md-0">
@@ -994,27 +993,27 @@
                <div class="row align-items-center">
                   @if($client_preference_detail->business_type != 'taxi')
 
-                  @if($client_preference_detail->business_type != 'laundry')
-                  <div class="col-md-4">
-                     <div class="form-group mb-3">
-                        <label for="celebrity_check" class="mr-2 mb-0"> {{ __("Celebrity Mod") }}</label>
-                        <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1')) checked='checked' @endif>
+                     @if($client_preference_detail->business_type != 'laundry')
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="celebrity_check" class="mr-2 mb-0"> {{ __("Celebrity Mod") }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="celebrity_check" id="celebrity_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->celebrity_check == '1')) checked='checked' @endif>
+                        </div>
                      </div>
-                  </div>
-                   <div class="col-md-4">
-                     <div class="form-group mb-3">
-                        <label for="pharmacy_check" class="mr-2 mb-0">{{ __('Pharmacy Mod') }}</label>
-                        <input type="checkbox" data-plugin="switchery" name="pharmacy_check" id="pharmacy_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1')) checked='checked' @endif>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="pharmacy_check" class="mr-2 mb-0">{{ __('Pharmacy Mod') }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="pharmacy_check" id="pharmacy_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pharmacy_check == '1')) checked='checked' @endif>
+                        </div>
                      </div>
-                  </div>
-                  <div class="col-md-4">
-                     <div class="form-group mb-3">
-                        <label for="enquire_mode" class="mr-2 mb-0">{{ __("Inquiry Mod") }}</label>
-                        <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1')) checked='checked' @endif>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="enquire_mode" class="mr-2 mb-0">{{ __("Inquiry Mod") }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1')) checked='checked' @endif>
+                        </div>
                      </div>
-                  </div>
-                  @endif
-                 
+                     @endif
+
                   <div class="col-md-4">
                      <div class="form-group mb-3">
                         <label for="off_scheduling_at_cart" class="mr-2 mb-0">{{__('Off Scheduling  Order')}}</label>
@@ -1035,7 +1034,7 @@
                      </div>
                   </div>
                   @endif
-                 
+
                   <div class="col-md-4">
                      <div class="form-group mb-3">
                         <label for="tip_before_order" class="mr-2 mb-0">{{__('Tip Before Order')}}</label>
@@ -1046,6 +1045,24 @@
                      <div class="form-group mb-3">
                         <label for="tip_after_order" class="mr-2 mb-0">{{__('Tip After Order')}}</label>
                         <input type="checkbox" data-plugin="switchery" name="tip_after_order" id="tip_after_order" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->tip_after_order == '1')) checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="form-group mb-3">
+                        <label for="delay_order" class="mr-2 mb-0">{{__('Delay Order')}}</label>
+                        <input type="checkbox" data-plugin="switchery" name="delay_order" id="delay_order" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delay_order == '1')) checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="form-group mb-3">
+                        <label for="product_order_form" class="mr-2 mb-0">{{__('Product Order Form')}}</label>
+                        <input type="checkbox" data-plugin="switchery" name="product_order_form" id="product_order_form" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->product_order_form == '1')) checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="form-group mb-3">
+                        <label for="gifting" class="mr-2 mb-0">{{__('Gifting')}}</label>
+                        <input type="checkbox" data-plugin="switchery" name="gifting" id="gifting" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->gifting == '1')) checked='checked' @endif>
                      </div>
                   </div>
                   <div class="col-md-12">
@@ -1064,12 +1081,9 @@
       <div class="col-xl-6">
          <div class="row">
             <div class="col-lg-12">
-               <!-- <div class="page-title-box">
-                  <h4 class="page-title text-uppercase">Vendor Registration Documents</h4>
-               </div> -->
                <div class="card-box pb-2">
-                  <h4 class="header-title text-uppercase">{{ __("Vendor Registration Documents") }}</h4>
-                  <div class="d-flex align-items-center justify-content-end mt-2">
+                  <div class="d-flex align-items-center justify-content-between">
+                     <h4 class="header-title text-uppercase m-0">{{ __("Vendor Registration Documents") }}</h4>
                      <a class="btn btn-info d-block" id="add_vendor_registration_document_modal_btn">
                         <i class="mdi mdi-plus-circle mr-1"></i>{{ __("Add") }}
                      </a>
@@ -1088,12 +1102,12 @@
                            @forelse($vendor_registration_documents as $vendor_registration_document)
                            <tr>
                               <td>
-                                 <a class="edit_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}" href="javascript:void(0)">   
+                                 <a class="edit_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}" href="javascript:void(0)">
                                     {{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}
-                                 </a>   
+                                 </a>
                               </td>
                               <td>{{$vendor_registration_document->file_type}}</td>
-                              <td>{{ ($vendor_registration_document->is_required == 1)?"Yes":"No" }}</td>
+                              <td>{{ ($vendor_registration_document->is_required == 1)?__('Yes'):__('No') }}</td>
                               <td>
                                  <div>
                                     <div class="inner-div" style="float: left;">
@@ -1121,15 +1135,13 @@
 
 
                <div class="card-box pb-2">
-                  <h4 class="header-title text-uppercase">{{ __("Android/IOS Link") }}</h4>
-                
-                  <div class="table-responsive mt-3 mb-1">
+                  <div class="table-responsive mb-1">
                      <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
                         <input type="hidden" name="distance_to_time_calc_config" id="distance_to_time_calc_config" value="1">
                         @csrf
-                        <div class="card-box mb-0">
-                           <div class="d-flex align-items-center justify-content-end">
-                              <!-- <h4 class="header-title mb-0">Refer and Earn</h4> -->
+                        <div class="card-box mb-0 py-0 px-2">
+                           <div class="d-flex align-items-center justify-content-between">
+                              <h4 class="header-title mb-0">{{ __("Android/IOS Link") }}</h4>
                               <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
                            </div>
                            <div class="row mt-2">
@@ -1146,19 +1158,52 @@
                      </form>
                   </div>
                </div>
+
+               <div class="col-12">
+                  <!-- <div class="page-title-box">
+                     <h4 class="page-title text-uppercase">{{__('Distance to Time Calculator')}}</h4>
+                  </div> -->
+
+                  <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
+                     <input type="hidden" name="distance_to_time_calc_config" id="distance_to_time_calc_config" value="1">
+                     @csrf
+                     <div class="card-box mb-2">
+                        <div class="d-flex align-items-center justify-content-between">
+                           <h4 class="header-title mb-0">{{__('Distance to Time Calculator')}}</h4>
+                           <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
+                        </div>
+                        <div class="row mt-2">
+                           <div class="col-xl-6">
+                              <label class="primaryCurText">{{__('Distance Unit')}}</label>
+                              <select class="form-control" id="distance_unit_for_time" name="distance_unit_for_time">
+                                 <option value="">{{__('Select unit')}}</option>
+                                 <option value="kilometer" @if((isset($preference) && $preference->distance_unit_for_time == 'kilometer')) selected @endif>{{__('Kilometer')}}</option>
+                                 <option value="mile" @if((isset($preference) && $preference->distance_unit_for_time == 'mile')) selected @endif>{{__('Mile')}}</option>
+                              </select>
+                           </div>
+                           <div class="col-xl-6">
+                              <label class="primaryCurText">{{__('Distance to Time Multiplier (Per 1 distance unit)')}}</label>
+                              <input class="form-control" type="number" id="distance_to_time_multiplier" name="distance_to_time_multiplier" value="{{ old('distance_to_time_multiplier', $preference->distance_to_time_multiplier  ?? '')}}" min="0">
+                           </div>
+                        </div>
+                     </div>
+                  </form>
+               </div>
             </div>
+
          </div>
       </div>
+
       <div class="col-xl-6">
          <div class="row">
-          
-            <div class="col-xl-6">
-           
+
+            <div class="col-xl-6 mb-3">
+
                <form method="POST" class="h-100" action="{{route('referandearn.update', Auth::user()->code)}}">
                   @csrf
                   <div class="card-box mb-0 pb-1">
-                  <h4 class="header-title text-uppercase">Refer and Earn</h4> 
-                     <div class="d-flex align-items-center justify-content-end">
+                     <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="header-title text-uppercase">Refer and Earn</h4>
                         <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
                      </div>
                      <div class="col-xl-12 my-2" id="addCur-160">
@@ -1172,10 +1217,93 @@
                   </div>
                </form>
             </div>
+
+            <div class="col-xl-6 mb-3">
+               <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
+                  @csrf
+                  <div class="card-box mb-0 pb-1">
+                     <div class="d-flex align-items-center justify-content-between">
+                  <h4 class="header-title text-uppercase">{{ __('Order Email Notification') }}</h4>
+                        <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
+                     </div>
+                     <div class="col-xl-12 my-2" id="addCur-160">
+                        <label class="primaryCurText">{{ __('Email') }}</label>
+                        <input class="form-control" type="email" id="admin_email" name="admin_email" value="{{ old('admin_email', $preference->admin_email)}}">
+                     </div>
+                  </div>
+               </form>
+            </div>
+
+            <div class="col-xl-6 mb-3">
+
+               <form method="POST" class="h-100" action="{{route('referandearn.update', Auth::user()->code)}}">
+                  @csrf
+                  <div class="card-box product-tags mb-0 pb-1">
+                     <div class="d-flex align-items-center justify-content-between">
+                     <h4 class="header-title text-uppercase">{{ __('Tags for Product')}}</h4>
+                        <a class="btn btn-info d-block" id="add_product_tag_modal_btn">
+                           <i class="mdi mdi-plus-circle mr-1"></i>{{ __("Add") }}
+                        </a>
+                     </div>
+                     <div class="table-responsive mt-3 mb-1">
+                        <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
+                           <thead>
+                              <tr>
+                                 <th>{{ __("Icon") }}</th>
+                                 <th>{{ __("Name") }}</th>
+                                 <th>{{ __("Action") }}</th>
+                              </tr>
+                           </thead>
+                           <tbody id="post_list">
+                              @forelse($tags as $tag)
+                              <tr>
+                                 <td>
+                                    <img src="{{ $tag->icon['proxy_url'].'100/100'.$tag->icon['image_path'] }}">
+                                 </td>
+                                 <td>
+                                    <a class="edit_product_tag_btn" data-tag_id="{{$tag->id}}" href="javascript:void(0)">
+                                       {{$tag->primary ? $tag->primary->name : ''}}
+                                    </a>
+                                 </td>
+                                  <td>
+                                    <div>
+                                       <div class="inner-div" style="float: left;">
+                                          <a class="action-icon edit_product_tag_btn" data-tag_id="{{$tag->id}}" href="javascript:void(0)">
+                                             <i class="mdi mdi-square-edit-outline"></i>
+                                          </a>
+                                       </div>
+                                       <div class="inner-div">
+                                          <button type="button" class="btn btn-primary-outline action-icon delete_product_tag_btn" data-tag_id="{{$tag->id}}">
+                                             <i class="mdi mdi-delete"></i>
+                                          </button>
+                                       </div>
+                                    </div>
+                                 </td>
+                              </tr>
+                              @empty
+                              <tr align="center">
+                                 <td colspan="4" style="padding: 20px 0">{{ __("Tags not found.") }}</td>
+                              </tr>
+                              @endforelse
+                           </tbody>
+                        </table>
+                     </div>
+
+                  </div>
+               </form>
+            </div>
+
+
+
          </div>
       </div>
+
+
+
    </div>
-   
+
+
+
    <div class="row">
       {{--<div class="col-lg-6">
          <div class="page-title-box">
@@ -1201,9 +1329,9 @@
                      @forelse($driver_registration_documents as $driver_registration_document)
                      <tr>
                         <td>
-                           <a class="edit_driver_registration_document_btn" data-driver_registration_document_id="{{$driver_registration_document->id}}" href="javascript:void(0)">   
+                           <a class="edit_driver_registration_document_btn" data-driver_registration_document_id="{{$driver_registration_document->id}}" href="javascript:void(0)">
                               {{$driver_registration_document->primary ? $driver_registration_document->primary->name : ''}}
-                           </a>   
+                           </a>
                         </td>
                         <td>{{$driver_registration_document->file_type}}</td>
                         <td>
@@ -1231,35 +1359,7 @@
             </div>
          </div>
       </div> --}}
-      <div class="col-xl-6">
-         <div class="page-title-box">
-            <h4 class="page-title text-uppercase">{{__('Distance to Time Calculator')}}</h4>
-         </div>
-         <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
-            <input type="hidden" name="distance_to_time_calc_config" id="distance_to_time_calc_config" value="1">
-            @csrf
-            <div class="card-box mb-2">
-               <div class="d-flex align-items-center justify-content-end">
-                  <!-- <h4 class="header-title mb-0">Refer and Earn</h4> -->
-                  <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
-               </div>
-               <div class="row mt-2">
-                  <div class="col-xl-6">
-                     <label class="primaryCurText">{{__('Distance Unit')}}</label>
-                     <select class="form-control" id="distance_unit_for_time" name="distance_unit_for_time">
-                        <option value="">{{__('Select unit')}}</option>
-                        <option value="kilometer" @if((isset($preference) && $preference->distance_unit_for_time == 'kilometer')) selected @endif>{{__('Kilometer')}}</option>
-                        <option value="mile" @if((isset($preference) && $preference->distance_unit_for_time == 'mile')) selected @endif>{{__('Mile')}}</option>
-                     </select>
-                  </div>
-                  <div class="col-xl-6">
-                     <label class="primaryCurText">{{__('Distance to Time Multiplier (Per 1 distance unit)')}}</label>
-                     <input class="form-control" type="number" id="distance_to_time_multiplier" name="distance_to_time_multiplier" value="{{ old('distance_to_time_multiplier', $preference->distance_to_time_multiplier  ?? '')}}" min="0">
-                  </div>
-               </div>
-            </div>
-         </form>
-      </div>
+
    </div>
 
    <div style="display:none;">
@@ -1413,8 +1513,8 @@
                               <label for="">Is Required?</label>
                               <div class="input-group mb-2">
                                  <select class="form-control" name="is_required">
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
+                                    <option value="1">{{__('Yes')}}</option>
+                                    <option value="0">{{__('No')}}</option>
                                  </select>
                               </div>
                            </div>
@@ -1446,6 +1546,8 @@
          </div>
       </div>
    </div>
+
+
    <div id="add_driver_registration_document_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
          <div class="modal-content">
@@ -1499,6 +1601,55 @@
          </div>
       </div>
    </div>
+
+   <!-- modal for product tags -->
+   <div id="add_product_tag_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+         <div class="modal-content">
+            <div class="modal-header border-bottom">
+               <h4 class="modal-title" id="standard-modalLabel">{{ __("Add Product Tag") }}</h4>
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+               <form id="productTagForm" method="POST" action="javascript:void(0)" enctype="multipart/form-data">
+                  @csrf
+                  <div id="save_product_tag">
+                     <input type="hidden" name="tag_id" value="">
+                     <div class="row">
+                        <div class="col-md-3">
+                           <label>{{ __('Upload Icon') }}</label>
+                           <input type="file" accept="image/*" data-plugins="dropify" name="icon" class="dropify"  />
+                           <label class="logo-size text-right w-100">{{ __("Icon Size") }} 100X100</label>
+                       </div>
+
+                        @forelse($client_languages as $k => $client_language)
+                        <div class="col-md-6 mb-2">
+                           <div class="row">
+                              <div class="col-12">
+                                 <div class="form-group position-relative">
+                                    <label for="">{{ __("Name") }} ({{$client_language->langName}})</label>
+                                    <input class="form-control" name="language_id[{{$k}}]" type="hidden" value="{{$client_language->langId}}">
+                                    <input class="form-control" name="name[{{$k}}]" type="text" id="product_tag_name_{{$client_language->langId}}">
+                                 </div>
+                                 @if($k == 0)
+                                    <span class="text-danger error-text product_tag_err"></span>
+                                 @endif
+                              </div>
+                           </div>
+                        </div>
+                        @empty
+                        @endforelse
+                     </div>
+                  </div>
+               </form>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary submitSaveProductTag">{{ __("Save") }}</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- end product tags -->
    @endsection
    @section('script')
    <script type="text/javascript">
@@ -1508,6 +1659,14 @@
          $('#add_vendor_registration_document_modal').modal('show');
          $('#add_vendor_registration_document_modal #standard-modalLabel').html('Add Vendor Registration Document');
       });
+
+      $('#add_product_tag_modal_btn').click(function(e) {
+         document.getElementById("productTagForm").reset();
+         $('#add_product_tag_modal input[name=tag_id]').val("");
+         $('#add_product_tag_modal').modal('show');
+         $('#add_product_tag__modal #standard-modalLabel').html('Add Tag');
+      });
+
       $(document).on("click", ".delete_vendor_registration_document_btn", function() {
          var vendor_registration_document_id = $(this).data('vendor_registration_document_id');
          if (confirm('Are you sure?')) {
@@ -1587,6 +1746,86 @@
          });
       });
 
+
+
+      ///   product tag ////
+      $(document).on("click", ".delete_product_tag_btn", function() {
+         var tag_id = $(this).data('tag_id');
+         if (confirm('Are you sure?')) {
+            $.ajax({
+               type: "POST",
+               dataType: 'json',
+               url: "{{ route('tag.delete') }}",
+               data: {
+                  _token: "{{ csrf_token() }}",
+                  tag_id: tag_id
+               },
+               success: function(response) {
+                  if (response.status == "Success") {
+                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                     setTimeout(function() {
+                        location.reload()
+                     }, 2000);
+                  }
+               }
+            });
+         }
+      });
+      $(document).on('click', '.submitSaveProductTag', function(e) {
+         var tag_id = $("#add_product_tag_modal input[name=tag_id]").val();
+         if (tag_id) {
+            var post_url = "{{ route('tag.update') }}";
+         } else {
+            var post_url = "{{ route('tag.create') }}";
+         }
+         var form_data = new FormData(document.getElementById("productTagForm"));
+         $.ajax({
+            url: post_url,
+            method: 'POST',
+            data: form_data,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+               if (response.status == 'Success') {
+                  $('#add_or_edit_social_media_modal').modal('hide');
+                  $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                  setTimeout(function() {
+                     location.reload()
+                  }, 2000);
+               } else {
+                  $.NotificationApp.send("Error", response.message, "top-right", "#ab0535", "error");
+               }
+            },
+            error: function(response) {
+               $('#add_product_tag_modal .product_tag_err').html('The default language name field is required.');
+            }
+         });
+      });
+      $(document).on("click", ".edit_product_tag_btn", function() {
+         let tag_id = $(this).data('tag_id');
+         $('#add_product_tag_modal input[name=tag_id]').val(tag_id);
+         $.ajax({
+            method: 'GET',
+            data: {
+               tag_id: tag_id
+            },
+            url: "{{ route('tag.edit') }}",
+            success: function(response) {
+               if (response.status = 'Success') {
+                  $("#add_product_tag_modal input[name=tag_id]").val(response.data.id);
+                  $('#add_product_tag_modal #standard-modalLabel').html('Update Product Tag');
+                  $('#add_product_tag_modal').modal('show');
+                  $.each(response.data.translations, function( index, value ) {
+                    $('#add_product_tag_modal #product_tag_name_'+value.language_id).val(value.name);
+                  });
+               }
+            },
+            error: function() {
+
+            }
+         });
+      });
+      // end product tag ////
       $('#add_driver_registration_document_modal_btn').click(function(e) {
          $('#add_driver_registration_document_modal').modal('show');
          $('#add_driver_registration_document_modal #standard-modalLabel').html('Add Driver Registration Document');
@@ -1831,7 +2070,7 @@
          $('#show-map-modal').modal('hide');
       });
 
-     
+
       var hyprlocal = $('#is_hyperlocal');
       if(hyprlocal.length > 0){
          hyprlocal[0].onchange = function() {
@@ -1843,7 +2082,7 @@
          }
          }
       }
-      
+
       var delivery_service = $('#need_delivery_service');
       var dispatcherDiv = $('#need_dispacher_ride');
       var need_dispacher_home_other_service = $('#need_dispacher_home_other_service');
@@ -1941,21 +2180,21 @@
          optionsChecked("dinein_check");
          }
       }
-      
+
       var takeaway_option = $('#takeaway_check');
       if(takeaway_option.length > 0){
          takeaway_option[0].onchange = function() {
          optionsChecked("takeaway_check");
       }
       }
-      
+
       var delivery_option = $('#delivery_check');
       if(delivery_option > 0){
          delivery_option[0].onchange = function() {
          optionsChecked("delivery_check");
          }
       }
-     
+
 
       function optionsChecked(id) {
          var delivery_checked = $("#delivery_check").is(":checked");

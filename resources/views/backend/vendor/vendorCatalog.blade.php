@@ -119,7 +119,7 @@
                 @include('backend.vendor.show-md-3')
             </div>
             <div class="col-lg-9 col-xl-9">
-                <div>
+                <div class="">
                     <ul class="nav nav-pills navtab-bg nav-justified">
                         <li class="nav-item">
                             <a href="{{ route('vendor.catalogs', $vendor->id) }}" aria-expanded="false"
@@ -153,7 +153,7 @@
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="card widget-inline">
-                                <div class="card-body">
+                                <div class="card-body p-2">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-3 col-lg mb-3 mb-md-0">
                                             <div class="text-center">
@@ -299,10 +299,10 @@
                                                             <td> {{ $product->is_live == 1 ? 'Published' : 'Draft' }}
                                                             </td>
                                                             @if ($client_preference_detail->business_type != 'taxi')
-                                                                <td> {{ $product->is_new == 0 ? 'No' : 'Yes' }}</td>
-                                                                <td> {{ $product->is_featured == 0 ? 'No' : 'Yes' }}
+                                                                <td> {{ $product->is_new == 0 ? __('No') : __('Yes') }}</td>
+                                                                <td> {{ $product->is_featured == 0 ? __('No')  : __('Yes') }}
                                                                 </td>
-                                                                <td> {{ $product->Requires_last_mile == 0 ? 'No' : 'Yes' }}
+                                                                <td> {{ $product->Requires_last_mile == 0 ? __('No')  : __('Yes') }}
                                                                 </td>
                                                             @endif
                                                             <td>
@@ -357,7 +357,7 @@
                     action="{{ route('product.store') }}">
                     @csrf
                     <div class="modal-body pb-0">
-                      
+
                                 <div class="row">
                                     <div class="col-12 mb-2">
                                         <div class="form-group" id="product_nameInput">
@@ -370,7 +370,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                   
+
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
@@ -379,6 +379,9 @@
                                             <span class="text-danger">*</span>
                                             {!! Form::text('sku', null, ['class' => 'form-control', 'id' => 'sku', 'onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
                                             <span class="invalid-feedback" role="alert">
+                                                <strong></strong>
+                                            </span>
+                                            <span class="valid-feedback" role="alert">
                                                 <strong></strong>
                                             </span>
                                             {!! Form::hidden('type_id', 1) !!}
@@ -393,7 +396,7 @@
                                                 <strong></strong>
                                             </span>
                                         </div>
-                                    </div>    
+                                    </div>
 
                                     <div class="col-12">
                                         <div class="form-group" id="categoryInput">
@@ -403,7 +406,7 @@
                                             @foreach($product_categories as $product_category)
                                                 <option value="{{$product_category['id']}}">{{$product_category['hierarchy']}}</option>
                                             @endforeach
-                                                
+
                                             {{--@foreach($product_categories as $product_category)
                                                 @if($product_category->category)
                                                     @if( ($product_category->category->type_id == 1) || ($product_category->category->type_id == 3) || ($product_category->category->type_id == 7))
@@ -418,7 +421,7 @@
                                         </div>
                                     </div>
                                 </div>
-                       
+
                     </div>
                     <div class="modal-footer">
                         <button type="button"
@@ -555,7 +558,7 @@
                 </div>
 
                 <div class="modal-body">
-                 
+
                         <div class="card-box">
                             <form id="save_product_action_modal" method="post" enctype="multipart/form-data"
                             action="#">
@@ -578,8 +581,8 @@
                                          <option value="for_sell_when_out_of_stock">{{__('Sell when out of stock ')}}</option>
                                     </select>
                                 </div>
-                                
-                               
+
+
 
                             </div>
 
@@ -614,7 +617,7 @@
                                     </select>
                                   </div>
 
-                            
+
                                 <div class="col-md-6 mb-2"  id="for_tax"  style="display: none;">
                                     {!! Form::label('title', __('Tax Category'), ['class' => 'control-label']) !!}
                                     <select class="form-control " id="tax_category_for" name="tax_category">
@@ -680,7 +683,7 @@
 
         ////////   *******************  Save product action data ******************* ////////////////////////
         // $('#save_product_action_modal').on('submit', function(e) {
-        //     e.preventDefault(); 
+        //     e.preventDefault();
         //     var is_new = $('#is_new').val();
         //     var is_featured = $('#is_featured').val();
         //     var is_live = $('#is_live').val();
@@ -690,7 +693,7 @@
         //         product_id[i] = $(this).val();
         //     });
         //     if (product_id.length == 0) {
-               
+
         //         $("#action-product-modal .close").click();
         //         return;
         //     }
@@ -720,14 +723,14 @@
                 product_id[i] = $(this).val();
             });
             if (product_id.length == 0) {
-               
+
                 $("#action-product-modal .close").click();
                 return;
             }
             if(action_for == 0){
                 return false;
             }
-            
+
             $.ajax({
                 type: "post",
                 url: '{{route("product.update.action")}}',
@@ -746,11 +749,11 @@
                     $(".loader_box").hide();
                 },
                 error: function(response) {
-                    
+
                         $(".show_all_error.invalid-feedback").show();
                         $(".show_all_error.invalid-feedback").text(
                             'Something went wrong, Please try Again.');
-                    
+
                     return response;
                 }
             });
@@ -769,9 +772,9 @@
                 url: "{{route('vendor.specific_categories',$vendor->id)}}",
                 success: function(response) {
                     if(response.status == 1){
+                        $('#category_list').selectize()[0].selectize.destroy();
                         $("#category_list").find('option').remove();
                         $("#category_list").append(response.options);
-                        $('#category_list').selectize()[0].selectize.destroy();
                     }
                 },
                 error:function(error){
@@ -797,6 +800,35 @@
         $("#woocommerce_button").click(function() {
             $("#import_csv").show();
             $("#import_woocommerce").hide();
+        });
+
+        $(document).delegate("#skuInput #sku", "blur focusout", function(){
+            var sku = $(this).val();
+            $.ajax({
+                type: "post",
+                url: "{{route('product.sku.validate')}}",
+                data: {sku : sku},
+                success: function(response) {
+                    if(response.status == 'Success'){
+                        $("#skuInput input").removeClass("is-invalid").addClass('valid');
+                        $("#skuInput span.invalid-feedback").children("strong").text('');
+                        $("#skuInput span.valid-feedback").children("strong").text(response.message);
+                        $("#skuInput span.invalid-feedback").hide();
+                        $("#skuInput span.valid-feedback").show();
+                    }
+                },
+                error:function(response){
+                    if (response.status === 422) {
+                        let error = response.responseJSON;
+                        $("#skuInput input").removeClass("valid").addClass("is-invalid");
+                        $("#skuInput span.invalid-feedback").children("strong").text(error.message);
+                        $("#skuInput span.invalid-feedback").show();
+                        $("#skuInput span.valid-feedback").hide();
+                    }else{
+
+                    }
+                }
+            });
         });
 
         var regexp = /^[a-zA-Z0-9-_]+$/;
