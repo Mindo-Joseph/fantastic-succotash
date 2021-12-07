@@ -244,7 +244,7 @@
 }
 .switch-square:checked + .lable::before {
   display: inline-block;
-  content: '\f00c';
+  /* content: '\f00c'; */
   background-color: #F5F8FC;
   border-color: #adb8c0;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
@@ -253,6 +253,22 @@
 .switch-square + .lable {
   margin: 0 4px;
   min-height: 24px;
+}
+.switch.switch-bootstrap:checked + .lable::before,.switch.switch-bootstrap + .lable::before{
+    content: "";
+    width: 40px;
+    height: 18px;
+    line-height: 21px;
+}
+.switch.switch-bootstrap + .lable::after{
+    width: 14px;
+    height: 14px;
+}
+.switch + .lable {
+    line-height: 14px;
+}
+.switch.switch-bootstrap:checked + .lable::after {
+    left: 23px;
 }
 .switch-square + .lable::before {
   font-weight: normal;
@@ -278,7 +294,7 @@
 }
 .switch-square.switch-bootstrap + .lable::before {
   font-family: FontAwesome;
-  content: "\f00d";
+  /* content: "\f00d"; */
   box-shadow: none;
   border-width: 0;
   font-size: 16px;
@@ -309,7 +325,7 @@
   transition: left 0.2s ease;
 }
 .switch-square.switch-bootstrap:checked + .lable::before {
-  content: "\f00c";
+ /* content: "\f00c";*/
   text-indent: 6px;
   color: #FFF;
   border-color: #b7d3e5;
