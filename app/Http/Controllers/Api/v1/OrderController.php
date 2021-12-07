@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Http;
 use App\Http\Requests\OrderStoreRequest;
 use Illuminate\Support\Facades\Validator;
 use Log;
-use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, CartProductPrescription, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, VendorOrderDispatcherStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client, UserVendor, LuxuryOption};
+use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, CartProductPrescription, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, VendorOrderDispatcherStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client, UserVendor, LuxuryOption, EmailTemplate,ProductVariantSet};
 use App\Models\AutoRejectOrderCron;
 
 class OrderController extends BaseController {
@@ -95,6 +95,8 @@ class OrderController extends BaseController {
             $taxable_amount = 0;
             $payable_amount = 0;
             $user = Auth::user();
+            $language_id = $user->language??1;
+
             if ($user) {
                 DB::beginTransaction();
                 $subscription_features = array();
@@ -147,6 +149,13 @@ class OrderController extends BaseController {
                     $order->order_number = generateOrderNo();
                     $order->address_id = $request->address_id;
                     $order->payment_option_id = $request->payment_option_id;
+                    $order->comment_for_pickup_driver = $cart->comment_for_pickup_driver??null;
+                    $order->comment_for_dropoff_driver = $cart->comment_for_dropoff_driver??null;
+                    $order->comment_for_vendor = $cart->comment_for_vendor??null;
+                    $order->schedule_pickup = $cart->schedule_pickup??null;
+                    $order->schedule_dropoff = $cart->schedule_dropoff??null;
+                    $order->specific_instructions = $cart->specific_instructions??null;
+                    $order->is_gift = $request->is_gift??0;
                     $order->save();
                     $customerCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
                     $clientCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
@@ -216,6 +225,33 @@ class OrderController extends BaseController {
                             $order_product->product_id = $vendor_cart_product->product_id;
                             $order_product->created_by = $vendor_cart_product->created_by;
                             $order_product->variant_id = $vendor_cart_product->variant_id;
+                            $product_variant_sets = '';
+                            if (isset($vendor_cart_product->variant_id) && !empty($vendor_cart_product->variant_id)) {
+                                $var_sets = ProductVariantSet::where('product_variant_id', $vendor_cart_product->variant_id)->where('product_id', $vendor_cart_product->product->id)
+                                ->with(['variantDetail.trans' => function ($qry) use ($language_id) {
+                                    $qry->where('language_id', $language_id);
+                                },
+                                'optionData.trans' => function ($qry) use ($language_id) {
+                                    $qry->where('language_id', $language_id);
+                                }])->get();
+                                if (count($var_sets)) {
+                                    foreach ($var_sets as $set) {
+                                        if (isset($set->variantDetail) && !empty($set->variantDetail)) {
+                                            $product_variant_set = @$set->variantDetail->trans->title.":".@$set->optionData->trans->title.", ";
+                                            $product_variant_sets .= $product_variant_set;
+                                        }
+                                    }
+                                }
+                            }
+                           
+                            $order_product->product_variant_sets = $product_variant_sets;
+                            if(!empty($vendor_cart_product->product->title))
+                            $vendor_cart_product->product->title = $vendor_cart_product->product->title;
+                            elseif(empty($vendor_cart_product->product->title)  && !empty($vendor_cart_product->product->translation))
+                            $vendor_cart_product->product->title = $vendor_cart_product->product->translation[0]->title;
+                            else
+                            $vendor_cart_product->product->title = $vendor_cart_product->product->sku;
+
                             $order_product->product_name = $vendor_cart_product->product->title ?? $vendor_cart_product->product->sku;
                             $order_product->product_dispatcher_tag = $vendor_cart_product->product->tags;
                             if ($vendor_cart_product->product->pimage) {
@@ -342,6 +378,10 @@ class OrderController extends BaseController {
                         $order->payment_status = 1;
                     }
                     $order->save();
+                    foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
+                        $this->sendSuccessEmail($request, $order, $vendor_id);
+                    }
+                    $this->sendSuccessEmail($request, $order);
                     $this->sendSuccessSMS($request, $order);
                     $ex_gateways = [6,7,8,9]; // if mobbex, payfast, yoco
                     if(!in_array($request->payment_option_id, $ex_gateways)){
@@ -725,6 +765,73 @@ class OrderController extends BaseController {
             'vendor_id' =>  $request->vendor_id
         ]);
     }
+
+    public function sendSuccessEmail($request, $order, $vendor_id = '')
+    {
+        $user = Auth::user();
+
+        $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
+        $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from', 'mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from', 'admin_email')->where('id', '>', 0)->first();
+        $message = __('An otp has been sent to your email. Please check.');
+        $otp = mt_rand(100000, 999999);
+        if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
+            $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+            if ($vendor_id == "") {
+                $sendto =  $user->email;
+            } else {
+                $vendor = Vendor::where('id', $vendor_id)->first();
+                if ($vendor) {
+                    $sendto =  $vendor->email;
+                }
+            }
+            $customerCurrency = ClientCurrency::join('currencies as cu', 'cu.id', 'client_currencies.currency_id')->where('client_currencies.currency_id', $user->currency)->first();
+            $currSymbol = $customerCurrency->symbol;
+            $client_name = 'Sales';
+            $mail_from = $data->mail_from;
+            try {
+                $email_template_content = '';
+                $email_template = EmailTemplate::where('id', 5)->first();
+                $address = UserAddress::where('id', $request->address_id)->first();
+                if ($user) {
+                    $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
+                }
+                if ($cart) {
+                    $cartDetails = $this->getCart($cart);
+                }
+                if ($email_template) {
+                    $email_template_content = $email_template->content;
+                    if ($vendor_id == "") {
+                        $returnHTML = view('email.orderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
+                    } else {
+                        $returnHTML = view('email.orderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id, 'currencySymbol' => $currSymbol])->render();
+                    }
+                    $email_template_content = str_ireplace("{customer_name}", ucwords($user->name), $email_template_content);
+                    $email_template_content = str_ireplace("{order_id}", $order->order_number, $email_template_content);
+                    $email_template_content = str_ireplace("{products}", $returnHTML, $email_template_content);
+                    $email_template_content = str_ireplace("{address}", $address->address . ', ' . $address->state . ', ' . $address->country . ', ' . $address->pincode, $email_template_content);
+                }
+                $email_data = [
+                    'code' => $otp,
+                    'link' => "link",
+                    'email' => $sendto,
+                    'mail_from' => $mail_from,
+                    'client_name' => $client_name,
+                    'logo' => $client->logo['original'],
+                    'subject' => $email_template->subject,
+                    'customer_name' => ucwords($user->name),
+                    'email_template_content' => $email_template_content,
+                    'cartData' => $cartDetails,
+                    'user_address' => $address,
+                ];
+                if(!empty($data['admin_email'])){
+                    $email_data['admin_email'] = $data['admin_email'];
+                }
+                dispatch(new \App\Jobs\SendOrderSuccessEmailJob($email_data))->onQueue('verify_email');
+                $notified = 1;
+            } catch (\Exception $e) {
+            }
+        }
+    }
     
     public function sendSuccessSMS($request, $order, $vendor_id = ''){
         try{
@@ -813,7 +920,7 @@ class OrderController extends BaseController {
             $order_item_count = 0;
             $order->user_name = $user->name;
             $order->user_image = $user->image;
-            $order->date_time = convertDateTimeInTimeZone($order->orderDetail->created_at, $user->timezone);
+            $order->date_time = dateTimeInUserTimeZone($order->orderDetail->created_at, $user->timezone);
             $order->payment_option_title = __($order->orderDetail->paymentOption->title??'');
             $order->order_number = $order->orderDetail->order_number;
             $product_details = [];
@@ -838,10 +945,10 @@ class OrderController extends BaseController {
                 $order_pre_time = ($order->order_pre_time > 0) ? $order->order_pre_time : 0;
                 $user_to_vendor_time = ($order->user_to_vendor_time > 0) ? $order->user_to_vendor_time : 0;
                 $ETA = $order_pre_time + $user_to_vendor_time;
-                $order->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $order->created_at, $order->orderDetail->scheduled_date_time) : convertDateTimeInTimeZone($order->created_at, $user->timezone, 'h:i A');
+                $order->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $order->created_at, $order->orderDetail->scheduled_date_time) : dateTimeInUserTimeZone($order->created_at, $user->timezone);
             }
             if(!empty($order->orderDetail->scheduled_date_time)){
-                $order->scheduled_date_time = convertDateTimeInTimeZone($order->orderDetail->scheduled_date_time, $user->timezone, 'M d, Y h:i A');
+                $order->scheduled_date_time = dateTimeInUserTimeZone($order->orderDetail->scheduled_date_time, $user->timezone);
             }
             $luxury_option_name = '';
             if($order->orderDetail->luxury_option_id > 0){
@@ -924,7 +1031,7 @@ class OrderController extends BaseController {
                 $order->user_name = $order->user->name;
                 $order->user_image = $order->user->image;
                 $order->payment_option_title = __($order->paymentOption->title);
-                $order->created_date = Carbon::parse($order->created_at)->setTimezone($user->timezone)->format('M d, Y h:i A');
+                $order->created_date = dateTimeInUserTimeZone($order->created_at, $user->timezone);
                 $order->tip_amount = $order->tip_amount;
                 $order->tip = array(
                     ['label' => '5%', 'value' => number_format((0.05 * ($order->payable_amount - $order->total_discount_calculate)), 2, '.', '')],
@@ -972,7 +1079,7 @@ class OrderController extends BaseController {
                         $order_pre_time = ($vendor->order_pre_time > 0) ? $vendor->order_pre_time : 0;
                         $user_to_vendor_time = ($vendor->user_to_vendor_time > 0) ? $vendor->user_to_vendor_time : 0;
                         $ETA = $order_pre_time + $user_to_vendor_time;
-                        $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : convertDateTimeInTimeZone($vendor->created_at, $user->timezone, 'h:i A');
+                        $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : dateTimeInUserTimeZone($vendor->created_at, $user->timezone);
                     }
                     if($vendor->dineInTable){
                         $vendor->dineInTableName = $vendor->dineInTable->translations->first() ? $vendor->dineInTable->translations->first()->name : '';
@@ -981,7 +1088,7 @@ class OrderController extends BaseController {
                     }
         		}
                 if(!empty($order->scheduled_date_time)){
-                    $order->scheduled_date_time = convertDateTimeInTimeZone($order->scheduled_date_time, $user->timezone, 'M d, Y h:i A');
+                    $order->scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
                 }
                 $luxury_option_name = '';
                 if($order->luxury_option_id > 0){

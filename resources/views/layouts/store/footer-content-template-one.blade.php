@@ -4,14 +4,14 @@ $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'
 $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('language_id', session()->get('customerLanguage') ??1);}])->whereHas('translations', function($q) {$q->where(['is_published' => 1, 'language_id' => session()->get('customerLanguage') ??1]);})->get();
 @endphp
 <footer class="footer-light">
-    <section class="section-b-space light-layout py-0">
+    <section class="section-b-space light-layout pt-3 pb-0">
         <div class="container">
             @if(count($pages))
             <div class="row footer-theme partition-f py-lg-4 pb-1">
 
                 @if($client_preference_detail->show_contact_us == 1)
                 <div class="col-12 d-block d-md-none">
-                    <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
+                    <!-- <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a> -->
                     <div class="footer-contant">
                         <div class="store-btn mb-3 d-flex align-items-center">
                             <a class="mt-2 mr-2" href="#"><img src="{{asset('front-assets/images/app-store.svg')}}" alt=""></a>
@@ -99,10 +99,10 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                 </div>
                 @endif
                 @if($client_preference_detail->show_contact_us == 1)
-                <div class="col-lg-3 col-6 pl-xl-3 mobile-border">
+                <div class="col-lg-3 col-md-6 col-5 pl-xl-3 mobile-border">
                     <div class="sub-title">
                         <div class="footer-title mt-0 d-none d-md-block">
-                            <h4 class="mt-0">{{ __('Find our app on mobile') }}</h4>
+                            <h4 class="mt-0">{{ __('Find Our App On Mobile') }}</h4>
                         </div>
                         <div class="footer-contant">
                             <div class="store-btn mb-3 d-none d-md-block">
@@ -112,7 +112,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
 
                             @if(count($social_media_details))
                             <div class="footer-title mt-0">
-                                <h4 class="mt-0">{{ __('Keep in Touch') }}</h4>
+                                <h4 class="mt-0">{{ __('Keep In Touch') }}</h4>
                             </div>
                             <ul class="social-links d-flex">
                                 @foreach($social_media_details as $social_media_detail)
@@ -131,7 +131,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                 @endif
 
                 @if($client_preference_detail->show_payment_icons == 1)
-                <div class="col-lg-3 col-6 payment-card mobile-border">
+                <div class="col-lg-3 col-md-6 col-7 payment-card mobile-border">
 
                     <div class="sub-title">
                         <div class="footer-title mt-0">
@@ -176,7 +176,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                             $prevYear = $currYear - 1;
                             $currYear = substr($currYear, -2);
                         @endphp
-                        <p><i class="fa fa-copyright" aria-hidden="true"></i> {{$prevYear}}-{{$currYear}} | All rights reserved</p>
+                        <p><i class="fa fa-copyright" aria-hidden="true"></i> {{$prevYear}}-{{$currYear}} | {{__('All rights reserved')}}</p>
                     </div>
                 </div>
             </div>

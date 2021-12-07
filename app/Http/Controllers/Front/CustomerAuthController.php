@@ -24,7 +24,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{AppStyling, AppStylingOption, Currency, Client, Category, Brand, Cart, ReferAndEarn, ClientPreference, Vendor, ClientCurrency, User, Country, UserRefferal, Wallet, WalletHistory, CartProduct, PaymentOption, UserVendor,Permissions, UserPermissions, VendorDocs, VendorRegistrationDocument, EmailTemplate, NotificationTemplate, UserDevice};
 use Kutia\Larafirebase\Facades\Larafirebase;
-
+use Math;
 class CustomerAuthController extends FrontController
 {
     use ApiResponser;
@@ -194,13 +194,17 @@ class CustomerAuthController extends FrontController
                 ]);
             }
             else{
+
                 $preferences = ClientPreference::first();
                 if(!empty($req->email) && ($preferences->verify_email == 0)){
+
                     $validator = $req->validate([
                         'email'  => 'email|unique:users'
                     ]);
                 }
+
                 if(!empty($req->phone_number) && isset($preferences) && ($preferences->verify_phone == 0)){
+
                     $validator = $req->validate([
                         'phone_number' => 'string|min:8|max:15|unique:users'
                     ]);
@@ -837,4 +841,6 @@ class CustomerAuthController extends FrontController
         }
         return redirect()->route('customer.login');
     }
+
+    
 }

@@ -107,7 +107,7 @@
    "Loyalty": " Lealtad",
    "Cash On Delivery": " Contra reembolso",
    "Total Payable": " Total a pagar",
-   "Summery": " Veraniego",
+   "Summary": " Veraniego",
    "Shipping Address": " Dirección de Envío",
    "Payment Method": " Método de pago",
    "Thank You": " Gracias",
@@ -121,6 +121,7 @@
    "The city field is required.": "El campo de la ciudad es obligatorio.",
    "The state field is required.": "El campo de estado es obligatorio.",
    "The pincode field is required.": "El campo de código PIN es obligatorio.",
+   "The zip code field is required.": "El campo del código postal es obligatorio.",
    "Address not available.": " Dirección no disponible.",
    "Share It": "Compártelo",
    "Product Details": "Detalles de producto",
@@ -163,6 +164,7 @@
    "State": " Estado",
    "City": " Ciudad ",
    "Pincode": " Código Pin",
+   "Zip Code": "Código postal",
    "Office": " Oficina",
    "Others": " otros",
    "Save Address": " Guardar dirección ",
@@ -858,5 +860,6 @@
    "Tip After Order": "Sugerencia después del pedido",
    "Off Scheduling  Order": "Orden fuera de programación",
    "Select Parent Category" : "Seleccionar categoría principal",
-   "Wallet has been debited for order number": "Se ha cargado a Wallet el número de pedido"
+   "Wallet has been debited for order number": "Se ha cargado a Wallet el número de pedido",
+   "There are no stores available in your area currently.": "Actualmente no hay ninguna tienda disponible en su área."
 }

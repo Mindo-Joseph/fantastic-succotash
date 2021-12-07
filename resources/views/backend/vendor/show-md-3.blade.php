@@ -12,12 +12,16 @@
             @if(Auth::user()->is_superadmin == 1)
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light" id="block_btn" data-vendor_id="{{$vendor->id}}" data-status="{{$vendor->status == 2  ? '1' : '2'}}">{{$vendor->status == 2 ? 'Unblock' : 'Block'}}</button>
             @endif
+            <div class="for_pickup_delivery_service_only">
             @if($client_preferences->need_dispacher_ride == 1 && !in_array($client_preferences->business_type, ['laundry']))
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcher" data-id="{{ $vendor->id }}"> {{ __("Login Into Dispatcher (Pickup & Delivery)") }} </button>
             @endif
+            </div>
+            <div class="for_on_demand_service_only">
             @if($client_preferences->need_dispacher_home_other_service == 1 && !in_array($client_preferences->business_type, ['laundry','taxi']))
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcherOnDemand" data-id="{{ $vendor->id }}"> {{ __("Login Into Dispatcher (On Demand Services)") }} </button>
             @endif
+            </div>
             @if($client_preferences->need_laundry_service == 1 && in_array($client_preferences->business_type, ['laundry']))
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcherLaundry" data-id="{{ $vendor->id }}"> {{ __("Login Into Dispatcher (Laundry Services)") }} </button>
             @endif
@@ -109,6 +113,32 @@
         </div>
     </div>
 </div>
+<div class="card-box">
+    <div class="row text-left">
+        <div class="col-md-12">
+            <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" method="post">
+                @csrf
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="mb-2"> <span class="">{{ __("Service Fee") }}</span></h4>
+                    </div>
+                </div>
+                <div class="row mb-2">
+
+                    <div class="col-md-12">
+                        <div class="form-group" id="service_fee_percentInput">
+                            {!! Form::label('title', __('Service Fee Percent'),['class' => 'control-label']) !!}
+                            <input class="form-control" name="service_fee_percent" type="text" min="0" maxlength="5" value="{{$vendor->service_fee_percent}}" onkeypress="return isNumberKey(event)" onkeydown="if(this.value.length > 6) return false;">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-info waves-effect waves-light w-100" {{$vendor->status == 1 ? '' : 'disabled'}}>{{ __("Save") }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @if(Auth::user()->is_superadmin == 1)
 <div class="card-box">
     <div class="row text-left">
@@ -125,7 +155,7 @@
                     <div class="col-md-12">
                         <div class="form-group" id="commission_percentInput">
                             {!! Form::label('title', __('Commission Percent'),['class' => 'control-label']) !!}
-                            <input class="form-control" name="commission_percent" type="text" value="{{$vendor->commission_percent}}" onkeypress="return isNumberKey(event)">
+                            <input class="form-control" name="commission_percent" type="text" value="{{$vendor->commission_percent}}" onkeypress="return isNumberKey(event)"  onkeydown="if(this.value.length > 6) return false;">
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -464,14 +494,29 @@ $('#add_user_permission_vendor').submit(function(e) {
             data: {category_id: category_id, status:status, vendor_id:vendor_id},
             success: function(response) {
                 if (response.status == 'Success') {
+                    console.log(response.data);
+                    if(response.data.check_pickup_delivery_service == 1)
+                    {
+                        $('.for_pickup_delivery_service_only').html('<button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcher" data-id="'+response.data.product_categories[0].vendor_id+'">{{__("Login Into Dispatcher (Pickup & Delivery)")}} </button>');
+                    }else{
+                        $('.for_pickup_delivery_service_only').html('');
+                    }
+                    if(response.data.check_on_demand_service == 1)
+                    {
+                        $('.for_on_demand_service_only').html('<button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcherOnDemand" data-id="'+response.data.product_categories[0].vendor_id+'">{{__("Login Into Dispatcher (On Demand Services)")}} </button>');
+                    }else{
+                        $('.for_on_demand_service_only').html('');
+                    }
+
+
                     $('#category_list').html('');
-                   $('#category_list').html('<option value="">Select Category...</option>');
-                   $('#category_list').selectize()[0].selectize.destroy();
-                   $.each(response.data, function (key, value) {
+                    $('#category_list').html('<option value="">Select Category...</option>');
+                    $('#category_list').selectize()[0].selectize.destroy();
+                    $.each(response.data.product_categories, function (key, value) {
                         if(value.category.type_id == 1){
                            $('#category_list').append('<option value='+value.category_id+'>'+value.category.title+'</option>');
                         }
-                   });
+                    });
                 }
             }
         });

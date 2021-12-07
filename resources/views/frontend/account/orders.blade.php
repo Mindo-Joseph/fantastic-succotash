@@ -14,6 +14,11 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
+    input:invalid,
+    input:out-of-range {
+        border-color:hsl(0, 50%, 50%);
+        background:hsl(0, 50%, 90%);
+    }
 </style>
 @endsection
 @section('content')
@@ -101,7 +106,7 @@ $timezone = Auth::user()->timezone;
             <div class="col-lg-3">
                 <div class="account-sidebar"><a class="popup-btn">{{ __('My Account') }}</a></div>
                 <div class="dashboard-left">
-                    <div class="collection-mobile-back"><span class="filter-back"><i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}</span></div>
+                    <div class="collection-mobile-back"><span class="filter-back d-lg-none d-inline-block"><i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}</span></div>
                     @include('layouts.store/profile-sidebar')
                 </div>
             </div>
@@ -149,7 +154,8 @@ $timezone = Auth::user()->timezone;
                                                 </div>
                                                 <div class="row no-gutters order_data">
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
-                                                    <div class="col-md-3">{{convertDateTimeInTimeZone($order->created_at, $timezone, 'l, F d, Y, h:i A')}}</div>
+                                                    {{-- <div class="col-md-3">{{convertDateTimeInTimeZone($order->created_at, $timezone, 'l, F d, Y, h:i A')}}</div> --}}
+                                                    <div class="col-md-3">{{dateTimeInUserTimeZone($order->created_at, $timezone)}}</div>
                                                     <div class="col-md-3">
                                                         <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                     </div>
@@ -162,10 +168,10 @@ $timezone = Auth::user()->timezone;
                                                                 NA
                                                             @endif
                                                         </span>
-                                                    </div>    
-                                                    @endif                
+                                                    </div>
+                                                    @endif
                                                 </div>
-                                                <div class="row mt-2"> 
+                                                <div class="row mt-2">
                                                     <div class="col-md-9 mb-3">
                                                         @php
                                                             $subtotal_order_price = $total_order_price = $total_tax_order_price = 0;
@@ -176,7 +182,7 @@ $timezone = Auth::user()->timezone;
                                                             @endphp
                                                             <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
                                                                 @if(($vendor->delivery_fee > 0) || (!empty($order->scheduled_date_time)) || ($order->luxury_option_id > 0))
-                                                                    <div class="progress-order font-12">
+                                                                    <div class="progress-order font-12  d-flex align-items-center justify-content-between pr-2">
                                                                         @if($order->luxury_option_id > 0)
                                                                             @php
                                                                                 $luxury_option = \App\Models\LuxuryOption::where('id', $order->luxury_option_id)->first();
@@ -188,13 +194,19 @@ $timezone = Auth::user()->timezone;
                                                                                     $luxury_option_name = 'Delivery';
                                                                                 }
                                                                             @endphp
-                                                                            <span class="badge badge-info ml-2">{{$luxury_option_name}}</span>
+                                                                            <span class="badge badge-info ml-2 my-1">{{$luxury_option_name}}</span>
                                                                         @endif
                                                                         @if(!empty($order->scheduled_date_time))
                                                                             <span class="badge badge-success ml-2">Scheduled</span>
-                                                                            <span class="ml-2">{{convertDateTimeInTimeZone($order->scheduled_date_time, $timezone, 'M d, Y h:i A')}}</span>
+                                                                            <span class="ml-2">{{dateTimeInUserTimeZone($order->scheduled_date_time, $timezone)}}</span>
                                                                         @elseif(!empty($vendor->ETA))
                                                                             <span class="ml-2">Your order will arrive by {{$vendor->ETA}}</span>
+                                                                        @endif
+                                                                        @if($order->is_gift == '1')
+                                                                            <div class="gifted-icon">
+                                                                                <img class="p-1 align-middle" src="{{ asset('assets/images/gifts_icon.png') }}" alt="">
+                                                                                <span class="align-middle">This is a gift.</span>
+                                                                            </div>
                                                                         @endif
                                                                     </div>
                                                                 @endif
@@ -202,7 +214,7 @@ $timezone = Auth::user()->timezone;
                                                                 <div class="row">
                                                                     <div class="col-5 col-sm-3">
                                                                         <h5 class="m-0">{{__('Order Status')}}</h5>
-                                                                        <ul class="status_box mt-1 pl-0"> 
+                                                                        <ul class="status_box mt-1 pl-0">
                                                                         @if(!empty($vendor->order_status))
                                                                             <li>
                                                                                 @if($vendor->order_status == 'placed')
@@ -217,7 +229,7 @@ $timezone = Auth::user()->timezone;
                                                                                 <label class="m-0 in-progress">{{ ucfirst($vendor->order_status) }}</label>
                                                                             </li>
                                                                         @endif
-                                                                        
+
                                                                         @if(!empty($vendor->dispatch_traking_url))
                                                                             <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
                                                                             <a href="{{route('front.booking.details',$order->order_number)}}" target="_blank">{{ __('Details') }}</a>
@@ -241,7 +253,7 @@ $timezone = Auth::user()->timezone;
                                                                                     <li class="text-center">
                                                                                         <img src="{{ $product->image_url }}" alt="">
                                                                                         <span class="item_no position-absolute">x{{$product->quantity}}</span>
-                                                                                        <label class="items_price">{{Session::get('currencySymbol')}}{{$product->price * $clientCurrency->doller_compare}}</label>
+                                                                                        <label class="items_price">{{Session::get('currencySymbol')}}{{helper_number_formet(($product->price * $clientCurrency->doller_compare),2)}}</label>
                                                                                     </li>
                                                                                     @php
                                                                                         $product_total_price = $product->price * $clientCurrency->doller_compare;
@@ -370,7 +382,7 @@ $timezone = Auth::user()->timezone;
                                                 </div>
                                                 <div class="row no-gutters order_data">
                                                     <div class="col-md-3">#{{$order->order_number}}</div>
-                                                    <div class="col-md-3">{{$order->created_at->format('D M d, Y h:m A')}}</div>
+                                                    <div class="col-md-3">{{dateTimeInUserTimeZone($order->created_at, $timezone)}}</div>
                                                     <div class="col-md-3">
                                                         <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                     </div>
@@ -378,13 +390,13 @@ $timezone = Auth::user()->timezone;
                                                     <div class="col-md-3">
                                                         <span class="ellipsis" data-toggle="tooltip" data-placement="top" title="">
                                                             @if($order->address)
-                                                                {{$order->address->address}}, {{$order->address->street}}, {{$order->address->city}}, {{$order->address->state}}, {{$order->address->country}} {{$order->address->pincode}}
+                                                            {{ ($order->address->house_number ?? false) ? $order->address->house_number."," : '' }} {{$order->address->address}}, {{$order->address->street}}, {{$order->address->city}}, {{$order->address->state}}, {{$order->address->country}} {{$order->address->pincode}}
                                                             @else
                                                                 NA
                                                             @endif
                                                         </span>
-                                                    </div>  
-                                                    @endif                  
+                                                    </div>
+                                                    @endif
                                                 </div>
                                                 <div class="row mt-2">
                                                     <div class="col-md-9 mb-3">
@@ -409,7 +421,7 @@ $timezone = Auth::user()->timezone;
                                                                         @endif
 
 
-                                                                      
+
 
                                                                         @if(!empty($vendor->dispatch_traking_url))
                                                                         <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
@@ -482,7 +494,7 @@ $timezone = Auth::user()->timezone;
                                                                             </li>
                                                                             @if(isset($hidereturn) && $hidereturn != 1)
                                                                             <button class="return-order-product btn btn-solid" data-id="{{$order->id??0}}"  data-vendor_id="{{$vendor->vendor_id??0}}"><td class="text-center" colspan="3">{{__('Return')}}</button>
-                                                                            @endif    
+                                                                            @endif
                                                                         </ul>
                                                                     </div>
                                                                 </div>
@@ -544,42 +556,42 @@ $timezone = Auth::user()->timezone;
                                                                 </li>
                                                             </ul>
 
-                                                            @if($client_preference_detail->tip_after_order == 1 && $order->tip_amount <= 0 && $payments > 0) 
+                                                            @if($client_preference_detail->tip_after_order == 1 && $order->tip_amount <= 0 && $payments > 0)
                                                             <hr>
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="mb-2">{{__('Do you want to give a tip?')}}</div>
                                                                     <div class="tip_radio_controls">
-                                                                        @if($order->payable_amount > 0) 
-                                                                            <input type="radio" class="tip_radio" id="control_01" name="select{{$order->order_number}}" value="{{$order->payable_amount*0.05}}">
+                                                                        @if($order->payable_amount > 0)
+                                                                            <input type="radio" class="tip_radio" id="control_01" name="select{{$order->order_number}}" value="{{round($order->payable_amount*0.05,2)}}">
                                                                             <label class="tip_label" for="control_01">
-                                                                                <h5 class="m-0" id="tip_5">{{Session::get('currencySymbol')}}{{$order->payable_amount*0.05}}</h5>
+                                                                                <h5 class="m-0" id="tip_5">{{Session::get('currencySymbol')}}{{ helper_number_formet(round($order->payable_amount*0.05,2) , 2)}}</h5>
                                                                                 <p class="m-0">5%</p>
                                                                             </label>
-                                                                        
-                                                                            <input type="radio" class="tip_radio" id="control_02" name="select{{$order->order_number}}" value="{{$order->payable_amount*0.10}}" >
+
+                                                                            <input type="radio" class="tip_radio" id="control_02" name="select{{$order->order_number}}" value="{{round($order->payable_amount*0.10,2)}}" >
                                                                             <label class="tip_label" for="control_02">
-                                                                                <h5 class="m-0" id="tip_10">{{Session::get('currencySymbol')}}{{$order->payable_amount*0.10}}</h5>
+                                                                                <h5 class="m-0" id="tip_10">{{Session::get('currencySymbol')}}{{ helper_number_formet(round($order->payable_amount*0.10,2 , 2))}}</h5>
                                                                                 <p class="m-0">10%</p>
                                                                             </label>
-                                                                        
-                                                                            <input type="radio" class="tip_radio" id="control_03" name="select{{$order->order_number}}" value="{{$order->payable_amount*0.15}}" >
+
+                                                                            <input type="radio" class="tip_radio" id="control_03" name="select{{$order->order_number}}" value="{{round($order->payable_amount*0.15,2)}}" >
                                                                             <label class="tip_label" for="control_03">
-                                                                                <h5 class="m-0" id="tip_15">{{Session::get('currencySymbol')}}{{$order->payable_amount*0.15}}</h5>
+                                                                                <h5 class="m-0" id="tip_15">{{Session::get('currencySymbol')}}{{helper_number_formet(round($order->payable_amount*0.15,2), 2)}}</h5>
                                                                                 <p class="m-0">15%</p>
                                                                             </label>
-                                                
+
                                                                             <input type="radio" class="tip_radio" id="custom_control{{$order->order_number}}" name="select{{$order->order_number}}" value="custom" >
                                                                             <label class="tip_label" for="custom_control{{$order->order_number}}">
                                                                                 <h5 class="m-0">{{__('Custom')}}<br>{{__('Amount')}}</h5>
                                                                             </label>
                                                                         @else
                                                                             <input type="hidden" class="tip_radio" id="custom_control{{$order->order_number}}" name="select{{$order->order_number}}" value="custom" checked>
-                                                                            
+
                                                                         @endif
                                                                     </div>
                                                                     <div class="custom_tip mb-1 @if($order->payable_amount  > 0)  d-none @endif">
-                                                                        <input class="input-number form-control" name="custom_tip_amount{{$order->order_number}}" id="custom_tip_amount{{$order->order_number}}" placeholder="Enter Custom Amount" type="number" value="" step="0.1">
+                                                                        <input class="input-number form-control" name="custom_tip_amount{{$order->order_number}}" id="custom_tip_amount{{$order->order_number}}" placeholder="Enter Custom Amount" type="number" value="" min="0.01" step="0.01">
                                                                     </div>
                                                                     <div class="col-md-6 text-md-right text-center">
                                                                         <button type="button" class="btn btn-solid topup_wallet_btn_tip topup_wallet_btn_for_tip"  data-order_number={{$order->order_number}} data-payableamount={{$order->payable_amount}} >{{__('Submit')}}</button>
@@ -621,7 +633,7 @@ $timezone = Auth::user()->timezone;
                                             </div>
                                             <div class="row no-gutters order_data">
                                                 <div class="col-md-3">#{{$order->order_number}}</div>
-                                                <div class="col-md-3">{{$order->created_at->format('D M d, Y h:m A')}}</div>
+                                                <div class="col-md-3">{{dateTimeInUserTimeZone($order->created_at, $timezone)}}</div>
                                                 <div class="col-md-3">
                                                     <a class="text-capitalize" href="#">{{$order->user->name}}</a>
                                                 </div>
@@ -634,8 +646,8 @@ $timezone = Auth::user()->timezone;
                                                             NA
                                                         @endif
                                                     </span>
-                                                </div> 
-                                                @endif                   
+                                                </div>
+                                                @endif
                                             </div>
                                             <div class="row mt-2">
                                                 <div class="col-md-9 mb-3">
@@ -720,7 +732,7 @@ $timezone = Auth::user()->timezone;
                                                                             <span>{{Session::get('currencySymbol')}}@money($vendor->payable_amount * $clientCurrency->doller_compare)</span>
                                                                         </li>
 
-                                                                       
+
                                                                     </ul>
                                                                 </div>
                                                             </div>
@@ -792,7 +804,7 @@ $timezone = Auth::user()->timezone;
                                     {{ $returnOrders->appends(['pageType' => 'returnOrders'])->links() }}
                                 </div>
                                 </div>
-                            </div>  
+                            </div>
                         </div>
                         <div class="box-account box-info">
                         </div>
@@ -822,7 +834,7 @@ $timezone = Auth::user()->timezone;
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                     </button>
-                <div id="return-order-form-modal"></div>    
+                <div id="return-order-form-modal"></div>
             </div>
         </div>
     </div>
@@ -844,8 +856,12 @@ $timezone = Auth::user()->timezone;
 <script src="{{asset('js/payment.js')}}"></script>
 <script type="text/javascript">
  $(document).delegate(".topup_wallet_btn_tip", "click", function () {
-     $('#topup_wallet').modal('show'); 
+    $('#topup_wallet').modal('show');
      var payable_amount = $(this).attr('data-payableamount');
+    //  if(payable_amount > 0)
+    //  {
+    //     $('#topup_wallet').modal('show');
+    //  }
      var order_number = $(this).attr('data-order_number');
      var input_name = "select"+order_number;
      var custom_tip_amount = "custom_tip_amount"+order_number;
@@ -860,12 +876,11 @@ $timezone = Auth::user()->timezone;
         $('.wallet_balance').html($('input[name="' + custom_tip_amount + '"]').val());
         var tip_amount = $('input[name="' + custom_tip_amount + '"]').val();
     }
-  
+
      $("#wallet_amount").val(tip_amount);
      $("#cart_tip_amount").val(tip_amount);
      $("#order_number").val(order_number);
-     
-       
+
     });
     var ajaxCall = 'ToCancelPrevReq';
     var credit_tip_url = "{{route('user.tip_after_order')}}";
@@ -880,7 +895,7 @@ $timezone = Auth::user()->timezone;
     var payment_payfast_url = "{{route('payment.payfastPurchase')}}";
     var amount_required_error_msg = "{{__('Please enter amount.') }}";
     var payment_method_required_error_msg = "{{__('Please select payment method.')}}";
-   
+
 </script>
 
 <script type="text/javascript">
@@ -920,7 +935,7 @@ $timezone = Auth::user()->timezone;
         var order_vendor_product_id = $(this).data('order_vendor_product_id');
         $.get('/rating/get-product-rating?id=' + id +'&order_vendor_product_id=' + order_vendor_product_id, function(markup)
         {
-            $('#product_rating').modal('show'); 
+            $('#product_rating').modal('show');
             $('#review-rating-form-modal').html(markup);
         });
     });
@@ -929,11 +944,11 @@ $timezone = Auth::user()->timezone;
         var id = $(this).data('id');
         var vendor_id = $(this).data('vendor_id');
         $.get('/return-order/get-order-data-in-model?id=' + id +'&vendor_id=' + vendor_id, function(markup)
-                {   
-                    $('#return_order_model').modal('show'); 
+                {
+                    $('#return_order_model').modal('show');
                     $('#return-order-form-modal').html(markup);
                 });
-    });        
+    });
     $(document).delegate("#orders_wrapper .nav-tabs .nav-link", "click", function(){
         let id = $(this).attr('id');
         const params = window.location.search;

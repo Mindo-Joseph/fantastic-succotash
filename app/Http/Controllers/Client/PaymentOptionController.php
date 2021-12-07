@@ -29,8 +29,8 @@ class PaymentOptionController extends BaseController
      */
     public function index()
     {
-        $payment_codes = array('cod', 'wallet', 'layalty-points', 'paypal', 'stripe', 'paystack', 'payfast', 'mobbex', 'yoco', 'paylink', 'razorpay');
-        $payout_codes = array('stripe');
+        $payment_codes = array('cod', 'wallet', 'layalty-points', 'paypal', 'stripe', 'paystack', 'payfast', 'mobbex', 'yoco', 'paylink', 'razorpay','gcash','simplify','square');
+        $payout_codes = array('cash', 'stripe');
         $payOption = PaymentOption::whereIn('code', $payment_codes)->get();
         $payoutOption = PayoutOption::whereIn('code', $payout_codes)->get();
         return view('backend/payoption/index')->with(['payOption' => $payOption, 'payoutOption' => $payoutOption]);
@@ -185,6 +185,36 @@ class PaymentOptionController extends BaseController
                     $json_creds = json_encode(array(
                         'api_key' => $request->mobbex_api_key,
                         'api_access_token' => $request->mobbex_api_access_token
+                    ));
+                }else if ((isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'gcash')) {
+                    $validatedData = $request->validate([
+                        'gcash_merchant_account' => 'required',
+                        'gcash_api_key' => 'required',
+                        'gcash_secret_key' => 'required'
+                    ]);
+                    $json_creds = json_encode(array(
+                        'merchant_account' => $request->gcash_merchant_account,
+                        'api_key' => $request->gcash_api_key,
+                        'secret_key' => $request->gcash_secret_key
+                    ));
+                }else if ((isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'simplify')) {
+                    $validatedData = $request->validate([
+                        'simplify_public_key' => 'required',
+                        'simplify_private_key' => 'required',
+                    ]);
+                    $json_creds = json_encode(array(
+                        'public_key' => $request->simplify_public_key,
+                        'private_key' => $request->simplify_private_key,
+                    ));
+                }
+                else if ((isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'square')) {
+                    $validatedData = $request->validate([
+                        'square_application_id' => 'required',
+                        'square_access_token' => 'required',
+                    ]);
+                    $json_creds = json_encode(array(
+                        'application_id' => $request->square_application_id,
+                        'api_access_token' => $request->square_access_token,
                     ));
                 }
             }

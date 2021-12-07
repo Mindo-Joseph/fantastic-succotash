@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{Currency, Banner, Category, Brand, Product, Celebrity, ClientLanguage, Vendor, VendorCategory, ClientCurrency, ProductVariantSet, ServiceArea, UserAddress,Country,Cart,CartProduct,SubscriptionInvoicesUser,ClientPreference,LoyaltyCard,Order};
 use Redirect;
+use Log;
 class CategoryController extends FrontController{
     private $field_status = 2;
     
@@ -54,26 +55,11 @@ class CategoryController extends FrontController{
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) && (isset($category->type_id)) && !in_array($category->type_id,[4,5]) ){
             $latitude = Session::get('latitude');
             $longitude = Session::get('longitude');
-            $vendorType = Session::get('vendorType');
-            $serviceAreaVendors = Vendor::select('id');
-            if($vendorType){
-                $serviceAreaVendors = $serviceAreaVendors->where($vendorType, 1);
-            }
-            $serviceAreaVendors = $serviceAreaVendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                    $query->select('vendor_id')
-                    ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                })
-                ->where('status', 1)->get();
-
-            if($serviceAreaVendors->isNotEmpty()){
-                foreach($serviceAreaVendors as $value){
-                    $vendors[] = $value->id;
-                }
-            }
+            $vendors = $this->getServiceAreaVendors();
             $redirect_to = $category->type->redirect_to; 
             $page = (strtolower($redirect_to) != '') ? strtolower($redirect_to) : 'product';  
-            // if(Session::has('vendors')){
-            if( (isset($vendors)) && (count($vendors) > 0) ){
+            
+            if( is_array($vendors) ){
                 Session::put('vendors', $vendors);
                 //remake child categories array
                 if($category->childs->isNotEmpty()){
@@ -224,13 +210,18 @@ class CategoryController extends FrontController{
                     sin( radians( latitude ) ) ) )  AS vendorToUserDistance'))->orderBy('vendorToUserDistance', 'ASC');
                 
                 $vendors= $this->getServiceAreaVendors();
-                $vendorData= $vendorData->whereIn('vct.vendor_id', $vendors);
+                $vendorData= $vendorData->whereIn('vendors.id', $vendors);
             }
-            $vendorData = $vendorData->join('vendor_categories as vct', 'vct.vendor_id', 'vendors.id')->where('vct.category_id', $category_id)->where('vct.status', 1);
+         //   $vendorData = $vendorData->join('vendor_categories as vct', 'vct.vendor_id', 'vendors.id')->where('vct.category_id', $category_id)->where('vct.status', 1);
+            $vendorData = $vendorData->whereHas('getAllCategory' , function ($q)use($category_id){
+                $q->where('category_id', $category_id)->where('status', 1);
+            });
+
             if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
                 
             }
             $vendorData = $vendorData->where('vendors.status', '!=', $this->field_status)->paginate($pagiNate);
+          
             foreach ($vendorData as $key => $value) {
                 $value = $this->getLineOfSightDistanceAndTime($value, $preferences);
                 $value->vendorRating = $this->vendorRating($value->products);
@@ -257,6 +248,7 @@ class CategoryController extends FrontController{
                     }
                 }
                 $value->categoriesList = $categoriesList;
+                Log::info($value->id.":".$value->categoriesList);
             }
             return $vendorData;
         }
@@ -446,9 +438,10 @@ class CategoryController extends FrontController{
         if(!empty($multiArray)){
             foreach ($multiArray as $key => $value) {
                 $new_pIds = $new_vIds = array();
-                $vResult = ProductVariantSet::join('product_categories as pc', 'product_variant_sets.product_id', 'pc.product_id')->select('product_variant_sets.product_variant_id', 'product_variant_sets.product_id')
-                    ->where('product_variant_sets.variant_type_id', $key)
-                    ->whereIn('product_variant_sets.variant_option_id', $value);
+                $vResult = ProductVariantSet::join('product_categories as pc', 'product_variant_sets.product_id', 'pc.product_id')
+                                            ->select('product_variant_sets.product_variant_id', 'product_variant_sets.product_id')
+                                            ->where('product_variant_sets.variant_type_id', $key)
+                                            ->whereIn('product_variant_sets.variant_option_id', $value);
 
                 if(!empty($variantIds)){
                     $vResult  = $vResult->whereIn('product_variant_sets.product_variant_id', $variantIds);

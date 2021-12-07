@@ -16,40 +16,33 @@ class VendorController extends FrontController
 {
     private $field_status = 2;
 
-    public function __construct()
-    {
-        $customerCurrency = Session::get('customerCurrency');
-        if(isset($customerCurrency) && !empty($customerCurrency)){
-            $customerCurrency = Session::get('customerCurrency');
-        }
-        else{
-            $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
-            Session::put('customerCurrency',$primaryCurrency->doller_compare);
-        }
-       
-    }
-
+  
     public function viewAll(){
         $langId = Session::get('customerLanguage');
         $preferences = Session::get('preferences');
         $navCategories = $this->categoryNav($langId);
-
-        $ses_vendors = array();
-        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
-            if(Session::has('vendors')){
-                $ses_vendors = Session::get('vendors');
-                }
-        }
+        $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 30;
+        $ses_vendors = $this->getServiceAreaVendors();
 
         $vendors = Vendor::with('products')->select('id', 'name', 'banner', 'address', 'order_pre_time', 'order_min_amount', 'logo', 'slug', 'latitude', 'longitude')->where('status', 1);
         
-        if (count($ses_vendors) > 0) {
+        if (is_array($ses_vendors)) {
+            $latitude = Session::get('latitude') ?? '';
+            $longitude = Session::get('longitude') ?? '';
+            $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
+            //3961 for miles and 6371 for kilometers
+            $calc_value = ($distance_unit == 'mile') ? 3961 : 6371;
+            $vendors = $vendors->select('*', DB::raw(' ( ' .$calc_value. ' * acos( cos( radians(' . $latitude . ') ) * 
+                    cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $longitude . ') ) + 
+                    sin( radians(' . $latitude . ') ) *
+                    sin( radians( latitude ) ) ) )  AS vendorToUserDistance'))->orderBy('vendorToUserDistance', 'ASC');
             $vendors = $vendors->whereIn('id', $ses_vendors);
         }
 
-        $vendors = $vendors->get();
+        $vendors = $vendors->paginate($pagiNate);
 
         foreach ($vendors as $key => $value) {
+            $value = $this->getLineOfSightDistanceAndTime($value, $preferences);
             $vendorCategories = VendorCategory::with('category.translation_one')->where('vendor_id', $value->id)->where('status', 1)->get();
             $categoriesList = '';
             foreach($vendorCategories as $key => $category){
@@ -313,11 +306,21 @@ class VendorController extends FrontController
                 $column = 'unique_identifier';
                 $value = session()->get('_token');
             }
+            $cur_ids = Session::get('customerCurrency');
+            if(isset($cur_ids) && !empty( $cur_ids))
+            $clientCurrency = ClientCurrency::where('currency_id','=', $cur_ids)->first();
+            else
+            {
+                $primaryCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+                $cur_ids = $primaryCurrency->currency_id;
+                $clientCurrency = ClientCurrency::where('currency_id','=', $cur_ids)->first();
+            }
 
-            $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
             $vendor_categories = VendorCategory::with(['category.translation' => function($q) use($langId){
                 $q->where('category_translations.language_id', $langId);
-            }])->where('vendor_id', $vid);
+            }])
+            ->whereHas('category')
+            ->where('vendor_id', $vid);
             if($categorySlug != ''){
                 $vendor_categories = $vendor_categories->whereHas('category', function($query) use($categorySlug) {
                     $query->where('slug', $categorySlug);
@@ -345,7 +348,7 @@ class VendorController extends FrontController
                         'variant' => function($q) use($langId,$column,$value){
                             $q->select('id','sku', 'product_id', 'quantity', 'price', 'barcode', 'compare_at_price')->orderBy('quantity', 'desc');
                             // $q->groupBy('product_id');
-                        },'variant.checkIfInCart',
+                        },'variant.checkIfInCart.addon',
                         'addOn' => function ($q1) use ($langId) {
                             $q1->join('addon_sets as set', 'set.id', 'product_addons.addon_id');
                             $q1->join('addon_set_translations as ast', 'ast.addon_id', 'set.id');
@@ -369,7 +372,7 @@ class VendorController extends FrontController
                                 }else{
                                     $v->is_free = false;
                                 }
-                                $v->multiplier = $clientCurrency->doller_compare;
+                                $v->multiplier = $clientCurrency->doller_compare??1;
                             }
                         }
 
@@ -467,8 +470,8 @@ class VendorController extends FrontController
                 },
                 'addOn.setoptions' => function ($q2) use ($langId) {
                     $q2->join('addon_option_translations as apt', 'apt.addon_opt_id', 'addon_options.id');
-                    $q2->select('addon_options.id', 'addon_options.title', 'addon_options.price', 'apt.title', 'addon_options.addon_id');
-                    $q2->where('apt.language_id', $langId);
+                    $q2->select('addon_options.id', 'addon_options.price', 'apt.title', 'addon_options.addon_id', 'apt.language_id');
+                    $q2->where('apt.language_id', $langId)->groupBy(['addon_options.id', 'apt.language_id']);
                 }
             ])->where('is_live', 1)->where('url_slug', $request->slug)->first();
         if(!empty($AddonData)){
@@ -601,14 +604,23 @@ class VendorController extends FrontController
 
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
 
-        // $vendor_categories = VendorCategory::with(['category.translation_one'])
-        // ->where('vendor_id', $vid)
-        // ->whereHas('category.translation_one', function ($query) use ($keyword){
-        //     $query->where('name', 'like', '%'.$keyword.'%');
-        // })
-        // ->whereHas('category', function($query) {
-        //         $query->whereIn('type_id', [1]);
-        // })->where('status', 1)->get();
+        $vendor = Vendor::with('slot.day', 'slotDate')
+            ->select('id','email', 'name', 'show_slot')->where('id', $vid)->where('status', 1)->firstOrFail();
+        $vendor->is_vendor_closed = 0;
+        if($vendor->show_slot == 0){
+            if( ($vendor->slotDate->isEmpty()) && ($vendor->slot->isEmpty()) ){
+                $vendor->is_vendor_closed = 1;
+            }else{
+                $vendor->is_vendor_closed = 0;
+                if($vendor->slotDate->isNotEmpty()){
+                    $vendor->opening_time = Carbon::parse($vendor->slotDate->first()->start_time)->format('g:i A');
+                    $vendor->closing_time = Carbon::parse($vendor->slotDate->first()->end_time)->format('g:i A');
+                }elseif($vendor->slot->isNotEmpty()){
+                    $vendor->opening_time = Carbon::parse($vendor->slot->first()->start_time)->format('g:i A');
+                    $vendor->closing_time = Carbon::parse($vendor->slot->first()->end_time)->format('g:i A');
+                }
+            }
+        }
 
         $vendorCategory = 0;
         if($vCat != ''){
@@ -712,7 +724,7 @@ class VendorController extends FrontController
         // dd($vendor_categories->toArray());
 
         $listData = $vendor_categories;
-        $returnHTML = view('frontend.vendor-search-products')->with(['listData'=>$listData])->render();
+        $returnHTML = view('frontend.vendor-search-products')->with(['vendor'=> $vendor, 'listData'=>$listData])->render();
         return response()->json(array('status'=>'Success', 'html'=>$returnHTML));
     }
 

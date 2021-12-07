@@ -92,7 +92,7 @@ $timezone = Auth::user()->timezone;
                 <div class="account-sidebar"><a class="popup-btn">{{__('My Account')}}</a></div>
                 <div class="dashboard-left">
                     <div class="collection-mobile-back">
-                        <span class="filter-back">
+                        <span class="filter-back d-lg-none d-inline-block">
                             <i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}
                         </span>
                         </div>
@@ -136,7 +136,7 @@ $timezone = Auth::user()->timezone;
                                         $amount = ($ut->amount / 100) * $clientCurrency->doller_compare;
                                         @endphp
                                           <tr>
-                                              <td>{{convertDateTimeInTimeZone($ut->created_at, $timezone, 'l, F d, Y, H:i A')}}</td>
+                                              <td>{{dateTimeInUserTimeZone($ut->created_at, $timezone)}}</td>
                                               <td  class="name_">{!!$reason[0]!!}</td>
                                               <td class="text-right {{ ($ut->type == 'deposit') ? 'text-success' : (($ut->type == 'withdraw') ? 'text-danger' : '') }}"><b>{{Session::get('currencySymbol')}}@money(sprintf("%.2f",$amount))</b></td>
                                           </tr>

@@ -11,13 +11,13 @@
                     <h4 class="page-title">{{ __('Orders') }}</h4>
                 </div>
             </div>
-        </div>     
+        </div>
         <div class="row">
             <div class="col-12">
                 <div class="card widget-inline">
-                    <div class="card-body">
+                    <div class="card-body p-2">
                         <div class="row">
-                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                            <div class="col-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
                                     <h3>
                                         <i class="mdi mdi-currency-usd text-primary mdi-24px"></i>
@@ -26,7 +26,7 @@
                                     <p class="text-muted font-15 mb-0">{{ __('Total Order Value') }}</p>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                            <div class="col-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
                                     <h3>
                                         <i class="mdi mdi-cart-arrow-up text-primary mdi-24px"></i>
@@ -35,7 +35,7 @@
                                     <p class="text-muted font-15 mb-0">{{ __('Total Orders') }}</p>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                            <div class="col-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
                                     <h3>
                                         <i class="fas fa-money-check-alt text-primary"></i>
@@ -44,7 +44,7 @@
                                     <p class="text-muted font-15 mb-0">{{ __('Total Cash To Be Collected') }}</p>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-3 mb-3 mb-md-0">
+                            <div class="col-6 col-md-3 mb-3 mb-md-0">
                                 <div class="text-center">
                                     <h3>
                                         <i class="fas fa-money-check-alt text-primary"></i>
@@ -57,8 +57,8 @@
                     </div>
                 </div>
             </div>
-        </div>    
-    </div> 
+        </div>
+    </div>
 </div>
 <div class="container-fluid">
     <div class="row">
@@ -66,7 +66,7 @@
             <div class="card">
                 <div class="card-body position-relative">
                     <div class="top-input position-absolute">
-                        <div class="row">                            
+                        <div class="row">
                             <div class="col-md-9">
                                 <div class="row">
                                     <div class="col">
@@ -117,7 +117,7 @@
                                 </tr>
                             </thead>
                             <tbody id="accounting_vendor_tbody_list">
-                                
+
                             </tbody>
                         </table>
                     </div>
@@ -134,11 +134,26 @@
                 'X-CSRF-TOKEN': $('input[name="_token"]').val()
             }
         });
+        function getPercentageAmount(percent,amouny){
+            var totalPercent = (amouny/percent);
+
+            return numberWithCommas(parseFloat(totalPercent).toFixed(2));
+        }
+
+
+        function numberWithCommas(x) {
+        // x=x.toFixed(2)
+            if(x > 0){
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }else{
+                return 0;
+            }
+        }
         getOrderList();
         function getOrderList() {
             $(document).ready(function() {
                 initDataTable();
-                $("#range-datepicker").flatpickr({ 
+                $("#range-datepicker").flatpickr({
                     mode: "range",
                     onClose: function(selectedDates, dateStr, instance) {
                         initDataTable();
@@ -169,7 +184,7 @@
                         drawCallback: function () {
                             $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                         },
-                        buttons: [{   
+                        buttons: [{
                                 className:'btn btn-success waves-effect waves-light',
                                 text: '<span class="btn-label"><i class="mdi mdi-export-variant"></i></span>Export CSV',
                                 action: function ( e, dt, node, config ) {
@@ -192,11 +207,26 @@
                             {data: 'created_date', name: 'name',orderable: false, searchable: false},
                             {data: 'user_name', name: 'Customer Name',orderable: false, searchable: false},
                             {data: 'vendor.name', name: 'vendor_name', orderable: false, searchable: false},
-                            {data: 'subtotal_amount', name: 'action', orderable: false, searchable: false},
-                            {data: 'discount_amount', name: 'action', orderable: false, searchable: false},
-                            {data: 'admin_commission_fixed_amount', name: 'action', orderable: false, searchable: false},
-                            {data: 'admin_commission_percentage_amount', name: 'action', orderable: false, searchable: false},
-                            {data: 'payable_amount', name: 'action', orderable: false, searchable: false},
+                            {data: 'subtotal_amount', name: 'action', orderable: false, searchable: false,
+                            "mRender": function(data, type, full) {
+                                return numberWithCommas(data);
+                            }},
+                            {data: 'discount_amount', name: 'action', orderable: false, searchable: false,
+                            "mRender": function(data, type, full) {
+                                return numberWithCommas(data);
+                            }},
+                            {data: 'admin_commission_fixed_amount', name: 'action', orderable: false, searchable: false,
+                            "mRender": function(data, type, full) {
+                                return numberWithCommas(data);
+                            }},
+                            {data: 'admin_commission_percentage_amount', name: 'action', orderable: false, searchable: false,
+                            "mRender": function(data, type, full) {
+                                return numberWithCommas(data)+" ("+getPercentageAmount(data,full.subtotal_amount)+"%)";
+                            }},
+                            {data: 'payable_amount', name: 'action', orderable: false, searchable: false,
+                            "mRender": function(data, type, full) {
+                                return numberWithCommas(data);
+                            }},
                             {data: 'order_detail.payment_option.title', name: 'action', orderable: false, searchable: false},
                             {data: 'order_status', name: 'order_status', orderable: false, searchable: false, "mRender": function ( data, type, full ) {
                               return "<h5><span class='badge bg-success'>"+full.order_status+"</span></h5>";
@@ -204,7 +234,7 @@
                         ]
                     });
                 }
-                
+
             });
         }
     });

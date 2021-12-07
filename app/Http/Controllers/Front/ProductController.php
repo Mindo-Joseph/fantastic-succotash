@@ -15,18 +15,11 @@ class ProductController extends FrontController{
 
     public function __construct()
     {
-        $customerCurrency = Session::get('customerCurrency');
-        if(isset($customerCurrency) && !empty($customerCurrency)){
-            $customerCurrency = Session::get('customerCurrency');
-        }
-        else{
-            $primaryCurrency = ClientCurrency::where('is_primary','=', 1)->first();
-            Session::put('customerCurrency',$primaryCurrency->doller_compare);
-        }
-       
+
+
     }
 
-    
+
     /**
      * Display product By Id
      *
@@ -36,7 +29,15 @@ class ProductController extends FrontController{
         $user = Auth::user();
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
+        $customerCurrency = Session::get('customerCurrency');
+        if(isset($customerCurrency) && !empty($customerCurrency)){
+        }
+        else{
+            $primaryCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+            Session::put('customerCurrency', $primaryCurrency->currency_id);
+        }
         $curId = Session::get('customerCurrency');
+
         $navCategories = $this->categoryNav($langId);
         $product = Product::select('id', 'vendor_id')->where('url_slug', $url_slug)->firstOrFail();
         $product_in_cart = CartProduct::where(["product_id" => $product->id]);
@@ -152,7 +153,7 @@ class ProductController extends FrontController{
                 $variant_option_id[] = $avSet->variant_option_id;
             }
             $sets[] = ['variant_types' => $variant_type_id, 'variant_options' => $variant_option_id];
-        } 
+        }
         if($product->category->categoryDetail->type_id == 8){
             $cartDataGet = $this->getCartOnDemand($request);
             $nlistData = clone $product;
@@ -199,7 +200,7 @@ class ProductController extends FrontController{
             return view('frontend.ondemand.index')->with(['clientCurrency' => $clientCurrency,'time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }
         elseif($product->category->categoryDetail->type_id == 7)
-        {  
+        {
             $slug = $product->category->categoryDetail->slug ?? '';
             return Redirect::route('categoryDetail',$slug);
         }
@@ -222,16 +223,16 @@ class ProductController extends FrontController{
                     }
                 }
             }
-            if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
-                    $url = "https://";   
-            else  
-                    $url = "http://";   
-            // Append the host(domain name, ip) to the URL.   
-            $url.= $_SERVER['HTTP_HOST'];   
-            
-            // Append the requested resource location to the URL   
-            $url.= $_SERVER['REQUEST_URI'];    
-                
+            if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
+                    $url = "https://";
+            else
+                    $url = "http://";
+            // Append the host(domain name, ip) to the URL.
+            $url.= $_SERVER['HTTP_HOST'];
+
+            // Append the requested resource location to the URL
+            $url.= $_SERVER['REQUEST_URI'];
+
             $shareComponent = \Share::page(
                 $url,
                 'Your share text comes here',
@@ -240,22 +241,29 @@ class ProductController extends FrontController{
             ->twitter()
             // ->linkedin()
             // ->telegram()
-            ->whatsapp();      
+            ->whatsapp();
             // ->reddit();
-    
+
             // dd($shareComponent);
             $category = $product->category->categoryDetail;
             return view('frontend.product')->with(['shareComponent' => $shareComponent, 'sets' => $sets, 'vendor_info' => $vendor, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn, 'category' => $category, 'product_in_cart' => $product_in_cart]);
-        
+
         }
    }
-    
+
     /**
      * Display product variant data
      *
      * @return \Illuminate\Http\Response
      */
     public function getVariantData(Request $request, $domain = '', $sku){
+        $customerCurrency = Session::get('customerCurrency');
+        if(isset($customerCurrency) && !empty($customerCurrency)){
+        }
+        else{
+            $primaryCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+            Session::put('customerCurrency', $primaryCurrency->currency_id);
+        }
         $clientCurrency = ClientCurrency::where('currency_id', Session::get('customerCurrency'))->first();
         $product = Product::select('id')->where('sku', $sku)->firstOrFail();
         $pv_ids = array();

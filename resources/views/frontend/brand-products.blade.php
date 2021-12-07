@@ -68,13 +68,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-3 collection-filter">
+                <div class="collection-filter col-lg-3">
                     <div class="collection-filter-block">
-                        <div class="collection-mobile-back">
-                            <span class="filter-back">
+                        <!-- <div class="collection-mobile-back">
+                            <span class="filter-back d-lg-none d-inline-block">
                                 <i class="fa fa-angle-left" aria-hidden="true"></i>{{__('Back')}}
                             </span>
-                        </div>
+                        </div> -->
                         @if(!empty($variantSets) && count($variantSets) > 0)
                           @foreach($variantSets as $key => $sets)
                             <div class="collection-collapse-block border-0 open">
@@ -124,7 +124,12 @@
                     </div>
                     <!-- side-bar single product slider start -->
                     <div class="theme-card">
-                        <h5 class="title-border">{{__('New Product')}}</h5>
+                        <h5 class="title-border d-flex align-items-center justify-content-between">
+                            <span>{{__('New Product')}}</span>  
+                            <span class="filter-back d-lg-none d-inline-block">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i> {{__('Back')}}
+                            </span>
+                        </h5>
                         <div class="offer-slider">
                             @if(!empty($newProducts) && count($newProducts) > 0)
                                 @foreach($newProducts as $newProds)
@@ -199,7 +204,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="collection-content col">
+                <div class="collection-content col-lg-9">
                     <div class="page-main-content">
                         <div class="row">
                             <div class="col-sm-12">
@@ -221,7 +226,7 @@
                                                     </div>
                                                     {{-- <div class="collection-grid-view">
                                                         <ul>
-                                                            <li><img src="{{asset('front-assets/images/icon/2.png')}}" alt="" class="product-2-layout-view"></li>
+                                                            <li><img src=" " alt="" class="product-2-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/3.png')}}" alt="" class="product-3-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/4.png')}}" alt="" class="product-4-layout-view"></li>
                                                             <li><img src="{{asset('front-assets/images/icon/6.png')}}" alt="" class="product-6-layout-view"></li>

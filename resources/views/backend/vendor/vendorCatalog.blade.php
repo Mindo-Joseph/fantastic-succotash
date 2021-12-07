@@ -119,7 +119,7 @@
                 @include('backend.vendor.show-md-3')
             </div>
             <div class="col-lg-9 col-xl-9">
-                <div>
+                <div class="">
                     <ul class="nav nav-pills navtab-bg nav-justified">
                         <li class="nav-item">
                             <a href="{{ route('vendor.catalogs', $vendor->id) }}" aria-expanded="false"
@@ -153,7 +153,7 @@
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="card widget-inline">
-                                <div class="card-body">
+                                <div class="card-body p-2">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-3 col-lg mb-3 mb-md-0">
                                             <div class="text-center">
@@ -379,6 +379,9 @@
                                             <span class="text-danger">*</span>
                                             {!! Form::text('sku', null, ['class' => 'form-control', 'id' => 'sku', 'onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
                                             <span class="invalid-feedback" role="alert">
+                                                <strong></strong>
+                                            </span>
+                                            <span class="valid-feedback" role="alert">
                                                 <strong></strong>
                                             </span>
                                             {!! Form::hidden('type_id', 1) !!}
@@ -769,9 +772,9 @@
                 url: "{{route('vendor.specific_categories',$vendor->id)}}",
                 success: function(response) {
                     if(response.status == 1){
+                        $('#category_list').selectize()[0].selectize.destroy();
                         $("#category_list").find('option').remove();
                         $("#category_list").append(response.options);
-                        $('#category_list').selectize()[0].selectize.destroy();
                     }
                 },
                 error:function(error){
@@ -797,6 +800,35 @@
         $("#woocommerce_button").click(function() {
             $("#import_csv").show();
             $("#import_woocommerce").hide();
+        });
+
+        $(document).delegate("#skuInput #sku", "blur focusout", function(){
+            var sku = $(this).val();
+            $.ajax({
+                type: "post",
+                url: "{{route('product.sku.validate')}}",
+                data: {sku : sku},
+                success: function(response) {
+                    if(response.status == 'Success'){
+                        $("#skuInput input").removeClass("is-invalid").addClass('valid');
+                        $("#skuInput span.invalid-feedback").children("strong").text('');
+                        $("#skuInput span.valid-feedback").children("strong").text(response.message);
+                        $("#skuInput span.invalid-feedback").hide();
+                        $("#skuInput span.valid-feedback").show();
+                    }
+                },
+                error:function(response){
+                    if (response.status === 422) {
+                        let error = response.responseJSON;
+                        $("#skuInput input").removeClass("valid").addClass("is-invalid");
+                        $("#skuInput span.invalid-feedback").children("strong").text(error.message);
+                        $("#skuInput span.invalid-feedback").show();
+                        $("#skuInput span.valid-feedback").hide();
+                    }else{
+                        
+                    }
+                }
+            });
         });
 
         var regexp = /^[a-zA-Z0-9-_]+$/;

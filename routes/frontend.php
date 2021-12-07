@@ -22,6 +22,10 @@ Route::group(['middleware' => ['domain']], function () {
 
 		dd('send mail successfully !!');
 	});
+
+
+	
+
 	Route::get('payment/gateway/returnResponse', 'Front\PaymentController@getGatewayReturnResponse')->name('payment.gateway.return.response');
 
 
@@ -51,6 +55,18 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('payment/mobbex/notify', 'Front\MobbexGatewayController@mobbexNotify')->name('payment.mobbexNotify');
 
 
+	//GCash
+	Route::post('payment/gcash','Front\GCashController@beforePayment')->name('payment.gcash.beforePayment');
+	Route::get('payment/gcash/view','Front\GCashController@webView')->name('payment.gcash.webView');
+
+
+	//Simplify
+	Route::get('payment/simplify/view','Front\SimplifyController@webView')->name('payment.simplify.webView');
+	Route::post('payment/simplify/before','Front\SimplifyController@beforePayment')->name('payment.simplify.beforePayment');
+	Route::post('payment/simplify','Front\SimplifyController@createPayment')->name('payment.simplify.createPayment');
+
+
+
 	//Route::get('payment/yoco-webview', 'Api\v1\YocoGatewayController@yocoWebView')->name('payment.yoco-webview');
 	Route::post('payment/yoco', 'Front\YocoGatewayController@yocoPurchase')->name('payment.yocoPurchase');
 	Route::post('payment/yoco/app', 'Front\YocoGatewayController@yocoPurchaseApp')->name('payment.yocoPurchaseApp');
@@ -64,10 +80,10 @@ Route::group(['middleware' => ['domain']], function () {
 	// Route::post('payment/paylink/notify', 'Front\PaylinkGatewayController@paylinkNotify')->name('payment.paylinkNotify');
 
 	Route::post('payment/razorpay', 'Front\RazorpayGatewayController@razorpayPurchase')->name('payment.razorpayPurchase');
-	Route::get("/payment/razorpay/view", function(){
-		return View::make("frontend.razorpay_view");
-	 })->name('razorpay.view');
-	Route::post('payment/razorpay/pay/{amount}/{order}', 'Front\RazorpayGatewayController@razorpayCompletePurchase')->name('payment.razorpayCompletePurchase');
+	// Route::get("/payment/razorpay/view", function(){
+	// 	return View::make("frontend.razorpay_view");
+	//  })->name('razorpay.view');
+	Route::post('payment/razorpay/pay', 'Front\RazorpayGatewayController@razorpayCompletePurchase')->name('payment.razorpayCompletePurchase');
 	Route::get('payment/razorpay/notify', 'Front\RazorpayGatewayController@razorpayNotify')->name('payment.razorpayNotify');
 
 	Route::post('payment/user/placeorder', 'Front\OrderController@postPaymentPlaceOrder')->name('user.postPaymentPlaceOrder');
@@ -117,6 +133,8 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('paginateValue', 'Front\UserhomeController@changePaginate')->name('changePaginate');
 	Route::get('/product/{id?}', 'Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}', 'Front\ProductController@getVariantData')->name('productVariant');
+	Route::post('cart/product/lastAdded', 'Front\CartController@getLastAddedProductVariant')->name('getLastAddedProductVariant');
+	Route::post('cart/product/variant/different-addons', 'Front\CartController@getProductVariantWithDifferentAddons')->name('getProductVariantWithDifferentAddons');
 	Route::post('add/product/cart', 'Front\CartController@postAddToCart')->name('addToCart');
 	Route::post('add/product/cart-addons', 'Front\CartController@postAddToCartAddons')->name('addToCartAddons');
 	Route::post('add/wishlist/cart', 'Front\CartController@addWishlistToCart')->name('addWishlistToCart');

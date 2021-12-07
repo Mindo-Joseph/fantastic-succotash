@@ -261,6 +261,104 @@ class CartController extends BaseController
         }
     }
 
+    /**
+     * Get Last added product variant
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getLastAddedProductVariant(Request $request)
+    {
+        try{
+            $cartProduct = CartProduct::with('addon')
+                ->where('cart_id', $request->cart_id)
+                ->where('product_id', $request->product_id)
+                ->orderByDesc('created_at')->first();
+            
+            return $this->successResponse($cartProduct, '', 200);
+        }
+        catch(Exception $ex){
+            return $this->errorResponse($ex->getMessage(), $ex->getCode());
+        }
+    }
+
+    /**
+     * Get current product variants with different addons
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getProductVariantWithDifferentAddons(Request $request)
+    {
+        try{
+            $langId = Session::get('customerLanguage');
+            $cur_ids = Session::get('customerCurrency');
+            if(isset($cur_ids) && !empty( $cur_ids)){
+                $clientCurrency = ClientCurrency::where('currency_id','=', $cur_ids)->first();
+            }else{
+                $clientCurrency = ClientCurrency::where('is_primary','=', 1)->first();
+            }
+
+            $cartProducts = CartProduct::with(['product.translation' => function ($qry) use ($langId) {
+                $qry->where('language_id', $langId)->groupBy('product_translations.language_id');
+            },
+            'product.media.image',
+            'pvariant.media.pimage.image',
+            'vendor.slot.day', 'vendor.slotDate',
+            ])
+            ->where('cart_id', $request->cart_id)
+            ->where('product_id', $request->product_id)
+            ->select('*','id as add_on_set_and_option')->orderByDesc('created_at')->get();
+
+            $multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
+            foreach ($cartProducts as $key => $cart) {
+                $cart->is_vendor_closed = 0;
+                $cart->variant_multiplier = $multiplier;
+                $variant_price = ($cart->pvariant) ? ($cart->pvariant->price * $multiplier) : 0;
+
+                $product = $cart->product;
+                $product->translation_title = ($product->translation->isNotEmpty()) ? $product->translation->first()->title : $product->sku;
+
+                if($cart->pvariant && $cart->pvariant->media->isNotEmpty()){
+                    $image_fit = $cart->pvariant->media->first()->pimage->image->path['image_fit'];
+                    $image_path = $cart->pvariant->media->first()->pimage->image->path['image_path'];
+                    $product->product_image = $image_fit . '300/300' . $image_path;
+                }elseif($product->media->isNotEmpty()){
+                    $image_fit = $product->media->first()->image->path['image_fit'];
+                    $image_path = $product->media->first()->image->path['image_path'];
+                    $product->product_image = $image_fit . '300/300' . $image_path;
+                }else{
+                    $product->product_image = $this->loadDefaultImage();
+                }
+
+                $addon_set = $cart->add_on_set_and_option;
+                foreach ($addon_set as $skey => $set) {
+                    $set->addon_set_translation_title = ($set->translation->isNotEmpty()) ? $set->translation->first()->title : $set->title;
+                    foreach ($set->options as $okey => $option) {
+                        $option->option_translation_title = ($option->translation->isNotEmpty()) ? $option->translation->first()->title : $option->title;
+                        $opt_price_in_doller_compare = $option->price * $multiplier;
+                        $variant_price = $variant_price + $opt_price_in_doller_compare;
+                    }
+                }
+                $cart->variant_price = $variant_price;
+                $cart->addon_set = $addon_set;
+                $cart->total_variant_price = number_format($cart->quantity * $variant_price, 2, '.', '');
+
+                if($cart->vendor->show_slot == 0){
+                    if( ($cart->vendor->slotDate->isEmpty()) && ($cart->vendor->slot->isEmpty()) ){
+                        $cart->is_vendor_closed = 1;
+                    }else{
+                        $cart->is_vendor_closed = 0;
+                    }
+                }
+                unset($cartProducts[$key]->add_on_set_and_option);
+            }
+
+            return $this->successResponse($cartProducts, '', 200);
+        }
+        catch(Exception $ex){
+            return $this->errorResponse($ex->getMessage(), $ex->getCode());
+        }
+    }
+
     /**        
      *    update quantity in cart       
      **/
@@ -434,20 +532,14 @@ class CartController extends BaseController
             $vendor_details = [];
             $tax_details = [];
             $is_vendor_closed = 0;
-           
+            $delay_date = 0;
+            $total_service_fee = 0;
             foreach ($cartData as $ven_key => $vendorData) {
              
                 $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
 
-                // if(Session::has('vendorTable')){
-                //     if((Session::has('vendorTableVendorId')) && (Session::get('vendorTableVendorId') == $vendorData->vendor_id)){
-                //         $cart_dinein_table_id = Session::get('vendorTable');
-                //     }
-                //     Session::forget(['vendorTable', 'vendorTableVendorId']);
-                // }else{
                 $cart_dinein_table_id = $vendorData->vendor_dinein_table_id;
-                // }
 
                 if ($action != 'delivery') {
                     $vendor_details['vendor_address'] = $vendorData->vendor->select('id', 'latitude', 'longitude', 'address')->where('id', $vendorData->vendor_id)->first();
@@ -525,6 +617,12 @@ class CartController extends BaseController
                     } else {
                         $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                     }
+
+                    if($prod->product->delay_hrs_min != 0){
+                        if($prod->product->delay_hrs_min > $delay_date)
+                        $delay_date = $prod->product->delay_hrs_min;
+                    }
+
                     if ($prod->pvariant) {
                         $variantsData['price']              = $price_in_currency;
                         $variantsData['id']                 = $prod->pvariant->id;
@@ -547,7 +645,7 @@ class CartController extends BaseController
                                 }
                                 $codeApplied = 1;
                             } else {
-                                $variantsData['coupon_msg'] = "Spend minimun " . $minimum_spend . " to apply this coupon";
+                                $variantsData['coupon_msg'] = "Spend Minimum " . $minimum_spend . " to apply this coupon";
                                 $variantsData['coupon_not_appiled'] = 1;
                             }
                         }
@@ -673,6 +771,13 @@ class CartController extends BaseController
                 } else {
                     $vendorData->couponData = $couponData;
                 }
+                $vendor_service_fee_percentage_amount = 0;
+                if($vendorData->vendor->service_fee_percent > 0){
+                    $vendor_service_fee_percentage_amount = ($payable_amount * $vendorData->vendor->service_fee_percent) / 100 ;
+                    $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
+                }
+                $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
+                $vendorData->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
                 $vendorData->vendor_gross_total = $payable_amount;
                 $vendorData->discount_amount = $discount_amount;
                 $vendorData->discount_percent = $discount_percent;
@@ -721,6 +826,7 @@ class CartController extends BaseController
             $total_disc_amount = $total_disc_amount + $total_subscription_discount;
             $cart->total_subscription_discount = $total_subscription_discount * $clientCurrency->doller_compare;
         }
+        $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');
         $cart->total_tax = $total_tax;
         $cart->tax_details = $tax_details;
         $cart->gross_paybale_amount = $total_paying;
@@ -766,6 +872,7 @@ class CartController extends BaseController
         $cart->cart_dinein_table_id = $cart_dinein_table_id;
         $cart->upSell_products = ($upSell_products) ? $upSell_products->first() : collect();
         $cart->crossSell_products = ($crossSell_products) ? $crossSell_products->first() : collect();
+        $cart->delay_date =  $delay_date??0;
         return $cart;
     }
 

@@ -85,7 +85,11 @@ class ProfileController extends BaseController{
                 $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                 $q->groupBy('product_id');
             },
-        ])->select( "id", "user_id", "product_id")->where('user_id', $user->id)->paginate($paginate);
+        ])
+        ->whereHas('product.category.categoryDetail', function($q){
+            $q->whereNotNull('products.category_id')->whereNull('categories.deleted_at');
+        })
+        ->select( "id", "user_id", "product_id")->where('user_id', $user->id)->paginate($paginate);
     	if($user_wish_details){
     		foreach ($user_wish_details as $user_wish_detail) {
                 if(isset($user_wish_detail->product) && !empty($user_wish_detail->product->category)){
@@ -218,7 +222,7 @@ class ProfileController extends BaseController{
         }
         $imgType = ($request->has('type')) ? $request->type : 'jpg';
         $code = Client::orderBy('id','asc')->value('code');
-        $imageName = '/'.$code.'/profile/'.$user->id.substr(md5(microtime()), 0, 15).'.'.$imgType;
+        $imageName = $code.'/profile/'.$user->id.substr(md5(microtime()), 0, 15).'.'.$imgType;
         $save = Storage::disk('s3')->put($imageName, $img, 'public');
         $user->image = $imageName;
         $user->save();

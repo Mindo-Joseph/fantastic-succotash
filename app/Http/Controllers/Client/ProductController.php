@@ -8,14 +8,16 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\{CsvProductImport, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell, CartProduct, CartAddon, UserWishlist,Client};
+use App\Models\{CsvProductImport, Product, Category, ProductTranslation, Vendor, AddonSet, ProductRelated, ProductCrossSell, ProductAddon, ProductCategory, ClientLanguage, ProductVariant, ProductImage, TaxCategory, ProductVariantSet, Country, Variant, VendorMedia, ProductVariantImage, Brand, Celebrity, ClientPreference, ProductCelebrity, Type, ProductUpSell, CartProduct, CartAddon, UserWishlist,Client,Tag,ProductTag,ProductFaq};
 use Illuminate\Support\Facades\Storage;
+use App\Http\Traits\ApiResponser;
 use App\Http\Traits\ToasterResponser;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductsImport;
 use GuzzleHttp\Client as GCLIENT;
 class ProductController extends BaseController
 {
+    use ApiResponser;
     private $folderName = 'prods';
     public function __construct()
     {
@@ -80,6 +82,22 @@ class ProductController extends BaseController
     }
 
     /**
+     * Validate product sku
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function validateSku(Request $request){
+        $sku = $request->sku;
+        $product = Product::where('sku', $sku)->first();
+        if($product){
+            return $this->errorResponse(__('Sku is not available'), 422);
+        }else{
+            return $this->successResponse('', __('Sku is available'));
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -99,6 +117,7 @@ class ProductController extends BaseController
         $product = new Product();
         $product->sku = $request->sku;
         $product->url_slug = empty($request->url_slug) ? $request->sku : $request->url_slug;
+        $product->title = empty($request->product_name) ? $request->sku : $request->product_name;
         $product->type_id = $request->type_id;
         $product->category_id = $request->category;
         $product->vendor_id = $request->vendor_id;
@@ -192,11 +211,12 @@ class ProductController extends BaseController
             }
         }
         $otherProducts = Product::with('primary')->select('id', 'sku')->where('is_live', 1)->where('id', '!=', $product->id)->where('vendor_id', $product->vendor_id)->get();
-        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode','need_dispacher_home_other_service')->first();
+        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode','need_dispacher_home_other_service','delay_order','product_order_form')->first();
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
         
         $agent_dispatcher_tags = [];
         $agent_dispatcher_on_demand_tags = [];
+        $pro_tags = [];
 
          if(isset($product->category->categoryDetail) && $product->category->categoryDetail->type_id == 7) # if type is pickup delivery then get dispatcher tags
         {   
@@ -209,9 +229,14 @@ class ProductController extends BaseController
             $agent_dispatcher_on_demand_tags = $this->getDispatcherOnDemandTags($vendor_id);
            
         }
-       
         
-        return view('backend/product/edit', ['agent_dispatcher_on_demand_tags' => $agent_dispatcher_on_demand_tags,'agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
+        $pro_tags = Tag::with('primary')->whereHas('primary')->get();
+        $product_faqs = ProductFaq::with('primary')->get();
+     
+        
+        $set_product_tags = ProductTag::where('product_id',$product->id)->pluck('tag_id')->toArray();
+
+        return view('backend/product/edit', ['product_faqs' => $product_faqs ,'set_product_tags' => $set_product_tags,'pro_tags' => $pro_tags,'agent_dispatcher_on_demand_tags' => $agent_dispatcher_on_demand_tags,'agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }
 
     /**
@@ -265,6 +290,8 @@ class ProductController extends BaseController
         $product->Requires_last_mile        = ($request->has('last_mile') && $request->last_mile == 'on') ? 1 : 0;
         $product->need_price_from_dispatcher = ($request->has('need_price_from_dispatcher') && $request->need_price_from_dispatcher == 'on') ? 1 : 0;
         $product->mode_of_service        = $request->mode_of_service??null;
+        $product->delay_order_hrs        = $request->delay_order_hrs??0;
+        $product->delay_order_min        = $request->delay_order_min??0;
         if (empty($product->publish_at)) {
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }
@@ -274,7 +301,7 @@ class ProductController extends BaseController
             $product->sell_when_out_of_stock = 1;
         }
         $product->save();
-        
+      
         if ($product->id > 0) {
             $trans = ProductTranslation::where('product_id', $product->id)->where('language_id', $request->language_id)->first();
             if (!$trans) {
@@ -301,12 +328,13 @@ class ProductController extends BaseController
                 }
             }
             ProductImage::insert($productImageSave);
-            $cat = $addonsArray = $upArray = $crossArray = $relateArray = array();
+            $cat = $addonsArray = $upArray = $crossArray = $relateArray = $tagSetArray = array();
             $delete = ProductAddon::where('product_id', $product->id)->delete();
             $delete = ProductUpSell::where('product_id', $product->id)->delete();
             $delete = ProductCrossSell::where('product_id', $product->id)->delete();
             $delete = ProductRelated::where('product_id', $product->id)->delete();
             $delete = ProductCelebrity::where('product_id', $product->id)->delete();
+            $delete = ProductTag::where('product_id', $product->id)->delete();
 
             if ($request->has('addon_sets') && count($request->addon_sets) > 0) {
                 foreach ($request->addon_sets as $key => $value) {
@@ -316,6 +344,16 @@ class ProductController extends BaseController
                     ];
                 }
                 ProductAddon::insert($addonsArray);
+            }
+
+            if ($request->has('tag_sets') && count($request->tag_sets) > 0) {
+                foreach ($request->tag_sets as $key => $value) {
+                    $tagSetArray[] = [
+                        'product_id' => $product->id,
+                        'tag_id' => $value
+                    ];
+                }
+                ProductTag::insert($tagSetArray);
             }
 
             if ($request->has('celebrities') && count($request->celebrities) > 0) {

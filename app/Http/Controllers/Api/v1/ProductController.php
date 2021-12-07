@@ -7,7 +7,7 @@ use Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand};
+use App\Models\{User, Product, Category, ProductVariantSet, ProductVariant, ProductAddon, ProductRelated, ProductUpSell, ProductCrossSell, ClientCurrency, Vendor, Brand,TagTranslation,Tag};
 use Validation;
 use DB;
 use App\Http\Traits\ApiResponser;
@@ -148,7 +148,7 @@ class ProductController extends BaseController
                         'addOn.setoptions' => function($q2) use($langId){
                             $q2->join('addon_option_translations as apt', 'apt.addon_opt_id', 'addon_options.id');
                             $q2->select('addon_options.id', 'addon_options.title', 'addon_options.price', 'apt.title', 'addon_options.addon_id');
-                            $q2->where('apt.language_id', $langId);
+                            $q2->where('apt.language_id', $langId)->groupBy(['addon_options.id', 'apt.language_id']);
                         },
                         ])->select('id', 'sku', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'is_new', 'is_featured', 'is_physical', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating')
                         ->where('id', $pid)
@@ -378,6 +378,24 @@ class ProductController extends BaseController
             unset($variantData->media);
             unset($variantData->product->media);
             return $this->successResponse($variantData);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
+    }
+
+    # get all product tags 
+
+    public function getAllProductTags(Request $request)
+    {
+        try{
+            $langId = Auth::user()->language;
+            $userid = Auth::user()->id;
+           
+            $get_all_tags = Tag::with(['translations' =>  function($q)use($langId){
+                $q->where('language_id',$langId);
+            }])->get();
+
+            return $this->successResponse($get_all_tags);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }

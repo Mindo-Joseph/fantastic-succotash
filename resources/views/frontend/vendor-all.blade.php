@@ -13,6 +13,8 @@
         @include('layouts.store/left-sidebar-template-one')
         @endif
 </header>
+
+@if(count($vendors) > 0)
 <section class="section-b-space new-pages pb-265">
     <div class="container">
         <div class="row">
@@ -28,14 +30,14 @@
                             <img class="fluid-img mx-auto" src="{{$vendor->logo['image_fit']}}200/200{{$vendor->logo['image_path']}}" alt="">
                         </div>
                         <div class="supplier-rating">
-                            <h6 class="mb-1">{{$vendor->name}}</h6>
+                            <h6 class="mb-1 ellips">{{$vendor->name}}</h6>
                             <p title="{{$vendor->categoriesList}}" class="vendor-cate border-bottom pb-1 mb-1 ellips">{{$vendor->categoriesList}}</p>
                             <div class="product-timing">
                                 <small title="{{$vendor->address}}" class="ellips d-block"><i class="fa fa-map-marker"></i> {{$vendor->address}}</small>
                                 @if(isset($vendor->timeofLineOfSightDistance))
                                     <ul class="timing-box">
                                         <li>
-                                            <small class="d-block"><img class="d-inline-block mr-1" src="{{ asset('front-assets/images/distance.png') }}" alt=""> {{$vendor->lineOfSightDistance}} km</small>
+                                            <small class="d-block"><img class="d-inline-block mr-1" src="{{ asset('front-assets/images/distance.png') }}" alt=""> {{$vendor->lineOfSightDistance}}</small>
                                         </li>
                                         <li>
                                             <small class="d-block mx-1"><i class="fa fa-clock-o"></i> {{$vendor->timeofLineOfSightDistance}} min</small>
@@ -93,10 +95,34 @@
                 </div>
             </div> --}}
             @endforeach
+            <div class="col-12">
+                <div class="pagination pagination-rounded justify-content-end mb-0">
+                    @if(!empty($vendors))
+                        {{ $vendors->links() }}
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 </section>
+@else
+<section class="no-store-wrapper mb-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <h4>{{__('There are no stores available in your area currently.')}}</h4>
+            </div>
+        </div>
+    </div>
+</section>
+@endif
 @endsection
+
 @section('script')
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
 <script src="{{asset('front-assets/js/jquery.exitintent.js')}}"></script>
@@ -153,13 +179,13 @@
         $("#input_file_banner").change(function() {
             readURL(this, '#upload_banner_preview');
         });
-        var input = document.querySelector("#phone");
-        window.intlTelInput(input, {
-            separateDialCode: true,
-            hiddenInput: "full_number",
-            utilsScript: "{{asset('assets/js/utils.js')}}",
-            initialCountry: "{{ Session::get('default_country_code','US') }}",
-        });
+        // var input = document.querySelector("#phone");
+        // window.intlTelInput(input, {
+        //     separateDialCode: true,
+        //     hiddenInput: "full_number",
+        //     utilsScript: "{{asset('assets/js/utils.js')}}",
+        //     initialCountry: "{{ Session::get('default_country_code','US') }}",
+        // });
 
         function initialize() {
             var input = document.getElementById('address');

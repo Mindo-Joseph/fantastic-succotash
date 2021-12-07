@@ -232,7 +232,6 @@ $(document).ready(function () {
         }else{
             type = "delivery";
         }
-        // console.log()
         if(!$.hasAjaxRunning()){
             vendorType(latitude, longitude, type);
         }
@@ -279,6 +278,7 @@ $(document).ready(function () {
             vendor_type = vtype;
         }
         let selected_address = $("#address-input").val();
+        // return 0;
         let selected_place_id = $("#address-place-id").val();
         $(".homepage-address span").text(selected_address).attr({ "title": selected_address, "data-original-title": selected_address });
         $("#edit-address").modal('hide');
@@ -295,7 +295,9 @@ $(document).ready(function () {
             dataType: 'json',
             url: home_page_data_url,
             beforeSend: function(){
-                $("#shimmer_effect").show();
+                $(".shimmer_effect").show();
+                $(".no-store-wrapper, .home-slider, .home-banner-slider, #main-menu, #our_vendor_main_div").hide();
+                $(".shimmer_effect .menu-slider").css("display" , "flex");
             },
             success: function (response) {
                 if (response.status == "Success") {
@@ -307,12 +309,17 @@ $(document).ready(function () {
                     let nav_categories_template = _.template($('#nav_categories_template').html());
                     $("#main-menu").append(nav_categories_template({ nav_categories: response.data.navCategories }));
                     // $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
-                    if($(window).width() >= 320){
-                        loadMainMenuSlider();
-                   }
+                    //     if($(window).width() >= 320){
+                    //         if(!$('.menu-slider').hasClass('slick-initialized')){
+                    //             loadMainMenuSlider();
+                    //         }
+                    //    }
+                    resizeMenuSlider();
+                    $("#main-menu").css("display" , "flex");
                   
                     var path = window.location.pathname;
                     if (path == '/') {
+                        $(".home-slider, .home-slider-wrapper, #our_vendor_main_div").show();
                         $(".slide-6").slick('destroy');
                         $(".product-4").slick('destroy');
                         $(".product-5").slick('destroy');
@@ -328,89 +335,111 @@ $(document).ready(function () {
                         $("#featured_products").html('');
                         $("#on_sale").html('');
                         let vendors = response.data.vendors;
-                        let banner_template = _.template($('#banner_template').html());
-                        let vendors_template = _.template($('#vendors_template').html());
-                        let products_template = _.template($('#products_template').html());
-                        let trending_vendors_template = _.template($('#trending_vendors_template').html());
-                        let recent_orders_template = _.template($('#recent_orders_template').html());
-                        $(".render_brands").append(banner_template({ brands: response.data.brands, type: brand_language }));
-                        $(".render_vendors").append(vendors_template({ vendors: response.data.vendors , type: vendor_language}));
-                        $(".render_new_products").append(products_template({ products: response.data.new_products, type: new_product_language }));
-                        $(".render_best_sellers").append(products_template({ products: response.data.new_products, type: best_seller_product_language}));
-                        $(".render_featured_products").append(products_template({ products: response.data.feature_products, type: featured_product_language }));
-                        $(".render_on_sale").append(products_template({ products: response.data.on_sale_products, type: on_sale_product_language }));
-                        $(".render_trending_vendors").append(trending_vendors_template({ trending_vendors: response.data.trending_vendors , type: vendor_language}));
-                        $(".render_recent_orders").append(recent_orders_template({ recent_orders: response.data.active_orders}));
-                        
-                        if (response.data.new_products.length > 0) {
-                            $('.render_full_new_products').removeClass('d-none');
-                        } else {
-                            $('.render_full_new_products1').addClass('d-none');
+                        if(vendors != ''){
+                            let banner_template = _.template($('#banner_template').html());
+                            let vendors_template = _.template($('#vendors_template').html());
+                            let products_template = _.template($('#products_template').html());
+                            let trending_vendors_template = _.template($('#trending_vendors_template').html());
+                            let recent_orders_template = _.template($('#recent_orders_template').html());
+                            $(".render_brands").append(banner_template({ brands: response.data.brands, type: brand_language }));
+                            $(".render_vendors").append(vendors_template({ vendors: response.data.vendors , type: vendor_language}));
+                            $(".render_new_products").append(products_template({ products: response.data.new_products, type: new_product_language }));
+                            $(".render_best_sellers").append(products_template({ products: response.data.new_products, type: best_seller_product_language}));
+                            $(".render_featured_products").append(products_template({ products: response.data.feature_products, type: featured_product_language }));
+                            $(".render_on_sale").append(products_template({ products: response.data.on_sale_products, type: on_sale_product_language }));
+                            $(".render_trending_vendors").append(trending_vendors_template({ trending_vendors: response.data.trending_vendors , type: vendor_language}));
+                            $(".render_recent_orders").append(recent_orders_template({ recent_orders: response.data.active_orders}));
+                            
+                            if (response.data.new_products.length > 0) {
+                                $('.render_full_new_products').removeClass('d-none');
+                            } else {
+                                $('.render_full_new_products1').addClass('d-none');
+                            }
+                            if (response.data.new_products.length > 0) {
+                                $('.render_full_best_sellers').removeClass('d-none');
+                            } else {
+                                $('.render_full_best_sellers').addClass('d-none');
+                            }
+                            if (response.data.on_sale_products.length > 0) {
+                                $('.render_full_on_sale').removeClass('d-none');
+                            } else {
+                                $('.render_full_on_sale').addClass('d-none');
+                            }
+                            if (response.data.feature_products.length > 0) {
+                                $('.render_full_featured_products').removeClass('d-none');
+                            } else {
+                                $('.render_full_featured_products').addClass('d-none');
+                            }
+                            if (vendors.length > 0) {
+                                $('#our_vendor_main_div').removeClass('d-none');
+                            } else {
+                                $('#our_vendor_main_div').addClass('d-none');
+                            }
+                            if (response.data.active_orders.length > 0) {
+                                $('.render_full_recent_orders').removeClass('d-none');
+                            } else {
+                                $('.render_full_recent_orders').addClass('d-none');
+                            }
+                            initializeSlider();
                         }
-                        if (response.data.new_products.length > 0) {
-                            $('.render_full_best_sellers').removeClass('d-none');
-                        } else {
-                            $('.render_full_best_sellers').addClass('d-none');
+                        else{
+                            $(".home-slider, .home-slider-wrapper, #our_vendor_main_div").hide();
+                            $(".no-store-wrapper").show();
                         }
-                        if (response.data.on_sale_products.length > 0) {
-                            $('.render_full_on_sale').removeClass('d-none');
-                        } else {
-                            $('.render_full_on_sale').addClass('d-none');
-                        }
-                        if (response.data.feature_products.length > 0) {
-                            $('.render_full_featured_products').removeClass('d-none');
-                        } else {
-                            $('.render_full_featured_products').addClass('d-none');
-                        }
-                        if (vendors.length > 0) {
-                            $('#our_vendor_main_div').removeClass('d-none');
-                        } else {
-                            $('#our_vendor_main_div').addClass('d-none');
-                        }
-                        if (response.data.active_orders.length > 0) {
-                            $('.render_full_recent_orders').removeClass('d-none');
-                        } else {
-                            $('.render_full_recent_orders').addClass('d-none');
-                        }
-                        initializeSlider();
                     }
                     else {
                         if ((latitude) && (longitude) && (selected_address)) {
                             window.location.href = home_page_url;
                         }
                     }
-                } else {
                 }
             },
             complete:function(data){
                 // Hide image container
-                $("#shimmer_effect").hide();
-               }
+                $(".shimmer_effect").hide();
+                $(".home-banner-slider").show();
+                $("#main-menu").show();
+                // $("#our_vendor_main_div").show();
+            }
         });
     }
 
+  
+
     function getLocation() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, null);
+            navigator.geolocation.getCurrentPosition(showPosition, defaultPosition);
         } else {
             alert("Geolocation is not supported by this browser.");
         }
     }
 
     function showPosition(position) {
-        let lat = position.coords.latitude;
-        let long = position.coords.longitude;
-        displayLocation(lat, long);
+        let lat = $("#address-latitude").val();
+        let long = $("#address-longitude").val();
+        let selectedPlaceId = $("#address-place-id").val();
+        let selectedAddress = $("#address-input").val();
+        if((lat != '') && (long != '')){
+            displayLocation(lat, long, selectedPlaceId, selectedAddress);
+        }else{
+            let lat = position.coords.latitude;
+            let long = position.coords.longitude;
+            displayLocation(lat, long);
+        }
+    }
+
+    function defaultPosition(){
+        displayLocation(defaultLatitude, defaultLongitude, '', defaultLocationName);
     }
 
     if (is_hyperlocal) {
-        if (!selected_address) {
+        // if (!selected_address) {
             getLocation();
-        }
-        let lat = $("#address-latitude").val();
-        let long = $("#address-longitude").val();
-        let placeId = $("#address-place-id").val();
-        displayLocation(lat, long, placeId);
+        // }
+        // let lat = $("#address-latitude").val();
+        // let long = $("#address-longitude").val();
+        // let placeId = $("#address-place-id").val();
+        // displayLocation(lat, long, placeId);
     }
 
     $(document).delegate(".confirm_address_btn", "click", function () {
@@ -465,7 +494,7 @@ $(document).ready(function () {
         });
     }
 
-    function displayLocation(latitude, longitude, placeId='') {
+    function displayLocation(latitude, longitude, placeId='', location='') {
         var geocoder;
         geocoder = new google.maps.Geocoder();
         var latlng = new google.maps.LatLng(latitude, longitude);
@@ -482,7 +511,8 @@ $(document).ready(function () {
 
         var geodata = { 'latLng': latlng };
         if(placeId != ''){
-            geodata.placeId = placeId;
+            geodata = { 'placeId': placeId };
+            // geodata.placeId = placeId;
         }
 
         geocoder.geocode(geodata,
@@ -491,13 +521,22 @@ $(document).ready(function () {
                     if (results[0]) {
                         var add = results[0].formatted_address;
                         var value = add.split(",");
+                        if(placeId == ''){
+                            placeId = results[0].place_id;
+                        }
+                        if(location != ''){
+                            add = location;
+                        }
 
                         count = value.length;
                         country = value[count - 1];
                         state = value[count - 2];
                         city = value[count - 3];
                         if (!selected_address) {
+                            $("#address-place-id").val(placeId);
                             $("#address-input").val(add);
+                            $("#address-latitude").val(latitude);
+                            $("#address-longitude").val(longitude);
                             $(".homepage-address span").text(value).attr({ "title": value, "data-original-title": value });
                             getHomePage(latitude, longitude);
                         }
