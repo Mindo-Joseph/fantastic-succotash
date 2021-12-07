@@ -63,7 +63,7 @@ class OrderController extends BaseController {
         } catch (\Exception $e) {
         }
     }
-    # check if last mile delivery on 
+    # check if last mile delivery on
     public function checkIfLastMileOn()
     {
         $preference = ClientPreference::first();
@@ -251,7 +251,7 @@ class OrderController extends BaseController {
                                     }
                                 }
                             }
-                           
+
                             $order_product->product_variant_sets = $product_variant_sets;
                             if(!empty($vendor_cart_product->product->title))
                             $vendor_cart_product->product->title = $vendor_cart_product->product->title;
@@ -480,7 +480,7 @@ class OrderController extends BaseController {
         }
     }
 
-    # if vendor selected auto accepted order  
+    # if vendor selected auto accepted order
     public function autoAcceptOrderIfOn($order_id)
     {
         $order_vendors = OrderVendor::where('order_id', $order_id)->whereHas('vendor', function ($q) {
@@ -523,8 +523,8 @@ class OrderController extends BaseController {
 
     /// ******************  check If any Product Last Mile on   ************************ ///////////////
     public function checkIfanyProductLastMileon($request)
-    {   
-       
+    {
+
 
         $order_dispatchs = 2;
         $checkdeliveryFeeAdded = OrderVendor::where(['order_id' => $request->order_id, 'vendor_id' => $request->vendor_id])->first();
@@ -541,9 +541,9 @@ class OrderController extends BaseController {
 
         $dispatch_domain_ondemand = $this->getDispatchOnDemandDomain();
         if ($dispatch_domain_ondemand && $dispatch_domain_ondemand != false) {
-        
+
             $ondemand = 0;
-       
+
             foreach ($checkdeliveryFeeAdded->products as $key => $prod) {
                 if (isset($prod->product_dispatcher_tag) && !empty($prod->product_dispatcher_tag) && $prod->product->category->categoryDetail->type_id == 8) {
                     $dispatch_domain_ondemand = $this->getDispatchOnDemandDomain();
@@ -585,7 +585,7 @@ class OrderController extends BaseController {
             else
             $call_back_url = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/dispatch-order-status-update/".$dynamic;
          //   $call_back_url = route('dispatch-order-update', $dynamic);
-            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
+            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'phone_no','email','latitude', 'longitude', 'address')->first();
             $tasks = array();
             $meta_data = '';
 
@@ -602,16 +602,22 @@ class OrderController extends BaseController {
                 'address' => $vendor_details->address ?? '',
                 'post_code' => '',
                 'barcode' => '',
+                'flat_no'     => null,
+                'email'       =>$vendor_details->email ?? null,
+                'phone_number'=>$vendor_details->phone_no ?? null,
             );
 
             $tasks[] = array(
                 'task_type_id' => 2,
-                'latitude' => $cus_address->latitude ?? '',
+                'latitude'  => $cus_address->latitude ?? '',
                 'longitude' => $cus_address->longitude ?? '',
                 'short_name' => '',
                 'address' => $cus_address->address ?? '',
                 'post_code' => $cus_address->pincode ?? '',
                 'barcode' => '',
+                'flat_no'     => $cus_address->house_number ?? null,
+                'email'       => $customer->email ?? null,
+                'phone_number'=> $customer->dial_code.$customer->phone_number  ?? null,
             );
 
             $postdata =  [
@@ -668,7 +674,7 @@ class OrderController extends BaseController {
     public function placeRequestToDispatchOnDemand($order, $vendor, $dispatch_domain)
     {
         try {
-           
+
             $order = Order::find($order);
             $customer = User::find($order->user_id);
             $cus_address = UserAddress::find($order->address_id);
@@ -746,20 +752,20 @@ class OrderController extends BaseController {
                 ['form_params' => ($postdata)]
             );
             $response = json_decode($res->getBody(), true);
-          
+
             if ($response && $response['task_id'] > 0) {
-              
+
                 $dispatch_traking_url = $response['dispatch_traking_url']??'';
                 $up_web_hook_code = OrderVendor::where(['order_id' => $order->id, 'vendor_id' => $vendor])
                     ->update(['web_hook_code' => $dynamic,'dispatch_traking_url' => $dispatch_traking_url]);
 
-               
+
                 return 1;
             }
-           
+
             return 2;
         } catch (\Exception $e) {
-          
+
             return 2;
         }
     }
@@ -863,7 +869,7 @@ class OrderController extends BaseController {
             }
         }
     }
-    
+
     public function sendSuccessSMS($request, $order, $vendor_id = ''){
         try{
             $prefer = ClientPreference::select('sms_provider', 'sms_key', 'sms_secret', 'sms_from')->first();
@@ -1141,14 +1147,14 @@ class OrderController extends BaseController {
                 $response = Http::get($request->new_dispatch_traking_url);
                }catch(\Exception $ex){
                 }
-           
+
 
             if(isset($response) && $response->status() == 200){
             $response = $response->json();
             $order['order_data'] = $response;
             }
            }
-           
+
 
             return $this->successResponse($order, null, 201);
         } catch (Exception $e) {
@@ -1200,7 +1206,7 @@ class OrderController extends BaseController {
                     'upcoming_status' => $upcoming_status,
                 ];
                 $orderData = Order::find($order_id);
-                
+
                 if(!empty($currentOrderStatus->dispatch_traking_url) && ($request->order_status_option_id == 3)){
                     $dispatch_traking_url = str_replace('/order/','/order-cancel/', $currentOrderStatus->dispatch_traking_url);
                     $response = Http::get($dispatch_traking_url);
@@ -1227,7 +1233,7 @@ class OrderController extends BaseController {
     public function sendOrderPushNotificationVendors($user_ids, $orderData, $header_code)
     {
         $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
-       
+
         $client_preferences = ClientPreference::select('fcm_server_key', 'favicon')->first();
         if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
             $from = $client_preferences->fcm_server_key;
@@ -1275,7 +1281,7 @@ class OrderController extends BaseController {
     public function sendStatusChangePushNotificationCustomer($user_ids, $orderData, $order_status_id, $header_code)
     {
         $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
-    
+
         $client_preferences = ClientPreference::select('fcm_server_key', 'favicon')->first();
         if (!empty($devices) && !empty($client_preferences->fcm_server_key)) {
             $from = $client_preferences->fcm_server_key;
@@ -1430,7 +1436,7 @@ class OrderController extends BaseController {
             return $this->errorResponse('Invalid User', 400);
         }
     }
-    
+
 
 
 }
