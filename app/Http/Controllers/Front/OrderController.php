@@ -88,6 +88,7 @@ class OrderController extends FrontController
         $activeOrders = Order::with([
             'vendors' => function ($q) {
                 $q->where('order_status_option_id', '!=', 6);
+                $q->where('order_status_option_id', '!=', 3);
             },
             'vendors.dineInTable.translations' => function ($qry) use ($langId) {
                 $qry->where('language_id', $langId);
@@ -95,6 +96,7 @@ class OrderController extends FrontController
         ])
             ->whereHas('vendors', function ($q) {
                 $q->where('order_status_option_id', '!=', 6);
+                $q->where('order_status_option_id', '!=', 3);
             })
             ->where(function ($q1) {
                 $q1->where('payment_status', 1)->whereNotIn('payment_option_id', [1]);
@@ -108,6 +110,7 @@ class OrderController extends FrontController
             foreach ($order->vendors as $vendor) {
                 $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
                 $vendor->order_status = $vendor_order_status ? strtolower($vendor_order_status->OrderStatusOption->title) : '';
+
                 foreach ($vendor->products as $product) {
                     if ($product->pvariant->media->isNotEmpty()) {
                         $product->image_url = $product->pvariant->media->first()->pimage->image->path['image_fit'] . '74/100' . $product->pvariant->media->first()->pimage->image->path['image_path'];
@@ -131,6 +134,7 @@ class OrderController extends FrontController
                 }
             }
         }
+
         foreach ($pastOrders as $order) {
             foreach ($order->vendors as $vendor) {
                 $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
@@ -182,17 +186,61 @@ class OrderController extends FrontController
                 }
             }
         }
+
+        $rejectedOrders = Order::with([
+            'vendors' => function ($q) {
+                $q->where('order_status_option_id', 3);
+            },
+            'vendors.dineInTable.translations' => function ($qry) use ($langId) {
+                $qry->where('language_id', $langId);
+            }, 'vendors.dineInTable.category', 'vendors.products', 'vendors.products.media.image', 'vendors.products.pvariant.media.pimage.image', 'products.productRating', 'user', 'address'
+        ])
+            ->whereHas('vendors', function ($q) {
+                $q->where('order_status_option_id', 3);
+            })
+            ->where(function ($q1) {
+                $q1->where('payment_status', 1)->whereNotIn('payment_option_id', [1]);
+                $q1->orWhere(function ($q2) {
+                    $q2->where('payment_option_id', 1);
+                });
+            })
+            ->where('orders.user_id', $user->id)
+            ->orderBy('orders.id', 'DESC')->select('*', 'id as total_discount_calculate')->paginate(10);
+
+            foreach ($rejectedOrders as $order) {
+                foreach ($order->vendors as $vendor) {
+                    $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
+                    $vendor->order_status = $vendor_order_status ? __(strtolower($vendor_order_status->OrderStatusOption->title)) : '';
+                    foreach ($vendor->products as $product) {
+                        if ($product->pvariant->media->isNotEmpty()) {
+                            $product->image_url = $product->pvariant->media->first()->pimage->image->path['image_fit'] . '74/100' . $product->pvariant->media->first()->pimage->image->path['image_path'];
+                        } elseif ($product->media->isNotEmpty()) {
+                            $product->image_url = $product->media->first()->image->path['image_fit'] . '74/100' . $product->media->first()->image->path['image_path'];
+                        } else {
+                            $product->image_url = ($product->image) ? $product->image['image_fit'] . '74/100' . $product->image['image_path'] : '';
+                        }
+                    }
+                    if ($vendor->dineInTable) {
+                        $vendor->dineInTableName = $vendor->dineInTable->translations->first() ? $vendor->dineInTable->translations->first()->name : '';
+                        $vendor->dineInTableCapacity = $vendor->dineInTable->seating_number;
+                        $vendor->dineInTableCategory = $vendor->dineInTable->category ? $vendor->dineInTable->category->title : '';
+                    }
+                }
+            }
+            // pr($rejectedOrders->toArray());
+            // exit();
+
         $clientCurrency = ClientCurrency::where('currency_id', $currency_id)->first();
 
         if (empty($clientCurrency)) {
             $clientCurrency = ClientCurrency::where('is_primary', 1)->first();
-        } 
+        }
 
         $payments = PaymentOption::where('credentials', '!=', '')->where('status', 1)->count();
 
      //   dd($activeOrders->toArray());
-   
-        return view('frontend/account/orders')->with(['payments' => $payments, 'navCategories' => $navCategories, 'activeOrders' => $activeOrders, 'pastOrders' => $pastOrders, 'returnOrders' => $returnOrders, 'clientCurrency' => $clientCurrency]);
+
+        return view('frontend/account/orders')->with(['payments' => $payments,'rejectedOrders' => $rejectedOrders, 'navCategories' => $navCategories, 'activeOrders' => $activeOrders, 'pastOrders' => $pastOrders, 'returnOrders' => $returnOrders, 'clientCurrency' => $clientCurrency]);
     }
 
     public function getOrderSuccessPage(Request $request)
@@ -649,6 +697,7 @@ class OrderController extends FrontController
             $payable_amount = 0;
             $tax_category_ids = [];
             $vendor_ids = [];
+            $total_service_fee = 0;
             $total_delivery_fee = 0;
             $total_subscription_discount = 0;
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
@@ -659,7 +708,7 @@ class OrderController extends FrontController
                 $vendor_payable_amount = 0;
                 $vendor_discount_amount = 0;
                 $product_taxable_amount = 0;
-                $product_payable_amount = 0;
+                $vendor_products_total_amount = 0;
                 $vendor_taxable_amount = 0;
                 $OrderVendor = new OrderVendor();
                 $OrderVendor->status = 0;
@@ -677,11 +726,12 @@ class OrderController extends FrontController
                     $price_in_dollar_compare = $price_in_currency * $clientCurrency->doller_compare;
                     $quantity_price = $price_in_dollar_compare * $vendor_cart_product->quantity;
                     $payable_amount = $payable_amount + $quantity_price;
+                    $vendor_products_total_amount = $vendor_products_total_amount + $quantity_price;
                     $vendor_payable_amount = $vendor_payable_amount + $quantity_price;
-                    if (isset($vendor_cart_product->product['taxCategory'])) {
-                        foreach ($vendor_cart_product->product['taxCategory']['taxRate'] as $tax_rate_detail) {
-                            if (!in_array($vendor_cart_product->product['taxCategory']['id'], $tax_category_ids)) {
-                                $tax_category_ids[] = $vendor_cart_product->product['taxCategory']['id'];
+                    if (isset($vendor_cart_product->product->taxCategory)) {
+                        foreach ($vendor_cart_product->product->taxCategory->taxRate as $tax_rate_detail) {
+                            if (!in_array($tax_rate_detail->id, $tax_category_ids)) {
+                                $tax_category_ids[] = $tax_rate_detail->id;
                             }
                             $rate = round($tax_rate_detail->tax_rate);
                             $tax_amount = ($price_in_dollar_compare * $rate) / 100;
@@ -712,12 +762,12 @@ class OrderController extends FrontController
                             }
                         }
                     }
+                    $taxable_amount += $product_taxable_amount;
+                    $vendor_taxable_amount += $taxable_amount;
                     $total_amount += $vendor_cart_product->quantity * $variant->price;
                     $order_product = new OrderProduct;
                     $order_product->order_id = $order->id;
                     $order_product->price = $variant->price;
-                    $taxable_amount += $product_taxable_amount;
-                    $vendor_taxable_amount += $product_taxable_amount;
                     $order_product->order_vendor_id = $OrderVendor->id;
                     $order_product->taxable_amount = $product_taxable_amount;
                     $order_product->quantity = $vendor_cart_product->quantity;
@@ -809,7 +859,21 @@ class OrderController extends FrontController
                         $vendor_discount_amount += $percentage_amount;
                     }
                 }
+                //Start applying service fee on vendor products total
+                $vendor_service_fee_percentage_amount = 0;
+                if($vendor_cart_product->vendor->service_fee_percent > 0){
+                    $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendor_cart_product->vendor->service_fee_percent) / 100 ;
+                    $vendor_payable_amount += $vendor_service_fee_percentage_amount;
+                    $payable_amount += $vendor_service_fee_percentage_amount;
+                }
+                //End applying service fee on vendor products total
+                $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
+                $OrderVendor->service_fee_percentage_amount = $vendor_service_fee_percentage_amount;
+
                 $total_delivery_fee += $delivery_fee;
+                $vendor_payable_amount += $delivery_fee;
+                $vendor_payable_amount += $vendor_taxable_amount;
+
                 $OrderVendor->coupon_id = $coupon_id;
                 $OrderVendor->coupon_code = $coupon_name;
                 $OrderVendor->order_status_option_id = 1;
@@ -818,7 +882,7 @@ class OrderController extends FrontController
                 $OrderVendor->discount_amount = $vendor_discount_amount;
                 $OrderVendor->taxable_amount   = $vendor_taxable_amount;
                 $OrderVendor->payment_option_id = $request->payment_option_id;
-                $OrderVendor->payable_amount = $vendor_payable_amount + $delivery_fee;
+                $OrderVendor->payable_amount = $vendor_payable_amount;
                 $vendor_info = Vendor::where('id', $vendor_id)->first();
                 if ($vendor_info) {
                     if (($vendor_info->commission_percent) != null && $vendor_payable_amount > 0) {
@@ -874,6 +938,7 @@ class OrderController extends FrontController
                 $order->tip_amount =$tip_amount;
             }
             $payable_amount = $payable_amount + $tip_amount;
+            $order->total_service_fee = $total_service_fee;
             $order->total_delivery_fee = $total_delivery_fee;
             $order->loyalty_points_used = $loyalty_points_used;
             $order->loyalty_amount_saved = $loyalty_amount_saved;
@@ -892,7 +957,7 @@ class OrderController extends FrontController
             }
             // $this->sendOrderNotification($user->id, $vendor_ids);
            $this->sendSuccessEmail($request, $order);
-           $this->sendSuccessSMS($request, $order, $vendor_id);
+           $this->sendSuccessSMS($request, $order);
             $ex_gateways = [7,8,9,10]; // mobbex, yoco, pointcheckout, razorpay
             if (!in_array($request->payment_option_id, $ex_gateways)) {
                 Cart::where('id', $cart->id)->update(['schedule_type' => null, 'scheduled_date_time' => null,
@@ -1729,27 +1794,34 @@ class OrderController extends FrontController
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
-                'phone_number' => 'required|unique',
+                'phone_number' => 'required',
                 'type' => 'required',
                 'vehicle_type_id' => 'required',
                 'make_model' => 'required',
                 'uid' => 'required',
                 'plate_number' => 'required',
                 'color' => 'required',
+                'team' => 'required',
+            ], [
+                "name.required" => __('The name field is required.'),
+                "phone_number.required" => __('The phone number field is required.'),
+                "type.required" => __('The type field is required.'),
+                "vehicle_type_id.required" => __('The transport type is required.'),
+                "make_model.required" => __('The transport details field is required.'),
+                "uid.required" => __('The UID field is required.'),
+                "plate_number.required" => __('The licence plate field is required.'),
+                "color.required" => __('The color field is required.'),
+                "team.required" => __('The team field is required.')
             ]);
-            //$meta_data = '';
-            //$tasks = array();
+            if($validator->fails()){
+                return $this->errorResponse($validator->errors(), 422);
+            }
             $dispatch_domain = $this->checkIfLastMileDeliveryOn();
-            //$customer = Auth::user();
             if ($dispatch_domain && $dispatch_domain != false) {
-                //$unique = Auth::user()->code;
-                $driver_registration_documents = json_decode($this->driverDocuments());
 
-                //     $rules_array = [];
-                //     foreach ($driver_registration_documents as $driver_registration_document) {
-                //         $rules_array[$driver_registration_document->name] = 'required';
-                //     }
-                //    $request->validate($rules_array);
+                $data = json_decode($this->driverDocuments());
+                $driver_registration_documents = $data->documents;
+                // dd($driver_registration_documents);
 
                 $files = [];
                 if ($driver_registration_documents != null) {
@@ -1852,6 +1924,13 @@ class OrderController extends FrontController
                 if (!array_key_exists(9, $filedata)) {
                     $filedata[9] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
                 }
+
+                $tags = '';
+                if($request->has('tags') && !empty($request->get('tags'))){
+                    $tagsArray = $request->get('tags');
+                    $tags = implode(',', $tagsArray);
+                }
+
                 $res = $client->post($url . '/api/agent/create', [
 
                     'multipart' => [
@@ -1914,6 +1993,14 @@ class OrderController extends FrontController
                         [
                             'name' => 'color',
                             'contents' => $request->color
+                        ],
+                        [
+                            'name' => 'team_id',
+                            'contents' => $request->team
+                        ],
+                        [
+                            'name' => 'tags',
+                            'contents' => $tags
                         ],
                     ]
 

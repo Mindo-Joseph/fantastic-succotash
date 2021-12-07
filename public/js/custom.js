@@ -162,10 +162,10 @@ window.initializeSlider = function initializeSlider() {
         dots: false,
         infinite: true,
         speed: 300,
-        centerMode: true,
-        centerPadding: '60px',
+        // centerMode: true,
+        // centerPadding: '60px',
         slidesToShow: 5,
-        slidesToScroll: 3,
+        slidesToScroll: 5,
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
@@ -338,6 +338,18 @@ $(document).ready(function() {
     // $(".toggle-nav").click(function() {
     //     $("body").toggleClass("overflow-hidden");
     // });
+    
+    $(".toggle-password").click(function() {
+        $(this).toggleClass("eye");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+          input.attr("type", "text");
+        } else {
+          input.attr("type", "password");
+        }
+    });
+
+    
     $(".mobile-search-btn").click(function() {
         $(".radius-bar").slideToggle();
     });
@@ -418,61 +430,6 @@ $(document).ready(function() {
             });
         }
     }
-    // // Cabbooking Js Code
-    //     $('.add-more-location').click(function(){
-    //         $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");
-    //         const height = document.querySelector('.location-box').offsetHeight;
-    //         var getheight = height;
-    //         var abc = 156;
-    //         var minheight = parseFloat(getheight + abc)+'px';
-    //         $('.location-list').attr('style', 'height:calc(100vh - '+minheight+' !important');
-    //     });
-
-    //     $('.location-inputs').on('click','.apremove',function(){
-    //         $(this).closest('.apdots').remove();
-    //         const height = document.querySelector('.location-box').offsetHeight;
-    //         var getheight = height;
-    //         var abc = 156;
-    //         var minheight = parseFloat(getheight + abc)+'px';
-    //         $('.location-list').attr('style', 'height:calc(100vh - '+minheight+' !important');
-    //     });
-    // // Cabbooking Js Code
-
-    // // Cabbooking Js Code
-    //     $('.add-more-location').click(function(){
-    //         $(".location-inputs").append("<li class='d-block mb-3 dots apdots map-icon'><input class='form-control pickup-text' type='text' placeholder='Choose destination, or click on the map...' /><i class='fa fa-times ml-1 apremove' aria-hidden='true'></i></li>");
-    //         const height = document.querySelector('.location-box').offsetHeight;
-    //         var getheight = height;
-    //         var abc = 190;
-    //         var minheight = parseFloat(getheight + abc)+'px';
-    //         $('.vehical-container').attr('style', 'height:calc(100vh - '+minheight+' !important');
-    //     });
-
-    //     $('.location-inputs').on('click','.apremove',function(){
-    //         $(this).closest('.apdots').remove();
-    //         const height = document.querySelector('.location-box').offsetHeight;
-    //         var getheight = height;
-    //         var abc = 190;
-    //         var minheight = parseFloat(getheight + abc)+'px';
-    //         $('.vehical-container').attr('style', 'height:calc(100vh - '+minheight+' !important');
-    //     });
-    // // Cabbooking Js Code
-
-
-    // top Moveble Tabbar on top js code
-    /*$(".navigation-tab-item").click(function() {
-        $(".navigation-tab-item").removeClass("active");
-        $(this).addClass("active");
-        if($('body').attr('dir') == 'rtl'){
-            $(".navigation-tab-overlay").css({
-                right: $(this).prevAll().length * 130 + "px"
-            });
-        }else{
-            $(".navigation-tab-overlay").css({
-                left: $(this).prevAll().length * 100 + "px"
-            });
-        }
-    });*/
 
     if ($('#cart_main_page').length > 0) {
         let address_checked = $("input:radio[name='address_id']").is(":checked");
@@ -673,6 +630,9 @@ $(document).ready(function() {
             }
             else if (payment_option_id == 12) {
                 paymentViaSimplify('', '');
+            }
+            else if (payment_option_id == 13) {
+                paymentViaSquare('', '');
             }
         } else {
             _this.attr("disabled", false);
@@ -1377,6 +1337,14 @@ $(document).ready(function() {
                 return false;
             }
         }
+        else if (payment_option_id == 13) {
+            var order = placeOrderBeforePayment(address_id, payment_option_id, tip);
+            if (order != '') {
+                paymentViaSquare(address_id, order);
+            } else {
+                return false;
+            }
+        }
     });
 
 
@@ -1518,15 +1486,6 @@ $(document).ready(function() {
             paymentViaPaystack();
         } else if (payment_option_id == 6) {
             paymentViaPayfast();
-        } else if (payment_option_id == 9) {
-            paymentViaPaylink('', '');
-        } else if (payment_option_id == 10) {
-            paymentViaRazorpay_wallet('', payment_option_id);
-        }else if (payment_option_id == 11) {
-            paymentViaGCash('', payment_option_id);
-        }
-        else if (payment_option_id == 12) {
-            paymentViaSimplify('', '');
         } else if (payment_option_id == 8) {
             inline.createToken().then(function(result) {
                 if (result.error) {
@@ -1540,6 +1499,16 @@ $(document).ready(function() {
                 // Re-enable button now that request is complete
                 alert("error occured: " + error);
             });
+        }else if (payment_option_id == 9) {
+            paymentViaPaylink('', '');
+        } else if (payment_option_id == 10) {
+            paymentViaRazorpay_wallet('', payment_option_id);
+        }else if (payment_option_id == 11) {
+            paymentViaGCash('', payment_option_id);
+        }else if (payment_option_id == 12) {
+            paymentViaSimplify('', '');
+        }else if (payment_option_id == 13) {
+            paymentViaSquare('', '');
         }
     });
     $(document).on("click", ".remove_promo_code_btn", function() {

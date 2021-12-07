@@ -418,7 +418,7 @@ class OrderController extends BaseController
                 return response()->json([
                     'status' => 'success',
                     'created_date' => convertDateTimeInTimeZone($vendor_order_status->created_at, $timezone, 'l, F d, Y, H:i A'),
-                    'message' => 'Order Status Updated Successfully.'
+                    'message' => __('Order Status Updated Successfully.')
                 ]);
             }
         } catch (\Exception $e) {
@@ -869,7 +869,6 @@ class OrderController extends BaseController
                     'content-type' => 'application/json'
                 ]
             ]);
-            Log::info($postdata);
             $url = $dispatch_domain->laundry_service_key_url;
             $res = $client->post(
                 $url . '/api/task/create',

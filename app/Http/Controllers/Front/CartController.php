@@ -588,6 +588,7 @@ class CartController extends FrontController
             $cart->scheduled_date_time = convertDateTimeInTimeZone($cart->scheduled_date_time, $user->timezone, 'Y-m-d\TH:i');
         }
         $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
+        $order_sub_total = 0;
         if ($cartData) {
             $cart_dinein_table_id = NULL;
             $action = (Session::has('vendorType')) ? Session::get('vendorType') : 'delivery';
@@ -596,9 +597,11 @@ class CartController extends FrontController
             $is_vendor_closed = 0;
             $deliver_charge = 0;
             $delay_date = 0;
+            $pickup_delay_date = 0;
+            $dropoff_delay_date = 0;
             $total_service_fee = 0;
             foreach ($cartData as $ven_key => $vendorData) {
-                $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
+                $vendor_products_total_amount = $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
 
                 if(Session::has('vendorTable')){
@@ -652,6 +655,7 @@ class CartController extends FrontController
                     $prod->pvariant->multiplier = ($customerCurrency) ? $customerCurrency->doller_compare : 1;
                     $prod->quantity_price = number_format($quantity_price, 2, '.', '');
                     $payable_amount = $payable_amount + $quantity_price;
+                    $vendor_products_total_amount = $vendor_products_total_amount + $quantity_price;
                     $taxData = array();
                     if (!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0) {
                         foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
@@ -668,19 +672,22 @@ class CartController extends FrontController
                         unset($prod->product->taxCategory);
                     }
                     $prod->taxdata = $taxData;
-                    foreach ($prod->addon as $ck => $addons) {
-                        $opt_price_in_currency = $addons->option->price;
-                        $opt_price_in_doller_compare = $addons->option->price;
-                        if($customerCurrency){
-                            $opt_price_in_currency = $addons->option->price / $divider;
-                            $opt_price_in_doller_compare = $opt_price_in_currency * $customerCurrency->doller_compare;
+                    if($prod->addon->isNotEmpty()){
+                        foreach ($prod->addon as $ck => $addons) {
+                            $opt_price_in_currency = $addons->option->price;
+                            $opt_price_in_doller_compare = $addons->option->price;
+                            if($customerCurrency){
+                                $opt_price_in_currency = $addons->option->price / $divider;
+                                $opt_price_in_doller_compare = $opt_price_in_currency * $customerCurrency->doller_compare;
+                            }
+                            $opt_quantity_price = number_format($opt_price_in_doller_compare * $prod->quantity, 2, '.', '');
+                            $addons->option->price_in_cart = $addons->option->price;
+                            $addons->option->price = number_format($opt_price_in_currency, 2, '.', '');
+                            $addons->option->multiplier = ($customerCurrency) ? $customerCurrency->doller_compare : 1;
+                            $addons->option->quantity_price = $opt_quantity_price;
+                            $payable_amount = $payable_amount + $opt_quantity_price;
+                            $order_sub_total = $order_sub_total + $opt_quantity_price;
                         }
-                        $opt_quantity_price = number_format($opt_price_in_doller_compare * $prod->quantity, 2, '.', '');
-                        $addons->option->price_in_cart = $addons->option->price;
-                        $addons->option->price = number_format($opt_price_in_currency, 2, '.', '');
-                        $addons->option->multiplier = ($customerCurrency) ? $customerCurrency->doller_compare : 1;
-                        $addons->option->quantity_price = $opt_quantity_price;
-                        $payable_amount = $payable_amount + $opt_quantity_price;
                     }
                     if (isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)) {
                         $prod->cartImg = $prod->pvariant->image->imagedata;
@@ -693,6 +700,16 @@ class CartController extends FrontController
                         $delay_date = $prod->product->delay_hrs_min;
                     }
 
+                    if($prod->product->pickup_delay_hrs_min != 0){
+                        if($prod->product->pickup_delay_hrs_min > $delay_date)
+                        $pickup_delay_date = $prod->product->pickup_delay_hrs_min;
+                    }
+
+                    if($prod->product->dropoff_delay_hrs_min != 0){
+                        if($prod->product->dropoff_delay_hrs_min > $delay_date)
+                        $dropoff_delay_date = $prod->product->dropoff_delay_hrs_min;
+                    }
+
                     if($action == 'delivery'){
                         if (!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1)) {
                             $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
@@ -700,6 +717,7 @@ class CartController extends FrontController
                                 $delivery_count = 1;
                                 $prod->deliver_charge = number_format($deliver_charge, 2, '.', '');
                                 // $payable_amount = $payable_amount + $deliver_charge;
+                                $order_sub_total = $order_sub_total + $deliver_charge;
                                 $delivery_fee_charges = $deliver_charge;
                             }
                         }
@@ -741,11 +759,13 @@ class CartController extends FrontController
                     $subscription_discount = $subscription_discount + $delivery_fee_charges;
                 }
                 $payable_amount = $payable_amount + $deliver_charge;
+                //Start applying service fee on vendor products total
                 $vendor_service_fee_percentage_amount = 0;
                 if($vendorData->vendor->service_fee_percent > 0){
-                    $vendor_service_fee_percentage_amount = ($payable_amount * $vendorData->vendor->service_fee_percent) / 100 ;
-                    $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
+                    $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendorData->vendor->service_fee_percent) / 100 ;
+                    // $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
                 }
+                //end applying service fee on vendor products total
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
                 $vendorData->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
                 $vendorData->delivery_fee_charges = number_format($delivery_fee_charges, 2, '.', '');
@@ -779,6 +799,7 @@ class CartController extends FrontController
                     $vendorData->is_vendor_closed = 1;
                     $delivery_status = 0;
                 }
+                $order_sub_total = $order_sub_total + $vendor_products_total_amount;
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
                 $total_discount_amount = $total_discount_amount + $discount_amount;
@@ -829,12 +850,13 @@ class CartController extends FrontController
                         $wallet_amount_used = $total_payable_amount;
                     }
                     $total_payable_amount = $total_payable_amount - $wallet_amount_used;
-                    $cart->wallet_amount_used = number_format($wallet_amount_used, 2, '.', '');
                 }
             }
+            $cart->wallet_amount_used = number_format($wallet_amount_used, 2, '.', '');
             $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');
             $cart->loyalty_amount = number_format($loyalty_amount_saved, 2, '.', '');
-            $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount + $loyalty_amount_saved + $wallet_amount_used - $total_taxable_amount), 2, '.', '');
+            // $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount + $loyalty_amount_saved + $wallet_amount_used - $total_taxable_amount), 2, '.', '');
+            $cart->gross_amount = number_format(($order_sub_total), 2, '.', '');
             $cart->new_gross_amount = number_format(($total_payable_amount + $total_discount_amount), 2, '.', '');
             $cart->total_payable_amount = number_format($total_payable_amount, 2, '.', '');
             $cart->total_discount_amount = number_format($total_discount_amount, 2, '.', '');
@@ -848,6 +870,8 @@ class CartController extends FrontController
             $cart->upSell_products = ($upSell_products) ? $upSell_products->first() : collect();
             $cart->crossSell_products = ($crossSell_products) ? $crossSell_products->first() : collect();
             $cart->delay_date =  $delay_date??0;
+            $cart->pickup_delay_date =  $pickup_delay_date??0;
+            $cart->dropoff_delay_date =  $dropoff_delay_date??0;
             // dd($cart->toArray());
             $cart->products = $cartData->toArray();
         }
@@ -1002,7 +1026,7 @@ class CartController extends FrontController
         CartProduct::where('id', $request->cartproduct_id)->delete();
         CartCoupon::where('vendor_id', $request->vendor_id)->delete();
         CartAddon::where('cart_product_id', $request->cartproduct_id)->delete();
-        return response()->json(['status' => 'success', 'message' => 'Product deleted successfully.']);
+        return response()->json(['status' => 'success', 'message' => __('Product removed from cart successfully.') ]);
     }
 
     /**

@@ -269,7 +269,7 @@
 
                     <div class="row" style="width:100%; overflow-x: scroll;">
                         <div id="variantAjaxDiv" class="col-12 mb-2">
-                            <h5 class="">Variant List</h5>
+                            <h5 class="">{{__('Variant List')}}</h5>
                             <div class="row mb-2">
                                 @foreach($productVariants as $vk => $var)
                                 <div class="col-sm-3">
@@ -282,7 +282,7 @@
                                             <input type="checkbox" name="variant{{$var->id}}" class="intpCheck" opt="{{$opt->id.';'.$opt->title}}" varId="{{$var->id.';'.$var->title}}" id="opt_vid_{{$opt->id}}" @if(in_array($opt->id, $existOptions)) checked @endif>
                                             <label for="opt_vid_{{$opt->id}}">{{$opt->title}}</label>
                                         </div>
-                                    @endif    
+                                    @endif
                                     @endforeach
                                 </div>
                                 @endforeach
@@ -320,8 +320,8 @@
                                         if(isset($vs) && !empty($vs->title)){
                                             $vsets .= $vs->title . ', ';
                                         }
-                                        
-                                        
+
+
                                     }
                                     ?>
                                     <tr id="tr_{{$varnt->id}}">
@@ -487,23 +487,53 @@
                             </select>
                         </div>
                     </div>
-                   
+
                     @if($configData->delay_order == 1 || $product->delay_order_hrs > 0 || $product->delay_order_min > 0)
+                    @if(in_array($configData->business_type,['laundry']))
                     <div class="row">
-                        <div class="col-md-2 d-flex justify-content-between mb-2">
+                        <div class="col-md-12 mb-2">
+                            {!! Form::label('title', __('Set Pickup Delay Time'),['class' => 'control-label mb-0']) !!}
+                         </div>
+                        <div class="col-md-6 mb-2">
+                            {!! Form::label('title', __('Hrs'),['class' => 'control-label']) !!}
+                             <input type="number"  class="form-control" value="{{$product->pickup_delay_order_hrs}}" name="pickup_delay_order_hrs" placeholder="{{__('hrs')}}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            {!! Form::label('title', __('Minutes'),['class' => 'control-label']) !!}
+                           <input type="number"  class="form-control" value="{{$product->pickup_delay_order_min}}" name="pickup_delay_order_min" placeholder="{{__('minutes')}}">
+                       </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 mb-2">
+                            {!! Form::label('title', __('Set DropoffDelay Time'),['class' => 'control-label mb-0']) !!}
+                         </div>
+                        <div class="col-md-6 mb-2">
+                            {!! Form::label('title', __('Hrs'),['class' => 'control-label']) !!}
+                             <input type="number"  class="form-control" value="{{$product->dropoff_delay_order_hrs}}" name="dropoff_delay_order_hrs" placeholder="{{__('hrs')}}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            {!! Form::label('title', __('Minutes'),['class' => 'control-label']) !!}
+                           <input type="number"  class="form-control" value="{{$product->dropoff_delay_order_min}}" name="dropoff_delay_order_min" placeholder="{{__('minutes')}}">
+                       </div>
+                    </div>
+                    @else
+                    <div class="row">
+                        <div class="col-md-12">
                             {!! Form::label('title', __('Set Delay Time'),['class' => 'control-label']) !!}
                          </div>
-                        <div class="col-md-5 d-flex justify-content-between mb-2">
+                        <div class="col-md-6 mb-2">
                             {!! Form::label('title', __('Hrs'),['class' => 'control-label']) !!}
                              <input type="number"  class="form-control" value="{{$product->delay_order_hrs}}" name="delay_order_hrs" placeholder="{{__('hrs')}}">
                         </div>
-                        <div class="col-md-5 d-flex justify-content-between mb-2">
+                        <div class="col-md-6 mb-2">
                             {!! Form::label('title', __('Minutes'),['class' => 'control-label']) !!}
                            <input type="number"  class="form-control" value="{{$product->delay_order_min}}" name="delay_order_min" placeholder="{{__('minutes')}}">
                        </div>
                     </div>
                     @endif
-
+                    @endif
+                  
                     <!-- <div class="row mb-2">
                         {!! Form::label('title', 'Physical',['class' => 'control-label col-sm-2']) !!}
                         <div class="col-sm-4">
@@ -595,7 +625,7 @@
                                 @foreach($otherProducts as $otherProduct)
                                     @if(isset($otherProduct) && !empty($otherProduct->primary))
                                     <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $upSell_ids)) selected @endif>{{$otherProduct->primary->title??null}}</option>
-                                    @endif                                   
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -606,7 +636,7 @@
                                 @foreach($otherProducts as $otherProduct)
                                     @if(isset($otherProduct) && !empty($otherProduct->primary))
                                     <option value="{{$otherProduct->id}}" @if(in_array($otherProduct->id, $crossSell_ids)) selected @endif>{{$otherProduct->primary->title??null}}</option>
-                                    @endif   
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -638,7 +668,7 @@
 
 
                 <!-- start product faqs -->
-                @if($configData->product_order_form == 1) 
+                @if($configData->product_order_form == 1)
                 <div class="row">
                     <div class="col-lg-12">
                              <div class="card-box pb-2">
@@ -661,9 +691,9 @@
                                          @forelse($product_faqs as $product_faq)
                                          <tr>
                                             <td>
-                                               <a class="edit_product_faq_btn" data-product_faq_id="{{$product_faq->id}}" href="javascript:void(0)">   
+                                               <a class="edit_product_faq_btn" data-product_faq_id="{{$product_faq->id}}" href="javascript:void(0)">
                                                   {{$product_faq->primary ? $product_faq->primary->name : ''}}
-                                               </a>   
+                                               </a>
                                             </td>
                                             <td>{{ ($product_faq->is_required == 1)?"Yes":"No" }}</td>
                                             <td>
@@ -690,11 +720,11 @@
                                    </table>
                                 </div>
                              </div>
-              
-              
+
+
                           </div>
-              
-                       
+
+
                  </div>
                  @endif
                  <!-- end product faqs -->
@@ -739,14 +769,14 @@
                    <input type="hidden" name="product_faq_id" value="">
                    <input type="hidden" name="product_id" value="{{$product->id}}">
                    <div class="row">
-                     
+
                       <div class="col-md-6">
                          <div class="form-group position-relative">
                             <label for="">Is Required?</label>
                             <div class="input-group mb-2">
                                <select class="form-control" name="is_required">
-                                  <option value="1">Yes</option>
-                                  <option value="0">No</option>
+                                  <option value="1">{{__('Yes')}}</option>
+                                  <option value="0">{{__('No')}}</option>
                                </select>
                             </div>
                          </div>
@@ -1224,7 +1254,7 @@
                },
                success: function(response) {
                   if (response.status == "Success") {
-                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                     $.NotificationApp.send({{__('Success')}}, response.message, "top-right", "#5ba035", "success");
                      setTimeout(function() {
                         location.reload()
                      }, 2000);
@@ -1251,12 +1281,13 @@
             success: function(response) {
                if (response.status == 'Success') {
                   $('#add_or_edit_social_media_modal').modal('hide');
-                  $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+
+                  $.NotificationApp.send("{{__('Success')}}", response.message, "top-right", "#5ba035", "success");
                   setTimeout(function() {
                      location.reload()
                   }, 2000);
                } else {
-                  $.NotificationApp.send("Error", response.message, "top-right", "#ab0535", "error");
+                  $.NotificationApp.send({{__('Errors')}}, response.message, "top-right", "#ab0535", "error");
                }
             },
             error: function(response) {
