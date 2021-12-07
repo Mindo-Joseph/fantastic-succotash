@@ -4,12 +4,25 @@ $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'
 $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('language_id', session()->get('customerLanguage') ??1);}])->whereHas('translations', function($q) {$q->where(['is_published' => 1, 'language_id' => session()->get('customerLanguage') ??1]);})->get();
 @endphp
 <footer class="footer-light">
-    <section class="section-b-space light-layout py-4">
+    <section class="section-b-space light-layout py-0">
         <div class="container">
-            <div class="row footer-theme partition-f">
-                @if(count($pages))
+            @if(count($pages))
+            <div class="row footer-theme partition-f py-lg-4 pb-1">
+
+                @if($client_preference_detail->show_contact_us == 1)
+                <div class="col-12 d-block d-md-none">
+                    <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
+                    <div class="footer-contant">
+                        <div class="store-btn mb-3 d-flex align-items-center">
+                            <a class="mt-2 mr-2" href="#"><img src="{{asset('front-assets/images/app-store.svg')}}" alt=""></a>
+                            <a class="mt-2" href="#"><img src="{{asset('front-assets/images/google-play.svg')}}" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
                
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-3 col-md-6 col-5 pt-md-4 pt-lg-0">
                     <div class="sub-title">
                         <div class="footer-title mt-0">
                             <h4 class="mt-0">{{ __('Quick Links') }}</h4>
@@ -46,7 +59,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 pl-lg-4">
+                <div class="col-lg-3 col-md-6 col-7 pl-lg-4">
                     <div class="sub-title">
                         <div class="footer-title mt-0">
                             <h4 class="mt-0">{{ __('Contact Us') }}</h4>
@@ -61,7 +74,6 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                     </div>
                 </div>
                 @endif
-
 
                 @if(count($social_media_details))
                 <div class="col-lg-4 col-md-6 pl-lg-5  d-none">
@@ -87,15 +99,15 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                 </div>
                 @endif
                 @if($client_preference_detail->show_contact_us == 1)
-                <div class="col-lg-3 col-md-6 pl-xl-3">
+                <div class="col-lg-3 col-6 pl-xl-3 mobile-border">
                     <div class="sub-title">
-                        <div class="footer-title mt-0">
+                        <div class="footer-title mt-0 d-none d-md-block">
                             <h4 class="mt-0">{{ __('Find our app on mobile') }}</h4>
                         </div>
                         <div class="footer-contant">
-                            <div class="store-btn mb-3">
-                                <a href="#"><img src="{{asset('front-assets/images/app-store.png')}}" alt=""></a>
-                                <a class="ml-xl-2 mt-2 mt-xl-0" href="#"><img src="{{asset('front-assets/images/google-play.png')}}" alt=""></a>
+                            <div class="store-btn mb-3 d-none d-md-block">
+                                <a href="#"><img src="{{asset('front-assets/images/app-store.svg')}}" alt=""></a>
+                                <a class="ml-xl-2 mt-2 mt-xl-0" href="#"><img src="{{asset('front-assets/images/google-play.svg')}}" alt=""></a>
                             </div>
 
                             @if(count($social_media_details))
@@ -119,7 +131,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                 @endif
 
                 @if($client_preference_detail->show_payment_icons == 1)
-                <div class="col-lg-3 col-md-6 payment-card">
+                <div class="col-lg-3 col-6 payment-card mobile-border">
 
                     <div class="sub-title">
                         <div class="footer-title mt-0">
@@ -150,8 +162,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     </div>
                 </div>
-                @endif
             </div>
+            @endif
         </div>
     </section>
     <div class="sub-footer">

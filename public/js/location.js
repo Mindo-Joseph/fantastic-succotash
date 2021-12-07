@@ -58,6 +58,7 @@ $(document).ready(function () {
     });
 
     $( document ).ready(function() {
+        $('.date-items').removeClass('hide');
         $('.date-items').slick({
             infinite: true,
             speed: 300,
@@ -68,21 +69,31 @@ $(document).ready(function () {
             autoplay: false,
             autoplaySpeed: 5000,
             rtl: false,
-            responsive: [{
+            responsive: [
+                {
                 breakpoint: 1200,
                 settings: {
                     slidesToShow: 2,
                     slidesToScroll: 2
                 }
-            },
-            {
-                breakpoint: 767,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    arrows: true
-                }
-            } ]
+                },
+                {
+                    breakpoint: 767,
+                    settings: {
+                        slidesToShow: 5,
+                        slidesToScroll: 1,
+                        arrows: true
+                    }
+                },
+                {
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                        arrows: true
+                    }
+                } 
+            ]
         });
         
         $('.booking-time').slick({
@@ -283,13 +294,23 @@ $(document).ready(function () {
             type: "POST",
             dataType: 'json',
             url: home_page_data_url,
+            beforeSend: function(){
+                $("#shimmer_effect").show();
+            },
             success: function (response) {
                 if (response.status == "Success") {
-                    $('#main-menu').smartmenus('destroy');
+                    if($('.menu-slider').hasClass('slick-initialized')){
+                        $('.menu-slider').slick('destroy');
+                    }
+                    // $('#main-menu').smartmenus('destroy');
                     $("#main-menu").html('');
                     let nav_categories_template = _.template($('#nav_categories_template').html());
                     $("#main-menu").append(nav_categories_template({ nav_categories: response.data.navCategories }));
-                    $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
+                    // $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
+                    if($(window).width() >= 320){
+                        loadMainMenuSlider();
+                   }
+                  
                     var path = window.location.pathname;
                     if (path == '/') {
                         $(".slide-6").slick('destroy');
@@ -360,7 +381,11 @@ $(document).ready(function () {
                     }
                 } else {
                 }
-            }
+            },
+            complete:function(data){
+                // Hide image container
+                $("#shimmer_effect").hide();
+               }
         });
     }
 

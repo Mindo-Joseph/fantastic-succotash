@@ -9,6 +9,68 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
+
+    #shimmer_effect {
+        overflow: hidden;
+    }
+
+    .grid-row.grid-4-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 20px;
+    }
+
+    #shimmer_effect .card_image {
+        width: 100%;
+        height: 100%;
+    }
+
+    #shimmer_effect .card_image.loading {
+        width: 100%;
+        height: 180px;
+    }
+
+    #shimmer_effect .card_title.loading {
+        width: 50%;
+        height: 1rem;
+        margin: 1rem;
+        border-radius: 3px;
+        position: relative;
+    }
+
+    #shimmer_effect .card_description {
+        padding: 8px;
+        font-size: 16px;
+    }
+
+    #shimmer_effect .card_description.loading {
+        height: 3rem;
+        margin: 1rem;
+        border-radius: 3px;
+    }
+
+    #shimmer_effect .loading {
+        position: relative;
+        background: #cccccc86;
+    }
+
+    #shimmer_effect .loading:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        transform: translateX(-100px);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        animation: loading 0.8s infinite;
+    }
+
+    @keyframes loading {
+        100% {
+            transform: translateX(100%);
+        }
+    }
 </style>
 @endsection 
 @section('content')
@@ -23,7 +85,7 @@
 </button>
 
 @if(count($banners))
-<section class="home-slider-wrapper">
+<section class="home-slider-wrapper pb-4">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -225,7 +287,7 @@
             <div class="row">
                 <div class="col-5 col-sm-3">
                     <h5 class="m-0">{{__('Order Status')}}</h5>
-                    <ul class="status_box mt-3 pl-0"> 
+                    <ul class="status_box mt-1 pl-0"> 
                     <% if(vendor.order_status){ %>
                         <li>
                         <% if(vendor.order_status == 'placed'){ %>
@@ -308,7 +370,56 @@
     <% }); %>
 </script>
 
-<section class="section-b-space p-t-0 pt-3 pt-md-4 ratio_asos d-none pb-0" id="our_vendor_main_div">
+<section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0" id="shimmer_effect">
+    <div class="row">
+        <div class="container">
+            <div class="grid-row grid-4-4">
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-b-space ratio_asos d-none pt-0 mt-0" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $key => $homePageLabel)
         @if($homePageLabel->slug == 'pickup_delivery') 
@@ -368,7 +479,7 @@
         </div>
        </section>
         @else
-        <div class="container render_full_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
+        <section class="container mb-0 render_full_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
             <div class="row">
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-0">
                     <h2 class="h2-heading">
@@ -376,9 +487,9 @@
                     if($homePageLabel->slug == 'vendors'){
                         echo getNomenclatureName('vendors', true);
                     } elseif($homePageLabel->slug == 'recent_orders'){
-                        echo (!empty($homePageLabel->translations->first()->title))?$homePageLabel->translations->first()->title:"Your Recent Orders";
+                        echo (!empty($homePageLabel->translations->first()->title)) ? $homePageLabel->translations->first()->title : __("Your Recent Orders");
                     } else {
-                        echo (!empty($homePageLabel->translations->first()->title))?$homePageLabel->translations->first()->title:$homePageLabel->title;
+                        echo (!empty($homePageLabel->translations->first()->title)) ? $homePageLabel->translations->first()->title : __($homePageLabel->title);
                     }
                     @endphp
 
@@ -399,7 +510,7 @@
                     @endif
                 </div>
             </div>
-        </div>
+        </section>
         @endif
         @endforeach
     </div>

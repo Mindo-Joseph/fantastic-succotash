@@ -104,6 +104,14 @@
                                     </a>
                                 </li>
                             @endif
+                            {{-- @if(in_array('vendors',$allowed) || Auth::user()->is_superadmin == 1)
+                                <li>
+                                    <a href="{{route('account.vendor.payout')}}">
+                                    <span class="icon-dollar"></span>
+                                    <span>{{ __('Payout') }}</span>
+                                    </a>
+                                </li>
+                            @endif --}}
                             @if(count(array_intersect($accounting_permissions, $allowed)) || Auth::user()->is_superadmin == 1)
                                 <li>
                                     <a href="#sidebaraccounting" data-toggle="collapse">
@@ -357,7 +365,7 @@
                             </a>
                             <ul class="nav-second-level">
                                 {{-- @if(!empty($client_preference) && $client_preference->celebrity_check == 1) --}}
-                                @if(Auth::user()->is_superadmin == 1)   
+                                @if(Auth::user()->is_superadmin == 1 && $client_preference->celebrity_check == 1)   
                                     @if(in_array('celebrity',$allowed) || Auth::user()->is_superadmin == 1)
                                         <li>
                                             <a href="{{ route('celebrity.index') }}">

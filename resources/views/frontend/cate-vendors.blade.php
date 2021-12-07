@@ -184,6 +184,7 @@
                                                     if(empty($data->vendor_templete_id) || ($data->vendor_templete_id == 1)){
                                                         $vendor_url = route('categoryVendorProducts', [$category->slug, $data->slug]);
                                                     }elseif($data->vendor_templete_id == 5){
+                                                        if(isset($data->slug) && isset($category->slug))
                                                         $vendor_url = route('vendorCategoryProducts', [$data->slug, $category->slug]);
                                                     }else{
                                                         $vendor_url = route('vendorDetail', $data->slug);
@@ -232,7 +233,7 @@
                                                             </div>
                                                         </a>
 
-                                                        <!-- <div class="product-box">
+                                                        {{-- <div class="product-box">
                                                             <div class="img-wrapper">
                                                                 <div class="front">
                                                                     <a href="{{$vendor_url}}"><img class="img-fluid blur-up lazyload" alt="" src="{{$imagePath}}" width="300" height="300"></a>
@@ -252,7 +253,7 @@
                                                                     @endif
                                                                 </div>
                                                             </div>
-                                                        </div> -->
+                                                        </div> --}}
                                                     </div>
                                                 @endforeach
                                             @else

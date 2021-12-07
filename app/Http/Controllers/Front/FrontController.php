@@ -65,7 +65,6 @@ class FrontController extends Controller
             ->whereNull('categories.vendor_id')
             ->orderBy('categories.position', 'asc')
             ->orderBy('categories.parent_id', 'asc')->groupBy('id')->get();
-
         if ($categories) {
             $categories = $this->buildTree($categories->toArray());
         }
@@ -149,6 +148,14 @@ class FrontController extends Controller
         return $vendors;
     }
 
+    public function loadDefaultImage(){
+        $proxy_url = \Config::get('app.IMG_URL1');
+        $image_path = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png');
+        $image_fit = \Config::get('app.FIT_URl');
+        $default_url = $image_fit .'300/300'. $image_path;
+        return $default_url;
+    }
+
     public function productList($vendorIds, $langId, $currency = 'USD', $where = '')
     {
         $products = Product::with([
@@ -175,7 +182,7 @@ class FrontController extends Controller
             if (is_array($vendorIds)) {
                 $products = $products->whereIn('vendor_id', $vendorIds);
             }
-            $products = $products->where('is_live', 1)->take(6)->get();
+            $products = $products->where('is_live', 1)->whereNotNull('category_id')->take(6)->get();
         // pr($products->toArray());die;          
         if (!empty($products)) {
             foreach ($products as $key => $value) {
@@ -183,8 +190,8 @@ class FrontController extends Controller
                 foreach ($value->variant as $k => $v) {
                     $value->variant[$k]->multiplier = Session::get('currencyMultiplier');
                 }
-                
-                $value->category_name = $value->category->categoryDetail->translation->first() ? $value->category->categoryDetail->translation->first()->name :  $value->category->slug;
+                $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
+                $value->category_name = ($value->category->categoryDetail->translation->first()) ? $value->category->categoryDetail->translation->first()->name :  $value->category->slug;
             }
         }
         return $products;
@@ -221,7 +228,8 @@ class FrontController extends Controller
                             $q->groupBy('product_id');
                         },
                     ])->select('id', 'sku', 'averageRating', 'url_slug', 'is_new', 'is_featured', 'vendor_id', 'inquiry_only')
-                    ->whereIn('id', $productIds);
+                    ->whereIn('id', $productIds)
+                    ->whereNotNull('category_id');
         $products = $products->get();
         if(!empty($products)){
             foreach ($products as $key => $value) {
@@ -239,7 +247,8 @@ class FrontController extends Controller
                 $value->variant_multiplier = $multiplier ? $multiplier : 1;
                 $value->variant_price = (!empty($value->variant->first())) ? number_format(($value->variant->first()->price * $multiplier),2,'.','') : 0;
                 $value->averageRating = number_format($value->averageRating, 1, '.', '');
-                $value->category_name = $value->category->categoryDetail->translation->first()->name;
+                $value->category_name = $value->category->categoryDetail->translation->first() ? $value->category->categoryDetail->translation->first()->name : '';
+                $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '600/600' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                 // foreach ($value->variant as $k => $v) {
                 //     $value->variant[$k]->multiplier = $multiplier;
                 // }
@@ -527,6 +536,24 @@ class FrontController extends Controller
         return $ReturnArray;
     }
 
+    public function getEvenOddTime($time) {
+        return ($time % 5 === 0) ? $time : ($time - ($time % 5));
+    }
+
+    function getLineOfSightDistanceAndTime($vendor, $preferences){
+        if (($preferences) && ($preferences->is_hyperlocal == 1)) {
+            $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
+            $unit_abbreviation = ($distance_unit == 'mile') ? 'miles' : 'km';
+            $distance_to_time_multiplier = ($preferences->distance_to_time_multiplier > 0) ? $preferences->distance_to_time_multiplier : 2;
+            $distance = $vendor->vendorToUserDistance;
+            $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
+            $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
+            $pretime = $this->getEvenOddTime($vendor->timeofLineOfSightDistance);
+            $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5);
+        }
+        return $vendor;
+    }
+
     function getVendorDistanceWithTime($userLat='', $userLong='', $vendor, $preferences){
         if(($preferences) && ($preferences->is_hyperlocal == 1)){
             if( (empty($userLat)) && (empty($userLong)) ){
@@ -545,6 +572,8 @@ class FrontController extends Controller
                 $distance = $this->calulateDistanceLineOfSight($lat1, $long1, $lat2, $long2, $distance_unit);
                 $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
                 $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
+                $pretime = $this->getEvenOddTime($vendor->timeofLineOfSightDistance);
+                $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5);
             }else{
                 $vendor->lineOfSightDistance = 0;
                 $vendor->timeofLineOfSightDistance = 0;
@@ -596,5 +625,10 @@ class FrontController extends Controller
         // $time = convertDateTimeInTimeZone($datetime, Auth::user()->timezone, $format);
         $time = Carbon::parse($datetime)->format($format);
         return $time;
+    }
+
+    public function getClientCode(){
+        $code = Client::orderBy('id','asc')->value('code');
+        return $code;
     }
 }

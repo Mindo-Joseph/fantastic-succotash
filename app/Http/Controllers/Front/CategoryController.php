@@ -51,7 +51,7 @@ class CategoryController extends FrontController{
             $child->translation_name = ($child->translation->first()) ? $child->translation->first()->name : $child->slug;
         }
        
-        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) && (isset($category->type_id)) && ($category->type_id != 4) && ($category->type_id != 5) ){
+        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) && (isset($category->type_id)) && !in_array($category->type_id,[4,5]) ){
             $latitude = Session::get('latitude');
             $longitude = Session::get('longitude');
             $vendorType = Session::get('vendorType');
@@ -111,7 +111,7 @@ class CategoryController extends FrontController{
                 // abort(404);
             }
         }
-
+       
         $navCategories = $this->categoryNav($langId);
         
         if(isset($vendors)){
@@ -193,9 +193,13 @@ class CategoryController extends FrontController{
             $clientCurrency = ClientCurrency::where('currency_id', $curId)->first();
             return view('frontend.ondemand.index')->with(['clientCurrency' => $clientCurrency,'time_slots' =>  $cartDataGet['time_slots'], 'period' =>  $cartDataGet['period'] ,'cartData' => $cartDataGet['cartData'], 'addresses' => $cartDataGet['addresses'], 'countries' => $cartDataGet['countries'], 'subscription_features' => $cartDataGet['subscription_features'], 'guest_user'=>$cartDataGet['guest_user'],'listData' => $listData, 'category' => $category,'navCategories' => $navCategories]);
         }else{
+            if($page == 'laundry')
+            $page = 'product';
+
+         
             if(view()->exists('frontend/cate-'.$page.'s')){
                 return view('frontend/cate-'.$page.'s')->with(['listData' => $listData, 'category' => $category, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets]);
-            }else{
+            }else{ 
                 abort(404);
             }
         }
@@ -206,26 +210,47 @@ class CategoryController extends FrontController{
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 12;
         
         if(strtolower($type) == 'vendor'){
-            $vendorData = Vendor::with('products')->select('vendors.id', 'name', 'banner', 'address', 'order_pre_time', 'order_min_amount', 'logo', 'slug', 'latitude', 'longitude', 'vendor_templete_id');
-            $vendorData = $vendorData->join('vendor_categories as vct', 'vct.vendor_id', 'vendors.id')->where('vct.category_id', $category_id)->where('vct.status', 1);
             $preferences= Session::get('preferences');
-            if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+            $vendorData = Vendor::with('products')->select('vendors.id', 'name', 'banner', 'address', 'order_pre_time', 'order_min_amount', 'logo', 'slug', 'latitude', 'longitude', 'vendor_templete_id');
+            if (($preferences) && ($preferences->is_hyperlocal == 1)) {
+                $latitude = Session::get('latitude') ?? '';
+                $longitude = Session::get('longitude') ?? '';
+                $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
+                //3961 for miles and 6371 for kilometers
+                $calc_value = ($distance_unit == 'mile') ? 3961 : 6371;
+                $vendorData = $vendorData->select('*', DB::raw(' ( ' .$calc_value. ' * acos( cos( radians(' . $latitude . ') ) * 
+                    cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $longitude . ') ) + 
+                    sin( radians(' . $latitude . ') ) *
+                    sin( radians( latitude ) ) ) )  AS vendorToUserDistance'))->orderBy('vendorToUserDistance', 'ASC');
+                
                 $vendors= $this->getServiceAreaVendors();
                 $vendorData= $vendorData->whereIn('vct.vendor_id', $vendors);
             }
+            $vendorData = $vendorData->join('vendor_categories as vct', 'vct.vendor_id', 'vendors.id')->where('vct.category_id', $category_id)->where('vct.status', 1);
+            if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+                
+            }
             $vendorData = $vendorData->where('vendors.status', '!=', $this->field_status)->paginate($pagiNate);
             foreach ($vendorData as $key => $value) {
+                $value = $this->getLineOfSightDistanceAndTime($value, $preferences);
                 $value->vendorRating = $this->vendorRating($value->products);
-                if (($preferences) && ($preferences->is_hyperlocal == 1)) {
-                    $latitude = Session::get('latitude') ?? '';
-                    $longitude = Session::get('longitude') ?? '';
-                    $value = $this->getVendorDistanceWithTime($latitude, $longitude, $value, $preferences);
-                }
                 $vendorCategories = VendorCategory::with('category.translation_one')->where('vendor_id', $value->id)->where('status', 1)->get();
+                // $categoriesList = '';
+                // foreach ($vendorCategories as $key => $category) {
+                //     if ($category->category) {
+                //         $categoriesList = $categoriesList . $category->category->translation ? $category->category->translation->first()->name : $category->category->slug;
+                //         if ($key !=  $vendorCategories->count() - 1) {
+                //             $categoriesList = $categoriesList . ', ';
+                //         }
+                //     }
+                // }
+                // $value->categoriesList = $categoriesList;
+
                 $categoriesList = '';
                 foreach ($vendorCategories as $key => $category) {
                     if ($category->category) {
-                        $categoriesList = $categoriesList . $category->category->translation ? $category->category->translation->first()->name : $category->category->slug;
+                        $cat_name = isset($category->category->translation_one) ? $category->category->translation_one->name : $category->category->slug;
+                        $categoriesList = $categoriesList . $cat_name ?? '';
                         if ($key !=  $vendorCategories->count() - 1) {
                             $categoriesList = $categoriesList . ', ';
                         }
@@ -236,8 +261,20 @@ class CategoryController extends FrontController{
             return $vendorData;
         }
         elseif(strtolower($type) == 'brand'){
-            $brands = Brand::with('bc')
-                ->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->paginate($pagiNate);
+            // $brands = Brand::with('bc')
+            //     ->select('id', 'image')->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->paginate($pagiNate);
+            $brands = Brand::with(['bc.categoryDetail', 'bc.categoryDetail.translation' =>  function ($q) use ($langId) {
+                $q->select('category_translations.name', 'category_translations.category_id', 'category_translations.language_id')->where('category_translations.language_id', $langId);
+            }, 'translation' => function ($q) use ($langId) {
+                $q->select('title', 'brand_id', 'language_id')->where('language_id', $langId);
+            }])
+            ->whereHas('bc.categoryDetail', function ($q){
+                $q->where('categories.status', 1);
+            })
+            ->wherehas('bc', function($q) use($category_id){
+                $q->where('category_id', $category_id);
+            })
+            ->select('id', 'title', 'image', 'image_banner')->where('status', 1)->orderBy('position', 'asc')->paginate($pagiNate);
             foreach ($brands as $brand) {
                 $brand->redirect_url = route('brandDetail', $brand->id);
             }
@@ -279,6 +316,7 @@ class CategoryController extends FrontController{
                     $value->translation_description = (!empty($value->translation->first())) ? html_entity_decode(strip_tags($value->translation->first()->body_html)) : $value->sku;
                     $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
+                    $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                     // foreach ($value->variant as $k => $v) {
                     //     $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     // }
@@ -367,6 +405,7 @@ class CategoryController extends FrontController{
                 $value->translation_description = ($value->translation->isNotEmpty()) ? html_entity_decode(strip_tags($value->translation->first()->body_html)) : '';
                 $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                 $value->variant_price = ($value->variant->isNotEmpty()) ? $value->variant->first()->price : 0;
+                $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
             }
         }
         $listData = $products;
@@ -483,6 +522,7 @@ class CategoryController extends FrontController{
                 $value->translation_description = (!empty($value->translation->first())) ? strip_tags($value->translation->first()->body_html) : $value->sku;
                 $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                 $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
+                $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                 // foreach ($value->variant as $k => $v) {
                 //     $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 // }

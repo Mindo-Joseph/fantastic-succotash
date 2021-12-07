@@ -298,7 +298,7 @@
                                         @if($product->inquiry_only == 0)
                                         <div class="product-description border-product pb-0">
                                             <h6 class="product-title mt-0">{{__('Quantity')}}:
-                                                @if(!$product->variant[0]->quantity > 0)
+                                                @if(!$product->variant[0]->quantity > 0 && $product->sell_when_out_of_stock != 1)
                                                     <span id="outofstock" style="color: red;">{{ __('Out of Stock')}}</span>
                                                 @else
                                                 @php
@@ -307,7 +307,7 @@
                                                     <input type="hidden" id="instock" value="{{ ($product->variant[0]->quantity - $product_quantity_in_cart)}}">
                                                 @endif
                                             </h6>
-                                            @if($product->variant[0]->quantity > 0)
+                                            @if($product->variant[0]->quantity > 0 || $product->sell_when_out_of_stock == 1)
                                             <div class="qty-box mb-3">
                                                 <div class="input-group">
                                                     <span class="input-group-prepend">
@@ -358,7 +358,7 @@
                                                         @foreach($addon->setoptions as $k => $option)
                                                         <div class="checkbox checkbox-success form-check-inline mb-1">
                                                             <input type="checkbox" id="inlineCheckbox_{{$row.'_'.$k}}" class="productDetailAddonOption" name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}">
-                                                            <label class="pl-2 mb-0" for="inlineCheckbox_{{$row.'_'.$k}}">
+                                                            <label class="pl-2 mb-0" for="inlineCheckbox_{{$row.'_'.$k}}" data-toggle="tooltip" data-placement="top" title="{{$option->title .' ($'.$option->price.')' }}">
                                                                 {{$option->title .' ($'.$option->price.')' }}</label>
                                                         </div>
                                                         @endforeach
@@ -410,7 +410,7 @@
                                     </div>
                                     @endif
                                     <div class="product-buttons">
-                                        @if($product->variant[0]->quantity > 0)
+                                        @if($product->variant[0]->quantity > 0  || $product->sell_when_out_of_stock == 1)
                                         @if($is_inwishlist_btn)
                                         <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
                                             {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? __('Remove From Wishlist') : __('Add To Wishlist') }}
@@ -418,7 +418,13 @@
                                         @endif
                                         @if($product->inquiry_only == 0)
                                         @php    
+                                        if($product->sell_when_out_of_stock == 1 && $product->variant[0]->quantity == 0){
+                                            $product_quantity_in_cart = 1;
+                                            $product->variant[0]->quantity = 2;
+                                        }
+                                        else
                                         $product_quantity_in_cart = $product_in_cart->quantity??0;
+                                       
                                         @endphp
                                             <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart {{ ($vendor_info->is_vendor_closed == 1 || ($product->variant[0]->quantity <= $product_quantity_in_cart)) ? 'btn-disabled' : '' }}">{{__('Add To Cart')}}</a>
                                             @if($vendor_info->is_vendor_closed == 1)
@@ -665,7 +671,7 @@
                 <div>
                 <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/{{ $related_product->url_slug }}">
                     <div class="img-outer-box position-relative">
-                        <img src="{{ $related_product->media ? $related_product->media->first()->image->path['image_fit'].'600/600'.$related_product->media->first()->image->path['image_path'] : '' }}" alt="">
+                        <img src="{{ $related_product->image_url }}" alt="">
                     </div>    
                     <div class="media-body align-self-center">
                         <div class="inner_spacing px-0">

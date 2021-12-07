@@ -51,10 +51,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             <a href="javascript:void(0)" class="customerLang" langId="{{$listl->language_id}}">{{$listl->language->name}}</a>
                                         </li>
                                     @endforeach
-
-
-
-
                                 </ul>
                             </li>
                             <li class="onhover-dropdown change-currency">
@@ -136,13 +132,21 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @if($mod_count > 1)
                             <ul class="nav nav-tabs navigation-tab nav-material tab-icons mx-auto order-0 mb-2 mb-lg-0 vendor_mods" id="top-tab" role="tablist">
                                 @if($client_preference_detail->delivery_check == 1)
+                                @php
+                                    $Delivery = getNomenclatureName('Delivery', true);
+                                    $Delivery = ($Delivery === 'Delivery') ? __('Delivery') : $Delivery;
+                                @endphp
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'delivery')) ? 'active' : ''}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ __('Delivery') }}</a>
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'delivery')) ? 'active' : ''}}" id="delivery_tab" data-toggle="tab" href="#delivery_tab" role="tab" aria-controls="profile" aria-selected="false">{{ $Delivery }}</a>
                                 </li>
                                 @endif
                                 @if($client_preference_detail->dinein_check == 1)
+                                @php
+                                    $Dine_In = getNomenclatureName('Dine-In', true);
+                                    $Dine_In = ($Dine_In === 'Dine-In') ? __('Dine-In') : $Dine_In;
+                                @endphp
                                 <li class="navigation-tab-item" role="presentation">
-                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'dine_in')) ? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-controls="dinein_tab" aria-selected="false">{{ __('Dine-In') }}</a>
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'dine_in')) ? 'active' : ''}}" id="dinein_tab" data-toggle="tab" href="#dinein_tab" role="tab" aria-controls="dinein_tab" aria-selected="false">{{ $Dine_In }}</a>
                                 </li>
                                 @endif
                                 @if($client_preference_detail->takeaway_check == 1)
@@ -156,7 +160,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
 
 
-                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ $T {{  akeaway <  }}}}/a>
+                                    <a class="nav-link {{ ($mod_count == 1 || (Session::get('vendorType') == 'takeaway')) ? 'active' : ''}}" id="takeaway_tab" data-toggle="tab" href="#takeaway_tab" role="tab" aria-controls="takeaway_tab" aria-selected="false">{{ $Takeaway }}/a>
                                 </li>
                                 @endif
                                 <div class="navigation-tab-overlay"></div>
@@ -231,8 +235,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                                     <a class='media' href='<%= show_cart_url %>'>
                                                         <% if(vendor_product.pvariant.media_one) { %>
                                                             <img class='mr-2' src="<%= vendor_product.pvariant.media_one.pimage.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.pimage.image.path.image_path %>">
-                                                        <% }else{ %>
+                                                        <% }else if(vendor_product.pvariant.media_second){ %>
                                                             <img class='mr-2' src="<%= vendor_product.pvariant.media_second.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_second.image.path.image_path %>">
+                                                        <% }else{ %>
+                                                            <img class='mr-2' src="<%= vendor_product.image_url %>">
                                                         <% } %>
                                                         <div class='media-body'>                                                                
                                                             <h4><%= vendor_product.product.translation_one ? vendor_product.product.translation_one.title :  vendor_product.product.sku %></h4>
@@ -363,10 +369,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             </div>
         </div>
     {{--@endif--}}
-
-   
-
-
 </header>
 <div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div>
 <script type="text/template" id="nav_categories_template">

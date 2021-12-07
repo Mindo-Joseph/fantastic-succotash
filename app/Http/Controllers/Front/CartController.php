@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Front\FrontController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
 
 class CartController extends FrontController
 {
@@ -24,7 +24,7 @@ class CartController extends FrontController
     }
     public function showCart(Request $request, $domain = '')
     {
-        if(($request->has('gateway')) && ($request->gateway == 'mobbex')){
+        if(($request->has('gateway')) && (($request->gateway == 'mobbex')||($request->gateway == 'yoco'))){
             if($request->has('order')){
                 $order = Order::where('order_number', $request->order)->first();
                 if($order){
@@ -55,11 +55,11 @@ class CartController extends FrontController
         $langId = Session::get('customerLanguage');
         $guest_user = true;
         if ($user) {
-            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
+            $cart = Cart::select('id', 'is_gift', 'item_count','comment_for_pickup_driver','comment_for_dropoff_driver','comment_for_vendor')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
             $addresses = UserAddress::where('user_id', $user->id)->get();
             $guest_user = false;
         } else {
-            $cart = Cart::select('id', 'is_gift', 'item_count')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
+            $cart = Cart::select('id', 'is_gift', 'item_count','comment_for_pickup_driver','comment_for_dropoff_driver','comment_for_vendor')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
             $addresses = collect();
         }
         if ($cart) {
@@ -91,7 +91,17 @@ class CartController extends FrontController
             'action' => $action
         );
         $client_preference_detail = ClientPreference::first();
-        return view('frontend.cartnew')->with($data,$client_preference_detail);
+        $public_key_yoco=PaymentOption::where('code','yoco')->first();
+        if($public_key_yoco){
+
+            $public_key_yoco= $public_key_yoco->credentials??'';
+            $public_key_yoco= json_decode($public_key_yoco);
+            $public_key_yoco= $public_key_yoco->public_key??'';
+        }
+       
+      
+       
+        return view('frontend.cartnew',compact('public_key_yoco','cart'))->with($data,$client_preference_detail);
         // return view('frontend.cartnew')->with(['navCategories' => $navCategories, 'cartData' => $cartData, 'addresses' => $addresses, 'countries' => $countries, 'subscription_features' => $subscription_features, 'guest_user'=>$guest_user]);
     }
 
@@ -133,12 +143,12 @@ class CartController extends FrontController
                     $sel->groupBy('product_id');
                 }
             ])->find($request->product_id);
-
+              
             # if product type is not equal to on demand 
-            if($productDetail->category->categoryDetail->type_id != 8){
+            if($productDetail->category->categoryDetail->type_id != 8  && $productDetail->sell_when_out_of_stock == 0){
                 if(!empty($already_added_product_in_cart)){
                     if($productDetail->variant[0]->quantity <= $already_added_product_in_cart->quantity){
-                        return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart')]);
+                        return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart s')]);
                     }
                     if($productDetail->variant[0]->quantity <= ($already_added_product_in_cart->quantity + $request->quantity)){
                         $request->quantity = $productDetail->variant[0]->quantity - $already_added_product_in_cart->quantity;
@@ -623,6 +633,7 @@ class CartController extends FrontController
                     $quantity_price = $price_in_doller_compare * $prod->quantity;
                     $prod->pvariant->price_in_cart = $prod->pvariant->price;
                     $prod->pvariant->price = number_format($price_in_currency, 2, '.', '');
+                    $prod->image_url = $this->loadDefaultImage();
                     $prod->pvariant->media_one = isset($prod->pvariant->media) ? $prod->pvariant->media->first() : [];
                     $prod->pvariant->media_second = isset($prod->product->media) ? $prod->product->media->first() : [];
                     $prod->pvariant->multiplier = ($customerCurrency) ? $customerCurrency->doller_compare : 1;
@@ -832,7 +843,7 @@ class CartController extends FrontController
             }
         ])->find($cartProduct->product_id);
 
-        if($productDetail->category->categoryDetail->type_id != 8){
+        if($productDetail->category->categoryDetail->type_id != 8 && $productDetail->sell_when_out_of_stock == 0){
             if($productDetail->variant[0]->quantity < $request->quantity){
                 return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart')]);
             }
@@ -890,9 +901,9 @@ class CartController extends FrontController
         $langId = Session::get('customerLanguage');
         $address_id = 0;
         if ($user) {
-            $cart = Cart::select('id', 'is_gift', 'item_count', 'schedule_type', 'scheduled_date_time')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
+            $cart = Cart::select('id', 'is_gift', 'item_count', 'schedule_type', 'scheduled_date_time','schedule_pickup','schedule_dropoff')->with('coupon.promo')->where('status', '0')->where('user_id', $user->id)->first();
         } else {
-            $cart = Cart::select('id', 'is_gift', 'item_count', 'schedule_type', 'scheduled_date_time')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
+            $cart = Cart::select('id', 'is_gift', 'item_count', 'schedule_type', 'scheduled_date_time','schedule_pickup','schedule_dropoff')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
         if (isset($request->address_id) && !empty($request->address_id)) {
             $address_id = $request->address_id;
@@ -1008,7 +1019,21 @@ class CartController extends FrontController
                 }else{
                     $request->schedule_dt = Carbon::parse($request->schedule_dt, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
                 }
-                Cart::where('status', '0')->where('user_id', $user->id)->update(['specific_instructions' => $request->specific_instructions??null,'schedule_type' => $request->task_type, 'scheduled_date_time' => $request->schedule_dt]);
+
+                if(isset($request->schedule_pickup) && !empty($request->schedule_pickup))    # for pickup laundry
+                $request->schedule_pickup = Carbon::parse($request->schedule_pickup, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
+
+                if(isset($request->schedule_dropoff) && !empty($request->schedule_dropoff))  # for pickup laundry
+                $request->schedule_dropoff = Carbon::parse($request->schedule_dropoff, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
+
+                Cart::where('status', '0')->where('user_id', $user->id)->update(['specific_instructions' => $request->specific_instructions??null,
+                'schedule_type' => $request->task_type, 
+                'scheduled_date_time' => $request->schedule_dt??null,
+                'comment_for_pickup_driver' => $request->comment_for_pickup_driver??null,
+                'comment_for_dropoff_driver' => $request->comment_for_dropoff_driver??null,
+                'comment_for_vendor' => $request->comment_for_vendor??null,
+                'schedule_pickup' => $request->schedule_pickup??null,
+                'schedule_dropoff' => $request->schedule_dropoff??null]);
                 DB::commit();
                 return response()->json(['status'=>'Success', 'message'=>'Cart has been scheduled']);
             }

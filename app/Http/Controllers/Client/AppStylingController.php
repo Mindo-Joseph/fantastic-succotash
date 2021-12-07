@@ -4,11 +4,19 @@ namespace App\Http\Controllers\Client;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{AppStyling, AppStylingOption,ClientPreference,AppDynamicTutorial};
+use App\Models\{AppStyling, AppStylingOption,ClientPreference,AppDynamicTutorial,Client};
 use Illuminate\Support\Facades\Storage;
 
 class AppStylingController extends BaseController
 {
+
+    private $folderName = '/app_styling/tutorials';
+
+    public function __construct()
+    {
+        $code = Client::orderBy('id','asc')->value('code');
+        $this->folderName = '/'.$code.'/app_styling/tutorials';
+    }
     /**
      * Display a listing of the resource.
      *
@@ -173,17 +181,30 @@ class AppStylingController extends BaseController
 
     public function addTutorials(Request $request)
     {
+        $maxTutorialValue = AppDynamicTutorial::max('sort');
         $tutorialObj = new AppDynamicTutorial;
         if ($request->hasFile('file_name')) {    /* upload logo file */
             $file = $request->file('file_name');
-            $file_name = uniqid() .'.'.  $file->getClientOriginalExtension();
-            $s3filePath = '/app_styling/tutorials/' . $file_name;
-            $tutorialObj->file_name = Storage::disk('s3')->put($s3filePath, $file, 'public');
+            $tutorialObj->file_name = Storage::disk('s3')->put($this->folderName, $file, 'public');
         }
+        $tutorialObj->sort = (!empty($maxTutorialValue))?($maxTutorialValue+1):1;
         $tutorialObj->save();
         return redirect()->back()->with('success', __("Tutorial updated successfully"));
     }
 
+    public function saveOrderTutorials(Request $request)
+    {
+        foreach ($request->order as $key => $value) {
+            $home_page = AppDynamicTutorial::where('id', $value['row_id'])->first();
+            $home_page->sort = $key + 1;
+            $home_page->save();
+        }
+        return response()->json([
+            'status'=>'success',
+            'message' => __('Tutorials order updated Successfully!'),
+        ]);
+    }
+    
     public function deleteTutorials(Request $request, $domain, $id)
     {
         $tutorialObj = AppDynamicTutorial::find($id);

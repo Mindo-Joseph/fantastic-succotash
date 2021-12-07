@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\ClientPreference;
 
 class SignupRequest extends FormRequest{
     /**
@@ -28,10 +29,12 @@ class SignupRequest extends FormRequest{
             'term_and_condition' => 'accepted',
             'refferal_code' => 'nullable|exists:user_refferals,refferal_code',
         ];
-        if(session('preferences')->verify_email == 1){
+        $preferences = ClientPreference::first();
+
+        if($preferences->verify_email == 1){
             $rules['email'] = 'required|email|unique:users';
         }
-        if(session('preferences')->verify_phone == 1){
+        if($preferences->verify_phone == 1){
             $rules['phone_number'] = 'required|string|min:8|max:15|unique:users';
         }
         return $rules;

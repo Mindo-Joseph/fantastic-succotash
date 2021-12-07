@@ -15,7 +15,20 @@ use App\Models\{Currency, Banner, Category, Brand, Product, ProductCategory, Cli
 class VendorController extends FrontController
 {
     private $field_status = 2;
-    
+
+    public function __construct()
+    {
+        $customerCurrency = Session::get('customerCurrency');
+        if(isset($customerCurrency) && !empty($customerCurrency)){
+            $customerCurrency = Session::get('customerCurrency');
+        }
+        else{
+            $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
+            Session::put('customerCurrency',$primaryCurrency->doller_compare);
+        }
+       
+    }
+
     public function viewAll(){
         $langId = Session::get('customerLanguage');
         $preferences = Session::get('preferences');
@@ -366,13 +379,13 @@ class VendorController extends FrontController
                             $z->join('variant_translations as vt', 'vt.variant_id', 'vr.id');
                             $z->select('product_variant_sets.product_id', 'product_variant_sets.product_variant_id', 'product_variant_sets.variant_type_id', 'vr.type', 'vt.title');
                             $z->where('vt.language_id', $langId);
-                            $z->where('product_variant_sets.product_id', $p_id)->orderBy('product_variant_sets.variant_type_id', 'asc');
+                            $z->where('product_variant_sets.product_id', $p_id)->where('vr.status', 1)->orderBy('product_variant_sets.variant_type_id', 'asc');
                         },'variantSet.option2'=> function ($zx) use ($langId, $p_id) {
                             $zx->where('vt.language_id', $langId)
                             ->where('product_variant_sets.product_id', $p_id);
                         }])->where('id', $p_id)->first();
                         $value->variantSet = $variantData->variantSet;
-                        $value->product_image = ($value->media->isNotEmpty()) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : '';
+                        $value->product_image = ($value->media->isNotEmpty()) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                         $value->translation_title = ($value->translation->isNotEmpty()) ? $value->translation->first()->title : $value->sku;
                         $value->translation_description = ($value->translation->isNotEmpty()) ? html_entity_decode(strip_tags($value->translation->first()->body_html)) : '';
                         $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
@@ -423,6 +436,7 @@ class VendorController extends FrontController
                     $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
                     $value->category_name = ($value->category->categoryDetail->translation->first()) ? $value->category->categoryDetail->translation->first()->name : $value->category->categoryDetail->slug;
+                    $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '600/600' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                     // foreach ($value->variant as $k => $v) {
                     //     $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     // }
@@ -565,6 +579,7 @@ class VendorController extends FrontController
                 $value->translation_title = (!empty($value->translation->first())) ? $value->translation->first()->title : $value->sku;
                 $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                 $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
+                $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                 // foreach ($value->variant as $k => $v) {
                 //     $value->variant[$k]->multiplier = $clientCurrency->doller_compare;
                 // }
@@ -663,7 +678,7 @@ class VendorController extends FrontController
                     ->where('product_variant_sets.product_id', $p_id);
                 }])->where('id', $p_id)->first();
                 $value->variantSet = $variantData->variantSet;
-                $value->product_image = ($value->media->isNotEmpty()) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : '';
+                $value->product_image = ($value->media->isNotEmpty()) ? $value->media->first()->image->path['image_fit'] . '300/300' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                 $value->translation_title = ($value->translation->isNotEmpty()) ? $value->translation->first()->title : $value->sku;
                 $value->translation_description = ($value->translation->isNotEmpty()) ? strip_tags($value->translation->first()->body_html) : '';
                 $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
