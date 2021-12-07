@@ -99,6 +99,7 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
         responsive: [
             { breakpoint: 1400, settings: { slidesToShow: 12, slidesToScroll: 2 } },
             { breakpoint: 1367, settings: { slidesToShow: 8, slidesToScroll: 2} },
+            { breakpoint: 991, settings: { slidesToShow: 6, slidesToScroll: 2} },
             { breakpoint: 767, settings: { slidesToShow: 4, slidesToScroll: 2} },
             // { breakpoint: 1200, settings: "unslick" },
         ],
