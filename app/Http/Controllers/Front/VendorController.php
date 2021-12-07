@@ -738,11 +738,11 @@ class VendorController extends FrontController
                 }
             }
         }
-
+        $tags = Tag::with('primary')->get();
         // dd($vendor_categories->toArray());
 
         $listData = $vendor_categories;
-        $returnHTML = view('frontend.vendor-search-products')->with(['vendor'=> $vendor, 'listData'=>$listData])->render();
+        $returnHTML = view('frontend.vendor-search-products')->with(['vendor'=> $vendor,'tags'=>$tags,'tag_id'=> $tagId, 'listData'=>$listData])->render();
         return response()->json(array('status'=>'Success', 'html'=>$returnHTML));
     }
 

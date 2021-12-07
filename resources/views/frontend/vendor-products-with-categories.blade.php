@@ -453,17 +453,6 @@
                             <div class="col-md-8"></div>
                             <div class="col-12">
                                 <hr>
-                                <div class="row justify-content-center ">
-                                @if(isset($tags) && !empty($tags))    
-                                    @foreach ($tags as $key =>$tag)
-                                        <label class="label-switch switch-primary product_tag_filter mr-2">
-                                            <input type="checkbox" class="switch switch-bootstrap product_tag_filter status" name="tag_id" id="product_tag_filter_{{$key}}" data-tag_id="{{$tag->id}}"" value="{{$tag->id}}" >
-                                            <span class="lable"> <img class="ml-1" src="{{ $tag->icon['proxy_url'].'100/100'.$tag->icon['image_path'] }}" alt=""> <span class="ml-1">{{$tag->primary ? $tag->primary->name : ''}}</span></span>
-                                        </label>
-                                    @endforeach
-                                @endif        
-                                </div>
-                                <hr>
                                 <div class="row vendor-products-wrapper">
                                     <div class="col-sm-4 col-lg-3 border-right">
                                         <nav class="scrollspy-menu">
@@ -477,6 +466,16 @@
                                         </nav>
                                     </div>
                                     <div class="col-md-8 col-lg-6">
+                                        <div class="row ">
+                                            @if(isset($tags) && !empty($tags))
+                                                @foreach ($tags as $key =>$tag)
+                                                    <label class="label-switch switch-primary product_tag_filter mr-2">
+                                                        <input type="checkbox" class="switch switch-bootstrap product_tag_filter status" name="tag_id" id="product_tag_filter_{{$key}}" data-tag_id="{{$tag->id}}"" value="{{$tag->id}}" >
+                                                        <span class="lable"> @if(isset($tag->icon) && !empty($tag->icon)) <img class="ml-1" src="{{ $tag->icon['proxy_url'].'100/100'.$tag->icon['image_path'] }}" alt="">@endif <span class="ml-1">{{$tag->primary ? $tag->primary->name : ''}}</span></span>
+                                                    </label>
+                                                @endforeach
+                                            @endif
+                                        </div>
                                         @forelse($listData as $key => $data)
                                             <section class="scrolling_section" id="{{ $data->category->slug }}">
                                                 @if (!empty($data->products))
