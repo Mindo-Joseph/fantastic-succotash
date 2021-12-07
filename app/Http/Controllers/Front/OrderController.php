@@ -1634,7 +1634,7 @@ class OrderController extends FrontController
                     'barcode'     => '',
                     'flat_no'     => $cus_address->house_number ?? null,
                     'email'       => $customer->email ?? null,
-                    'phone_number' => $customer->dial_code . $customer->phone_number  ?? null,
+                    'phone_number' => ($customer->dial_code . $customer->phone_number)  ?? null,
                 );
 
 
