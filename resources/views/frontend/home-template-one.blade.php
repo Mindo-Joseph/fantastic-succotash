@@ -67,7 +67,7 @@
                     @if($url)
                     <a class="banner-img-outer" href="{{$url}}">
                         @endif
-                            <img src="{{$banner->image['image_fit'] . '1920/1080' . $banner->image['image_path']}}">
+                            <img src="{{$banner->image['image_fit'] . '1370/300' . $banner->image['image_path']}}">
                         @if($url)
                     </a>
                     @endif
