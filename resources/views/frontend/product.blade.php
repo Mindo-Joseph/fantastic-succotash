@@ -654,9 +654,9 @@
 						href="{{route('productDetail')}}/{{ $related_product->url_slug }}">
 					<div class="img-outer-box position-relative">
 						<img src="{{ $related_product->image_url }}" alt="">
-						<div class="pref-timing">
-							<!--<span>5-10 min</span>-->
-						</div>
+						<!-- <div class="pref-timing">
+							<span>5-10 min</span>
+						</div> -->
 						<!-- <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i> -->
 					</div>
 					<div class="media-body align-self-center">
