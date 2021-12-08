@@ -409,6 +409,30 @@
                     <div class="card_content loading"></div>
                     <div class="card_description loading"></div>
                 </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="card_title loading"></div>
+                    <div class="card_content loading"></div>
+                    <div class="card_description loading"></div>
+                </div>
             </div>
         </div>
     </div>
