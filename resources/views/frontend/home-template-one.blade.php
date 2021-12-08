@@ -88,7 +88,7 @@
                 <input id="fav_pro_one" type="checkbox">
                 <label for="fav_pro_one"><i class="fa fa-heart-o fav-heart" aria-hidden="true"></i></label>
             </div>
-            <a class="suppliers-box d-block mx-2" href="{{route('vendorDetail')}}/<%= vendor.slug %>">
+            <a class="suppliers-box d-block" href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                 <div class="suppliers-img-outer position-relative">
                     <img class="fluid-img mx-auto" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
                     <% if(vendor.timeofLineOfSightDistance != undefined){ %>
@@ -428,7 +428,7 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-2 cw top-heading pr-0 text-center text-lg-left mb-3 mb-lg-0">
-                        <h2 class="h2-heading">{{ (!empty($homePageLabel->translations->first()->title)) ? $homePageLabel->translations->first()->title : __($homePageLabel->title) }}</h2>
+                        <h2 class="h2-heading">{{ $homePageLabel->slug == 'brands' ? getNomenclatureName('brands', true) :  __($homePageLabel->title) }}</h2>
                         <!-- <p>Check out the favorites among people.</p> -->
                     </div>
                     <div class="col-lg-10 cw">
@@ -449,7 +449,7 @@
                     <a class="btn btn-solid" href="{{route('vendor.all')}}">{{__("See all")}}</a>
                 </div>
                 <div class="col-12">
-                    <div class="suppliers-slider render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
+                    <div class="suppliers-slider product-m render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
 
 
                     </div>
@@ -465,7 +465,7 @@
                     <h2 class="h2-heading">{{ $homePageLabel->slug == 'trending_vendors' ? __('trending')." ".getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2>
                 </div>
                 <div class="col-12">
-                    <div class="suppliers-slider render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
+                    <div class="suppliers-slider product-m render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
 
 
                     </div>
