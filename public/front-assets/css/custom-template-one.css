@@ -62,6 +62,7 @@ body {
     font-family: 'Zen Kaku Gothic Antique';
     src: url('../fonts/ZenKakuGothicAntique-Bold.eot');
     src: url('../fonts/ZenKakuGothicAntique-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/ZenKakuGothicAntique-Bold.woff2') format('woff2'),
         url('../fonts/ZenKakuGothicAntique-Bold.woff') format('woff'),
         url('../fonts/ZenKakuGothicAntique-Bold.ttf') format('truetype'),
         url('../fonts/ZenKakuGothicAntique-Bold.svg#ZenKakuGothicAntique-Bold') format('svg');
