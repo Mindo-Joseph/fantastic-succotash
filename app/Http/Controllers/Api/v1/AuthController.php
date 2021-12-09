@@ -1161,23 +1161,23 @@ class AuthController extends BaseController
                 //         $rules_array[$name] = 'required';
                 //     }
                 // }
-                // $validator = Validator::make($request->all(), $rules_array, [
-                //     "name.required" => __('The name field is required.'),
-                //     "phone_number.required" => __('The phone number field is required.'),
-                //     "type.required" => __('The type field is required.'),
-                //     "vehicle_type_id.required" => __('The transport type is required.'),
-                //     "make_model.required" => __('The transport details field is required.'),
-                //     "uid.required" => __('The UID field is required.'),
-                //     "plate_number.required" => __('The licence plate field is required.'),
-                //     "color.required" => __('The color field is required.'),
-                //     "team.required" => __('The team field is required.')
-                // ]);
-                // if ($validator->fails()) {
-                //     foreach($validator->errors()->toArray() as $error_key => $error_value){
-                //         $error = __($error_value[0]);
-                //         return $this->errorResponse($error, 422);
-                //     }
-                // }
+                $validator = Validator::make($request->all(), $rules_array, [
+                    "name.required" => __('The name field is required.'),
+                    "phone_number.required" => __('The phone number field is required.'),
+                    "type.required" => __('The type field is required.'),
+                    "vehicle_type_id.required" => __('The transport type is required.'),
+                    "make_model.required" => __('The transport details field is required.'),
+                    "uid.required" => __('The UID field is required.'),
+                    "plate_number.required" => __('The licence plate field is required.'),
+                    "color.required" => __('The color field is required.'),
+                    "team.required" => __('The team field is required.')
+                ]);
+                if ($validator->fails()) {
+                    foreach($validator->errors()->toArray() as $error_key => $error_value){
+                        $error = __($error_value[0]);
+                        return $this->errorResponse($error, 422);
+                    }
+                }
 
                 $files = [];
                 if ($driver_registration_documents != null) {
