@@ -27,7 +27,6 @@
     font-family: 'Zen Kaku Gothic Antique';
     src: url('/assets/fonts/ZenKakuGothicAntique-Medium.eot');
     src: url('/assets/fonts/ZenKakuGothicAntique-Medium.eot?#iefix') format('embedded-opentype'),
-        url('/assets/fonts/ZenKakuGothicAntique-Medium.woff') format('woff'),
         url('/assets/fonts/ZenKakuGothicAntique-Medium.ttf') format('truetype'),
         url('/assets/fonts/ZenKakuGothicAntique-Medium.svg#ZenKakuGothicAntique-Medium') format('svg');
     font-weight: 500;
@@ -39,7 +38,6 @@
     font-family: 'Zen Kaku Gothic Antique';
     src: url('/assets/fonts/ZenKakuGothicAntique-Bold.eot');
     src: url('/assets/fonts/ZenKakuGothicAntique-Bold.eot?#iefix') format('embedded-opentype')
-        url('/assets/fonts/ZenKakuGothicAntique-Bold.woff') format('woff'),
         url('/assets/fonts/ZenKakuGothicAntique-Bold.ttf') format('truetype'),
         url('/assets/fonts/ZenKakuGothicAntique-Bold.svg#ZenKakuGothicAntique-Bold') format('svg');
     font-weight: bold;
