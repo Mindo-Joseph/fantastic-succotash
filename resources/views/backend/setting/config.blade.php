@@ -818,7 +818,7 @@
                <p class="sub-header">{{__('View and update your Firebase Keys')}}</p>
                <div class="row">
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_server_key">{{__('Server Key')}}</label>
                         <input type="text" name="fcm_server_key" id="fcm_server_key" placeholder="" class="form-control" value="{{ old('fcm_server_key', $preference->fcm_server_key ?? '')}}" required>
                         @if($errors->has('fcm_server_key'))
@@ -829,7 +829,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_api_key">{{__('API Key')}}</label>
                         <input type="text" name="fcm_api_key" id="fcm_api_key" placeholder="" class="form-control" value="{{ old('fcm_api_key', $preference->fcm_api_key ?? '')}}" required>
                         @if($errors->has('fcm_api_key'))
@@ -840,7 +840,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_auth_domain">{{__('Auth Domain')}}</label>
                         <input type="text" name="fcm_auth_domain" id="fcm_auth_domain" placeholder="" class="form-control" value="{{ old('fcm_auth_domain', $preference->fcm_auth_domain ?? '')}}" required>
                         @if($errors->has('fcm_auth_domain'))
@@ -851,7 +851,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_project_id">{{__('Project ID')}}</label>
                         <input type="text" name="fcm_project_id" id="fcm_project_id" placeholder="" class="form-control" value="{{ old('fcm_project_id', $preference->fcm_project_id ?? '')}}" required>
                         @if($errors->has('fcm_project_id'))
@@ -862,7 +862,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_storage_bucket">{{__('Storage Bucket')}}</label>
                         <input type="text" name="fcm_storage_bucket" id="fcm_storage_bucket" placeholder="" class="form-control" value="{{ old('fcm_storage_bucket', $preference->fcm_storage_bucket ?? '')}}" required>
                         @if($errors->has('fcm_storage_bucket'))
@@ -873,7 +873,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_messaging_sender_id">{{__('Messaging Sender ID')}}</label>
                         <input type="text" name="fcm_messaging_sender_id" id="fcm_messaging_sender_id" placeholder="" class="form-control" value="{{ old('fcm_messaging_sender_id', $preference->fcm_messaging_sender_id ?? '')}}" required>
                         @if($errors->has('fcm_messaging_sender_id'))
@@ -884,7 +884,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_app_id">{{__('App ID')}}</label>
                         <input type="text" name="fcm_app_id" id="fcm_app_id" placeholder="" class="form-control" value="{{ old('fcm_app_id', $preference->fcm_app_id ?? '')}}" required>
                         @if($errors->has('fcm_app_id'))
@@ -895,7 +895,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_measurement_id">{{__('Measurement ID')}}</label>
                         <input type="text" name="fcm_measurement_id" id="fcm_measurement_id" placeholder="" class="form-control" value="{{ old('fcm_measurement_id', $preference->fcm_measurement_id ?? '')}}">
                         @if($errors->has('fcm_measurement_id'))
@@ -920,68 +920,66 @@
          <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
             <input type="hidden" name="verify_config" id="verify_config" value="1">
             @csrf
-            <div class="row">
-               <div class="col-xl-12">
-                  <!-- <div class="page-title-box">
-                     <h4 class="page-title text-uppercase">User Authentication</h4>
-                  </div> -->
-                  <div class="card-box">
-                     <h4 class="header-title text-uppercase">{{ __("User Authentication") }}</h4>
-                     <div class="row align-items-center">
-                        <div class="col-sm-5">
-                           <div class="form-group mb-md-0 switchery-demo">
-                              <label for="verify_email" class="mr-3 mb-0">{{ __("Verify Email") }}</label>
-                              <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1')) checked='checked' @endif>
+               <div class="row">
+                  <div class="col-xl-12">
+                     <!-- <div class="page-title-box">
+                        <h4 class="page-title text-uppercase">User Authentication</h4>
+                     </div> -->
+                     <div class="card-box">
+                        <h4 class="header-title text-uppercase">{{ __("User Authentication") }}</h4>
+                        <div class="row align-items-center">
+                           <div class="col-sm-5">
+                              <div class="form-group mb-md-0 switchery-demo">
+                                 <label for="verify_email" class="mr-3 mb-0">{{ __("Verify Email") }}</label>
+                                 <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1')) checked='checked' @endif>
+                              </div>
                            </div>
-                        </div>
-                        <div class="col-sm-5">
-                           <div class="form-group mb-md-0">
-                              <label for="verify_phone" class="mr-3 mb-0">{{ __("Verify Phone") }}</label>
-                              <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1')) checked='checked' @endif>
+                           <div class="col-sm-5">
+                              <div class="form-group mb-md-0">
+                                 <label for="verify_phone" class="mr-3 mb-0">{{ __("Verify Phone") }}</label>
+                                 <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1')) checked='checked' @endif>
+                              </div>
                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                           <div class="form-group mb-0 text-md-right">
-                              <button class="btn btn-info d-block ml-auto" type="submit"> {{ __("Save") }} </button>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               @if($client_preference_detail->business_type != 'taxi' && $client_preference_detail->business_type != 'laundry' )
-               <div class="col-xl-12 mb-4">
-
-                  <div class="card-box mb-0">
-                     <h4 class="header-title text-uppercase">{{ __("Vendor") }}</h4>
-                     <div class="row align-items-center">
-                        <div class="col-md-3">
-                           <div class="form-group mb-md-0">
-                              <label for="dinein_check" class="mr-3 mb-0">{{ __("Dine In") }}</label>
-                              <input type="checkbox" data-plugin="switchery" name="dinein_check" id="dinein_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->dinein_check == '1')) checked='checked' @endif>
-                           </div>
-                        </div>
-                        <div class="col-md-3">
-                           <div class="form-group mb-md-0">
-                              <label for="delivery_check" class="mr-3 mb-0">{{ __("Delivery") }}</label>
-                              <input type="checkbox" data-plugin="switchery" name="delivery_check" id="delivery_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delivery_check == '1')) checked='checked' @endif>
-                           </div>
-                        </div>
-                        <div class="col-md-3">
-                           <div class="form-group mb-md-0">
-                              <label for="takeaway_check" class="mr-3 mb-0">{{ __("Takeaway") }}</label>
-                              <input type="checkbox" data-plugin="switchery" name="takeaway_check" id="takeaway_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->takeaway_check == '1')) checked='checked' @endif>
-                           </div>
-                        </div>
-                        <div class="col-md-3">
-                           <div class="form-group mb-0 text-md-right">
-                              <button class="btn btn-info d-block ml-md-auto" type="submit"> {{ __("Save") }} </button>
+                           <div class="col-sm-2">
+                              <div class="form-group mb-0 text-md-right">
+                                 <button class="btn btn-info d-block ml-auto" type="submit"> {{ __("Save") }} </button>
+                              </div>
                            </div>
                         </div>
                      </div>
                   </div>
-               </div>
+                  @if($client_preference_detail->business_type != 'taxi' && $client_preference_detail->business_type != 'laundry' )
+                  <div class="col-xl-12 mb-3">
+                     <div class="card-box mb-0">
+                        <h4 class="header-title text-uppercase">{{ __("Vendor") }}</h4>
+                        <div class="row align-items-center">
+                           <div class="col-md-3">
+                              <div class="form-group mb-md-0">
+                                 <label for="dinein_check" class="mr-3 mb-0">{{ __("Dine In") }}</label>
+                                 <input type="checkbox" data-plugin="switchery" name="dinein_check" id="dinein_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->dinein_check == '1')) checked='checked' @endif>
+                              </div>
+                           </div>
+                           <div class="col-md-3">
+                              <div class="form-group mb-md-0">
+                                 <label for="delivery_check" class="mr-3 mb-0">{{ __("Delivery") }}</label>
+                                 <input type="checkbox" data-plugin="switchery" name="delivery_check" id="delivery_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delivery_check == '1')) checked='checked' @endif>
+                              </div>
+                           </div>
+                           <div class="col-md-3">
+                              <div class="form-group mb-md-0">
+                                 <label for="takeaway_check" class="mr-3 mb-0">{{ __("Takeaway") }}</label>
+                                 <input type="checkbox" data-plugin="switchery" name="takeaway_check" id="takeaway_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->takeaway_check == '1')) checked='checked' @endif>
+                              </div>
+                           </div>
+                           <div class="col-md-3">
+                              <div class="form-group mb-0 text-md-right">
+                                 <button class="btn btn-info d-block ml-md-auto" type="submit"> {{ __("Save") }} </button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
                @endif
-
             </div>
          </form>
 
@@ -1073,7 +1071,6 @@
                </div>
             </form>
          </div>
-
       </div>
    </div>
 
@@ -1133,7 +1130,6 @@
                   </div>
                </div>
 
-
                <div class="card-box pb-2">
                   <div class="table-responsive mb-1">
                      <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
@@ -1159,38 +1155,31 @@
                   </div>
                </div>
 
-               <div class="col-12">
-                  <!-- <div class="page-title-box">
-                     <h4 class="page-title text-uppercase">{{__('Distance to Time Calculator')}}</h4>
-                  </div> -->
-
-                  <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
-                     <input type="hidden" name="distance_to_time_calc_config" id="distance_to_time_calc_config" value="1">
-                     @csrf
-                     <div class="card-box mb-2">
-                        <div class="d-flex align-items-center justify-content-between">
-                           <h4 class="header-title mb-0">{{__('Distance to Time Calculator')}}</h4>
-                           <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
+               <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
+                  <input type="hidden" name="distance_to_time_calc_config" id="distance_to_time_calc_config" value="1">
+                  @csrf
+                  <div class="card-box mb-2">
+                     <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="header-title mb-0">{{__('Distance to Time Calculator')}}</h4>
+                        <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
+                     </div>
+                     <div class="row mt-2">
+                        <div class="col-xl-6">
+                           <label class="primaryCurText">{{__('Distance Unit')}}</label>
+                           <select class="form-control" id="distance_unit_for_time" name="distance_unit_for_time">
+                              <option value="">{{__('Select unit')}}</option>
+                              <option value="kilometer" @if((isset($preference) && $preference->distance_unit_for_time == 'kilometer')) selected @endif>{{__('Kilometer')}}</option>
+                              <option value="mile" @if((isset($preference) && $preference->distance_unit_for_time == 'mile')) selected @endif>{{__('Mile')}}</option>
+                           </select>
                         </div>
-                        <div class="row mt-2">
-                           <div class="col-xl-6">
-                              <label class="primaryCurText">{{__('Distance Unit')}}</label>
-                              <select class="form-control" id="distance_unit_for_time" name="distance_unit_for_time">
-                                 <option value="">{{__('Select unit')}}</option>
-                                 <option value="kilometer" @if((isset($preference) && $preference->distance_unit_for_time == 'kilometer')) selected @endif>{{__('Kilometer')}}</option>
-                                 <option value="mile" @if((isset($preference) && $preference->distance_unit_for_time == 'mile')) selected @endif>{{__('Mile')}}</option>
-                              </select>
-                           </div>
-                           <div class="col-xl-6">
-                              <label class="primaryCurText">{{__('Distance to Time Multiplier (Per 1 distance unit)')}}</label>
-                              <input class="form-control" type="number" id="distance_to_time_multiplier" name="distance_to_time_multiplier" value="{{ old('distance_to_time_multiplier', $preference->distance_to_time_multiplier  ?? '')}}" min="0">
-                           </div>
+                        <div class="col-xl-6">
+                           <label class="primaryCurText">{{__('Distance to Time Multiplier (Per 1 distance unit)')}}</label>
+                           <input class="form-control" type="number" id="distance_to_time_multiplier" name="distance_to_time_multiplier" value="{{ old('distance_to_time_multiplier', $preference->distance_to_time_multiplier  ?? '')}}" min="0">
                         </div>
                      </div>
-                  </form>
-               </div>
+                  </div>
+               </form>
             </div>
-
          </div>
       </div>
 
@@ -1223,7 +1212,7 @@
                   @csrf
                   <div class="card-box mb-0 pb-1">
                      <div class="d-flex align-items-center justify-content-between">
-                  <h4 class="header-title text-uppercase">{{ __('Order Email Notification') }}</h4>
+                        <h4 class="header-title text-uppercase">{{ __('Order Email Notification') }}</h4>
                         <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
                      </div>
                      <div class="col-xl-12 my-2" id="addCur-160">
@@ -1240,7 +1229,7 @@
                   @csrf
                   <div class="card-box product-tags mb-0 pb-1">
                      <div class="d-flex align-items-center justify-content-between">
-                     <h4 class="header-title text-uppercase">{{ __('Tags for Product')}}</h4>
+                        <h4 class="header-title text-uppercase">{{ __('Tags for Product')}}</h4>
                         <a class="btn btn-info d-block" id="add_product_tag_modal_btn">
                            <i class="mdi mdi-plus-circle mr-1"></i>{{ __("Add") }}
                         </a>
@@ -1256,53 +1245,44 @@
                            </thead>
                            <tbody id="post_list">
                               @forelse($tags as $tag)
-                              <tr>
-                                 <td>
-                                    @if(isset($tag->icon) && !empty($tag->icon)) <img src="{{ $tag->icon['proxy_url'].'100/100'.$tag->icon['image_path'] }}">@endif
-                                 </td>
-                                 <td>
-                                    <a class="edit_product_tag_btn" data-tag_id="{{$tag->id}}" href="javascript:void(0)">
-                                       {{$tag->primary ? $tag->primary->name : ''}}
-                                    </a>
-                                 </td>
-                                  <td>
-                                    <div>
-                                       <div class="inner-div" style="float: left;">
-                                          <a class="action-icon edit_product_tag_btn" data-tag_id="{{$tag->id}}" href="javascript:void(0)">
-                                             <i class="mdi mdi-square-edit-outline"></i>
-                                          </a>
+                                 <tr>
+                                    <td>
+                                       @if(isset($tag->icon) && !empty($tag->icon)) <img src="{{ $tag->icon['proxy_url'].'100/100'.$tag->icon['image_path'] }}">@endif
+                                    </td>
+                                    <td>
+                                       <a class="edit_product_tag_btn" data-tag_id="{{$tag->id}}" href="javascript:void(0)">
+                                          {{$tag->primary ? $tag->primary->name : ''}}
+                                       </a>
+                                    </td>
+                                    <td>
+                                       <div>
+                                          <div class="inner-div" style="float: left;">
+                                             <a class="action-icon edit_product_tag_btn" data-tag_id="{{$tag->id}}" href="javascript:void(0)">
+                                                <i class="mdi mdi-square-edit-outline"></i>
+                                             </a>
+                                          </div>
+                                          <div class="inner-div">
+                                             <button type="button" class="btn btn-primary-outline action-icon delete_product_tag_btn" data-tag_id="{{$tag->id}}">
+                                                <i class="mdi mdi-delete"></i>
+                                             </button>
+                                          </div>
                                        </div>
-                                       <div class="inner-div">
-                                          <button type="button" class="btn btn-primary-outline action-icon delete_product_tag_btn" data-tag_id="{{$tag->id}}">
-                                             <i class="mdi mdi-delete"></i>
-                                          </button>
-                                       </div>
-                                    </div>
-                                 </td>
-                              </tr>
+                                    </td>
+                                 </tr>
                               @empty
-                              <tr align="center">
-                                 <td colspan="4" style="padding: 20px 0">{{ __("Tags not found.") }}</td>
-                              </tr>
+                                 <tr align="center">
+                                    <td colspan="4" style="padding: 20px 0">{{ __("Tags not found.") }}</td>
+                                 </tr>
                               @endforelse
                            </tbody>
                         </table>
                      </div>
-
                   </div>
                </form>
             </div>
-
-
-
          </div>
       </div>
-
-
-
    </div>
-
-
 
    <div class="row">
       {{--<div class="col-lg-6">
