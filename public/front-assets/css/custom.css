@@ -5,7 +5,7 @@ html {
 body {
     font-size: 16px;
     position: initial;
-    font-family: 'Zen Kaku Gothic Antique' !important;
+    font-family: 'Inter' !important;
 }
 
 a {
@@ -126,7 +126,7 @@ header.site-header.fixed-bar {
     color: #fff;
     font-size: 14px;
     line-height: 22px;
-    vertical-align: text-top;
+    vertical-align: text-bottom;
 }
 
 .site-topbar .location-bar i {
