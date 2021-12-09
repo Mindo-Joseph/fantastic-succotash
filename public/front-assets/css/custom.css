@@ -2,23 +2,10 @@ html {
     scroll-behavior: smooth;
 }
 
-@font-face {
-    font-family: 'Zen Kaku Gothic Antique';
-    src: url('../fonts/ZenKakuGothicAntique-Regular.eot');
-    src: url('../fonts/ZenKakuGothicAntique-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/ZenKakuGothicAntique-Regular.woff') format('woff'),
-        url('../fonts/ZenKakuGothicAntique-Regular.ttf') format('truetype'),
-        url('../fonts/ZenKakuGothicAntique-Regular.svg#ZenKakuGothicAntique-Regular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-
 body {
     font-size: 16px;
     position: initial;
-    font-family: 'Zen Kaku Gothic Antique';
+    /* font-family: 'Zen Kaku Gothic Antique'; */
 }
 
 a {

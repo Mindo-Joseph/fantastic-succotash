@@ -10,7 +10,7 @@
     font-display: block;
 }
 
-
+/* 
 @font-face {
     font-family: 'Zen Kaku Gothic Antique';
     src: url('/assets/fonts/ZenKakuGothicAntique-Regular.eot');
@@ -65,7 +65,7 @@ h5,
 h6 {
     font-family: 'Zen Kaku Gothic Antique' !important;
     font-weight: bold !important;
-}
+} */
 
 
 [class^="icon-"],
