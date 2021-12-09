@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Nunito:400,600,700,900);@charset "UTF-8";
 /*
 Template Name: Ubold - Responsive Bootstrap 4 Admin Dashboard
 Author: CoderThemes
@@ -6,6 +7,36 @@ Website: https://coderthemes.com/
 Contact: support@coderthemes.com
 File: Main Css File
 */
+@font-face {
+  font-family: "Cerebri Sans,sans-serif";
+  src: url("fonts/cerebrisans-light.eot");
+  src: local("Cerebri-sans Light"), url("fonts/cerebrisans-light.woff") format("woff");
+  font-weight: 300;
+}
+@font-face {
+  font-family: "Cerebri Sans,sans-serif";
+  src: url("fonts/cerebrisans-regular.eot");
+  src: local("Cerebri-sans Regular"), url("fonts/cerebrisans-regular.woff") format("woff");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Cerebri Sans,sans-serif";
+  src: url("fonts/cerebrisans-medium.eot");
+  src: local("Cerebri-sans Medium"), url("fonts/cerebrisans-medium.woff") format("woff");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Cerebri Sans,sans-serif";
+  src: url("fonts/cerebrisans-semibold.eot");
+  src: local("Cerebri-sans Semibold"), url("fonts/cerebrisans-semibold.woff") format("woff");
+  font-weight: 600;
+}
+@font-face {
+  font-family: "Cerebri Sans,sans-serif";
+  src: url("fonts/cerebrisans-bold.eot");
+  src: local("Cerebri-sans Bold"), url("fonts/cerebrisans-bold.woff") format("woff");
+  font-weight: 700;
+}
 html {
   position: relative;
   min-height: 100%;
@@ -50,7 +81,7 @@ body {
   padding: 12px 20px;
   position: relative;
   transition: all 0.4s;
-  
+  font-family: "Cerebri Sans,sans-serif";
   font-size: 0.95rem;
 }
 #sidebar-menu > ul > li > a:hover, #sidebar-menu > ul > li > a:focus, #sidebar-menu > ul > li > a:active {
@@ -1214,7 +1245,7 @@ body[data-layout-mode=horizontal] .content-page {
   line-height: 22px;
   padding: calc(33px / 2) 1.1rem;
   color: #6e7488;
-  
+  font-family: "Cerebri Sans,sans-serif";
 }
 .topnav .navbar-nav .nav-link i {
   font-size: 15px;
@@ -1433,7 +1464,7 @@ body[data-layout-mode=two-column] .sidebar-main-menu .menu-title {
 body[data-layout-mode=two-column] .sidebar-main-menu .nav > .nav-item > .nav-link {
   color: #6e768e;
   font-size: 0.95rem;
-  
+  font-family: "Cerebri Sans,sans-serif";
 }
 body[data-layout-mode=two-column] .sidebar-main-menu .nav > .nav-item .menu-arrow {
   right: 10px;
@@ -1608,7 +1639,7 @@ body[data-layout-mode=two-column][data-layout-width=boxed]:not([data-sidebar-siz
 }
 
 .font-family-secondary {
-  
+  font-family: "Cerebri Sans,sans-serif";
 }
 
 .sp-line-1,
@@ -2695,12 +2726,12 @@ body.authentication-bg-pattern {
   text-shadow: rgba(102, 88, 221, 0.3) 5px 1px, rgba(102, 88, 221, 0.2) 10px 3px;
   font-size: 84px;
   line-height: 90px;
-  
+  font-family: "Cerebri Sans,sans-serif";
 }
 
 .error-text-box {
   font-size: 10rem;
-  
+  font-family: "Cerebri Sans,sans-serif";
   min-height: 200px;
 }
 .error-text-box .text {
@@ -3388,7 +3419,7 @@ body.authentication-bg-pattern {
   display: inline-block;
   margin-bottom: 5px;
   font-weight: 500;
-  
+  font-family: "Cerebri Sans,sans-serif";
 }
 .filter-menu a:hover {
   background-color: rgba(102, 88, 221, 0.15);
@@ -5285,7 +5316,7 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.down .hopscotch-bubble-ar
   border-top: 0 solid rgba(0, 0, 0, 0.5);
 }
 div.hopscotch-bubble h3 {
-  
+  font-family: "Cerebri Sans,sans-serif";
   margin-bottom: 10px;
 }
 div.hopscotch-bubble .hopscotch-content {
@@ -5306,7 +5337,7 @@ div.hopscotch-bubble .hopscotch-content {
 }
 .legend tr {
   height: 30px;
-  
+  font-family: "Cerebri Sans,sans-serif";
 }
 .legend > div {
   background-color: transparent !important;
@@ -5365,7 +5396,7 @@ div.hopscotch-bubble .hopscotch-content {
 .morris-hover.morris-default-style .morris-hover-row-label {
   font-weight: bold;
   margin: 0.25em 0;
-  
+  font-family: "Cerebri Sans,sans-serif";
 }
 .morris-hover.morris-default-style .morris-hover-point {
   white-space: nowrap;
@@ -5494,7 +5525,7 @@ div.hopscotch-bubble .hopscotch-content {
 }
 .c3-tooltip td {
   border-left: none;
-  
+  font-family: "Cerebri Sans,sans-serif";
 }
 .c3-tooltip td > span {
   background: #323a46;
@@ -5518,7 +5549,7 @@ div.hopscotch-bubble .hopscotch-content {
 }
 
 .c3-legend-item {
-  
+  font-family: "Cerebri Sans,sans-serif";
   font-size: 14px;
 }
 
@@ -5991,7 +6022,7 @@ table[data-toggle=table] {
 .tablesaw thead tr:first-child th {
   border: none;
   font-weight: 500;
-  
+  font-family: "Cerebri Sans,sans-serif";
 }
 .tablesaw td {
   border-top: 1px solid #f3f7f9 !important;
@@ -6216,7 +6247,7 @@ table[data-toggle=table] {
 
 .ms-optgroup-label {
   font-weight: 500;
-  
+  font-family: "Cerebri Sans,sans-serif";
   color: #323a46 !important;
   font-size: 13px;
 }
@@ -6257,7 +6288,7 @@ table[data-toggle=table] {
 .autocomplete-group {
   padding: 5px;
   font-weight: 500;
-  
+  font-family: "Cerebri Sans,sans-serif";
 }
 
 .autocomplete-group strong {
@@ -6718,7 +6749,7 @@ span.flatpickr-weekday,
   border: none;
   background: #323a46;
   color: #fff;
-  
+  font-family: "Cerebri Sans,sans-serif";
   font-size: 0.875rem;
   padding: 5px 8px;
 }
@@ -6742,7 +6773,7 @@ span.flatpickr-weekday,
   max-width: 200px;
   display: none;
   color: #fff;
-  
+  font-family: "Cerebri Sans,sans-serif";
 }
 .mapael .zoomIn,
 .mapael .zoomOut,
