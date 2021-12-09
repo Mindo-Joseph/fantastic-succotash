@@ -67,6 +67,9 @@ h6 {
     font-weight: bold !important;
 } */
 
+input[type=radio], input[type=checkbox]{
+    cursor: pointer !important;
+}
 
 [class^="icon-"],
 [class*=" icon-"] {
@@ -190,6 +193,11 @@ h6 {
     content: "\e94e";
 }
 
+.domain-outer input#custom_domain {
+    border: 0;
+    border-left: 1px solid #ced4da;
+    border-radius: 0;
+}
 
 .vendor-products .card {
     margin-top: -60px;
@@ -2198,6 +2206,8 @@ td.product-name,
 
 .domain-outer {
     border: 1px solid #ced4da;
+    border-radius: 0.2rem;
+    overflow: hidden;
 }
 
 .domain_name {
@@ -2590,7 +2600,6 @@ h3 .fas.fa-money-check-alt {
 
 
 /* Arabic Css Start From Here */
-body[dir="rtl"] {}
 
 body[dir="rtl"] .content-page {
     margin-left: 0;

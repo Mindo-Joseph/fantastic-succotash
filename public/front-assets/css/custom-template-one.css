@@ -1,5 +1,5 @@
 /* body {
-    font-family: 'Zen Kaku Gothic Antique';
+    /*font-family: 'Zen Kaku Gothic Antique';*/
 } */
 
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{
@@ -324,7 +324,7 @@ h6 {
 
 .product-description h3 {
     color: #000000;
-    font-family: 'Zen Kaku Gothic Antique';
+    /*font-family: 'Zen Kaku Gothic Antique';*/
     font-weight: 600;
     font-size: 17px;
     letter-spacing: 0;
@@ -334,7 +334,7 @@ h6 {
 .product-description p {
     opacity: 0.67;
     color: #000000;
-    font-family: 'Zen Kaku Gothic Antique';
+    /*font-family: 'Zen Kaku Gothic Antique';*/
     font-weight: 400;
     font-size: 13px;
     letter-spacing: 0;
@@ -347,7 +347,7 @@ h6 {
 
 .product-description b {
     color: #000;
-    font-family: 'Zen Kaku Gothic Antique';
+    /*font-family: 'Zen Kaku Gothic Antique';*/
     font-weight: 700;
     font-size: 16px;
     letter-spacing: 0;
@@ -356,7 +356,7 @@ h6 {
 
 .h2-heading {
     color: #000;
-    font-family: 'Zen Kaku Gothic Antique';
+    /*font-family: 'Zen Kaku Gothic Antique';*/
     font-weight: 700;
     font-size: 33px;
     letter-spacing: 0;
@@ -374,7 +374,7 @@ h6 {
     line-height: 35px;
     border-radius: 27.5px;
     color: #EC5837;
-    font-family: 'Zen Kaku Gothic Antique';
+    /*font-family: 'Zen Kaku Gothic Antique';*/
     font-weight: 600;
     font-size: 13px;
     letter-spacing: 0;
@@ -403,7 +403,7 @@ h6 {
     height: 40px;
     text-indent: -8px;
     line-height: 10px;
-    font-family: 'Zen Kaku Gothic Antique';
+    /*font-family: 'Zen Kaku Gothic Antique';*/
     display: flex;
     align-items: center;
     justify-content: center;

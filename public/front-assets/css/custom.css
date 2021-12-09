@@ -12,6 +12,10 @@ a {
     color: var(--theme-deafult);
 }
 
+input[type=radio], input[type=checkbox]{
+    cursor: pointer !important;
+}
+
 .onhover-dropdown .onhover-show-div {
     display: none;
 }
