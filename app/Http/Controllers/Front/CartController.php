@@ -731,6 +731,7 @@ class CartController extends FrontController
                             $q->where('language_id', $langId);
                         }])->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating')
                         ->where('url_slug', $prod->product->url_slug)
+                        ->where('is_live', 1)
                         ->first();
                     $doller_compare = ($customerCurrency) ? $customerCurrency->doller_compare : 1;
                     $up_prods = $this->metaProduct($langId, $doller_compare, 'upSell', $product->upSell);
