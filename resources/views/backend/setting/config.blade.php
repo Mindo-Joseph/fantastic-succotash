@@ -3,6 +3,11 @@
 @endsection
 @section('content')
 
+
+@php
+$sms_crendential = json_decode($preference->sms_credentials);
+@endphp
+
 <div class="container-fluid custom-toggle">
    <div class="row">
       <div class="col-12">
@@ -641,7 +646,7 @@
          </form>
       </div>
       <div class="col-xl-3 mb-3">
-         <form class="h-100" method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+         <form class="h-100" method="POST" action="{{route('configure.update', Auth::user()->code)}}"> 
             @csrf
             <div class="card-box h-100 h-100">
                <h4 class="header-title text-uppercase">{{ __("SMS Configuration") }}</h4>
@@ -650,9 +655,9 @@
                   <div class="col-12">
                      <div class="form-group mb-3">
                         <label for="sms_provider">{{ __("SMS PROVIDER") }}</label>
-                        <select class="form-control" id="sms_provider" name="sms_provider">
+                        <select class="form-control" id="sms_provider" name="sms_provider" onchange="toggle_smsFields(this)">
                            @foreach($smsTypes as $sms)
-                           <option value="{{$sms->id}}" {{ (isset($preference) && $preference->sms_provider == $sms->id)? "selected" : "" }}> {{$sms->provider}} </option>
+                           <option data-id="{{$sms->keyword}}_fields" value="{{$sms->id}}" {{ (isset($preference) && $preference->sms_provider == $sms->id)? "selected" : "" }} > {{$sms->provider}} </option>
                            @endforeach
                         </select>
                         @if($errors->has('sms_provider'))
@@ -662,37 +667,68 @@
                         @endif
                      </div>
                   </div>
-                  <div class="col-12">
-                     <div class="form-group mb-3">
-                        <label for="sms_from">{{ __("SMS From") }}</label>
-                        <input type="text" name="sms_from" id="sms_from" placeholder="" class="form-control" value="{{ old('sms_from', $preference->sms_from ?? '')}}">
-                        @if($errors->has('sms_from'))
-                        <span class="text-danger" role="alert">
-                           <strong>{{ $errors->first('sms_from') }}</strong>
-                        </span>
-                        @endif
+
+                  <!-- For twillio -->
+                  <div class="sms_fields row mx-0" id="twilio_fields" style="display : {{$preference->sms_provider == 1 ? 'flex' : 'none'}};">
+                     <div class="col-12">
+                        <div class="form-group mb-3">
+                           <label for="sms_from">{{ __("SMS From") }}</label>
+                           <input type="text" name="sms_from" id="sms_from" placeholder="" class="form-control" value="{{ old('sms_from', $preference->sms_from ?? '')}}">
+                           @if($errors->has('sms_from'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('sms_from') }}</strong>
+                           </span>
+                           @endif
+                        </div>
+                     </div>
+                     <div class="col-12">
+                        <div class="form-group mb-3">
+                           <label for="sms_key">{{ __("API KEY") }}</label>
+                           <input type="text" name="sms_key" id="sms_key" placeholder="" class="form-control" value="{{ old('sms_key', $preference->sms_key ?? '')}}">
+                           @if($errors->has('sms_key'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('sms_key') }}</strong>
+                           </span>
+                           @endif
+                        </div>
+                     </div>
+                     <div class="col-12">
+                        <div class="form-group mb-3">
+                           <label for="sms_secret">{{ __("API Secret") }}</label>
+                           <input type="password" name="sms_secret" id="sms_secret" placeholder="" class="form-control" value="{{ old('sms_secret', $preference->sms_secret ?? '')}}">
+                           @if($errors->has('sms_secret'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('sms_secret') }}</strong>
+                           </span>
+                           @endif
+                        </div>
                      </div>
                   </div>
-                  <div class="col-12">
-                     <div class="form-group mb-3">
-                        <label for="sms_key">{{ __("API KEY") }}</label>
-                        <input type="text" name="sms_key" id="sms_key" placeholder="" class="form-control" value="{{ old('sms_key', $preference->sms_key ?? '')}}">
-                        @if($errors->has('sms_key'))
-                        <span class="text-danger" role="alert">
-                           <strong>{{ $errors->first('sms_key') }}</strong>
-                        </span>
-                        @endif
+
+
+                  <!-- For mTalkz -->
+                  <div class="row sms_fields mx-0" id="mTalkz_fields" style="display : {{$preference->sms_provider == 2 ? 'flex' : 'none'}};">
+                     <div class="col-12">
+                        <div class="form-group mb-3">
+                           <label for="mtalkz_api_key">{{ __("API Key") }}</label>
+                           <input type="text" name="mtalkz_api_key" id="mtalkz_api_key" placeholder="" class="form-control" value="{{ old('mtalkz_api_key', $sms_crendential->api_key ?? '')}}">
+                           @if($errors->has('mtalkz_api_key'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('mtalkz_api_key') }}</strong>
+                           </span>
+                           @endif
+                        </div>
                      </div>
-                  </div>
-                  <div class="col-12">
-                     <div class="form-group mb-3">
-                        <label for="sms_secret">{{ __("API Secret") }}</label>
-                        <input type="password" name="sms_secret" id="sms_secret" placeholder="" class="form-control" value="{{ old('sms_secret', $preference->sms_secret ?? '')}}">
-                        @if($errors->has('sms_secret'))
-                        <span class="text-danger" role="alert">
-                           <strong>{{ $errors->first('sms_secret') }}</strong>
-                        </span>
-                        @endif
+                     <div class="col-12">
+                        <div class="form-group mb-3">
+                           <label for="mtalkz_sender_id">{{ __("Sender ID") }}</label>
+                           <input type="text" name="mtalkz_sender_id" id="mtalkz_sender_id" placeholder="" class="form-control" value="{{ old('mtalkz_sender_id', $sms_crendential->sender_id ?? '')}}">
+                           @if($errors->has('mtalkz_sender_id'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('mtalkz_sender_id') }}</strong>
+                           </span>
+                           @endif
+                        </div>
                      </div>
                   </div>
                   <div class="col-md-2">
@@ -2204,6 +2240,14 @@
             alert("One option must be enables");
             $("#" + id).trigger('click');
          }
+      }
+
+      function toggle_smsFields(obj)
+      {
+         var id = $(obj).find(':selected').attr('data-id');
+         $('.sms_fields').css('display','none');
+         $('#'+id).css('display','flex');
+         console.log(id);
       }
    </script>
    @endsection
