@@ -21,12 +21,11 @@ trait smsManager{
         return $response;
     }
 
-    public function mazinhost_sms($to,$message,$crendentials)
+    public function mazinhost($to,$message,$crendentials)
     {
-        $api_url = "https://mazinhost.com/smsv1/sms/api";
+        $api_url = " https://mazinhost.com/smsv1/sms/api";
         $to_number = substr($to, 1);
-        // $to_number = '249912325566';
-        $endpoint = $api_url.'?action=send-sms&api_key='.$crendentials->api_key.'&to='.$to_number.'&from='.$crendentials->sender_id.'&sms='.$message;
+        $endpoint = $api_url.'?action=send-sms&apikey='.$crendentials->api_key.'&to='.$to_number.'&from='.$crendentials->sender_id.'&message='.$message.'&format=json';
         $response=$this->getGuzzle($endpoint);
         return $response;
     }

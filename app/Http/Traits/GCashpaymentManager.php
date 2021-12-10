@@ -43,7 +43,7 @@ trait GCashpaymentManager{
       'redirectsuccessurl' => 'https://sales.alerthire.com',
       'redirectfailurl' => 'https://sales.alerthire.com',
       'returnUrl' => 'https://sales.alerthire.com'
-      ),
+      )));
 
 
     $response = curl_exec($curl);
