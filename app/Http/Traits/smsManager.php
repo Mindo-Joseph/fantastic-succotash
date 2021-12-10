@@ -33,6 +33,15 @@ trait smsManager{
         return $response;
     }
 
+    public function mazinhost($to,$message,$crendentials)
+    {
+        $api_url = " https://mazinhost.com/smsv1/sms/api";
+        $to_number = substr($to, 1);
+        $endpoint = $api_url.'?action=send-sms&apikey='.$crendentials->api_key.'&to='.$to_number.'&from='.$crendentials->sender_id.'&message='.$message.'&format=json';
+        $response=$this->getGuzzle($endpoint);
+        return $response;
+    }
+
     private function postCurl($data,$token=null):object{
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->api_url);
