@@ -88,21 +88,38 @@ class CategoryController extends BaseController
                 }
             }
             $vendorData = Vendor::select('id', 'slug', 'name', 'banner', 'show_slot', 'order_pre_time', 'order_min_amount', 'vendor_templete_id', 'latitude', 'longitude');
+            $ses_vendors = $this->getServiceAreaVendors($user->latitude, $user->longitude, $mod_type);
+
+            // if (($preferences) && ($preferences->is_hyperlocal == 1)) {
+            //     $latitude = $user->latitude;
+            //     $longitude = $user->longitude;
+            //     if ((empty($latitude)) && (empty($longitude))) {
+            //         $latitude = (!empty($preferences->Default_latitude)) ? floatval($preferences->Default_latitude) : 0;
+            //         $longitude = (!empty($preferences->Default_latitude)) ? floatval($preferences->Default_longitude) : 0;
+            //     }
+            //     $vendorData = $vendorData->whereHas('serviceArea', function ($query) use ($latitude, $longitude) {
+            //         $query->select('vendor_id')
+            //             ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(" . $latitude . " " . $longitude . ")'))");
+            //     });
+            // }
+
             if (($preferences) && ($preferences->is_hyperlocal == 1)) {
-                $latitude = $user->latitude;
-                $longitude = $user->longitude;
-                if ((empty($latitude)) && (empty($longitude))) {
-                    $latitude = (!empty($preferences->Default_latitude)) ? floatval($preferences->Default_latitude) : 0;
-                    $longitude = (!empty($preferences->Default_latitude)) ? floatval($preferences->Default_longitude) : 0;
-                }
-                $vendorData = $vendorData->whereHas('serviceArea', function ($query) use ($latitude, $longitude) {
-                    $query->select('vendor_id')
-                        ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(" . $latitude . " " . $longitude . ")'))");
-                });
+                $latitude = ($user->latitude) ? $user->latitude : $preferences->Default_latitude;
+                $longitude = ($user->longitude) ? $user->longitude : $preferences->Default_longitude;
+                $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
+                //3961 for miles and 6371 for kilometers
+                $calc_value = ($distance_unit == 'mile') ? 3961 : 6371;
+                $vendorData = $vendorData->select('*', DB::raw(' ( ' .$calc_value. ' * acos( cos( radians(' . $latitude . ') ) *
+                        cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $longitude . ') ) +
+                        sin( radians(' . $latitude . ') ) *
+                        sin( radians( latitude ) ) ) )  AS vendorToUserDistance'))->orderBy('vendorToUserDistance', 'ASC');
+                $vendorData = $vendorData->whereIn('id', $ses_vendors);
             }
+
             $vendorData = $vendorData->where($mod_type, 1)->where('status', 1)->whereIn('id', $vendor_ids)->with('slot')->withAvg('product', 'averageRating')->paginate($limit);
             foreach ($vendorData as $vendor) {
                 unset($vendor->products);
+                $vendor = $this->getLineOfSightDistanceAndTime($vendor, $preferences);
                 $vendor->is_show_category = ($vendor->vendor_templete_id == 2 || $vendor->vendor_templete_id == 4 ) ? 1 : 0;
                 $vendor->is_show_products_with_category = ($vendor->vendor_templete_id == 5) ? 1 : 0;
                 $vendorCategories = VendorCategory::with(['category.translation' => function($q) use($langId){
@@ -120,9 +137,9 @@ class CategoryController extends BaseController
                 }
                 $vendor->categoriesList = $categoriesList;
                 
-                if (($preferences) && ($preferences->is_hyperlocal == 1) && ($user->latitude) && ($user->longitude)) {
-                    $vendor = $this->getVendorDistanceWithTime($user->latitude, $user->longitude, $vendor, $preferences);
-                }
+                // if (($preferences) && ($preferences->is_hyperlocal == 1) && ($user->latitude) && ($user->longitude)) {
+                //     $vendor = $this->getVendorDistanceWithTime($user->latitude, $user->longitude, $vendor, $preferences);
+                // }
                 $vendor->is_vendor_closed = 0;
                 if ($vendor->show_slot == 0) {
                     if (($vendor->slotDate->isEmpty()) && ($vendor->slot->isEmpty())) {
@@ -156,7 +173,7 @@ class CategoryController extends BaseController
                 'variant' => function ($q) use ($langId) {
                     $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                     // $q->groupBy('product_id');
-                }, 'variant.checkIfInCartApp',
+                }, 'variant.checkIfInCartApp', 'checkIfInCartApp',
                 'tags.tag.translations' => function ($q) use ($langId) {
                     $q->where('language_id', $langId);
                 }
@@ -265,7 +282,7 @@ class CategoryController extends BaseController
                 'variant' => function ($q) use ($langId) {
                     $q->select('id', 'sku', 'product_id', 'title', 'quantity', 'price', 'barcode');
                     // $q->groupBy('product_id');
-                }, 'variant.checkIfInCartApp',
+                }, 'variant.checkIfInCartApp', 'checkIfInCartApp',
                 'tags.tag.translations' => function ($q) use ($langId) {
                     $q->where('language_id', $langId);
                 }

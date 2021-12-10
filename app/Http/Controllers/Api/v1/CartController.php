@@ -14,6 +14,7 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
+use App\Http\Controllers\Api\v1\PromoCodeController;
 use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet, UserAddress, ClientPreference, LuxuryOption, Vendor, LoyaltyCard, SubscriptionInvoicesUser, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation, OrderVendor, OrderProductAddon, OrderTax, OrderProduct, OrderProductPrescription, VendorOrderStatus};
 use GuzzleHttp\Client as GCLIENT;
 use Log;
@@ -528,6 +529,7 @@ class CartController extends BaseController
         $total_tax = $total_paying = $total_disc_amount = 0.00;
         $item_count = 0;
         $total_delivery_amount = 0;
+        $order_sub_total = 0;
         if ($cartData) {
             $cart_dinein_table_id = NULL;
             $action = $type;
@@ -539,7 +541,7 @@ class CartController extends BaseController
             $dropoff_delay_date = 0;
             $total_service_fee = 0;
             foreach ($cartData as $ven_key => $vendorData) {
-
+                $is_promo_code_available = 0;
                 $vendor_products_total_amount = $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
 
@@ -593,8 +595,12 @@ class CartController extends BaseController
                         if ($vendorData->coupon->promo->promo_type_id == 1) {
                             $is_percent = 1;
                             $discount_percent = round($vendorData->coupon->promo->amount);
+
+                           
                         } else {
                             $discount_amount = $vendorData->coupon->promo->amount * $clientCurrency->doller_compare;
+
+                            
                         }
                         if ($vendorData->coupon->promo->restriction_on == 0) {
                             foreach ($vendorData->coupon->promo->details as $key => $value) {
@@ -608,156 +614,160 @@ class CartController extends BaseController
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
                     if(isset($prod->product) && !empty($prod->product)){
 
-
-                    $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0;
-                    $variantsData = $taxData = $vendorAddons = array();
-                    $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
-                    $price_in_currency = $prod->pvariant ? $prod->pvariant->price : 0;
-                    $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
-                    $quantity_price = $price_in_doller_compare * $prod->quantity;
-                    $item_count = $item_count + $prod->quantity;
-                    $proSum = $proSum + $quantity_price;
-                    $vendor_products_total_amount = $vendor_products_total_amount + $quantity_price;
-                    if (isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)) {
-                        $prod->cartImg = $prod->pvariant->image->imagedata;
-                    } else {
-                        $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
-                    }
-
-                    if($prod->product->delay_hrs_min != 0){
-                        if($prod->product->delay_hrs_min > $delay_date)
-                        $delay_date = $prod->product->delay_hrs_min;
-                    }
-                    if($prod->product->pickup_delay_hrs_min != 0){
-                        if($prod->product->pickup_delay_hrs_min > $delay_date)
-                        $pickup_delay_date = $prod->product->pickup_delay_hrs_min;
-                    }
-
-                    if($prod->product->dropoff_delay_hrs_min != 0){
-                        if($prod->product->dropoff_delay_hrs_min > $delay_date)
-                        $dropoff_delay_date = $prod->product->dropoff_delay_hrs_min;
-                    }
-
-                    if ($prod->pvariant) {
-                        $variantsData['price']              = $price_in_currency;
-                        $variantsData['id']                 = $prod->pvariant->id;
-                        $variantsData['sku']                = ucfirst($prod->pvariant->sku);
-                        $variantsData['title']              = $prod->pvariant->title;
-                        $variantsData['barcode']            = $prod->pvariant->barcode;
-                        $variantsData['product_id']         = $prod->pvariant->product_id;
-                        $variantsData['multiplier']         = $clientCurrency->doller_compare;
-                        $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
-                        if (!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)) {
-                            $pro_disc = $discount_amount;
-                            if ($minimum_spend <= $quantity_price) {
-                                if ($is_percent == 1) {
-                                    $pro_disc = ($quantity_price * $discount_percent) / 100;
-                                }
-                                $quantity_price = $quantity_price - $pro_disc;
-                                $proSumDis = $proSumDis + $pro_disc;
-                                if ($quantity_price < 0) {
-                                    $quantity_price = 0;
-                                }
-                                $codeApplied = 1;
-                            } else {
-                                $variantsData['coupon_msg'] = "Spend Minimum " . $minimum_spend . " to apply this coupon";
-                                $variantsData['coupon_not_appiled'] = 1;
-                            }
+                        $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0;
+                        $variantsData = $taxData = $vendorAddons = array();
+                        $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
+                        $price_in_currency = $prod->pvariant ? $prod->pvariant->price : 0;
+                        $price_in_doller_compare = $price_in_currency * $clientCurrency->doller_compare;
+                        $quantity_price = $price_in_doller_compare * $prod->quantity;
+                        $item_count = $item_count + $prod->quantity;
+                        $proSum = $proSum + $quantity_price;
+                        $vendor_products_total_amount = $vendor_products_total_amount + $quantity_price;
+                        if (isset($prod->pvariant->image->imagedata) && !empty($prod->pvariant->image->imagedata)) {
+                            $prod->cartImg = $prod->pvariant->image->imagedata;
+                        } else {
+                            $prod->cartImg = (isset($prod->product->media[0]) && !empty($prod->product->media[0])) ? $prod->product->media[0]->image : '';
                         }
-                        $variantsData['discount_amount'] = $pro_disc;
-                        $variantsData['coupon_applied'] = $codeApplied;
-                        $variantsData['quantity_price'] = $quantity_price;
-                        $payable_amount = $payable_amount + $quantity_price;
-                        if (!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0) {
-                            foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
-                                $rate = round($tax_value->tax_rate);
-                                $tax_amount = ($price_in_doller_compare * $rate) / 100;
-                                $product_tax = $quantity_price * $rate / 100;
-                                $taxData[$tckey]['rate'] = $rate;
-                                $taxData[$tckey]['tax_amount'] = $tax_amount;
-                                $taxData[$tckey]['product_tax'] = $product_tax;
-                                $taxable_amount = $taxable_amount + $product_tax;
-                                $taxData[$tckey]['sku'] = ucfirst($prod->pvariant->sku);
-                                $taxData[$tckey]['identifier'] = $tax_value->identifier;
-                                $tax_details[] = array(
-                                    'rate' => $rate,
-                                    'tax_amount' => $tax_amount,
-                                    'identifier' => $tax_value->identifier,
-                                    'sku' => ucfirst($prod->pvariant->sku),
+
+                        if($prod->product->delay_hrs_min != 0){
+                            if($prod->product->delay_hrs_min > $delay_date)
+                            $delay_date = $prod->product->delay_hrs_min;
+                        }
+                        if($prod->product->pickup_delay_hrs_min != 0){
+                            if($prod->product->pickup_delay_hrs_min > $delay_date)
+                            $pickup_delay_date = $prod->product->pickup_delay_hrs_min;
+                        }
+
+                        if($prod->product->dropoff_delay_hrs_min != 0){
+                            if($prod->product->dropoff_delay_hrs_min > $delay_date)
+                            $dropoff_delay_date = $prod->product->dropoff_delay_hrs_min;
+                        }
+
+                        if ($prod->pvariant) {
+                            $variantsData['price']              = $price_in_currency;
+                            $variantsData['id']                 = $prod->pvariant->id;
+                            $variantsData['sku']                = ucfirst($prod->pvariant->sku);
+                            $variantsData['title']              = $prod->pvariant->title;
+                            $variantsData['barcode']            = $prod->pvariant->barcode;
+                            $variantsData['product_id']         = $prod->pvariant->product_id;
+                            $variantsData['multiplier']         = $clientCurrency->doller_compare;
+                            $variantsData['gross_qty_price']    = $price_in_doller_compare * $prod->quantity;
+                            if (!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 0) && in_array($prod->product_id, $couponProducts)) {
+                                $pro_disc = $discount_amount;
+                                if ($minimum_spend <= $quantity_price) {
+                                    if ($is_percent == 1) {
+                                        $pro_disc = ($quantity_price * $discount_percent) / 100;
+                                    }
+                                    $quantity_price = $quantity_price - $pro_disc;
+                                    $proSumDis = $proSumDis + $pro_disc;
+                                    if ($quantity_price < 0) {
+                                        $quantity_price = 0;
+                                    }
+                                    $codeApplied = 1;
+                                } else {
+                                    $variantsData['coupon_msg'] = "Spend Minimum " . $minimum_spend . " to apply this coupon";
+                                    $variantsData['coupon_not_appiled'] = 1;
+                                }
+
+                                
+                            }
+                           
+                            $variantsData['discount_amount'] = $pro_disc;
+                            $variantsData['coupon_applied'] = $codeApplied;
+                            $variantsData['quantity_price'] = $quantity_price;
+                            $payable_amount = $payable_amount + $quantity_price;
+                            if (!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0) {
+                                foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
+                                    $rate = round($tax_value->tax_rate);
+                                    $tax_amount = ($price_in_doller_compare * $rate) / 100;
+                                    $product_tax = $quantity_price * $rate / 100;
+                                    $taxData[$tckey]['rate'] = $rate;
+                                    $taxData[$tckey]['tax_amount'] = $tax_amount;
+                                    $taxData[$tckey]['product_tax'] = $product_tax;
+                                    $taxable_amount = $taxable_amount + $product_tax;
+                                    $taxData[$tckey]['sku'] = ucfirst($prod->pvariant->sku);
+                                    $taxData[$tckey]['identifier'] = $tax_value->identifier;
+                                    $tax_details[] = array(
+                                        'rate' => $rate,
+                                        'tax_amount' => $tax_amount,
+                                        'identifier' => $tax_value->identifier,
+                                        'sku' => ucfirst($prod->pvariant->sku),
+                                    );
+                                }
+                            }
+                            $prod->taxdata = $taxData;
+                            if ($action == 'delivery') {
+                                if (!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1)) {
+                                    $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
+                                    if (!empty($deliver_charge) && $delivery_count == 0) {
+                                        $delivery_count = 1;
+                                        $prod->deliver_charge = number_format($deliver_charge, 2, '.', '');
+                                        $payable_amount = $payable_amount + $deliver_charge;
+                                        $order_sub_total = $order_sub_total + $deliver_charge;
+                                        $delivery_fee_charges = $deliver_charge;
+                                    }
+                                }
+                            }
+                            if (!empty($prod->addon)) {
+                                foreach ($prod->addon as $ck => $addons) {
+                                    $opt_quantity_price = 0;
+                                    $opt_price_in_currency = $addons->option ? $addons->option->price : 0;
+                                    $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
+                                    $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
+                                    $vendorAddons[$ck]['quantity'] = $prod->quantity;
+                                    $vendorAddons[$ck]['addon_id'] = $addons->addon_id;
+                                    $vendorAddons[$ck]['option_id'] = $addons->option_id;
+                                    $vendorAddons[$ck]['price'] = $opt_price_in_currency;
+                                    $vendorAddons[$ck]['addon_title'] = $addons->set->title;
+                                    $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
+                                    $vendorAddons[$ck]['option_title'] = $addons->option ? $addons->option->title : 0;
+                                    $vendorAddons[$ck]['price_in_cart'] = $addons->option->price;
+                                    $vendorAddons[$ck]['cart_product_id'] = $addons->cart_product_id;
+                                    $vendorAddons[$ck]['multiplier'] = $clientCurrency->doller_compare;
+                                    $ttAddon = $ttAddon + $opt_quantity_price;
+                                    $payable_amount = $payable_amount + $opt_quantity_price;
+                                    $order_sub_total = $order_sub_total + $opt_quantity_price;
+                                }
+                            }
+                            unset($prod->addon);
+                            unset($prod->pvariant);
+                        }
+                        $variant_options = [];
+                        if ($prod->pvariant) {
+                            foreach ($prod->pvariant->vset as $variant_set_option) {
+                                $variant_options[] = array(
+                                    'option' => $variant_set_option->optionData->trans->title,
+                                    'title' => $variant_set_option->variantDetail->trans->title,
                                 );
                             }
                         }
-                        $prod->taxdata = $taxData;
-                        if ($action == 'delivery') {
-                            if (!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1)) {
-                                $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
-                                if (!empty($deliver_charge) && $delivery_count == 0) {
-                                    $delivery_count = 1;
-                                    $prod->deliver_charge = number_format($deliver_charge, 2, '.', '');
-                                    $payable_amount = $payable_amount + $deliver_charge;
-                                    $delivery_fee_charges = $deliver_charge;
-                                }
-                            }
+                        $prod->variants = $variantsData;
+                        $prod->variant_options = $variant_options;
+                        $prod->product_addons = $vendorAddons;
+                        
+                        $product = Product::with([
+                            'variant' => function ($sel) {
+                                $sel->groupBy('product_id');
+                            },
+                            'variant.media.pimage.image', 'upSell', 'crossSell', 'vendor', 'media.image', 'translation' => function ($q) use ($langId) {
+                                $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
+                                $q->where('language_id', $langId);
+                            }])->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating')
+                            ->where('url_slug', $prod->product->url_slug)
+                            ->first();
+                        $doller_compare = ($clientCurrency) ? $clientCurrency->doller_compare : 1;
+                        $up_prods = $this->metaProduct($langId, $doller_compare, 'upSell', $product->upSell);
+                        if($up_prods){
+                            $upSell_products->push($up_prods);
                         }
-                        if (!empty($prod->addon)) {
-                            foreach ($prod->addon as $ck => $addons) {
-                                $opt_quantity_price = 0;
-                                $opt_price_in_currency = $addons->option ? $addons->option->price : 0;
-                                $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
-                                $opt_quantity_price = $opt_price_in_doller_compare * $prod->quantity;
-                                $vendorAddons[$ck]['quantity'] = $prod->quantity;
-                                $vendorAddons[$ck]['addon_id'] = $addons->addon_id;
-                                $vendorAddons[$ck]['option_id'] = $addons->option_id;
-                                $vendorAddons[$ck]['price'] = $opt_price_in_currency;
-                                $vendorAddons[$ck]['addon_title'] = $addons->set->title;
-                                $vendorAddons[$ck]['quantity_price'] = $opt_quantity_price;
-                                $vendorAddons[$ck]['option_title'] = $addons->option ? $addons->option->title : 0;
-                                $vendorAddons[$ck]['price_in_cart'] = $addons->option->price;
-                                $vendorAddons[$ck]['cart_product_id'] = $addons->cart_product_id;
-                                $vendorAddons[$ck]['multiplier'] = $clientCurrency->doller_compare;
-                                $ttAddon = $ttAddon + $opt_quantity_price;
-                                $payable_amount = $payable_amount + $opt_quantity_price;
-                            }
+                        $cross_prods = $this->metaProduct($langId, $doller_compare, 'crossSell', $product->crossSell);
+                        if($cross_prods){
+                            $crossSell_products->push($cross_prods);
                         }
-                        unset($prod->addon);
-                        unset($prod->pvariant);
-                    }
-                    $variant_options = [];
-                    if ($prod->pvariant) {
-                        foreach ($prod->pvariant->vset as $variant_set_option) {
-                            $variant_options[] = array(
-                                'option' => $variant_set_option->optionData->trans->title,
-                                'title' => $variant_set_option->variantDetail->trans->title,
-                            );
-                        }
-                    }
-                    $prod->variants = $variantsData;
-                    $prod->variant_options = $variant_options;
-                    $prod->product_addons = $vendorAddons;
-                //    Log::info($prod);
-                    $product = Product::with([
-                        'variant' => function ($sel) {
-                            $sel->groupBy('product_id');
-                        },
-                        'variant.media.pimage.image', 'upSell', 'crossSell', 'vendor', 'media.image', 'translation' => function ($q) use ($langId) {
-                            $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
-                            $q->where('language_id', $langId);
-                        }])->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating')
-                        ->where('url_slug', $prod->product->url_slug)
-                        ->first();
-                    $doller_compare = ($clientCurrency) ? $clientCurrency->doller_compare : 1;
-                    $up_prods = $this->metaProduct($langId, $doller_compare, 'upSell', $product->upSell);
-                    if($up_prods){
-                        $upSell_products->push($up_prods);
-                    }
-                    $cross_prods = $this->metaProduct($langId, $doller_compare, 'crossSell', $product->crossSell);
-                    if($cross_prods){
-                        $crossSell_products->push($cross_prods);
-                    }
 
 
+                    }
                 }
-            }
 
                 $couponApplied = 0;
                 if (!empty($vendorData->coupon->promo) && ($vendorData->coupon->promo->restriction_on == 1)) {
@@ -772,13 +782,15 @@ class CartController extends BaseController
                         $vendorData->coupon_not_appiled = 1;
                     }
                 }
+
+                
+                
                 $deliver_charge = $deliver_charge * $clientCurrency->doller_compare;
                 $vendorData->proSum = $proSum;
                 $vendorData->addonSum = $ttAddon;
                 $vendorData->deliver_charge = $deliver_charge;
                 $total_delivery_amount += $deliver_charge;
                 $vendorData->coupon_apply_on_vendor = $couponApplied;
-                $vendorData->is_coupon_applied = $is_coupon_applied;
                 $vendorData->is_coupon_applied = $is_coupon_applied;
                 if (empty($couponData)) {
                     $vendorData->couponData = NULL;
@@ -788,7 +800,7 @@ class CartController extends BaseController
                 $vendor_service_fee_percentage_amount = 0;
                 if($vendorData->vendor->service_fee_percent > 0){
                     $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendorData->vendor->service_fee_percent) / 100 ;
-                    $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
+                    // $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
                 }
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
                 $vendorData->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
@@ -831,6 +843,20 @@ class CartController extends BaseController
                     $vendorData->is_vendor_closed = 1;
                     $delivery_status = 0;
                 }
+
+                $order_sub_total = $order_sub_total + $vendor_products_total_amount;
+
+                $promoCodeController = new PromoCodeController();
+                $promoCodeRequest = new Request();
+                $promoCodeRequest->setMethod('POST');
+                $promoCodeRequest->request->add(['vendor_id' => $vendorData->vendor_id, 'cart_id' => $cartID]);
+                $promoCodeResponse = $promoCodeController->postPromoCodeList($promoCodeRequest)->getData();
+                if($promoCodeResponse->status == 'Success'){
+                    if($promoCodeResponse->data){
+                        $is_promo_code_available = 1;
+                    }
+                }
+                $vendorData->is_promo_code_available = $is_promo_code_available;
             }
         }
         $cart_product_luxury_id = CartProduct::where('cart_id', $cartID)->select('luxury_option_id', 'vendor_id')->first();
@@ -847,7 +873,8 @@ class CartController extends BaseController
         $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');
         $cart->total_tax = $total_tax;
         $cart->tax_details = $tax_details;
-        $cart->gross_paybale_amount = $total_paying;
+        // $cart->gross_paybale_amount = $total_paying;
+        $cart->gross_paybale_amount = $order_sub_total;
         $cart->total_discount_amount = $total_disc_amount * $clientCurrency->doller_compare;
         $cart->products = $cartData;
         $cart->item_count = $item_count;

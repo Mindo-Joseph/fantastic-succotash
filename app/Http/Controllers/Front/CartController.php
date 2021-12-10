@@ -11,6 +11,7 @@ use GuzzleHttp\Client as GCLIENT;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Front\FrontController;
+use App\Http\Controllers\Front\PromoCodeController;
 use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
 
 class CartController extends FrontController
@@ -600,8 +601,9 @@ class CartController extends FrontController
             $dropoff_delay_date = 0;
             $total_service_fee = 0;
             foreach ($cartData as $ven_key => $vendorData) {
+                $is_promo_code_available = 0;
                 $vendor_products_total_amount = $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
-                $delivery_count = 0;
+                $delivery_count = 0;$coupon_amount_used = 0;
 
                 if(Session::has('vendorTable')){
                     if((Session::has('vendorTableVendorId')) && (Session::get('vendorTableVendorId') == $vendorData->vendor_id)){
@@ -744,11 +746,13 @@ class CartController extends FrontController
                     if (isset($vendorData->coupon->promo)) {
                         if ($vendorData->coupon->promo->promo_type_id == 2) {
                             $total_discount_percent = $vendorData->coupon->promo->amount;
-                            $payable_amount -= $total_discount_percent;
+                            $payable_amount -= $total_discount_percent; 
+                            $coupon_amount_used = $total_discount_percent;
                         } else {
                             $gross_amount = number_format(($payable_amount - $taxable_amount), 2, '.', '');
                             $percentage_amount = ($gross_amount * $vendorData->coupon->promo->amount / 100);
                             $payable_amount -= $percentage_amount;
+                            $coupon_amount_used = $percentage_amount;
                         }
                     }
                 }
@@ -764,6 +768,7 @@ class CartController extends FrontController
                 }
                 //end applying service fee on vendor products total
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
+                $vendorData->coupon_amount_used = number_format($coupon_amount_used, 2, '.', '');
                 $vendorData->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
                 $vendorData->delivery_fee_charges = number_format($delivery_fee_charges, 2, '.', '');
                 $vendorData->payable_amount = number_format($payable_amount, 2, '.', '');
@@ -801,6 +806,18 @@ class CartController extends FrontController
                 $total_discount_amount = $total_discount_amount + $discount_amount;
                 $total_discount_percent = $total_discount_percent + $discount_percent;
                 $total_subscription_discount = $total_subscription_discount + $subscription_discount;
+
+                $promoCodeController = new PromoCodeController();
+                $promoCodeRequest = new Request();
+                $promoCodeRequest->setMethod('POST');
+                $promoCodeRequest->request->add(['vendor_id' => $vendorData->vendor_id, 'amount' => $vendorData->product_total_amount]);
+                $promoCodeResponse = $promoCodeController->postPromoCodeList($promoCodeRequest)->getData();
+                if($promoCodeResponse->status == 'Success'){
+                    if(!empty($promoCodeResponse->data)){
+                        $is_promo_code_available = 1;
+                    }
+                }
+                $vendorData->is_promo_code_available = $is_promo_code_available;
             }
             $is_percent = 0;
             $amount_value = 0;
@@ -1283,9 +1300,11 @@ class CartController extends FrontController
 
             }
 
-
-
-                    CartAddon::where('cart_id',$request->cart_id)->where('cart_product_id',$request->cart_product_id)->delete();
+            if(isset($addon_ids) && !empty($addon_ids[0]))
+            CartAddon::where('cart_id',$request->cart_id)->where('cart_product_id',$request->cart_product_id)->where('addon_id',$addon_ids[0])->delete();
+            else
+            CartAddon::where('cart_id',$request->cart_id)->where('cart_product_id',$request->cart_product_id)->delete();
+                   
                     if (count($addon_options) > 0) {
                         $saveAddons = array();
                         foreach ($addon_options as $key => $opts) {

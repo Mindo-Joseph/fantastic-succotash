@@ -19,16 +19,17 @@ class VendorController extends FrontController
 
     public function viewAll(){
         $langId = Session::get('customerLanguage');
+        $vendorType = Session::get('vendorType');
         $preferences = Session::get('preferences');
         $navCategories = $this->categoryNav($langId);
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 30;
         $ses_vendors = $this->getServiceAreaVendors();
 
-        $vendors = Vendor::with('products')->select('id', 'name', 'banner', 'address', 'order_pre_time', 'order_min_amount', 'logo', 'slug', 'latitude', 'longitude')->where('status', 1);
+        $vendors = Vendor::with('products')->select('id', 'name', 'banner', 'address', 'order_pre_time', 'order_min_amount', 'logo', 'slug', 'latitude', 'longitude')->where('status', 1)->where($vendorType, 1);
 
-        if (is_array($ses_vendors)) {
-            $latitude = Session::get('latitude') ?? '';
-            $longitude = Session::get('longitude') ?? '';
+        if (($preferences) && ($preferences->is_hyperlocal == 1)) {
+            $latitude = Session::get('latitude') ?? $preferences->Default_latitude;
+            $longitude = Session::get('longitude') ?? $preferences->Default_longitude;
             $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
             //3961 for miles and 6371 for kilometers
             $calc_value = ($distance_unit == 'mile') ? 3961 : 6371;
@@ -738,11 +739,11 @@ class VendorController extends FrontController
                 }
             }
         }
-
+        $tags = Tag::with('primary')->get();
         // dd($vendor_categories->toArray());
 
         $listData = $vendor_categories;
-        $returnHTML = view('frontend.vendor-search-products')->with(['vendor'=> $vendor, 'listData'=>$listData])->render();
+        $returnHTML = view('frontend.vendor-search-products')->with(['vendor'=> $vendor,'tags'=>$tags,'tag_id'=> $tagId, 'listData'=>$listData])->render();
         return response()->json(array('status'=>'Success', 'html'=>$returnHTML));
     }
 

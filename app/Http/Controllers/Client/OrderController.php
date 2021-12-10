@@ -300,9 +300,10 @@ class OrderController extends BaseController
             'vendors.products.addon',
             'vendors.products.addon.set',
             'vendors.products.addon.option',
-            'vendors.products.addon.option.translation_one' => function ($q) use ($langId) {
-                $q->select('id', 'addon_opt_id', 'title');
-                $q->where('language_id', $langId);
+            'vendors.products.addon.option.translation' => function ($q) use ($langId) {
+                $q->select('addon_option_translations.id', 'addon_option_translations.addon_opt_id', 'addon_option_translations.title', 'addon_option_translations.language_id');
+                $q->where('addon_option_translations.language_id', $langId);
+                $q->groupBy('addon_option_translations.addon_opt_id', 'addon_option_translations.language_id');
             },
             'vendors.dineInTable.translations' => function ($qry) use ($langId) {
                 $qry->where('language_id', $langId);
@@ -322,6 +323,7 @@ class OrderController extends BaseController
                         $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
                     }
                     $opt_quantity_price = number_format($opt_price_in_doller_compare * $product->quantity, 2, '.', '');
+                    $addons->option->translation_title = ($addons->option->translation->isNotEmpty()) ? $addons->option->translation->first()->title : '';
                     $addons->option->price_in_cart = $addons->option->price;
                     $addons->option->price = number_format($opt_price_in_currency, 2, '.', '');
                     $addons->option->multiplier = ($clientCurrency) ? $clientCurrency->doller_compare : 1;
@@ -581,7 +583,7 @@ class OrderController extends BaseController
             }
             $dynamic = uniqid($order->id . $vendor);
             $call_back_url = route('dispatch-order-update', $dynamic);
-            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
+            $vendor_details = Vendor::where('id', $vendor)->select('id', 'phone_no', 'email', 'name', 'latitude', 'longitude', 'address')->first();
             $tasks = array();
             $meta_data = '';
 
@@ -598,6 +600,9 @@ class OrderController extends BaseController
                 'address' => $vendor_details->address ?? '',
                 'post_code' => '',
                 'barcode' => '',
+                'flat_no'     => null,
+                'email'       => $vendor_details->email ?? null,
+                'phone_number' => $vendor_details->phone_no ?? null,
             );
 
             $tasks[] = array(
@@ -608,6 +613,9 @@ class OrderController extends BaseController
                 'address' => $cus_address->address ?? '',
                 'post_code' => $cus_address->pincode ?? '',
                 'barcode' => '',
+                'flat_no'     => $cus_address->house_number ?? null,
+                'email'       => $customer->email ?? null,
+                'phone_number' => ($customer->dial_code . $customer->phone_number)  ?? null,
             );
 
             $postdata =  [
@@ -678,7 +686,7 @@ class OrderController extends BaseController
             }
             $dynamic = uniqid($order->id . $vendor);
             $call_back_url = route('dispatch-order-update', $dynamic);
-            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
+            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'phone_no', 'email', 'latitude', 'longitude', 'address')->first();
             $tasks = array();
             $meta_data = '';
 
@@ -694,6 +702,9 @@ class OrderController extends BaseController
                 'address' => $vendor_details->address ?? '',
                 'post_code' => '',
                 'barcode' => '',
+                'flat_no'     => null,
+                'email'       => $vendor_details->email ?? null,
+                'phone_number' => $vendor_details->phone_no ?? null,
             );
 
             $tasks[] = array(
@@ -704,6 +715,9 @@ class OrderController extends BaseController
                 'address' => $cus_address->address ?? '',
                 'post_code' => $cus_address->pincode ?? '',
                 'barcode' => '',
+                'flat_no'     => $cus_address->house_number ?? null,
+                'email'       => $customer->email ?? null,
+                'phone_number' => ($customer->dial_code . $customer->phone_number)  ?? null,
             );
 
             $postdata =  [
@@ -775,7 +789,7 @@ class OrderController extends BaseController
 
             $dynamic = uniqid($order->id . $vendor);
             $call_back_url = route('dispatch-order-update', $dynamic);
-            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
+            $vendor_details = Vendor::where('id', $vendor)->select('id', 'phone_no', 'email', 'name', 'latitude', 'longitude', 'address')->first();
             $tasks = array();
             $meta_data = '';
 
@@ -820,6 +834,9 @@ class OrderController extends BaseController
                     'address' => $vendor_details->address ?? '',
                     'post_code' => '',
                     'barcode' => '',
+                    'flat_no'     => null,
+                    'email'       => $vendor_details->email ?? null,
+                    'phone_number' => $vendor_details->phone_no ?? null,
                 );
 
                 $tasks[] = array(
@@ -830,6 +847,9 @@ class OrderController extends BaseController
                     'address' => $cus_address->address ?? '',
                     'post_code' => $cus_address->pincode ?? '',
                     'barcode' => '',
+                    'flat_no'     => $cus_address->house_number ?? null,
+                    'email'       => $customer->email ?? null,
+                    'phone_number' => ($customer->dial_code . $customer->phone_number)  ?? null,
                 );
 
 

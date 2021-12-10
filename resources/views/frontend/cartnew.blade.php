@@ -205,18 +205,20 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             <div class="row">
                 <div class="col-lg-6 mb-3 mb-lg-0 d-flex align-items-start">
                     @if(!$guest_user)
-                        <div class="coupon_box w-100">
-                            <img src="{{ asset('assets/images/discount_icon.svg') }}">
-                            <label class="mb-0 ml-2">
-                                <% if(product.coupon) { %>
-                                    <%= product.coupon.promo.name %>
-                                <% }else{ %>
-                                    <a href="javascript:void(0)" class="promo_code_list_btn ml-1" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">{{__('Select a promo code')}}</a>
-                                <% } %>
-                            </label>
-                        </div>
-                        <% if(product.coupon) { %>
-                            <label class="p-1 m-0"><a href="javascript:void(0)" class="remove_promo_code_btn ml-1" data-coupon_id="<%= product.coupon ? product.coupon.promo.id : '' %>" data-cart_id="<%= cart_details.id %>">Remove</a></label>
+                        <% if(product.is_promo_code_available > 0) { %>
+                            <div class="coupon_box w-100">
+                                <img src="{{ asset('assets/images/discount_icon.svg') }}">
+                                <label class="mb-0 ml-2">
+                                    <% if(product.coupon) { %>
+                                        <%= product.coupon.promo.name %>
+                                    <% }else{ %>
+                                        <a href="javascript:void(0)" class="promo_code_list_btn ml-1" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">{{__('Select a promo code')}}</a>
+                                    <% } %>
+                                </label>
+                            </div>
+                            <% if(product.coupon) { %>
+                                <label class="p-1 m-0"><a href="javascript:void(0)" class="remove_promo_code_btn ml-1" data-coupon_id="<%= product.coupon ? product.coupon.promo.id : '' %>" data-cart_id="<%= cart_details.id %>">Remove</a></label>
+                            <% } %>
                         <% } %>
                     @endif
                 </div>
@@ -224,12 +226,19 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="row">
                         <div class="col-8 text-lg-right">
                             <p class="total_amt m-0">{{__('Delivery Fee')}} :</p>
+                            <% if(product.coupon_amount_used > 0) { %>
+                            <p class="total_amt m-0">{{__('Coupon Discount')}} :</p>
+                            <% } %>
                         </div>
                         <div class="col-4 text-right">
                             <p class="total_amt mb-1 <% if(product.delivery_fee_charges > 0) { %>{{ ((in_array(1, $subscription_features)) ) ? 'discard_price' : '' }}<% } %>">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %></p>
+                            <% if(product.coupon_amount_used > 0) { %>
+                            <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.coupon_amount_used) %></p>
+                            <% } %>
                             <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.product_total_amount) %></p>
                         </div>
                     </div>
+                   
                 </div>
             </div>
         </div>
@@ -311,7 +320,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div>
                 <hr class="my-2">
             <% } %>
-            <% if(cart_details.wallet_amount_used != undefined) { %>
+            <% if(cart_details.wallet_amount_used > 0) { %>
                 <div class="row">
                     <div class="col-6">{{__('Wallet Amount')}}</div>
                     <div class="col-6 text-right">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(cart_details.wallet_amount_used) %></div>
