@@ -11,6 +11,7 @@ use GuzzleHttp\Client as GCLIENT;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Front\FrontController;
+use App\Http\Controllers\Front\PromoCodeController;
 use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
 
 class CartController extends FrontController
@@ -601,6 +602,7 @@ class CartController extends FrontController
             $total_service_fee = 0;
             $product_out_of_stock = 0;
             foreach ($cartData as $ven_key => $vendorData) {
+                $is_promo_code_available = 0;
                 $vendor_products_total_amount = $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;$coupon_amount_used = 0;
 
@@ -742,6 +744,7 @@ class CartController extends FrontController
                             $q->where('language_id', $langId);
                         }])->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating')
                         ->where('url_slug', $prod->product->url_slug)
+                        ->where('is_live', 1)
                         ->first();
                     $doller_compare = ($customerCurrency) ? $customerCurrency->doller_compare : 1;
                     $up_prods = $this->metaProduct($langId, $doller_compare, 'upSell', $product->upSell);
@@ -817,6 +820,18 @@ class CartController extends FrontController
                 $total_discount_amount = $total_discount_amount + $discount_amount;
                 $total_discount_percent = $total_discount_percent + $discount_percent;
                 $total_subscription_discount = $total_subscription_discount + $subscription_discount;
+
+                $promoCodeController = new PromoCodeController();
+                $promoCodeRequest = new Request();
+                $promoCodeRequest->setMethod('POST');
+                $promoCodeRequest->request->add(['vendor_id' => $vendorData->vendor_id, 'amount' => $vendorData->product_total_amount]);
+                $promoCodeResponse = $promoCodeController->postPromoCodeList($promoCodeRequest)->getData();
+                if($promoCodeResponse->status == 'Success'){
+                    if(!empty($promoCodeResponse->data)){
+                        $is_promo_code_available = 1;
+                    }
+                }
+                $vendorData->is_promo_code_available = $is_promo_code_available;
             }
             $is_percent = 0;
             $amount_value = 0;
