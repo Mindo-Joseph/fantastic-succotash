@@ -227,11 +227,6 @@ h6 {
     transition-duration: none;
 }
 
-/* .product-4 .slick-slide,
-.suppliers-slider .slick-slide {
-    padding: 20px 0;
-} */
-
 .common-product-box,
 .suppliers-box {
     padding: 0;
@@ -678,9 +673,6 @@ footer ul.social-links li a i,
     margin-bottom: 0;
 }
 
-section#our_vendor_main_div {
-    padding-bottom: 0;
-}
 
 
 

@@ -16,6 +16,13 @@ input[type=radio], input[type=checkbox]{
     cursor: pointer !important;
 }
 
+.slick-slider {
+    visibility: hidden;
+}
+.slick-slider.slick-initialized {
+    visibility: visible;
+}
+
 .onhover-dropdown .onhover-show-div {
     display: none;
 }
@@ -7231,7 +7238,7 @@ body[dir="rtl"] .inner_spacing h3 {
     .radius-bar.d-xl-inline {
         position: absolute;
         left: 0;
-        top: calc(100% + 124px);
+        top: calc(100% + 98px);
         width: 100%;
         display: none;
         border-radius: 0;
