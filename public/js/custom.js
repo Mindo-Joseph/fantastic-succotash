@@ -1495,7 +1495,7 @@ $(document).ready(function() {
         } else if (payment_option_id == 10) {
             paymentViaRazorpay_wallet('', payment_option_id);
         }else if (payment_option_id == 11) {
-            paymentViaGCash('', payment_option_id);
+            paymentViaGCash('', '');
         }else if (payment_option_id == 12) {
             paymentViaSimplify('', '');
         }else if (payment_option_id == 13) {
