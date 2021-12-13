@@ -255,7 +255,7 @@ h6 {
 
 .product-description h3 {
     color: #000000;
-    
+
     font-weight: 600;
     font-size: 17px;
     letter-spacing: 0;
@@ -265,7 +265,7 @@ h6 {
 .product-description p {
     opacity: 0.67;
     color: #000000;
-    
+
     font-weight: 400;
     font-size: 13px;
     letter-spacing: 0;
@@ -278,7 +278,7 @@ h6 {
 
 .product-description b {
     color: #000;
-    
+
     font-weight: 700;
     font-size: 16px;
     letter-spacing: 0;
@@ -287,11 +287,10 @@ h6 {
 
 .h2-heading {
     color: #000;
-    
     font-weight: 700;
-    font-size: 33px;
+    font-size: 26px;
     letter-spacing: 0;
-    line-height: 40px;
+    line-height: 38px;
     margin: 0 0 20px;
 }
 
@@ -305,7 +304,7 @@ h6 {
     line-height: 35px;
     border-radius: 27.5px;
     color: #EC5837;
-    
+
     font-weight: 600;
     font-size: 13px;
     letter-spacing: 0;
@@ -334,7 +333,7 @@ h6 {
     height: 40px;
     text-indent: -8px;
     line-height: 10px;
-    
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -842,139 +841,7 @@ body[dir="rtl"] #social-links li:last-child {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Media Responsiveness Css Start form here */
 
 @media (min-width: 1520px) {
 
@@ -1173,7 +1040,7 @@ body[dir="rtl"] #social-links li:last-child {
 }
 
 @media (max-width: 767px) {
-    
+
     .home-banner-slider .slick-prev,
     .home-banner-slider .slick-next {
         height: 30px;

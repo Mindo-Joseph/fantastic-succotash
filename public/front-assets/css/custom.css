@@ -23,6 +23,10 @@ input[type=radio], input[type=checkbox]{
     visibility: visible;
 }
 
+.navbar-brand {
+    height: 70px;
+}
+
 .onhover-dropdown .onhover-show-div {
     display: none;
 }
