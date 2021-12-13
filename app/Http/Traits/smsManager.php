@@ -8,21 +8,9 @@ trait smsManager{
 
   public function __construct()
   {
-    $this->api_key = "U8RSSodH6KUq1ZHG";
-    $this->sender_id = "690909";
-    $this->api_url = "http://msg.mtalkz.com/V2/http-api-post.php";
+    //
   }
 
-    public function sendMessage($data)
-    {
-        $data = [
-            'apikey' => $this->api_key,
-            'sender_id' => 'BIGSMS',
-            'number' => $data['numbers'],
-            'message' => $data['message']??"Testing",
-            'format' => 'json'
-        ];
-    }
 
     public function mTalkz_sms($to,$message,$crendentials)
     {
