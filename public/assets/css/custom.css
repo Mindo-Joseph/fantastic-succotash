@@ -164,7 +164,6 @@ border-radius: 0;
 	border: 2px solid #ddd;
     border-radius: 5px;
 }
-
 .vendor-products .card {
 margin-top: -60px;
 background: transparent;
@@ -618,9 +617,8 @@ padding: 10px;
 .dataTables_scrollHead {
     height: 63px;
 }
-
 .dataTables_scrollBody {
-    height: 400px;
+    height: 450px;
 }
 .card_outer {
 height: calc(100vh - 234px);
