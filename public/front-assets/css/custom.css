@@ -6202,7 +6202,7 @@ ul#main-nav-list {
     padding: 0 17px;
     margin-top: 12px;
 }
-/* 
+/*
 .cab-footer .btn.btn-solid {
     margin: 12px 22px 0 0;
 } */
@@ -7190,7 +7190,7 @@ body[dir="rtl"] .inner_spacing h3 {
 
 /* Responsiveness Css Start From Here */
 
-@media(min-width: 2000px){    
+@media(min-width: 2000px){
     body {
         min-height: calc(100vh - 207px);
         padding-bottom: 333px;
