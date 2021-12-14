@@ -467,7 +467,7 @@ class ClientController extends Controller{
     ->setUserName($userName)
     ->setPassword($password)
     ->setHost($host)
-    ->dumpToFile($databaseName.'.sql');
+    ->dumpToFile('royo_'.$databaseName.'.sql');
 
      }
      
