@@ -34,7 +34,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
+  .age-restriction img.blur-up.lazyloaded {
+    width: 150px;
+    margin: 30px 0 10px;
+}
   .icon-moon:before {
     content: "\e908";
   }
