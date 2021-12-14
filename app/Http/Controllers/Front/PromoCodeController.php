@@ -107,8 +107,8 @@ class PromoCodeController extends Controller{
             $promo_code = Promocode::where('id', $request->coupon_id)->first();
             if(!$promo_code){
                 return $this->errorResponse('Invalid Promocode Id', 422);
-            }elseif($promo_code->minimum_spend >= 30){
-                
+            }elseif(isset($request->amount) && $request->amount < $promo_code->minimum_spend){
+                return $this->errorResponse('Add item worth '.(int)($promo_code->minimum_spend - $request->amount).' to apply this offer.', 422);
             }
             $cart_coupon_detail = CartCoupon::where('cart_id', $request->cart_id)->where('vendor_id', $request->vendor_id)->where('coupon_id', $request->coupon_id)->first();
             if($cart_coupon_detail){
