@@ -459,6 +459,7 @@ class ClientController extends Controller{
      }
 
      public function exportDb(Request $request,$databaseName){
+        $databaseName = 'royo_'.$databaseName;
         $userName = env('DB_USERNAME');
         $password = env('DB_PASSWORD');
         $host = env('DB_HOST');
@@ -467,7 +468,7 @@ class ClientController extends Controller{
     ->setUserName($userName)
     ->setPassword($password)
     ->setHost($host)
-    ->dumpToFile('royo_'.$databaseName.'.sql');
+    ->dumpToFile($databaseName.'.sql');
 
      }
      
