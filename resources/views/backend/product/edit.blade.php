@@ -79,7 +79,9 @@
 @endsection
 @section('content')
 <div class="container-fluid">
-    <div class="row">
+   
+    <div class="row"> 
+           
         <div class="col-8 d-flex align-items-center">
             <div class="page-title-box">
                 <h4 class="page-title">{{ __("Edit Product") }}</h4>
@@ -96,6 +98,7 @@
             <button type="button" class="btn btn-info waves-effect waves-light text-sm-right saveProduct"> {{ __("Submit") }}</button>
         </div>
     </div>
+    <a href="{{route('vendor.catalogs',$product->vendor_id)}}">{{ $product->vendor->name}} </a>
     <div class="row mb-2">
         <div class="col-sm-12">
             <div class="text-sm-left">
