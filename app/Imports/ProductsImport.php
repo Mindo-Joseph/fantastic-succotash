@@ -11,7 +11,7 @@ use App\Models\{Brand, Category, ClientLanguage, CategoryTranslation, CsvProduct
 
 class ProductsImport implements ToCollection{
     private $folderName = 'prods';
-  
+
     public function  __construct($vendor_id ,$csv_product_import_id){
         $this->vendor_id= $vendor_id;
         $this->csv_product_import_id = $csv_product_import_id;
@@ -25,10 +25,9 @@ class ProductsImport implements ToCollection{
         $error = array();
         $variant_exist = 0;
         foreach ($rows as $row) {
-             print_r($row);
-            exit();
+
             $checker = 0;
-            if ($row[0] != "Handle") { //header of excel check              
+            if ($row[0] != "Handle") { //header of excel check
 
                 if ($row[0] == "") { //if sku or handle is empty
                     $error[] = "Row " . $i . " : handle is empty";
@@ -464,7 +463,7 @@ class ProductsImport implements ToCollection{
                     }
                 }
             }
-        } 
+        }
         $vendor_csv = CsvProductImport::where('vendor_id', $this->vendor_id)->where('id', $this->csv_product_import_id)->first();
         if (!empty($error)) {
             $vendor_csv->status = 3;
