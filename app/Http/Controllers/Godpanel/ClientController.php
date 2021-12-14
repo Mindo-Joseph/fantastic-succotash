@@ -463,12 +463,12 @@ class ClientController extends Controller{
         $userName = env('DB_USERNAME');
         $password = env('DB_PASSWORD');
         $host = env('DB_HOST');
-  \Spatie\DbDumper\Databases\MySql::create()
-    ->setDbName($databaseName)
-    ->setUserName($userName)
-    ->setPassword($password)
-    ->setHost($host)
-    ->dumpToFile($databaseName.'.sql');
+        \Spatie\DbDumper\Databases\MySql::create()
+            ->setDbName($databaseName)
+            ->setUserName($userName)
+            ->setPassword($password)
+            ->setHost($host)
+            ->dumpToFile($databaseName.'.sql');
 
      }
      
