@@ -15,6 +15,7 @@ class Changeskustringlenghthinproducts extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->string('sku', 500)->change();
+            $table->string('title', 120)->change();
         });
     }
 
