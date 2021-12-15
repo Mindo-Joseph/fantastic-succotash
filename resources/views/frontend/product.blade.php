@@ -895,8 +895,8 @@
                         let variant_image_template = _.template($('#variant_image_template').html());
                         $(".product__carousel .gallery-parent").html('');
                         $(".product__carousel .gallery-parent").append(variant_image_template({variant:response.variant}));
-                        easyZoomInitialize();
-                        $('.easyzoom').easyZoom();
+                        // easyZoomInitialize();
+                        // $('.easyzoom').easyZoom();
 
                         if(response.variant.media != ''){
                             $(".product-slick").slick({ slidesToShow: 1, slidesToScroll: 1, arrows: !0, fade: !0, asNavFor: ".slider-nav" });
