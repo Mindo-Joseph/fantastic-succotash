@@ -952,12 +952,16 @@
                     addonids.splice(addonids.indexOf(addonId), 1);
                     addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
                 }
-                updatePrice();
-                // addOnPrice = parseFloat(checkAddOnPrice());
-                // org_price = parseFloat($(this).data('original_price')) + addOnPrice;
-                // fixed_price = parseFloat($(this).data('fixed_price')) + addOnPrice;
-                // $('.product_fixed_price').html(fixed_price.toFixed(2));
-                // $('.product_original_price').html(org_price.toFixed(2));
+                if($('.changeVariant').length > 0)
+                {
+                    updatePrice();
+                }else{
+                    addOnPrice = parseFloat(checkAddOnPrice());
+                    org_price = parseFloat($(this).data('original_price')) + addOnPrice;
+                    fixed_price = parseFloat($(this).data('fixed_price')) + addOnPrice;
+                    $('.product_fixed_price').html(fixed_price.toFixed(2));
+                    $('.product_original_price').html(org_price.toFixed(2));
+                }
             }
         });
     });
