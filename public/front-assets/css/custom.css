@@ -5,7 +5,6 @@ html {
 body {
     font-size: 16px;
     position: initial;
-    font-family: 'Zen Kaku Gothic Antique', sans-serif !important;
 }
 
 a {
@@ -140,7 +139,7 @@ header.site-header.fixed-bar {
 .site-topbar .map-icon .yl-text {
     color: #fff;
     font-size: 14px;
-    line-height: 22px;
+    line-height: 30px;
     vertical-align: text-bottom;
 }
 
@@ -440,6 +439,10 @@ header.site-header.fixed-bar {
     letter-spacing: 0;
     line-height: 11px;
 }*/
+
+.vendors .container {
+    margin: 0 auto 50px;
+}
 
 .coupon_box button {
     border-color: var(--theme-deafult);
@@ -2338,7 +2341,7 @@ div#test {
 }
 
 .product-image {
-    height: 225px;
+    height: 180px;
     width: 100%;
     margin: auto;
     padding: 0 10px;
@@ -2346,9 +2349,8 @@ div#test {
 
 .product-image img {
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     width: 100%;
-    /* border-radius: 6px; */
 }
 
 .product-detail {
@@ -3657,22 +3659,25 @@ header .homepage-address h2 {
 
 .nav-tabs .nav-link,
 .nav-tabs.navigation-tab .nav-item .nav-link,
-.nav-tabs.navigation-tab .nav-item.show .nav-link,
 .nav-tabs.navigation-tab .active .nav-link,
 .nav-tabs.navigation-tab .nav-link:focus{
     border: 0;
     background-color: transparent;
-    color: #fff;
     width: 100%;
     display: block;
+    text-align: center;
 }
 
 .nav-pills>li>a,
 .nav-tabs>li>a,
-.nav-tabs .nav-item.show .nav-link,
-.nav-tabs .nav-link.active {
+.nav-tabs .nav-item.show .nav-link
+{
     color: #222222;
     font-weight: 400;
+}
+
+.nav-tabs.navigation-tab .nav-item.show .nav-link.active{
+    color: #fff;
 }
 
 .navigation-tab {
@@ -3695,6 +3700,10 @@ header .homepage-address h2 {
     transition: 0.3s;
     position: relative;
     z-index: 2;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    overflow: hidden;
 }
 
 .navigation-tab-overlay {
@@ -3722,7 +3731,7 @@ header .homepage-address h2 {
 }
 
 .navigation-tab-item .nav-link {
-    padding: .5rem 0;
+    padding: 4px 0;
 }
 
 
@@ -4989,7 +4998,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     position: absolute;
     top: 20px;
     left: 10px;
-    background: rgb(5, 163, 87);
+    background: var(--theme-deafult);
     color: #fff;
     padding: 1px 15px;
     font-size: 12px;

@@ -125,15 +125,15 @@ h6 {
 
 .navigation-tab-item .nav-link {
     color: rgba(0, 0, 0, 0.39);
-    font-weight: 400;
-    padding: 5px 0;
+    font-weight: 600;
+    padding: 4px 0 6px;
     text-align: center;
     line-height: 18px;
 }
 
 .navigation-tab-item .nav-link.active {
     color:  #fff;
-    font-weight: 400;
+    font-weight: 600;
     background-color: transparent;
 }
 
@@ -243,6 +243,12 @@ h6 {
 .suppliers-box {
     width: 100%;
     margin: auto;
+}
+
+.product-image img {
+    height: 100%;
+    object-fit: contain;
+    width: 100%;
 }
 
 .rating-box {
