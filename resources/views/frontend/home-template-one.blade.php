@@ -84,10 +84,6 @@
     <% _.each(vendors, function(vendor, k){%>
 
         <div class="product-card-box position-relative">
-            <div class="add-to-fav">
-                <input id="fav_pro_one" type="checkbox">
-                <label for="fav_pro_one"><i class="fa fa-heart-o fav-heart" aria-hidden="true"></i></label>
-            </div>
             <a class="suppliers-box d-block" href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                 <div class="suppliers-img-outer position-relative">
                     <img class="fluid-img mx-auto blur-up lazyload" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
