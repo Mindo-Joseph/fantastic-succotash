@@ -170,7 +170,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </div>
                             </div>
                             <% _.each(vendor_product.addon, function(addon, ad){%>
-                            <% if(isset(addon.option)){%>
+                            <% if(addon.option){%>
                                 <div class="row">
                                     <div class="col-md-3 col-sm-4 items-details text-left">
                                         <p class="p-0 m-0"><%= addon.option.title %></p>
@@ -182,7 +182,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                         <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(addon.option.quantity_price) %></div>
                                     </div>
                                 </div>
-                            } %>
+                            <% } %>
                             <% }); %>
                         <% } %>
                     </div>
