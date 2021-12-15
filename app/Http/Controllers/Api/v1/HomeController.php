@@ -167,8 +167,6 @@ class HomeController extends BaseController
             $preferences = ClientPreference::select('distance_to_time_multiplier', 'distance_unit_for_time', 'is_hyperlocal', 'Default_location_name', 'Default_latitude', 'Default_longitude')->first();
             $latitude = $request->latitude;
             $longitude = $request->longitude;
-            $user_geo[] = $latitude;
-            $user_geo[] = $longitude;
             $paginate = $request->has('limit') ? $request->limit : 12;
             $type = 'delivery';
             if ($request->has('type')) {
@@ -181,17 +179,20 @@ class HomeController extends BaseController
             } else {
                 $vendorData = Vendor::select('id', 'slug', 'name', 'desc', 'banner', 'order_pre_time', 'order_min_amount', 'vendor_templete_id', 'show_slot', 'latitude', 'longitude')->withAvg('product', 'averageRating');
             }
+
+            $ses_vendors = $this->getServiceAreaVendors($latitude, $longitude, $type);
+
             if (($preferences) && ($preferences->is_hyperlocal == 1)) {
-                if ((empty($latitude)) && (empty($longitude))) {
-                    $address = $preferences->Default_location_name;
-                    $latitude = (!empty($preferences->Default_latitude)) ? floatval($preferences->Default_latitude) : 0;
-                    $longitude = (!empty($preferences->Default_latitude)) ? floatval($preferences->Default_longitude) : 0;
-                    $request->request->add(['latitude' => $latitude, 'longitude' => $longitude, 'address' => $address]);
-                }
-                $vendorData = $vendorData->whereHas('serviceArea', function ($query) use ($latitude, $longitude) {
-                    $query->select('vendor_id')
-                        ->whereRaw("ST_Contains(polygon, ST_GeomFromText('POINT(" . $latitude . " " . $longitude . ")'))");
-                });
+                $latitude = ($latitude) ? $latitude : $preferences->Default_latitude;
+                $longitude = ($longitude) ? $longitude : $preferences->Default_longitude;
+                $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
+                //3961 for miles and 6371 for kilometers
+                $calc_value = ($distance_unit == 'mile') ? 3961 : 6371;
+                $vendorData = $vendorData->select('*', DB::raw(' ( ' .$calc_value. ' * acos( cos( radians(' . $latitude . ') ) *
+                        cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $longitude . ') ) +
+                        sin( radians(' . $latitude . ') ) *
+                        sin( radians( latitude ) ) ) )  AS vendorToUserDistance'))->orderBy('vendorToUserDistance', 'ASC');
+                $vendorData = $vendorData->whereIn('id', $ses_vendors);
             }
             $vendorData = $vendorData->with('slot', 'slotDate')->where('status', 1)->get();
 
@@ -234,9 +235,9 @@ class HomeController extends BaseController
                     $vendor = $this->getVendorDistanceWithTime($latitude, $longitude, $vendor, $preferences);
                 }
             }
-            if (($preferences) && ($preferences->is_hyperlocal == 1) && ($latitude) && ($longitude)) {
-                $vendorData = $vendorData->sortBy('lineOfSightDistance')->values()->all();
-            }
+            // if (($preferences) && ($preferences->is_hyperlocal == 1) && ($latitude) && ($longitude)) {
+            //     $vendorData = $vendorData->sortBy('lineOfSightDistance')->values()->all();
+            // }
 
             $on_sale_product_details = $this->vendorProducts($vends, $langId, $clientCurrency, '', $type);
             $new_product_details = $this->vendorProducts($vends, $langId, $clientCurrency, 'is_new', $type);
@@ -404,6 +405,8 @@ class HomeController extends BaseController
             $keyword = $request->keyword;
             $langId = Auth::user()->language;
             $curId = Auth::user()->language;
+            $limit = $request->has('limit') ? $request->limit : 10;
+            $page = $request->has('page') ? $request->page : 1;
             $action = $request->has('type') && $request->type ? $request->type : null;
             $types = ['delivery', "dine_in", "takeaway"];
 
@@ -426,7 +429,7 @@ class HomeController extends BaseController
                             ->orWhere('categories.slug', 'LIKE', '%' . $keyword . '%')
                             ->orWhere('cts.trans-slug', 'LIKE', '%' . $keyword . '%');
                     })->orderBy('categories.parent_id', 'asc')
-                    ->orderBy('categories.position', 'asc')->get();
+                    ->orderBy('categories.position', 'asc')->paginate($limit, $page);
                 foreach ($categories as $category) {
                     $category->response_type = 'category';
                     $category->image_url = $category->image['proxy_url'] . '80/80' . $category->image['image_path'];
@@ -438,7 +441,7 @@ class HomeController extends BaseController
                     ->where('bt.title', 'LIKE', '%' . $keyword . '%')
                     ->where('brands.status', '!=', '2')
                     ->where('bt.language_id', $langId)
-                    ->orderBy('brands.position', 'asc')->get();
+                    ->orderBy('brands.position', 'asc')->paginate($limit, $page);
                 foreach ($brands as $brand) {
                     $brand->response_type = 'brand';
                     $brand->image_url = $brand->image['proxy_url'] . '80/80' . $brand->image['image_path'];
@@ -448,7 +451,7 @@ class HomeController extends BaseController
                 $vendors = Vendor::select('id', 'name  as dataname', 'logo', 'slug', 'address')->where($action, 1);
                 $vendors = $vendors->where(function ($q) use ($keyword) {
                     $q->where('name', 'LIKE', "%$keyword%")->orWhere('address', 'LIKE', '%' . $keyword . '%');
-                })->where('status', 1)->get();
+                })->where('status', 1)->paginate($limit, $page);
                 foreach ($vendors as $vendor) {
                     $vendor->response_type = 'vendor';
                     $vendor->image_url = $vendor->logo['proxy_url'] . '80/80' . $vendor->logo['image_path'];
@@ -471,7 +474,7 @@ class HomeController extends BaseController
                     })
                     ->where(function ($q) use ($keyword) {
                         $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
-                    })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->get();
+                    })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->paginate($limit, $page);
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $product->image_url = ($product->media->isNotEmpty()) ? $product->media->first()->image->path['image_fit'] . '300/300' . $product->media->first()->image->path['image_path'] : '';
@@ -510,7 +513,7 @@ class HomeController extends BaseController
                 if ($for == 'brand') {
                     $products = $products->where('products.brand_id', $dataId);
                 }
-                $products = $products->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->get();
+                $products = $products->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->paginate($limit, $page);
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $response[] = $product;

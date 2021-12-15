@@ -722,25 +722,25 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="card-box mb-0">
-                        <h1>Request a ride now</h1>
+                        <h1>{{__('Request a ride now')}}</h1>
                         <form action="" class="cab-booking-form">
 
                             <div class="cab-input">
                                 <div class="form-group mb-1 position-relative">
-                                    <input class="form-control" type="text" placeholder="Enter pickup location">
+                                    <input class="form-control" type="text" placeholder="{{__('Enter pickup location')}}">
                                     <a class="location-btn" href="#">
                                         <img src="{{asset('front-assets/images/arrow.svg')}}" alt="">
                                     </a>
                                 </div>
                                 <div class="form-group mb-0">
-                                    <input class="form-control" type="text" placeholder="Enter pickup location">
+                                    <input class="form-control" type="text" placeholder="{{__('Enter pickup location')}}">
                                 </div>
                                 <div class="input-line"></div>
                             </div>
 
                             <div class="cab-footer">
-                                <button class="btn btn-solid new-btn request-btn">Request now</button>
-                                <button class="btn btn-solid new-btn schedule-btn">Schedule for later</button>
+                                <button class="btn btn-solid new-btn request-btn">{{__('Request now')}}</button>
+                                <button class="btn btn-solid new-btn schedule-btn">{{__('Schedule for later')}}</button>
                             </div>
 
                         </form>

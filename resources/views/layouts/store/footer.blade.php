@@ -72,6 +72,10 @@
     var square_before_payment = "{{route('payment.square.beforePayment')}}";
     var square_create_payment = "{{route('payment.square.createPayment')}}";
 
+//////////////Ozow payment Routes
+    var ozow_before_payment = "{{route('payment.ozow.beforePayment')}}";
+    var ozow_create_payment = "{{route('payment.ozow.createPayment')}}";
+
 // Logged In User Detail
     var logged_in_user_name = "{{Auth::user()->name??''}}";
     var logged_in_user_email = "{{Auth::user()->email??''}}";
@@ -136,9 +140,15 @@
 <script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
 <script src="{{asset('assets/libs/clockpicker/clockpicker.min.js')}}"></script>
 
+
+
+@if(in_array('razorpay',$client_payment_options)) 
 <!-- RazourPay Payment Gateway -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <!-- RazourPay Payment Gateway -->
+@endif
+
+
 
 <!--WaitMe Loader Script -->
 <script src="{{asset('js/waitMe.min.js')}}"></script>

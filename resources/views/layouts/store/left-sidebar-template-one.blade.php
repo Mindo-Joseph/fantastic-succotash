@@ -104,7 +104,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     @if( (Session::get('preferences')))
                                         @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
                                             <div class="location-bar d-flex d-sm-none align-items-center justify-content-start mb-2 my-lg-0" href="#edit-address" data-toggle="modal">
-                                                <div class="map-icon mr-2"><span>{{__('Your Location')}}</span> <i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                                <div class="map-icon mr-1"><span>{{__('Delivering To')}}</span> <i class="fa fa-map-marker" aria-hidden="true"></i></div>
                                                 <div class="homepage-address text-left">
                                                     <h2><span data-placement="top">{{session('selectedAddress')}}</span></h2>
                                                 </div>
@@ -512,7 +512,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                             <img src="{{$cate['icon']['image_fit']}}200/200{{$cate['icon']['image_path']}}" alt="">
                                         </div>
                                         @endif
-                                        {{$cate['name']}}</a>
+                                        {{$cate['name']}}
+                                    </a>
                                     @if(!empty($cate['children']))
                                         <ul>
                                             @foreach($cate['children'] as $childs)
@@ -614,7 +615,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </button>
       </div>
       <div class="modal-body">
-        <h6 class="m-0">{{__('Este cambio removerá los productos actuales en tu carrito. ¿Deseas continuar?')}}</h6>
+        <h6 class="m-0">{{__('This change will remove all your cart products. Do you really want to continue ?')}}</h6>
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">
         <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">{{__('Cancel')}}</button>

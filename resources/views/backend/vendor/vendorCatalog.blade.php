@@ -127,13 +127,14 @@
                                 {{ __('Catalog') }}
                             </a>
                         </li>
+                        
+                        <li class="nav-item">
+                            <a href="{{ route('vendor.show', $vendor->id) }}" aria-expanded="false"
+                                class="nav-link {{ $tab == 'configuration' ? 'active' : '' }} {{ $vendor->status == 1 ? '' : 'disabled' }}">
+                                {{ __('Configuration') }}
+                            </a>
+                        </li>
                         @if ($client_preference_detail->business_type != 'taxi')
-                            <li class="nav-item">
-                                <a href="{{ route('vendor.show', $vendor->id) }}" aria-expanded="false"
-                                    class="nav-link {{ $tab == 'configuration' ? 'active' : '' }} {{ $vendor->status == 1 ? '' : 'disabled' }}">
-                                    {{ __('Configuration') }}
-                                </a>
-                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('vendor.categories', $vendor->id) }}" aria-expanded="true"
                                     class="nav-link {{ $tab == 'category' ? 'active' : '' }} {{ $vendor->status == 1 ? '' : 'disabled' }}">
@@ -280,7 +281,7 @@
                                                                     <img alt="{{ $product->id }}" class="rounded-circle"
                                                                         src="{{ $product->media[0]->image->path['proxy_url'] . '30/30' . $product->media[0]->image->path['image_path'] }}">
                                                                 @else
-                                                                    {{ $product->sku }}
+                                                                    {{-- {{ $product->sku }} --}}
                                                                 @endif
                                                             </td>
                                                             <td> <a href="{{ route('product.edit', $product->id) }}"

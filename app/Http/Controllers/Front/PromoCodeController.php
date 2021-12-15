@@ -27,7 +27,7 @@ class PromoCodeController extends Controller{
             $promo_codes = new \Illuminate\Database\Eloquent\Collection;
             $vendor_id = $request->vendor_id;
             $total_minimum_spend = $request->amount;
-            $validator = $this->validatePromoCodeList();
+            $validator = $this->validatePromoCodeList($request);
             if($validator->fails()){
                 return $this->errorResponse($validator->messages(), 422);
             }
@@ -104,9 +104,11 @@ class PromoCodeController extends Controller{
             if(!$cart_detail){
                 return $this->errorResponse('Invalid Cart Id', 422);
             }
-            $cart_detail = Promocode::where('id', $request->coupon_id)->first();
-            if(!$cart_detail){
+            $promo_code = Promocode::where('id', $request->coupon_id)->first();
+            if(!$promo_code){
                 return $this->errorResponse('Invalid Promocode Id', 422);
+            }elseif(isset($request->amount) && $request->amount < $promo_code->minimum_spend){
+                return $this->errorResponse('Add item worth '.(int)($promo_code->minimum_spend - $request->amount).' to apply this offer.', 422);
             }
             $cart_coupon_detail = CartCoupon::where('cart_id', $request->cart_id)->where('vendor_id', $request->vendor_id)->where('coupon_id', $request->coupon_id)->first();
             if($cart_coupon_detail){
@@ -121,7 +123,8 @@ class PromoCodeController extends Controller{
                 if($orders_count > 0){
                     return $this->errorResponse('Coupon Code apply only first order.', 422);
                 }
-            }
+            } 
+
             $cart_coupon = new CartCoupon();
             $cart_coupon->cart_id = $request->cart_id;
             $cart_coupon->vendor_id = $request->vendor_id;
@@ -150,8 +153,8 @@ class PromoCodeController extends Controller{
         }
     }
 
-    public function validatePromoCodeList(){
-        return Validator::make(request()->all(), [
+    public function validatePromoCodeList($request){
+        return Validator::make($request->all(), [
             'vendor_id' => 'required',
         ]);
     }
@@ -170,7 +173,7 @@ class PromoCodeController extends Controller{
             // $promo_codes = new \Illuminate\Database\Eloquent\Collection;
             $vendor_id = $request->vendor_id;
             $total_minimum_spend = $request->amount;
-            $validator = $this->validatePromoCodeList();
+            $validator = $this->validatePromoCodeList($request);
             if($validator->fails()){
                 return $this->errorResponse($validator->messages(), 422);
             }

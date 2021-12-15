@@ -294,6 +294,11 @@
                                                                                             <a href="{{ route('front.booking.details', $order->order_number) }}"
                                                                                                 target="_blank">{{ __('Details') }}</a>
                                                                                         @endif
+                                                                                        <h6 class="m-0">
+                                                                                            <label class="rating-star cancel_order"  data-order_vendor_id="{{$vendor->vendor_id??0}}" data-id="{{$vendor->id??0}}">
+                                                                                                Cancel Order
+                                                                                            </label>
+                                                                                        </h6>
 
                                                                                         @if ($vendor->dineInTable)
                                                                                             <li>
@@ -482,9 +487,7 @@
                                                                                 class="grand_total d-flex align-items-center justify-content-between">
                                                                                 <label
                                                                                     class="m-0">{{ __('Total Payable') }}</label>
-                                                                                <span>{{ Session::get('currencySymbol') }}@money($order->payable_amount
-                                                                                    - $order->total_discount_calculate *
-                                                                                    $clientCurrency->doller_compare)</span>
+                                                                                <span>{{ Session::get('currencySymbol') }}@money($order->payable_amount)</span>
                                                                             </li>
                                                                         </ul>
                                                                     </div>
@@ -1548,6 +1551,21 @@
         </div>
     </div>
 
+<!-- start cancel order -->
+<div class="modal fade vendor-order-cancel" id="cancel_order" tabindex="-1" aria-labelledby="cancel_orderLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div id="cancel-order-form-modal">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- end cancel order -->
 
     <!-- tip after order complete -->
     @include('frontend.modals.tip_after_order')
@@ -1666,5 +1684,19 @@
                 }
             }
         });
-    </script>
+   
+    ///// cancel order start 
+    $('body').on('click', '.cancel_order', function (event) {
+        event.preventDefault();
+        var id = $(this).data('id');
+        var order_vendor_id = $(this).data('order_vendor_id');
+         $.get('/return-order/get-vendor-order-for-cancel?id=' + id +'&order_vendor_id=' + order_vendor_id, function(markup)
+         {
+            $('#cancel_order').modal('show');
+            $('#cancel-order-form-modal').html(markup);
+        });
+    });
+    ////////// cancel order end 
+    
+</script>
 @endsection

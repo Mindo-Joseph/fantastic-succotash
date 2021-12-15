@@ -1,6 +1,7 @@
 <?php
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;
+use App\Model\SmsProvider;
 
 class SmsProviderSeeder extends Seeder
 {
@@ -11,7 +12,7 @@ class SmsProviderSeeder extends Seeder
      */
     public function run()
     {
-        \DB::table('sms_providers')->delete();
+        $sms_count = DB::table('sms_providers')->count();
  
         $maps = array(
             array(
@@ -20,7 +21,34 @@ class SmsProviderSeeder extends Seeder
                 'keyword' => 'twilio',
                 'status' => '1'
             ),
-        ); 
-        \DB::table('sms_providers')->insert($maps);
+            array(
+                'id' => 2,
+                'provider' => 'mTalkz Service',
+                'keyword' => 'mTalkz',
+                'status' => '1'
+            ),
+            array(
+                'id' => 3,
+                'provider' => 'Mazinhost Service',
+                'keyword' => 'mazinhost',
+                'status' => '1'
+            ),
+        );
+        if($sms_count == 0)
+        {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            DB::table('sms_providers')->truncate();
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+            DB::table('sms_providers')->insert($maps);
+        }else{
+            foreach($maps as $map){
+                $sms = SmsProvider::create([
+                    'provider' => $map['provider'],
+                    'keyword' => $map['keyword'],
+                    'status' => $map['status'],
+                ]);
+            }
+        } 
     }
 }

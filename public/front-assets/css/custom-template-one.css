@@ -1,128 +1,5 @@
-body {
-    font-family: 'Zen Kaku Gothic Antique';
-}
-
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{
-    font-weight: bold !important;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('../fonts/Inter-Regular.eot');
-    src: url('../fonts/Inter-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/Inter-Regular.woff2') format('woff2'),
-        url('../fonts/Inter-Regular.woff') format('woff'),
-        url('../fonts/Inter-Regular.ttf') format('truetype'),
-        url('../fonts/Inter-Regular.svg#Inter-Regular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Montserrat';
-    src: url('../fonts/Montserrat-Regular.eot');
-    src: url('../fonts/Montserrat-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/Montserrat-Regular.woff2') format('woff2'),
-        url('../fonts/Montserrat-Regular.woff') format('woff'),
-        url('../fonts/Montserrat-Regular.ttf') format('truetype'),
-        url('../fonts/Montserrat-Regular.svg#Montserrat-Regular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Raleway';
-    src: url('../fonts/Raleway-Regular.eot');
-    src: url('../fonts/Raleway-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/Raleway-Regular.woff2') format('woff2'),
-        url('../fonts/Raleway-Regular.woff') format('woff'),
-        url('../fonts/Raleway-Regular.ttf') format('truetype'),
-        url('../fonts/Raleway-Regular.svg#Raleway-Regular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Zen Kaku Gothic Antique';
-    src: url('../fonts/ZenKakuGothicAntique-Regular.eot');
-    src: url('../fonts/ZenKakuGothicAntique-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/ZenKakuGothicAntique-Regular.woff2') format('woff2'),
-        url('../fonts/ZenKakuGothicAntique-Regular.woff') format('woff'),
-        url('../fonts/ZenKakuGothicAntique-Regular.ttf') format('truetype'),
-        url('../fonts/ZenKakuGothicAntique-Regular.svg#ZenKakuGothicAntique-Regular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Zen Kaku Gothic Antique';
-    src: url('../fonts/ZenKakuGothicAntique-Bold.eot');
-    src: url('../fonts/ZenKakuGothicAntique-Bold.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/ZenKakuGothicAntique-Bold.woff2') format('woff2'),
-        url('../fonts/ZenKakuGothicAntique-Bold.woff') format('woff'),
-        url('../fonts/ZenKakuGothicAntique-Bold.ttf') format('truetype'),
-        url('../fonts/ZenKakuGothicAntique-Bold.svg#ZenKakuGothicAntique-Bold') format('svg');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-}
-
-
-
-@font-face {
-    font-family: 'Eina02';
-    src: url('../fonts/Eina02-SemiBold.eot');
-    src: url('../fonts/Eina02-SemiBold.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/Eina02-SemiBold.woff2') format('woff2'),
-        url('../fonts/Eina02-SemiBold.woff') format('woff'),
-        url('../fonts/Eina02-SemiBold.ttf') format('truetype'),
-        url('../fonts/Eina02-SemiBold.svg#Eina02-SemiBold') format('svg');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Eina02';
-    src: url('../fonts/Eina02-Regular.eot');
-    src: url('../fonts/Eina02-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/Eina02-Regular.woff2') format('woff2'),
-        url('../fonts/Eina02-Regular.woff') format('woff'),
-        url('../fonts/Eina02-Regular.ttf') format('truetype'),
-        url('../fonts/Eina02-Regular.svg#Eina02-Regular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Eina02';
-    src: url('../fonts/Eina02-Bold.eot');
-    src: url('../fonts/Eina02-Bold.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/Eina02-Bold.woff2') format('woff2'),
-        url('../fonts/Eina02-Bold.woff') format('woff'),
-        url('../fonts/Eina02-Bold.ttf') format('truetype'),
-        url('../fonts/Eina02-Bold.svg#Eina02-Bold') format('svg');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Eina03';
-    src: url('../fonts/Eina03-SemiBold.eot');
-    src: url('../fonts/Eina03-SemiBold.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/Eina03-SemiBold.woff2') format('woff2'),
-        url('../fonts/Eina03-SemiBold.woff') format('woff'),
-        url('../fonts/Eina03-SemiBold.ttf') format('truetype'),
-        url('../fonts/Eina03-SemiBold.svg#Eina03-SemiBold') format('svg');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
+    font-weight: 500 !important;
 }
 
 h1 {
@@ -178,11 +55,11 @@ h6 {
 }
 
 .offset-top {
-    margin-top: 270px;
+    margin-top: 220px;
 }
 
 .inner-pages-offset {
-    margin-top: 207px;
+    margin-top: 196px;
 }
 
 .set-hide-nav-bar {
@@ -201,6 +78,7 @@ h6 {
 
 .site-topbar .location-bar {
     background: transparent;
+    white-space: nowrap;
     width: calc(100% - 20px);
 }
 
@@ -247,23 +125,22 @@ h6 {
 
 .navigation-tab-item .nav-link {
     color: rgba(0, 0, 0, 0.39);
-    font-weight: 600;
-    padding: 3px 0 6px;
+    font-weight: 400;
+    padding: 5px 0;
     text-align: center;
     line-height: 18px;
 }
 
 .navigation-tab-item .nav-link.active {
     color:  #fff;
-    font-weight: 600;
+    font-weight: 400;
     background-color: transparent;
 }
 
 .search_form input.form-control {
     opacity: 0.81;
     color: #8B8B8B;
-    font-family: 'Eina03';
-    font-weight: 600;
+    font-weight: 400;
     font-size: 16px;
     letter-spacing: 0;
     line-height: 16px;
@@ -273,8 +150,7 @@ h6 {
 .search_form input.form-control::placeholder {
     opacity: 0.81;
     color: #8B8B8B;
-    font-family: 'Eina03';
-    font-weight: 600;
+    font-weight: 400;
     font-size: 16px;
 }
 
@@ -310,17 +186,24 @@ h6 {
     transform: rotate(-180deg);
 } */
 
-.home-banner-slider .slick-prev,
-.home-banner-slider .slick-next {
+.home-banner-slider .slick-prev, .home-banner-slider .slick-next {
     height: 40px;
     width: 40px;
-    background: rgb(0 0 0 / 18%);
+    background: rgb(0 0 0 / 18%) url("../images/slide-next.png") no-repeat;
     border-radius: 50%;
+    background-size: 30px;
+    background-position: 6px 6px;
+}
+
+.home-banner-slider .slick-prev {
+    transform: rotate(180deg);
+    background-position: 7px 5px;
 }
 
 .home-banner-slider .slick-next:before,
 .home-banner-slider .slick-prev:before {
     color: #fff;
+    display: none;
 }
 
 .img-outer-box {
@@ -344,27 +227,14 @@ h6 {
     transition-duration: none;
 }
 
-.product-4 .slick-slide,
-.suppliers-slider .slick-slide {
-    padding: 20px 0;
-}
-
 .common-product-box,
 .suppliers-box {
-    padding: 10px 10px 0;
+    padding: 0;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
     transition: all 0.5s;
     display: block;
 }
-
-/* .common-product-box:hover,
-.suppliers-box:hover,
-.product-box:hover {
-    border-color: rgb(232, 232, 232);
-    box-shadow: rgb(28 28 28 / 12%) 0px 0.4rem 1.8rem;
-    box-sizing: border-box;
-} */
 
 .product-box {
     padding: 5px 16px 0;
@@ -373,14 +243,9 @@ h6 {
 .suppliers-box {
     width: 100%;
     margin: auto;
-    padding-top: 10px;
-    padding-bottom: 20px;
 }
 
 .rating-box {
-    /* position: absolute;
-    top: 30px;
-    left: 0; */
     border-radius: 5px;
     background-color: #F7B500;
     font-size: 11px;
@@ -390,7 +255,7 @@ h6 {
 
 .product-description h3 {
     color: #000000;
-    font-family: 'Zen Kaku Gothic Antique';
+
     font-weight: 600;
     font-size: 17px;
     letter-spacing: 0;
@@ -400,7 +265,7 @@ h6 {
 .product-description p {
     opacity: 0.67;
     color: #000000;
-    font-family: 'Zen Kaku Gothic Antique';
+
     font-weight: 400;
     font-size: 13px;
     letter-spacing: 0;
@@ -413,7 +278,7 @@ h6 {
 
 .product-description b {
     color: #000;
-    font-family: 'Zen Kaku Gothic Antique';
+
     font-weight: 700;
     font-size: 16px;
     letter-spacing: 0;
@@ -422,12 +287,11 @@ h6 {
 
 .h2-heading {
     color: #000;
-    font-family: 'Zen Kaku Gothic Antique';
     font-weight: 700;
-    font-size: 33px;
+    font-size: 26px;
     letter-spacing: 0;
-    line-height: 40px;
-    margin: 0;
+    line-height: 38px;
+    margin: 0 0 20px;
 }
 
 .popular-brands .h2-heading {
@@ -440,7 +304,7 @@ h6 {
     line-height: 35px;
     border-radius: 27.5px;
     color: #EC5837;
-    font-family: 'Zen Kaku Gothic Antique';
+
     font-weight: 600;
     font-size: 13px;
     letter-spacing: 0;
@@ -469,7 +333,7 @@ h6 {
     height: 40px;
     text-indent: -8px;
     line-height: 10px;
-    font-family: 'Zen Kaku Gothic Antique';
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -488,9 +352,9 @@ h6 {
 
 .popular-brands,
 .royo-recommends {
-    padding: 55px 0;
+    margin-bottom: 30px;
+    padding: 55px 0 !important;
     z-index: 1;
-    margin: 30px 0;
 }
 
 .popular-brands .brand-slider {
@@ -526,7 +390,7 @@ h6 {
 }
 
 .brand-box {
-    height: 313px;
+    height: 270px;
     border-radius: 10px;
     width: 100%;
     margin: auto;
@@ -539,7 +403,7 @@ h6 {
     height: 100%;
     position: relative;
     overflow: hidden;
-    border-radius: 40px;
+    border-radius: 10px;
 }
 
 .brand-ing:after {
@@ -556,15 +420,15 @@ h6 {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 40px;
 }
 
 
 .brand-box h6 {
     position: absolute;
-    bottom: 20px;
+    left: 0;
+    bottom: 10px;
     color: #fff;
-    font-size: 24px;
+    font-size: 20px;
     letter-spacing: 0;
     font-weight: 600;
     line-height: 33px;
@@ -631,14 +495,14 @@ h6 {
 }
 
 .nav-cate-img {
-    height: 70px;
-    width: 70px;
+    height: 50px;
+    width: 50px;
     background-color: #F7F7F7;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    margin: 0 auto 10px;
+    margin: 0 auto 5px;
 }
 
 .nav-cate-img img {
@@ -808,9 +672,6 @@ footer ul.social-links li a i,
     margin-bottom: 0;
 }
 
-section#our_vendor_main_div {
-    padding-bottom: 0;
-}
 
 
 
@@ -980,139 +841,7 @@ body[dir="rtl"] #social-links li:last-child {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Media Responsiveness Css Start form here */
 
 @media (min-width: 1520px) {
 
@@ -1144,12 +873,6 @@ body[dir="rtl"] #social-links li:last-child {
     }
 
     .home-banner-slider .slick-prev,
-    .home-banner-slider .slick-next {
-        height: 35px;
-        width: 35px;
-    }
-
-    .home-banner-slider .slick-prev,
     .home-banner-slider .slick-prev:focus,
     .home-banner-slider .slick-prev:hover {
         left: -50px;
@@ -1163,18 +886,18 @@ body[dir="rtl"] #social-links li:last-child {
 }
 
 @media (min-width: 991px) {
-
-    .home-banner-slider,.home-banner-slider .slick-slide {
-        height: 550px;
+    .cab-banner-area {
+        margin-bottom: -40px;
     }
+
     .home-banner-slider .slick-list {
         border-radius: 4px;
         overflow: hidden;
     }
 
     .home-banner-slider .slick-slide img {
-        height: 100%;
-        object-fit: cover;
+        /* height: 100%;
+        object-fit: fill; */
         width: 100%;
     }
 
@@ -1321,7 +1044,7 @@ body[dir="rtl"] #social-links li:last-child {
 }
 
 @media (max-width: 767px) {
-    
+
     .home-banner-slider .slick-prev,
     .home-banner-slider .slick-next {
         height: 30px;
@@ -1392,16 +1115,8 @@ body[dir="rtl"] #social-links li:last-child {
         width: 100%;
     }
 
-    .img-outer-box {
-        height: 170px;
-    }
-
-    section.suppliers-section {
-        padding: 0 16px;
-    }
-
     .product-4 {
-        padding: 0 16px;
+        padding: 0;
     }
 
     .cab-banner-area .card-box {

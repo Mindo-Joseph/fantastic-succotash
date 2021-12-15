@@ -22,11 +22,27 @@ use App\Models\{Client, Category, Product, ClientPreference,EmailTemplate, Clien
 
 class FrontController extends Controller
 {
+    use \App\Http\Traits\smsManager;
     private $field_status = 2;
     protected function sendSms($provider, $sms_key, $sms_secret, $sms_from, $to, $body){
         try{
-            $client = new TwilioClient($sms_key, $sms_secret);
-            $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+            $client_preference =  getClientPreferenceDetail();
+            if($client_preference->sms_provider == 1)
+            {
+                $client = new TwilioClient($sms_key, $sms_secret);
+                $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+            }elseif($client_preference->sms_provider == 2) //for mtalkz gateway
+            {
+                $crendentials = json_decode($client_preference->sms_credentials);
+                $send = $this->mTalkz_sms($to,$body,$crendentials);
+            }elseif($client_preference->sms_provider == 3) //for mazinhost gateway
+            {
+                $crendentials = json_decode($client_preference->sms_credentials);
+                $send = $this->mazinhost_sms($to,$body,$crendentials);
+            }else{
+                $client = new TwilioClient($sms_key, $sms_secret);
+                $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+            }
         }
         catch(\Exception $e){
             return '2';
@@ -665,5 +681,43 @@ class FrontController extends Controller
     public function getClientCode(){
         $code = Client::orderBy('id','asc')->value('code');
         return $code;
+    }
+    public function sendmailtest(){
+
+        $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
+        $data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
+//         echo "<pre>";
+// print_r($data->toArray());
+// exit();
+      
+        if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
+                $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+                $client_name = $client->name;
+                $mail_from = $data->mail_from;
+                $sendto = "harbans.singh@codebrewinnovations.com";
+                try{
+                    $data = [
+                        'customer_name' => "harbans",
+                        'code_text' => '',
+                        'logo' => $client->logo['original'],
+                        'frequency' => 'asd',
+                        'end_date' => "asd",
+                        'link'=> "http://local.myorder.com/user/subscription/select/",
+                    ];
+                     $mail=   Mail::send('email.notifyUserSubscriptionBilling', ['mailData'=>$data],
+                        function ($message) use($sendto, $client_name, $mail_from) {
+                            $message->from($mail_from, $client_name);
+                            $message->to($sendto)->subject('Upcoming Subscription Billing');
+                        });
+//                                 echo "<pre>";
+// print_r($mail);
+// exit();
+                        $response['send_email'] = 1;
+                }
+                catch(\Exception $e){
+                    return response()->json(['data' => $e->getMessage()]);
+                }
+            }
+       
     }
 }

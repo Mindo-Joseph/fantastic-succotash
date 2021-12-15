@@ -79,7 +79,9 @@
 @endsection
 @section('content')
 <div class="container-fluid">
-    <div class="row">
+   
+    <div class="row"> 
+           
         <div class="col-8 d-flex align-items-center">
             <div class="page-title-box">
                 <h4 class="page-title">{{ __("Edit Product") }}</h4>
@@ -96,6 +98,7 @@
             <button type="button" class="btn btn-info waves-effect waves-light text-sm-right saveProduct"> {{ __("Submit") }}</button>
         </div>
     </div>
+    <a href="{{route('vendor.catalogs',$product->vendor_id)}}">{{ $product->vendor->name}} </a>
     <div class="row mb-2">
         <div class="col-sm-12">
             <div class="text-sm-left">
@@ -1253,13 +1256,19 @@
                   product_faq_id: product_faq_id
                },
                success: function(response) {
-                  if (response.status == "Success") {
-                     $.NotificationApp.send({{__('Success')}}, response.message, "top-right", "#5ba035", "success");
-                     setTimeout(function() {
-                        location.reload()
-                     }, 2000);
-                  }
+               if (response.status == 'Success') {
+                 
+                  $.NotificationApp.send("{{__('Success')}}", response.message, "top-right", "#5ba035", "success");
+                  setTimeout(function() {
+                     location.reload()
+                  }, 2000);
+               } else {
+                  $.NotificationApp.send({{__('Errors')}}, response.message, "top-right", "#ab0535", "error");
                }
+            },
+            error: function(response) {
+               $('#add_product_faq_modal .social_media_url_err').html('Error in delete.');
+            }
             });
          }
       });
