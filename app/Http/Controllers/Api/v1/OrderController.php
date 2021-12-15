@@ -19,7 +19,6 @@ use App\Models\AutoRejectOrderCron;
 class OrderController extends BaseController
 {
     use ApiResponser;
-    use \App\Http\Traits\OrderTrait;
     /**
      * Display a listing of the resource.
      *
@@ -515,7 +514,6 @@ class OrderController extends BaseController
                         $stats = $this->insertInVendorOrderDispatchStatus($request);
                 }
                 OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id]);
-                $this->ProductVariantStoke($order_id);
                 DB::commit();
                 // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
             }
@@ -1224,6 +1222,13 @@ class OrderController extends BaseController
                     $dispatch_traking_url = str_replace('/order/', '/order-cancel/', $currentOrderStatus->dispatch_traking_url);
                     $response = Http::get($dispatch_traking_url);
                 }
+
+                if ($request->order_status_option_id == 2) {
+                    $order_dispatch = $this->checkIfanyProductLastMileon($request);
+                    if ($order_dispatch && $order_dispatch == 1)
+                        $stats = $this->insertInVendorOrderDispatchStatus($request);
+                }
+
                 DB::commit();
                 // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
                 $code = $request->header('code');

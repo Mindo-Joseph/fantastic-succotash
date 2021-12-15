@@ -579,7 +579,7 @@
     <input type="hidden" name="variant_id" id="prod_variant_id" value="<%= variant.id %>">
     <% if(variant.product.inquiry_only == 0) { %>
         <h3 id="productPriceValue" class="mb-md-3">
-            <b class="mr-1"><span class="product_fixed_price"><%= variant.productPrice %></span></b>
+            <b class="mr-1"><span class="product_fixed_price">{{Session::get('currencySymbol')}}<%= variant.productPrice %></span></b>
             <% if(variant.compare_at_price > 0 ) { %>
                 <span class="org_price">{{Session::get('currencySymbol')}}<span class="product_original_price"><%= variant.compare_at_price %></span></span>
             <% } %>
@@ -851,6 +851,10 @@
     var product_id = "{{ $product->id }}";
     var add_to_cart_url = "{{ route('addToCart') }}";
     $('.changeVariant').click(function() {
+        updatePrice();
+    });
+    function updatePrice()
+    {
         var variants = [];
         var options = [];
         $('.changeVariant').each(function() {
@@ -875,12 +879,15 @@
                 }
             },
             success: function(response) {
+                console.log(response);
                 if(response.status == 'Success'){
                     $("#variant_response span").html('');
                     if(response.variant != ''){
                         $('#product_variant_wrapper').html('');
                         let variant_template = _.template($('#variant_template').html());
-                        $("#product_variant_wrapper").append(variant_template({variant:response.variant}));
+                        response.variant.productPrice = (parseFloat(checkAddOnPrice()) + parseFloat(response.variant.productPrice)).toFixed(2);
+                        response.variant.compare_at_price = (parseFloat(checkAddOnPrice()) + parseFloat(response.variant.compare_at_price)).toFixed(2);
+                        $("#product_variant_wrapper").append(variant_template({variant:response.variant})); 
 
                         $('#product_variant_quantity_wrapper').html('');
                         let variant_quantity_template = _.template($('#variant_quantity_template').html());
@@ -912,7 +919,18 @@
 
             },
         });
-    });
+    }
+    function checkAddOnPrice()
+    {
+        price  = 0;
+        $('.productDetailAddonOption').each(function(){
+            if($(this).prop('checked') == true){
+                var cp = $(this).data('price');
+                price = price + parseFloat(cp);
+            }
+        });
+        return price;
+    }
 </script>
 <script>
     var addonids = [];
@@ -934,17 +952,12 @@
                     addonids.splice(addonids.indexOf(addonId), 1);
                     addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
                 }
-                org_price = parseFloat($(this).data('original_price'));
-                fixed_price = parseFloat($(this).data('fixed_price'));
-                $('.productDetailAddonOption').each(function(){
-                    if($(this).prop('checked') == true){
-                        var cp = $(this).data('price');
-                        org_price = org_price + parseFloat(cp);
-                        fixed_price = fixed_price + parseFloat(cp);
-                    }
-                });
-                $('.product_fixed_price').html(fixed_price.toFixed(2));
-                $('.product_original_price').html(org_price.toFixed(2));
+                updatePrice();
+                // addOnPrice = parseFloat(checkAddOnPrice());
+                // org_price = parseFloat($(this).data('original_price')) + addOnPrice;
+                // fixed_price = parseFloat($(this).data('fixed_price')) + addOnPrice;
+                // $('.product_fixed_price').html(fixed_price.toFixed(2));
+                // $('.product_original_price').html(org_price.toFixed(2));
             }
         });
     });
