@@ -902,8 +902,8 @@
                         let variant_image_template = _.template($('#variant_image_template').html());
                         $(".product__carousel .gallery-parent").html('');
                         $(".product__carousel .gallery-parent").append(variant_image_template({variant:response.variant}));
-                        easyZoomInitialize();
-                        $('.easyzoom').easyZoom();
+                        // easyZoomInitialize();
+                        // $('.easyzoom').easyZoom();
 
                         if(response.variant.media != ''){
                             $(".product-slick").slick({ slidesToShow: 1, slidesToScroll: 1, arrows: !0, fade: !0, asNavFor: ".slider-nav" });
@@ -952,12 +952,16 @@
                     addonids.splice(addonids.indexOf(addonId), 1);
                     addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
                 }
-                updatePrice();
-                // addOnPrice = parseFloat(checkAddOnPrice());
-                // org_price = parseFloat($(this).data('original_price')) + addOnPrice;
-                // fixed_price = parseFloat($(this).data('fixed_price')) + addOnPrice;
-                // $('.product_fixed_price').html(fixed_price.toFixed(2));
-                // $('.product_original_price').html(org_price.toFixed(2));
+                if($('.changeVariant').length > 0)
+                {
+                    updatePrice();
+                }else{
+                    addOnPrice = parseFloat(checkAddOnPrice());
+                    org_price = parseFloat($(this).data('original_price')) + addOnPrice;
+                    fixed_price = parseFloat($(this).data('fixed_price')) + addOnPrice;
+                    $('.product_fixed_price').html(fixed_price.toFixed(2));
+                    $('.product_original_price').html(org_price.toFixed(2));
+                }
             }
         });
     });
