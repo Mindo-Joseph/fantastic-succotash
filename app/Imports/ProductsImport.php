@@ -478,8 +478,9 @@ class ProductsImport implements ToCollection{
                 $vendor_csv->status = 2;
             }
             $vendor_csv->save();
-        } catch (Exception $e) {
-            pr($e->getCode());
+        } catch(\Exception $ex){
+            $error[] = "Other: " .$ex->getMessage();
+            \Log::info($ex->getMessage()."".$ex->getLine());
         }
     }
     private function generateBarcodeNumber(){
