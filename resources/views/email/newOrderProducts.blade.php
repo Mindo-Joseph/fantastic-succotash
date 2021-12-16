@@ -1,11 +1,11 @@
-@php
+{{-- @php
 $timezone = Auth::user()->timezone;
-@endphp
+@endphp --}}
 
    <tr> 
       <td colspan="2" style="text-align: center;">
           <h2 style="color: #000000;font-size: 15px;font-weight: 500;letter-spacing: 0;line-height: 19px;">{{__('ORDER NO')}}. {{$order->order_number}}</h2>
-          <p style="opacity: 0.41;color: #000000;font-size: 12px;letter-spacing: 0;line-height: 15px;">{{ dateTimeInUserTimeZone($order->created_at, $timezone) }}</p>
+          {{-- <p style="opacity: 0.41;color: #000000;font-size: 12px;letter-spacing: 0;line-height: 15px;">{{ dateTimeInUserTimeZone($order->created_at, $timezone) }}</p> --}}
       </td>
    </tr>
 
