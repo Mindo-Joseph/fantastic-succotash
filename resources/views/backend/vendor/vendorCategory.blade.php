@@ -167,7 +167,7 @@
                                                                 <td>{{$set->min_select}} - {{$set->max_select}}</td>
                                                                 <td>
                                                                     @foreach($set->option as $opt)
-                                                                    <span>{{$opt->title}} - ${{$opt->price}}</span><br />
+                                                                    <span>{{$opt->title}} - {{$clientCurrency->currency->symbol}}{{$opt->price}}</span><br />
                                                                     <span></span>
                                                                     @endforeach
                                                                 </td>
@@ -244,7 +244,7 @@
                                 <div class="col-md-12" style="overflow-x: auto;">
                                     <table class="table table-borderless mb-0 optionTableAdd" id="banner-datatable">
                                         <tr class="trForClone">
-                                            <th>{{ __("Price") }}($)</th>
+                                            <th>{{ __("Price") }}({{$clientCurrency->currency->symbol}})</th> 
                                             @foreach($languages as $langs)
                                             <th>{{$langs->language->name}}</th>
                                             @endforeach
