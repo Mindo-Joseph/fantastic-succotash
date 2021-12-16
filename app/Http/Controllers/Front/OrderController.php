@@ -317,6 +317,7 @@ class OrderController extends FrontController
                     $email_template_content = $email_template->content;
                     if ($vendor_id == "") {
                         $returnHTML = view('email.newOrderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
+                        dd($returnHTML);
                     } else {
                         $returnHTML = view('email.orderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id, 'currencySymbol' => $currSymbol])->render();
                     }
