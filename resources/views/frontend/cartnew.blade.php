@@ -884,7 +884,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif
 
                         <div class="divider-line mb-2"></div>
-                        <p class="new-user mb-0">New to Royo? <a href="{{route('customer.register')}}">Create an
+                        <p class="new-user mb-0">New to {{getClientDetail()->company_name}}? <a href="{{route('customer.register')}}">Create an
                                 account</a></p>
                     </div>
                     {{-- <div class="login-with-mail">
