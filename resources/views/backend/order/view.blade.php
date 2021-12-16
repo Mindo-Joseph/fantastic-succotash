@@ -308,7 +308,7 @@ $timezone = Auth::user()->timezone;
             <div class="col-lg-6 mb-3">
                 <div class="card mb-0 h-100">
                     <div class="card-body">
-                        <h4 class="header-title mb-3">{{ __("Shipping Information") }}</h4>
+                        <h4 class="header-title mb-3">{{ __("Delivery Information") }}</h4>
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __("Email") }}:</span> {{ $order->user->email ? $order->user->email : ''}}</p>
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __('Phone')}}:</span> {{'+'.$order->user->dial_code.$order->user->phone_number}}</p>
