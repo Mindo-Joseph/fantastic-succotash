@@ -79,8 +79,8 @@
                             <div class="row">
                                 @foreach($tab_style_options as $tab_style)
                                 <div class="col-12">
-                                    <div class="card mb-0">
-                                        <div class="card-body px-2 pt-0">
+                                    <div class="card mb-3 shadow-none bg-tranparent">
+                                        <div class="card-body px-2 py-0">
                                             <div class="row">
                                                 <div class="col-sm-12 custom-control custom-radio radio_new p-0">
                                                     <input type="radio" {{$tab_style->is_selected == 1 ? 'checked' : ''}} onchange="submitTabBarForm(this.id)" value="{{$tab_style->id}}" id="{{$tab_style->id}}" name="tab_bars" class="custom-control-input tab_bar_options" }}>
@@ -105,7 +105,7 @@
                         <input type="text" class="form-control" data-id="{{ $signup_tag_line_text->id??'' }}" id="signup_tagline" name="signup_tagline" value="{{ $signup_tag_line_text->name??'' }}">
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <form action="{{ route('styling.addTutorials') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="card card-box">
@@ -117,6 +117,31 @@
                             <button type="submit" class="btn btn-info waves-effect waves-light mt-1">Submit</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title">{{ __("Home Page Style") }}</h4>
+                    <div class="row">
+                        @foreach($homepage_style_options as $homepage_style)
+                                <div class="col-sm-6 col-md-4 col-lg-3">
+                                    <div class="card mb-0">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-sm-12 custom-control custom-radio radio_new p-0">
+                                                    <input type="radio" {{$homepage_style->is_selected == 1 ? 'checked' : ''}} value="{{$homepage_style->id}}" onchange="submitHomePageForm(this.id)" id="{{$homepage_style->id}}" name="home_styles" class="custom-control-input " }}>
+                                                    <label class="custom-control-label" for="{{$homepage_style->id}}">
+                                                        <img class="card-img-top img-fluid" src="{{url('images/'.$homepage_style->image)}}" alt="Card image cap">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
@@ -156,34 +181,7 @@
     </div>
     @endif
 
-    <div class="row">
-        <div class="col-xl-6">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="header-title">{{ __("Home Page Style") }}</h4>
-                    <div class="row">
-                        @foreach($homepage_style_options as $homepage_style)
-                                <div class="col-sm-6 col-md-4 col-lg-3">
-                                    <div class="card mb-0">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-sm-12 custom-control custom-radio radio_new p-0">
-                                                    <input type="radio" {{$homepage_style->is_selected == 1 ? 'checked' : ''}} value="{{$homepage_style->id}}" onchange="submitHomePageForm(this.id)" id="{{$homepage_style->id}}" name="home_styles" class="custom-control-input " }}>
-                                                    <label class="custom-control-label" for="{{$homepage_style->id}}">
-                                                        <img class="card-img-top img-fluid" src="{{url('images/'.$homepage_style->image)}}" alt="Card image cap">
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
+
 </div>
 
 @endsection

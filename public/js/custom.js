@@ -319,6 +319,9 @@ window.initializeSlider = function initializeSlider() {
     }
 }
 
+
+
+
 $(document).ready(function() {
 
     // $(".toggle-nav").click(function() {

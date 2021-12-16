@@ -126,6 +126,7 @@ header.site-header.fixed-bar {
     font-size: 14px;
     line-height: 20px;
     width: calc(100% - 11%);
+    font-weight: 400!important;
 }
 
 .site-topbar .location-bar h2:after {
@@ -360,8 +361,14 @@ header.site-header.fixed-bar {
     margin-right: 20px;
 }
 
+.pac-container {
+    z-index: 9999;
+    top: 100% !important;
+    left: 0 !important;
+}
+
 .add-to-fav {
-    display: none;
+    display: block;
     position: absolute;
     right: 10px;
     top: 10px;
@@ -377,7 +384,7 @@ header.site-header.fixed-bar {
 }
 
 .add-to-fav .fav-heart,.fav-heart{
-    display: none;
+    display: block;
 }
 
 .add-to-fav input[type="checkbox"]{
@@ -440,7 +447,7 @@ header.site-header.fixed-bar {
     line-height: 11px;
 }*/
 
-.vendors .container {
+.vendors > .container {
     margin: 0 auto 50px;
 }
 
@@ -879,20 +886,16 @@ ul.social-links li:active a i {
 .radius-flag .iti__selected-flag:hover {
     background: transparent !important;
     border-right: 1px solid #ddd;
-    /* border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;*/
 }
 
 .verify_id .form-control {
     opacity: 0.6;
-    /* color: #000000; */
     font-size: 14px;
     font-weight: 500;
     padding: 19px 20px;
 }
 
 .verify_id .input-group-text {
-    /* color: #2B8AFF; */
     font-size: 12px;
     font-weight: 600;
     line-height: 22.58px;
@@ -5203,6 +5206,10 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     margin: auto !important;
 }
 
+.menu-slider .slick-list {
+    overflow: visible;
+}
+
 .menu-slider.items-center .slick-track {
     justify-content: space-between;
 }
@@ -5245,9 +5252,6 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     height: 40px;
 }
 
-.pixelstrap a .sub-arrow {
-    display: none;
-}
 
 @media screen and (max-width: 500px) {
     .step p {
@@ -7274,6 +7278,9 @@ body[dir="rtl"] .inner_spacing h3 {
 
 
 @media (max-width: 1199px) {
+    .pixelstrap a .sub-arrow{
+        display: none;
+    }
     .small-slider .home-slider .home {
         height: 30vh;
     }

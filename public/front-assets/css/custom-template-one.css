@@ -18,7 +18,7 @@ h1 span {
 h2 {
     font-size: 34px;
     color: #222222;
-    text-transform: uppercase;
+    text-transform: none !important;
     font-weight: 700;
     line-height: 1;
     letter-spacing: 0.02em;
@@ -667,15 +667,9 @@ footer ul.social-links li a i,
     font-size: 14px;
 }
 
-
 .mail-icon .img-fluid {
     width: 40%;
     margin: auto;
-}
-
-
-.cab-banner-area{
-    margin-bottom: 0;
 }
 
 
@@ -892,10 +886,6 @@ body[dir="rtl"] #social-links li:last-child {
 }
 
 @media (min-width: 991px) {
-    .cab-banner-area {
-        margin-bottom: -40px;
-    }
-
     .home-banner-slider .slick-list {
         border-radius: 4px;
         overflow: hidden;
