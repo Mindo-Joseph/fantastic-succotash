@@ -438,7 +438,7 @@
                             </div>
                         </div>
                     </div>
-                 {{--   <section class="tab-product m-0">
+                    <section class="tab-product m-0">
                         <div class="row">
                             <div class="col-sm-12 col-lg-12">
                                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
@@ -468,7 +468,7 @@
                                             $product->translation[0]->body_html : ''!!}</p>
                                     </div>
                                     <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
-                                        @foreach ($rating_details as $rating)
+                                        @forelse ($rating_details as $rating)
                                         <div v-for="item in list" class="w-100 d-flex justify-content-between mb-3">
                                             <div class="review-box">
 
@@ -497,12 +497,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @endforeach
+                                        @empty
+                                        <p>{{__('No Result Found.')}}</p>
+                                        @endforelse
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </section>--}}
+                    </section>
                 </div>
             </div>
         </div>
