@@ -29,6 +29,17 @@ $timezone = Auth::user()->timezone;
                                     <p>#{{$order->order_number}}</p>
                                 </div>
                             </div>
+                             @if(isset($order->vendors) && empty($order->vendors->first()->dispatch_traking_url) && ($order->vendors->first()->delivery_fee > 0) && ($order->vendors->first()->order_status_option_id > 2))
+                             <div class='inner-div d-inline-block' style="float: right;">
+                                <form method='POST' action='"+full.destroy_url+"'>
+                                   
+                                        <button type='button' class='btn btn-danger' id="create_dispatch_request"  data-order_vendor_id="{{$order->vendors->first()->id}}">{{__('Create Dispatch Request')}}</i>
+                                        </button>
+                                   
+                                </form>
+                             </div>
+                            @endif    
+
                             @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null)
                             <div class="col-lg-6">
                                 <div class="mb-4">
@@ -87,6 +98,7 @@ $timezone = Auth::user()->timezone;
                                     @endforeach
 
                                     <!-- List of incomplete order status if order is not rejected -->
+                                    
                                     @if(!in_array(3, $vendor_order_status_option_ids))
                                         @foreach($order_status_options as $order_status_option)
                                             @if(!in_array($order_status_option->id, $vendor_order_status_option_ids))
@@ -125,6 +137,8 @@ $timezone = Auth::user()->timezone;
                                     @endif
                                 </ul>
                             </div>
+
+                           
 
                             @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null)
                             <div class="col-lg-6">
@@ -165,16 +179,7 @@ $timezone = Auth::user()->timezone;
                         <h4 class="header-title mb-3">
  
                             <div class='form-ul'> {{ $vendor_data->name }}
-                                @if(isset($order->vendors) && empty($order->vendors->first()->dispatch_traking_url) && ($order->vendors->first()->delivery_fee > 0) && ($order->vendors->first()->order_status_option_id > 2))
-                                     <div class='inner-div d-inline-block' style="float: right;">
-                                        <form method='POST' action='"+full.destroy_url+"'>
-                                           
-                                                <button type='button' class='btn btn-warning' id="create_dispatch_request"  data-order_vendor_id="{{$order->vendors->first()->id}}">{{__('Create Dispatch Request')}}</i>
-                                                </button>
-                                           
-                                        </form>
-                                    </div>
-                                @endif    
+                                
                             </div>
 
 
