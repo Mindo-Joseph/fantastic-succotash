@@ -2,7 +2,23 @@
      <td>
          @foreach($cartData->products as $product)
          @if($product['vendor_id'] == $id)
-         <h4>Vendor: {{$product['vendor']['name']}}</h4>
+         <tr>
+            <td colspan="2" style="background-color: rgb(216 216 216 / 37%);">
+               <table style="width: 100%;">
+                  <thead>
+                     <tr>
+                        <th style="padding-right: 0;padding-left: 0;font-weight: 400;">
+                           <label style="height: 22px;width: 22px;background-color: #ddd;border-radius: 50%;display: inline-block;vertical-align: middle;margin-right: 5px;"></label>
+                           <span style="color: #000000;font-size: 13px;letter-spacing: 0;line-height: 18px;">{{$product['vendor']['name']}}</span>
+                        </th>
+                        <th style="text-align: right;padding-right: 0;padding-left: 0;color: #000000;font-size: 13px;letter-spacing: 0;line-height: 18px;font-weight: 400;">
+                           {{$product['vendor']['address']}}
+                        </th>
+                     </tr>
+                  </thead>
+               </table>
+            </td>
+         </tr>
          <table  border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%;margin-bottom: 50px;">
             <tr>
                 <td colspan="3" style="border-bottom: 1px solid rgb(151 151 151 / 23%);padding: 3px 0 10px;"></td>

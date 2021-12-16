@@ -21,7 +21,7 @@ $timezone = Auth::user()->timezone;
                   <span style="color: #000000;font-size: 13px;letter-spacing: 0;line-height: 18px;">{{$product['vendor']['name']}}</span>
                </th>
                <th style="text-align: right;padding-right: 0;padding-left: 0;color: #000000;font-size: 13px;letter-spacing: 0;line-height: 18px;font-weight: 400;">
-                  {{-- {{$product['vendor']['address']}} --}}
+                  {{$product['vendor']['address']}}
                </th>
             </tr>
          </thead>
@@ -195,6 +195,4 @@ $timezone = Auth::user()->timezone;
       <span style="border-bottom: 1px solid rgb(151 151 151 / 23%);display: block;"></span>
    </td>
 </tr>  
-{{-- <tr>
-   <td colspan="2" style="padding: 15px 0 20px; text-align: center;color: #FFC478;font-size: 13px;font-weight: 500;letter-spacing: 0;line-height: 16px;">Powered by Royo</td>
-</tr>  --}}
+
