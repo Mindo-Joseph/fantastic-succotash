@@ -460,12 +460,13 @@ $timezone = Auth::user()->timezone;
                 },
                 success: function(response) {
                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", response.status);
-                   // location.reload();
+                    location.reload();
                 },
                 error: function(error) {
                 var response = $.parseJSON(error.responseText);
                 let error_messages = response.message;
                 alert(error_messages);
+                location.reload();
                 }
             });
         }
