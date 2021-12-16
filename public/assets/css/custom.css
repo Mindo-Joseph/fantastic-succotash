@@ -1835,6 +1835,12 @@ th {
     text-align: center;
 }
 
+.profile-page .dropify-wrapper {
+    width: 150px;
+    height: 150px;
+    margin: auto;
+}
+
 label.logo-size {
     right: 16px;
     font-size: 11px;

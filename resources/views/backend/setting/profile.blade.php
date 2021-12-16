@@ -24,7 +24,7 @@
 @endsection
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid profile-page">
 
     <div class="row">
         <div class="col-12">

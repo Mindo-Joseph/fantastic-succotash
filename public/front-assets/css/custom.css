@@ -117,6 +117,10 @@ header.site-header.fixed-bar {
     white-space: normal;
 }
 
+.pixelstrap li ul a {
+    text-align: left;
+}
+
 .top-header .header-dropdown li:hover i {
     color: #fff;
 }
@@ -147,7 +151,8 @@ header.site-header.fixed-bar {
 .site-topbar .location-bar i {
     font-size: 20px;
     color: #fff !important;
-    margin-top: 4px;
+    position: relative;
+    top: -2px;
 }
 
 .site-topbar .location-bar span {
