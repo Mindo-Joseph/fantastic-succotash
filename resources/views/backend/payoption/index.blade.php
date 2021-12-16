@@ -243,7 +243,7 @@
                             </div>
                         </div>
                     </div>
-                    @endif 
+                    @endif
 
                     @if ( (strtolower($opt->code) == 'razorpay') )
                     <div id="razorpay_fields_wrapper" @if($opt->status != 1) style="display:none" @endif>
@@ -353,10 +353,6 @@
                         </div>
                     </div>
                     @endif
-
-                    <!-- <div class="d-flex align-items-center justify-content-between mb-2">
-                        <button class="btn btn-info d-block" type="submit"> Save </button>
-                    </div> -->
                 </div>
             </div>
             @endforeach

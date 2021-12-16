@@ -339,8 +339,41 @@ div.dataTables_wrapper div.dataTables_processing {
     font-weight: 700;
 }
 
-.dropify-wrapper {
-    height: 100px !important;
+.style-cols .dropify-wrapper {
+    height: calc(100% - 35px);
+}
+
+.remove-button .btn.btn-danger {
+    padding: 0 10px 30px;
+    font-size: 14px;
+    right: -10px;
+    line-height: 0;
+    position: absolute;
+    height: 100%;
+    opacity: 0;
+    width: 100%;
+    top: 0;
+    left: 0;
+    text-align: right;
+    background: rgb(0 0 0 / 31%);
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+    border: 0;
+    border-radius: 0;
+    margin: 0 !important;
+    text-align: center;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.tutorial_main_div .radio_new:hover .btn.btn-danger {
+    opacity: 1;
+}
+
+.last-child .col-12:last-child .mb-3 {
+    margin-bottom: 0 !important;
 }
 
 .catalog_box .card-box {

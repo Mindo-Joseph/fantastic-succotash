@@ -209,11 +209,14 @@ h6 {
 .img-outer-box {
     height: 100px;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: top;
 }
 
 .img-outer-box img {
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     width: 100%;
     object-position: center;
     border-radius: 10px;
@@ -428,7 +431,6 @@ h6 {
     object-fit: cover;
 }
 
-
 .brand-box h6 {
     position: absolute;
     left: 0;
@@ -470,6 +472,13 @@ h6 {
     letter-spacing: 0;
     line-height: 23px;
     width: calc(100% - 40px);
+    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: break-spaces;
 }
 
 .supplier-rating p {
