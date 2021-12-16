@@ -175,13 +175,16 @@ $timezone = Auth::user()->timezone;
                   @endif
 
                </td>
-               {{-- <td style="width: 60%;text-align: right;font-size: 13px;line-height: 18px;color: #000000;">
-                  <p style="width: 200px;margin-left: auto;">Andrew Davis
-                     600 Montgomery St.
-                     San Fransisco, CA 94103
-                    <a style="display: block;color: #32C5FF;" href="mailto:andrewdavis@gmail.com">andrewdavis@gmail.com</a>
-                     (514)932-1932</p>
-               </td> --}}
+               <td style="width: 60%;text-align: right;font-size: 13px;line-height: 18px;color: #000000;">
+                  <p style="width: 200px;margin-left: auto;">{{Auth::user()->name}}
+                     @php 
+                     $address = \App\Models\UserAddress::where(['id' => $order->address_id])->first();
+                     $address = $address->address . ', ' . $address->state . ', ' . $address->country . ', ' . $address->pincode;
+                     @endphp 
+                     {{$address}}
+                    <a style="display: block;color: #32C5FF;" href="mailto:{{Auth::user()->email}}">{{Auth::user()->email}}</a>
+                    {{Auth::user()->dial_code}}{{Auth::user()->phone_number }}</p>
+               </td>
             </tr>
          </tbody>
       </table>
