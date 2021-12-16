@@ -403,7 +403,7 @@ header.site-header.fixed-bar {
 }
 
 .add-to-fav {
-    display: block;
+    display: none;
     position: absolute;
     right: 10px;
     top: 10px;

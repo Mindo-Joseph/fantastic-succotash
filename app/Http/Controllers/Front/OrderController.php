@@ -316,14 +316,16 @@ class OrderController extends FrontController
                 if ($email_template) {
                     $email_template_content = $email_template->content;
                     if ($vendor_id == "") {
-                        $returnHTML = view('email.orderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
+                        $returnHTML = view('email.newOrderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
                     } else {
-                        $returnHTML = view('email.orderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id, 'currencySymbol' => $currSymbol])->render();
+                        $returnHTML = view('email.newOrderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id, 'currencySymbol' => $currSymbol])->render();
                     }
+                   
                     $email_template_content = str_ireplace("{customer_name}", ucwords($user->name), $email_template_content);
                     $email_template_content = str_ireplace("{order_id}", $order->order_number, $email_template_content);
                     $email_template_content = str_ireplace("{products}", $returnHTML, $email_template_content);
                     $email_template_content = str_ireplace("{address}", $address->address . ', ' . $address->state . ', ' . $address->country . ', ' . $address->pincode, $email_template_content);
+                    Log::info($returnHTML);
                 }
                 $email_data = [
                     'code' => $otp,
@@ -961,6 +963,7 @@ class OrderController extends FrontController
             $order->save();
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $this->sendSuccessEmail($request, $order, $vendor_id);
+              
             }
             // $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
