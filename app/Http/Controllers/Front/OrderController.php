@@ -316,7 +316,7 @@ class OrderController extends FrontController
                 if ($email_template) {
                     $email_template_content = $email_template->content;
                     if ($vendor_id == "") {
-                        $returnHTML = view('email.orderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
+                        $returnHTML = view('email.newOrderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
                     } else {
                         $returnHTML = view('email.orderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id, 'currencySymbol' => $currSymbol])->render();
                     }
@@ -961,6 +961,7 @@ class OrderController extends FrontController
             $order->save();
             foreach ($cart_products->groupBy('vendor_id') as $vendor_id => $vendor_cart_products) {
                 $this->sendSuccessEmail($request, $order, $vendor_id);
+                dd($order);
             }
             // $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
