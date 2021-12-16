@@ -163,6 +163,22 @@ $timezone = Auth::user()->timezone;
                 <div class="card mb-0 h-100">
                     <div class="card-body">
                         <h4 class="header-title mb-3">
+ 
+                            <div class='form-ul'> {{ $vendor_data->name }}
+                                @if(isset($order->vendors) && empty($order->vendors->first()->dispatch_traking_url) && ($order->vendors->first()->delivery_fee > 0) && ($order->vendors->first()->order_status_option_id > 2))
+                                     <div class='inner-div d-inline-block' style="float: right;">
+                                        <form method='POST' action='"+full.destroy_url+"'>
+                                           
+                                                <button type='button' class='btn btn-warning' id="create_dispatch_request"  data-order_vendor_id="{{$order->vendors->first()->id}}">{{__('Create Dispatch Request')}}</i>
+                                                </button>
+                                           
+                                        </form>
+                                    </div>
+                                @endif    
+                            </div>
+
+
+
                             @if($order->luxury_option_name != '')
                                 <span class="badge badge-info mr-2">{{$order->luxury_option_name}}</span>
                             @endif
@@ -419,6 +435,33 @@ $timezone = Auth::user()->timezone;
                         $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
                     location.reload();
                 },
+            });
+        }
+    });
+
+
+    $("#create_dispatch_request").click(function() {
+        if (confirm("Are you Sure?")) {
+            let that = $(this);
+            var order_vendor_id = that.data("order_vendor_id");
+            $.ajax({
+                url: "{{ route('create.dispatch.request') }}",
+                type: "POST",
+                data: {
+                    order_id: "{{$order->id}}",
+                    vendor_id: "{{$vendor_id}}",
+                    "_token": "{{ csrf_token() }}",
+                    order_vendor_id: order_vendor_id,
+                },
+                success: function(response) {
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", response.status);
+                   // location.reload();
+                },
+                error: function(error) {
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.message;
+                alert(error_messages);
+                }
             });
         }
     });
