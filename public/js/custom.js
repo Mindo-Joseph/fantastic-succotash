@@ -1665,19 +1665,19 @@ $(document).ready(function() {
     function displayMapLocation(latitude, longitude, elementID) {
 
         // Commented By Sujata
-        // var geocoder;
-        // geocoder = new google.maps.Geocoder();
-        // var latlng = new google.maps.LatLng(latitude, longitude);
+        var geocoder;
+        geocoder = new google.maps.Geocoder();
+        var latlng = new google.maps.LatLng(latitude, longitude);
 
-        // const map = new google.maps.Map(document.getElementById(elementID), {
-        //     center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
-        //     zoom: 13
-        // });
+        const map = new google.maps.Map(document.getElementById(elementID), {
+            center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+            zoom: 13
+        });
 
-        // const marker = new google.maps.Marker({
-        //     map: map,
-        //     position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
-        // });
+        const marker = new google.maps.Marker({
+            map: map,
+            position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+        });
         // End Comment
 
 

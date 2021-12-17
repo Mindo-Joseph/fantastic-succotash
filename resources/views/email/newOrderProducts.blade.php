@@ -176,7 +176,7 @@ $timezone = Auth::user()->timezone;
 
                </td>
                <td style="width: 60%;text-align: right;font-size: 13px;line-height: 18px;color: #000000;">
-                  <p style="width: 210px;margin-left: auto;">{{Auth::user()->name}}
+                  <p style="width: 240px;margin-left: auto;">{{Auth::user()->name}}
                      @php 
                      $address = \App\Models\UserAddress::where(['id' => $order->address_id])->first();
                      $address = $address->address . ', ' . $address->state . ', ' . $address->country . ', ' . $address->pincode;
