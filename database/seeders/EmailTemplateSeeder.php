@@ -53,7 +53,7 @@ class EmailTemplateSeeder extends Seeder{
                  </thead>
                 <tbody>
                     <tr>
-                        <td colspan="2">
+                        <td colspan="2" style="padding-left: 0;padding-right: 0;">
                             <table style="width:100%; border: 1px solid rgb(221 221 221 / 41%);">
                                 <tbody>
                                       <tr>
