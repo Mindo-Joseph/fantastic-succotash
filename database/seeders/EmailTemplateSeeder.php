@@ -41,7 +41,7 @@ class EmailTemplateSeeder extends Seeder{
                 'label' => 'Orders',
                 'subject' => 'Orders',
                 'tags' => '{customer_name}, {description}, {products}, {order_id}, {address}', 
-                'content'=>'<table style="width: 100%; background-color:#fff;">
+                'content'=>'<table style="width: 100%;background-color: #fff;padding: 50px 0 0;">
                 <thead>
                     <tr>
                        <th colspan="2" style="text-align: center;">
