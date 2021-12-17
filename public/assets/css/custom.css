@@ -508,6 +508,12 @@ padding: 0 8px !important;
 .modal-footer .btn {
 width: 100%;
 }
+
+.vendor-show-page .custom-dd {
+    height: 400px;
+    overflow: auto;
+}
+
 @media (min-width: 1365px) {
 .col-md-12 button.btn.btn-info {
 min-width: 80px;
@@ -665,15 +671,15 @@ flex: 0 0 100%;
 max-width: 100%;
 }
 }
-#scroll-bar::-webkit-scrollbar-track {
--webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-background-color: #f5f5f5;
+#scroll-bar::-webkit-scrollbar-track,.vendor-show-page .custom-dd::-webkit-scrollbar-track {
+    height: 400px;
+    overflow: auto;
 }
-#scroll-bar::-webkit-scrollbar {
+#scroll-bar::-webkit-scrollbar,.vendor-show-page .custom-dd::-webkit-scrollbar {
 width: 6px;
 background-color: #f5f5f5;
 }
-#scroll-bar::-webkit-scrollbar-thumb {
+#scroll-bar::-webkit-scrollbar-thumb,.vendor-show-page .custom-dd::-webkit-scrollbar-thumb {
 background-color: rgb(247 184 75 / 82%);
 }
 body.dark #form-tags-4_tagsinput {

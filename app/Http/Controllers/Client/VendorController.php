@@ -1066,7 +1066,7 @@ class VendorController extends BaseController
                         foreach($employees as $row)
                         {
                         $output .= '
-                        <li data-id="'.$row->id.'"><a href="#">'.$row->name.'('.$row->email.')</a></li>
+                        <li data-id="'.$row->id.'"><a href="#">'.$row->name.' ('.$row->email.')</a></li>
                         ';
                         }
                         $output .= '</ul>';

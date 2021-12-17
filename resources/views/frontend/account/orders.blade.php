@@ -188,8 +188,7 @@
                                                                     {{ dateTimeInUserTimeZone($order->created_at, $timezone) }}
                                                                 </div>
                                                                 <div class="col-md-3">
-                                                                    <a class="text-capitalize"
-                                                                        href="#">{{ $order->user->name }}</a>
+                                                                    <a class="text-capitalize">{{ $order->user->name }}</a>
                                                                 </div>
                                                                 @if ($client_preference_detail->business_type != 'taxi')
                                                                     <div class="col-md-3">
@@ -535,8 +534,7 @@
                                                                     {{ dateTimeInUserTimeZone($order->created_at, $timezone) }}
                                                                 </div>
                                                                 <div class="col-md-3">
-                                                                    <a class="text-capitalize"
-                                                                        href="#">{{ $order->user->name }}</a>
+                                                                    <a class="text-capitalize">{{ $order->user->name }}</a>
                                                                 </div>
                                                                 @if ($client_preference_detail->business_type != 'taxi')
                                                                     <div class="col-md-3">
@@ -954,8 +952,7 @@
                                                                         {{ dateTimeInUserTimeZone($order->created_at, $timezone) }}
                                                                     </div>
                                                                     <div class="col-md-3">
-                                                                        <a class="text-capitalize"
-                                                                            href="#">{{ $order->user->name }}</a>
+                                                                        <a class="text-capitalize">{{ $order->user->name }}</a>
                                                                     </div>
                                                                     @if ($client_preference_detail->business_type != 'taxi')
                                                                         <div class="col-md-3">
@@ -1248,8 +1245,7 @@
                                                                     {{ dateTimeInUserTimeZone($order->created_at, $timezone) }}
                                                                 </div>
                                                                 <div class="col-md-3">
-                                                                    <a class="text-capitalize"
-                                                                        href="#">{{ $order->user->name }}</a>
+                                                                    <a class="text-capitalize">{{ $order->user->name }}</a>
                                                                 </div>
                                                                 @if ($client_preference_detail->business_type != 'taxi')
                                                                     <div class="col-md-3">
