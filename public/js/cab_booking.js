@@ -255,6 +255,7 @@ $(document).ready(function () {
                 var perm = "?" + (queryString != '' ? queryString : '') + "&destination_location_"+random_id+"=" + destination_location  + "&destination_location_latitude_"+random_id+"=" + destinationLocationLatitude + "&destination_location_longitude_"+random_id+"=" + destinationLocationLongitude;
                 window.history.replaceState(null, null, perm);
             }
+
         });
       }
     }

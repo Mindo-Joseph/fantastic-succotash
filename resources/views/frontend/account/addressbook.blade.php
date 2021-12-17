@@ -318,6 +318,22 @@
     var update_address_url = "{{ route('address.update', ':id') }}";
     var delete_address_url = "{{ route('deleteAddress', ':id') }}";
     var verify_information_url = "{{ route('verifyInformation', Auth::user()->id) }}";
+
+    var latitude = "{{ session()->has('latitude') ? session()->get('latitude') : 0 }}";
+    var longitude = "{{ session()->has('longitude') ? session()->get('longitude') : 0 }}";
+
+    if(!latitude){
+        @if(!empty($client_preference_detail->Default_latitude))
+            latitude = "{{$client_preference_detail->Default_latitude}}";
+        @endif
+    }
+
+    if(!longitude){
+        @if(!empty($client_preference_detail->Default_longitude))
+            longitude = "{{$client_preference_detail->Default_longitude}}";
+        @endif
+    }
+
     var ajaxCall = 'ToCancelPrevReq';
     $('.verifyEmail').click(function(){
         verifyUser('email');
@@ -432,8 +448,15 @@
     $(document).on('click', '.showMapHeader', function(){
         var lats = document.getElementById('latitude').value;
         var lngs = document.getElementById('longitude').value;
+        if(lats==''){
+            lats=latitude;
+        }
+        if(lngs==''){
+            lngs=longitude;
+        }
 
         var myLatlng = new google.maps.LatLng(lats, lngs);
+
         var infowindow = new google.maps.InfoWindow();
         var geocoder = new google.maps.Geocoder();
         var mapProp = {

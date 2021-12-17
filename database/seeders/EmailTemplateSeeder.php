@@ -55,22 +55,8 @@ class EmailTemplateSeeder extends Seeder{
                     <tr>
                         <td colspan="2">
                             <table style="width:100%; border: 1px solid rgb(221 221 221 / 41%);">
-                                <thead>
-                                    <tr>
-                                        <th colspan="2" style="border-bottom: 1px solid rgb(221 221 221 / 41%);">
-                                            <h3 style="font-weight: 700;">Items Ordered</h3>
-                                        </th>
-                                    </tr>
-                                </thead>
                                 <tbody>
-                                    <tr style="vertical-align: top;">
-                                        <td
-                                            style="border-bottom: 1px solid rgb(221 221 221 / 41%);border-right: 1px solid rgb(221 221 221 / 41%);width: 50%;">
-                                            <p style="margin-bottom: 5px;"><b>Shipping Address:</b></p>
-                                            <p>{address}</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
+                                      <tr>
                                         <td colspan="2" style="padding: 0;">
                                             <table style="width:100%;">
                                                 <tbody> {products} </tbody>

@@ -12,6 +12,7 @@ jQuery(window).scroll(function () {
     }
 });
 $(document).ready(function () {
+
     if (window.location.pathname == '/') {
         let latitude = "";
         let longitude = "";
@@ -93,10 +94,10 @@ $(document).ready(function () {
                         slidesToScroll: 1,
                         arrows: true
                     }
-                } 
+                }
             ]
         });
-        
+
         $('.booking-time').slick({
             infinite: true,
             speed: 300,
@@ -150,7 +151,7 @@ $(document).ready(function () {
                 }
             }]
         });
-        
+
         $('.materials-slide').slick({
             infinite: true,
             speed: 300,
@@ -178,16 +179,16 @@ $(document).ready(function () {
             }]
         });
 
-        
+
     // });
-       
+
     // $(document ).ready(function() {
         $("#number").hide();
         $("#add_btn").click(function(){
             $("#number").show();
             $(this).hide();
         });
-        
+
     // });
 
     if($(".vendor_mods .nav-link").hasClass('active')){
@@ -305,11 +306,11 @@ $(document).ready(function () {
                     if($('.menu-slider').hasClass('slick-initialized')){
                         $('.menu-slider').slick('destroy');
                     }
-                    // $('#main-menu').smartmenus('destroy');
+                    $('#main-menu').smartmenus('destroy');
                     $("#main-menu").html('');
                     let nav_categories_template = _.template($('#nav_categories_template').html());
                     $("#main-menu").append(nav_categories_template({ nav_categories: response.data.navCategories }));
-                    // $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
+                    $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
                     //     if($(window).width() >= 320){
                     //         if(!$('.menu-slider').hasClass('slick-initialized')){
                     //             loadMainMenuSlider();
@@ -317,7 +318,7 @@ $(document).ready(function () {
                     //    }
                     resizeMenuSlider();
                     $("#main-menu").css("display" , "flex");
-                  
+
                     var path = window.location.pathname;
                     if (path == '/') {
                         // $(".home-slider, .home-slider-wrapper, #our_vendor_main_div").show();
@@ -350,7 +351,7 @@ $(document).ready(function () {
                             $(".render_on_sale").append(products_template({ products: response.data.on_sale_products, type: on_sale_product_language }));
                             $(".render_trending_vendors").append(trending_vendors_template({ trending_vendors: response.data.trending_vendors , type: vendor_language}));
                             $(".render_recent_orders").append(recent_orders_template({ recent_orders: response.data.active_orders}));
-                            
+
                             if (response.data.new_products.length > 0) {
                                 $('.render_full_new_products').removeClass('d-none');
                             } else {
@@ -405,7 +406,7 @@ $(document).ready(function () {
         });
     }
 
-  
+
 
     function getLocation() {
         if (navigator.geolocation) {
@@ -644,7 +645,7 @@ function setLocationCoordinates(key, lat, lng) {
 google.maps.event.addDomListener(window, 'load', initMap);
 
 
-////   cab booking section 
+////   cab booking section
 
 $(document).on("input",".edit-other-stop",function() {
     var random_id = $(this).attr("id");
@@ -662,9 +663,9 @@ $(document).on("input",".edit-other-stop",function() {
       document.getElementById(random_id+'_latitude_home').value = place.geometry.location.lat();
       document.getElementById(random_id+'_longitude_home').value = place.geometry.location.lng();
 
-      
-       
-     
+
+
+
     });
   }
 
