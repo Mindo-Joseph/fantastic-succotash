@@ -434,6 +434,8 @@
         var lngs = document.getElementById('longitude').value;
 
         var myLatlng = new google.maps.LatLng(lats, lngs);
+        var infowindow = new google.maps.InfoWindow();
+        var geocoder = new google.maps.Geocoder();
         var mapProp = {
             center:myLatlng,
             zoom:13,
@@ -447,15 +449,34 @@
             draggable:true
         });
         // marker drag event
-        google.maps.event.addListener(marker,'drag',function(event) {
-            document.getElementById('latitude').value = event.latLng.lat();
-            document.getElementById('longitude').value = event.latLng.lng();
-        });
-        //marker drag event end
-        google.maps.event.addListener(marker,'dragend',function(event) {
-            document.getElementById('latitude').value = event.latLng.lat();
-            document.getElementById('longitude').value = event.latLng.lng();
-        });
+        google.maps.event.addListener(marker, 'dragend', function() {
+                    geocoder.geocode({
+                    'latLng': marker.getPosition()
+                    }, function(results, status) {
+
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                             document.getElementById('latitude').value = marker.getPosition().lat();
+                             document.getElementById('longitude').value = marker.getPosition().lng();
+                             document.getElementById('address').value= results[0].formatted_address;
+
+                            infowindow.setContent(results[0].formatted_address);
+
+                            infowindow.open(map, marker);
+                        }
+                    }
+                    });
+                });
+
+        // google.maps.event.addListener(marker,'drag',function(event) {
+        //     document.getElementById('latitude').value = event.latLng.lat();
+        //     document.getElementById('longitude').value = event.latLng.lng();
+        // });
+        // //marker drag event end
+        // google.maps.event.addListener(marker,'dragend',function(event) {
+        //     document.getElementById('latitude').value = event.latLng.lat();
+        //     document.getElementById('longitude').value = event.latLng.lng();
+        // });
         $('#pick_address').modal('show');
 
     });
@@ -463,6 +484,7 @@
     function initialize() {
       var input = document.getElementById('address');
       var autocomplete = new google.maps.places.Autocomplete(input);
+
       google.maps.event.addListener(autocomplete, 'place_changed', function () {
         var place = autocomplete.getPlace();
         // console.log(place);
