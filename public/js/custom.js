@@ -319,6 +319,9 @@ window.initializeSlider = function initializeSlider() {
     }
 }
 
+
+
+
 $(document).ready(function() {
 
     // $(".toggle-nav").click(function() {
@@ -1660,6 +1663,8 @@ $(document).ready(function() {
     }
 
     function displayMapLocation(latitude, longitude, elementID) {
+
+        // Commented By Sujata
         var geocoder;
         geocoder = new google.maps.Geocoder();
         var latlng = new google.maps.LatLng(latitude, longitude);
@@ -1673,6 +1678,9 @@ $(document).ready(function() {
             map: map,
             position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
         });
+        // End Comment
+
+
         // geocoder.geocode(
         //     { 'latLng': latlng },
         //     function (results, status) {

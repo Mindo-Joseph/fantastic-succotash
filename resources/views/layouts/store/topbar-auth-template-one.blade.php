@@ -15,7 +15,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <div class="container">
         <div class="row align-items-center justify-content-center">
             <div class="col-6">
-                <div class="d-flex align-items-center justify-content-lg-start justify-content-center">    
+                <div class="d-flex align-items-center justify-content-lg-start justify-content-center">
                     <a class="navbar-brand mr-0 mr-sm-3 d-block d-sm-none" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                     @if( (Session::get('preferences')))
                         @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
@@ -57,22 +57,22 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif
                     @endif
                 </div>
-                @php  
+                @php
                 $applocale = 'en';
                 if(session()->has('applocale')){
                     $applocale = session()->get('applocale');
-                }            
+                }
                 @endphp
-                <ul class="header-dropdown d-none d-sm-inline">                    
+                <ul class="header-dropdown d-none d-sm-inline">
                     <!-- <li class="mobile-wishlist d-inline d-sm-none">
                         <a href="{{route('user.wishlists')}}">
                             <i class="fa fa-heart" aria-hidden="true"></i>
                         </a>
                     </li> -->
                     <li class="onhover-dropdown change-language slected-language">
-                        <a href="javascript:void(0)">{{$applocale}} 
+                        <a href="javascript:void(0)">{{$applocale}}
                         <span class="icon-ic_lang align-middle"></span>
-                        <span class="language ml-1 align-middle">{{ __('language') }}</span>
+                        <span class="language ml-1">{{ __('language') }}</span>
                         </a>
                         <ul class="onhover-show-div">
                             @foreach($languageList as $key => $listl)
@@ -83,8 +83,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </ul>
                     </li>
                     <li class="onhover-dropdown change-currency slected-language">
-                        <a href="#">{{session()->get('iso_code')}} <span class="icon-ic_currency align-middle"></span> 
-                        <span class="currency ml-1 align-middle">{{ __('currency') }}</span> </a>
+                        <a href="#">{{session()->get('iso_code')}} <span class="icon-ic_currency align-middle"></span>
+                        <span class="currency ml-1">{{ __('currency') }}</span> </a>
                         <ul class="onhover-show-div">
                             @foreach($currencyList as $key => $listc)
                                 <li class="{{session()->get('iso_code') ==  $listc->currency->iso_code ?  'active' : ''}}">
@@ -142,7 +142,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif
                     </div> -->
                 </li>
-                
+
                 <li class="onhover-dropdown mobile-account  d-inline d-sm-none"> <i class="fa fa-user" aria-hidden="true"></i>
                     {{__('My Account')}}
                     <ul class="onhover-show-div">
@@ -159,7 +159,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </li>
                     </ul>
                 </li>
-                
+
                 @if($client_preference_detail->show_wishlist == 1)
                 <li class="mobile-wishlist d-inline d-sm-none">
                     <a href="{{route('user.wishlists')}}">
@@ -189,7 +189,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </div>
                     </div>
                 </li>
-                
+
                 @if($client_preference_detail->cart_enable == 1)
                 <li class="onhover-div mobile-cart">
                     <a href="{{route('showCart')}}" style="position: relative">
@@ -205,7 +205,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </div>
     </div>
 
-  
+
 </div>
 
 <!-- Modal -->
