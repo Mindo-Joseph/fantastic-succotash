@@ -24,6 +24,15 @@ $(document).ready(function () {
         }
         getHomePage(latitude, longitude);
         // $(document).ready(function () {
+        if ($.cookie("age_restriction") != 1) {
+            if(is_age_restricted == "1" || is_age_restricted == 1)
+            {
+                $('#age_restriction').modal({backdrop: 'static', keyboard: false});
+            }
+        }
+
+
+        // Commented By Sujata
             $.ajax({
                 url: client_preferences_url,
                 type: "POST",
@@ -44,6 +53,8 @@ $(document).ready(function () {
                     // }
                 },
             });
+        // End Comment
+
         // });
     }
     else{
