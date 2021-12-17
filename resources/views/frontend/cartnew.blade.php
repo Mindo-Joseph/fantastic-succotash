@@ -6,7 +6,6 @@
 <link href="{{asset('assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
-<script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 <style type="text/css">
     .swal2-title {
         margin: 0px;
@@ -1023,7 +1022,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 @section('script')
 <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous">
 </script>
-<script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 <script src="https://js.stripe.com/v3/"></script>
 
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>

@@ -144,7 +144,7 @@
 @endsection
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid vendor-show-page">
 
     <!-- start page title -->
     <div class="row">
