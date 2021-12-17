@@ -12,7 +12,7 @@ $timezone = Auth::user()->timezone;
 @foreach($cartData->products as $product)
  
 <tr>
-   <td colspan="2" style="background-color: rgb(216 216 216 / 37%);">
+   <td colspan="2" style="background-color: #d8d8d85e;">
       <table style="width: 100%;">
          <thead>
             <tr>
@@ -43,7 +43,7 @@ $timezone = Auth::user()->timezone;
          </thead>
          <tbody>       
             <tr>
-               <td colspan="3" style="border-bottom: 1px solid rgb(151 151 151 / 23%);padding: 3px 0 10px;"></td>
+               <td colspan="3" style="border-bottom: 1px solid #9797973b;padding: 3px 0 10px;"></td>
             </tr>  
             @foreach($product['vendor_products'] as $vendor_product)
             <tr style="vertical-align: top;">
@@ -77,7 +77,7 @@ $timezone = Auth::user()->timezone;
             @endphp
 
             <tr>
-               <td colspan="3" style="border-bottom: 1px solid rgb(151 151 151 / 23%);padding: 2px 0;"></td>
+               <td colspan="3" style="border-bottom: 1px solid #9797973b;padding: 2px 0;"></td>
             </tr>  
             @endforeach
                
@@ -176,7 +176,7 @@ $timezone = Auth::user()->timezone;
 
                </td>
                <td style="width: 60%;text-align: right;font-size: 13px;line-height: 18px;color: #000000;">
-                  <p style="width: 200px;margin-left: auto;">{{Auth::user()->name}}
+                  <p style="width: 210px;margin-left: auto;">{{Auth::user()->name}}
                      @php 
                      $address = \App\Models\UserAddress::where(['id' => $order->address_id])->first();
                      $address = $address->address . ', ' . $address->state . ', ' . $address->country . ', ' . $address->pincode;

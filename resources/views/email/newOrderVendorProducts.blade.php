@@ -3,7 +3,7 @@
          @foreach($cartData->products as $product)
          @if($product['vendor_id'] == $id)
          <tr>
-            <td colspan="2" style="background-color: rgb(216 216 216 / 37%);">
+            <td colspan="2" style="background-color: #d8d8d85e;">
                <table style="width: 100%;">
                   <thead>
                      <tr>
@@ -21,7 +21,7 @@
          </tr>
          <table  border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%;margin-bottom: 50px;">
             <tr>
-                <td colspan="3" style="border-bottom: 1px solid rgb(151 151 151 / 23%);padding: 3px 0 10px;"></td>
+                <td colspan="3" style="border-bottom: 1px solid #9797973b;padding: 3px 0 10px;"></td>
              </tr>    
              @php
              $total_products = 0;
@@ -54,7 +54,7 @@
             </tr>
 
              <tr>
-                <td colspan="3" style="border-bottom: 1px solid rgb(151 151 151 / 23%);padding: 5px 0;"></td>
+                <td colspan="3" style="border-bottom: 1px solid #9797973b;padding: 5px 0;"></td>
              </tr> 
              @endforeach
              <tr>

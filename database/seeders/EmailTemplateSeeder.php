@@ -60,13 +60,6 @@ class EmailTemplateSeeder extends Seeder{
                                         <td colspan="2" style="padding: 0;">
                                             <table style="width:100%;">
                                                 <tbody> {products} </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <td colspan="2"
-                                                            style="background-color: #8142ff;color: #fff; border-top: 1px solid rgb(221 221 221 / 41%);text-align: center;">
-                                                            <b>Powered By Royo</b> </td>
-                                                    </tr>
-                                                </tfoot>
                                             </table>
                                         </td>
                                     </tr>
