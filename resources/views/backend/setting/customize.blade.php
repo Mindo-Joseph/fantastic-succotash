@@ -198,8 +198,8 @@
                     <p class="sub-header">
                         {{ __("Update custom domain here.") }}
                     </p>
-                    <label for="custom_domain">*{{__("Make sure you already pointed to IP")}} ({{\env('IP')}}) {{__("from your domain.")}}</label> 
-                      
+                    <label for="custom_domain">*{{__("Make sure you already pointed to IP")}} ({{\env('IP')}}) {{__("from your domain.")}}</label>
+
                     <div class="row mb-2">
                         <div class="col-sm-12">
                             <div class="form-group mb-3">
@@ -210,7 +210,7 @@
                                     <input type="text" name="custom_domain" id="custom_domain" placeholder="" class="form-control" value="{{ old('custom_domain', $preference->domain->custom_domain ?? '')}}">
                                 </div>
 
-                               
+
                                 @if($errors->has('custom_domain'))
                                 <span class="text-danger" role="alert">
                                     <strong>{{ $errors->first('custom_domain') }}</strong>

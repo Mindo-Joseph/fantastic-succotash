@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.css">
 @endsection
 @section('content')
-
+<div class="web-style">
 <div class="row">
     <div class="col-12">
         <div class="col-sm-8">
@@ -235,25 +235,25 @@
                                 </div>
                                 @endforeach
 
-
-
                             </div>
                         </div>
-                        @if($home_page_label->slug == 'pickup_delivery')
-                        <div class="col-2 pl-1">
-                             <select class="form-control select2-multiple" required id="categories" name="categories[{{$key}}][check]" data-toggle="select2"  data-placeholder="Choose ...">
 
-                             {{-- <select class="form-control w-100">  --}}
-                                 @foreach ($all_pickup_category as $category)
-                                 <option value="{{$category->id}}"
-                                    @if(isset($home_page_label->pickupCategories->first()->categoryDetail) && !empty($home_page_label->pickupCategories->first()) && $home_page_label->pickupCategories->first()->categoryDetail->id == $category->id)
-                                     selected="selected"
-                                    @endif>{{$category->translation_one->name??''}}
-                                 </option>
-                                 @endforeach
-                             </select>
-                         </div>
-                         @endif
+                        @if($home_page_label->slug == 'pickup_delivery')
+                            <div class="col-2 pl-1">
+                                <select class="form-control select2-multiple" required id="categories" name="categories[{{$key}}][check]" data-toggle="select2"  data-placeholder="Choose ...">
+
+                                {{-- <select class="form-control w-100">  --}}
+                                    @foreach ($all_pickup_category as $category)
+                                    <option value="{{$category->id}}"
+                                        @if(isset($home_page_label->pickupCategories->first()->categoryDetail) && !empty($home_page_label->pickupCategories->first()) && $home_page_label->pickupCategories->first()->categoryDetail->id == $category->id)
+                                        selected="selected"
+                                        @endif>{{$category->translation_one->name??''}}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+
 
                          @if($home_page_label->slug == 'pickup_delivery')
                         <a class="action-icon openBannerModal" userId="{{$home_page_label->id}}" data-row-id="{{$home_page_label->id}}" href="javascript:void(0);">
@@ -373,7 +373,7 @@
 
 <!-- end cab booking template -->
 
-
+</div>
 
 @endsection
 

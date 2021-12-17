@@ -5226,9 +5226,9 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     margin: auto !important;
 }
 
-.menu-slider .slick-list {
+/* .menu-slider .slick-list {
     overflow: visible;
-}
+} */
 
 .menu-slider.items-center .slick-track {
     justify-content: space-between;
