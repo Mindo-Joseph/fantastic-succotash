@@ -651,6 +651,41 @@ h1.control-label {
     width: 100%;
 }
 
+.web-style .dropify-wrapper.has-preview {
+    max-width: 100px;
+    width: 100px;
+    height: 100px;
+    margin: auto;
+}
+
+.home-options-list .select2-container--default .select2-selection--single {
+    width: 100%;
+    height: calc(1.5em + 0.9rem + 2px);
+    padding: 0.45rem 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #6c757d;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.2rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+
+.home-options-list .select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding: 0;
+    line-height: normal;
+}
+
+.home-options-list .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
 @media (min-width: 1365px) {
     .col-md-12 button.btn.btn-info {
         min-width: 80px;
@@ -2699,6 +2734,15 @@ body[dir="rtl"] .modal-header .close {
     .style-cols .col-xl-6 {
         flex: 0 0 50%;
         max-width: 50%;
+    }
+}
+
+@media(min-width: 1440px){
+    .main-customer-page .set-height{
+        min-height: calc(100vh - 320px);
+    }
+    .main-customer-page .set-height .dataTables_scrollBody {
+        height: calc(100vh - 550px);
     }
 }
 
