@@ -7983,11 +7983,12 @@ body[dir="rtl"] .inner_spacing h3 {
 
     .navbar-brand {
         padding: 0;
-        height: 45px !important;
+        height: 35px !important;
     }
 
     .navbar-brand .img-fluid {
-        max-width: 100% !important;
+        max-width: 100px !important;
+        width: 100%;
     }
 
     .site-topbar .location-bar h2:after {

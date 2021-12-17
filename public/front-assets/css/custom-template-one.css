@@ -1161,10 +1161,10 @@ body[dir="rtl"] #social-links li:last-child {
     }
 
     .location-bar {
-        width: calc(100% - 2%);
+        width: 100%;
     }
 
     .homepage-address {
-        width: calc(100% - 160px);
+        width: calc(100% - 120px);
     }
 }
