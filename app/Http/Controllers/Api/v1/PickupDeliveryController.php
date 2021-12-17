@@ -727,17 +727,14 @@ class PickupDeliveryController extends BaseController{
     public function postPromoCodeListOpen(Request $request){
         try {
             $promo_codes = new \Illuminate\Database\Eloquent\Collection;
-            $validator = $this->validatePromoCodeList();
-            if($validator->fails()){
-                return $this->errorResponse($validator->messages(), 422);
-            }
+           
             $now = Carbon::now()->toDateTimeString();
             $promo_code_details = PromoCodeDetail::pluck('promocode_id');
                 if($promo_code_details->count() > 0){
-                    $result1 = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->where('restriction_on', 0)->where('restriction_type', 0)->where('is_deleted', 0)->get();
+                    $promo_codes = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->where('is_deleted', 0)->get();
                     
                 }
-            $promo_codes = $promo_codes->merge($result1);
+           
             
             return $this->successResponse($promo_codes, '', 200);
         } catch (Exception $e) {
