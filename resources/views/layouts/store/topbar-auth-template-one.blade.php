@@ -13,13 +13,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
 <div class="top-header site-topbar">
     <div class="container">
-        <div class="row align-items-center justify-content-center">
-            <div class="col-6">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-sm-6 mb-3 mb-sm-0">
                 <div class="d-flex align-items-center justify-content-lg-start justify-content-center">
                     <a class="navbar-brand mr-0 mr-sm-3 d-block d-sm-none" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                     @if( (Session::get('preferences')))
                         @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
-                            <div class="location-bar d-none d-sm-flex align-items-center justify-content-start m-0 p-0 dropdown-toggle order-1 ellips" href="#edit-address" data-toggle="modal">
+                            <div class="location-bar d-flex align-items-center justify-content-start m-0 p-0 dropdown-toggle order-1 ellips" href="#edit-address" data-toggle="modal">
                                 <div class="map-icon mr-1"><span class="yl-text">{{__('Delivering to')}}</span> <i class="fa fa-map-marker" aria-hidden="true"></i></div>
                                 <div class="homepage-address text-left">
                                     <h2><span data-placement="top">{{session('selectedAddress')}}</span></h2>
