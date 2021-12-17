@@ -1,7 +1,7 @@
 <?php
 namespace Database\Seeders;
 use Illuminate\Database\Seeder;
-use App\Model\SmsProvider;
+use App\Models\SmsProvider;
 use DB;
 
 class SmsProviderSeeder extends Seeder
