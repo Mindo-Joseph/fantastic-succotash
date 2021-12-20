@@ -67,7 +67,7 @@ class ClientDatabaseToDevMaster implements ShouldQueue
                 $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
                 $db = DB::select($query, [$schemaName]);
                 if ($db) {
-
+                    dd('exist');
                 }else{
                     $query = "CREATE DATABASE $schemaName;";
                     DB::connection('dev')->statement($query);
