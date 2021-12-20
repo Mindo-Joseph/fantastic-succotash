@@ -31,6 +31,10 @@ class HomeController extends Controller
 
     		}
     	}
+    	if(isset($request->serverUrl))
+    	{
+    		return Redirect::to(url($request->serverUrl));
+    	}
     	return Redirect::to(url('/'));
     }
 }
