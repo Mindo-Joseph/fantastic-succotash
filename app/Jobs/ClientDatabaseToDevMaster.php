@@ -13,6 +13,7 @@ use Config;
 use Exception;
 use Illuminate\Support\Facades\Artisan;
 use \Spatie\DbDumper\Databases\MySql;
+use Illuminate\Support\Facades\File;
 
 class ClientDatabaseToDevMaster implements ShouldQueue
 {
@@ -44,6 +45,7 @@ class ClientDatabaseToDevMaster implements ShouldQueue
 
            
         try {
+
             $databaseNameSet = 'royo_'.$client['database_name'];
             $db_name_set = $databaseNameSet.'.sql';
             \Spatie\DbDumper\Databases\MySql::create()
@@ -52,19 +54,17 @@ class ClientDatabaseToDevMaster implements ShouldQueue
                 ->setPassword($client['database_password'])
                 ->setHost($client['database_host'])
                 ->dumpToFile($db_name_set);
-
-            dd($databaseNameSet) ;   
-            
-            $schemaName = 'ab_royo_' . $client['database_name'] ?: config("database.connections.mysql.database");
+ 
+            $schemaName = 'royo_' . $client['database_name'] ?: config("database.connections.mysql.database");
             $dumpinto = $this->dumpinto;
 
-                $database_host_dev = env('DB_HOST_DEV', 'royoorders-2-db-development-cluster.cvgfslznkneq.us-west-2.rds.amazonaws.com');
-                $database_port_dev = env('DB_PORT_DEV', '3306');
-                $database_username_dev = env('DB_USERNAME_DEV', 'cbladmin');
-                $database_password_dev =  env('DB_PASSWORD_DEV', 'aQ2hvKYLH4LKWmrA');
+                $database_host_dev = env('DB_HOST_'.$dumpinto, '');
+                $database_port_dev = env('DB_PORT_'.$dumpinto, '3306');
+                $database_username_dev = env('DB_USERNAME_'.$dumpinto, '');
+                $database_password_dev =  env('DB_PASSWORD_'.$dumpinto, '');
 
                 $default = [
-                'driver' => env('DB_CONNECTION_DEV', 'mysql'),
+                'driver' => env('DB_CONNECTION_'.$dumpinto, 'mysql'),
                 'host' => $database_host_dev,
                 'port' => $database_port_dev,
                 'database' => $schemaName,
@@ -79,33 +79,25 @@ class ClientDatabaseToDevMaster implements ShouldQueue
                 ];
 
                 $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
-                $db = DB::connection('dev')->select($query, [$schemaName]);
+                $db = DB::connection($dumpinto)->select($query, [$schemaName]);
                 if ($db) {
-                    dd('exist');
+                    dd('Database already exist');
                 }else{
                     $query = "CREATE DATABASE $schemaName;";
-                    DB::connection('dev')->statement($query);
+                    DB::connection($dumpinto)->statement($query);
                 }
 
-               
-                
-                dd($db_name_set) ;
-                
-           
                 Config::set("database.connections.$schemaName", $default);
                 config(["database.connections.mysql.database" => $schemaName]);
-            
                 DB::connection($schemaName)->beginTransaction();
                 DB::connection($schemaName)->statement("SET foreign_key_checks=0");
-
-           
-
-           
-
-            Config::set("database.connections.$schemaName", $default);
-            config(["database.connections.mysql.database" => $schemaName]);
-         
-            DB::connection($schemaName)->table('clients')->insert($clientData);
+                DB::connection($schemaName)->unprepared(file_get_contents((asset($db_name_set))));
+                DB::connection($schemaName)->commit();
+                DB::connection($schemaName)->statement("SET foreign_key_checks=1");
+                DB::connection($schemaName)->table('clients')->update(['database_host' => $database_host_dev]);
+            
+            DB::connection($dumpinto)->table('clients')->insert($clientData);
+            DB::connection($dumpinto)->table('clients')->update(['database_host' => $database_host_dev]);
           
             DB::disconnect($schemaName);
         } catch (Exception $ex) {
