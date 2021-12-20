@@ -461,14 +461,16 @@ class ClientController extends Controller{
      public function exportDb(Request $request,$databaseName){
 
         $client = Client::where('database_name',$databaseName)->first();
-
+        $check_if_already = 0;
+        $request->dump_into = 'DEV';
+        $data = $request->all();
         if($client){
-
-            $check_if_already = Client::on('dev')->where(['database_name' => $client->database_name])->count();
+            
+         //   $check_if_already = Client::on('dev')->where(['database_name' => $client->database_name])->count();
             if($check_if_already == 0)
-            $create_db = $this->dispatchNow(new ClientDatabaseToDevMaster($client->id));
+            $create_db = $this->dispatchNow(new ClientDatabaseToDevMaster($client->id,'DEV'));
             else
-            dd($databaseName);
+            dd('already');
 
         // $databaseNameSet = 'royo_'.$databaseName;
         // $userName = $client->database_username;

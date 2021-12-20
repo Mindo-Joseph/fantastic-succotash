@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Config;
 use Exception;
 use Illuminate\Support\Facades\Artisan;
+use \Spatie\DbDumper\Databases\MySql;
 
 class ClientDatabaseToDevMaster implements ShouldQueue
 {
@@ -19,14 +20,16 @@ class ClientDatabaseToDevMaster implements ShouldQueue
 
 
     protected $client; 
+    protected $dumpinto; 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($client)
+    public function __construct($client,$dumpinto)
     {
         $this->client = $client;
+        $this->dumpinto = $dumpinto;
     }
 
     /**
@@ -36,26 +39,37 @@ class ClientDatabaseToDevMaster implements ShouldQueue
      */
     public function handle()
     {
-        $client = Client::where('id', $this->client)->first(['name', 'email', 'password', 'phone_number', 'database_path', 'database_name', 'database_username', 'database_password', 'logo', 'company_name', 'company_address', 'custom_domain', 'status', 'code', 'country_id', 'sub_domain'])->toarray();
+        $client = Client::where('id', $this->client)->first(['name', 'email', 'password', 'phone_number', 'database_host','database_path', 'database_name', 'database_username', 'database_password', 'logo', 'company_name', 'company_address', 'custom_domain', 'status', 'code', 'country_id', 'sub_domain'])->toarray();
         $clientData = array();
 
            
         try {
-           
-            $schemaName = 'ab_royo_' . $client['database_name'] ?: config("database.connections.mysql.database");
+            $databaseNameSet = 'royo_'.$client['database_name'];
+            $db_name_set = $databaseNameSet.'.sql';
+            \Spatie\DbDumper\Databases\MySql::create()
+                ->setDbName($databaseNameSet)
+                ->setUserName($client['database_username'])
+                ->setPassword($client['database_password'])
+                ->setHost($client['database_host'])
+                ->dumpToFile('dumps/'.$db_name_set);
 
-                $database_host = !empty($client['database_host']) ? $client['database_host'] : env('DB_HOST_DEV', 'royoorders-2-db-development-cluster.cvgfslznkneq.us-west-2.rds.amazonaws.com');
-                $database_port = !empty($client['database_port']) ? $client['database_port'] : env('DB_PORT_DEV', '3306');
-                $database_username = !empty($client['database_username']) ? $client['database_username'] : env('DB_USERNAME_DEV', 'cbladmin');
-                $database_password = !empty($client['database_password']) ? $client['database_password'] : env('DB_PASSWORD_DEV', 'aQ2hvKYLH4LKWmrA');
+            dd($databaseNameSet) ;   
+            
+            $schemaName = 'ab_royo_' . $client['database_name'] ?: config("database.connections.mysql.database");
+            $dumpinto = $this->dumpinto;
+
+                $database_host_dev = env('DB_HOST_DEV', 'royoorders-2-db-development-cluster.cvgfslznkneq.us-west-2.rds.amazonaws.com');
+                $database_port_dev = env('DB_PORT_DEV', '3306');
+                $database_username_dev = env('DB_USERNAME_DEV', 'cbladmin');
+                $database_password_dev =  env('DB_PASSWORD_DEV', 'aQ2hvKYLH4LKWmrA');
 
                 $default = [
-                'driver' => env('DB_CONNECTION', 'mysql'),
-                'host' => $database_host,
-                'port' => $database_port,
+                'driver' => env('DB_CONNECTION_DEV', 'mysql'),
+                'host' => $database_host_dev,
+                'port' => $database_port_dev,
                 'database' => $schemaName,
-                'username' => $database_username,
-                'password' => $database_password,
+                'username' => $database_username_dev,
+                'password' => $database_password_dev,
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
                 'prefix' => '',
@@ -65,15 +79,17 @@ class ClientDatabaseToDevMaster implements ShouldQueue
                 ];
 
                 $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
-                $db = DB::select($query, [$schemaName]);
+                $db = DB::connection('dev')->select($query, [$schemaName]);
                 if ($db) {
                     dd('exist');
                 }else{
                     $query = "CREATE DATABASE $schemaName;";
                     DB::connection('dev')->statement($query);
                 }
+
+               
                 
-                dd($schemaName) ;
+                dd($db_name_set) ;
                 
            
                 Config::set("database.connections.$schemaName", $default);
