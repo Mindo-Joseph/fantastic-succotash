@@ -19,6 +19,7 @@ class ShippingOptionSeeder extends Seeder
 
       	$shipping_options = array(
         	array('id' => '1', 'path' => '', 'code' => 'shiprocket',  'title' => 'ShipRocket', 'status' => '0'),
+        	array('id' => '2', 'path' => '', 'code' => 'lalamoves', 'title' => 'LalaMoves', 'status' => '0'),
       	); 
 
       	if($option_count == 0)
