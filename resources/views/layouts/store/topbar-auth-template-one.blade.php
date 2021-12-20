@@ -14,7 +14,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 <div class="top-header site-topbar">
     <div class="container">
         <div class="row align-items-center justify-content-between">
-            <div class="col-sm-6 mb-3 mb-sm-0">
+            <div class="col-sm-6 mb-2 mb-sm-0">
                 <div class="d-flex align-items-center justify-content-lg-start justify-content-center">
                     <a class="navbar-brand mr-0 mr-sm-3 d-block d-sm-none" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                     @if( (Session::get('preferences')))

@@ -7356,7 +7356,7 @@ body[dir="rtl"] .inner_spacing h3 {
         text-align: center;
         font-weight: 400 !important;
         font-size: 12px !important;
-        width: 105px !important;
+        width: 85px !important;
     }
 
     .pixelstrap li a,
@@ -7708,7 +7708,6 @@ body[dir="rtl"] .inner_spacing h3 {
     }
     .product-image {
         height: auto;
-        min-height: 130px;
     }
     .common-product-box, .suppliers-box {
         padding: 0;
@@ -7723,6 +7722,14 @@ body[dir="rtl"] .inner_spacing h3 {
 
     .site-topbar .location-bar i, .site-topbar .location-bar span {
         font-size: 16px;
+    }
+
+    .site-topbar .location-bar span {
+        font-size: 14px;
+    }
+
+    .site-topbar .map-icon .yl-text {
+        padding-left: 10px;
     }
 
     .navigation-tab {
@@ -7913,11 +7920,6 @@ body[dir="rtl"] .inner_spacing h3 {
     .brand-box {
         height: 170px !important;
     }
-    .pixelstrap .nav-cate-img {
-        height: 50px;
-        width: 50px;
-        margin-bottom: 5px;
-    }
     .pixelstrap li a img {
         width: 30px;
         height: 30px;
@@ -7933,7 +7935,7 @@ body[dir="rtl"] .inner_spacing h3 {
         overflow: hidden;
     }
     .top-header.site-topbar {
-        padding: 10px 10px 10px 0;
+        padding: 10px 0 0;
         background: transparent;
     }
 
@@ -7987,12 +7989,13 @@ body[dir="rtl"] .inner_spacing h3 {
     }
 
     .navbar-brand .img-fluid {
-        max-width: 100px !important;
+        max-width: 70px !important;
         width: 100%;
     }
 
     .site-topbar .location-bar h2:after {
-        right: 10px !important                                                      ;
+        right: 10px !important;
+        font-size: 20px;
     }
 
     .small-slider .home-slider .home {

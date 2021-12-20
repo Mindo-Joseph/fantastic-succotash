@@ -1049,7 +1049,9 @@ body[dir="rtl"] #social-links li:last-child {
 }
 
 @media (max-width: 767px) {
-
+    .product-image {
+        min-height: 130px;
+    }
     .home-banner-slider .slick-prev,
     .home-banner-slider .slick-next {
         height: 30px;
@@ -1141,7 +1143,11 @@ body[dir="rtl"] #social-links li:last-child {
     header.site-header.fixed-bar {
         top: 0;
     }
-
+    .pixelstrap .nav-cate-img {
+        height: 50px;
+        width: 50px;
+        margin: 0 auto 5px;
+    }
     .top-header.site-topbar {
         padding: 10px 0 0 0;
         background: transparent;
