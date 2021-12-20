@@ -375,8 +375,8 @@
                                     <div class="card-box vendor-details-left px-2 py-3">
                                         <div class="d-sm-flex">
                                             <div class="vender-icon mr-sm-1 text-center text-sm-left mb-2 mb-sm-0">
-                                                <img src="{{ $vendor->logo['image_fit'] . '120/120' . $vendor->logo['image_path'] }}"
-                                                    class="rounded-circle avatar-lg" alt="profile-image">
+                                              <img src="{{ $vendor->logo['image_fit'] . '120/120' . $vendor->logo['image_path'] }}"
+                                                  class="rounded-circle avatar-lg" alt="profile-image">
                                             </div>
                                             <div class="ml-sm-1">
                                                 <h3>{{ $vendor->name }}</h3>
@@ -503,10 +503,12 @@
                                                             data-p_sku="{{ $prod->sku }}"
                                                             data-slug="{{ $prod->url_slug }}">
                                                             <div class="col-2">
+                                                              <a  target="_blank" href="{{route('productDetail',$prod->url_slug)}}">
                                                                 <div class="class_img product_image">
-                                                                    <img src="{{ $prod->product_image }}"
-                                                                        alt="{{ $prod->translation_title }}">
+                                                                  <img src="{{ $prod->product_image }}" alt="{{ $prod->translation_title }}">
                                                                 </div>
+                                                              </a>
+                                                                
                                                             </div>
                                                             <div class="col-10">
                                                                 <div class="row price_head pl-2">
@@ -742,7 +744,7 @@
                                                 <span>£ 10.50</span>
                                             </div> -->
 
-                    <div class="show-div shopping-cart flex-fill" id="header_cart_main_ul_ondemand"></div>
+                    <div class="show-div shopping-cart flex-fill w-100" id="header_cart_main_ul_ondemand"></div>
                 </div>
             </div>
         </div>

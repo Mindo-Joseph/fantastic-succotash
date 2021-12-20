@@ -316,9 +316,9 @@ class OrderController extends FrontController
                 if ($email_template) {
                     $email_template_content = $email_template->content;
                     if ($vendor_id == "") {
-                        $returnHTML = view('email.orderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
+                        $returnHTML = view('email.newOrderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
                     } else {
-                        $returnHTML = view('email.orderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id, 'currencySymbol' => $currSymbol])->render();
+                        $returnHTML = view('email.newOrderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id, 'currencySymbol' => $currSymbol])->render();
                     }
                     $email_template_content = str_ireplace("{customer_name}", ucwords($user->name), $email_template_content);
                     $email_template_content = str_ireplace("{order_id}", $order->order_number, $email_template_content);
@@ -861,6 +861,7 @@ class OrderController extends FrontController
                     } else {
                         $gross_amount = number_format(($payable_amount - $taxable_amount), 2);
                         $percentage_amount = ($gross_amount * $vendor_cart_product->coupon->promo->amount / 100);
+                        $total_discount += $percentage_amount;
                         $vendor_payable_amount -= $percentage_amount;
                         $vendor_discount_amount += $percentage_amount;
                     }
