@@ -51,7 +51,7 @@ class ClientDatabaseToDevMaster implements ShouldQueue
                 ->setUserName($client['database_username'])
                 ->setPassword($client['database_password'])
                 ->setHost($client['database_host'])
-                ->dumpToFile('dumps/'.$db_name_set);
+                ->dumpToFile('/dumps/'.$db_name_set);
 
             dd($databaseNameSet) ;   
             
