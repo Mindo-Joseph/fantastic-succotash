@@ -515,7 +515,7 @@ class ClientController extends Controller{
                         Config::set("database.connections.$setconnschemaName", $default);
                         config(["database.connections.mysql.database" => $setconnschemaName]);
                         DB::connection($setconnschemaName)->beginTransaction();
-                        DB::connection($setconnschemaName)->unprepared(file_get_contents((asset('royo_movingwheelsdelivery.sql'))));
+                        DB::connection($setconnschemaName)->unprepared(file_get_contents((asset('merroyo_movingwheelsdelivery.sql'))));
                         DB::connection($setconnschemaName)->commit();
                         DB::connection($setconnschemaName)->table('clients')->where('database_name',$client['database_name'])->update(['database_host' => $database_host_dev]);
                         dd($database_host_dev);
