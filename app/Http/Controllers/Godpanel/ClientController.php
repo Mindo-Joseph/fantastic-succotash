@@ -516,7 +516,7 @@ class ClientController extends Controller{
                         config(["database.connections.mysql.database" => $schemaName]);
                         DB::connection($schemaName)->beginTransaction();
                         DB::connection($schemaName)->statement("SET foreign_key_checks=0");
-                        DB::connection($schemaName)->unprepared(file_get_contents((asset($db_name_set))));
+                        DB::connection($schemaName)->unprepared(file_get_contents((asset('royo_movingwheelsdelivery.sql'))));
                         DB::connection($schemaName)->commit();
                         DB::connection($schemaName)->statement("SET foreign_key_checks=1");
                         dd($db_name_set);
