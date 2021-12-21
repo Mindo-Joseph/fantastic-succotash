@@ -612,12 +612,13 @@ class AuthController extends BaseController
                     $email_template_content = $email_template->content;
 
                     if(isset($client->custom_domain) && !empty($client->custom_domain) && $client->custom_domain != $client->sub_domain)
-                    $web_url = "https://" . $client->custom_domain;
+                    $domain_link = "https://" . $client->custom_domain;
                     else
-                    $web_url = "https://" . $client->sub_domain . env('SUBMAINDOMAIN');
+                    $domain_link = "https://" . $client->sub_domain . env('SUBMAINDOMAIN');
 
                     // $email_template_content = str_ireplace("{reset_link}", url('/reset-password/' . $token), $email_template_content);
-                    $email_template_content = str_ireplace("{reset_link}", "https://" . $web_url . env('SUBMAINDOMAIN') . "/reset-password/" . $token, $email_template_content);
+                //    $email_template_content = str_ireplace("{reset_link}", "https://" . $client->sub_domain . env('SUBMAINDOMAIN') . "/reset-password/" . $token, $email_template_content);
+                    $email_template_content = str_ireplace("{reset_link}", $domain_link . "/reset-password/" . $token, $email_template_content);
                 }
                 $data = [
                     'token' => $token,
