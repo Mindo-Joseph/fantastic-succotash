@@ -8002,6 +8002,7 @@ body[dir="rtl"] .inner_spacing h3 {
     .navbar-brand {
         padding: 0;
         height: 30px !important;
+        margin: auto;
     }
 
     .navbar-brand .img-fluid {
