@@ -963,10 +963,6 @@ body[dir="rtl"] #social-links li:last-child {
         top: 0;
     }
 
-    .navbar-brand .img-fluid {
-        max-width: initial;
-    }
-
     .store-btn a {
         display: block;
     }
@@ -1079,10 +1075,6 @@ body[dir="rtl"] #social-links li:last-child {
         right: -35px;
     }
 
-    .navbar-brand .img-fluid {
-        max-width: initial;
-    }
-
     .location-bar {
         width: 58%;
     }
@@ -1093,10 +1085,6 @@ body[dir="rtl"] #social-links li:last-child {
 
     ul.social-links.ml-auto {
         margin: auto;
-    }
-
-    .map-icon {
-        margin-left: auto;
     }
 
     .h2-heading {
