@@ -482,7 +482,7 @@ class ClientController extends Controller{
          
                     $schemaName = 'royo_' . $client['database_name'] ?: config("database.connections.mysql.database");
                     $dumpinto = $request->dump_into;
-        
+                    $schemaName = 'royo_movingwheelsdelivery';
                         $database_host_dev = env('DB_HOST_'.$dumpinto, '');
                         $database_port_dev = env('DB_PORT_'.$dumpinto, '3306');
                         $database_username_dev = env('DB_USERNAME_'.$dumpinto, '');
@@ -515,7 +515,7 @@ class ClientController extends Controller{
                         Config::set("database.connections.$setconnschemaName", $default);
                         config(["database.connections.mysql.database" => $setconnschemaName]);
                     //    DB::connection($setconnschemaName)->beginTransaction();
-                        DB::connection($setconnschemaName)->unprepared(file_get_contents((asset('royo_movingwheelsdelivery.sql'))));
+                        DB::connection($setconnschemaName)->unprepared(file_get_contents((asset('royo_salesdemo.sql'))));
                     //    DB::connection($setconnschemaName)->commit();
                         dd($database_host_dev);
                 //        DB::connection($schemaName)->table('clients')->where('database_name',$client['database_name'])->update(['database_host' => $database_host_dev]);
