@@ -503,14 +503,14 @@ class ClientController extends Controller{
                         'engine' => null
                         ];
         
-                        $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
-                        $db = DB::connection($dumpinto)->select($query, [$schemaName]);
-                        if ($db) {
-                            return redirect()->route('client.index')->with('error', 'Database already exist');
-                        }else{
-                            $query = "CREATE DATABASE $schemaName;";
-                            DB::connection($dumpinto)->statement($query);
-                        }
+                        // $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
+                        // $db = DB::connection($dumpinto)->select($query, [$schemaName]);
+                        // if ($db) {
+                        //     return redirect()->route('client.index')->with('error', 'Database already exist');
+                        // }else{
+                        //     $query = "CREATE DATABASE $schemaName;";
+                        //     DB::connection($dumpinto)->statement($query);
+                        // }
         
                         Config::set("database.connections.$schemaName", $default);
                         config(["database.connections.mysql.database" => $schemaName]);
