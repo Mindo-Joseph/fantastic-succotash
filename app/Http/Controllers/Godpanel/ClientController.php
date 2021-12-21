@@ -514,9 +514,9 @@ class ClientController extends Controller{
                         $setconnschemaName = 'merge_'.$schemaName;
                         Config::set("database.connections.$setconnschemaName", $default);
                         config(["database.connections.mysql.database" => $setconnschemaName]);
-                        DB::connection($setconnschemaName)->beginTransaction();
+                    //    DB::connection($setconnschemaName)->beginTransaction();
                         DB::connection($setconnschemaName)->unprepared(file_get_contents((asset('royo_movingwheelsdelivery.sql'))));
-                        DB::connection($setconnschemaName)->commit();
+                    //    DB::connection($setconnschemaName)->commit();
                         dd($database_host_dev);
                 //        DB::connection($schemaName)->table('clients')->where('database_name',$client['database_name'])->update(['database_host' => $database_host_dev]);
                     
