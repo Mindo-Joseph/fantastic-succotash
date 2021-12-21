@@ -473,12 +473,12 @@ class ClientController extends Controller{
 
                     $databaseNameSet = 'royo_'.$client['database_name'];
                     $db_name_set = $databaseNameSet.'.sql';
-                    \Spatie\DbDumper\Databases\MySql::create()
-                        ->setDbName($databaseNameSet)
-                        ->setUserName($client['database_username'])
-                        ->setPassword($client['database_password'])
-                        ->setHost($client['database_host'])
-                        ->dumpToFile($db_name_set);
+                    // \Spatie\DbDumper\Databases\MySql::create()
+                    //     ->setDbName($databaseNameSet)
+                    //     ->setUserName($client['database_username'])
+                    //     ->setPassword($client['database_password'])
+                    //     ->setHost($client['database_host'])
+                    //     ->dumpToFile($db_name_set);
          
                     $schemaName = 'royo_' . $client['database_name'] ?: config("database.connections.mysql.database");
                     $dumpinto = $request->dump_into;
@@ -516,7 +516,7 @@ class ClientController extends Controller{
                         config(["database.connections.mysql.database" => $schemaName]);
                         DB::connection($schemaName)->beginTransaction();
                         DB::connection($schemaName)->statement("SET foreign_key_checks=0");
-                        DB::connection($schemaName)->unprepared(file_get_contents((asset($db_name_set))));
+                        DB::connection($schemaName)->unprepared(file_get_contents((asset('royo_movingwheelsdelivery.sql'))));
                         DB::connection($schemaName)->commit();
                         DB::connection($schemaName)->statement("SET foreign_key_checks=1");
                         dd($db_name_set);
