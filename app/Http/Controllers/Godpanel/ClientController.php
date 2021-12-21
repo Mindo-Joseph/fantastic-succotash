@@ -519,10 +519,11 @@ class ClientController extends Controller{
                         DB::connection($schemaName)->unprepared(file_get_contents((asset($db_name_set))));
                         DB::connection($schemaName)->commit();
                         DB::connection($schemaName)->statement("SET foreign_key_checks=1");
-                        DB::connection($schemaName)->table('clients')->where('database_name',$client['database_name'])->update(['database_host' => $database_host_dev]);
+                        dd($db_name_set);
+                //        DB::connection($schemaName)->table('clients')->where('database_name',$client['database_name'])->update(['database_host' => $database_host_dev]);
                     
-                    DB::connection($dumpinto)->table('clients')->insert($clientData);
-                    DB::connection($dumpinto)->table('clients')->where('database_name',$client['database_name'])->update(['database_host' => $database_host_dev]);
+                //    DB::connection($dumpinto)->table('clients')->insert($clientData);
+                //    DB::connection($dumpinto)->table('clients')->where('database_name',$client['database_name'])->update(['database_host' => $database_host_dev]);
                   
                     DB::disconnect($schemaName);
                     return redirect()->route('client.index')->with('success', 'Client Migrated!');
