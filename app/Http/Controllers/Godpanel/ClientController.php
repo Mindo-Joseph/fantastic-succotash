@@ -524,7 +524,7 @@ class ClientController extends Controller{
                         DB::connection($setconnschemaName)->beginTransaction();
                         DB::connection($setconnschemaName)->unprepared(file_get_contents((asset($db_name_set))));
                         DB::connection($setconnschemaName)->commit();
-                        DB::connection($setconnschemaName)->table('clients')->update(['database_host' => $database_host_dev]);
+                   //     DB::connection($setconnschemaName)->table('clients')->update(['database_host' => $database_host_dev]);
                         dd($database_host_dev);
                       
                 //    DB::connection($dumpinto)->table('clients')->insert($clientData);
