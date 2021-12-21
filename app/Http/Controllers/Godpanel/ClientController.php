@@ -483,6 +483,8 @@ class ClientController extends Controller{
 
                     ///////// ********** create database **************//////////
                     $dumpinto = $request->dump_into;
+                    $schemaName = 'royo_' . $client['database_name'] ?: config("database.connections.mysql.database");
+                  
                     $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
                         $db = DB::connection($dumpinto)->select($query, [$schemaName]);
                         if ($db) {
@@ -493,9 +495,8 @@ class ClientController extends Controller{
                         }
                     ///////// ********** end create database **************//////////
 
-                    $schemaName = 'royo_' . $client['database_name'] ?: config("database.connections.mysql.database");
                    
-                    $schemaName = 'royo_movingwheelsdelivery';
+                  
                         $database_host_dev = env('DB_HOST_'.$dumpinto, '');
                         $database_port_dev = env('DB_PORT_'.$dumpinto, '3306');
                         $database_username_dev = env('DB_USERNAME_'.$dumpinto, '');
