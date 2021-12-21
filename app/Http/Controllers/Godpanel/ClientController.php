@@ -473,26 +473,26 @@ class ClientController extends Controller{
 
                     $databaseNameSet = 'royo_'.$client['database_name'];
                     $db_name_set = $databaseNameSet.'.sql';
-                    // \Spatie\DbDumper\Databases\MySql::create()
-                    //     ->setDbName($databaseNameSet)
-                    //     ->setUserName($client['database_username'])
-                    //     ->setPassword($client['database_password'])
-                    //     ->setHost($client['database_host'])
-                    //     ->dumpToFile($db_name_set);
+                    \Spatie\DbDumper\Databases\MySql::create()
+                        ->setDbName($databaseNameSet)
+                        ->setUserName($client['database_username'])
+                        ->setPassword($client['database_password'])
+                        ->setHost($client['database_host'])
+                        ->dumpToFile($db_name_set);
                     
 
                     ///////// ********** create database **************//////////
                     $dumpinto = $request->dump_into;
                     $schemaName = 'royo_' . $client['database_name'] ?: config("database.connections.mysql.database");
                   
-                    // $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
-                    //     $db = DB::connection($dumpinto)->select($query, [$schemaName]);
-                    //     if ($db) {
-                    //         return redirect()->route('client.index')->with('error', 'Database already exist');
-                    //     }else{
-                    //         $query = "CREATE DATABASE $schemaName;";
-                    //         DB::connection($dumpinto)->statement($query);
-                    //     }
+                    $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
+                        $db = DB::connection($dumpinto)->select($query, [$schemaName]);
+                        if ($db) {
+                            return redirect()->route('client.index')->with('error', 'Database already exist');
+                        }else{
+                            $query = "CREATE DATABASE $schemaName;";
+                            DB::connection($dumpinto)->statement($query);
+                        }
                     ///////// ********** end create database **************//////////
 
                    
@@ -517,18 +517,14 @@ class ClientController extends Controller{
                         'engine' => null
                         ];
         
-                        try{
-                            $setconnschemaName = 'merge_'.$schemaName;
-                            Config::set("database.connections.$setconnschemaName", $default);
-                            config(["database.connections.mysql.database" => $setconnschemaName]);
-                            DB::connection($setconnschemaName)->beginTransaction();
-                            DB::connection($setconnschemaName)->unprepared(file_get_contents((asset('royo_movingwheelsdelivery.sql'))));
-                            DB::connection($setconnschemaName)->commit();
-                        }catch (Exception $ex) {
-                        return redirect()->back()->with('error', $ex->getMessage());
-                      }
-                       
-                       // DB::connection($setconnschemaName)->table('clients')->update(['database_host' => $database_host_dev]);
+                        
+                        $setconnschemaName = 'merge_'.$schemaName;
+                        Config::set("database.connections.$setconnschemaName", $default);
+                        config(["database.connections.mysql.database" => $setconnschemaName]);
+                        DB::connection($setconnschemaName)->beginTransaction();
+                        DB::connection($setconnschemaName)->unprepared(file_get_contents((asset($db_name_set))));
+                        DB::connection($setconnschemaName)->commit();
+                        DB::connection($setconnschemaName)->table('clients')->update(['database_host' => $database_host_dev]);
                         dd($database_host_dev);
                       
                 //    DB::connection($dumpinto)->table('clients')->insert($clientData);
