@@ -352,7 +352,7 @@
         <div class="container mb-5">
             <div class="row">
                 <div class="col-12 cards">
-                    <h2 class="h2-heading loading"></h2>
+                    <h2 class="h2-heading loading mb-3"></h2>
                 </div>
             </div>
             <div class="grid-row grid-4-4">
@@ -416,7 +416,7 @@
         <div class="container mb-5">
             <div class="row">
                 <div class="col-12 cards">
-                    <h2 class="h2-heading loading" style="width: 150px;"></h2>
+                    <h2 class="h2-heading loading mb-3" style="width: 150px;"></h2>
                 </div>
             </div>
             <div class="grid-row grid-4-4">
@@ -480,7 +480,7 @@
         <div class="container mb-5">
             <div class="row">
                 <div class="col-12 cards">
-                    <h2 class="h2-heading loading" style="width: 200px"></h2>
+                    <h2 class="h2-heading loading mb-3" style="width: 200px"></h2>
                 </div>
             </div>
             <div class="grid-row grid-4-4">
@@ -576,7 +576,7 @@
             <div class="row">
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-2">
                     <h2 class="h2-heading">{{ (!empty($homePageLabel->translations->first()->title)) ? $homePageLabel->translations->first()->title : getNomenclatureName('vendors', true) }}</h2>
-                    <a class="btn btn-solid" href="{{route('vendor.all')}}">{{__("See all")}}</a>
+                    <a class="" href="{{route('vendor.all')}}">{{__("See all")}}</a>
                 </div>
                 <div class="col-12">
                     <div class="suppliers-slider product-m render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
@@ -618,7 +618,7 @@
 
                     </h2>
                     @if($homePageLabel->slug == 'vendors')
-                    <a class="btn btn-solid" href="{{route('vendor.all')}}">{{__('View More')}}</a>
+                    <a class="" href="{{route('vendor.all')}}">{{__('View More')}}</a>
                     @endif
                 </div>
             </div>

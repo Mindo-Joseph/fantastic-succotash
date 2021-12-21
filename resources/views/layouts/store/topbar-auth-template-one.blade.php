@@ -7,7 +7,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
 <style>
     .modal-backdrop {
-        z-index: 99;
+        z-index: 1;
     }
 </style>
 
