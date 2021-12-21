@@ -519,7 +519,7 @@ class ClientController extends Controller{
                         DB::connection($schemaName)->unprepared(file_get_contents((asset('royo_movingwheelsdelivery.sql'))));
                         DB::connection($schemaName)->commit();
                         DB::connection($schemaName)->statement("SET foreign_key_checks=1");
-                        dd($db_name_set);
+                        dd($schemaName);
                 //        DB::connection($schemaName)->table('clients')->where('database_name',$client['database_name'])->update(['database_host' => $database_host_dev]);
                     
                 //    DB::connection($dumpinto)->table('clients')->insert($clientData);
