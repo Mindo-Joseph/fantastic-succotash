@@ -1090,6 +1090,7 @@ body[dir="rtl"] #social-links li:last-child {
     .h2-heading {
         font-size: 20px;
         line-height: 28px;
+        margin-bottom: 0;
     }
 
     .see-all-btn {
