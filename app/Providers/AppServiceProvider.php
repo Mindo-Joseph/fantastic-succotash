@@ -142,6 +142,9 @@ class AppServiceProvider extends ServiceProvider
                             DB::setDefaultConnection($database_name);
                             DB::purge($database_name);
                             $dbname = DB::connection()->getDatabaseName();
+
+                            $client_update = Client::on($database_name)->where('id','>',0)->update(['custom_domain' =>  $domain,'sub_domain' =>  $subDomain[0]]);
+                            
                         }
                     }
                 }

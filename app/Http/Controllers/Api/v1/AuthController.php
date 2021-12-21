@@ -611,7 +611,7 @@ class AuthController extends BaseController
                 if ($email_template) {
                     $email_template_content = $email_template->content;
 
-                    if (isset($client->custom_domain) && !empty($client->custom_domain) && $client->custom_domain != $client->sub_domain)
+                    if(isset($client->custom_domain) && !empty($client->custom_domain) && $client->custom_domain != $client->sub_domain)
                     $web_url = "https://" . $client->custom_domain;
                     else
                     $web_url = "https://" . $client->sub_domain . env('SUBMAINDOMAIN');
