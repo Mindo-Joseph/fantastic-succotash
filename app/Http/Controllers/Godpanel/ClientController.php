@@ -511,15 +511,15 @@ class ClientController extends Controller{
                         //     $query = "CREATE DATABASE $schemaName;";
                         //     DB::connection($dumpinto)->statement($query);
                         // }
-        
-                        Config::set("database.connections.$schemaName", $default);
-                        config(["database.connections.mysql.database" => $schemaName]);
-                        DB::connection($schemaName)->beginTransaction();
-                        DB::connection($schemaName)->statement("SET foreign_key_checks=0");
-                        DB::connection($schemaName)->unprepared(file_get_contents((asset('royo_movingwheelsdelivery.sql'))));
-                        DB::connection($schemaName)->commit();
-                        DB::connection($schemaName)->statement("SET foreign_key_checks=1");
-                        dd($schemaName);
+                        $setconnschemaName = 'merge_'.$schemaName;
+                        Config::set("database.connections.$setconnschemaName", $default);
+                        config(["database.connections.mysql.database" => $setconnschemaName]);
+                        DB::connection($setconnschemaName)->beginTransaction();
+                        DB::connection($setconnschemaName)->statement("SET foreign_key_checks=0");
+                        DB::connection($setconnschemaName)->unprepared(file_get_contents((asset('royo_movingwheelsdelivery.sql'))));
+                        DB::connection($setconnschemaName)->commit();
+                        DB::connection($setconnschemaName)->statement("SET foreign_key_checks=1");
+                        dd($setconnschemaName);
                 //        DB::connection($schemaName)->table('clients')->where('database_name',$client['database_name'])->update(['database_host' => $database_host_dev]);
                     
                 //    DB::connection($dumpinto)->table('clients')->insert($clientData);
