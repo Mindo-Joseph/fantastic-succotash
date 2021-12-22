@@ -29,7 +29,7 @@ class DispatcherController extends FrontController
                     'dispatcher_status_option_id' =>  $request->dispatcher_status_option_id,
                     'vendor_id' =>  $checkiftokenExist->vendor_id,
                     'type' =>  $request->type??1]);
-                    
+                    $type = $request->type??1;
                 $dispatch_status = $request->dispatcher_status_option_id;
 
                     switch ($dispatch_status) {
@@ -51,7 +51,7 @@ class DispatcherController extends FrontController
 
                     # vendor status update
 
-                    if(isset($request->status_option_id) && !empty($request->status_option_id) && $request->status_option_id == 6){
+                    if(isset($request->status_option_id) && !empty($request->status_option_id) && $request->status_option_id == 6 && $type == 2){
                         
                         $checkif= VendorOrderStatus::where(['order_id' =>  $checkiftokenExist->order_id,
                         'order_status_option_id' =>  $request->status_option_id,
@@ -102,6 +102,7 @@ class DispatcherController extends FrontController
         try {
             DB::beginTransaction();
             $checkiftokenExist = OrderVendor::where('web_hook_code',$web_hook_code)->first();
+            $type = $request->type??1;
             if($checkiftokenExist){
 
                 $dispatch_status = $request->dispatcher_status_option_id;
@@ -122,7 +123,7 @@ class DispatcherController extends FrontController
                   default:
                    $request->status_option_id = null;
                 }
-                if(isset($request->status_option_id) && !empty($request->status_option_id) && $request->status_option_id == 6){
+                if(isset($request->status_option_id) && !empty($request->status_option_id) && $request->status_option_id == 6 && $type == 2){
                     
                     $checkif= VendorOrderStatus::where(['order_id' =>  $checkiftokenExist->order_id,
                     'order_status_option_id' =>  $request->status_option_id,
