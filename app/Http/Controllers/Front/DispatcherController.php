@@ -152,10 +152,7 @@ class DispatcherController extends FrontController
             }
 
             OrderVendor::where('vendor_id', $checkiftokenExist->vendor_id)->where('order_id', $checkiftokenExist->order_id)->update(['dispatcher_status_option_id' => $request->dispatcher_status_option_id]);
-          
-              
-            
-                    DB::commit();
+              DB::commit();
                     $message = "Order status updated.";
                     return $this->successResponse($update, $message);
                    
