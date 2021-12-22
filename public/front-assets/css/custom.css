@@ -2361,7 +2361,6 @@ div#test {
     height: 180px;
     width: 100%;
     margin: auto;
-    padding: 0 10px;
 }
 
 .product-image img {
@@ -5007,7 +5006,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     display: block;
     width: 34px;
     height: 34px;
-    margin: 0 auto 10px;
+    margin: 0 auto;
 }
 
 .product-tag {
@@ -5264,6 +5263,10 @@ input.form-control.pac-target-input.gm-err-autocomplete {
 
 .store-btn img{
     height: 40px;
+}
+
+.vendors section:last-child {
+    margin: 0 auto;
 }
 
 
@@ -7316,6 +7319,9 @@ body[dir="rtl"] .inner_spacing h3 {
 
 
 @media (max-width: 1199px) {
+    .top-header .header-dropdown li span:first-child {
+        font-size: 14px;
+    }
     .pixelstrap a .sub-arrow{
         display: none;
     }
@@ -7331,12 +7337,17 @@ body[dir="rtl"] .inner_spacing h3 {
     .step-indicator{
         margin-top: 0;
     }
+    .navbar-brand {
+        height: 40px;
+    }
     .navbar-brand .img-fluid {
-        max-width: initial;
+        max-width: max-content;
+        width: 100px;
     }
 
     .site-header {
         position: relative !important;
+        top: 0 !important;
     }
 
     .offset-top {
@@ -7356,7 +7367,7 @@ body[dir="rtl"] .inner_spacing h3 {
         text-align: center;
         font-weight: 400 !important;
         font-size: 12px !important;
-        width: 105px !important;
+        width: 85px !important;
     }
 
     .pixelstrap li a,
@@ -7693,7 +7704,12 @@ body[dir="rtl"] .inner_spacing h3 {
 }
 
 @media(max-width:767px) {
-
+    .navbar-brand {
+        height: 45px;
+    }
+    .homepage-address {
+        width: calc(100% - 100px);
+    }
     .brand-box {
         height: 200px !important;
     }
@@ -7708,7 +7724,6 @@ body[dir="rtl"] .inner_spacing h3 {
     }
     .product-image {
         height: auto;
-        min-height: 130px;
     }
     .common-product-box, .suppliers-box {
         padding: 0;
@@ -7723,6 +7738,14 @@ body[dir="rtl"] .inner_spacing h3 {
 
     .site-topbar .location-bar i, .site-topbar .location-bar span {
         font-size: 16px;
+    }
+
+    .site-topbar .location-bar span {
+        font-size: 14px;
+    }
+
+    .site-topbar .map-icon .yl-text {
+        padding-left: 10px;
     }
 
     .navigation-tab {
@@ -7913,11 +7936,6 @@ body[dir="rtl"] .inner_spacing h3 {
     .brand-box {
         height: 170px !important;
     }
-    .pixelstrap .nav-cate-img {
-        height: 50px;
-        width: 50px;
-        margin-bottom: 5px;
-    }
     .pixelstrap li a img {
         width: 30px;
         height: 30px;
@@ -7933,7 +7951,7 @@ body[dir="rtl"] .inner_spacing h3 {
         overflow: hidden;
     }
     .top-header.site-topbar {
-        padding: 10px 10px 10px 0;
+        padding: 10px 0 0;
         background: transparent;
     }
 
@@ -7983,16 +8001,18 @@ body[dir="rtl"] .inner_spacing h3 {
 
     .navbar-brand {
         padding: 0;
-        height: 35px !important;
+        height: 30px !important;
+        margin: auto;
     }
 
     .navbar-brand .img-fluid {
-        max-width: 100px !important;
+        max-width: 70px !important;
         width: 100%;
     }
 
     .site-topbar .location-bar h2:after {
-        right: 10px !important                                                      ;
+        right: 10px !important;
+        font-size: 20px;
     }
 
     .small-slider .home-slider .home {
