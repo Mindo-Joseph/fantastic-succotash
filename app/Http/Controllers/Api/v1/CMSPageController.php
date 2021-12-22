@@ -50,16 +50,25 @@ class CMSPageController extends BaseController
         $data['privacy_policy'] = $server_url . 'page/privacy-policy';
 
         $user = Auth::user();
-        $langId = $user->language;
+      //  $langId = $user->language;
+
+        $langId = ($request->hasHeader('language')) ? $request->header('language') : 1;
+
         $client_preferences = ClientPreference::first();
         
-        $page_detail = Page::with(['translations' => function ($q) use($langId) {
-            $q->where('language_id', $langId);
-        }])->where('id', $page_id)->firstOrFail();
+        $page_detail = Page::with(['translations' => function ($q) use($langId,$page_id) {
+            $q->where('language_id', $langId)->where('id', $page_id);
+        },'translation' => function ($q) use($langId,$page_id) {
+            $q->where('language_id', $langId)->where('id', $page_id);
+        }])->whereHas('translations' , function ($q) use($langId,$page_id) {
+            $q->where('language_id', $langId)->where('id', $page_id);
+        })->whereHas('translation' , function ($q) use($langId,$page_id) {
+            $q->where('language_id', $langId)->where('id', $page_id);
+        })->first();
 
         $data['page_detail'] = $page_detail;
-
-        if ($page_detail->primary->type_of_form != 2) {
+        $page_detail->primary = $page_detail->translation;
+        if ($page_detail->translation->type_of_form != 2) {
             $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
             $data['vendor_registration_documents'] = $vendor_registration_documents;
         } 
