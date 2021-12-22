@@ -31,7 +31,7 @@ class PaymentOptionController extends BaseController{
                 $option->title = __('Credit/Debit Card (Stripe)');
             }
             if($option->code == 'mobbex'){
-                $option->title = __('mobbex');
+                $option->title = __('Mobbex');
             }
             $option->title = __($option->title);
         }
