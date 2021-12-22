@@ -766,13 +766,16 @@ class CartController extends FrontController
 
                     if (isset($vendorData->coupon->promo) && !empty($vendorData->coupon->promo)) {
                         if($vendorData->coupon->promo->first_order_only==1){
-                            $userOrder = auth()->user()->orders->first();
-                            if($userOrder){
-                                $cart->coupon()->delete();
-                                $vendorData->coupon()->delete();
-                                unset($vendorData->coupon);
-                                $PromoDelete =1;
+                            if(Auth::user()){
+                                $userOrder = auth()->user()->orders->first();
+                                if($userOrder){
+                                    $cart->coupon()->delete();
+                                    $vendorData->coupon()->delete();
+                                    unset($vendorData->coupon);
+                                    $PromoDelete =1;
+                                }
                             }
+
 
                         }
                         if ( $PromoDelete !=1) {
