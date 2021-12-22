@@ -27,7 +27,8 @@ class DispatcherController extends FrontController
                 $update = VendorOrderDispatcherStatus::updateOrCreate(['dispatcher_id' => null,
                     'order_id' =>  $checkiftokenExist->order_id,
                     'dispatcher_status_option_id' =>  $request->dispatcher_status_option_id,
-                    'vendor_id' =>  $checkiftokenExist->vendor_id ]);
+                    'vendor_id' =>  $checkiftokenExist->vendor_id,
+                    'type' =>  $request->type??1]);
                     
                 $dispatch_status = $request->dispatcher_status_option_id;
 
@@ -47,7 +48,10 @@ class DispatcherController extends FrontController
                       default:
                        $request->status_option_id = null;
                     }
-                    if(isset($request->status_option_id) && !empty($request->status_option_id)){
+
+                    # vendor status update
+
+                    if(isset($request->status_option_id) && !empty($request->status_option_id) && $request->status_option_id == 6){
                         
                         $checkif= VendorOrderStatus::where(['order_id' =>  $checkiftokenExist->order_id,
                         'order_status_option_id' =>  $request->status_option_id,
@@ -118,7 +122,7 @@ class DispatcherController extends FrontController
                   default:
                    $request->status_option_id = null;
                 }
-                if(isset($request->status_option_id) && !empty($request->status_option_id)){
+                if(isset($request->status_option_id) && !empty($request->status_option_id) && $request->status_option_id == 6){
                     
                     $checkif= VendorOrderStatus::where(['order_id' =>  $checkiftokenExist->order_id,
                     'order_status_option_id' =>  $request->status_option_id,
@@ -139,7 +143,8 @@ class DispatcherController extends FrontController
                 $update = VendorOrderDispatcherStatus::updateOrCreate(['dispatcher_id' => null,
                     'order_id' =>  $checkiftokenExist->order_id,
                     'dispatcher_status_option_id' =>  $request->dispatcher_status_option_id,
-                    'vendor_id' =>  $checkiftokenExist->vendor_id ]);
+                    'vendor_id' =>  $checkiftokenExist->vendor_id,
+                    'type' =>  $request->type??1]);
 
             if(isset($request->dispatch_traking_url) && !empty($request->dispatch_traking_url))
             {
