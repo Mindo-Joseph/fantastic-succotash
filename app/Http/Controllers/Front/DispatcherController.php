@@ -28,8 +28,8 @@ class DispatcherController extends FrontController
                     'order_id' =>  $checkiftokenExist->order_id,
                     'dispatcher_status_option_id' =>  $request->dispatcher_status_option_id,
                     'vendor_id' =>  $checkiftokenExist->vendor_id,
-                    'type' =>  $request->type??1]);
-                    $type = $request->type??1;
+                    'type' =>  $request->task_type??1]);
+                    $type = $request->task_type??1;
                 $dispatch_status = $request->dispatcher_status_option_id;
 
                     switch ($dispatch_status) {
@@ -102,7 +102,7 @@ class DispatcherController extends FrontController
         try {
             DB::beginTransaction();
             $checkiftokenExist = OrderVendor::where('web_hook_code',$web_hook_code)->first();
-            $type = $request->type??1;
+            $type = $request->task_type??1;
             if($checkiftokenExist){
 
                 $dispatch_status = $request->dispatcher_status_option_id;
@@ -145,7 +145,7 @@ class DispatcherController extends FrontController
                     'order_id' =>  $checkiftokenExist->order_id,
                     'dispatcher_status_option_id' =>  $request->dispatcher_status_option_id,
                     'vendor_id' =>  $checkiftokenExist->vendor_id,
-                    'type' =>  $request->type??1]);
+                    'type' =>  $request->task_type??1]);
 
             if(isset($request->dispatch_traking_url) && !empty($request->dispatch_traking_url))
             {
