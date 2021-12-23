@@ -177,7 +177,7 @@
     <% _.each(products, function(product, k){ %>
         <div>
             <a class="card scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
-                <label class="product-tag"><%= type %></label>
+                <label class="product-tag"><% if(product.tag_title != 0) { %><%= product.tag_title %><% } else { %><%= type %><% } %></label>
                 <div class="product-image">
                     <img class="blur-up lazyloaded" src="<%= product.image_url %>" alt="">
                 </div>
