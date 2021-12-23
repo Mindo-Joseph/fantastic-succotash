@@ -183,7 +183,7 @@
                                 @endif
                             </div>
                             <p><%= product.vendor_name %></p>
-                            <p class="border-bottom pb-1">In <%= product.category %></p>
+                            <p class="border-bottom pb-1">{{__('In')}} <%= product.category %></p>
                             <div class="d-flex align-items-center justify-content-between">
                                 <b><% if(product.inquiry_only == 0) { %>
                                     <%= product.price %>
@@ -257,9 +257,9 @@
                     <div class="progress-order font-12">
                     <% if(order.scheduled_date_time){ %>
                             <span class="badge badge-success ml-2">Scheduled</span>
-                            <span class="ml-2">Your order will arrive by <%= order.converted_scheduled_date_time %></span>
+                            <span class="ml-2">{{__('Your order will arrive by')}} <%= order.converted_scheduled_date_time %></span>
                         <% } else { %>
-                            <span class="ml-2">Your order will arrive by <%= vendor.ETA %></span>
+                            <span class="ml-2">{{__('Your order will arrive by')}} <%= vendor.ETA %></span>
                         <% } %>
                     </div>
                 <% } %>
