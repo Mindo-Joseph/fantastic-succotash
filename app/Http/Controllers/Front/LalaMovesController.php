@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\UserAddress;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\TryCatch;
 
 class LalaMovesController extends Controller
 {
@@ -11,10 +16,8 @@ class LalaMovesController extends Controller
 	use \App\Http\Traits\ApiResponser;
 
 
-
     public function quotation(Request $request)
     {
-        
     	$data = (object) array(
             'pick_lat' => '3.048593',
             'pick_lng' => '101.671568',
@@ -30,6 +33,41 @@ class LalaMovesController extends Controller
         );
         $quotation = $this->getQuotations($data);
         return $quotation;
+    }
+
+
+    public function getDeliveryFeeLalamove($vendor_id)
+    {
+        try{
+                $customer = User::find(Auth::id());
+                $cus_address = UserAddress::where('user_id', Auth::id())->orderBy('is_primary', 'desc')->first();
+                if ($cus_address) {
+
+                    $vendor_details = Vendor::find($vendor_id);
+                    $data = (object) array(
+                        'pick_lat' => $vendor_details->latitude,
+                        'pick_lng' => $vendor_details->longitude,
+                        'pick_address' => $vendor_details->address,
+                        'vendor_name' => $vendor_details->name,
+                        'vendor_contact' => $vendor_details->phone_no,
+                        'drop_lat' => $cus_address->latitude,
+                        'drop_lng' => $cus_address->longitude,
+                        'drop_address' => $cus_address->address,
+                        'user_name' => $customer->name,
+                        'user_phone' => $customer->phone_number,
+                        'remarks' => 'Delivery vendor message remarks'
+                    );
+                    //dd($data);
+                    $quotation = $this->getQuotations($data);
+                    return $quotation;
+                    
+                }
+            
+        }catch(\Exception $e)
+        {
+            return 'Wrong';
+        }
+
     }
 
 

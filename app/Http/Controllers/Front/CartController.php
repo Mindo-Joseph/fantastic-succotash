@@ -12,6 +12,7 @@ use App\Http\Traits\{ApiResponser,CartManager};
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\PromoCodeController;
+use App\Http\Controllers\Front\LalaMovesController;
 use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
 
 class CartController extends FrontController
@@ -727,6 +728,8 @@ class CartController extends FrontController
 
                     if($action == 'delivery'){
                         if (!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1)) {
+
+                            //Dispatcher Delivery changes code
                             $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
                             if (!empty($deliver_charge) && $delivery_count == 0) {
                                 $delivery_count = 1;
@@ -734,7 +737,19 @@ class CartController extends FrontController
                                 // $payable_amount = $payable_amount + $deliver_charge;
                                 $delivery_fee_charges = $deliver_charge;
                             }
+                          
+                        //Lalamove Delivery changes code
+                        $lalamove = new LalaMovesController();
+                        $deliver_charges_lalmove = $lalamove->getDeliveryFeeLalamove($vendorData->vendor_id);
+                        if($deliver_charges_lalmove['code']!='409')
+                        {
+                             $deliver_charges_lalmove = json_decode($deliver_charges_lalmove['response']);
+                             $deliver_charges_lalmove = $deliver_charges_lalmove->totalFee; 
+                             $prod->deliver_charge_lalamove = number_format($deliver_charges_lalmove, 2, '.', '');
                         }
+                        //End Lalamove Delivery changes code
+                        }
+                        //dd($deliver_charges_lalmove);
                     }
 
                     $product = Product::with([
@@ -798,6 +813,7 @@ class CartController extends FrontController
                 $vendorData->coupon_amount_used = number_format($coupon_amount_used, 2, '.', '');
                 $vendorData->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
                 $vendorData->delivery_fee_charges = number_format($delivery_fee_charges, 2, '.', '');
+                $vendorData->delivery_fee_charges_lalamove = number_format($deliver_charges_lalmove, 2, '.', '');
                 $vendorData->payable_amount = number_format($payable_amount, 2, '.', '');
                 $vendorData->discount_amount = number_format($discount_amount, 2, '.', '');
                 $vendorData->discount_percent = number_format($discount_percent, 2, '.', '');
@@ -1105,6 +1121,8 @@ class CartController extends FrontController
         } else {
             $cart = Cart::select('id', 'is_gift', 'item_count', 'schedule_type', 'scheduled_date_time','schedule_pickup','schedule_dropoff')->with('coupon.promo')->where('status', '0')->where('unique_identifier', session()->get('_token'))->first();
         }
+
+        
         if (isset($request->address_id) && !empty($request->address_id)) {
             $address_id = $request->address_id;
             $address = UserAddress::where('user_id', $user->id)->update(['is_primary' => 0]);
@@ -1113,7 +1131,6 @@ class CartController extends FrontController
         if ($cart) {
             $cart_details = $this->getCart($cart, $address_id);
         }
-
         $client_preference_detail = ClientPreference::first();
         return response()->json(['status' => 'success', 'cart_details' => $cart_details, 'client_preference_detail' => $client_preference_detail]);
     }

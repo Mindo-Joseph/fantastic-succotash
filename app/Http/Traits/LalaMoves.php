@@ -11,7 +11,7 @@ trait LalaMoves{
   private $secret_key;
   private $base_url;
   private $region;
-  private $local_keys;
+  private $locale_key;
   private $startTime;
   private $service_type;
 
@@ -26,24 +26,15 @@ trait LalaMoves{
 
   public function __construct()
   {
-   // $simp_creds = ShippingOption::select('credentials', 'test_mode')->where('code', 'lalamoves')->where('status', 1)->first();
 
-    $creds_arr = (object) array(
-      'api_key' => 'pk_test_11c917c792586a46bef122660d6e04b9', 
-      'secret_key' => 'sk_test_+jBZOCfi0u7e7tAGxWBfT64w3CTEyWxyHN1LEukRe7p5ZSNJi9iYSHAUhR+q0Ff3', 
-      'region' => 'MY_KUL', 
-      'local_keys' => 'en_MY',
-      'service_type'=>'MOTORCYCLE'
-    );
-    //$creds_arr = json_encode($creds_arr);
-    //$creds_arr = json_decode($creds_arr);
-    $this->api_key = $creds_arr->api_key ?? '';
+    $simp_creds = ShippingOption::select('credentials', 'test_mode')->where('code', 'lalamove')->where('status', 1)->first();
+    $creds_arr = json_decode($simp_creds->credentials);
+    $this->api_key = $creds_arr->api_key??'';
     $this->secret_key = $creds_arr->secret_key ?? '';
-    $this->base_url = 'https://rest.sandbox.lalamove.com'; //Live url - https://rest.lalamove.com
-    $this->region = $creds_arr->region ?? ''; // Malaysia regions ----  MY_JHB, MY_KUL, MY_NTL
-    $this->local_keys = $creds_arr->local_keys ?? ''; // Malaysia region locale type en_MY, ms_MY
+    $this->base_url = (($simp_creds->test_mode=='1')?'https://rest.sandbox.lalamove.com':'https://rest.lalamove.com'); //Live url - https://rest.lalamove.com
+    $this->region = $creds_arr->country_region ?? ''; // Malaysia regions ----  MY_JHB, MY_KUL, MY_NTL
+    $this->locale_key = $creds_arr->locale_key ?? ''; // Malaysia region locale type en_MY, ms_MY
     $this->service_type = $creds_arr->service_type ?? ''; // Malaysia region ServiceType MOTORCYCLE, WALKER , VAN , 4x4 , TRUCK330, TRUCK550 
-    
   }
 
 
@@ -88,7 +79,7 @@ trait LalaMoves{
     );
  //Pickup Stop
     $addresses =array(
-       $this->local_keys => $regionDetail,
+       $this->locale_key => $regionDetail,
     );
 
     //Pickup Stop
@@ -113,7 +104,7 @@ trait LalaMoves{
     );
 
     $addresses_to =array(
-      $this->local_keys => $regionDetail_to,
+      $this->locale_key => $regionDetail_to,
    );
 
     //Dropoff Stop
