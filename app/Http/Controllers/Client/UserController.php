@@ -12,7 +12,7 @@ use App\Models\UserVendor;
 use App\Models\Permissions;
 use Illuminate\Http\Request;
 use App\Models\UserPermissions;
-use App\Models\TimeZone;
+use App\Models\Timezone;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
@@ -283,7 +283,7 @@ class UserController extends BaseController
         $client = Client::where('code', Auth::user()->code)->first();
         $tzlist = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
 
-        $tzlist = TimeZone::whereIn('timezone',$tzlist)->get();
+        $tzlist = Timezone::whereIn('timezone',$tzlist)->get();
         return view('backend/setting/profile')->with(['client' => $client, 'countries' => $countries, 'tzlist' => $tzlist]);
     }
 
