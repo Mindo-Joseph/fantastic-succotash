@@ -60,7 +60,7 @@ class OrderController extends FrontController
      * @return \Illuminate\Http\Response
      */
     public function orders(Request $request, $domain = '')
-    { 
+    {
         $user = Auth::user();
         $currency_id = Session::get('customerCurrency');
 
@@ -109,6 +109,7 @@ class OrderController extends FrontController
         foreach ($activeOrders as $order) {
             foreach ($order->vendors as $vendor) {
                 $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
+
                 $vendor->order_status = $vendor_order_status ? strtolower($vendor_order_status->OrderStatusOption->title) : '';
 
                 foreach ($vendor->products as $product) {
@@ -210,7 +211,7 @@ class OrderController extends FrontController
         foreach ($rejectedOrders as $order) {
             foreach ($order->vendors as $vendor) {
                 $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
-                $vendor->order_status = $vendor_order_status ? __(strtolower($vendor_order_status->OrderStatusOption->title)) : '';
+                $vendor->order_status = $vendor_order_status ? strtolower($vendor_order_status->OrderStatusOption->title) : '';
                 foreach ($vendor->products as $product) {
                     if (isset($product->pvariant->media)) {
                         if ($product->pvariant->media->isNotEmpty()) {

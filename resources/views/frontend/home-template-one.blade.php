@@ -187,7 +187,7 @@
                                 @endif
                             </div>
                             <p><%= product.vendor_name %></p>
-                            <p class="border-bottom pb-1">In <%= product.category %></p>
+                            <p class="border-bottom pb-1">{{__('In')}} <%= product.category %></p>
                             <div class="d-flex align-items-center justify-content-between">
                                 <b><% if(product.inquiry_only == 0) { %>
                                     <%= product.price %>
