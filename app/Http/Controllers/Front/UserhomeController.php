@@ -315,7 +315,7 @@ class UserhomeController extends FrontController
         }
         Session::forget('vendorType');
         Session::put('vendorType', $request->type);
-        $vendors = Vendor::with('products')->select('id', 'name', 'banner', 'address', 'order_pre_time', 'order_min_amount', 'logo', 'slug', 'latitude', 'longitude')->where($request->type, 1);
+        $vendors = Vendor::with('products')->with('slot.day', 'slotDate')->select('id', 'name', 'banner', 'address', 'order_pre_time', 'order_min_amount', 'logo', 'slug', 'latitude', 'longitude','show_slot')->where($request->type, 1);
         if ($preferences) {
             if ((empty($latitude)) && (empty($longitude)) && (empty($selectedAddress))) {
                 $selectedAddress = $preferences->Default_location_name;
@@ -358,6 +358,22 @@ class UserhomeController extends FrontController
             }
             $value->categoriesList = $categoriesList;
             $value->type_title = $categoriesList;
+
+            $value->is_vendor_closed = 0;
+            if($value->show_slot == 0){ 
+                if( ($value->slotDate->isEmpty()) && ($value->slot->isEmpty()) ){
+                    $value->is_vendor_closed = 1;
+                }else{
+                    $value->is_vendor_closed = 0;
+                    if($value->slotDate->isNotEmpty()){
+                        $value->opening_time = Carbon::parse($value->slotDate->first()->start_time)->format('g:i A');
+                        $value->closing_time = Carbon::parse($value->slotDate->first()->end_time)->format('g:i A');
+                    }elseif($value->slot->isNotEmpty()){
+                        $value->opening_time = Carbon::parse($value->slot->first()->start_time)->format('g:i A');
+                        $value->closing_time = Carbon::parse($value->slot->first()->end_time)->format('g:i A');
+                    }
+                }
+            }
         }
         if (($preferences) && ($preferences->is_hyperlocal == 1)) {
             $vendors = $vendors->sortBy('lineOfSightDistance')->values()->all();
@@ -375,7 +391,7 @@ class UserhomeController extends FrontController
             Session::put('vendors', $vendor_ids);
         }
 
-        $trendingVendors = Vendor::whereIn('id', $subscribed_vendors_for_trending)->where('status', 1)->inRandomOrder()->get();
+        $trendingVendors = Vendor::with('slot.day', 'slotDate')->whereIn('id', $subscribed_vendors_for_trending)->where('status', 1)->inRandomOrder()->get();
 
         if ((!empty($trendingVendors) && count($trendingVendors) > 0)) {
             foreach ($trendingVendors as $key => $value) {
@@ -396,12 +412,27 @@ class UserhomeController extends FrontController
                     }
                 }
                 $value->categoriesList = $categoriesList;
+                $value->is_vendor_closed = 0;
+                if($value->show_slot == 0){ 
+                    if( ($value->slotDate->isEmpty()) && ($value->slot->isEmpty()) ){
+                        $value->is_vendor_closed = 1;
+                    }else{
+                        $value->is_vendor_closed = 0;
+                        if($value->slotDate->isNotEmpty()){
+                            $value->opening_time = Carbon::parse($value->slotDate->first()->start_time)->format('g:i A');
+                            $value->closing_time = Carbon::parse($value->slotDate->first()->end_time)->format('g:i A');
+                        }elseif($value->slot->isNotEmpty()){
+                            $value->opening_time = Carbon::parse($value->slot->first()->start_time)->format('g:i A');
+                            $value->closing_time = Carbon::parse($value->slot->first()->end_time)->format('g:i A');
+                        }
+                    }
+                }
             }
         }
         if (($preferences) && ($preferences->is_hyperlocal == 1)) {
             $trendingVendors = $trendingVendors->sortBy('lineOfSightDistance')->values()->all();
         }
-        $mostSellingVendors = Vendor::select('vendors.*',DB::raw('count(vendor_id) as max_sales'))->join('order_vendors','vendors.id','=','order_vendors.vendor_id')->whereIn('vendors.id',$vendor_ids)->where('vendors.status', 1)->groupBy('order_vendors.vendor_id')->orderBy(DB::raw('count(vendor_id)'),'desc')->get();
+        $mostSellingVendors = Vendor::with('slot.day', 'slotDate')->select('vendors.*',DB::raw('count(vendor_id) as max_sales'))->join('order_vendors','vendors.id','=','order_vendors.vendor_id')->whereIn('vendors.id',$vendor_ids)->where('vendors.status', 1)->groupBy('order_vendors.vendor_id')->orderBy(DB::raw('count(vendor_id)'),'desc')->get();
         if ((!empty($mostSellingVendors) && count($mostSellingVendors) > 0)) {
             foreach ($mostSellingVendors as $key => $value) {
                 $value->vendorRating = $this->vendorRating($value->products);
@@ -420,6 +451,22 @@ class UserhomeController extends FrontController
                     }
                 }
                 $value->categoriesList = $categoriesList;
+
+                $value->is_vendor_closed = 0;
+                if($value->show_slot == 0){ 
+                    if( ($value->slotDate->isEmpty()) && ($value->slot->isEmpty()) ){
+                        $value->is_vendor_closed = 1;
+                    }else{
+                        $value->is_vendor_closed = 0;
+                        if($value->slotDate->isNotEmpty()){
+                            $value->opening_time = Carbon::parse($value->slotDate->first()->start_time)->format('g:i A');
+                            $value->closing_time = Carbon::parse($value->slotDate->first()->end_time)->format('g:i A');
+                        }elseif($value->slot->isNotEmpty()){
+                            $value->opening_time = Carbon::parse($value->slot->first()->start_time)->format('g:i A');
+                            $value->closing_time = Carbon::parse($value->slot->first()->end_time)->format('g:i A');
+                        }
+                    }
+                }
             }
         }
         if (($preferences) && ($preferences->is_hyperlocal == 1)) {
@@ -496,8 +543,7 @@ class UserhomeController extends FrontController
                 'vendors.dineInTable.translations' => function ($qry) use ($language_id) {
                     $qry->where('language_id', $language_id);
                 }, 'vendors.dineInTable.category', 'vendors.products', 'vendors.products.media.image', 'vendors.products.pvariant.media.pimage.image', 'user', 'address'
-            ])
-                ->whereHas('vendors', function ($q) {
+            ])->whereHas('vendors', function ($q) {
                     $q->where('order_status_option_id', '!=', 6);
                 })
                 ->where('orders.user_id', $user->id)->take(10)
@@ -529,11 +575,13 @@ class UserhomeController extends FrontController
                         $vendor->dineInTableCapacity = $vendor->dineInTable->seating_number;
                         $vendor->dineInTableCategory = $vendor->dineInTable->category->first() ? $vendor->dineInTable->category->first()->title : '';
                     }
+
+                     
                 }
                 $order->converted_scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
             }
         }
-
+      
         $data = [
             'brands' => $brands,
             'vendors' => $vendors,
