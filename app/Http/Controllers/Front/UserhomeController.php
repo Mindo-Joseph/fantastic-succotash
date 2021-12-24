@@ -179,7 +179,7 @@ class UserhomeController extends FrontController
         }
     }
     public function index(Request $request)
-    {
+    {  
         try {
             $home = array();
             $vendor_ids = array();
