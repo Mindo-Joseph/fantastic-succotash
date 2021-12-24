@@ -1139,9 +1139,9 @@ class OrderController extends BaseController
                     $vendor->vendor_dispatcher_status = VendorOrderDispatcherStatus::whereNotIn('dispatcher_status_option_id',[2])
                     ->select('*','dispatcher_status_option_id as status_data')->where('order_id', $order_id)
                     ->where('vendor_id', $vendor->vendor->id)
-                    ->where(function ($q){$q->where('dispatcher_status_option_id' ,'!=', 4)->where('type' ,'!=', 2);})->get();
-                    $vendor->vendor_dispatcher_status_count = 5;
-                    $vendor->dispatcher_status_icons = [asset('assets/icons/driver_1_1.png'),asset('assets/icons/driver_2_1.png'),asset('assets/icons/driver_3_1.png'),asset('assets/icons/driver_4_1.png'),asset('assets/icons/driver_5_1.png')];
+                    ->get();
+                    $vendor->vendor_dispatcher_status_count = 6;
+                    $vendor->dispatcher_status_icons = [asset('assets/icons/driver_1_1.png'),asset('assets/icons/driver_2_1.png'),asset('assets/icons/driver_3_1.png'),asset('assets/icons/driver_4_1.png'),asset('assets/icons/driver_4_2.png'),asset('assets/icons/driver_5_1.png')];
                 }
                 if (!empty($order->scheduled_date_time)) {
                     $order->scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
