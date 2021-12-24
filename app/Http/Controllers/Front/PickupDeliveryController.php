@@ -40,11 +40,11 @@ class PickupDeliveryController extends FrontController{
 
     public function getOrderTrackingDetails(Request $request, $domain = ''){
 
-        $order = OrderVendor::where('order_id',$request->order_id)->select('*','dispatcher_status_option_id as dispatcher_status')->first()->toArray();
+        $order = OrderVendor::where('order_id',$request->order_id)->select('*','dispatcher_status_option_id as dispatcher_status')->first();
         $response = Http::get($request->new_dispatch_traking_url);
-        if($response->status() == 200){
+        if($response->status() == 200 && isset($order) && !empty($order)){
            $response = $response->json();
-           $response['order_details'] = $order;
+           $response['order_details'] = $order->toArray();
            return $this->successResponse($response);
         }
     }

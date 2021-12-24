@@ -1411,7 +1411,12 @@ body.dark .inner_spacing {
     background: transparent;
 }
 
-
+.grayscale-image{
+    filter: grayscale(100%) !important;
+    -webkit-filter: grayscale(100%) !important;
+    transition: filter 600ms ease !important;
+    -webkit-transition: -webkit-filter 600ms ease !important;
+}
 /* Spinner End */
 
 .btn-solid {
@@ -8166,4 +8171,5 @@ body[dir="rtl"] .inner_spacing h3 {
     .suppliers-img-outer {
         height: 100px !important;
     }
+  
 }
