@@ -1141,6 +1141,7 @@ class OrderController extends BaseController
                     ->where('vendor_id', $vendor->vendor->id)
                     ->where(function ($q){$q->where('dispatcher_status_option_id' ,'!=', 4)->where('type' ,'!=', 2);})->get();
                     $vendor->vendor_dispatcher_status_count = 5;
+                    $vendor->dispatcher_status_icons = [asset('assets/icons/driver_1_1.png'),asset('assets/icons/driver_2_1.png'),asset('assets/icons/driver_3_1.png'),asset('assets/icons/driver_4_1.png'),asset('assets/icons/driver_5_1.png')];
                 }
                 if (!empty($order->scheduled_date_time)) {
                     $order->scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
