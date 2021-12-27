@@ -501,7 +501,7 @@ class CartController extends FrontController
      * Get Cart Items
      *
      */
-    public function getCart($cart, $address_id=0)
+    public function getCart($cart, $address_id=0 , $code = null)
     {
         $address = [];
         $cart_id = $cart->id;
@@ -605,10 +605,13 @@ class CartController extends FrontController
             $product_out_of_stock = 0;
             $PromoFreeDeliver = 0;
             $PromoDelete = 0;
+            $d = 0;
             foreach ($cartData as $ven_key => $vendorData) {
                 $is_promo_code_available = 0;
                 $vendor_products_total_amount = $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
-                $delivery_count = 0;$coupon_amount_used = 0;
+                $delivery_count = 0;
+                $delivery_count_lm = 0;
+                $coupon_amount_used = 0;
 
                 if(Session::has('vendorTable')){
                     if((Session::has('vendorTableVendorId')) && (Session::get('vendorTableVendorId') == $vendorData->vendor_id)){
@@ -730,6 +733,10 @@ class CartController extends FrontController
                     }
 
                     if($action == 'delivery'){
+                        $delivery_fee_charges = 0;
+                        $deliver_charges_lalmove =0;
+                        //$deliveryCharges = 0;
+
                         if (!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1)) {
 
                             //Dispatcher Delivery changes code
@@ -739,21 +746,39 @@ class CartController extends FrontController
                                 $prod->deliver_charge = number_format($deliver_charge, 2, '.', '');
                                 // $payable_amount = $payable_amount + $deliver_charge;
                                 $delivery_fee_charges = $deliver_charge;
+
                             }
-                          
+                        $deliveryCharges = $delivery_fee_charges;
                         //Lalamove Delivery changes code
                         $lalamove = new LalaMovesController();
-                        $deliver_charges_lalmove = $lalamove->getDeliveryFeeLalamove($vendorData->vendor_id);
-                        if($deliver_charges_lalmove['code']!='409')
-                        {
-                             $deliver_charges_lalmove = json_decode($deliver_charges_lalmove['response']);
-                             $deliver_charges_lalmove = $deliver_charges_lalmove->totalFee; 
-                             $prod->deliver_charge_lalamove = number_format($deliver_charges_lalmove, 2, '.', '');
+                        $deliver_lalmove_fee = $lalamove->getDeliveryFeeLalamove($vendorData->vendor_id);
+                        //dd($deliver_lalmove_fee);
+                        if($deliver_lalmove_fee>0 && $delivery_count_lm == 0)
+                        {   
+                             $delivery_count_lm = 1;
+                             $prod->deliver_charge_lalamove = number_format($deliver_lalmove_fee, 2, '.', '');
+                             $deliver_charges_lalmove = $deliver_lalmove_fee;
+
                         }
                         //End Lalamove Delivery changes code
+                        if($code =='L' && $deliver_charges_lalmove>0)
+                        {
+                            $deliveryCharges = $deliver_charges_lalmove;
+
+                            // if($d==0){
+                            // }else{
+                            //     $deliveryCharges = 0;
+                            // }
+                            // ++$d;
                         }
-                        //dd($deliver_charges_lalmove);
+
+
+
+                        }
+                       
+
                     }
+                   
 
                     $product = Product::with([
                         'variant' => function ($sel) {
@@ -819,8 +844,8 @@ class CartController extends FrontController
                         if ( $PromoDelete !=1) {
                             if($vendorData->coupon->promo->allow_free_delivery ==1   ){
                                 $PromoFreeDeliver = 1;
-                                $coupon_amount_used = $coupon_amount_used +  $delivery_fee_charges;
-                                $payable_amount = $payable_amount - $delivery_fee_charges;
+                                $coupon_amount_used = $coupon_amount_used +  $deliveryCharges;
+                                $payable_amount = $payable_amount - $deliveryCharges;
                                // pr($payable_amount);
                             }
                         }
@@ -829,13 +854,13 @@ class CartController extends FrontController
 
                 }
                 if (in_array(1, $subscription_features)) {
-                    $subscription_discount = $subscription_discount + $delivery_fee_charges;
+                    $subscription_discount = $subscription_discount + $deliveryCharges;
                 }
                // pr($PromoFreeDeliver);
 
                 $subtotal_amount = $payable_amount;
                 if($PromoFreeDeliver != 1){
-                    $payable_amount = $payable_amount + $deliver_charge;
+                    $payable_amount = $payable_amount + $deliveryCharges;
                 }
                 //$payable_amount = $payable_amount + $deliver_charge;
                 //Start applying service fee on vendor products total
@@ -965,6 +990,7 @@ class CartController extends FrontController
             $cart->delay_date =  $delay_date??0;
             $cart->pickup_delay_date =  $pickup_delay_date??0;
             $cart->dropoff_delay_date =  $dropoff_delay_date??0;
+            $cart->delivery_type =  $code??'D';
 
             // dd($cart->toArray());
             $cart->products = $cartData->toArray();
@@ -1167,7 +1193,7 @@ class CartController extends FrontController
             $address = UserAddress::where('user_id', $user->id)->where('id', $address_id)->update(['is_primary' => 1]);
         }
         if ($cart) {
-            $cart_details = $this->getCart($cart, $address_id);
+            $cart_details = $this->getCart($cart, $address_id,$request->code);
         }
         $client_preference_detail = ClientPreference::first();
         return response()->json(['status' => 'success', 'cart_details' => $cart_details, 'client_preference_detail' => $client_preference_detail]);

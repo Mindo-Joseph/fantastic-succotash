@@ -63,6 +63,10 @@
                 $country_region = (isset($creds->country_region)) ? $creds->country_region : '';
                 $locale_key = (isset($creds->locale_key)) ? $creds->locale_key : '';
                 $service_type = (isset($creds->service_type)) ? $creds->service_type : '';
+
+                $base_price = (isset($creds->base_price)) ? $creds->base_price : '';
+                $distance = (isset($creds->distance)) ? $creds->distance : '';
+                $amount_per_km = (isset($creds->amount_per_km)) ? $creds->amount_per_km : '';
                 ?>
 
                 <div class="card-box h-100">
@@ -162,6 +166,36 @@
                             </div>
 
 
+                            <div class="col-6 mt-4">
+                                <div class="form-group mb-0 switchery-demo">
+                                    <label for="" class="mr-3">{{ __("Set Base Price Fare") }}</label>
+                                    <input type="checkbox"  data-title="{{$delOption->code}}" data-plugin="switchery" name="base_active" class="chk_box base_select" data-color="#43bee1" @if($base_price > 0) checked @endif>
+                                </div>
+                            </div>
+
+                        <div id="lalamove_fields_wrapper_base" @if($base_price < 1) style="display:none" @endif class="col-12">
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="lalamove_base_price" class="mr-3">{{ __("Base Price") }}</label>
+                                    <input type="text" name="base_price" id="lalamove_base_price" class="form-control" value="{{@$base_price}}" >
+                                </div>  
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="lalamove_distance" class="mr-3">{{ __("Distance") }}</label>
+                                    <input type="text" name="distance" id="lalamove_distance" class="form-control" value="{{@$distance}}" >
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <label for="lalamove_amount_per_km" class="mr-3">{{ __("Amount Per Killometer") }}</label>
+                                    <input type="text" name="amount_per_km" id="lalamove_amount_per_km" class="form-control" value="{{@$amount_per_km}}" >
+                                </div>
+                            </div>
+                        </div>
+
                         </div>
                     </div>
                     @endif
@@ -197,6 +231,19 @@
         } else {
             $("#" + code + "_fields_wrapper").hide();
             $("#" + code + "_fields_wrapper").find('input').removeAttr('required');
+        }
+    });
+
+    $('.base_select').change(function() {
+        var id = $(this).data('id');
+        var title = $(this).data('title');
+        var code = title.toLowerCase();
+        if ($(this).is(":checked")) {
+            $("#" + code + "_fields_wrapper_base").show();
+            $("#" + code + "_fields_wrapper_base").find('input').attr('required', true);
+        } else {
+            $("#" + code + "_fields_wrapper_base").hide();
+            $("#" + code + "_fields_wrapper_base").find('input').removeAttr('required');
         }
     });
 </script>

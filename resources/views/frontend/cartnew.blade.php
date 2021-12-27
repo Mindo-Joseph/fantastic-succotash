@@ -239,7 +239,22 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <% } %>
                         </div>
                         <div class="col-4 text-right">
-                            <p class="total_amt mb-1 <% if(product.delivery_fee_charges > 0) { %>{{ ((in_array(1, $subscription_features)) ) ? 'discard_price' : '' }}<% } %>  <% if(product.promo_free_deliver ==1) { %>discard_price <% } %> <% product.promo_free_deliver == 1? 'discard_price': '' %> ">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %></p>
+                            
+                            
+                            <% if(product.delivery_fee_charges > 0 ) { %>
+                                {{__('Dispatcher')}} : {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %>  
+                                <input type="radio" name="deliveryFee[<%= product.vendor.id %>]" class="delivery-fee" value="<%= Helper.formatPrice(product.delivery_fee_charges) %>" data-dcode="D" <%= (cart_details.delivery_type == 'D')?'checked':'' %>  /> 
+                            <% } %>
+                            <br>
+                            <% if(product.delivery_fee_charges_lalamove > 0) { %>
+                                {{__('Lalamove')}} : {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges_lalamove) %> <input type="radio" name="deliveryFee[<%= product.vendor.id %>]" class="delivery-fee" value="<%= Helper.formatPrice(product.delivery_fee_charges_lalamove) %>"  data-dcode="L" <%= (cart_details.delivery_type == 'L')?'checked':'' %> />
+                            <% } %>
+                            
+
+
+
+                            
+
                             <% if(product.coupon_amount_used > 0) { %>
                             <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.coupon_amount_used) %></p>
                             <% } %>
