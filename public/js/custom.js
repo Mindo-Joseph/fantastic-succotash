@@ -706,9 +706,9 @@ $(document).ready(function() {
 
     $(document).on("click", "#order_placed_btn", function() {
 
-        var delivery_fee = $("input[name='deliveryFee']:checked").val();
-        var delivery_type = $("input[name='deliveryFee']:checked").attr('data-dcode');
-
+        //var delivery_fee = $("input[name='deliveryFee']:checked").val();
+        var delivery_type = $("input:radio.delivery-fee:checked").attr('data-dcode'); 
+        
         $('.alert-danger').html('');
         if ((typeof guest_cart != undefined) && (guest_cart == 1)) {
             // window.location.href = login_url;
@@ -764,14 +764,14 @@ $(document).ready(function() {
         }
 
             if (cartAmount == 0) {
-            placeOrder(address, 1, '', tip);
+            placeOrder(address, 1, '', tip,delivery_type);
             return false;
         } else {
             $.ajax({
                 type: "POST",
                 dataType: 'json',
                 url: update_cart_schedule,
-                data: { specific_instructions:specific_instructions,task_type: task_type,schedule_dropoff:schedule_dropoff, schedule_pickup:schedule_pickup,schedule_dt: schedule_dt , comment_for_pickup_driver: comment_for_pickup_driver , comment_for_dropoff_driver: comment_for_dropoff_driver , comment_for_vendor: comment_for_vendor , delivery_fee : delivery_fee , delivery_type : delivery_type },
+                data: { specific_instructions:specific_instructions,task_type: task_type,schedule_dropoff:schedule_dropoff, schedule_pickup:schedule_pickup,schedule_dt: schedule_dt , comment_for_pickup_driver: comment_for_pickup_driver , comment_for_dropoff_driver: comment_for_dropoff_driver , comment_for_vendor: comment_for_vendor , delivery_type : delivery_type },
                 success: function(response) {
                     if (response.status == "Success") {
                         $.ajax({
@@ -1140,7 +1140,7 @@ $(document).ready(function() {
         });
     }
 
-    window.placeOrder = function placeOrder(address_id = 0, payment_option_id, transaction_id = 0, tip = 0) {
+    window.placeOrder = function placeOrder(address_id = 0, payment_option_id, transaction_id = 0, tip = 0 , delivery_type ='D') {
         var task_type = $("input[name='task_type']:checked").val();
         var schedule_dt = $("#schedule_datetime").val();
         var is_gift = $('#is_gift:checked').val() ?? 0;
@@ -1155,7 +1155,7 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: place_order_url,
-            data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt,is_gift:is_gift },
+            data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt,is_gift:is_gift ,delivery_type:delivery_type},
             success: function(response) {
                 if (response.status == "Success") {
                     var ip_address = window.location.host;
@@ -1247,7 +1247,8 @@ $(document).ready(function() {
     $(document).on("click", ".proceed_to_pay", function() {
         // startLoader('body',"{{getClientPreferenceDetail()->wb_color_rgb}}");
         $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
-
+        var delivery_type = $("input:radio.delivery-fee:checked").attr('data-dcode'); 
+       
         let address_id = $("input:radio[name='address_id']:checked").val();
 
         if ((vendor_type == 'delivery') && ((address_id == '') || (address_id < 1) || ($("input[name='address_id']").length < 1))) {
@@ -1260,7 +1261,7 @@ $(document).ready(function() {
 
         let tip = $("#cart_tip_amount").val();
         if (payment_option_id == 1) {
-            placeOrder(address_id, payment_option_id, '', tip);
+            placeOrder(address_id, payment_option_id, '', tip, delivery_type);
         } else if (payment_option_id == 4) {
             stripe.createToken(card).then(function(result) {
                 if (result.error) {

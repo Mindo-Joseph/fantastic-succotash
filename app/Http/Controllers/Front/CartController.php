@@ -735,7 +735,7 @@ class CartController extends FrontController
                     if($action == 'delivery'){
                         $delivery_fee_charges = 0;
                         $deliver_charges_lalmove =0;
-                        //$deliveryCharges = 0;
+                       // $deliveryCharges = 0;
 
                         if (!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1)) {
 
@@ -745,33 +745,25 @@ class CartController extends FrontController
                                 $delivery_count = 1;
                                 $prod->deliver_charge = number_format($deliver_charge, 2, '.', '');
                                 // $payable_amount = $payable_amount + $deliver_charge;
-                                $delivery_fee_charges = $deliver_charge;
 
                             }
+                        $delivery_fee_charges = $deliver_charge;
                         $deliveryCharges = $delivery_fee_charges;
                         //Lalamove Delivery changes code
                         $lalamove = new LalaMovesController();
                         $deliver_lalmove_fee = $lalamove->getDeliveryFeeLalamove($vendorData->vendor_id);
-                        //dd($deliver_lalmove_fee);
                         if($deliver_lalmove_fee>0 && $delivery_count_lm == 0)
                         {   
                              $delivery_count_lm = 1;
                              $prod->deliver_charge_lalamove = number_format($deliver_lalmove_fee, 2, '.', '');
-                             $deliver_charges_lalmove = $deliver_lalmove_fee;
 
                         }
+                       $deliver_charges_lalmove = $deliver_lalmove_fee;
                         //End Lalamove Delivery changes code
-                        if($code =='L' && $deliver_charges_lalmove>0)
+                        if($code =='L' && $deliver_lalmove_fee>0)
                         {
                             $deliveryCharges = $deliver_charges_lalmove;
-
-                            // if($d==0){
-                            // }else{
-                            //     $deliveryCharges = 0;
-                            // }
-                            // ++$d;
                         }
-
 
 
                         }
