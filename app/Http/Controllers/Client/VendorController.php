@@ -168,7 +168,10 @@ class VendorController extends BaseController
         );
         foreach ($vendor_registration_documents as $vendor_registration_document) {
             if($vendor_registration_document->is_required == 1){
-                $rules[$vendor_registration_document->primary->slug] = 'required';
+                if(isset($vendor_registration_document->primary) && !empty($vendor_registration_document->primary))
+                {
+                    $rules[$vendor_registration_document->primary->slug] = 'required';
+                }
             }
         }
         $validation  = Validator::make($request->all(), $rules)->validate();
