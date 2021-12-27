@@ -966,7 +966,7 @@ class OrderController extends FrontController
             // $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
             $this->sendSuccessSMS($request, $order);
-            $ex_gateways = [7, 8, 9, 10]; // mobbex, yoco, pointcheckout, razorpay
+            $ex_gateways = [7, 8, 9, 10]; //  mobbex, yoco, pointcheckout, razorpay
             if (!in_array($request->payment_option_id, $ex_gateways)) {
                 Cart::where('id', $cart->id)->update([
                     'schedule_type' => null, 'scheduled_date_time' => null,
