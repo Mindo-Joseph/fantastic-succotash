@@ -408,6 +408,7 @@ class HomeController extends BaseController
 
     public function globalSearch(Request $request, $for = 'all', $dataId = 0)
     {
+       // return 1;
         try {
             $keyword = $request->keyword;
             $langId = Auth::user()->language;
@@ -420,10 +421,11 @@ class HomeController extends BaseController
             $latitude = $request->latitude;
             $longitude = $request->longitude;
 
+
             if (!in_array($action, $types)) {
                 return response()->json(['error' => 'Type is incorrect.'], 404);
             }
-
+            $allowed_vendors = $this->getServiceAreaVendors($latitude, $longitude, $action);
             $response = array();
             if ($for == 'all') {
                 $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
@@ -465,9 +467,12 @@ class HomeController extends BaseController
                         ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
                     });
                 }
+
                 $vendors = $vendors->where(function ($q) use ($keyword) {
                     $q->where('name', 'LIKE', "%$keyword%")->orWhere('address', 'LIKE', '%' . $keyword . '%');
                 })->where('status', 1)->paginate($limit, $page);
+
+
                 foreach ($vendors as $vendor) {
                     $vendor->response_type = 'vendor';
                     $vendor->image_url = $vendor->logo['proxy_url'] . '80/80' . $vendor->logo['image_path'];
@@ -490,7 +495,9 @@ class HomeController extends BaseController
                     })
                     ->where(function ($q) use ($keyword) {
                         $q->where('products.sku', ' LIKE', '%' . $keyword . '%')->orWhere('products.url_slug', 'LIKE', '%' . $keyword . '%')->orWhere('pt.title', 'LIKE', '%' . $keyword . '%');
-                    })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')->paginate($limit, $page);
+                    })->where('products.is_live', 1)->whereNull('deleted_at')->groupBy('products.id')
+                    ->whereIn('vendor_id', $allowed_vendors)
+                    ->paginate($limit, $page);
                 foreach ($products as $product) {
                     $product->response_type = 'product';
                     $product->image_url = ($product->media->isNotEmpty()) ? $product->media->first()->image->path['image_fit'] . '300/300' . $product->media->first()->image->path['image_path'] : '';
