@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\OrderVendor;
 use App\Models\ShippingOption;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\Vendor;
+use App\Models\VendorOrderDispatcherStatus;
+use App\Models\Webhook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Stmt\TryCatch;
@@ -92,17 +96,19 @@ class LalaMovesController extends Controller
                         'pick_lng' => $vendor_details->longitude,
                         'pick_address' => $vendor_details->address,
                         'vendor_name' => $vendor_details->name,
-                        'vendor_contact' => $vendor_details->phone_no,
+                        // 'vendor_contact' => $vendor_details->phone_no,
+                        'vendor_contact' => '3768865552',
                         'drop_lat' => $cus_address->latitude,
                         'drop_lng' => $cus_address->longitude,
                         'drop_address' => $cus_address->address,
                         'user_name' => $customer->name,
-                        'user_phone' => $customer->phone_number,
+                        'user_phone' => '3768865551',
+                        //'user_phone' => $customer->phone_number,
                         'remarks' => 'Delivery vendor message remarks'
                     );
             
                     $quotation = $this->getQuotations($data);
-                   
+                    $actualAmount=0;
                     if($quotation['code']!='409')
                     { 
                         $json = json_decode($quotation['response']);
@@ -120,19 +126,60 @@ class LalaMovesController extends Controller
             
         }catch(\Exception $e)
         {
-            return $e->getMessage();
+            return 0;
         }
 
+    }
+
+    public function placeOrderToLalamove($vendor_id,$user_id,$order_id)
+    {
+        $order = Order::find($order_id);
+        $customer = User::find($user_id);
+        //$cus_address = UserAddress::where('user_id', $customer->id)->orderBy('is_primary', 'desc')->first();
+        $cus_address = UserAddress::find($order->address_id);
+                if ($cus_address && $this->lalamove_status==1){
+
+                    $vendor_details = Vendor::find($vendor_id);
+                    $data = (object) array(
+                        'pick_lat' => $vendor_details->latitude,
+                        'pick_lng' => $vendor_details->longitude,
+                        'pick_address' => $vendor_details->address,
+                        'vendor_name' => $vendor_details->name,
+                        'vendor_contact' => $vendor_details->phone_no,
+                        'drop_lat' => $cus_address->latitude,
+                        'drop_lng' => $cus_address->longitude,
+                        'drop_address' => $cus_address->address,
+                        'user_name' => $customer->name,
+                        'user_phone' => $customer->phone_number,
+                        'remarks' => 'Delivery vendor message remarks'
+                    );
+                   
+                $quotation = $this->getQuotations($data);
+                $response = json_decode($quotation['response']);
+                if($quotation['code']=='200'){
+                        $response = $this->placeOrders($data,$response);
+                        if($response['code']=='200'){
+                            $response = json_decode($response['response']);
+                        }else{
+                            $response = 2;
+                        }
+                }else{
+                    $response = 2;
+                }
+            }
+
+        return $response;
+    	
     }
 
 
     public function placeOrder($vendor_id)
     {
         $customer = User::find(Auth::id());
-        $cus_address = UserAddress::where('user_id', Auth::id())->orderBy('is_primary', 'desc')->first();
+        $cus_address = UserAddress::find('150');
                 if ($cus_address && $this->lalamove_status==1){
-
-                    $vendor_details = Vendor::find($vendor_id);
+                    //dd($vendor_id);
+                    $vendor_details = Vendor::find('16');
                     $data = (object) array(
                         'pick_lat' => $vendor_details->latitude,
                         'pick_lng' => $vendor_details->longitude,
@@ -163,6 +210,75 @@ class LalaMovesController extends Controller
 
         return $response;
     	
+    }
+
+    public function placeOrder2($vendor_id)
+    {
+        $response = $this->testing();
+        dd($response);
+    }
+
+    public function webhooks(Request $request)
+    {
+        // $request = '{
+        //     "apiKey": "pk_test_11c917c792586a46bef122660d6e04b9",
+        //     "timestamp": 1640697361,
+        //     "signature": "92153b66e867160b139f1288c07170bf2e66851a7c77113f546cd3c143e5d349",
+        //     "eventId": "52C93E91-FD46-F542-67B1-225F324AD809",
+        //     "eventType": "ORDER_STATUS_CHANGED",
+        //     "data": {
+        //       "order": {
+        //         "id": "195610807268",
+        //         "city": "MY_KUL",
+        //         "status": "ASSIGNING_DRIVER",
+        //         "driverId": "",
+        //         "shareLink": "https://share.sandbox.lalamove.com/?MY100211228211600794410010041218730&lang=en_MY&source=api_wrapper&sign=757a3f926c2ca25fc2e121c21eec4dd5",
+        //         "previousStatus": "",
+        //         "updatedAt": "2021-12-28T21:16.00Z"
+        //       }
+        //     }
+        //   }';
+
+        $json = json_decode($request);
+        if($json->eventType == 'ORDER_STATUS_CHANGED' && $json->data->order->status == 'ASSIGNING_DRIVER')
+        {
+            // ASSIGNING_DRIVER means Order is placed and assigning drivers
+            OrderVendor::where('web_hook_code',$json->data->order->id)
+            ->update(['lalamove_tracking_url'=>$json->data->order->shareLink]);
+            $details = OrderVendor::where('web_hook_code',$json->data->order->id)->first();
+            VendorOrderDispatcherStatus::UpdateOrCreate(['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id],['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id,'dispatcher_status_option_id'=>'1']);
+        }elseif($json->eventType == 'ORDER_STATUS_CHANGED' && $json->data->order->status == 'ON_GOING')
+        {
+
+            // ON_GOING means driver assigned and start drive
+            OrderVendor::where('web_hook_code',$json->data->order->id)
+            ->update(['lalamove_tracking_url'=>$json->data->order->shareLink]);
+            $details = OrderVendor::where('web_hook_code',$json->data->order->id)->first();
+            VendorOrderDispatcherStatus::UpdateOrCreate(['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id],['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id,'dispatcher_status_option_id'=>'2']);
+            VendorOrderDispatcherStatus::UpdateOrCreate(['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id],['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id,'dispatcher_status_option_id'=>'3']);
+        }elseif($json->eventType == 'ORDER_STATUS_CHANGED' && $json->data->order->status == 'PICKED_UP')
+        {
+            // PICKED_UP means driver picked order and out for delivery
+            OrderVendor::where('web_hook_code',$json->data->order->id)
+            ->update(['lalamove_tracking_url'=>$json->data->order->shareLink]);
+            $details = OrderVendor::where('web_hook_code',$json->data->order->id)->first();
+            VendorOrderDispatcherStatus::UpdateOrCreate(['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id],['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id,'dispatcher_status_option_id'=>'4']);
+        }elseif($json->eventType == 'ORDER_STATUS_CHANGED' && $json->data->order->status == 'COMPLETED')
+        {
+            // COMPLETED means driver complete the delivery
+            OrderVendor::where('web_hook_code',$json->data->order->id)
+            ->update(['lalamove_tracking_url'=>$json->data->order->shareLink]);
+            $details = OrderVendor::where('web_hook_code',$json->data->order->id)->first();
+            VendorOrderDispatcherStatus::UpdateOrCreate(['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id],['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id,'dispatcher_status_option_id'=>'5']);
+        }
+
+
+
+
+         Webhook::create(['tracking_order_id'=>(($json->data->order->id)?$json->data->order->id:''),'response'=>$request]);
+
+
+
     }
 
     

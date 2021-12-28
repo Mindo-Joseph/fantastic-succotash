@@ -26,7 +26,6 @@ trait LalaMoves{
 
   public function __construct()
   {
-
     $simp_creds = ShippingOption::select('credentials', 'test_mode')->where('code', 'lalamove')->where('status', 1)->first();
     $creds_arr = json_decode($simp_creds->credentials);
     $this->api_key = $creds_arr->api_key??'';
@@ -130,7 +129,7 @@ trait LalaMoves{
 
     $bodyArr = array(
       'serviceType' => $this->service_type,
-      'specialRequests' => [], //optional parameters "COD", "HELP_BUY", "LALABAG"
+      'specialRequests' => [ ], //optional parameters "COD", "HELP_BUY", "LALABAG"
       'requesterContact' => $requesters,
       'stops' => $stops,
       'deliveries' =>$deliveries
@@ -147,6 +146,15 @@ trait LalaMoves{
   //Quotation Function Api
   public function getQuotations($data)
   {
+    $simp_creds = ShippingOption::select('credentials', 'test_mode')->where('code', 'lalamove')->where('status', 1)->first();
+    $creds_arr = json_decode($simp_creds->credentials);
+    $this->api_key = $creds_arr->api_key??'';
+    $this->secret_key = $creds_arr->secret_key ?? '';
+    $this->base_url = (($simp_creds->test_mode=='1')?'https://rest.sandbox.lalamove.com':'https://rest.lalamove.com'); //Live url - https://rest.lalamove.com
+    $this->region = $creds_arr->country_region ?? ''; // Malaysia regions ----  MY_JHB, MY_KUL, MY_NTL
+    $this->locale_key = $creds_arr->locale_key ?? ''; // Malaysia region locale type en_MY, ms_MY
+    $this->service_type = $creds_arr->service_type ?? ''; // Malaysia region ServiceType MOTORCYCLE, WALKER , VAN , 4x4 , TRUCK330, TRUCK550 
+
     $method = 'POST';
     $path = '/v2/quotations';
     $body = $this->getQuotationBody($data);
@@ -176,14 +184,14 @@ trait LalaMoves{
   $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
   curl_close($curl);
 
-  $response = '{
-    "totalFee": "80", 
-    "totalFeeCurrency": "INR",
-    "distance": {
-      "text": "16.2 km",
-      "value": 16210
-    }}';
-  return array('code'=>'200','response'=>$response);
+  // $response = '{
+  //   "totalFee": "80", 
+  //   "totalFeeCurrency": "INR",
+  //   "distance": {
+  //     "text": "16.2 km",
+  //     "value": 16210
+  //   }}';
+  return array('code'=>$httpCode,'response'=>$response);
 
 //Responses
 //   200 Quotation Created
@@ -234,11 +242,23 @@ public function getOrderBody($data)
 
 public function placeOrders($data,$quotation)
 {
+
+  $simp_creds = ShippingOption::select('credentials', 'test_mode')->where('code', 'lalamove')->where('status', 1)->first();
+  $creds_arr = json_decode($simp_creds->credentials);
+  $this->api_key = $creds_arr->api_key??'';
+  $this->secret_key = $creds_arr->secret_key ?? '';
+  $this->base_url = (($simp_creds->test_mode=='1')?'https://rest.sandbox.lalamove.com':'https://rest.lalamove.com'); //Live url - https://rest.lalamove.com
+  $this->region = $creds_arr->country_region ?? ''; // Malaysia regions ----  MY_JHB, MY_KUL, MY_NTL
+  $this->locale_key = $creds_arr->locale_key ?? ''; // Malaysia region locale type en_MY, ms_MY
+  $this->service_type = $creds_arr->service_type ?? ''; // Malaysia region ServiceType MOTORCYCLE, WALKER , VAN , 4x4 , TRUCK330, TRUCK550 
+
+
  $method = 'POST';
  $path = '/v2/orders';
  $bodyQut = $this->getQuotationBody($data);
  $bodyOrder = $this->getOrderBody($quotation);
  $body=json_encode(array_merge(json_decode($bodyQut, true),json_decode($bodyOrder, true)));
+
  $token = $this->token($method,$path,$body);
 
   
@@ -257,8 +277,8 @@ curl_setopt_array($curl, array(
     CURLOPT_HTTPHEADER => array(
         "Content-type: application/json; charset=utf-8",
         "Authorization: hmac ".$token, // A unique Signature Hash has to be generated for EVERY API call at the time of making such call.
-        "Accept: application/json",
-        "X-LLM-Market: {$this->region}" // Please note to which city are you trying to make API call
+        //"Accept: application/json",
+        "X-LLM-Market: $this->region" // Please note to which city are you trying to make API call
     ),
 ));
 
@@ -282,9 +302,47 @@ return array('code'=>$httpCode,'response'=>$response,'totalTime'=>floor((microti
   
 } 
 
+public function testing()
+{
+
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://rest.sandbox.lalamove.com/v2/orders',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+  CURLOPT_POSTFIELDS =>'{"serviceType":"MOTORCYCLE","specialRequests":[],"requesterContact":{"name":"General Electric","phone":"8965745236"},"stops":[{"location":{"lat":"3.115825684565","lng":"101.666775521484"},"addresses":{"en_MY":{"displayString":"Malaysia","market":"MY_KUL"}}},{"location":{"lat":"3.144354220271","lng":"101.710811322266"},"addresses":{"en_MY":{"displayString":"g107, Jln Bukit Bintang, Bukit Bintang, 55100 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur, Malaysia","market":"MY_KUL"}}}],"deliveries":[{"toStop":1,"toContact":{"name":"pankaj","phone":"7520822619"},"remarks":"Delivery vendor message remarks"}],"quotedTotalFee":{"amount":"11.00","currency":"MYR"},"sms":false,"pod":false}',
+  CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/json',
+    'Authorization: hmac pk_test_11c917c792586a46bef122660d6e04b9:1640684549815:5aa5d38a69dad05defa0943d4308559d30f8fdc20651bf85f98e9acaa60db64e',
+    'X-LLM-market: MY_KUL'
+  ),
+));
+
+$response = curl_exec($curl);
+curl_close($curl);
+return $response;
+}
+
 
 public function orderDetails($orderReff)
   {
+
+    $simp_creds = ShippingOption::select('credentials', 'test_mode')->where('code', 'lalamove')->where('status', 1)->first();
+    $creds_arr = json_decode($simp_creds->credentials);
+    $this->api_key = $creds_arr->api_key??'';
+    $this->secret_key = $creds_arr->secret_key ?? '';
+    $this->base_url = (($simp_creds->test_mode=='1')?'https://rest.sandbox.lalamove.com':'https://rest.lalamove.com'); //Live url - https://rest.lalamove.com
+    $this->region = $creds_arr->country_region ?? ''; // Malaysia regions ----  MY_JHB, MY_KUL, MY_NTL
+    $this->locale_key = $creds_arr->locale_key ?? ''; // Malaysia region locale type en_MY, ms_MY
+    $this->service_type = $creds_arr->service_type ?? ''; // Malaysia region ServiceType MOTORCYCLE, WALKER , VAN , 4x4 , TRUCK330, TRUCK550 
+
+
   $method = 'GET';
   $path = '/v2/orders/'.$orderReff;
   $token = $this->token($method,$path);
@@ -332,6 +390,17 @@ public function orderDetails($orderReff)
 
   public function orderDriverDetail($driverId)
   {
+
+    $simp_creds = ShippingOption::select('credentials', 'test_mode')->where('code', 'lalamove')->where('status', 1)->first();
+    $creds_arr = json_decode($simp_creds->credentials);
+    $this->api_key = $creds_arr->api_key??'';
+    $this->secret_key = $creds_arr->secret_key ?? '';
+    $this->base_url = (($simp_creds->test_mode=='1')?'https://rest.sandbox.lalamove.com':'https://rest.lalamove.com'); //Live url - https://rest.lalamove.com
+    $this->region = $creds_arr->country_region ?? ''; // Malaysia regions ----  MY_JHB, MY_KUL, MY_NTL
+    $this->locale_key = $creds_arr->locale_key ?? ''; // Malaysia region locale type en_MY, ms_MY
+    $this->service_type = $creds_arr->service_type ?? ''; // Malaysia region ServiceType MOTORCYCLE, WALKER , VAN , 4x4 , TRUCK330, TRUCK550 
+
+
     $method = 'GET';
     $path = '/v2/orders/drivers/'.$driverId;
     $token = $this->token($method,$path);
@@ -367,6 +436,17 @@ public function orderDetails($orderReff)
 
   public function orderCancel($orderReff)
   {
+
+    $simp_creds = ShippingOption::select('credentials', 'test_mode')->where('code', 'lalamove')->where('status', 1)->first();
+    $creds_arr = json_decode($simp_creds->credentials);
+    $this->api_key = $creds_arr->api_key??'';
+    $this->secret_key = $creds_arr->secret_key ?? '';
+    $this->base_url = (($simp_creds->test_mode=='1')?'https://rest.sandbox.lalamove.com':'https://rest.lalamove.com'); //Live url - https://rest.lalamove.com
+    $this->region = $creds_arr->country_region ?? ''; // Malaysia regions ----  MY_JHB, MY_KUL, MY_NTL
+    $this->locale_key = $creds_arr->locale_key ?? ''; // Malaysia region locale type en_MY, ms_MY
+    $this->service_type = $creds_arr->service_type ?? ''; // Malaysia region ServiceType MOTORCYCLE, WALKER , VAN , 4x4 , TRUCK330, TRUCK550 
+
+
     $method = 'GET';
     $path = '/v2/orders/'.$orderReff.'/cancel';
     $token = $this->token($method,$path);

@@ -231,7 +231,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     @endif
                 </div>
                 <div class="col-lg-6">
-                    <div class="row">
+                    <div class="row mb-1">
                         <div class="col-8 text-lg-right">
                             <p class="total_amt m-0">{{__('Delivery Fee')}} :</p>
                             <% if(product.coupon_amount_used > 0) { %>
@@ -239,22 +239,42 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <% } %>
                         </div>
                         <div class="col-4 text-right">
-                            
-                            
-                            <% if(product.delivery_fee_charges > 0 ) { %>
-                                {{__('Dispatcher')}} : {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %>  
-                                <input type="radio" name="deliveryFee[<%= product.vendor.id %>]" class="delivery-fee" value="<%= Helper.formatPrice(product.delivery_fee_charges) %>" data-dcode="D" <%= (cart_details.delivery_type == 'D')?'checked':'' %>  /> 
-                            <% } %>
-                            <br>
-                            <% if(product.delivery_fee_charges_lalamove > 0) { %>
-                                {{__('Lalamove')}} : {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges_lalamove) %> <input type="radio" name="deliveryFee[<%= product.vendor.id %>]" class="delivery-fee" value="<%= Helper.formatPrice(product.delivery_fee_charges_lalamove) %>"  data-dcode="L" <%= (cart_details.delivery_type == 'L')?'checked':'' %> />
-                            <% } %>
-                            
+                           
+                        </div>
+                    </div>
 
+                    <% if(product.delivery_fee_charges > 0 ) { %>
+                        <div class="row mb-1">
+                            <div class="col-8 text-lg-right">
+                                <label class="radio pull-right">
+                                    {{__('Dispatcher')}} :
+                                    <input type="radio" name="deliveryFee[<%= product.vendor.id %>]" class="delivery-fee" value="<%= Helper.formatPrice(product.delivery_fee_charges) %>" data-dcode="D" <%= (cart_details.delivery_type == 'D')?'checked':'' %>  />
+                                    <span class="checkround"></span>
+                                </label>
+                            </div>
+                            <div class="col-4 text-right">
+                                {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %> 
+                            </div>
+                        </div>
+                    <% } %>                    
 
+                    <% if(product.delivery_fee_charges_lalamove > 0) { %>
+                        <div class="row mb-1">
+                            <div class="col-8 text-lg-right">
+                                <label class="radio pull-right">
+                                    {{__('Lalamove')}} :
+                                    <input type="radio" name="deliveryFee[<%= product.vendor.id %>]" class="delivery-fee" value="<%= Helper.formatPrice(product.delivery_fee_charges_lalamove) %>"  data-dcode="L" <%= (cart_details.delivery_type == 'L')?'checked':'' %> />
+                                    <span class="checkround"></span>
+                                </label>
+                            </div>
+                            <div class="col-4 text-right">
+                                {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges_lalamove) %>
+                            </div>
+                        </div>
+                    <% } %>
 
-                            
-
+                    <div class="row">
+                        <div class="col-12 text-right">
                             <% if(product.coupon_amount_used > 0) { %>
                             <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.coupon_amount_used) %></p>
                             <% } %>

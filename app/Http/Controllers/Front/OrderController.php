@@ -753,7 +753,7 @@ class OrderController extends FrontController
                     if ($action == 'delivery') {
                         if ((!empty($vendor_cart_product->product->Requires_last_mile)) && ($vendor_cart_product->product->Requires_last_mile == 1)) {
                          
-                            
+                            //Add here Delivery option Lalamove and dispatcher
                             if($request->delivery_type=='L'){
                                 $lala = new LalaMovesController();
                                 $delivery_fee = $lala->getDeliveryFeeLalamove($vendor_cart_product->vendor_id);
