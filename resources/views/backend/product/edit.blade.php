@@ -401,7 +401,6 @@
                                     <input type="checkbox" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#43bee1" @if($product->is_featured == 1) checked @endif>
                                 </div>
                             @endif
-
                         @endif
                         @if($configData->need_delivery_service == 1 && $product->category->categoryDetail->type_id != 7 && (!in_array($client_preference_detail->business_type,['taxi','laundry'])))
                         <div class="col-md-6 d-flex justify-content-between mb-2">

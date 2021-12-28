@@ -23,14 +23,20 @@ use App\Models\{Client, Category, Product, ClientPreference,EmailTemplate, Clien
 class FrontController extends Controller
 {
     use \App\Http\Traits\smsManager;
+
     private $field_status = 2;
     protected function sendSms($provider, $sms_key, $sms_secret, $sms_from, $to, $body){
         try{
             $client_preference =  getClientPreferenceDetail();
             if($client_preference->sms_provider == 1)
             {
-                $client = new TwilioClient($sms_key, $sms_secret);
-                $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+                if(!empty($sms_secret) && !empty($sms_from)){
+                    $client = new TwilioClient($sms_key, $sms_secret);
+                    $send =  $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+                }else{
+                    return 2;
+                }
+
             }elseif($client_preference->sms_provider == 2) //for mtalkz gateway
             {
                 $crendentials = json_decode($client_preference->sms_credentials);
@@ -38,13 +44,19 @@ class FrontController extends Controller
             }elseif($client_preference->sms_provider == 3) //for mazinhost gateway
             {
                 $crendentials = json_decode($client_preference->sms_credentials);
-                $send = $this->mazinhost_sms($to,$body,$crendentials);
+                $send = $this->mazinhost($to,$body,$crendentials);
             }else{
-                $client = new TwilioClient($sms_key, $sms_secret);
-                $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+                if(!empty($sms_secret) && !empty($sms_from)){
+                    $client = new TwilioClient($sms_key, $sms_secret);
+                    $send =  $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+                }else{
+                    return 2;
+                }
             }
+            return $send;
         }
         catch(\Exception $e){
+            pr($e->getMessage());
             return '2';
         }
         return '1';
