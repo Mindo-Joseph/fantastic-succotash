@@ -93,6 +93,7 @@
                     @if ( (strtolower($delOption->code) == 'lalamove'))
                     <div id="lalamove_fields_wrapper" @if($delOption->status != 1) style="display:none" @endif>
                         <div class="row">
+
                             <div class="col-12">
                                 <div class="form-group mb-0">
                                     <label for="lalamove_api_key" class="mr-3">{{ __("Api key") }}</label>
@@ -163,6 +164,21 @@
                                     </select> 
                                     
                                 </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group m-2">
+                                <div class="site_link position-relative">
+                                    <label for="">{{__('Webhook Url')}}</label> 
+
+                                    <a href="{{route('webhook')}}" target="_blank"><span id="pwd_spn" class="password-span">{{route('webhook')}}</span></a>
+                                    <label class="copy_link float-right" id="cp_btn" title="copy">
+                                        <img src="{{ asset('assets/icons/domain_copy_icon.svg')}}" alt="">
+                                        <span class="copied_txt" id="show_copy_msg_on_click_copy" style="display:none;">{{ __('Copied') }}</span>
+                                        <input type="text" id="copy"  value="{{route('webhook')}}" >
+                                    </label>
+                                </div>
+                            </div>
                             </div>
 
 
@@ -246,5 +262,15 @@
             $("#" + code + "_fields_wrapper_base").find('input').removeAttr('required');
         }
     });
+    $('#copy').hide();
+    $('#cp_btn').click(function(){
+    $('#copy').show();
+        const area = document.querySelector('#copy')
+        area.select();
+        document.execCommand('copy');
+    $('#copy').hide();
+
+    });
+
 </script>
 @endsection
