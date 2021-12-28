@@ -606,7 +606,13 @@ class OrderController extends BaseController
             if (!empty($dispatch_domain->last_mile_team))
                 $team_tag = $dispatch_domain->last_mile_team;
 
-
+                if (isset($order->scheduled_date_time) && !empty($order->scheduled_date_time)) {
+                    $task_type = 'schedule';
+                    $schedule_time = $order->scheduled_date_time ?? null;
+                } else {
+                    $task_type = 'now';
+                }
+ 
             $tasks[] = array(
                 'task_type_id' => 1,
                 'latitude' => $vendor_details->latitude ?? '',
@@ -641,7 +647,8 @@ class OrderController extends BaseController
                 'recipient_email' => $customer->email ?? null,
                 'task_description' => "Order From :" . $vendor_details->name,
                 'allocation_type' => 'a',
-                'task_type' => 'now',
+                'task_type' => $task_type,
+                'schedule_time' => $schedule_time ?? null,
                 'cash_to_be_collected' => $payable_amount ?? 0.00,
                 'barcode' => '',
                 'order_team_tag' => $team_tag,
