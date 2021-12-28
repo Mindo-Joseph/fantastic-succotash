@@ -237,9 +237,20 @@
                                     {!! Form::number('quantity', $product->variant[0]->quantity, ['class'=>'form-control', 'id' => 'quantity', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                 </div>
                                 @endif
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     {!! Form::label('title', __('Sell When Out Of Stock'),['class' => 'control-label']) !!} <br />
                                     <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#43bee1" @if($product->sell_when_out_of_stock == 1) checked @endif>
+                                </div>
+                                @endif
+
+                                @if($configData->minimum_order_batch == 1 || $product->minimum_order_count > 0)
+                                <div class="col-sm-3">
+                                    {!! Form::label('title', __('Minimum Order Count'),['class' => 'control-label']) !!}
+                                    {!! Form::number('minimum_order_count', $product->minimum_order_count, ['class'=>'form-control', 'id' => 'minimum_order_count', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                                </div>
+                                <div class="col-sm-2">
+                                    {!! Form::label('title', __('Batch Count'),['class' => 'control-label']) !!}
+                                    {!! Form::number('batch_count', $product->batch_count, ['class'=>'form-control', 'id' => 'batch_count', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                 </div>
                                 @endif
                                 @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 8)

@@ -486,7 +486,7 @@ class VendorController extends BaseController
                         ->where('can_add_products', 1)->orderBy('parent_id', 'asc')->where('status', 1)->orderBy('position', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand','variant' => function($v){
                             $v->select('id','product_id', 'quantity', 'price')->groupBy('product_id');
-                    }])->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
+                    }])->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id','minimum_order_count','batch_count')
                     ->where('vendor_id', $id)->get();
         $product_count = $products->count();
         $published_products = $products->where('is_live', 1)->count();
@@ -502,7 +502,7 @@ class VendorController extends BaseController
                         ->orderBy('parent_id', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand', 'variant' => function ($v) {
             $v->select('id', 'product_id', 'quantity', 'price')->groupBy('product_id');
-        }])->select('id', 'sku', 'vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
+        }])->select('id', 'sku', 'vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id','minimum_order_count','batch_count')
             ->where('vendor_id', $id)->get();
         $categories = Category::with('translation_one')->select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
             ->where('id', '>', '1')

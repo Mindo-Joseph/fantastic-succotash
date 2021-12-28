@@ -196,7 +196,7 @@ class FrontController extends Controller
                 $q->select('sku', 'product_id', 'quantity', 'price', 'barcode')->orderBy('price');
                 $q->groupBy('product_id');
             },
-        ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating', 'inquiry_only');
+        ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating', 'inquiry_only','minimum_order_count','batch_count');
 
         if ($where !== '') {
             $products = $products->where($where, 1);
@@ -255,7 +255,7 @@ class FrontController extends Controller
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                         },
-                    ])->select('id', 'sku', 'averageRating', 'url_slug', 'is_new', 'is_featured', 'vendor_id', 'inquiry_only')
+                    ])->select('id', 'sku', 'averageRating', 'url_slug', 'is_new', 'is_featured', 'vendor_id', 'inquiry_only','minimum_order_count','batch_count')
                     ->whereIn('id', $productIds)
                     ->whereNotNull('category_id');
         $products = $products->get();
