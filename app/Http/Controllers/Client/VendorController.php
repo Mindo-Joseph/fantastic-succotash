@@ -705,7 +705,7 @@ class VendorController extends BaseController
             $is_stripe_connected = 1;
         }
         $server_url = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/";
-        $stripe_redirect_url = 'http://local.myorder.com/client/verify/oauth/token/stripe'; //$server_url."client/verify/oauth/token/stripe";
+        $stripe_redirect_url = $server_url."client/verify/oauth/token/stripe";
 
         if((!empty($payout_creds->credentials)) && ($client_id != '')){
             $stripe_connect_url = 'https://connect.stripe.com/oauth/v2/authorize?response_type=code&state='.$id.'&client_id='.$client_id.'&scope=read_write&redirect_uri='.$stripe_redirect_url;
