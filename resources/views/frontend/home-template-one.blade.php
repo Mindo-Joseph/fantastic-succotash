@@ -9,6 +9,9 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
+    .no-store-wrapper{
+        display: none;
+    }
 </style>
 @endsection
 @section('content')
@@ -21,21 +24,6 @@
 <button type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#login_modal">
   Launch demo modal
 </button>
-
-<section class="no-store-wrapper" style="display:none">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 text-center mt-2">
-                <h4>{{__('There are no stores available in your area currently.')}}</h4>
-            </div>
-        </div>
-    </div>
-</section>
 
 @if(count($banners))
 <section class="home-slider-wrapper pt-4">
@@ -644,6 +632,20 @@
         </section>
         @endif
         @endforeach
+    </div>
+</section>
+<section class="no-store-wrapper mb-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <h4>{{__('There are no stores available in your area currently.')}}</h4>
+            </div>
+        </div>
     </div>
 </section>
 <div class="modal age-restriction fade" id="age_restriction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
