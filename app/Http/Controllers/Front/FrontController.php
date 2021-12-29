@@ -56,7 +56,7 @@ class FrontController extends Controller
             return $send;
         }
         catch(\Exception $e){
-            pr($e->getMessage());
+          //  pr($e->getMessage());
             return '2';
         }
         return '1';
