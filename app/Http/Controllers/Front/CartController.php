@@ -598,6 +598,7 @@ class CartController extends FrontController
             $delivery_status = 1;
             $is_vendor_closed = 0;
             $deliver_charge = 0;
+            $deliveryCharges = 0;
             $delay_date = 0;
             $pickup_delay_date = 0;
             $dropoff_delay_date = 0;
