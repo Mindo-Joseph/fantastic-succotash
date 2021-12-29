@@ -277,7 +277,9 @@ class LalaMovesController extends Controller
         if($request && isset($json->data)){
          Webhook::create(['tracking_order_id'=>(($json->data->order->id)?$json->data->order->id:''),'response'=>$request]);
         }
-        header("HTTP/1.1 200 OK");
+
+        return response([],200);
+       // header("HTTP/1.1 200 OK");
         //return json_encode(['status'=>'200']);
 
 
