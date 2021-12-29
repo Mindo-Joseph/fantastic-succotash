@@ -168,7 +168,10 @@ class VendorController extends BaseController
         );
         foreach ($vendor_registration_documents as $vendor_registration_document) {
             if($vendor_registration_document->is_required == 1){
-                $rules[$vendor_registration_document->primary->slug] = 'required';
+                if(isset($vendor_registration_document->primary) && !empty($vendor_registration_document->primary))
+                {
+                    $rules[$vendor_registration_document->primary->slug] = 'required';
+                }
             }
         }
         $validation  = Validator::make($request->all(), $rules)->validate();
@@ -213,6 +216,8 @@ class VendorController extends BaseController
         $vendor->website = $request->website;
         $vendor->phone_no = $request->phone_no;
         $vendor->slug = Str::slug($request->name, "-");
+        if(Vendor::where('slug',$vendor->slug)->count() > 0)
+        $vendor->slug = Str::slug($request->name, "-").rand(10,100);
         $vendor->save();
 
         $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
@@ -269,7 +274,7 @@ class VendorController extends BaseController
     {
         $rules = array(
             'address' => 'required',
-            'name' => 'required|string|max:150|unique:vendors,name,' . $id,
+        //    'name' => 'required|string|max:150|unique:vendors,name,' . $id,
         );
         //dd($request->all());
         $validation  = Validator::make($request->all(), $rules)->validate();
@@ -481,7 +486,7 @@ class VendorController extends BaseController
                         ->where('can_add_products', 1)->orderBy('parent_id', 'asc')->where('status', 1)->orderBy('position', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand','variant' => function($v){
                             $v->select('id','product_id', 'quantity', 'price')->groupBy('product_id');
-                    }])->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
+                    }])->select('id', 'sku','vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id','minimum_order_count','batch_count')
                     ->where('vendor_id', $id)->get();
         $product_count = $products->count();
         $published_products = $products->where('is_live', 1)->count();
@@ -497,7 +502,7 @@ class VendorController extends BaseController
                         ->orderBy('parent_id', 'asc')->get();
         $products = Product::with(['media.image', 'primary', 'category.cat', 'brand', 'variant' => function ($v) {
             $v->select('id', 'product_id', 'quantity', 'price')->groupBy('product_id');
-        }])->select('id', 'sku', 'vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id')
+        }])->select('id', 'sku', 'vendor_id', 'is_live', 'is_new', 'is_featured', 'has_inventory', 'has_variant', 'sell_when_out_of_stock', 'Requires_last_mile', 'averageRating', 'brand_id','minimum_order_count','batch_count')
             ->where('vendor_id', $id)->get();
         $categories = Category::with('translation_one')->select('id', 'icon', 'slug', 'type_id', 'is_visible', 'status', 'is_core', 'vendor_id', 'can_add_products', 'parent_id')
             ->where('id', '>', '1')
@@ -619,7 +624,7 @@ class VendorController extends BaseController
         $client_preferences = ClientPreference::first();
         $woocommerce_detail = Woocommerce::first();
 
-        $client = Client::orderBy('id','asc')->first();
+        $client = Client::with('country')->orderBy('id','asc')->first();
         if(isset($client->custom_domain) && !empty($client->custom_domain) && $client->custom_domain != $client->sub_domain)
         $sku_url =  ($client->custom_domain);
         else
@@ -682,13 +687,13 @@ class VendorController extends BaseController
         //stripe connected account details
         $stripe_connect_url = '';
         $codes = ['stripe'];
+        $is_stripe_payout_enabled = 0;
         $payout_creds = PayoutOption::whereIn('code', $codes)->where('status', 1)->first();
         if(!empty($payout_creds->credentials)){
             $creds_arr = json_decode($payout_creds->credentials);
             $client_id = (isset($creds_arr->client_id)) ? $creds_arr->client_id : '';
+            $is_stripe_payout_enabled = 1;
         }
-        // $test_mode = (isset($paylink_creds->test_mode) && ($paylink_creds->test_mode == '1')) ? true : false;
-        // $client = Session::has('client_config') ? Session::get('client_config')->code : '';
 
         $payout_options = PayoutOption::where('status', 1)->get();
 
@@ -698,17 +703,25 @@ class VendorController extends BaseController
             $is_stripe_connected = 1;
         }
         $server_url = "https://".$client->sub_domain.env('SUBMAINDOMAIN')."/";
-        $stripe_redirect_url = $server_url."client/verify/oauth/token/stripe";
 
         if((!empty($payout_creds->credentials)) && ($client_id != '')){
             $stripe_connect_url = 'https://connect.stripe.com/oauth/v2/authorize?response_type=code&state='.$id.'&client_id='.$client_id.'&scope=read_write&redirect_uri='.$stripe_redirect_url;
         }
 
+        // $ex_countries = ['INDIA'];
+        
+        // if((!empty($payout_creds->credentials)) && ($client_id != '') && (!in_array($client->country->name, $ex_countries))){
+        //     $stripe_redirect_url = 'http://local.myorder.com/client/verify/oauth/token/stripe'; //$server_url."client/verify/oauth/token/stripe";
+        //     $stripe_connect_url = 'https://connect.stripe.com/oauth/v2/authorize?response_type=code&state='.$id.'&client_id='.$client_id.'&scope=read_write&redirect_uri='.$stripe_redirect_url;
+        // }else{
+        //     $stripe_connect_url = route('create.custom.connected-account.stripe', $id);
+        // }
+
         $taxCate = TaxCategory::all();
         $vendor_for_pickup_delivery = VendorCategory::where('vendor_id',$id)->whereHas('category',function($q){$q->where('type_id',7);})->count();
         $vendor_for_ondemand = VendorCategory::where('vendor_id',$id)->whereHas('category',function($q){$q->where('type_id',8);})->count();
 
-        return view('backend.vendor.vendorPayout')->with(['vendor_for_pickup_delivery' => $vendor_for_pickup_delivery,'vendor_for_ondemand' => $vendor_for_ondemand,'taxCate' => $taxCate,'sku_url' => $sku_url, 'client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory, 'tab' => 'payout', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build, 'woocommerce_detail' => $woocommerce_detail, 'stripe_connect_url'=> $stripe_connect_url, 'is_payout_enabled'=>$this->is_payout_enabled, 'is_stripe_connected'=>$is_stripe_connected, 'total_order_value' => number_format($total_order_value, 2), 'total_admin_commissions' => number_format($total_admin_commissions, 2), 'total_promo_amount'=>$total_promo_amount, 'past_payout_value'=>$past_payout_value, 'available_funds'=>$available_funds, 'payout_options' => $payout_options]);
+        return view('backend.vendor.vendorPayout')->with(['vendor_for_pickup_delivery' => $vendor_for_pickup_delivery,'vendor_for_ondemand' => $vendor_for_ondemand,'taxCate' => $taxCate,'sku_url' => $sku_url, 'client_preferences' => $client_preferences, 'vendor' => $vendor, 'VendorCategory' => $VendorCategory, 'tab' => 'payout', 'typeArray' => $type, 'categories' => $categories, 'categoryToggle' => $categoryToggle, 'templetes' => $templetes, 'builds' => $build, 'woocommerce_detail' => $woocommerce_detail, 'stripe_connect_url'=> $stripe_connect_url, 'is_payout_enabled'=>$this->is_payout_enabled, 'is_stripe_connected'=>$is_stripe_connected, 'total_order_value' => number_format($total_order_value, 2), 'total_admin_commissions' => number_format($total_admin_commissions, 2), 'total_promo_amount'=>$total_promo_amount, 'past_payout_value'=>$past_payout_value, 'available_funds'=>$available_funds, 'payout_options' => $payout_options, 'is_stripe_payout_enabled' => $is_stripe_payout_enabled]);
     }
 
     public function vendorPayoutCreate(Request $request, $domain = '', $id){

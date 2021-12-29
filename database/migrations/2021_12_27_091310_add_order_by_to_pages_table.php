@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangerDollerCompareInclientCurr extends Migration
+class AddOrderByToPagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class ChangerDollerCompareInclientCurr extends Migration
      */
     public function up()
     {
-        Schema::table('client_currencies', function (Blueprint $table) {
-            $table->decimal('doller_compare', 8, 4)->nullable()->change();
+        Schema::table('pages', function (Blueprint $table) {
+            $table->tinyInteger('order_by')->default(0);
         });
     }
 
@@ -25,6 +25,8 @@ class ChangerDollerCompareInclientCurr extends Migration
      */
     public function down()
     {
-        
+        Schema::table('pages', function (Blueprint $table) {
+            //
+        });
     }
 }
