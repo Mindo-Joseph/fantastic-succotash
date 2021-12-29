@@ -76,12 +76,12 @@
                 <div class="suppliers-img-outer position-relative">
                     <% if(vendor.is_vendor_closed == 1){%>
                     <img class="fluid-img mx-auto blur-up lazyload grayscale-image" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
-                    <% }else { %> 
-                        <img class="fluid-img mx-auto blur-up lazyload" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">   
-                    <%  } %>     
+                    <% }else { %>
+                        <img class="fluid-img mx-auto blur-up lazyload" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
+                    <%  } %>
                     <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                         <div class="pref-timing">
-                            <span><%= vendor.timeofLineOfSightDistance %> min</span>
+                            <span><%= vendor.timeofLineOfSightDistance %></span>
                         </div>
                     <% } %>
                 </div>
@@ -197,9 +197,9 @@
                 <div class="suppliers-img-outer">
                     <% if(vendor.is_vendor_closed == 1){%>
                     <img class="fluid-img mx-auto blur-up lazyload grayscale-image" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
-                    <% }else { %> 
-                    <img class="fluid-img mx-auto blur-up lazyload" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">   
-                    <%  } %> 
+                    <% }else { %>
+                    <img class="fluid-img mx-auto blur-up lazyload" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
+                    <%  } %>
                     <div class="pref-timing">
                         <span>35 min</span>
                     </div>
@@ -215,7 +215,7 @@
                                     <small class="d-block"><img class="d-inline-block mr-1 blur-up lazyload" src="{{ asset('front-assets/images/distance.png') }}" alt=""> <%= vendor.lineOfSightDistance %></small>
                                 </li>
                                 <li>
-                                    <small class="d-block mx-1"><i class="fa fa-clock-o"></i> <%= vendor.timeofLineOfSightDistance %> min</small>
+                                    <small class="d-block mx-1"><i class="fa fa-clock-o"></i> <%= vendor.timeofLineOfSightDistance %></small>
                                 </li>
                             </ul>
                         <% } %>
