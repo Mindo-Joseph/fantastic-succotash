@@ -66,6 +66,22 @@ class LalaMovesController extends Controller
 
     public function getBaseprice($distance)
     {
+
+        $simp_creds = ShippingOption::select('credentials', 'test_mode','status')->where('code', 'lalamove')->where('status', 1)->first();
+        if($simp_creds && $simp_creds->credentials){
+              $creds_arr = json_decode($simp_creds->credentials);
+              $this->base_price = $creds_arr->base_price??'0';
+              if($this->base_price>0)
+              {
+                  $this->base_price = $creds_arr->base_price??'0';
+                  $this->distance = $creds_arr->distance??'0';
+                  $this->amount_per_km = $creds_arr->amount_per_km??'0';
+  
+              }
+              $this->lalamove_status = $simp_creds->status??'';
+          }
+
+          
         $distance = ($distance - $this->distance);
         if($distance < 1 && $this->base_price < 1)
         {
