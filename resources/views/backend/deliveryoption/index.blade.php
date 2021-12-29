@@ -166,19 +166,18 @@
                                 </div>
                             </div>
 
-                            <div class="col-12">
-                                <div class="form-group m-2">
-                                <div class="site_link position-relative">
-                                    <label for="">{{__('Webhook Url')}}</label> 
 
-                                    <a href="{{route('webhook')}}" target="_blank"><span id="pwd_spn" class="password-span">{{route('webhook')}}</span></a>
-                                    <label class="copy_link float-right" id="cp_btn" title="copy">
-                                        <img src="{{ asset('assets/icons/domain_copy_icon.svg')}}" alt="">
-                                        <span class="copied_txt" id="show_copy_msg_on_click_copy" style="display:none;">{{ __('Copied') }}</span>
-                                        <input type="text" id="copy"  value="{{route('webhook')}}" >
-                                    </label>
-                                </div>
-                            </div>
+                            <div class="col-12">
+                                <h5 class="d-inline-block mt-3">
+                                    <span>{{ __('Webhook Url') }} : </span>
+                                    <a href="javascript:;" ><span id="pwd_spn" class="password-span">{{route('webhook')}}</span></a>
+                                </h5>
+                                <sup class="position-relative">
+                                    <a class="copy-icon ml-2" id="copy_icon" data-url="{{route('webhook')}}" style="cursor:pointer;">
+                                        <i class="fa fa-copy"></i>
+                                    </a>
+                                    <h6 id="copy_message" class="copy-message mt-2"></h6>
+                                </sup>
                             </div>
 
 
@@ -262,14 +261,19 @@
             $("#" + code + "_fields_wrapper_base").find('input').removeAttr('required');
         }
     });
-    $('#copy').hide();
-    $('#cp_btn').click(function(){
-    $('#copy').show();
-        const area = document.querySelector('#copy')
-        area.select();
-        document.execCommand('copy');
-    $('#copy').hide();
 
+
+    $("#copy_icon").click(function(){
+        var temp = $("<input>");
+        var url = $(this).data('url');
+        $("body").append(temp);
+        temp.val(url).select();
+        document.execCommand("copy");
+        temp.remove();
+        $("#copy_message").text("{{ __('URL Copied!') }}").show();
+        setTimeout(function(){
+            $("#copy_message").text('').hide();
+        }, 3000);
     });
 
 </script>

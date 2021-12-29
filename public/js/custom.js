@@ -892,7 +892,7 @@ $(document).ready(function() {
 
 
 
-    function paymentViaStripe(stripe_token, address_id, payment_option_id) {
+    function paymentViaStripe(stripe_token, address_id, payment_option_id, delivery_type = 'D') {
         let total_amount = 0;
         let tip = 0;
         let cartElement = $("input[name='cart_total_payable_amount']");
@@ -920,7 +920,7 @@ $(document).ready(function() {
             success: function(resp) {
                 if (resp.status == 'Success') {
                     if (path.indexOf("cart") !== -1) {
-                        placeOrder(address_id, payment_option_id, resp.data.id, tip);
+                        placeOrder(address_id, payment_option_id, resp.data.id, tip,delivery_type);
                     } else if (path.indexOf("wallet") !== -1) {
                         creditWallet(total_amount, payment_option_id, resp.data.id);
                     } else if (path.indexOf("subscription") !== -1) {
@@ -1257,7 +1257,7 @@ $(document).ready(function() {
         }
         //let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
         let payment_option_id = $("#cart_payment_form input[name='cart_payment_method']:checked").val();
-
+        
 
         let tip = $("#cart_tip_amount").val();
         if (payment_option_id == 1) {
@@ -1268,7 +1268,7 @@ $(document).ready(function() {
                     $('#stripe_card_error').html(result.error.message);
                     $("#order_placed_btn, .proceed_to_pay").attr("disabled", false);
                 } else {
-                    paymentViaStripe(result.token.id, address_id, payment_option_id);
+                    paymentViaStripe(result.token.id, address_id, payment_option_id,delivery_type);
                 }
             });
         } else if (payment_option_id == 8) {

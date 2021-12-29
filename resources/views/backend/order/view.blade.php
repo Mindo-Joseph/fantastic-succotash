@@ -478,7 +478,7 @@ $timezone = Auth::user()->timezone;
                 var response = $.parseJSON(error.responseText);
                 let error_messages = response.message;
                 alert(error_messages);
-                //location.reload();
+                location.reload();
                 }
             });
         }

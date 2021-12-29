@@ -888,27 +888,27 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     </button> --}}
 
                         @if(session('preferences'))
-                        @if(session('preferences')->fb_login == 1 || session('preferences')->twitter_login == 1 ||
-                        session('preferences')->google_login == 1 || session('preferences')->apple_login == 1)
-                        @if(session('preferences')->google_login == 1)
+                        @if(@session('preferences')->fb_login == 1 || @session('preferences')->twitter_login == 1 ||
+                        @session('preferences')->google_login == 1 || @session('preferences')->apple_login == 1)
+                        @if(@session('preferences')->google_login == 1)
                         <a class="login-button" href="{{url('auth/google')}}">
                             <i class="fa fa-google" aria-hidden="true"></i>
                             <span>Continue with gmail</span>
                         </a>
                         @endif
-                        @if(session('preferences')->fb_login == 1)
+                        @if(@session('preferences')->fb_login == 1)
                         <a class="login-button" href="{{url('auth/facebook')}}">
                             <i class="fa fa-facebook" aria-hidden="true"></i>
                             <span>Continue with facebook</span>
                         </a>
                         @endif
-                        @if(session('preferences')->twitter_login)
+                        @if(@session('preferences')->twitter_login)
                         <a class="login-button" href="{{url('auth/twitter')}}">
                             <i class="fa fa-twitter" aria-hidden="true"></i>
                             <span>Continue with twitter</span>
                         </a>
                         @endif
-                        @if(session('preferences')->apple_login == 1)
+                        @if(@session('preferences')->apple_login == 1)
                         <a class="login-button" href="javascript::void(0);">
                             <i class="fa fa-apple" aria-hidden="true"></i>
                             <span>Continue with apple</span>
