@@ -1887,11 +1887,25 @@ $(document).ready(function() {
     $(document).on('click', '.qty-minus', function() {
         let base_price = $(this).data('base_price');
         let cartproduct_id = $(this).attr("data-id");
+        let minimum_order_count = $(this).attr("data-minimum_order_count");
+        let batch_count = $(this).attr("data-batch_count");
+        if(batch_count > 0)
+        batch_count = batch_count;
+        else
+        batch_count = 1;
+
+        if(minimum_order_count > 0)
+        minimum_order_count = minimum_order_count;
+        else
+        minimum_order_count = 1;
         let qty = $('#quantity_' + cartproduct_id).val();
+        let decrevalue = parseInt(qty)-parseInt(batch_count);
+
+        
         $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
-        if (qty > 1) {
-            $('#quantity_' + cartproduct_id).val(--qty);
-            updateQuantity(cartproduct_id, qty, base_price);
+        if (decrevalue >= minimum_order_count) {
+            $('#quantity_' + cartproduct_id).val(decrevalue);
+            updateQuantity(cartproduct_id, decrevalue, base_price);
         } else {
             // alert('remove this product');
             $('#remove_item_modal').modal('show');
@@ -1904,9 +1918,23 @@ $(document).ready(function() {
         let base_price = $(this).data('base_price');
         let cartproduct_id = $(this).attr("data-id");
         let qty = $('#quantity_' + cartproduct_id).val();
-        $('#quantity_' + cartproduct_id).val(++qty);
+        let minimum_order_count = $(this).attr("data-minimum_order_count");
+        let batch_count = $(this).attr("data-batch_count");
+        if(batch_count > 0)
+        batch_count = batch_count;
+        else
+        batch_count = 1;
+
+        if(minimum_order_count > 0)
+        minimum_order_count = minimum_order_count;
+        else
+        minimum_order_count = 1;
+        
+        let increvalue = parseInt(qty)+parseInt(batch_count);
+
+        $('#quantity_' + cartproduct_id).val(increvalue);
         $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
-        updateQuantity(cartproduct_id, qty, base_price);
+        updateQuantity(cartproduct_id, increvalue, base_price);
     });
     cartHeader();
     $(document).on("click", "#cancel_save_address_btn", function() {
@@ -2179,14 +2207,14 @@ $(document).ready(function() {
         batch_count = 1;
 
         if(minimum_order_count > 0)
-        batch_count = batch_count;
+        minimum_order_count = minimum_order_count;
         else
-        batch_count = 1;
+        minimum_order_count = 1;
         
         let qty = $(this).next().val();
         let decrevalue = parseInt(qty)-parseInt(batch_count);
         if(!$.hasAjaxRunning()){
-            if (qty > 1) {
+            if (decrevalue >= minimum_order_count) {
                 if( $(this).hasClass('remove-customize') && $(this).hasClass('m-open') ){
                     $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
                     updateProductQuantity(product_id, cartproduct_id, decrevalue, base_price, this);
@@ -2364,9 +2392,17 @@ $(document).ready(function() {
             getProductAddons(slug, variant_id);
             return false;
         }
+      
+        var minimum_order_count = $(that).data("minimum_order_count");
+        if(minimum_order_count > 0)
+        minimum_order_count = minimum_order_count;
+        else
+        minimum_order_count = 1;
+
+      
         // end addons data
         if (!$.hasAjaxRunning()) {
-            addToCartProductsAddons(that);
+            addToCartProductsAddons(that,minimum_order_count);
         }
     }
 
