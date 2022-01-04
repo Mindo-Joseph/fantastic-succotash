@@ -23,15 +23,26 @@ class PagarmeController extends FrontController
 	    $this->secret_key = $creds_arr->secret_key??'';
 	}
 
-    public function beforePayment(Request $request)
+    public function beforePayment(Request $request) 
     {
-    	$data = $request->all();
+        $data = $request->all();
         $data['come_from'] = 'app';
         if($request->isMethod('post'))
         {
             $data['come_from'] = 'web';
         }
-    	return view('frontend.payment_gatway.pgarmne_view')->with(['data' => $data]);
+        return view('frontend.payment_gatway.pgarmne_view')->with(['data' => $data]);
+    }
+    public function createPaymentCard(Request $request)
+    {
+        try{
+            $request['card_number'] = str_replace(' ', '', $request->number);
+            $data = $request->all();
+            $card = $this->create_card($data);
+            return $this->successResponse($card->id);
+        }catch(Exception $ex){
+            return $this->errorResponse();
+        }
     }
     public function createPayment(Request $request)
     {
@@ -48,8 +59,6 @@ class PagarmeController extends FrontController
     	$request['amount'] = $amount*100;
     	$request['items'] = [];
     	$data = $request->all();
-    	$card = $this->create_card($data);
-    	$data['card_id'] = $card->id;
         if($request->payment_from == 'cart'){
         	$item['id'] = "1";
             $item['title'] = "Cart Checkout";
@@ -146,7 +155,6 @@ class PagarmeController extends FrontController
                 }else{
                     $returnUrl = route('order.return.success');
                 }
-                
                 return $returnUrl;
             }
         } elseif($request->payment_from == 'wallet'){

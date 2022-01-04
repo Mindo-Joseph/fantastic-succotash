@@ -41,13 +41,40 @@
 <script type="text/javascript" src="{{asset('js/card.js')}}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+
         number = document.querySelector('#cc-number');
         cvc = document.querySelector('#cc-cvc');
         exp_month = document.querySelector('#cc-exp-month');
         exp_year = document.querySelector('#cc-exp-year');
         Payment.formatCardNumber(number);
         Payment.formatCardCVC(cvc);
-        Payment.formatCardExpiry(exp_month+"/"+exp_year);
+        // Payment.formatCardExpiry(exp_month+"/"+exp_year);
+        $("#process-payment-btn").on("click", function() {
+            var number = $("#cc-number").val();
+            $("#process-payment-btn").attr("disabled", "disabled");
+            $.ajax({
+                url: "{{ route('payment.pagarme.createPaymentCard') }}",
+                type: "POST",
+                data: {
+                    holder_name: $("#cc-name").val(),
+                    number: number.replace(/\s/g, ''),
+                    cvc: $("#cc-cvc").val(),
+                    expMonth: $("#cc-exp-month").val(),
+                    expYear: $("#cc-exp-year").val(),
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function(response){
+                    if(response.status == 'Success')
+                    {
+                        console.log(response.data);
+                        $('#cc-card_id').val(response.data);
+                        $('#pagarme-payment-form').submit();
+                    }else{
+                      $('#pagarme-payment-form').after("<div class='error'>{{__('Invalid Card Details.')}}</div>");
+                    } 
+                }
+            });
+        });
     });
 </script>
 <body>
@@ -56,7 +83,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
-                <img src="{{ getClientDetail()->logo_image_url }}" alt="" height="50"> 
+                <img src="{{ getClientDetail()->logo_image_url }}" alt="" height="50">  
             </div>
         </div>
     </div>
@@ -65,24 +92,24 @@
 <div class="container">
     <div class="row">
         <div class="offset-lg-3 col-lg-6">
-            <form id="pgarme-payment-form" action="{{route('payment.pagarme.createPayment')}}" method="POST">
+            <form id="pagarme-payment-form" action="{{route('payment.pagarme.createPayment')}}" method="POST">
                 <div class="form-group">
-                    <label>{{__('Card Holder Number')}}: </label>
-                    <input class="form-control" id="cc-name" type="text" maxlength="20" autocomplete="off" name="holder_name" autofocus />
+                    <label>{{__('Card Holder Name')}}: </label>
+                    <input class="form-control" id="cc-name" type="text" maxlength="20" autocomplete="off" name="holder_name" required autofocus />
                 </div>
                 <div class="form-group">
                     <label>{{__('Card Number')}}: </label>
-                    <input class="form-control" id="cc-number" type="text" maxlength="20" autocomplete="off" name="number" autofocus />
+                    <input class="form-control" id="cc-number" type="text" maxlength="20" autocomplete="off" name="number" required autofocus />
                 </div>
                 <div class="form-group">
                     <label>{{__('CVC')}}: </label>
-                    <input class="form-control" id="cc-cvc" type="text" maxlength="4" autocomplete="off" name="cvc"/>
+                    <input class="form-control" id="cc-cvc" type="text" maxlength="4" autocomplete="off" name="cvc" required />
                 </div>
                 <div class="form-group">
                     <label>{{__('Expiry Date')}}: </label>
                     <div class="row align-items-center">
                         <div class="col-sm-6">
-                            <select class="form-control" id="cc-exp-month" name="exp-month">
+                            <select class="form-control" id="cc-exp-month" name="expMonth" required>
                                 <option value="01">Jan</option>
                                 <option value="02">Feb</option>
                                 <option value="03">Mar</option>
@@ -98,7 +125,7 @@
                             </select>
                         </div>
                         <div class="col-sm-6">
-                            <select class="form-control" id="cc-exp-year" name="exp-year">
+                            <select class="form-control" id="cc-exp-year" name="expYear" required>
                                 @for($i=0; $i<10; $i++)
                                 <option value="{{date('y') + $i}}">{{date('Y') + $i}}</option>
                                 @endfor
@@ -111,7 +138,8 @@
                 @empty
                 @endforelse
                 @csrf
-                <button id="process-payment-btn" class="btn btn-solid w-100 mt-4" type="submit">{{__('Process Payment')}}</button>
+                <input type="hidden" name="card_id" id="cc-card_id">
+                <button id="process-payment-btn" class="btn btn-solid w-100 mt-4" type="button">{{__('Process Payment')}}</button>
             </form>
         </div>
     </div>

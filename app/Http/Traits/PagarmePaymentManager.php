@@ -30,7 +30,7 @@ trait PagarmePaymentManager{
     $card  =  $pagarme ->cards()->create([
       'holder_name' => $data['holder_name'] ,
       'number' => $data['card_number'] ,
-      'expiration_date' => $data['exp-month'].$data['exp-year'],
+      'expiration_date' => $data['expMonth'].$data['expYear'],
       'cvv' => $data['cvc']
     ]);
     return $card;
