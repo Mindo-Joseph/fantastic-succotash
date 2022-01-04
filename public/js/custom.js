@@ -172,7 +172,7 @@ window.initializeSlider = function initializeSlider() {
             { breakpoint: 420, settings: { slidesToShow: 1, arrows: true, slidesToScroll: 1 } }
         ]
     });
-    
+
     $(".recent-orders").slick({
         arrows: false,
         dots: false,
@@ -1595,6 +1595,7 @@ $(document).ready(function() {
         var input = document.getElementById('address');
         if (input) {
             var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo('bounds', bindMap);
             google.maps.event.addListener(autocomplete, 'place_changed', function() {
                 var place = autocomplete.getPlace();
                 // document.getElementById('city').value = place.name;
@@ -1901,7 +1902,7 @@ $(document).ready(function() {
         let qty = $('#quantity_' + cartproduct_id).val();
         let decrevalue = parseInt(qty)-parseInt(batch_count);
 
-        
+
         $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
         if (decrevalue >= minimum_order_count) {
             $('#quantity_' + cartproduct_id).val(decrevalue);
@@ -1929,7 +1930,7 @@ $(document).ready(function() {
         minimum_order_count = minimum_order_count;
         else
         minimum_order_count = 1;
-        
+
         let increvalue = parseInt(qty)+parseInt(batch_count);
 
         $('#quantity_' + cartproduct_id).val(increvalue);
@@ -2210,7 +2211,7 @@ $(document).ready(function() {
         minimum_order_count = minimum_order_count;
         else
         minimum_order_count = 1;
-        
+
         let qty = $(this).next().val();
         let decrevalue = parseInt(qty)-parseInt(batch_count);
         if(!$.hasAjaxRunning()){
@@ -2392,14 +2393,14 @@ $(document).ready(function() {
             getProductAddons(slug, variant_id);
             return false;
         }
-      
+
         var minimum_order_count = $(that).data("minimum_order_count");
         if(minimum_order_count > 0)
         minimum_order_count = minimum_order_count;
         else
         minimum_order_count = 1;
 
-      
+
         // end addons data
         if (!$.hasAjaxRunning()) {
             addToCartProductsAddons(that,minimum_order_count);
@@ -2871,7 +2872,7 @@ $(document).ready(function() {
         else
         minimum_order_count = 1;
         // var res = parseInt(str.substring(10, str.length - 1));
-       
+
 
         console.log(minimum_order_count);
 
@@ -2881,13 +2882,13 @@ $(document).ready(function() {
         if (i - batch_count < minimum_order_count) {
                 alert("Minimum Quantity count is " + minimum_order_count);
                 return false;
-        }    
+        }
         !isNaN(i) && i > 1 && s.val(i - batch_count);
     });
     $(document).delegate('.quantity_count', 'change', function() {
         var quan = $(this).val();
         var str = $('#instock').val();
-      
+
 
         if (quan > str) {
             alert("Quantity is not available in stock");
