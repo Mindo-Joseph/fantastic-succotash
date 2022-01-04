@@ -111,7 +111,7 @@ class PageController extends BaseController{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $domain = ''){
-        pr( $request->all());
+       // pr( $request->all());
         $rules = array(
             'edit_title' => 'required',
             'edit_description' => 'required',
@@ -134,6 +134,7 @@ class PageController extends BaseController{
         $page_translation->meta_description = $request->edit_meta_description;
         $page_translation->type_of_form = $request->type_of_form;
         $page_translation->save();
+        //pr($page_translation->toArray());
         if($request->type_of_form == 3){
             //delete faq
            $delete_question_ids = $request->question_old_ids;

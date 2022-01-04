@@ -444,11 +444,9 @@ class CategoryController extends BaseController
             $order_type = $request->has('order_type') ? $request->order_type : '';
             $products = Product::with([
                 'category.categoryDetail', 'media.image',
-                'translation' => function ($q) use ($langId,$order_type) {
+                'translation' => function ($q) use ($langId) {
                     $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
-
-
-                    $q->groupBy('language_id',"product_id");
+                    $q->groupBy('language_id','product_id');
                 },
                 'variant' => function ($q) use ($langId, $variantIds,$order_type) {
                     $q->select('sku', 'product_id', 'quantity', 'price', 'barcode','price');
@@ -492,13 +490,13 @@ class CategoryController extends BaseController
             $products = $products->orderBy('product_variants.price', 'desc');
             }
             if (!empty($order_type) && $order_type == 'a_to_z') {
-                $q->orderBy('product_translations.title', 'asc');
+                $products = $products->orderBy('product_translations.title', 'asc');
             }
             if (!empty($order_type) && $order_type == 'z_to_a') {
-                $q->orderBy('product_translations.title', 'desc');
+                $products = $products->orderBy('product_translations.title', 'desc');
             }
             $paginate = $request->has('limit') ? $request->limit : 12;
-
+            $products = $products->groupBy('id');
             $products = $products->paginate($paginate);
 
             if (!empty($products)) {
