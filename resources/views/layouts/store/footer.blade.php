@@ -78,6 +78,11 @@
     var ozow_before_payment = "{{route('payment.ozow.beforePayment')}}";
     var ozow_create_payment = "{{route('payment.ozow.createPayment')}}";
 
+/////////////Pagarme Payment Routes
+    var pagarme_before_payment = "{{route('payment.pagarme.beforePayment')}}";
+    var pagarme_create_payment = "{{route('payment.pagarme.createPayment')}}";
+
+
 // Logged In User Detail
     var logged_in_user_name = "{{Auth::user()->name??''}}";
     var logged_in_user_email = "{{Auth::user()->email??''}}";
