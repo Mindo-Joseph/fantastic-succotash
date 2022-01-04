@@ -495,6 +495,9 @@ class CategoryController extends BaseController
             if (!empty($order_type) && $order_type == 'z_to_a') {
                 $products = $products->orderBy('product_translations.title', 'desc');
             }
+            if (!empty($order_type) && $order_type == 'newly_added') {
+                $products = $products->orderBy('products.id', 'desc');
+            }
             $paginate = $request->has('limit') ? $request->limit : 12;
             $products = $products->groupBy('id');
             $products = $products->paginate($paginate);
