@@ -62,7 +62,8 @@ class VendorController extends FrontController
             $value->categoriesList = $categoriesList;
             $value->vendorRating = $this->vendorRating($value->products);
         }
-        return view('frontend/vendor-all')->with(['navCategories' => $navCategories,'vendors' => $vendors]);
+        $for_no_product_found_html = CabBookingLayout::with('translations')->where('is_active', 1)->where('for_no_product_found_html',1)->orderBy('order_by')->get();
+        return view('frontend/vendor-all')->with(['navCategories' => $navCategories,'for_no_product_found_html' => $for_no_product_found_html,'vendors' => $vendors]);
     }
     /**
      * Display product By Vendor
