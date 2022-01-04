@@ -29,6 +29,6 @@ class PagarmeGatewayController extends BaseController
             $params = $params . '&order_number=' . $request->order_number;
         }
         // return $this->successResponse(url('payment/pagarme/page'.$params)); 
-        return $this->successResponse(url($request->serverUrl.'payment/simplify/page'.$params)); 
+        return $this->successResponse(url($request->serverUrl.'payment/pagarme/page'.$params)); 
     }
 }
