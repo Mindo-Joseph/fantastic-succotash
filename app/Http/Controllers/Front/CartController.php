@@ -530,7 +530,7 @@ class CartController extends FrontController
         $longitude = ($address) ? $address->longitude : '';
 
         $delifproductnotexist = CartProduct::where('cart_id', $cart_id)->doesntHave('product')->delete();
-
+ 
         $cartData = CartProduct::with([
             'vendor', 'vendor.slot.day', 'vendor.slotDate', 'coupon' => function ($qry) use ($cart_id) {
                 $qry->where('cart_id', $cart_id);
@@ -732,7 +732,7 @@ class CartController extends FrontController
                         if($prod->product->dropoff_delay_hrs_min > $delay_date)
                         $dropoff_delay_date = $prod->product->dropoff_delay_hrs_min;
                     }
-
+                    
                     if($action == 'delivery'){
                         $delivery_fee_charges = 0;
                         $deliver_charges_lalmove =0;
