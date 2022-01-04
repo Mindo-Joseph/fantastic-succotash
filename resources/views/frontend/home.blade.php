@@ -126,10 +126,10 @@
                     <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                         <% if(vendor.is_vendor_closed == 1){%>
                             <img class="img-fluid blur-up lazyload m-auto bg-img grayscale-image" alt="xx" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
-                            <% }else { %>  
+                            <% }else { %>
                                 <img class="img-fluid blur-up lazyload m-auto bg-img" alt="xx" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
-                            <%  } %> 
-                        
+                            <%  } %>
+
                     </a>
                 </div>
             </div>
@@ -149,7 +149,7 @@
                 <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                     <h6 class="d-flex justify-content-between">
                         <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %></small>
-                        <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
+                        <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %></small>
                     </h6>
                 <% } %>
             </div>
@@ -206,9 +206,9 @@
                     <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                         <% if(vendor.is_vendor_closed == 1){%>
                         <img class="img-fluid blur-up lazyload m-auto bg-img grayscale-image" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
-                        <% }else { %>  
+                        <% }else { %>
                             <img class="img-fluid blur-up lazyload m-auto bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
-                        <%  } %> 
+                        <%  } %>
                     </a>
                 </div>
             </div>
@@ -228,7 +228,7 @@
                 <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                     <h6 class="d-flex justify-content-between">
                         <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
-                        <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
+                        <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %></small>
                     </h6>
                 <% } %>
             </div>

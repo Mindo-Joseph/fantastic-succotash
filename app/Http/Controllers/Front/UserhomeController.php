@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\Front\FrontController;
 use Illuminate\Contracts\Session\Session as SessionSession;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency,Client, ClientPreference, DriverRegistrationDocument, HomePageLabel, Page, VendorRegistrationDocument, Language, OnboardSetting, CabBookingLayout, WebStylingOption, SubscriptionInvoicesVendor, Order, VendorOrderStatus,CabBookingLayoutTranslation};
+use App\Models\{Currency, Banner,FaqTranslations, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency,Client, ClientPreference, DriverRegistrationDocument, HomePageLabel, Page, VendorRegistrationDocument, Language, OnboardSetting, CabBookingLayout, WebStylingOption, SubscriptionInvoicesVendor, Order, VendorOrderStatus,CabBookingLayoutTranslation};
 use Illuminate\Contracts\View\View;
 use Illuminate\View\View as ViewView;
 use Redirect;
@@ -161,6 +161,10 @@ class UserhomeController extends FrontController
             $q->where('language_id', session()->get('customerLanguage'));
         }])->where('slug', $request->slug)->firstOrFail();
         if ($page_detail->primary->type_of_form != 2) {
+            if($page_detail->primary->type_of_form == 3){
+             $faq =    FaqTranslations::where('page_id',$page_detail->id)->where('language_id', session()->get('customerLanguage'))->get();
+             $page_detail->faqs_details = $faq;
+            }
             $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
             return view('frontend.extrapage', compact('page_detail', 'navCategories', 'client_preferences', 'user', 'vendor_registration_documents'));
         } else {
@@ -179,7 +183,7 @@ class UserhomeController extends FrontController
         }
     }
     public function index(Request $request)
-    {  
+    {
         try {
             $home = array();
             $vendor_ids = array();
@@ -285,26 +289,26 @@ class UserhomeController extends FrontController
         $currency_id = Session::get('customerCurrency');
         $language_id = Session::get('customerLanguage');
         $layouts = CabBookingLayoutTranslation::where('language_id',$language_id)->with('layout')->get()->toArray();
-      
+
         $currency_id = $this->setCurrencyInSesion();
 
        // $key = array_search(1, array_columns($layouts, 'cab_booking_layout_id'));
         $featured_products_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','featured_products');})->value('title');
-       
+
         $vendors_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','vendors');})->value('title');
-        
+
         $new_products_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','new_products');})->value('title');
 
         $on_sale_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','on_sale');})->value('title');
-   
+
         $brands_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','brands');})->value('title');
 
         $best_sellers_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','best_sellers');})->value('title');
-    
+
         $trending_vendors_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','trending');})->value('title');
 
         $recent_orders_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','recent_orders');})->value('title');
-       
+
 
         $brands = Brand::select('id', 'image', 'title')->with(['translation' => function ($q) use ($language_id) {
             $q->where('language_id', $language_id);
@@ -338,7 +342,7 @@ class UserhomeController extends FrontController
         }
         $vendors = $vendors->where('status', 1)->inRandomOrder()->get();
 
-        
+
         foreach ($vendors as $key => $value) {
             $vendor_ids[] = $value->id;
             $value->vendorRating = $this->vendorRating($value->products);
@@ -360,7 +364,7 @@ class UserhomeController extends FrontController
             $value->type_title = $categoriesList;
 
             $value->is_vendor_closed = 0;
-            if($value->show_slot == 0){ 
+            if($value->show_slot == 0){
                 if( ($value->slotDate->isEmpty()) && ($value->slot->isEmpty()) ){
                     $value->is_vendor_closed = 1;
                 }else{
@@ -413,7 +417,7 @@ class UserhomeController extends FrontController
                 }
                 $value->categoriesList = $categoriesList;
                 $value->is_vendor_closed = 0;
-                if($value->show_slot == 0){ 
+                if($value->show_slot == 0){
                     if( ($value->slotDate->isEmpty()) && ($value->slot->isEmpty()) ){
                         $value->is_vendor_closed = 1;
                     }else{
@@ -453,7 +457,7 @@ class UserhomeController extends FrontController
                 $value->categoriesList = $categoriesList;
 
                 $value->is_vendor_closed = 0;
-                if($value->show_slot == 0){ 
+                if($value->show_slot == 0){
                     if( ($value->slotDate->isEmpty()) && ($value->slot->isEmpty()) ){
                         $value->is_vendor_closed = 1;
                     }else{
@@ -576,12 +580,12 @@ class UserhomeController extends FrontController
                         $vendor->dineInTableCategory = $vendor->dineInTable->category->first() ? $vendor->dineInTable->category->first()->title : '';
                     }
 
-                     
+
                 }
                 $order->converted_scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
             }
         }
-      
+
         $data = [
             'brands' => $brands,
             'vendors' => $vendors,
