@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{User, Transaction, ClientCurrency, PaymentOption};
@@ -114,5 +115,28 @@ class WalletController extends FrontController
             }
         }
         return $this->successResponse($payment_options);
+    }
+
+    /**
+     * wallet payment options
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function walletTransferUserVerify(Request $request, $domain = ''){
+        try{
+            $username = $request->username;
+            $user_exists = User::where(function($q) use($username){
+                $q->where('email', $username)->orWhereRaw("CONCAT(`dial_code`, `phone_number`) = ?", $username);
+            })
+            ->where('status', 1)->first();
+            if($user_exists){
+                return $this->successResponse('', __('User is verified'), 201);
+            }else{
+                return $this->errorResponse('User does not exist', 422);   
+            }
+        }
+        catch(Exception $ex){
+            return $this->errorResponse($ex->getMessage(), $ex->getCode);
+        }
     }
 }
