@@ -806,7 +806,7 @@
     var areajson_json = all_coordinates; //{all_coordinates};
     
     function initialize_show() {
-
+       
         // var myLatlng = new google.maps.LatLng("{{ $center['lat'] }}","{{ $center['lng']  }}");
         //console.log(myLatlng);
         var latitude = parseFloat("{{ $vendor['latitude'] }}");
@@ -1088,7 +1088,7 @@
             });
         }
     }
-    if ((is_hyperlocal) || (pickup_delivery_service_area == 1)) {
+    if ((is_hyperlocal) || (pickup_delivery_service_area == 1)) { 
         google.maps.event.addDomListener(window, 'load', initialize);
         google.maps.event.addDomListener(window, 'load', initialize_show);
         google.maps.event.addDomListener(window, 'load', initialize_edit);
