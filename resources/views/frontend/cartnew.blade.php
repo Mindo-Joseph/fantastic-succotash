@@ -439,18 +439,18 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
                             <% } %>
 
-                            <% } else { %>
+                    <% } else { %>
 
-                            <input type="date" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%=  cart_details.scheduled_date_time %>"
-                            min="{{$now}}">
+                       
+                            <input type="date" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%=  cart_details.scheduled.scheduled_date_time %>"  min="{{$now}}">
                         
                             <select name="slots" id="slot" class="form-control">
                                 <option value="">{{__("Select Slot")}}  </option>
                                 <% _.each(cart_details.slots, function(slot, sl){%>
-                                <option value="<%= slot.start_time %> - <%= slot.end_time  %>"><%= slot.name %></option>
+                                <option value="<%= slot.start_time %> - <%= slot.end_time  %>" <%= slot.start_time +' - '+ slot.end_time == cart_details.scheduled.slot ? 'selected' : '' %> ><%= slot.name %></option>
                                 <% }) %>
                             </select> 
-                            <% } %>
+                    <% } %>
 
                 </div>
             </div>
