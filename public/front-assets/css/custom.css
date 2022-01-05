@@ -8222,3 +8222,8 @@ body[dir="rtl"] .inner_spacing h3 {
     }
   
 }
+
+input#schedule_datetime {
+    width: 50% !important;
+        margin-right: 10px;
+    }
