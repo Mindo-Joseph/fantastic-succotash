@@ -251,12 +251,18 @@
             <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0 mt-3">
                 <% if((vendor.delivery_fee > 0) || (order.scheduled_date_time)){ %>
                     <div class="progress-order font-12">
+                        <% if(order.scheduled_slot == null){ %>
                     <% if(order.scheduled_date_time){ %>
                             <span class="badge badge-success ml-2">Scheduled</span>
                             <span class="ml-2">{{__('Your order will arrive by')}} <%= order.converted_scheduled_date_time %></span>
                         <% } else { %>
                             <span class="ml-2">{{__('Your order will arrive by')}} <%= vendor.ETA %></span>
                         <% } %>
+                        <% }else{ %>
+                            <span class="badge badge-success ml-2">Scheduled</span>
+                            <span class="ml-2">{{__('Your order will arrive by')}} <%= order.converted_scheduled_date_time %>, Slot : <%= order.scheduled_slot %></span>
+                        <% } %>
+
                     </div>
                 <% } %>
                 <span class="left_arrow pulse"></span>
