@@ -866,6 +866,12 @@ class CartController extends FrontController
                     $vendorData->is_vendor_closed = 1;
                     $delivery_status = 0;
                 }
+               
+                if((float)($vendorData->vendor->order_min_amount) > $subtotal_amount){  # if any vendor total amount of order is less then minimum order amount
+                    $delivery_status = 0;
+                }
+
+                
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
                 $total_discount_amount = $total_discount_amount + $discount_amount;
