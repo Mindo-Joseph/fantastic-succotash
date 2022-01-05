@@ -3268,6 +3268,13 @@ button.return-order-product {
     margin-top: 5px;
 }
 
+button.repeat-order-product {
+    padding: 0 5px;
+    font-size: 14px;
+    float: right;
+    margin-top: 5px;
+}
+
 .review {
     width: 100%;
     margin: 10px 0;
