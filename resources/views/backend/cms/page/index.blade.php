@@ -242,8 +242,10 @@
                     $('#edit_page_content #page_id').val(response.data.id);
                     if(response.data.translation){
                         if(response.data.translation.type_of_form==3){
-                            $("#faqSection").removeClass("d-none");
+                            console.log("language change");
                             $('.option_section').remove();
+                            $("#faqSection").removeClass("d-none");
+
                             var faqs = response.data.faqs;
                             var faq_section_temp    = $('#faq_template').html();
                             var modified_temp         = _.template(faq_section_temp);
@@ -258,6 +260,7 @@
                             });
                             addFaqSectionTemplate(section_id);
                         }else{
+                            $('.option_section').remove();
                             $("#faqSection").addClass("d-none");
                         }
                         $('#edit_page_content #edit_title').val(response.data.translation.title);
@@ -272,6 +275,16 @@
                         // $('#edit_page_content #edit_description').summernote({'height':450});
 
                     }else{
+                      $('.option_section').remove();
+                      var selectedid = $('#type_of_form').val();
+                        if(selectedid==3){
+                            $("#faqSection").removeClass("d-none");
+                            var classoption_section = $('#faqSection').find('.option_section');
+
+                            if(classoption_section.length==0){
+                                addFaqSectionTemplate(0);
+                            }
+                        }
                       $(':input:text').val('');
                       $('textarea').val('');
                     }
@@ -301,22 +314,30 @@
         $(document).on("click",".delete-page",function() {
             var page_id = $(this).data('page_id');
             let destroy_url = "{{route('cms.page.delete')}}";
-            if (confirm('Are you sure?')) {
-                $.ajax({
-                    type: "POST",
-                    dataType: 'json',
-                    url: destroy_url,
-                    data: {page_id: page_id},
-                    success: function(response) {
-                        if (response.status == "Success") {
-                            $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                            setTimeout(function() {
-                                location.reload()
-                            }, 2000);
+            Swal.fire({
+                title: "{{__('Are you Sure?')}}",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Ok',
+            }).then((result) => {
+                if(result.value)
+                {
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        url: destroy_url,
+                        data: {page_id: page_id},
+                        success: function(response) {
+                            if (response.status == "Success") {
+                                $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                                setTimeout(function() {
+                                    location.reload()
+                                }, 2000);
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
         $(document).on("click","#update_page_btn",function() {
             var update_url = "{{route('cms.page.update')}}";

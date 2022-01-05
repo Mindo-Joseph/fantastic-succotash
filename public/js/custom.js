@@ -621,6 +621,10 @@ $(document).ready(function() {
             }
             else if (payment_option_id == 13) {
                 paymentViaSquare('', '');
+            }else if (payment_option_id == 14) {
+                paymentViaOzow('', '');
+            }else if (payment_option_id == 15) {
+                paymentViaPagarme('', '');
             }
         } else {
             _this.attr("disabled", false);
@@ -1337,6 +1341,14 @@ $(document).ready(function() {
                 return false;
             }
         }
+        else if (payment_option_id == 15) {
+            var order = placeOrderBeforePayment(address_id, payment_option_id, tip);
+            if (order != '') {
+                paymentViaPagarme(address_id, order);
+            } else {
+                return false;
+            }
+        }
     });
 
 
@@ -1503,6 +1515,8 @@ $(document).ready(function() {
             paymentViaSquare('', '');
         }else if (payment_option_id == 14) {
             paymentViaOzow('', '');
+        }else if (payment_option_id == 15) {
+            paymentViaPagarme('', '');
         }
     });
     $(document).on("click", ".remove_promo_code_btn", function() {
