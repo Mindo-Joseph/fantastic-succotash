@@ -166,7 +166,7 @@ class WalletController extends FrontController
             })
             ->where('status', 1)->first();
             if($second_user){
-                $first_user->transferFloat($second_user, $transfer_amount, ['Wallet has been <b>Debited</b> by transfer with reference <b>'.$transaction_reference.'</b>']);
+                $first_user->transferFloat($second_user, $transfer_amount, ['Wallet has been transferred with reference <b>'.$transaction_reference.'</b>']);
                 $message = __('Amount has been transferred successfully');
                 Session::put('success', $message);
                 return $this->successResponse('', $message, 201);
