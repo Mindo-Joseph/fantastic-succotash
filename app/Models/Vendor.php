@@ -10,11 +10,11 @@ class Vendor extends Model{
     protected $fillable = ['name','slug','desc','logo','banner','address','email','website','phone_no','latitude','longitude','order_min_amount','order_pre_time','auto_reject_time','commission_percent','commission_fixed_per_order','commission_monthly','dine_in','takeaway','delivery','status','add_category','setting','show_slot','vendor_templete_id','auto_accept_order', 'service_fee_percent'];
 
     public function serviceArea(){
-       return $this->hasMany('App\Models\ServiceArea')->select('vendor_id', 'geo_array', 'name'); 
+       return $this->hasMany('App\Models\ServiceArea')->select('vendor_id', 'geo_array', 'name');
     }
 
     public function products(){
-      return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
+      return $this->hasMany('App\Models\Product', 'vendor_id', 'id');
     }
 
     public function slot(){
@@ -33,20 +33,21 @@ class Vendor extends Model{
     }
 
     public function avgRating(){
-      return $this->hasMany('App\Models\Product', 'vendor_id', 'id')->avg('averageRating'); 
+      return $this->hasMany('App\Models\Product', 'vendor_id', 'id')->avg('averageRating');
     }
-    
+
     public function getLogoAttribute($value){
       $values = array();
       $img = 'default/default_image.png';
       if(!empty($value)){
         $img = $value;
       }
+      $ex = checkImageExtension($img);
       $values['proxy_url'] = \Config::get('app.IMG_URL1');
       if (substr($img, 0, 7) == "http://" || substr($img, 0, 8) == "https://"){
         $values['image_path'] = \Config::get('app.IMG_URL2').'/'.$img;
       } else {
-        $values['image_path'] = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url($img);
+        $values['image_path'] = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url($img).$ex;
       }
       $values['image_fit'] = \Config::get('app.FIT_URl');
       return $values;
@@ -58,11 +59,12 @@ class Vendor extends Model{
       if(!empty($value)){
         $img = $value;
       }
+      $ex = checkImageExtension($img);
       $values['proxy_url'] = \Config::get('app.IMG_URL1');
       if (substr($img, 0, 7) == "http://" || substr($img, 0, 8) == "https://"){
         $values['image_path'] = \Config::get('app.IMG_URL2').'/'.$img;
       } else {
-        $values['image_path'] = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url($img);
+        $values['image_path'] = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url($img).$ex;
       }
       $values['image_fit'] = \Config::get('app.FIT_URl');
       return $values;
@@ -73,12 +75,12 @@ class Vendor extends Model{
     }
 
     public function orders(){
-       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id'); 
+       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id');
     }
 
     public function activeOrders(){
        return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id')
-              ->where('status', '!=', 3); 
+              ->where('status', '!=', 3);
     }
 
     public function permissionToUser(){
@@ -87,12 +89,12 @@ class Vendor extends Model{
 
 
     public function product(){
-      return $this->hasMany('App\Models\Product', 'vendor_id', 'id'); 
+      return $this->hasMany('App\Models\Product', 'vendor_id', 'id');
     }
 
     public function currentlyWorkingOrders(){
       return $this->hasMany('App\Models\OrderVendor', 'vendor_id', 'id')->select('id', 'vendor_id')
-             ->whereIn('order_status_option_id',[2,4,5]); 
+             ->whereIn('order_status_option_id',[2,4,5]);
    }
 
 

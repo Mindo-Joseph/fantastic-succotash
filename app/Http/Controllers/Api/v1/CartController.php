@@ -14,6 +14,7 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
+use App\Http\Controllers\Api\v1\PromoCodeController;
 use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet, UserAddress, ClientPreference, LuxuryOption, Vendor, LoyaltyCard, SubscriptionInvoicesUser, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation, OrderVendor, OrderProductAddon, OrderTax, OrderProduct, OrderProductPrescription, VendorOrderStatus};
 use GuzzleHttp\Client as GCLIENT;
 use Log;
@@ -540,7 +541,7 @@ class CartController extends BaseController
             $dropoff_delay_date = 0;
             $total_service_fee = 0;
             foreach ($cartData as $ven_key => $vendorData) {
-
+                $is_promo_code_available = 0;
                 $vendor_products_total_amount = $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
 
@@ -594,8 +595,12 @@ class CartController extends BaseController
                         if ($vendorData->coupon->promo->promo_type_id == 1) {
                             $is_percent = 1;
                             $discount_percent = round($vendorData->coupon->promo->amount);
+
+                           
                         } else {
                             $discount_amount = $vendorData->coupon->promo->amount * $clientCurrency->doller_compare;
+
+                            
                         }
                         if ($vendorData->coupon->promo->restriction_on == 0) {
                             foreach ($vendorData->coupon->promo->details as $key => $value) {
@@ -663,7 +668,10 @@ class CartController extends BaseController
                                     $variantsData['coupon_msg'] = "Spend Minimum " . $minimum_spend . " to apply this coupon";
                                     $variantsData['coupon_not_appiled'] = 1;
                                 }
+
+                                
                             }
+                           
                             $variantsData['discount_amount'] = $pro_disc;
                             $variantsData['coupon_applied'] = $codeApplied;
                             $variantsData['quantity_price'] = $quantity_price;
@@ -744,7 +752,7 @@ class CartController extends BaseController
                             'variant.media.pimage.image', 'upSell', 'crossSell', 'vendor', 'media.image', 'translation' => function ($q) use ($langId) {
                                 $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                                 $q->where('language_id', $langId);
-                            }])->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating')
+                            }])->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating','minimum_order_count','batch_count')
                             ->where('url_slug', $prod->product->url_slug)
                             ->first();
                         $doller_compare = ($clientCurrency) ? $clientCurrency->doller_compare : 1;
@@ -774,13 +782,15 @@ class CartController extends BaseController
                         $vendorData->coupon_not_appiled = 1;
                     }
                 }
+
+                
+                
                 $deliver_charge = $deliver_charge * $clientCurrency->doller_compare;
                 $vendorData->proSum = $proSum;
                 $vendorData->addonSum = $ttAddon;
                 $vendorData->deliver_charge = $deliver_charge;
                 $total_delivery_amount += $deliver_charge;
                 $vendorData->coupon_apply_on_vendor = $couponApplied;
-                $vendorData->is_coupon_applied = $is_coupon_applied;
                 $vendorData->is_coupon_applied = $is_coupon_applied;
                 if (empty($couponData)) {
                     $vendorData->couponData = NULL;
@@ -835,6 +845,18 @@ class CartController extends BaseController
                 }
 
                 $order_sub_total = $order_sub_total + $vendor_products_total_amount;
+
+                $promoCodeController = new PromoCodeController();
+                $promoCodeRequest = new Request();
+                $promoCodeRequest->setMethod('POST');
+                $promoCodeRequest->request->add(['vendor_id' => $vendorData->vendor_id, 'cart_id' => $cartID]);
+                $promoCodeResponse = $promoCodeController->postPromoCodeList($promoCodeRequest)->getData();
+                if($promoCodeResponse->status == 'Success'){
+                    if($promoCodeResponse->data){
+                        $is_promo_code_available = 1;
+                    }
+                }
+                $vendorData->is_promo_code_available = $is_promo_code_available;
             }
         }
         $cart_product_luxury_id = CartProduct::where('cart_id', $cartID)->select('luxury_option_id', 'vendor_id')->first();

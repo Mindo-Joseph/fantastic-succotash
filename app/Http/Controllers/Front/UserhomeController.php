@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\Front\FrontController;
 use Illuminate\Contracts\Session\Session as SessionSession;
-use App\Models\{Currency, Banner, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency,Client, ClientPreference, DriverRegistrationDocument, HomePageLabel, Page, VendorRegistrationDocument, Language, OnboardSetting, CabBookingLayout, WebStylingOption, SubscriptionInvoicesVendor, Order, VendorOrderStatus};
+use App\Models\{Currency, Banner,FaqTranslations, Category, Brand, Product, ClientLanguage, Vendor, VendorCategory, ClientCurrency,Client, ClientPreference, DriverRegistrationDocument, HomePageLabel, Page, VendorRegistrationDocument, Language, OnboardSetting, CabBookingLayout, WebStylingOption, SubscriptionInvoicesVendor, Order, VendorOrderStatus,CabBookingLayoutTranslation};
 use Illuminate\Contracts\View\View;
 use Illuminate\View\View as ViewView;
 use Redirect;
@@ -24,7 +24,7 @@ class UserhomeController extends FrontController
     use ApiResponser;
     private $field_status = 2;
 
-    
+
     public function setTheme(Request $request)
     {
         if ($request->theme_color == "dark") {
@@ -37,7 +37,7 @@ class UserhomeController extends FrontController
     {
         $client_preferences = ClientPreference::first();
         return response()->json(['success' => true, 'client_preferences' => $client_preferences]);
-        
+
     }
 
     public function getLastMileTeams()
@@ -129,7 +129,7 @@ class UserhomeController extends FrontController
         $last_mile_teams = [];
 
         $tag = [];
-        
+
         $showTag = implode(',', $tag);
         $driver_registration_documents = json_decode($this->driverDocuments());
         return view('frontend.driver-registration', compact('page_detail', 'navCategories', 'user', 'showTag', 'driver_registration_documents'));
@@ -161,16 +161,24 @@ class UserhomeController extends FrontController
             $q->where('language_id', session()->get('customerLanguage'));
         }])->where('slug', $request->slug)->firstOrFail();
         if ($page_detail->primary->type_of_form != 2) {
+            if($page_detail->primary->type_of_form == 3){
+             $faq =    FaqTranslations::where('page_id',$page_detail->id)->where('language_id', session()->get('customerLanguage'))->get();
+             $page_detail->faqs_details = $faq;
+            }
             $vendor_registration_documents = VendorRegistrationDocument::with('primary')->get();
             return view('frontend.extrapage', compact('page_detail', 'navCategories', 'client_preferences', 'user', 'vendor_registration_documents'));
         } else {
             $tag = [];
             $showTag = implode(',', $tag);
             $client = Client::with('country')->first();
-            $data = json_decode($this->driverDocuments());
-            $driver_registration_documents = $data->documents;
-            $teams = $data->all_teams;
-            $tags = $data->agent_tags;
+            $driverDocs = json_decode($this->driverDocuments());
+            $driver_registration_documents = $driverDocs->documents;
+            foreach ($driverDocs->documents as $key => $doc) {
+                $name = str_replace(" ", "_", $doc->name);
+                $doc->slug = $name;
+            }
+            $teams = $driverDocs->all_teams;
+            $tags = $driverDocs->agent_tags;
             return view('frontend.driver-registration', compact('page_detail', 'navCategories', 'user', 'showTag', 'driver_registration_documents','client', 'teams', 'tags'));
         }
     }
@@ -223,7 +231,7 @@ class UserhomeController extends FrontController
                 })->orderBy('sorting', 'asc')->with('category')->with('vendor')->get();
 
 
-            $home_page_labels = CabBookingLayout::where('is_active', 1)->orderBy('order_by');
+            $home_page_labels = CabBookingLayout::where('is_active', 1)->where('for_no_product_found_html',0)->orderBy('order_by');
 
             if (isset($langId) && !empty($langId))
                 $home_page_labels = $home_page_labels->with(['translations' => function ($q) use ($langId) {
@@ -240,18 +248,19 @@ class UserhomeController extends FrontController
             if ($only_cab_booking == 1)
                 return Redirect::route('categoryDetail', 'cabservice');
 
-            $home_page_pickup_labels = CabBookingLayout::with('translations')->where('is_active', 1)->orderBy('order_by')->get();
+            $home_page_pickup_labels = CabBookingLayout::with('translations')->where('is_active', 1)->where('for_no_product_found_html',0)->orderBy('order_by')->get();
 
             $set_template = WebStylingOption::where('web_styling_id', 1)->where('is_selected', 1)->first();
 
-
+            $for_no_product_found_html = CabBookingLayout::with('translations')->where('is_active', 1)->where('for_no_product_found_html',1)->orderBy('order_by')->get();
+          
             // $last_mile = $this->checkIfLastMileDeliveryOn();
             if (isset($set_template)  && $set_template->template_id == 1)
-                return view('frontend.home-template-one')->with(['home' => $home,  'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+                return view('frontend.home-template-one')->with(['home' => $home,  'count' => $count, 'for_no_product_found_html' => $for_no_product_found_html,'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
             if (isset($set_template)  && $set_template->template_id == 2)
-                return view('frontend.home')->with(['home' => $home, 'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+                return view('frontend.home')->with(['home' => $home, 'count' => $count, 'for_no_product_found_html' => $for_no_product_found_html,'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
             else
-            return view('frontend.home-template-one')->with(['home' => $home,  'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
+            return view('frontend.home-template-one')->with(['home' => $home,  'count' => $count, 'for_no_product_found_html' => $for_no_product_found_html,'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
             pr($e->getCode());
             die;
@@ -280,11 +289,28 @@ class UserhomeController extends FrontController
         $preferences = Session::get('preferences');
         $currency_id = Session::get('customerCurrency');
         $language_id = Session::get('customerLanguage');
+        $layouts = CabBookingLayoutTranslation::where('language_id',$language_id)->with('layout')->get()->toArray();
 
-       
         $currency_id = $this->setCurrencyInSesion();
 
-        
+       // $key = array_search(1, array_columns($layouts, 'cab_booking_layout_id'));
+        $featured_products_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','featured_products');})->value('title');
+
+        $vendors_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','vendors');})->value('title');
+
+        $new_products_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','new_products');})->value('title');
+
+        $on_sale_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','on_sale');})->value('title');
+
+        $brands_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','brands');})->value('title');
+
+        $best_sellers_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','best_sellers');})->value('title');
+
+        $trending_vendors_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','trending');})->value('title');
+
+        $recent_orders_title = CabBookingLayoutTranslation::where('language_id',$language_id)->whereHas('layout',function($q){$q->where('slug','recent_orders');})->value('title');
+
+
         $brands = Brand::select('id', 'image', 'title')->with(['translation' => function ($q) use ($language_id) {
             $q->where('language_id', $language_id);
         }])->where('status', '!=', $this->field_status)->orderBy('position', 'asc')->get();
@@ -294,7 +320,7 @@ class UserhomeController extends FrontController
         }
         Session::forget('vendorType');
         Session::put('vendorType', $request->type);
-        $vendors = Vendor::with('products')->select('id', 'name', 'banner', 'address', 'order_pre_time', 'order_min_amount', 'logo', 'slug', 'latitude', 'longitude')->where($request->type, 1);
+        $vendors = Vendor::with('products')->with('slot.day', 'slotDate')->select('id', 'name', 'banner', 'address', 'order_pre_time', 'order_min_amount', 'logo', 'slug', 'latitude', 'longitude','show_slot')->where($request->type, 1);
         if ($preferences) {
             if ((empty($latitude)) && (empty($longitude)) && (empty($selectedAddress))) {
                 $selectedAddress = $preferences->Default_location_name;
@@ -316,6 +342,8 @@ class UserhomeController extends FrontController
             }
         }
         $vendors = $vendors->where('status', 1)->inRandomOrder()->get();
+
+
         foreach ($vendors as $key => $value) {
             $vendor_ids[] = $value->id;
             $value->vendorRating = $this->vendorRating($value->products);
@@ -334,6 +362,23 @@ class UserhomeController extends FrontController
                 }
             }
             $value->categoriesList = $categoriesList;
+            $value->type_title = $categoriesList;
+
+            $value->is_vendor_closed = 0;
+            if($value->show_slot == 0){
+                if( ($value->slotDate->isEmpty()) && ($value->slot->isEmpty()) ){
+                    $value->is_vendor_closed = 1;
+                }else{
+                    $value->is_vendor_closed = 0;
+                    if($value->slotDate->isNotEmpty()){
+                        $value->opening_time = Carbon::parse($value->slotDate->first()->start_time)->format('g:i A');
+                        $value->closing_time = Carbon::parse($value->slotDate->first()->end_time)->format('g:i A');
+                    }elseif($value->slot->isNotEmpty()){
+                        $value->opening_time = Carbon::parse($value->slot->first()->start_time)->format('g:i A');
+                        $value->closing_time = Carbon::parse($value->slot->first()->end_time)->format('g:i A');
+                    }
+                }
+            }
         }
         if (($preferences) && ($preferences->is_hyperlocal == 1)) {
             $vendors = $vendors->sortBy('lineOfSightDistance')->values()->all();
@@ -351,10 +396,11 @@ class UserhomeController extends FrontController
             Session::put('vendors', $vendor_ids);
         }
 
-        $trendingVendors = Vendor::whereIn('id', $subscribed_vendors_for_trending)->where('status', 1)->inRandomOrder()->get();
+        $trendingVendors = Vendor::with('slot.day', 'slotDate')->whereIn('id', $subscribed_vendors_for_trending)->where('status', 1)->inRandomOrder()->get();
 
         if ((!empty($trendingVendors) && count($trendingVendors) > 0)) {
             foreach ($trendingVendors as $key => $value) {
+                $value->tag_title = $trending_vendors_title??'0';
                 $value->vendorRating = $this->vendorRating($value->products);
                 // $value->name = Str::limit($value->name, 15, '..');
                 if (($preferences) && ($preferences->is_hyperlocal == 1)) {
@@ -371,12 +417,27 @@ class UserhomeController extends FrontController
                     }
                 }
                 $value->categoriesList = $categoriesList;
+                $value->is_vendor_closed = 0;
+                if($value->show_slot == 0){
+                    if( ($value->slotDate->isEmpty()) && ($value->slot->isEmpty()) ){
+                        $value->is_vendor_closed = 1;
+                    }else{
+                        $value->is_vendor_closed = 0;
+                        if($value->slotDate->isNotEmpty()){
+                            $value->opening_time = Carbon::parse($value->slotDate->first()->start_time)->format('g:i A');
+                            $value->closing_time = Carbon::parse($value->slotDate->first()->end_time)->format('g:i A');
+                        }elseif($value->slot->isNotEmpty()){
+                            $value->opening_time = Carbon::parse($value->slot->first()->start_time)->format('g:i A');
+                            $value->closing_time = Carbon::parse($value->slot->first()->end_time)->format('g:i A');
+                        }
+                    }
+                }
             }
         }
         if (($preferences) && ($preferences->is_hyperlocal == 1)) {
             $trendingVendors = $trendingVendors->sortBy('lineOfSightDistance')->values()->all();
         }
-        $mostSellingVendors = Vendor::select('vendors.*',DB::raw('count(vendor_id) as max_sales'))->join('order_vendors','vendors.id','=','order_vendors.vendor_id')->whereIn('vendors.id',$vendor_ids)->where('vendors.status', 1)->groupBy('order_vendors.vendor_id')->orderBy(DB::raw('count(vendor_id)'),'desc')->get();
+        $mostSellingVendors = Vendor::with('slot.day', 'slotDate')->select('vendors.*',DB::raw('count(vendor_id) as max_sales'))->join('order_vendors','vendors.id','=','order_vendors.vendor_id')->whereIn('vendors.id',$vendor_ids)->where('vendors.status', 1)->groupBy('order_vendors.vendor_id')->orderBy(DB::raw('count(vendor_id)'),'desc')->get();
         if ((!empty($mostSellingVendors) && count($mostSellingVendors) > 0)) {
             foreach ($mostSellingVendors as $key => $value) {
                 $value->vendorRating = $this->vendorRating($value->products);
@@ -395,6 +456,22 @@ class UserhomeController extends FrontController
                     }
                 }
                 $value->categoriesList = $categoriesList;
+
+                $value->is_vendor_closed = 0;
+                if($value->show_slot == 0){
+                    if( ($value->slotDate->isEmpty()) && ($value->slot->isEmpty()) ){
+                        $value->is_vendor_closed = 1;
+                    }else{
+                        $value->is_vendor_closed = 0;
+                        if($value->slotDate->isNotEmpty()){
+                            $value->opening_time = Carbon::parse($value->slotDate->first()->start_time)->format('g:i A');
+                            $value->closing_time = Carbon::parse($value->slotDate->first()->end_time)->format('g:i A');
+                        }elseif($value->slot->isNotEmpty()){
+                            $value->opening_time = Carbon::parse($value->slot->first()->start_time)->format('g:i A');
+                            $value->closing_time = Carbon::parse($value->slot->first()->end_time)->format('g:i A');
+                        }
+                    }
+                }
             }
         }
         if (($preferences) && ($preferences->is_hyperlocal == 1)) {
@@ -409,8 +486,9 @@ class UserhomeController extends FrontController
         foreach ($new_product_details as  $new_product_detail) {
             $multiply = $new_product_detail->variant->first() ? $new_product_detail->variant->first()->multiplier : 1;
             $title = $new_product_detail->translation->first() ? $new_product_detail->translation->first()->title : $new_product_detail->sku;
-            $image_url = $new_product_detail->media->first() ? $new_product_detail->media->first()->image->path['image_fit'] . '600/600' . $new_product_detail->media->first()->image->path['image_path'] : $this->loadDefaultImage();
+            $image_url = $new_product_detail->media->first() ? $new_product_detail->media->first()->image->path['proxy_url'] . '260/100' . $new_product_detail->media->first()->image->path['image_path'] : $this->loadDefaultImage();
             $new_products[] = array(
+                'tag_title' => $new_products_title??0,
                 'image_url' => $image_url,
                 'sku' => $new_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
@@ -425,8 +503,9 @@ class UserhomeController extends FrontController
         foreach ($feature_product_details as  $feature_product_detail) {
             $multiply = $feature_product_detail->variant->first() ? $feature_product_detail->variant->first()->multiplier : 1;
             $title = $feature_product_detail->translation->first() ? $feature_product_detail->translation->first()->title : $feature_product_detail->sku;
-            $image_url = $feature_product_detail->media->first() ? $feature_product_detail->media->first()->image->path['image_fit'] . '600/600' . $feature_product_detail->media->first()->image->path['image_path'] : $this->loadDefaultImage();
+            $image_url = $feature_product_detail->media->first() ? $feature_product_detail->media->first()->image->path['proxy_url'] . '260/100' . $feature_product_detail->media->first()->image->path['image_path'] : $this->loadDefaultImage();
             $feature_products[] = array(
+                'tag_title' => $featured_products_title??'0',
                 'image_url' => $image_url,
                 'sku' => $feature_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
@@ -441,8 +520,9 @@ class UserhomeController extends FrontController
         foreach ($on_sale_product_details as  $on_sale_product_detail) {
             $multiply = $on_sale_product_detail->variant->first() ? $on_sale_product_detail->variant->first()->multiplier : 1;
             $title = $on_sale_product_detail->translation->first() ? $on_sale_product_detail->translation->first()->title : $on_sale_product_detail->sku;
-            $image_url = $on_sale_product_detail->media->first() ? $on_sale_product_detail->media->first()->image->path['image_fit'] . '600/600' . $on_sale_product_detail->media->first()->image->path['image_path'] : $this->loadDefaultImage();
+            $image_url = $on_sale_product_detail->media->first() ? $on_sale_product_detail->media->first()->image->path['proxy_url'] . '260/100' . $on_sale_product_detail->media->first()->image->path['image_path'] : $this->loadDefaultImage();
             $on_sale_products[] = array(
+                'tag_title' => $on_sale_title??'0',
                 'image_url' => $image_url,
                 'sku' => $on_sale_product_detail->sku,
                 'title' => Str::limit($title, 18, '..'),
@@ -457,7 +537,7 @@ class UserhomeController extends FrontController
         $home_page_labels = HomePageLabel::with('translations')->get();
 
         $activeOrders = [];
-        
+
         $user = Auth::user();
 
         if ($user) {
@@ -468,8 +548,7 @@ class UserhomeController extends FrontController
                 'vendors.dineInTable.translations' => function ($qry) use ($language_id) {
                     $qry->where('language_id', $language_id);
                 }, 'vendors.dineInTable.category', 'vendors.products', 'vendors.products.media.image', 'vendors.products.pvariant.media.pimage.image', 'user', 'address'
-            ])
-                ->whereHas('vendors', function ($q) {
+            ])->whereHas('vendors', function ($q) {
                     $q->where('order_status_option_id', '!=', 6);
                 })
                 ->where('orders.user_id', $user->id)->take(10)
@@ -477,6 +556,7 @@ class UserhomeController extends FrontController
             foreach ($activeOrders as $order) {
                 foreach ($order->vendors as $vendor) {
                     // dd($vendor->toArray());
+                    $vendor->tag_title = $vendor_title??'0';
                     $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
                     $vendor->order_status = $vendor_order_status ? strtolower($vendor_order_status->OrderStatusOption->title) : '';
                     foreach ($vendor->products as $product) {
@@ -500,6 +580,8 @@ class UserhomeController extends FrontController
                         $vendor->dineInTableCapacity = $vendor->dineInTable->seating_number;
                         $vendor->dineInTableCategory = $vendor->dineInTable->category->first() ? $vendor->dineInTable->category->first()->title : '';
                     }
+
+
                 }
                 $order->converted_scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
             }
@@ -610,7 +692,7 @@ class UserhomeController extends FrontController
     }
 
 
-    /////    new home page 
+    /////    new home page
     public function indexTemplateOne(Request $request)
     {
         try {
@@ -665,9 +747,9 @@ class UserhomeController extends FrontController
                 return Redirect::route('categoryDetail', 'cabservice');
             $home_page_pickup_labels = CabBookingLayout::with(['translations' => function ($q) use ($langId) {
                 $q->where('language_id', $langId);
-            }])->where('is_active', 1)->orderBy('order_by')->get();
+            }])->where('is_active', 1)->orderBy('order_by')->where('for_no_product_found_html',0)->get();
 
-           
+
             return view('frontend.home-template-one')->with(['home' => $home, 'count' => $count, 'homePagePickupLabels' => $home_page_pickup_labels, 'homePageLabels' => $home_page_labels, 'clientPreferences' => $clientPreferences, 'banners' => $banners, 'navCategories' => $navCategories, 'selectedAddress' => $selectedAddress, 'latitude' => $latitude, 'longitude' => $longitude]);
         } catch (Exception $e) {
             pr($e->getCode());

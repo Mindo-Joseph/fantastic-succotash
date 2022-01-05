@@ -6,7 +6,6 @@
 <link href="{{asset('assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
-<script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 <style type="text/css">
     .swal2-title {
         margin: 0px;
@@ -47,7 +46,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 </header>
 <script type="text/template" id="address_template">
     <div class="col-md-12">
-        <div class="delivery_box px-0">
+        <div class="delivery_box p-0 mb-3">
             <label class="radio m-0"><%= address.address %> <%= address.city %><%= address.state %> <%= address.pincode %>
                 <input type="radio" checked="checked" name="address_id" value="<%= address.id %>">
                 <span class="checkround"></span>
@@ -137,12 +136,15 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             </div>
                             <div class="col-8 col-md-4 text-md-center order-3 order-md-2">
                                 <div class="number d-flex justify-content-md-center">
-                                    <div class="counter-container d-flex align-items-center">
-                                        <span class="minus qty-minus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>" data-vendor_id="<%= vendor_product.vendor_id %>">
+                                    <div class="counter-container d-flex align-items-center"> 
+                                        <span class="minus qty-minus" data-minimum_order_count="<%= vendor_product.product.minimum_order_count %>"
+                                        data-batch_count="<%= vendor_product.product.batch_count %>" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                             <i class="fa fa-minus" aria-hidden="true"></i>
                                         </span>
-                                        <input placeholder="1" type="text" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>" readonly>
-                                        <span class="plus qty-plus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
+                                        <input placeholder="1" type="text" data-minimum_order_count="<%= vendor_product.product.minimum_order_count %>"
+                                        data-batch_count="<%= vendor_product.product.batch_count %>" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>" readonly>
+                                        <span class="plus qty-plus" data-minimum_order_count="<%= vendor_product.minimum_order_count %>"
+                                            data-batch_count="<%= vendor_product.product.batch_count %>" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                         </span>
                                     </div>
@@ -170,17 +172,19 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </div>
                             </div>
                             <% _.each(vendor_product.addon, function(addon, ad){%>
-                            <div class="row">
-                                <div class="col-md-3 col-sm-4 items-details text-left">
-                                    <p class="p-0 m-0"><%= addon.option.title %></p>
+                            <% if(addon.option){%>
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-4 items-details text-left">
+                                        <p class="p-0 m-0"><%= addon.option.title %></p>
+                                    </div>
+                                    <div class="col-md-2 col-sm-4 text-center">
+                                        <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(addon.option.price_in_cart) %></div>
+                                    </div>
+                                    <div class="col-md-7 col-sm-4 text-right">
+                                        <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(addon.option.quantity_price) %></div>
+                                    </div>
                                 </div>
-                                <div class="col-md-2 col-sm-4 text-center">
-                                    <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(addon.option.price_in_cart) %></div>
-                                </div>
-                                <div class="col-md-7 col-sm-4 text-right">
-                                    <div class="extra-items-price">{{Session::get('currencySymbol')}}<%= Helper.formatPrice(addon.option.quantity_price) %></div>
-                                </div>
-                            </div>
+                            <% } %>
                             <% }); %>
                         <% } %>
                     </div>
@@ -198,6 +202,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             </div>
                         </div>
                     <% } %>
+                    <% if( (vendor_product.product_out_of_stock == 1 ) ) { %>
+                        <div class="col-12">
+                            <div class="text-danger" style="font-size:12px;">
+                                <i class="fa fa-exclamation-circle"></i>{{__("This Product is out of stock")}}
+                            </div>
+                        </div>
+                    <% } %>
                 </div>
 
                 <hr>
@@ -205,18 +216,20 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             <div class="row">
                 <div class="col-lg-6 mb-3 mb-lg-0 d-flex align-items-start">
                     @if(!$guest_user)
-                        <div class="coupon_box w-100">
-                            <img src="{{ asset('assets/images/discount_icon.svg') }}">
-                            <label class="mb-0 ml-2">
-                                <% if(product.coupon) { %>
-                                    <%= product.coupon.promo.name %>
-                                <% }else{ %>
-                                    <a href="javascript:void(0)" class="promo_code_list_btn ml-1" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_total_amount %>">{{__('Select a promo code')}}</a>
-                                <% } %>
-                            </label>
-                        </div>
-                        <% if(product.coupon) { %>
-                            <label class="p-1 m-0"><a href="javascript:void(0)" class="remove_promo_code_btn ml-1" data-coupon_id="<%= product.coupon ? product.coupon.promo.id : '' %>" data-cart_id="<%= cart_details.id %>">Remove</a></label>
+                        <% if(product.is_promo_code_available > 0) { %>
+                            <div class="coupon_box w-100">
+                                <img src="{{ asset('assets/images/discount_icon.svg') }}">
+                                <label class="mb-0 ml-2">
+                                    <% if(product.coupon) { %>
+                                        <%= product.coupon.promo.name %>
+                                    <% }else{ %>
+                                        <a href="javascript:void(0)" class="promo_code_list_btn ml-1" data-vendor_id="<%= product.vendor.id %>" data-cart_id="<%= cart_details.id %>" data-amount="<%= product.product_sub_total_amount  %>">{{__('Select a promo code')}}</a>
+                                    <% } %>
+                                </label>
+                            </div>
+                            <% if(product.coupon) { %>
+                                <label class="p-1 m-0"><a href="javascript:void(0)" class="remove_promo_code_btn ml-1" data-coupon_id="<%= product.coupon ? product.coupon.promo.id : '' %>" data-cart_id="<%= cart_details.id %>">Remove</a></label>
+                            <% } %>
                         <% } %>
                     @endif
                 </div>
@@ -224,12 +237,19 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="row">
                         <div class="col-8 text-lg-right">
                             <p class="total_amt m-0">{{__('Delivery Fee')}} :</p>
+                            <% if(product.coupon_amount_used > 0) { %>
+                            <p class="total_amt m-0">{{__('Coupon Discount')}} :</p>
+                            <% } %>
                         </div>
                         <div class="col-4 text-right">
-                            <p class="total_amt mb-1 <% if(product.delivery_fee_charges > 0) { %>{{ ((in_array(1, $subscription_features)) ) ? 'discard_price' : '' }}<% } %>">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %></p>
+                            <p class="total_amt mb-1 <% if(product.delivery_fee_charges > 0) { %>{{ ((in_array(1, $subscription_features)) ) ? 'discard_price' : '' }}<% } %>  <% if(product.promo_free_deliver ==1) { %>discard_price <% } %> <% product.promo_free_deliver == 1? 'discard_price': '' %> ">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %></p>
+                            <% if(product.coupon_amount_used > 0) { %>
+                            <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.coupon_amount_used) %></p>
+                            <% } %>
                             <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.product_total_amount) %></p>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -524,8 +544,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     <div class="inner_spacing px-0">
                                         <div class="product-description">
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <h6 class="card_title mb-1 ellips"><%= product.translation_title %></h6>                                                                                    
-                                                <!--<span class="rating-number">2.0</span>-->                                
+                                                <h6 class="card_title mb-1 ellips"><%= product.translation_title %></h6>
+                                                <!--<span class="rating-number">2.0</span>-->
                                             </div>
                                             <p><%= product.vendor_name %></p>
                                             <p class="border-bottom pb-1">In <%= product.category_name %></p>
@@ -575,8 +595,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                     <div class="inner_spacing px-0">
                                         <div class="product-description">
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <h6 class="card_title mb-1 ellips"><%= product.translation_title %></h6>                                                                                    
-                                                <!--<span class="rating-number">2.0</span>-->                                
+                                                <h6 class="card_title mb-1 ellips"><%= product.translation_title %></h6>
+                                                <!--<span class="rating-number">2.0</span>-->
                                             </div>
                                             <!-- <h3 class="m-0"><%= product.translation_title %></h3> -->
                                             <p><%= product.vendor_name %></p>
@@ -866,7 +886,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif
 
                         <div class="divider-line mb-2"></div>
-                        <p class="new-user mb-0">New to Royo? <a href="{{route('customer.register')}}">Create an
+                        <p class="new-user mb-0">New to {{getClientDetail()->company_name}}? <a href="{{route('customer.register')}}">Create an
                                 account</a></p>
                     </div>
                     {{-- <div class="login-with-mail">
@@ -1005,7 +1025,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 @section('script')
 <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous">
 </script>
-<script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 <script src="https://js.stripe.com/v3/"></script>
 
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
@@ -1049,10 +1068,32 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     var my_orders_url = "{{route('user.orders')}}";
     var validate_promocode_coupon_url = "{{ route('verify.promocode.validate_code') }}";
 
+    var latitude = "{{ session()->has('latitude') ? session()->get('latitude') : 0 }}";
+    var longitude = "{{ session()->has('longitude') ? session()->get('longitude') : 0 }}";
+
+    if(!latitude){
+        @if(!empty($client_preference_detail->Default_latitude))
+            latitude = "{{$client_preference_detail->Default_latitude}}";
+        @endif
+    }
+
+    if(!longitude){
+        @if(!empty($client_preference_detail->Default_longitude))
+            longitude = "{{$client_preference_detail->Default_longitude}}";
+        @endif
+    }
+
     $(document).on('click', '.showMapHeader', function() {
         var lats = document.getElementById('latitude').value;
         var lngs = document.getElementById('longitude').value;
-
+        if(lats==''){
+            lats=latitude;
+        }
+        if(lngs==''){
+            lngs=longitude;
+        }
+        var infowindow = new google.maps.InfoWindow();
+        var geocoder = new google.maps.Geocoder();
         var myLatlng = new google.maps.LatLng(lats, lngs);
         var mapProp = {
             center: myLatlng,
@@ -1060,6 +1101,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             mapTypeId: google.maps.MapTypeId.ROADMAP
 
         };
+        //address
         var map = new google.maps.Map(document.getElementById("pick-address-map"), mapProp);
         var marker = new google.maps.Marker({
             position: myLatlng,
@@ -1067,15 +1109,33 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             draggable: true
         });
         // marker drag event
-        google.maps.event.addListener(marker, 'drag', function(event) {
-            document.getElementById('latitude').value = event.latLng.lat();
-            document.getElementById('longitude').value = event.latLng.lng();
+        google.maps.event.addListener(marker, 'dragend', function() {
+            geocoder.geocode({
+            'latLng': marker.getPosition()
+            }, function(results, status) {
+
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                        document.getElementById('latitude').value = marker.getPosition().lat();
+                        document.getElementById('longitude').value = marker.getPosition().lng();
+                        document.getElementById('address').value= results[0].formatted_address;
+
+                    infowindow.setContent(results[0].formatted_address);
+
+                    infowindow.open(map, marker);
+                }
+            }
+            });
         });
-        //marker drag event end
-        google.maps.event.addListener(marker, 'dragend', function(event) {
-            document.getElementById('latitude').value = event.latLng.lat();
-            document.getElementById('longitude').value = event.latLng.lng();
-        });
+        // google.maps.event.addListener(marker, 'drag', function(event) {
+        //     document.getElementById('latitude').value = event.latLng.lat();
+        //     document.getElementById('longitude').value = event.latLng.lng();
+        // });
+        // //marker drag event end
+        // google.maps.event.addListener(marker, 'dragend', function(event) {
+        //     document.getElementById('latitude').value = event.latLng.lat();
+        //     document.getElementById('longitude').value = event.latLng.lng();
+        // });
         $('#pick_address').modal('show');
     });
 

@@ -10,16 +10,28 @@
     </nav>
 </div>
 <div class="col-md-8 col-lg-6">
+    <div class="row ">
+        @if(isset($tags) && !empty($tags))
+            @foreach ($tags as $key =>$tag)
+                <label class="label-switch switch-primary product_tag_filter mr-2">
+                    <input type="checkbox" class="switch switch-bootstrap product_tag_filter status" {{($tag_id ?? false) ? ( in_array($tag->id, $tag_id) ? 'checked' : '' ) : '' }} name="tag_id" id="product_tag_filter_{{$key}}" data-tag_id="{{$tag->id}}"" value="{{$tag->id}}" >
+                    <span class="lable"> @if(isset($tag->icon) && !empty($tag->icon)) <img class="ml-1" src="{{ $tag->icon['proxy_url'].'100/100'.$tag->icon['image_path'] }}" alt="">@endif <span class="ml-1">{{$tag->primary ? $tag->primary->name : ''}}</span></span>
+                </label>
+            @endforeach
+        @endif
+    </div>
     @forelse($listData as $key => $data)
     <section class="scrolling_section" id="{{$data->category->slug}}">
-        <h2 class="category-head mt-0 mb-3">{{$data->category->translation_one->name}} ({{$data->products_count}})</h2>
+        <h2 class="category-head mt-0 mb-3">{{$data->category->translation_title}} ({{$data->products_count}})</h2>
         @if(!empty($data->products))
             @forelse($data->products as $prod)
             <div class="row cart-box-outer product_row classes_wrapper no-gutters mb-3" data-p_sku="{{ $prod->sku }}" data-slug="{{ $prod->url_slug }}">
                 <div class="col-2">
-                    <div class="class_img product_image">
-                        <img src="{{ $prod->product_image }}" alt="{{ $prod->translation_title }}">
-                    </div>
+                    <a  target="_blank" href="{{route('productDetail',$prod->url_slug)}}">
+                        <div class="class_img product_image">
+                            <img src="{{ $prod->product_image }}" alt="{{ $prod->translation_title }}">
+                        </div>
+                    </a>
                 </div>
                 <div class="col-10">
                     <div class="row price_head pl-3 pl-sm-2">
@@ -87,7 +99,7 @@
                                             data-vendor_id="{{$vendor_id}}"
                                             data-product_id="{{$product_id}}"
                                             data-addon="{{$isAddonExist}}"
-                                            href="javascript:void(0)">Add</a>
+                                            href="javascript:void(0)">{{__('Add')}}</a>
                                         <div class="number" id="show_plus_minus{{$cartProductId}}">
                                             <span class="minus qty-minus-product {{$productVariantInCartWithDifferentAddons ? 'remove-customize' : ''}}"
                                                 data-variant_id="{{$productVariantIdInCart}}"
@@ -122,7 +134,7 @@
                                             data-vendor_id="{{$data->vendor_id}}"
                                             data-product_id="{{$data->id}}"
                                             data-addon="{{$isAddonExist}}"
-                                            href="javascript:void(0)">Add</a>
+                                            href="javascript:void(0)">{{__('Add')}}</a>
                                         <div class="number" style="display:none;" id="ashow_plus_minus{{$data->id}}">
                                             <span class="minus qty-minus-product"
                                                 data-parent_div_id="show_plus_minus{{$data->id}}"
@@ -202,9 +214,25 @@
     @endforelse
 </div>
 @else
-<div class="col-12 col-lg-9 d-md-inline-block">
-    <h4 class="mt-3 mb-3 text-center">{{ __("No result found") }}</h4>
+<div class="col-sm-4 col-lg-3 border-right">
 </div>
+<div class="col-md-8 col-lg-6">
+    <div class="row ">
+        @if(isset($tags) && !empty($tags))
+            @foreach ($tags as $key =>$tag)
+                <label class="label-switch switch-primary product_tag_filter mr-2">
+                    <input type="checkbox" class="switch switch-bootstrap product_tag_filter status" {{($tag_id ?? false) ? ( in_array($tag->id, $tag_id) ? 'checked' : '' ) : '' }} name="tag_id" id="product_tag_filter_{{$key}}" data-tag_id="{{$tag->id}}"" value="{{$tag->id}}" >
+                    <span class="lable"> @if(isset($tag->icon) && !empty($tag->icon)) <img class="ml-1" src="{{ $tag->icon['proxy_url'].'100/100'.$tag->icon['image_path'] }}" alt="">@endif <span class="ml-1">{{$tag->primary ? $tag->primary->name : ''}}</span></span>
+                </label>
+            @endforeach
+        @endif
+    </div>
+    <hr>
+    <div class="col-12 d-md-inline-block">
+        <h4 class="mt-3 mb-3 text-center">{{ __("No result found") }}</h4>
+    </div>
+</div>
+
 @endif
 <div class="col-12 col-lg-3 d-lg-inline-block d-none">
     <div class="card-box p-0 cart-main-box">

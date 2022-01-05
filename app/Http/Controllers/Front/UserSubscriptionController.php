@@ -97,12 +97,16 @@ class UserSubscriptionController extends FrontController
         else{
             return response()->json(["status"=>"Error", "message" => __("Subscription plan not active")]);
         }
-        $code = array('stripe', 'yoco', 'paylink', 'razorpay','simplify','square');
+        $code = array('stripe', 'yoco', 'paylink', 'razorpay','simplify','square','ozow','pagarme');
         $ex_codes = array('cod');
         $payment_options = PaymentOption::select('id', 'code', 'title', 'credentials')->whereIn('code', $code)->where('status', 1)->get();
         foreach ($payment_options as $k => $payment_option) {
             if( (in_array($payment_option->code, $ex_codes)) || (!empty($payment_option->credentials)) ){
                 $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
+                if($payment_option->code == 'stripe'){
+                    $payment_option->title = 'Credit/Debit Card (Stripe)';
+                }
+                $payment_option->title = __($payment_option->title);
                 unset($payment_option->credentials);
             }
             else{

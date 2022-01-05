@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Requests\OrderProductRatingRequest;
-use App\Models\{Category,ClientPreference,ClientCurrency,Vendor,ProductVariantSet,Product,LoyaltyCard,UserAddress,Order,OrderVendor,OrderProduct,VendorOrderStatus,Client,Promocode,PromoCodeDetail,VendorOrderDispatcherStatus};
+use App\Models\{Category,ClientPreference,ClientCurrency,Vendor,ProductVariantSet,Product,LoyaltyCard,UserAddress,Order,OrderVendor,OrderProduct,VendorOrderStatus,Client,Promocode,PromoCodeDetail,VendorOrderDispatcherStatus, Payment};
 use App\Http\Traits\ApiResponser;
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Support\Facades\Validator;
@@ -25,7 +25,7 @@ class PickupDeliveryController extends BaseController{
 
     # get all vehicles category by vendor
 
-    public function productsByVendorInPickupDelivery(Request $request, $vid = 0){
+    public function productsByVendorInPickupDelivery(Request $request, $vid = 0, $cid = 0){
         try {
             if($vid == 0){
                 return response()->json(['error' => __('No record found.')], 404);
@@ -59,8 +59,11 @@ class PickupDeliveryController extends BaseController{
                                     ->where('vendor_id', $vid)->where('status', 0);
                     })
                     ->select('products.id', 'products.sku', 'products.requires_shipping', 'products.sell_when_out_of_stock', 'products.url_slug', 'products.weight_unit', 'products.weight', 'products.vendor_id', 'products.has_variant', 'products.has_inventory', 'products.Requires_last_mile', 'products.averageRating', 'pc.category_id','products.tags')
-                    ->where('products.vendor_id', $vid)
-                    ->where('products.is_live', 1)->distinct()->paginate($paginate); 
+                    ->where('products.vendor_id', $vid);
+                    if($cid > 0){
+                        $products = $products->where('products.category_id', $cid);
+                    }
+                    $products = $products->where('products.is_live', 1)->distinct()->paginate($paginate); 
                    
             if(!empty($products)){
                 foreach ($products as $key => $product) {
@@ -283,10 +286,12 @@ class PickupDeliveryController extends BaseController{
                     }
                 }
 
-                if($request->payment_option_id == 2)
-                $payment_option = 1;
-                else
-                $payment_option = 1;
+                if($request->payment_option_id == 2){
+                    $payment_option = 1;
+                }
+                else{
+                    $payment_option = $request->payment_option_id;
+                }
 
                 $order = new Order;
                 $order->user_id = $user->id;
@@ -417,7 +422,20 @@ class PickupDeliveryController extends BaseController{
                 $order->payable_amount = $delivery_fee + $payable_amount - $total_discount - $loyalty_amount_saved;
                 $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
                 $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
+                if (($request->has('transaction_id')) && (!empty($request->transaction_id))) {
+                    $order->payment_status = 1;
+                }
                 $order->save();
+
+                if (($request->payment_option_id != 1) && ($request->payment_option_id != 2) && ($request->has('transaction_id')) && (!empty($request->transaction_id))) {
+                    $payment = new Payment();
+                    $payment->date = date('Y-m-d');
+                    $payment->order_id = $order->id;
+                    $payment->transaction_id = $request->transaction_id;
+                    $payment->balance_transaction = $order->payable_amount;
+                    $payment->type = 'pickup/delivery';
+                    $payment->save();
+                }
             }
 
                         $data = [];
@@ -560,10 +578,7 @@ class PickupDeliveryController extends BaseController{
             $cart_products = Product::with(['variant' => function($q){
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                         }])->where('vendor_id', $request->vendor_id)->where('id', $request->product_id)->get();
-            //$total_minimum_spend = 0;
-            // foreach ($cart_products as $cart_product) {
-            //     $total_minimum_spend += $cart_product->variant->first() ? $cart_product->variant->first()->price * 1 : 0;
-            // }
+            
             $total_minimum_spend = $request->amount??0;
             if($product_ids){
                 $promo_code_details = PromoCodeDetail::whereIn('refrence_id', $product_ids->toArray())->pluck('promocode_id');
@@ -652,8 +667,13 @@ class PickupDeliveryController extends BaseController{
 
 
     public function getOrderTrackingDetails(Request $request){
-
-        $order = OrderVendor::where('order_id',$request->order_id)->with(['products.productRating.reviewFiles'])->select('*','dispatcher_status_option_id as dispatcher_status')->first()->toArray();
+        $user = Auth::user();
+        $langId = $user->language ?? 1;
+        $order = OrderVendor::where('order_id',$request->order_id)
+        ->with(['products.productRating.reviewFiles', 'products.product.category.categoryDetail.translation' => function($q) use($langId){
+            $q->where('category_translations.language_id', $langId);
+        }])
+        ->select('*','dispatcher_status_option_id as dispatcher_status')->first()->toArray();
         $response = Http::get($request->new_dispatch_traking_url);
         if($response->status() == 200){
            $response = $response->json();
@@ -717,6 +737,32 @@ class PickupDeliveryController extends BaseController{
             return $data;
         }
        
+    }
+
+
+
+
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function postPromoCodeListOpen(Request $request){
+        try {
+            $promo_codes = new \Illuminate\Database\Eloquent\Collection;
+           
+            $now = Carbon::now()->toDateTimeString();
+            $promo_code_details = PromoCodeDetail::pluck('promocode_id');
+                if($promo_code_details->count() > 0){
+                    $promo_codes = Promocode::whereIn('id', $promo_code_details->toArray())->whereDate('expiry_date', '>=', $now)->where('is_deleted', 0)->get();
+                    
+                }
+           
+            
+            return $this->successResponse($promo_codes, '', 200);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
     }
 
 }

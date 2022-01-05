@@ -68,6 +68,8 @@
                                 <div class="row  <%= ve ==0 ? 'mt-0' : 'mt-2'%>" id="single-order-div<%= k %><%= ve %>">
                                     <div class="col-12 order-hover-btn">
 
+
+
                                         <div id="update-single-status">
                                             <% if(vendor.order_status_option_id == 1) { %>
                                                 <button class="update-status btn-info" data-full_div="#full-order-div<%= k %>"  data-single_div="#single-order-div<%= k %><%= ve %>" data-count="<%= ve %>" data-order_id="<%= order.id %>"  data-vendor_id="<%= vendor.vendor_id %>"  data-status_option_id="2" data-order_vendor_id="<%= vendor.order_vendor_id %>">{{ __('Accept') }}</button>
@@ -110,7 +112,22 @@
                                                         <span class="badge badge-success ml-2">Scheduled</span>
                                                         <span class="ml-2"><%= order.scheduled_date_time %></span>
                                                     <% } %>
+
+
+                                                    <% if((vendor.delivery_fee > 0) || (order.scheduled_date_time)){ %>
+                                                        <% if(order.scheduled_date_time){ %>
+                                                               <span class="badge badge-success ml-2">Scheduled</span>
+                                                               <span class="ml-2">{{__('Your order will arrive by')}} <%= order.converted_scheduled_date_time %></span>
+                                                           <% } else { %>
+                                                               <span class="ml-2">{{__('Your order will arrive by')}} <%= vendor.ETA %></span>
+                                                           <% } %>
+                                                   <% } %>
+
                                                 </div>
+
+
+
+
                                             </div>
                                             <% } %>
                                             <span class="left_arrow pulse">
@@ -222,7 +239,7 @@
                                     <% } %>
                                     <li class="grand_total d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Payable') }} </label>
-                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice( (order.payable_amount - order.total_discount_calculate))%></span>
+                                        <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.payable_amount)%></span>
                                     </li>
                                 </ul>
                             </div>
@@ -337,8 +354,8 @@
                 @csrf
                 <div class="modal-body" id="AddRejectBox">
                     <p id="error-case" style="color:red;"></p>
-                    <label style="font-size:medium;">Enter reason for rejecting the order.</label>
-                    <textarea class="reject_reason" data-name="reject_reason" name="reject_reason" id="" cols="107" rows="10"></textarea>
+                    <label style="font-size:medium;">{{ __("Enter reason for rejecting the order.") }}</label>
+                    <textarea class="reject_reason w-100" data-name="reject_reason" name="reject_reason" id="" cols="107" rows="10"></textarea>
 
                 </div>
                 <div class="modal-footer">
@@ -580,51 +597,57 @@
             if (status_option_id == 3) {
                 return openRejectModal(order_id, vendor_id, status_option_id, order_vendor_id);
             } else {
-                if (confirm("{{__('Are you Sure?')}}")) {
-                    $.ajax({
-                        url: "{{ route('order.changeStatus') }}",
-                        type: "POST",
-                        data: {
-                            order_id: order_id,
-                            vendor_id: vendor_id,
-                            "_token": "{{ csrf_token() }}",
-                            status_option_id: status_option_id,
-                            order_vendor_id: order_vendor_id,
-                        },
-                        success: function(response) {
+                Swal.fire({
+                  title: "{{__('Are you Sure?')}}",
+                  icon: 'info',
+                  showCancelButton: true,
+                  confirmButtonText: 'Ok',
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url: "{{ route('order.changeStatus') }}",
+                            type: "POST",
+                            data: {
+                                order_id: order_id,
+                                vendor_id: vendor_id,
+                                "_token": "{{ csrf_token() }}",
+                                status_option_id: status_option_id,
+                                order_vendor_id: order_vendor_id,
+                            },
+                            success: function(response) {
 
-                            if (status_option_id == 4 || status_option_id == 5) {
-                                if (status_option_id == 4){
-                                    if((luxury_option == 2) || (luxury_option == 3)){
-                                        var next_status = "{{ __('Order Prepared') }}";
+                                if (status_option_id == 4 || status_option_id == 5) {
+                                    if (status_option_id == 4){
+                                        if((luxury_option == 2) || (luxury_option == 3)){
+                                            var next_status = "{{ __('Order Prepared') }}";
+                                        }else{
+                                            var next_status = "{{ __('Out For Delivery') }}";
+                                        }
                                     }else{
-                                        var next_status = "{{ __('Out For Delivery') }}";
+                                        var next_status = "{{ __('Delivered') }}";
                                     }
-                                }else{
-                                    var next_status = "{{ __('Delivered') }}";
-                                }
-                                that.replaceWith("<button class='update-status btn-warning' data-full_div='" + full_div + "' data-single_div='" + single_div + "'  data-count='" + count + "'  data-order_id='" + order_id + "'  data-vendor_id='" + vendor_id + "'  data-status_option_id='" + status_option_id_next + "' data-order_vendor_id=" + order_vendor_id + ">" + next_status + "</button>");
-                                return false;
-                            } else {
-
-                                if (count == 0) {
-                                    $(full_div).slideUp(1000, function() {
-                                        $(this).remove();
-                                    });
-
+                                    that.replaceWith("<button class='update-status btn-warning' data-full_div='" + full_div + "' data-single_div='" + single_div + "'  data-count='" + count + "'  data-order_id='" + order_id + "'  data-vendor_id='" + vendor_id + "'  data-status_option_id='" + status_option_id_next + "' data-order_vendor_id=" + order_vendor_id + ">" + next_status + "</button>");
+                                    return false;
                                 } else {
-                                    $(single_div).slideUp(1000, function() {
-                                        $(this).remove();
-                                    });
 
+                                    if (count == 0) {
+                                        $(full_div).slideUp(1000, function() {
+                                            $(this).remove();
+                                        });
+
+                                    } else {
+                                        $(single_div).slideUp(1000, function() {
+                                            $(this).remove();
+                                        });
+
+                                    }
                                 }
-                            }
-                            if (status_option_id == 2)
-                                $.NotificationApp.send('{{__("Success")}}', response.message, "top-right", "#5ba035", "success");
-                            // location.reload();
-                        },
-                    });
-                }
+                                if (status_option_id == 2)
+                                    $.NotificationApp.send('{{__("Success")}}', response.message, "top-right", "#5ba035", "success");
+                            },
+                        });
+                    }
+                });
             }
         });
     });

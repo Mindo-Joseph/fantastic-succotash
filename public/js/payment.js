@@ -493,6 +493,7 @@ $(document).ready(function() {
         let tipElement = $("#cart_tip_amount");
         let cartElement = $("input[name='cart_total_payable_amount']");
         let cart_id = $("#cart_total_payable_amount").data("cart_id");
+        let cabElement = $("#pickup_now");
 
         let walletElement = $("input[name='wallet_amount']");
         let ajaxData = {};
@@ -501,8 +502,12 @@ $(document).ready(function() {
             tip = tipElement.val();
             ajaxData.tip = tip;
             ajaxData.address_id = address_id;
-            ajaxData.payment_form = 'cart';
+            ajaxData.payment_from = 'cart';
             ajaxData.cart_id = cart_id;
+            ajaxData.order_number = order.order_number;
+        } else if (cabElement.length > 0) {
+            total_amount = cabElement.data('amount');
+            ajaxData.payment_from = 'pickup_delivery';
             ajaxData.order_number = order.order_number;
         } else if (walletElement.length > 0) {
             total_amount = walletElement.val();
@@ -519,12 +524,13 @@ $(document).ready(function() {
             // );
         }
         ajaxData.amount = total_amount;
-        ajaxData.payment_from = 'cart';
+        // ajaxData.payment_from = 'cart';
         ajaxData.returnUrl = path;
         ajaxData.cancelUrl = path;
         $.ajax({
             type: "POST",
             dataType: 'json',
+            async: false,
             url: payment_razorpay_url,
             data: ajaxData,
             success: function(response) {
@@ -534,7 +540,7 @@ $(document).ready(function() {
                     razorpay_options.order_id = response.data.order_id;
                     razorpay_options.currency = response.data.currency;
                     $('#proceed_to_pay_modal').modal('hide');
-                    razourPayView(response.data);
+                    razourPayView(response.data, order);
                     // window.location.href = response.data;
                 } else {
                     if (cartElement.length > 0) {
@@ -559,17 +565,22 @@ $(document).ready(function() {
         });
     }
 
-    window.razourPayCompletePayment = function razourPayCompletePayment(data, response) {
+    window.razorPayCompletePayment = function razorPayCompletePayment(data, response, order='') {
         data.razorpay_payment_id = response.razorpay_payment_id;
         $.ajax({
             type: "POST",
             dataType: 'json',
+            async: false,
             url: razorpay_complete_payment_url,
             data: data,
             success: function(response) {
-                console.log(response);
+                // console.log(response);
                 if (response.status == "Success") {
-                    window.location.href = response.data;
+                    if(data.payment_from == 'pickup_delivery'){
+                        window.location.replace(order.route);
+                    }else{
+                        window.location.href = response.data;
+                    }
                 } else {
                    
                 }
@@ -580,10 +591,10 @@ $(document).ready(function() {
         });
     }
      // RazourPay payment gateway
-    window.razourPayView = function razourPayView(data) {
+    window.razourPayView = function razourPayView(data, order='') {
         razorpay_options.handler = function (response){
             startLoader('body','We are processing your transaction...');
-            razourPayCompletePayment(data,response);
+            razorPayCompletePayment(data,response, order);
             // alert(response.razorpay_payment_id);
             // alert(response.razorpay_order_id);
             // alert(response.razorpay_signature);
@@ -603,45 +614,44 @@ $(document).ready(function() {
      // RazourPay payment gateway
 
 /////////////////////////////////////////////GCash payment Gateway Integration/////////////
-    window.paymentViaGCash = function paymentViaGCash(address_id,payment_option_id){
-        let walletElement = $("input[name='wallet_amount']");
-        let subscriptionElement = $("input[name='subscription_amount']");
+    window.paymentViaGCash = function paymentViaGCash(address_id,order){
         let total_amount = 0;
+        let tip = 0;
+        let tipElement = $("#cart_tip_amount");
+        let cartElement = $("input[name='cart_total_payable_amount']");
+        let cart_id = $("#cart_total_payable_amount").data("cart_id");
+        let subscriptionElement = $("input[name='subscription_amount']");
+        let subscription_id = $("input[name='subscription_id']");
+        let walletElement = $("input[name='wallet_amount']");
         let ajaxData = [];
-        if (path.indexOf("wallet") !== -1) {
+        let data = [];
+        
+        if (path.indexOf("cart") !== -1) {
+            total_amount = cartElement.val();
+            tip = tipElement.val();
+            data.tip = tip;
+            data.address_id = address_id;
+            data.payment_from = 'cart';
+            data.cart_id = cart_id;
+            data.order_number = order.order_number;
+
+        } else if (path.indexOf("wallet") !== -1) {
             total_amount = walletElement.val();
-            ajaxData.push({name: 'payment_from', value: 'wallet'});
+            data.payment_from ='wallet';
         } else if (path.indexOf("subscription") !== -1) {
             total_amount = subscriptionElement.val();
-            ajaxData = $("#subscription_payment_form").serializeArray();
-            ajaxData.push({name: 'payment_from', value: 'subscription'});
+            // ajaxData = $("#subscription_payment_form").serializeArray();
+            data.subscription_id = subscription_id.val();
+            data.payment_from ='subscription';
         } else if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
             total_amount = walletElement.val();
-            ajaxData.push( 
-                {name: 'payment_from', value: 'tip'},
-                {name: 'order_number', value: $("#order_number").val()}
-            );
+            data.payment_from ='tip';
+            data.order_number = $("#order_number").val();
         }
-        ajaxData.push(
-            {name: 'amount', value: total_amount}, 
-            {name: 'returnSuccessUrl', value: path},
-            {name: 'returnFailureUrl', value: path}
-        );
-        ajaxData.push({ name: 'payment_option_id', value: payment_option_id });
-        console.log(ajaxData);
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            url: gcash_before_payment,
-            data: ajaxData, 
-            success: function(response) {
-                if (response.status == "Success") {
-                    console.log(response);
-                    window.location.href = response.data.data.checkouturl;
-                }
-            }
-        });
-
+        data.amount = total_amount;
+        data.payment_option_id =11;
+        data._token = $('input[name=_token]').val(); 
+        $.redirect(gcash_before_payment, data);
     }
 
 //////////////////////////////////////Simplify Payment Gateway////////////////////////////////////
@@ -726,8 +736,90 @@ $(document).ready(function() {
         $.redirect(square_before_payment, data);
     }
 
+//////////////////////////Ozow Payment Gateway /////////////////////////////////////////
+    window.paymentViaOzow = function paymentViaOzow(address_id,order){
+        let total_amount = 0;
+        let tip = 0;
+        let tipElement = $("#cart_tip_amount");
+        let cartElement = $("input[name='cart_total_payable_amount']");
+        let cart_id = $("#cart_total_payable_amount").data("cart_id");
+        let subscriptionElement = $("input[name='subscription_amount']");
+        let subscription_id = $("input[name='subscription_id']");
+        let walletElement = $("input[name='wallet_amount']");
+        let ajaxData = [];
+        let data = [];
+        
+        if (path.indexOf("cart") !== -1) {
+            total_amount = cartElement.val();
+            tip = tipElement.val();
+            data.tip = tip;
+            data.address_id = address_id;
+            data.payment_from = 'cart';
+            data.cart_id = cart_id;
+            data.order_number = order.order_number;
+
+        } else if (path.indexOf("wallet") !== -1) {
+            total_amount = walletElement.val();
+            data.payment_from ='wallet';
+        } else if (path.indexOf("subscription") !== -1) {
+            total_amount = subscriptionElement.val();
+            // ajaxData = $("#subscription_payment_form").serializeArray();
+            data.subscription_id = subscription_id.val();
+            data.payment_from ='subscription';
+        } else if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
+            total_amount = walletElement.val();
+            data.payment_from ='tip';
+            data.order_number = $("#order_number").val();
+        }
+        data.amount = total_amount;
+        data.payment_option_id =14;
+        data._token = $('input[name=_token]').val(); 
+        $.redirect(ozow_before_payment, data);
+    }
+///////////////////////////Pagarme payment Gateway //////////////////////////////
+    window.paymentViaPagarme = function paymentViaPagarme(address_id,order){
+        let total_amount = 0;
+        let tip = 0;
+        let tipElement = $("#cart_tip_amount");
+        let cartElement = $("input[name='cart_total_payable_amount']");
+        let cart_id = $("#cart_total_payable_amount").data("cart_id");
+        let subscriptionElement = $("input[name='subscription_amount']");
+        let subscription_id = $("input[name='subscription_id']");
+        let walletElement = $("input[name='wallet_amount']");
+        let ajaxData = [];
+        let data = [];
+        
+        if (path.indexOf("cart") !== -1) {
+            total_amount = cartElement.val();
+            tip = tipElement.val();
+            data.tip = tip;
+            data.address_id = address_id;
+            data.payment_from = 'cart';
+            data.cart_id = cart_id;
+            data.order_number = order.order_number;
+
+        } else if (path.indexOf("wallet") !== -1) {
+            total_amount = walletElement.val();
+            data.payment_from ='wallet';
+        } else if (path.indexOf("subscription") !== -1) {
+            total_amount = subscriptionElement.val();
+            // ajaxData = $("#subscription_payment_form").serializeArray();
+            data.subscription_id = subscription_id.val();
+            data.payment_from ='subscription';
+        } else if ((tip_for_past_order != undefined) && (tip_for_past_order == 1)) {
+            total_amount = walletElement.val();
+            data.payment_from ='tip';
+            data.order_number = $("#order_number").val();
+        }
+        data.amount = total_amount;
+        data.payment_option_id =15;
+        data._token = $('input[name=_token]').val(); 
+        $.redirect(pagarme_before_payment, data);
+    }
+
 
 });
+
 
 
 

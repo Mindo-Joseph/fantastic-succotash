@@ -3,8 +3,10 @@
         <i class="fa fa-angle-double-up"></i>
     </div>
 </div>
+<div class="d-none" id ="nearmap">
+</div>
 
-@php 
+@php
     $mapKey = '1234';
     $theme = \App\Models\ClientPreference::where(['id' => 1])->first();
     if($theme && !empty($theme->map_key)){
@@ -15,7 +17,7 @@
     if(isset(Session::get('preferences')->theme_admin) && ucwords(session('preferences')->theme_admin) == 'Dark'){
         $darkMode = 'dark';
     }
-    
+
     \Session::forget('success');
 @endphp
 <script src="{{asset('front-assets/js/jquery-3.3.1.min.js')}}"></script>
@@ -36,7 +38,7 @@
     var home_page_url = "{{ route('indexTemplateOne') }}";
     else
     var home_page_url = "{{ route('userHome') }}";
-    
+
     var home_page_url_template_one = "{{ route('indexTemplateOne') }}";
     let home_page_url2 = home_page_url.concat("/");
     var add_to_whishlist_url = "{{ route('addWishlist') }}";
@@ -62,7 +64,7 @@
     var vendor_language = "{{ __('Vendors') }}";
     var brand_language = "{{ __('Brands') }}";
 /////GCash Payment Routes
-    var gcash_before_payment = "{{route('payment.gcash.beforePayment')}}"; 
+    var gcash_before_payment = "{{route('payment.gcash.beforePayment')}}";
 
 ///////////////Simplify Payment Routes
     var simplify_before_payment = "{{route('payment.simplify.beforePayment')}}";
@@ -71,6 +73,15 @@
 //////////////Square payment Routes
     var square_before_payment = "{{route('payment.square.beforePayment')}}";
     var square_create_payment = "{{route('payment.square.createPayment')}}";
+
+//////////////Ozow payment Routes
+    var ozow_before_payment = "{{route('payment.ozow.beforePayment')}}";
+    var ozow_create_payment = "{{route('payment.ozow.createPayment')}}";
+
+/////////////Pagarme Payment Routes
+    var pagarme_before_payment = "{{route('payment.pagarme.beforePayment')}}";
+    var pagarme_create_payment = "{{route('payment.pagarme.createPayment')}}";
+
 
 // Logged In User Detail
     var logged_in_user_name = "{{Auth::user()->name??''}}";
@@ -82,27 +93,50 @@
 
 // Client Perference  Detail
     var client_preference_web_color = "{{getClientPreferenceDetail()->web_color}}";
-    var client_preference_web_rgb_color = "{{getClientPreferenceDetail()->wb_color_rgb}}"; 
+    var client_preference_web_rgb_color = "{{getClientPreferenceDetail()->wb_color_rgb}}";
 
 // Client Detail
     var client_company_name = "{{getClientDetail()->company_name}}";
     var client_logo_url = "{{getClientDetail()->logo_image_url}}";
 
+// is restricted
+    var is_age_restricted ="{{$client_preference_detail->age_restriction}}";
+    //user lat long
 
+    var userLatitude = "{{ session()->has('latitude') ? session()->get('latitude') : 0 }}";
+    var userLongitude = "{{ session()->has('longitude') ? session()->get('longitude') : 0 }}";
+
+    if(!userLatitude){
+        @if(!empty($client_preference_detail->Default_latitude))
+        userLatitude = "{{$client_preference_detail->Default_latitude}}";
+        @endif
+    }
+    if(!userLatitude ){
+        userLatitude = "30.7333";
+    }
+
+    if(!userLongitude){
+        @if(!empty($client_preference_detail->Default_longitude))
+             userLongitude = "{{$client_preference_detail->Default_longitude}}";
+        @endif
+    }
+    if(!userLatitude ){
+        userLatitude = "76.7794";
+    }
     // if((home_page_url != window.location.href) && (home_page_url2 != window.location.href)){
     //     $('.vendor_mods').hide();}
     // else{
     //     $('.vendor_mods').show();}
-        
+
     @if(Session::has('selectedAddress'))
         selected_address = 1;
     @endif
     // @if( Session::has('preferences') )
-    //     @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) ) 
+    //     @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
     //         is_hyperlocal = 1;
     //     @endif;
     // @endif;
-    
+
     @if($client_preference_detail->is_hyperlocal == 1)
         is_hyperlocal = 1;
         var defaultLatitude = "{{$client_preference_detail->Default_latitude}}";
@@ -117,10 +151,27 @@
         return x;
         }
     };
+    @php
+        $mapurl = "https://maps.googleapis.com/maps/api/js?key=".$mapKey."&v=3.exp&libraries=places,drawing";
+    @endphp
 
 </script>
+
+
 <script src="{{asset('assets/js/constants.js')}}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{$mapKey}}&v=3.exp&libraries=places,drawing"></script>
+<script src="{{$mapurl}}"></script>
+
+<script>
+      var bindLatlng = new google.maps.LatLng(userLatitude, userLongitude);
+      var bindmapProp = {
+            center:bindLatlng,
+            zoom:13,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+
+        };
+    var bindMap=new google.maps.Map(document.getElementById("nearmap"), bindmapProp);
+</script>
+
 <script src="{{asset('front-assets/js/popper.min.js')}}"></script>
 <script src="{{asset('front-assets/js/slick.js')}}"></script>
 <script src="{{asset('front-assets/js/menu.js')}}"></script>
@@ -136,9 +187,15 @@
 <script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
 <script src="{{asset('assets/libs/clockpicker/clockpicker.min.js')}}"></script>
 
+
+
+@if(in_array('razorpay',$client_payment_options))
 <!-- RazourPay Payment Gateway -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <!-- RazourPay Payment Gateway -->
+@endif
+
+
 
 <!--WaitMe Loader Script -->
 <script src="{{asset('js/waitMe.min.js')}}"></script>
@@ -191,7 +248,7 @@
             console.log(`Token Error :: ${err}`);
         });
     }
-    
+
     @if(empty(Session::get('current_fcm_token')))
     initFirebaseMessagingRegistration();
     @endif

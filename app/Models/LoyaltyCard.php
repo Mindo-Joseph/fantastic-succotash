@@ -31,14 +31,15 @@ class LoyaltyCard extends Model
       if(!empty($value)){
         $img = $value;
       }
+      $ex = checkImageExtension($img);
       $values['proxy_url'] = \Config::get('app.IMG_URL1');
-      $values['image_path'] = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url($img);
+      $values['image_path'] = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url($img).$ex;
       $values['image_fit'] = \Config::get('app.FIT_URl');
       return $values;
     }
 
     public static function getLoyaltyName($minimum_points){
-    	
+
     	$result = LoyaltyCard::where('minimum_points','<=', $minimum_points)->orderBy('id', 'DESC')->first();
         if($result){
             return $result->name;

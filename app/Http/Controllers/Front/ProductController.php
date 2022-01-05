@@ -107,7 +107,7 @@ class ProductController extends FrontController{
                 $query->where('user_wishlists.user_id', $user->id);
             });
         }
-        $product = $product->with('related')->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating','sell_when_out_of_stock' )
+        $product = $product->with('related')->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating','sell_when_out_of_stock','minimum_order_count','batch_count' )
             ->where('url_slug', $url_slug)
             ->where('is_live', 1)
             ->firstOrFail();
@@ -328,7 +328,8 @@ class ProductController extends FrontController{
                 ->whereIn('id', $pv_ids)->get();
             if ($variantData) {
                 foreach($variantData as $variant){
-                    $variant->productPrice = Session::get('currencySymbol') . number_format(($variant->price * $clientCurrency->doller_compare), 2, '.', '');
+                    $variant->productPrice =  number_format(($variant->price * $clientCurrency->doller_compare), 2, '.', '');
+                    // $variant->productPrice = Session::get('currencySymbol') . number_format(($variant->price * $clientCurrency->doller_compare), 2, '.', '');
                     // $sets[] = $availableSet->toArray();
                     // foreach($availableSet->groupBy('product_variant_id') as $avSets){
                     //     $variant_type_id = array();
@@ -351,7 +352,7 @@ class ProductController extends FrontController{
                     }
                     if(empty($image_path)){
                         $image_fit = \Config::get('app.FIT_URl');
-                        $image_path = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png');
+                        $image_path = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png').'@webp';
                     }
                     $variantData['image_fit'] = $image_fit;
                     $variantData['image_path'] = $image_path;
@@ -370,6 +371,7 @@ class ProductController extends FrontController{
                 }
                 return response()->json(array('status' => 'Success', 'variant' => $variantData, 'availableSets' => $availableSets->variantSet));
             }
+
         }
         return response()->json(array('status' => 'Error', 'message' => 'This option is currenty not available', 'availableSets' => $availableSets->variantSet));
     }

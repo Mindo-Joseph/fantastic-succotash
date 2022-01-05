@@ -3,6 +3,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use App\Models\Nomenclature;
 use App\Models\UserRefferal;
+use App\Models\ProductVariant;
 use App\Models\ClientPreference;
 use App\Models\Client as ClientData;
 use App\Models\PaymentOption;
@@ -15,6 +16,7 @@ function pr($var) {
   	echo '<pre>';
 	print_r($var);
   	echo '</pre>';
+    exit();
 }
 function http_check($url) {
     $return = $url;
@@ -147,4 +149,58 @@ function dateTimeInUserTimeZone($date, $timezone, $showDate=true, $showTime=true
 
 function helper_number_formet($number){
     return number_format($number,2);
+}
+function productvariantQuantity($variantId ,$type=1){
+    if($type==1){
+        $ProductVariant =  ProductVariant::where('id',$variantId)
+        ->select('quantity')->first();
+    }else{
+        $ProductVariant =  ProductVariant::where('sku',$variantId)
+        ->select('quantity')->first();
+    }
+    if($ProductVariant){
+    return  $ProductVariant->quantity;
+    }
+    return "variant not found";
+}
+function checkImageExtension($image)
+{
+    $ch =  substr($image, strpos($image, ".") + 1);
+    $ex = "@webp";
+    if($ch == 'svg')
+    {
+        $ex = "";
+    }
+    return $ex;
+}
+function getDefaultImagePath()
+{
+    $values = array();
+    $img = 'default/default_image.png';
+    $values['proxy_url'] = \Config::get('app.IMG_URL1');
+    $values['image_path'] = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url($img).'@webp';
+    $values['image_fit'] = \Config::get('app.FIT_URl');
+    return $values;
+}
+
+
+function getUserIP() {
+    $ipaddress = '';
+    if (isset($_SERVER['HTTP_CLIENT_IP']))
+        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+    else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    else if(isset($_SERVER['HTTP_X_FORWARDED']))
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+    else if(isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']))
+        $ipaddress = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
+    else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+    else if(isset($_SERVER['HTTP_FORWARDED']))
+        $ipaddress = $_SERVER['HTTP_FORWARDED'];
+    else if(isset($_SERVER['REMOTE_ADDR']))
+        $ipaddress = $_SERVER['REMOTE_ADDR'];
+    else
+        $ipaddress = 'UNKNOWN';
+    return $ipaddress;
 }

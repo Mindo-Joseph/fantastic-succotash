@@ -25,8 +25,8 @@
                         <button class="btn btn-info add_cms_page" data-toggle="modal">
                             <i class="mdi mdi-plus-circle"></i> {{ __("Add") }}
                         </button>
-                    </div> 
-                   <div class="table-responsive pages-list-data">
+                    </div>
+                   {{-- <div class="table-responsive pages-list-data">
                         <table class="table table-striped w-100">
                             <thead>
                                 <tr>
@@ -55,8 +55,30 @@
                                 @endforelse
                             </tbody>
                         </table>
+                   </div> --}}
+                   <div class="custom-dd-empty dd home-options-list" id="pickup_page_datatable">
+                    <ol class="dd-list p-0" id="page_ol" >
+                        @forelse($pages as $page)
+                        <li class="dd-item dd3-item d-flex align-items-center page-detail on_click{{$page->slug}}" data-id="1" data-row-id="{{$page->id}}" data-page_id="{{$page->id}}" data-show_url="{{route('cms.page.show', ['id'=> $page->id])}}" data-active_url="{{route('extrapage',['slug' => $page->slug])}}">
+                            <a herf="#" class="dd-handle dd3-handle d-block mr-auto" id="text_body_{{$page->id}}">
+                                {{$page->primary ? $page->primary->title : ''}}
+
+                                <a href="{{route('extrapage',['slug' => $page->slug])}}" target="_BLANK">
+                                    <i class="mdi mdi-eye"></i>
+                                </a>
+                                @if(!in_array($page->id, [1,2,3]))
+                                    <a class="text-body delete-page" href="javascript:void(0)" data-page_id="{{$page->id}}">
+                                        <i class="mdi mdi-delete"></i>
+                                    </a>
+                                @endif
+                            </a>
+
+                        </li>
+                        @empty
+                                @endforelse
+                    </ol>
                    </div>
-                </div>            
+                </div>
             </div>
         </div>
         <div class="col-lg-7 col-xl-6 mb-2 cms-content">
@@ -69,7 +91,7 @@
                             </h4>
                         </div>
                     </div>
-                    <div class="row align-items-center"> 
+                    <div class="row align-items-center">
                         <div class="col-lg-6 mb-2">
                             <!-- <label for="title" class="control-label">{{ __("Title") }}</label> -->
                             <!-- <input class="form-control" id="edit_title" name="meta_title" type="text"> -->
@@ -80,11 +102,10 @@
                                     <img src="{{ asset('assets/icons/domain_copy_icon.svg')}}" alt="">
                                     <span class="copied_txt" id="show_copy_msg_on_click_copy" style="display:none;">Copied</span>
                                 </label>
-                                @endif   
-                               
+                                @endif
                             </div>
                             <span class="text-danger error-text updatetitleError"></span>
-                        </div>                       
+                        </div>
                         <div class="col-md-4 col-xl-2 mb-2">
                             <div class="form-group mb-0">
                                 <select class="form-control" id="client_language">
@@ -114,60 +135,99 @@
                                 <div class="col-6 mb-2">
                                     <label for="title" class="control-label">{{ __("Attach Form") }}</label>
                                     <select class="form-control" name="type_of_form" id="type_of_form">
-                                        <option value="0">None</option>
-                                        <option value="1">Vendor Registration</option>
-                                        <option value="2">Driver Registration</option>
+                                        <option value="0">{{__("None")}}</option>
+                                        <option value="1">{{__("Vendor Registration")}}</option>
+                                        <option value="2">{{__("Driver Registration")}}</option>
+                                        <option value="3">{{__("Faq's")}}</option>
                                     </select>
-                                </div>                               
-                            </div>         
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <input type="hidden" id="page_id" value="">
                         <div class="col-lg-6">
-                            <div class="row">                               
+                            <div class="row">
                                 <div class="col-12 mb-2">
                                     <label for="title" class="control-label">{{ __("Meta Keyword") }}</label>
                                     <textarea class="form-control m-0" id="edit_meta_keyword" rows="1" name="meta_keyword" cols="10"></textarea>
                                 </div>
-                            </div>         
+                            </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="row">
                                 <div class="col-12 mb-2">
                                     <label for="title" class="control-label">{{ __("Meta Description") }}</label>
                                     <textarea class="form-control m-0" id="edit_meta_description" rows="1" name="meta_description" cols="10"></textarea>
-                                </div>                               
-                            </div>         
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 mb-2">
                             <label for="title" class="control-label mb-0">{{ __("Description") }}</label>
                             <textarea class="form-control" id="edit_description" rows="9" name="meta_description" cols="100"></textarea>
                             <span class="text-danger error-text updatedescrpitionError"></span>
                         </div>
+                        <div class="col-md-12 d-none" id="faqSection">
+                            <div class="card">
+                                <div class="card-body p-3">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h4>{{ __("Faq's") }}</h4>
+
+                                    </div>
+                                    <div class="faq_section" id ="faq_show_section"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>            
+                </div>
             </div>
-        </div>         
+        </div>
     </div>
 </div>
+<script type="text/template" id="faq_template">
+    <div class ="option_section" id ="option_section_<%= id %>" data-section_number="<%= id %>">
+        <div class="form-group">
+            <label for="option_title_<%= id %>">{{__('Question')}}</label>
+            <input type="hidden" name="question_id[]"  id="option_id<%= id %>" data-id ="<%= id %>" value ="<%= data?data.id:'' %>">
+
+            <input type="text" name="question[]" class="form-control option_title" requrid id="question<%= id %>" placeholder="{{__('Enter question')}}" data-id ="<%= id %>" value ="<%= data?data.question:'' %>">
+        </div>
+        <div class="form-group">
+            <label for="answer<%= id %>">{{__('Answer')}}</label>
+            <input type="text" name="answer[]" class="form-control answer" requrid id="answer<%= id %>" placeholder="{{__('Enter Answer')}}" data-id ="<%= id %>" value ="<%= data?data.answer:'' %>">
+        </div>
+        <button type="button" class="btn btn-primary add_more_button mb-3" id ="add_button_<%= id %>" data-id ="<%= id %>" style=" margin-top: 17px;"> + {{__('Add Question')}}</button>
+        <% if(id > 1) { %>
+        <button type="button" class="btn btn-danger remove_more_button mb-3" id ="remove_button_<%= id %>" data-id ="<%= id %>" style=" margin-top: 17px;"> - {{__('Remove Question')}}</button>
+        <% } %>
+    </div>
+    </script>
 <script src="{{ asset('assets/ck_editor/ckeditor.js')}}"></script>
 <script src="{{ asset('assets/ck_editor/samples/js/sample.js')}}"></script>
+<script src="{{ asset('front-assets/js/underscore.min.js')}}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+
+
          $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('input[name="_token"]').val()
             }
         });
-        setTimeout(function(){ 
+
+        setTimeout(function(){
+            $('li.page-detail:first').trigger('click');
+        }, 500);
+        setTimeout(function(){
             $('tr.page-title:first').trigger('click');
         }, 500);
         $(document).on("change","#client_language",function() {
             let page_id = $('#edit_page_content #page_id').val();
             $('#text_body_'+page_id).trigger('click');
         });
+
         $(document).on("click",".page-detail",function() {
+            var section_id = 0
             // $('#edit_page_content #edit_description').val('');
             // $('#edit_page_content #edit_description').summernote('destroy');
             let url = $(this).data('show_url');
@@ -181,6 +241,28 @@
                 if(response.data){
                     $('#edit_page_content #page_id').val(response.data.id);
                     if(response.data.translation){
+                        if(response.data.translation.type_of_form==3){
+                            console.log("language change");
+                            $('.option_section').remove();
+                            $("#faqSection").removeClass("d-none");
+
+                            var faqs = response.data.faqs;
+                            var faq_section_temp    = $('#faq_template').html();
+                            var modified_temp         = _.template(faq_section_temp);
+                            var section_id = 0
+                            $(faqs).each(function(index, value) {
+                                section_id                = parseInt(section_id);
+                                section_id                = section_id +1;
+                                $('#faq_show_section').append(modified_temp({ id:section_id,data:value}));
+                                $('.add_more_button').hide();
+                                $('#add_button_'+section_id).show();
+
+                            });
+                            addFaqSectionTemplate(section_id);
+                        }else{
+                            $('.option_section').remove();
+                            $("#faqSection").addClass("d-none");
+                        }
                         $('#edit_page_content #edit_title').val(response.data.translation.title);
                         $("#edit_page_content #published").val(response.data.translation.is_published);
                         $('#edit_page_content #edit_meta_title').val(response.data.translation.meta_title);
@@ -191,7 +273,18 @@
                         $('#edit_page_content #edit_meta_description').val(response.data.translation.meta_description);
                         $("#update_page_btn").html('Update');
                         // $('#edit_page_content #edit_description').summernote({'height':450});
+
                     }else{
+                      $('.option_section').remove();
+                      var selectedid = $('#type_of_form').val();
+                        if(selectedid==3){
+                            $("#faqSection").removeClass("d-none");
+                            var classoption_section = $('#faqSection').find('.option_section');
+
+                            if(classoption_section.length==0){
+                                addFaqSectionTemplate(0);
+                            }
+                        }
                       $(':input:text').val('');
                       $('textarea').val('');
                     }
@@ -214,26 +307,37 @@
             CKEDITOR.instances.edit_description.setData("");
             $('#edit_page_content #edit_meta_keyword').val('');
             $('#edit_page_content #edit_meta_description').val('');
-        });  
+            $("#faqSection").addClass("d-none");
+            $('.option_section').remove();
+
+        });
         $(document).on("click",".delete-page",function() {
             var page_id = $(this).data('page_id');
             let destroy_url = "{{route('cms.page.delete')}}";
-            if (confirm('Are you sure?')) {
-                $.ajax({
-                    type: "POST",
-                    dataType: 'json',
-                    url: destroy_url,
-                    data: {page_id: page_id},
-                    success: function(response) {
-                        if (response.status == "Success") {
-                            $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                            setTimeout(function() {
-                                location.reload()
-                            }, 2000);
+            Swal.fire({
+                title: "{{__('Are you Sure?')}}",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Ok',
+            }).then((result) => {
+                if(result.value)
+                {
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        url: destroy_url,
+                        data: {page_id: page_id},
+                        success: function(response) {
+                            if (response.status == "Success") {
+                                $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                                setTimeout(function() {
+                                    location.reload()
+                                }, 2000);
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
         $(document).on("click","#update_page_btn",function() {
             var update_url = "{{route('cms.page.update')}}";
@@ -249,8 +353,12 @@
             // let edit_description = $('#edit_page_content #edit_description').val();
             let edit_description = CKEDITOR.instances.edit_description.getData();
             let edit_meta_keyword = $('#edit_page_content #edit_meta_keyword').val();
+            let question = $("input[name='question[]']").map(function(){return $(this).val();}).get();
+            let answer = $("input[name='answer[]']").map(function(){return $(this).val();}).get();
+            let question_old_ids = $("input[name='question_id[]']").map(function(){return $(this).val();}).get();
+
             let edit_meta_description = $('#edit_page_content #edit_meta_description').val();
-            var data = { page_id: page_id, is_published: is_published, edit_title: edit_title,edit_meta_title:edit_meta_title, edit_description:edit_description, edit_meta_keyword:edit_meta_keyword, edit_meta_description:edit_meta_description,language_id:language_id,type_of_form:type_of_form};
+            var data = { page_id: page_id,question_old_ids:question_old_ids,answer: answer,question: question, is_published: is_published, edit_title: edit_title,edit_meta_title:edit_meta_title, edit_description:edit_description, edit_meta_keyword:edit_meta_keyword, edit_meta_description:edit_meta_description,language_id:language_id,type_of_form:type_of_form};
             $.post(update_url, data, function(response) {
               $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
               $('#text_body_'+response.data.id).html(response.data.title);
@@ -262,6 +370,85 @@
                 $('#edit_page_content .updatedescrpitionError').html(response.responseJSON.errors.edit_description[0]);
             });
         });
+        $("#pickup_page_datatable ol").sortable({
+        // placeholder: "ui-state-highlight",
+            update: function(event, ui) {
+                var post_order_ids = new Array();
+                $('#pickup_page_datatable li').each(function() {
+                    console.log($(this).data("row-id"));
+                    post_order_ids.push($(this).data("row-id"));
+                });
+                console.log(post_order_ids);
+                saveOrderPickup(post_order_ids);
+
+            }
+        });
+        function saveOrderPickup(orderVal) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('input[name="_token"]').val()
+                }
+            });
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "{{ url('client/cms/page/ordering') }}",
+                data: {
+                    order: orderVal
+                },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                    }
+                },
+            });
+        }
+        $(document).on('change','#type_of_form',function(){
+            var selectedid = $(this).val();
+            if(selectedid==3){
+                $("#faqSection").removeClass("d-none");
+                var classoption_section = $('#faqSection').find('.option_section');
+                console.log(classoption_section);
+                if(classoption_section.length==0){
+                    addFaqSectionTemplate(0);
+                }
+            }else{
+                $("#faqSection").addClass("d-none");
+            }
+
+        });
+        $(document).on('click','.add_more_button',function(){
+            var main_id = $(this).data('id');
+            addFaqSectionTemplate(main_id);
+            console.log($('.add_more_button').length);
+        });
+        // var section_id = $("#faqSection .option_section").last().data('section_number');
+        // console.log(section_id);
+        //addFaqSectionTemplate(section_id);
+        function addFaqSectionTemplate(section_id){
+            section_id                = parseInt(section_id);
+            section_id                = section_id +1;
+            var data                  = '';
+            //console.log(section_id);
+            var price_section_temp    = $('#faq_template').html();
+            var modified_temp         = _.template(price_section_temp);
+            var result_html           = modified_temp({id:section_id,data:data});
+            $("#faq_show_section").append(result_html);
+            $('.add_more_button').hide();
+            $('#add_button_'+section_id).show();
+        }
+        $(document).on('click','.remove_more_button',function(){
+            var main_id =$(this).data('id');
+            removeFaqSectionTemplate(main_id);
+            $('.add_more_button').each(function(key,value){
+                if(key == ($('.add_more_button').length-1)){
+                    $('#add_button_'+$(this).data('id')).show();
+                }
+            });
+        });
+        function removeFaqSectionTemplate(div_id){
+            $('#option_section_'+div_id).remove();
+        }
     });
 </script>
 <script>
