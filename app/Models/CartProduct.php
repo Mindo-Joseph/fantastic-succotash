@@ -30,6 +30,10 @@ class CartProduct extends Model{
         return $this->belongsTo('App\Models\Vendor', 'vendor_id', 'id')->select('id', 'name', 'desc', 'logo', 'banner', 'latitude', 'longitude', 'order_pre_time', 'auto_reject_time', 'order_min_amount', 'show_slot', 'dine_in', 'delivery', 'takeaway', 'service_fee_percent','address');
     }
 
+    public function slotCounts(){
+        return $this->hasMany('App\Models\VendorSlot', 'vendor_id', 'id');
+     }
+
     public function pvariant(){
     	return $this->belongsTo('App\Models\ProductVariant', 'variant_id', 'id')->select('id', 'sku', 'product_id', 'title', 'price', 'tax_category_id', 'barcode');
     }

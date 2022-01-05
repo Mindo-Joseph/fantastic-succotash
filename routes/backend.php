@@ -15,6 +15,7 @@ use App\Http\Controllers\Client\Accounting\LoyaltyController;
 use App\Http\Controllers\Client\Accounting\PromoCodeController;
 use App\Http\Controllers\Client\VendorRegistrationDocumentController;
 use App\Http\Controllers\Client\TagController;
+use App\Http\Controllers\Client\ClientSlotController;
 use App\Http\Controllers\Client\DriverRegistrationDocumentController;
 use App\Http\Controllers\Client\ProductFaqController;
 
@@ -142,6 +143,13 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::post('tag/create', [TagController::class, 'store'])->name('tag.create');
         Route::post('tag/update', [TagController::class, 'update'])->name('tag.update');
         Route::post('tag/delete', [TagController::class, 'destroy'])->name('tag.delete');
+
+        Route::resource('slot', 'Client\ClientSlotController');
+
+        Route::get('slot/edit', [ClientSlotController::class, 'show'])->name('slot.edit');
+        Route::post('slot/create', [ClientSlotController::class, 'store'])->name('slot.create');
+        Route::post('slot/update', [ClientSlotController::class, 'update'])->name('slot.update');
+        Route::post('slot/delete', [ClientSlotController::class, 'destroy'])->name('slot.delete');
 
 
         Route::resource('productfaq', 'Client\ProductFaqController');
