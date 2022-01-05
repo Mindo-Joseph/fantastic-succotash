@@ -98,6 +98,15 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </div>
                     </div>
                 <% } %>
+
+                <% if( (parseFloat(product.vendor.order_min_amount) > 0) &&  (product.product_sub_total_amount < parseFloat(product.vendor.order_min_amount)) ) { %>
+                    <div class="col-12">
+                        <div class="text-danger">
+                            <i class="fa fa-exclamation-circle"></i> {{__('We are not accepting orders less then ')}} {{Session::get('currencySymbol')}}<%= Helper.formatPrice(product.vendor.order_min_amount) %>
+                        </div>
+                    </div>
+                <% } %>
+
                 <% if( (product.isDeliverable != undefined) && (product.isDeliverable == 0) ) { %>
                     <div class="col-12">
                         <div class="text-danger">

@@ -100,12 +100,12 @@
                     </div>
                     @endif
 
-                    <!-- <div class="col-md-12">
+                     <div class="col-md-12">
                         <div class="form-group" id="order_min_amountInput">
                             {!! Form::label('title', 'Order Min Amount',['class' => 'control-label']) !!}
                             <input class="form-control" onkeypress="return isNumberKey(event)" name="order_min_amount" type="text" value="{{$vendor->order_min_amount}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
                         </div>
-                    </div> -->
+                    </div> 
                     <div class="col-12">
                         <button class="btn btn-info waves-effect waves-light w-100" {{$vendor->status == 1 ? '' : 'disabled'}}>{{ __("Save") }}</button>
                     </div>
