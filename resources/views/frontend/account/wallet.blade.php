@@ -283,6 +283,9 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
                     <strong></strong>
                 </span>
               </div>
+              <div class="form-group" id="user_profile">
+                
+              </div>
               <span class="error-msg pl-0" id="wallet_transfer_error_msg"></span>
               @endif
           </div>
@@ -300,6 +303,16 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
       </div>
     </div>
 </div>
+<script type="text/template" id="user_profile_template">
+    <% if(profile != '') { %>
+        <label>
+            <span class="update_pic">
+                <img class="rounded-circle" src="<%= profile.image['image_fit'] %>100/100<%= profile.image['image_path'] %>" alt="" width="40" height="40">
+            </span>
+            <span class="ml-1"><b><%= profile.name %></b></span>
+        </label>
+    <% } %>
+</script>
 <script type="text/template" id="payment_method_template">
     <% if(payment_options == '') { %>
         <h6>{{__('Payment Options Not Avaialable')}}</h6>
@@ -449,14 +462,19 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
                     if(response.status == 'Success'){
                         $("#wallet_transfer_userInput input").removeClass("is-invalid").addClass('valid');
                         $("#wallet_transfer_userInput span.invalid-feedback").children("strong").text('');
-                        $("#wallet_transfer_userInput span.valid-feedback").children("strong").text(response.message);
+                        // $("#wallet_transfer_userInput span.valid-feedback").children("strong").text(response.message);
                         $("#wallet_transfer_userInput span.invalid-feedback").hide();
-                        $("#wallet_transfer_userInput span.valid-feedback").show();
+                        // $("#wallet_transfer_userInput span.valid-feedback").show();
+
+                        $("#user_profile").html('');
+                        let user_profile_template = _.template($('#user_profile_template').html());
+                        $("#user_profile").append(user_profile_template({ profile: response.data}));
                     }
                 },
                 error: function(response) {
                     let error = response.responseJSON;
                     if (response.status === 422) {
+                        $("#user_profile").html('');
                         $("#wallet_transfer_userInput input").removeClass("valid").addClass("is-invalid");
                         $("#wallet_transfer_userInput span.invalid-feedback").children("strong").text(error.message);
                         $("#wallet_transfer_userInput span.invalid-feedback").show();
