@@ -846,6 +846,9 @@ class CartController extends BaseController
 
                 $order_sub_total = $order_sub_total + $vendor_products_total_amount;
 
+                if((float)($vendorData->vendor->order_min_amount) > $payable_amount){  # if any vendor total amount of order is less then minimum order amount
+                    $delivery_status = 0;
+                }
                 $promoCodeController = new PromoCodeController();
                 $promoCodeRequest = new Request();
                 $promoCodeRequest->setMethod('POST');
