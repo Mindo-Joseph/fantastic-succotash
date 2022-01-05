@@ -238,7 +238,7 @@
                                                                                         <span
                                                                                             class="badge badge-success ml-2">Scheduled</span>
                                                                                         <span
-                                                                                            class="ml-2">{{ (($order->scheduled_slot)?dateTimeInUserTimeZone($order->scheduled_date_time, $timezone,true,'').'. Slot: '.$order->scheduled_slot:dateTimeInUserTimeZone($order->scheduled_date_time, $timezone) ) }}</span>
+                                                                                            class="ml-2">{{ (($order->scheduled_slot)?dateTimeInUserTimeZone($order->scheduled_date_time, $timezone).'. Slot: '.$order->scheduled_slot:dateTimeInUserTimeZone($order->scheduled_date_time, $timezone) ) }}</span>
                                                                                     @elseif(!empty($vendor->ETA))
                                                                                         <span class="ml-2">{{__('Your
                                                                                             order will arrive by')}}

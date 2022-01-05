@@ -13,9 +13,11 @@ class AlterTableOrderAddScheduledSlot extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->string('scheduled_slot')->nullable();
-        });
+        if (!Schema::hasColumn('orders', 'scheduled_slot')) {
+            Schema::table('orders', function (Blueprint $table) {
+                $table->string('scheduled_slot')->nullable();
+            });
+         }
     }
 
     /**
