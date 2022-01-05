@@ -24,6 +24,10 @@ class Vendor extends Model{
       return $this->hasMany('App\Models\VendorSlot', 'vendor_id', 'id')->has('day')->where('start_time', '<', $current_time)->where('end_time', '>', $current_time);
     }
 
+    public function slots(){
+        return $this->hasMany('App\Models\VendorSlot', 'vendor_id', 'id');
+    }
+
     public function slotDate(){
       $client = Client::first();
       $mytime = Carbon::now()->setTimezone($client->timezone);

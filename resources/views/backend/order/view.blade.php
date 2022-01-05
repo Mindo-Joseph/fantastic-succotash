@@ -355,7 +355,7 @@ $timezone = Auth::user()->timezone;
 
 
                     <div class="card-body">
-                        <h4 class="header-title mb-3">{{ __('Comment/Schedule Information') }}</h4>
+                        <h4 class="header-title mb-3 text-danger">{{ __('Comment/Schedule Information') }}</h4>
                         @if($order->comment_for_pickup_driver)
                           <p class="mb-2"><span class="fw-semibold me-2">{{ __('Comment for Pickup Driver') }} :</span> {{ $order->comment_for_pickup_driver ?? ''}}</p>
                         @endif

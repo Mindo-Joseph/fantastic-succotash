@@ -405,6 +405,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div>
             </div>
             <hr class="my-2">
+
+            {{-- Schedual code Start at down --}}
+
+           
             <% if(client_preference_detail.off_scheduling_at_cart != 1) { %>
                 @if($client_preference_detail->business_type != 'laundry')
             <div class="row d-flex align-items-center arabic-lng no-gutters mt-2 mb-md-4 mb-2" id="dateredio">
@@ -424,7 +428,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-7 datenow align-items-center justify-content-between" id="schedule_div" style="<%= ((cart_details.schedule_type == 'now' || cart_details.schedule_type == '' || cart_details.schedule_type == null) ? 'display:none!important' : '') %>">
+                <div class="col-md-7 datenow d-flex align-items-center justify-content-between" id="schedule_div" style="<%= ((cart_details.schedule_type == 'now' || cart_details.schedule_type == '' || cart_details.schedule_type == null) ? 'display:none!important' : '') %>">
+                    <% if(cart_details.slotsCnt ==0) { %>
                     <% if(cart_details.delay_date != 0) { %>
                         <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%= ((cart_details.schedule_type == 'schedule') ? cart_details.scheduled_date_time : '') %>"
                         min="<%= ((cart_details.delay_date != '0') ? cart_details.delay_date : '') %>">
@@ -434,10 +439,25 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
                             <% } %>
 
+                            <% } else { %>
+
+                            <input type="date" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%=  cart_details.scheduled_date_time %>"
+                            min="{{$now}}">
+                        
+                            <select name="slots" id="slot" class="form-control">
+                                <option value="">{{__("Select Slot")}}  </option>
+                                <% _.each(cart_details.slots, function(slot, sl){%>
+                                <option value="<%= slot.start_time %> - <%= slot.end_time  %>"><%= slot.name %></option>
+                                <% }) %>
+                            </select> 
+                            <% } %>
+
                 </div>
             </div>
             @endif
-            <% } %>
+            <% } %> 
+
+            {{-- Schedual code end at down --}}
 
         </div>
     </div>
@@ -855,28 +875,28 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <span>Continue with Email</span>
                     </button> --}}
 
-                        @if(session('preferences'))
-                        @if(session('preferences')->fb_login == 1 || session('preferences')->twitter_login == 1 ||
-                        session('preferences')->google_login == 1 || session('preferences')->apple_login == 1)
-                        @if(session('preferences')->google_login == 1)
+                        @if(@session('preferences'))
+                        @if(@session('preferences')->fb_login == 1 || @session('preferences')->twitter_login == 1 ||
+                        @session('preferences')->google_login == 1 || @session('preferences')->apple_login == 1)
+                        @if(@session('preferences')->google_login == 1)
                         <a class="login-button" href="{{url('auth/google')}}">
                             <i class="fa fa-google" aria-hidden="true"></i>
                             <span>Continue with gmail</span>
                         </a>
                         @endif
-                        @if(session('preferences')->fb_login == 1)
+                        @if(@session('preferences')->fb_login == 1)
                         <a class="login-button" href="{{url('auth/facebook')}}">
                             <i class="fa fa-facebook" aria-hidden="true"></i>
                             <span>Continue with facebook</span>
                         </a>
                         @endif
-                        @if(session('preferences')->twitter_login)
+                        @if(@session('preferences')->twitter_login)
                         <a class="login-button" href="{{url('auth/twitter')}}">
                             <i class="fa fa-twitter" aria-hidden="true"></i>
                             <span>Continue with twitter</span>
                         </a>
                         @endif
-                        @if(session('preferences')->apple_login == 1)
+                        @if(@session('preferences')->apple_login == 1)
                         <a class="login-button" href="javascript::void(0);">
                             <i class="fa fa-apple" aria-hidden="true"></i>
                             <span>Continue with apple</span>
@@ -1059,6 +1079,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
     var payment_option_list_url = "{{route('payment.option.list')}}";
+    var update_cart_slot = "{{ route('updateCartSlot') }}";
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
     var update_cart_schedule = "{{route('cart.updateSchedule')}}";

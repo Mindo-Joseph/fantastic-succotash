@@ -12,7 +12,7 @@ use App\Http\Traits\{ApiResponser,CartManager};
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\PromoCodeController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation,ClientSlot};
 
 class CartController extends FrontController
 {
@@ -531,7 +531,7 @@ class CartController extends FrontController
         $delifproductnotexist = CartProduct::where('cart_id', $cart_id)->doesntHave('product')->delete();
  
         $cartData = CartProduct::with([
-            'vendor', 'vendor.slot.day', 'vendor.slotDate', 'coupon' => function ($qry) use ($cart_id) {
+            'vendor','vendor.slots','vendor.slot.day', 'vendor.slotDate', 'coupon' => function ($qry) use ($cart_id) {
                 $qry->where('cart_id', $cart_id);
             }, 'vendorProducts.pvariant.media.pimage.image', 'vendorProducts.product.media.image',
             'vendorProducts.pvariant.vset.variantDetail.trans' => function ($qry) use ($langId) {
@@ -931,6 +931,9 @@ class CartController extends FrontController
                     $cart->wallet_amount_used = number_format($wallet_amount_used, 2, '.', '');
                 }
             }
+            $slots = ClientSlot::get();
+            $cart->slots = $slots;
+            $cart->slotsCnt = $slots->count();
             $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');
             $cart->loyalty_amount = number_format($loyalty_amount_saved, 2, '.', '');
             $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount + $loyalty_amount_saved + $wallet_amount_used - $total_taxable_amount), 2, '.', '');
@@ -1410,4 +1413,11 @@ class CartController extends FrontController
             return response()->json(['status'=>'Success', 'otherVendorExists'=>0 , 'isSingleVendorEnabled'=>0]);
         }
     }
+
+
+    public function updateCartSlot(Request $request){
+        $checkVendorProd = CartProduct::where('vendor_id',$request->vid)->update(['schedule_type'=>$request->slot,'scheduled_date_time'=>$request->date]);
+            return true;
+        }
+
 }
