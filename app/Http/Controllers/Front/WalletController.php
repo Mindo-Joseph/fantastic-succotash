@@ -159,12 +159,14 @@ class WalletController extends FrontController
                 return $this->errorResponse(__('Insufficient funds in wallet'), 422);
             }
             
+            $transaction_reference = generateWalletTransactionReference();
+            
             $second_user = User::where(function($q) use($username){
                 $q->where('email', $username)->orWhereRaw("CONCAT(`dial_code`, `phone_number`) = ?", $username);
             })
             ->where('status', 1)->first();
             if($second_user){
-                $first_user->transfer($second_user, $transfer_amount, ['Wallet has been <b>Debited</b> by transfer']);
+                $first_user->transferFloat($second_user, $transfer_amount, ['Wallet has been <b>Debited</b> by transfer with reference <b>'.$transaction_reference.'</b>']);
                 $message = __('Amount has been transferred successfully');
                 Session::put('success', $message);
                 return $this->successResponse('', $message, 201);

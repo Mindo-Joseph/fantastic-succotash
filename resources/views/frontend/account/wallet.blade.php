@@ -61,6 +61,9 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
     .box-info table tr:first-child td {
         padding-top: .85rem;
     }
+    #wallet_transfer_error_msg{
+        display: none;
+    }
 </style>
 <section class="section-b-space">
     <div class="container">
@@ -272,7 +275,7 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
               </div>
               <div class="form-group" id="wallet_transfer_userInput">
                 <label for="wallet_transfer_user">{{__('Transfer to')}}</label>
-                <input class="form-control" name="wallet_transfer_user" id="wallet_transfer_user" type="text" placeholder="{{__('Enter Email or Phone Number')}}">
+                <input class="form-control" name="wallet_transfer_user" id="wallet_transfer_user" type="text" placeholder="{{__('Enter Email or Phone Number with Dial Code')}}">
                 <span class="invalid-feedback" role="alert">
                     <strong></strong>
                 </span>
@@ -280,7 +283,7 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
                     <strong></strong>
                 </span>
               </div>
-              <span class="error-msg mt-2"></span>
+              <span class="error-msg pl-0" id="wallet_transfer_error_msg"></span>
               @endif
           </div>
           <div class="modal-footer d-block text-center">
@@ -482,7 +485,12 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
         }
     });
 
+    $(document).on('focus', '#wallet_transfer_form input', function(){
+        $("#wallet_transfer_error_msg").text('').hide();
+    });
+
     $(document).on('click', '.transfer_wallet_confirm', function() {
+        var _that = $(this);
         var amount = $("#wallet_transfer_amount").val();
         var username = $("#wallet_transfer_user").val();
         if((amount != '') && (username != '')){
@@ -514,14 +522,14 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
                 },
                 success: function(response) {
                     if(response.status == 'Success'){
-                        $(this).find(".error-msg").text('');
+                        $("#wallet_transfer_error_msg").text('').hide();
                         window.location.reload();
                     }
                 },
                 error: function(response) {
                     let error = response.responseJSON;
                     if (response.status === 422) {
-                        $(this).find(".error-msg").text(error.message);
+                        $("#wallet_transfer_error_msg").text(error.message).show();
                     }
                 },
             });
