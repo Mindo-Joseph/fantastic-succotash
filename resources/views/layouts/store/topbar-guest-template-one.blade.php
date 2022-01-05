@@ -8,12 +8,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <div class="container">
         <div class="row align-items-center justify-content-center">
             <div class="col-6">
-                <div class="d-flex align-items-center justify-content-center justify-content-lg-start">    
-                    <a class="navbar-brand mr-0 mr-sm-3 d-block d-sm-none" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
+                <div class="d-flex align-items-center justify-content-start">
+                    <a class="navbar-brand mr-sm-3 d-block d-sm-none" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                     @if( (Session::get('preferences')))
                         @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
                             <div class="location-bar d-none d-sm-flex align-items-center justify-content-start my-2 my-lg-0 order-1" href="#edit-address" data-toggle="modal">
-                                <div class="map-icon mr-2"><span>{{__('Your Location')}}</span> <i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                <div class="map-icon mr-1"><span>{{__('Delivering To')}}</span> <i class="fa fa-map-marker" aria-hidden="true"></i></div>
                                 <div class="homepage-address text-left">
                                     <h2><span data-placement="top" data-toggle="tooltip" title="{{session('selectedAddress')}}">{{session('selectedAddress')}}</span></h2>
                                 </div>
@@ -33,11 +33,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 </div>
             </div>
             <div class="col-6 text-right d-sm-inline d-none">
-            @php  
+            @php
             $applocale = 'en';
             if(session()->has('applocale')){
                 $applocale = session()->get('applocale');
-            }            
+            }
             @endphp
                 <ul class="header-dropdown">
                     <li class="onhover-dropdown change-language">
@@ -111,14 +111,14 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         @endif
                     </div>
                 </li>
-                
+
                 <li class="onhover-dropdown mobile-account  d-inline d-sm-none"> <i class="fa fa-user" aria-hidden="true"></i>
                     {{__('My Account')}}
                     <ul class="onhover-show-div">
                         <li>
                             <a href="{{route('customer.login')}}" data-lng="en">{{__('Login')}}</a>
                         </li>
-                        
+
                     </ul>
                 </li>
                 @if($client_preference_detail->show_wishlist == 1)
@@ -149,7 +149,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </div>
                     </div>
                 </li>
-                
+
                 @if($client_preference_detail->cart_enable == 1)
                 <li class="onhover-div mobile-cart">
                     <a href="{{route('showCart')}}" style="position: relative">
@@ -164,7 +164,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             </ul>
         </div>
     </div>
-    
+
 </div>
 
 

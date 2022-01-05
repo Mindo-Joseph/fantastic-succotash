@@ -99,7 +99,9 @@ window.loadMainMenuSlider = function loadMainMenuSlider(){
         responsive: [
             { breakpoint: 1400, settings: { slidesToShow: 12, slidesToScroll: 2 } },
             { breakpoint: 1367, settings: { slidesToShow: 8, slidesToScroll: 2} },
+            { breakpoint: 991, settings: { slidesToShow: 6, slidesToScroll: 2} },
             { breakpoint: 767, settings: { slidesToShow: 4, slidesToScroll: 2} },
+            { breakpoint: 576, settings: { slidesToShow: 3, slidesToScroll: 2} },
             // { breakpoint: 1200, settings: "unslick" },
         ],
     });
@@ -154,40 +156,38 @@ window.initializeSlider = function initializeSlider() {
             { breakpoint: 1367, settings: { slidesToShow: 5, slidesToScroll: 5, infinite: !0 } },
             { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
             { breakpoint: 767, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 3, infinite: !0 } },
-            { breakpoint: 480, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
-        ],
+            { breakpoint: 480, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } }
+        ]
     });
     $(".product-4").slick({
+        dots: false,
+        infinite: true,
+        dots: false,
+        speed: 300,
+        slidesToShow: 5,
+        slidesToScroll: 4,
+        responsive: [
+            { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
+            { breakpoint: 991, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
+            { breakpoint: 420, settings: { slidesToShow: 1, arrows: true, slidesToScroll: 1 } }
+        ]
+    });
+
+    $(".recent-orders").slick({
         arrows: false,
         dots: false,
         infinite: true,
         speed: 300,
         // centerMode: true,
         // centerPadding: '60px',
-        slidesToShow: 5,
-        slidesToScroll: 5,
-        responsive: [
-            { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 3 } },
-            { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
-            { breakpoint: 767, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
-            { breakpoint: 420, settings: { slidesToShow: 1, arrows: true, slidesToScroll: 1 } },
-        ],
-    });
-    $(".recent-orders").slick({
-        arrows: false,
-        dots: false,
-        infinite: true,
-        speed: 300,
-        centerMode: true,
-        centerPadding: '60px',
         slidesToShow: 2,
         slidesToScroll: 1,
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 2 } },
             { breakpoint: 991, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 2 } },
             { breakpoint: 767, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 1 } },
-            { breakpoint: 420, settings: { slidesToShow: 1, arrows: true, slidesToScroll: 1 } },
-        ],
+            { breakpoint: 420, settings: { slidesToShow: 1, arrows: true, slidesToScroll: 1 } }
+        ]
     });
     $(".brand-slider").slick({
         arrows: false,
@@ -196,40 +196,12 @@ window.initializeSlider = function initializeSlider() {
         speed: 300,
         slidesToShow: 4,
         slidesToScroll: 3,
-        responsive: [{
-                breakpoint: 1367,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    arrows: false,
-                    infinite: true
-                }
-            },
-            {
-                breakpoint: 991,
-                settings: {
-                    slidesToShow: 2,
-                    arrows: false,
-                    slidesToScroll: 1
-                }
-            },
-            {
-                breakpoint: 767,
-                settings: {
-                    slidesToShow: 2,
-                    arrows: false,
-                    slidesToScroll: 1
-                }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    arrows: false,
-                    slidesToScroll: 1
-                }
-            }
-        ],
+        responsive: [
+            {breakpoint: 1367,settings: {slidesToShow: 4,slidesToScroll: 2,arrows: false,infinite: true}},
+            {breakpoint: 991,settings: {slidesToShow: 3,arrows: false,slidesToScroll: 1}},
+            {breakpoint: 767,settings: {slidesToShow: 2,arrows: false,slidesToScroll: 1}},
+            {breakpoint: 360,settings: {slidesToShow: 1,arrows: false,slidesToScroll: 1}}
+        ]
     });
     $('.suppliers-slider').slick({
         dots: false,
@@ -237,17 +209,27 @@ window.initializeSlider = function initializeSlider() {
         speed: 300,
         slidesToShow: 5,
         slidesToScroll: 3,
-        // centerMode: true,
-        // centerPadding: '60px',
+        centerMode: false,
+        centerPadding: '60px',
         arrows: false,
         dots: false,
         responsive: [{
                 breakpoint: 1199,
                 settings: {
-                    slidesToShow: 3,
+                    slidesToShow: 4,
                     slidesToScroll: 3,
                     infinite: true,
-                    dots: false
+                    dots: false,
+                    centerMode: false,
+                }
+            },
+            {
+                breakpoint: 991,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                    dots: false,
+                    centerMode: true,
                 }
             },
             {
@@ -255,15 +237,17 @@ window.initializeSlider = function initializeSlider() {
                 settings: {
                     slidesToShow: 2,
                     slidesToScroll: 2,
-                    dots: false
+                    dots: false,
+                    centerMode: true,
                 }
             },
             {
-                breakpoint: 480,
+                breakpoint: 576,
                 settings: {
                     slidesToShow: 1,
                     slidesToScroll: 1,
-                    dots: false
+                    dots: false,
+                    centerMode: true,
                 }
             }
         ]
@@ -275,12 +259,10 @@ window.initializeSlider = function initializeSlider() {
         speed: 300,
         slidesToShow: 6,
         slidesToScroll: 3,
-        // centerMode: true,
-        // centerPadding: '60px',
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
-            { breakpoint: 420, settings: { slidesToShow: 1, arrows: true, slidesToScroll: 1 } },
+            { breakpoint: 420, settings: { slidesToShow: 1, arrows: true, slidesToScroll: 1 } }
         ]
     });
     $('.vendor-product').slick({
@@ -292,8 +274,6 @@ window.initializeSlider = function initializeSlider() {
         slidesToScroll: 2,
         autoplay: true,
         autoplaySpeed: 5000,
-        centerMode: true,
-        centerPadding: '40px',
         rtl: false,
         responsive: [{
                 breakpoint: 1200,
@@ -324,8 +304,8 @@ window.initializeSlider = function initializeSlider() {
             { breakpoint: 1367, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
             { breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 4, infinite: !0 } },
             { breakpoint: 767, settings: { slidesToShow: 3, arrows: true, slidesToScroll: 3, infinite: !0 } },
-            { breakpoint: 480, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
-        ],
+            { breakpoint: 480, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } }
+        ]
     });
 
     if ($('body').attr('dir') == 'rtl') {
@@ -333,12 +313,15 @@ window.initializeSlider = function initializeSlider() {
     }
 }
 
+
+
+
 $(document).ready(function() {
 
     // $(".toggle-nav").click(function() {
     //     $("body").toggleClass("overflow-hidden");
     // });
-    
+
     $(".toggle-password").click(function() {
         $(this).toggleClass("eye");
         var input = $($(this).attr("toggle"));
@@ -349,7 +332,7 @@ $(document).ready(function() {
         }
     });
 
-    
+
     $(".mobile-search-btn").click(function() {
         $(".radius-bar").slideToggle();
     });
@@ -405,17 +388,22 @@ $(document).ready(function() {
         let keyword = $(this).val();
         searchResults(keyword);
     });
-
+    var searchAjaxCall = 'ToCancelPrevReq';
     function searchResults(keyword) {
         if (keyword.length <= 2) {
             $('#search_box_main_div').html('').hide();
         }
-        if (keyword.length > 2) {
-            $.ajax({
+        if (keyword.length >= 2) {
+            searchAjaxCall = $.ajax({
                 type: "GET",
                 dataType: 'json',
                 url: autocomplete_url,
                 data: { keyword: keyword },
+                beforeSend: function() {
+                    if (searchAjaxCall != 'ToCancelPrevReq' && searchAjaxCall.readyState < 4) {
+                        searchAjaxCall.abort();
+                    }
+                },
                 success: function(response) {
                     if (response.status == 'Success') {
                         $('#search_box_main_div').html('');
@@ -633,6 +621,10 @@ $(document).ready(function() {
             }
             else if (payment_option_id == 13) {
                 paymentViaSquare('', '');
+            }else if (payment_option_id == 14) {
+                paymentViaOzow('', '');
+            }else if (payment_option_id == 15) {
+                paymentViaPagarme('', '');
             }
         } else {
             _this.attr("disabled", false);
@@ -746,8 +738,6 @@ $(document).ready(function() {
                 return false;
             }
         }
-
-
 
         let cartAmount = $("input[name='cart_total_payable_amount']").val();
         let comment_for_pickup_driver = $("input[name='comment_for_pickup_driver']").val(); //commnet for pickup
@@ -1345,6 +1335,14 @@ $(document).ready(function() {
                 return false;
             }
         }
+        else if (payment_option_id == 15) {
+            var order = placeOrderBeforePayment(address_id, payment_option_id, tip);
+            if (order != '') {
+                paymentViaPagarme(address_id, order);
+            } else {
+                return false;
+            }
+        }
     });
 
 
@@ -1504,11 +1502,15 @@ $(document).ready(function() {
         } else if (payment_option_id == 10) {
             paymentViaRazorpay_wallet('', payment_option_id);
         }else if (payment_option_id == 11) {
-            paymentViaGCash('', payment_option_id);
+            paymentViaGCash('', '');
         }else if (payment_option_id == 12) {
             paymentViaSimplify('', '');
         }else if (payment_option_id == 13) {
             paymentViaSquare('', '');
+        }else if (payment_option_id == 14) {
+            paymentViaOzow('', '');
+        }else if (payment_option_id == 15) {
+            paymentViaPagarme('', '');
         }
     });
     $(document).on("click", ".remove_promo_code_btn", function() {
@@ -1607,6 +1609,7 @@ $(document).ready(function() {
         var input = document.getElementById('address');
         if (input) {
             var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo('bounds', bindMap);
             google.maps.event.addListener(autocomplete, 'place_changed', function() {
                 var place = autocomplete.getPlace();
                 // document.getElementById('city').value = place.name;
@@ -1669,6 +1672,8 @@ $(document).ready(function() {
     }
 
     function displayMapLocation(latitude, longitude, elementID) {
+
+        // Commented By Sujata
         var geocoder;
         geocoder = new google.maps.Geocoder();
         var latlng = new google.maps.LatLng(latitude, longitude);
@@ -1682,6 +1687,9 @@ $(document).ready(function() {
             map: map,
             position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
         });
+        // End Comment
+
+
         // geocoder.geocode(
         //     { 'latLng': latlng },
         //     function (results, status) {
@@ -1894,11 +1902,25 @@ $(document).ready(function() {
     $(document).on('click', '.qty-minus', function() {
         let base_price = $(this).data('base_price');
         let cartproduct_id = $(this).attr("data-id");
+        let minimum_order_count = $(this).attr("data-minimum_order_count");
+        let batch_count = $(this).attr("data-batch_count");
+        if(batch_count > 0)
+        batch_count = batch_count;
+        else
+        batch_count = 1;
+
+        if(minimum_order_count > 0)
+        minimum_order_count = minimum_order_count;
+        else
+        minimum_order_count = 1;
         let qty = $('#quantity_' + cartproduct_id).val();
+        let decrevalue = parseInt(qty)-parseInt(batch_count);
+
+
         $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
-        if (qty > 1) {
-            $('#quantity_' + cartproduct_id).val(--qty);
-            updateQuantity(cartproduct_id, qty, base_price);
+        if (decrevalue >= minimum_order_count) {
+            $('#quantity_' + cartproduct_id).val(decrevalue);
+            updateQuantity(cartproduct_id, decrevalue, base_price);
         } else {
             // alert('remove this product');
             $('#remove_item_modal').modal('show');
@@ -1911,9 +1933,23 @@ $(document).ready(function() {
         let base_price = $(this).data('base_price');
         let cartproduct_id = $(this).attr("data-id");
         let qty = $('#quantity_' + cartproduct_id).val();
-        $('#quantity_' + cartproduct_id).val(++qty);
+        let minimum_order_count = $(this).attr("data-minimum_order_count");
+        let batch_count = $(this).attr("data-batch_count");
+        if(batch_count > 0)
+        batch_count = batch_count;
+        else
+        batch_count = 1;
+
+        if(minimum_order_count > 0)
+        minimum_order_count = minimum_order_count;
+        else
+        minimum_order_count = 1;
+
+        let increvalue = parseInt(qty)+parseInt(batch_count);
+
+        $('#quantity_' + cartproduct_id).val(increvalue);
         $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
-        updateQuantity(cartproduct_id, qty, base_price);
+        updateQuantity(cartproduct_id, increvalue, base_price);
     });
     cartHeader();
     $(document).on("click", "#cancel_save_address_btn", function() {
@@ -2178,12 +2214,25 @@ $(document).ready(function() {
         let cart_id = $(this).attr("data-cart");
         let product_id = $(this).attr("data-product_id");
         let variant_id = $(this).attr("data-variant_id");
+        let minimum_order_count = $(this).attr("data-minimum_order_count");
+        let batch_count = $(this).attr("data-batch_count");
+        if(batch_count > 0)
+        batch_count = batch_count;
+        else
+        batch_count = 1;
+
+        if(minimum_order_count > 0)
+        minimum_order_count = minimum_order_count;
+        else
+        minimum_order_count = 1;
+
         let qty = $(this).next().val();
+        let decrevalue = parseInt(qty)-parseInt(batch_count);
         if(!$.hasAjaxRunning()){
-            if (qty > 1) {
+            if (decrevalue >= minimum_order_count) {
                 if( $(this).hasClass('remove-customize') && $(this).hasClass('m-open') ){
                     $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
-                    updateProductQuantity(product_id, cartproduct_id, --qty, base_price, this);
+                    updateProductQuantity(product_id, cartproduct_id, decrevalue, base_price, this);
                 }
                 else if( $(this).hasClass('remove-customize') && !$(this).hasClass('m-open') ){
                     $('#customize_repeated_item_modal').modal('show');
@@ -2191,8 +2240,8 @@ $(document).ready(function() {
                 }
                 else{
                     $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
-                    $('#quantity_ondemand_' + cartproduct_id).val(--qty);
-                    updateProductQuantity(product_id, cartproduct_id, qty, base_price, this);
+                    $('#quantity_ondemand_' + cartproduct_id).val(decrevalue);
+                    updateProductQuantity(product_id, cartproduct_id, decrevalue, base_price, this);
                 }
             } else {
                 // alert('remove this product');
@@ -2209,21 +2258,28 @@ $(document).ready(function() {
         let cartproduct_id = $(this).attr("data-id");
         let cart_id = $(this).attr("data-cart");
         let product_id = $(this).attr("data-product_id");
+        let minimum_order_count = $(this).attr("data-minimum_order_count");
+        let batch_count = $(this).attr("data-batch_count");
+        if(batch_count > 0)
+        batch_count = batch_count;
+        else
+        batch_count = 1;
         // let variant_id = $(this).attr("data-variant_id");
         // let vendor_id = $(this).attr("data-vendor_id");
         let addon = $(this).attr("data-addon");
         let qty = $(this).prev().val();
+        let increvalue = parseInt(qty)+parseInt(batch_count);
         if(!$.hasAjaxRunning()){
             if( $(this).hasClass('repeat-customize') && $(this).hasClass('m-open') ){
                 $(this).find('.fa').removeClass("fa-plus").addClass("fa-spinner fa-pulse");
-                updateProductQuantity(product_id, cartproduct_id, ++qty, base_price, this);
+                updateProductQuantity(product_id, cartproduct_id, increvalue, base_price, this);
             }
             else if($(this).hasClass('repeat-customize') && !$(this).hasClass('m-open') ){
                 getLastAddedProductVariant(this, cart_id, product_id, addon);
-            }else{												  
-                $(this).prev().val(++qty);
+            }else{
+                $(this).prev().val(increvalue);
                 $(this).find('.fa').removeClass("fa-plus").addClass("fa-spinner fa-pulse");
-                updateProductQuantity(product_id, cartproduct_id, qty, base_price, this);
+                updateProductQuantity(product_id, cartproduct_id, increvalue, base_price, this);
             }
         }
     });
@@ -2351,9 +2407,17 @@ $(document).ready(function() {
             getProductAddons(slug, variant_id);
             return false;
         }
+
+        var minimum_order_count = $(that).data("minimum_order_count");
+        if(minimum_order_count > 0)
+        minimum_order_count = minimum_order_count;
+        else
+        minimum_order_count = 1;
+
+
         // end addons data
         if (!$.hasAjaxRunning()) {
-            addToCartProductsAddons(that);
+            addToCartProductsAddons(that,minimum_order_count);
         }
     }
 
@@ -2792,25 +2856,54 @@ $(document).ready(function() {
     $(document).delegate('.quantity-right-plus', 'click', function() {
         var quan = parseInt($('.quantity_count').val());
         var str = $('#instock').val();
+        var batch_count = $(this).data("batch_count");
         // var res = parseInt(str.substring(10, str.length - 1));
-        if ((quan + 1) > str) {
+        if(batch_count > 0)
+        batch_count = batch_count;
+        else
+        batch_count = 1;
+
+        if ((quan + batch_count) > str) {
             alert("Quantity is not available in stock");
             $('.quantity_count').val(str);
         } else {
             var s = $(".qty-box .input-qty-number"),
                 i = parseInt(s.val(), 10);
-            isNaN(i) || s.val(i + 1);
+            isNaN(i) || s.val(i + batch_count);
         }
     });
     $(document).delegate(".quantity-left-minus", "click", function() {
+
+        var batch_count = $(this).data("batch_count");
+        if(batch_count >0)
+        batch_count = batch_count;
+        else
+        batch_count = 1;
+
+        var minimum_order_count = $(this).data("minimum_order_count");
+        if(minimum_order_count > 0)
+        minimum_order_count = minimum_order_count;
+        else
+        minimum_order_count = 1;
+        // var res = parseInt(str.substring(10, str.length - 1));
+
+
+        console.log(minimum_order_count);
+
         var s = $(".qty-box .input-qty-number"),
             i = parseInt(s.val(), 10);
-        !isNaN(i) && i > 1 && s.val(i - 1);
+
+        if (i - batch_count < minimum_order_count) {
+                alert("Minimum Quantity count is " + minimum_order_count);
+                return false;
+        }
+        !isNaN(i) && i > 1 && s.val(i - batch_count);
     });
     $(document).delegate('.quantity_count', 'change', function() {
         var quan = $(this).val();
         var str = $('#instock').val();
-        // var res = parseInt(str.substring(10, str.length - 1));
+
+
         if (quan > str) {
             alert("Quantity is not available in stock");
             $('.quantity_count').val(str);

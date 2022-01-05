@@ -188,8 +188,7 @@
                                                                     {{ dateTimeInUserTimeZone($order->created_at, $timezone) }}
                                                                 </div>
                                                                 <div class="col-md-3">
-                                                                    <a class="text-capitalize"
-                                                                        href="#">{{ $order->user->name }}</a>
+                                                                    <a class="text-capitalize">{{ $order->user->name }}</a>
                                                                 </div>
                                                                 @if ($client_preference_detail->business_type != 'taxi')
                                                                     <div class="col-md-3">
@@ -218,11 +217,9 @@
                                                                         @php
                                                                             $product_total_count = $product_subtotal_amount = $product_taxable_amount = 0;
                                                                         @endphp
-                                                                        <div
-                                                                            class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
+                                                                        <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0">
                                                                             @if ($vendor->delivery_fee > 0 || !empty($order->scheduled_date_time) || $order->luxury_option_id > 0)
-                                                                                <div
-                                                                                    class="progress-order font-12  d-flex align-items-center justify-content-between pr-2">
+                                                                                <div class="progress-order font-12  d-flex align-items-center justify-content-between pr-2">
                                                                                     @if ($order->luxury_option_id > 0)
                                                                                         @php
                                                                                             $luxury_option = \App\Models\LuxuryOption::where('id', $order->luxury_option_id)->first();
@@ -235,7 +232,7 @@
                                                                                             }
                                                                                         @endphp
                                                                                         <span
-                                                                                            class="badge badge-info ml-2 my-1">{{ $luxury_option_name }}</span>
+                                                                                            class="badge badge-info ml-2 my-1">{{ __($luxury_option_name) }}</span>
                                                                                     @endif
                                                                                     @if (!empty($order->scheduled_date_time))
                                                                                         <span
@@ -243,8 +240,8 @@
                                                                                         <span
                                                                                             class="ml-2">{{ dateTimeInUserTimeZone($order->scheduled_date_time, $timezone) }}</span>
                                                                                     @elseif(!empty($vendor->ETA))
-                                                                                        <span class="ml-2">Your
-                                                                                            order will arrive by
+                                                                                        <span class="ml-2">{{__('Your
+                                                                                            order will arrive by')}}
                                                                                             {{ $vendor->ETA }}</span>
                                                                                     @endif
                                                                                     @if ($order->is_gift == '1')
@@ -284,7 +281,7 @@
                                                                                                         alt="">
                                                                                                 @endif
                                                                                                 <label
-                                                                                                    class="m-0 in-progress">{{ ucfirst($vendor->order_status) }}</label>
+                                                                                                    class="m-0 in-progress">{{__( ucfirst( $vendor->order_status)) }}</label>
                                                                                             </li>
                                                                                         @endif
 
@@ -294,6 +291,11 @@
                                                                                             <a href="{{ route('front.booking.details', $order->order_number) }}"
                                                                                                 target="_blank">{{ __('Details') }}</a>
                                                                                         @endif
+                                                                                        <h6 class="m-0">
+                                                                                            <label class="rating-star cancel_order"  data-order_vendor_id="{{$vendor->vendor_id??0}}" data-id="{{$vendor->id??0}}">
+                                                                                                {{ __('Cancel Order') }}
+                                                                                            </label>
+                                                                                        </h6>
 
                                                                                         @if ($vendor->dineInTable)
                                                                                             <li>
@@ -381,11 +383,51 @@
                                                                                                 *
                                                                                                 $clientCurrency->doller_compare)</span>
                                                                                         </li>
+                                                                                       
+                                                                                       
+                                                                                      
+
                                                                                     </ul>
                                                                                 </div>
-                                                                            </div>
+                                                                            </div>  
+                                                                            @if(count($vendor['vendor_dispatcher_status']))
+                                                                                        <div class="step-indicator step-indicator-order">
+                                                                                           
+                                                                                                @foreach ($vendor->dispatcher_status_icons as $key => $icons)
+                                                                                                    @if(isset($vendor['vendor_dispatcher_status'][$key]) && !empty($vendor['vendor_dispatcher_status'][$key]))
+                                                                                                    <div class="step step{{$key+1}} active">
+                                                                                                        <div class="step-icon-order step-icon-order-fill"><img src="{{@$vendor->vendor_dispatcher_status[$key]->status_data['icon']}}"></div>
+                                                                                                        
+                                                                                                    </div>
+                                                                                                    
+                                                                                                   
+                                                                                                    <div class="indicator-line active"></div>
+                                                                                                    
+                                                                                                    @if(count($vendor['vendor_dispatcher_status']) == $key+1)
+                                                                                                        <p>{{@$vendor->vendor_dispatcher_status[$key]->status_data['driver_status']}}</p>
+                                                                                                    @endif
+                                                                                                    @if($key < count($vendor->dispatcher_status_icons)-1)
+                                                                                                    <div class="indicator-line active"></div>
+                                                                                                    @endif
+                                                                                                    @else
+                                                                                                    <div class="step step{{$key+1}} @if(app('request')->input('step') >= '1' || empty(app('request')->input('step'))) active @endif">
+                                                                                                        <div class="step-icon-order"><img src="{{$icons}}"></div>
+                                                                                                        <p></p>
+                                                                                                    </div>
+                                                                                                    @if($key < count($vendor->dispatcher_status_icons)-1)
+                                                                                                    <div class="indicator-line"></div>
+                                                                                                    @endif
+                                                                                                    @endif   
+                                                                                                @endforeach
+                                                                                           
+                                                                                        </div>
+                                                                                        @endif
+                                                                                           
+                                                                        
                                                                         </div>
+                                                                        
                                                                     @endforeach
+                                                                    
                                                                 </div>
                                                                 <div class="col-md-3 mb-3 pl-lg-0">
                                                                     <div class="card-box p-2 mb-0 h-100">
@@ -482,9 +524,7 @@
                                                                                 class="grand_total d-flex align-items-center justify-content-between">
                                                                                 <label
                                                                                     class="m-0">{{ __('Total Payable') }}</label>
-                                                                                <span>{{ Session::get('currencySymbol') }}@money($order->payable_amount
-                                                                                    - $order->total_discount_calculate *
-                                                                                    $clientCurrency->doller_compare)</span>
+                                                                                <span>{{ Session::get('currencySymbol') }}@money($order->payable_amount)</span>
                                                                             </li>
                                                                         </ul>
                                                                     </div>
@@ -532,8 +572,7 @@
                                                                     {{ dateTimeInUserTimeZone($order->created_at, $timezone) }}
                                                                 </div>
                                                                 <div class="col-md-3">
-                                                                    <a class="text-capitalize"
-                                                                        href="#">{{ $order->user->name }}</a>
+                                                                    <a class="text-capitalize">{{ $order->user->name }}</a>
                                                                 </div>
                                                                 @if ($client_preference_detail->business_type != 'taxi')
                                                                     <div class="col-md-3">
@@ -576,7 +615,7 @@
                                                                                                 <img src="{{ asset('assets/images/driver_icon.svg') }}"
                                                                                                     alt="">
                                                                                                 <label
-                                                                                                    class="m-0 in-progress">{{ ucfirst($vendor->order_status) }}</label>
+                                                                                                    class="m-0 in-progress">{{ __(ucfirst($vendor->order_status)) }}</label>
                                                                                             </li>
                                                                                         @endif
 
@@ -951,8 +990,7 @@
                                                                         {{ dateTimeInUserTimeZone($order->created_at, $timezone) }}
                                                                     </div>
                                                                     <div class="col-md-3">
-                                                                        <a class="text-capitalize"
-                                                                            href="#">{{ $order->user->name }}</a>
+                                                                        <a class="text-capitalize">{{ $order->user->name }}</a>
                                                                     </div>
                                                                     @if ($client_preference_detail->business_type != 'taxi')
                                                                         <div class="col-md-3">
@@ -1245,8 +1283,7 @@
                                                                     {{ dateTimeInUserTimeZone($order->created_at, $timezone) }}
                                                                 </div>
                                                                 <div class="col-md-3">
-                                                                    <a class="text-capitalize"
-                                                                        href="#">{{ $order->user->name }}</a>
+                                                                    <a class="text-capitalize">{{ $order->user->name }}</a>
                                                                 </div>
                                                                 @if ($client_preference_detail->business_type != 'taxi')
                                                                     <div class="col-md-3">
@@ -1292,7 +1329,7 @@
                                                                                             }
                                                                                         @endphp
                                                                                         <span
-                                                                                            class="badge badge-info ml-2 my-1">{{ $luxury_option_name }}</span>
+                                                                                            class="badge badge-info ml-2 my-1">{{ __($luxury_option_name) }}</span>
                                                                                     @endif
 
                                                                                     @if ($order->is_gift == '1')
@@ -1315,7 +1352,7 @@
                                                                                     <ul class="status_box mt-1 pl-0">
                                                                                         @if (!empty($vendor->order_status))
                                                                                             <li>
-                                                                                                <label class="m-0 in-progress">{{ ucfirst($vendor->order_status) }} </label>
+                                                                                                <label class="m-0 in-progress">{{ __(ucfirst($vendor->order_status)) }} </label>
                                                                                                 <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="{{$vendor->reject_reason}}" aria-hidden="true"></i>
                                                                                             </li>
                                                                                         @endif
@@ -1548,6 +1585,21 @@
         </div>
     </div>
 
+<!-- start cancel order -->
+<div class="modal fade vendor-order-cancel" id="cancel_order" tabindex="-1" aria-labelledby="cancel_orderLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div id="cancel-order-form-modal">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- end cancel order -->
 
     <!-- tip after order complete -->
     @include('frontend.modals.tip_after_order')
@@ -1560,7 +1612,6 @@
 @section('script')
     <script src="{{ asset('js/tip_after_order.js') }}"></script>
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
     <script src="{{ asset('js/payment.js') }}"></script>
     <script type="text/javascript">
         $(document).delegate(".topup_wallet_btn_tip", "click", function() {
@@ -1666,5 +1717,19 @@
                 }
             }
         });
-    </script>
+
+    ///// cancel order start
+    $('body').on('click', '.cancel_order', function (event) {
+        event.preventDefault();
+        var id = $(this).data('id');
+        var order_vendor_id = $(this).data('order_vendor_id');
+         $.get('/return-order/get-vendor-order-for-cancel?id=' + id +'&order_vendor_id=' + order_vendor_id, function(markup)
+         {
+            $('#cancel_order').modal('show');
+            $('#cancel-order-form-modal').html(markup);
+        });
+    });
+    ////////// cancel order end
+
+</script>
 @endsection

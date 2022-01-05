@@ -19,16 +19,17 @@ class VendorController extends FrontController
 
     public function viewAll(){
         $langId = Session::get('customerLanguage');
+        $vendorType = Session::get('vendorType');
         $preferences = Session::get('preferences');
         $navCategories = $this->categoryNav($langId);
         $pagiNate = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 30;
         $ses_vendors = $this->getServiceAreaVendors();
 
-        $vendors = Vendor::with('products')->select('id', 'name', 'banner', 'address', 'order_pre_time', 'order_min_amount', 'logo', 'slug', 'latitude', 'longitude')->where('status', 1);
+        $vendors = Vendor::with('products')->select('id', 'name', 'banner', 'address', 'order_pre_time', 'order_min_amount', 'logo', 'slug', 'latitude', 'longitude')->where('status', 1)->where($vendorType, 1);
 
-        if (is_array($ses_vendors)) {
-            $latitude = Session::get('latitude') ?? '';
-            $longitude = Session::get('longitude') ?? '';
+        if (($preferences) && ($preferences->is_hyperlocal == 1)) {
+            $latitude = Session::get('latitude') ?? $preferences->Default_latitude;
+            $longitude = Session::get('longitude') ?? $preferences->Default_longitude;
             $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
             //3961 for miles and 6371 for kilometers
             $calc_value = ($distance_unit == 'mile') ? 3961 : 6371;
@@ -61,7 +62,8 @@ class VendorController extends FrontController
             $value->categoriesList = $categoriesList;
             $value->vendorRating = $this->vendorRating($value->products);
         }
-        return view('frontend/vendor-all')->with(['navCategories' => $navCategories,'vendors' => $vendors]);
+        $for_no_product_found_html = CabBookingLayout::with('translations')->where('is_active', 1)->where('for_no_product_found_html',1)->orderBy('order_by')->get();
+        return view('frontend/vendor-all')->with(['navCategories' => $navCategories,'for_no_product_found_html' => $for_no_product_found_html,'vendors' => $vendors]);
     }
     /**
      * Display product By Vendor
@@ -74,7 +76,7 @@ class VendorController extends FrontController
         $vendor = Vendor::with('slot.day', 'slotDate')
             ->select('id','email', 'name', 'slug', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id', 'is_show_vendor_details', 'website', 'show_slot')->where('slug', $slug)->where('status', 1)->firstOrFail();
         $vendor->is_vendor_closed = 0;
-        if($vendor->show_slot == 0){
+        if($vendor->show_slot == 0){ 
             if( ($vendor->slotDate->isEmpty()) && ($vendor->slot->isEmpty()) ){
                 $vendor->is_vendor_closed = 1;
             }else{
@@ -367,7 +369,7 @@ class VendorController extends FrontController
                             $q2->select('addon_options.id', 'addon_options.title', 'addon_options.price', 'apt.title', 'addon_options.addon_id');
                             $q2->where('apt.language_id', $langId);
                         }
-                    ])->select('id', 'sku', 'description', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating', 'inquiry_only');
+                    ])->select('id', 'sku', 'description', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating', 'inquiry_only','minimum_order_count','batch_count');
                 $products = $products->where('is_live', 1)->where('category_id', $category->category_id)->where('vendor_id', $vid)->get();
 
                 if(!empty($products)){
@@ -446,7 +448,7 @@ class VendorController extends FrontController
                     $value->variant_multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     $value->variant_price = (!empty($value->variant->first())) ? $value->variant->first()->price : 0;
                     $value->category_name = ($value->category->categoryDetail->translation->first()) ? $value->category->categoryDetail->translation->first()->name : $value->category->categoryDetail->slug;
-                    $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '600/600' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
+                    $value->image_url = $value->media->first() ? $value->media->first()->image->path['image_fit'] . '240/170' . $value->media->first()->image->path['image_path'] : $this->loadDefaultImage();
                     // foreach ($value->variant as $k => $v) {
                     //     $value->variant[$k]->multiplier = $clientCurrency ? $clientCurrency->doller_compare : 1;
                     // }
@@ -630,10 +632,14 @@ class VendorController extends FrontController
             }
         }
 
-        $vendorCategory = 0;
+        $vendorCategory = [];
         if($vCat != ''){
             $category = Category::select('id')->where('slug', $vCat)->firstOrFail();
-            $vendorCategory = $category->id;
+            array_push($vendorCategory, $category->id);
+            $childs = $this->getChildCategoriesForVendor($category->id, $langId, $vid);
+            foreach($childs as $child){
+                array_push($vendorCategory, $child->category->id);
+            }
         }
 
         $products = Product::with(['media.image',
@@ -665,19 +671,26 @@ class VendorController extends FrontController
             ])
             ->select('id', 'sku', 'description', 'category_id', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating', 'inquiry_only');
             if($keyword){
-                $products->where(function ($q) use ($keyword) {
-                    $q->where('sku', 'LIKE', '%' . $keyword . '%')
-                    ->orWhere('url_slug', 'LIKE', '%' . $keyword . '%')
-                    ->orWhere('title', 'LIKE', '%' . $keyword . '%');
-                });
+                $products->where(function ($q) use ($keyword, $langId) {
+                    $q->where(function ($q1) use ($keyword) {
+                        $q1->where('sku', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('url_slug', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('title', 'LIKE', '%' . $keyword . '%');
+                    });
+                    $q->orWhereHas('translation', function ($q1) use ($keyword, $langId) {
+                        $q1->where(function ($q2) use ($keyword) {
+                            $q2->where('title', 'LIKE', '%' . $keyword . '%');
+                        });
+                    });
+                });                
             }
             if($tagId){
                 $products->whereHas('tags',function($query) use ($tagId){
                     $query->whereIn('tag_id',$tagId);
                  });
             }
-        if($vendorCategory > 0){
-            $products = $products->where('category_id', $vendorCategory);
+        if(count($vendorCategory) > 0){
+            $products = $products->whereIn('category_id', $vendorCategory);
         }
         $products = $products->where('is_live', 1)->where('vendor_id', $vid)->get();
 
@@ -719,17 +732,20 @@ class VendorController extends FrontController
 
                 if(!in_array($cid, $category_list)){
                     $category_list[] = $cid;
-                    $vendor_category = VendorCategory::with(['category.translation_one'])
-                    ->where('vendor_id', $vid);
-                    if($vendorCategory < 1){ // if user is not coming to vendor by selecting a category
-                        $vendor_category = $vendor_category->whereHas('category', function($query) {
-                            $query->whereIn('type_id', [1]);
-                        });
+                    $vendor_category = VendorCategory::with(['category.translation' => function($q) use($langId){
+                        $q->where('category_translations.language_id', $langId)->groupBy('category_translations.language_id');
+                    }]);
+                    // ->whereHas('category');
+                    if(count($vendorCategory) < 1){ // if user is not coming to vendor by selecting a category
+                        // $vendor_category = $vendor_category->whereHas('category', function($query) {
+                        //     $query->whereIn('categories.type_id', [1]);
+                        // });
                     }
-                    $vendor_category = $vendor_category->where('status', 1)->where('category_id', $cid)->first();
+                    $vendor_category = $vendor_category->where('status', 1)->where('vendor_id', $vid)->where('category_id', $cid)->first();
                     if($vendor_categories){
                         $vendorProducts = $products->where('category_id', $cid);
                         if($vendor_category){
+                            $vendor_category->category->translation_title = $vendor_category->category->translation->first() ? $vendor_category->category->translation->first()->name : '';
                             $vendor_category->products = $vendorProducts;
                             $vendor_category->products_count = $vendorProducts->count();
                             $vendor_categories->push($vendor_category);
@@ -738,11 +754,11 @@ class VendorController extends FrontController
                 }
             }
         }
-
+        $tags = Tag::with('primary')->get();
         // dd($vendor_categories->toArray());
 
         $listData = $vendor_categories;
-        $returnHTML = view('frontend.vendor-search-products')->with(['vendor'=> $vendor, 'listData'=>$listData])->render();
+        $returnHTML = view('frontend.vendor-search-products')->with(['vendor'=> $vendor,'tags'=>$tags,'tag_id'=> $tagId, 'listData'=>$listData])->render();
         return response()->json(array('status'=>'Success', 'html'=>$returnHTML));
     }
 

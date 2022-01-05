@@ -175,7 +175,7 @@
                                 @foreach($preference->currency as $ac)
                                 <div class="col-sm-10 offset-sm-4 col-lg-12 offset-lg-0 col-xl-8 offset-xl-4 mb-2" id="addCur-{{$ac->currency->id}}">
                                     <label class="primaryCurText">1 {{$preference->primary->currency->iso_code}} {{!empty($preference->primary->currency->symbol) ? $preference->primary->currency->symbol : ''}} = </label>
-                                    <input class="form-control w-50 d-inline-block" type="number" value="{{$ac->doller_compare}}" step=".01" name="multiply_by[]" min="0.01"> {{$ac->currency->iso_code}} {{!empty($ac->currency->symbol) ? $ac->currency->symbol : ''}}
+                                    <input class="form-control w-50 d-inline-block" type="number" value="{{$ac->doller_compare}}" step=".0001" name="multiply_by[]" min="0.0001"> {{$ac->currency->iso_code}} {{!empty($ac->currency->symbol) ? $ac->currency->symbol : ''}}
                                     <input type="hidden" name="cuid[]" class="curr_id" value="{{ $ac->currency->id }}">
                                 </div>
                                 @endforeach
@@ -198,8 +198,8 @@
                     <p class="sub-header">
                         {{ __("Update custom domain here.") }}
                     </p>
-                    <label for="custom_domain">*{{__("Make sure you already pointed to IP")}} ({{\env('IP')}}) {{__("from your domain.")}}</label> 
-                      
+                    <label for="custom_domain">*{{__("Make sure you already pointed to IP")}} ({{\env('IP')}}) {{__("from your domain.")}}</label>
+
                     <div class="row mb-2">
                         <div class="col-sm-12">
                             <div class="form-group mb-3">
@@ -210,7 +210,7 @@
                                     <input type="text" name="custom_domain" id="custom_domain" placeholder="" class="form-control" value="{{ old('custom_domain', $preference->domain->custom_domain ?? '')}}">
                                 </div>
 
-                               
+
                                 @if($errors->has('custom_domain'))
                                 <span class="text-danger" role="alert">
                                     <strong>{{ $errors->first('custom_domain') }}</strong>
@@ -286,7 +286,7 @@
                         <div class="row mb-2 flex-nowrap">
                             @foreach($client_languages as $k => $client_language)
                             <div class="col-sm-3">
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-0">
                                     <label for="custom_domain">{{ __("Vendors") }}({{$client_language->langName}})</label>
                                     <input type="hidden" name="language_ids[]" value="{{$client_language->langId}}">
                                     <input type="text" name="names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 1)}}">
@@ -304,7 +304,7 @@
                         <div class="row mb-2 flex-nowrap">
                             @foreach($client_languages as $k => $client_language)
                             <div class="col-sm-3">
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-0">
                                     <label for="custom_domain">{{ __("Loyalty Cards") }}({{$client_language->langName}})</label>
                                     <input type="hidden" name="loyalty_cards_language_ids[]" value="{{$client_language->langId}}">
                                     <input type="text" name="loyalty_cards_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 2)}}">
@@ -322,7 +322,7 @@
                         <div class="row mb-2 flex-nowrap">
                             @foreach($client_languages as $k => $client_language)
                             <div class="col-sm-3">
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-0">
                                     <label for="custom_domain">{{ __("Takeaway") }}({{$client_language->langName}})</label>
                                     <input type="hidden" name="takeaway_language_ids[]" value="{{$client_language->langId}}">
                                     <input type="text" name="takeaway_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 3)}}">
@@ -340,7 +340,7 @@
                         <div class="row mb-2 flex-nowrap">
                             @foreach($client_languages as $k => $client_language)
                             <div class="col-sm-3">
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-0">
                                     <label for="custom_domain">{{ __("Search") }}({{$client_language->langName}})</label>
                                     <input type="hidden" name="search_language_ids[]" value="{{$client_language->langId}}">
                                     <input type="text" name="search_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 4)}}">
@@ -358,7 +358,7 @@
                         <div class="row mb-2 flex-nowrap">
                             @foreach($client_languages as $k => $client_language)
                             <div class="col-sm-3">
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-0">
                                     <label for="custom_domain">{{ __("Wishlist") }}({{$client_language->langName}})</label>
                                     <input type="hidden" name="wishlist_language_ids[]" value="{{$client_language->langId}}">
                                     <input type="text" name="wishlist_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 5)}}">
@@ -376,7 +376,7 @@
                         <div class="row mb-2 flex-nowrap">
                             @foreach($client_languages as $k => $client_language)
                             <div class="col-sm-3">
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-0">
                                     <label for="custom_domain">{{ __("Dine-In") }}({{$client_language->langName}})</label>
                                     <input type="hidden" name="dinein_language_ids[]" value="{{$client_language->langId}}">
                                     <input type="text" name="dinein_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 6)}}">
@@ -394,7 +394,7 @@
                         <div class="row mb-2 flex-nowrap">
                             @foreach($client_languages as $k => $client_language)
                             <div class="col-sm-3">
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-0">
                                     <label for="custom_domain">{{ __("Delivery") }}({{$client_language->langName}})</label>
                                     <input type="hidden" name="delivery_language_ids[]" value="{{$client_language->langId}}">
                                     <input type="text" name="delivery_names[]" class="form-control" value="{{ App\Models\NomenclatureTranslation::getNameBylanguageId($client_language->langId, 7)}}">
@@ -477,24 +477,32 @@
         });
         $(document).on("click", ".delete_social_media_option_btn", function() {
             var social_media_detail_id = $(this).data('social_media_detail_id');
-            if (confirm('Are you sure?')) {
-                $.ajax({
-                    type: "POST",
-                    dataType: 'json',
-                    url: "{{ route('social.media.delete') }}",
-                    data: {
-                        social_media_detail_id: social_media_detail_id
-                    },
-                    success: function(response) {
-                        if (response.status == "Success") {
-                            $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                            setTimeout(function() {
-                                location.reload()
-                            }, 2000);
+            Swal.fire({
+                title: "{{__('Are you Sure?')}}",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Ok',
+            }).then((result) => {
+                if(result.value)
+                {
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        url: "{{ route('social.media.delete') }}",
+                        data: {
+                            social_media_detail_id: social_media_detail_id
+                        },
+                        success: function(response) {
+                            if (response.status == "Success") {
+                                $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                                setTimeout(function() {
+                                    location.reload()
+                                }, 2000);
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
         $(document).on("click", ".edit_social_media_option_btn", function() {
             let social_media_detail_id = $(this).data('social_media_detail_id');

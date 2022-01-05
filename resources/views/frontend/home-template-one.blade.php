@@ -9,6 +9,9 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
+    .no-store-wrapper{
+        display: none;
+    }
 </style>
 @endsection
 @section('content')
@@ -22,23 +25,8 @@
   Launch demo modal
 </button>
 
-<section class="no-store-wrapper mb-3" style="display:none">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 text-center mt-2">
-                <h4>{{__('There are no stores available in your area currently.')}}</h4>
-            </div>
-        </div>
-    </div>
-</section>
-
 @if(count($banners))
-<section class="home-slider-wrapper mb-3">
+<section class="home-slider-wrapper pt-4">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -67,7 +55,7 @@
                     @if($url)
                     <a class="banner-img-outer" href="{{$url}}">
                         @endif
-                            <img src="{{$banner->image['image_fit'] . '1920/1080' . $banner->image['image_path']}}">
+                            <img class="blur-up lazyload" src="{{$banner->image['image_fit'] . '1370/300' . $banner->image['image_path']}}">
                         @if($url)
                     </a>
                     @endif
@@ -83,16 +71,19 @@
 <script type="text/template" id="vendors_template">
     <% _.each(vendors, function(vendor, k){%>
 
-        <div>
-            <a class="suppliers-box d-block px-2" href="{{route('vendorDetail')}}/<%= vendor.slug %>">
+        <div class="product-card-box position-relative">
+            <a class="suppliers-box d-block" href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                 <div class="suppliers-img-outer position-relative">
-                    <img class="fluid-img mx-auto" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
+                    <% if(vendor.is_vendor_closed == 1){%>
+                    <img class="fluid-img mx-auto blur-up lazyload grayscale-image" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
+                    <% }else { %>
+                        <img class="fluid-img mx-auto blur-up lazyload" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
+                    <%  } %>
                     <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                         <div class="pref-timing">
-                            <span><%= vendor.timeofLineOfSightDistance %> min</span>
+                            <span><%= vendor.timeofLineOfSightDistance %></span>
                         </div>
                     <% } %>
-                    <i class="fa fa-heart-o" aria-hidden="true"></i>
                 </div>
                 <div class="supplier-rating">
                     <div class="d-flex align-items-center justify-content-between">
@@ -147,7 +138,7 @@
         <div>
             <a class="brand-box d-block black-box" href="<%= brand.redirect_url %>">
                 <div class="brand-ing">
-                    <img src="<%= brand.image.image_fit %>500/500<%= brand.image.image_path %>" alt="">
+                    <img class="blur-up lazyload" src="<%= brand.image.image_fit %>260/260<%= brand.image.image_path %>" alt="">
                 </div>
                 <h6><%= brand.translation_title %></h6>
             </a>
@@ -155,45 +146,46 @@
     <% }); %>
 </script>
 
+
 <script type="text/template" id="products_template">
     <% _.each(products, function(product, k){ %>
-        <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
-            <div class="img-outer-box position-relative">
-                <img src="<%= product.image_url %>" alt="">
-                <div class="pref-timing">
-                    <!--<span>5-10 min</span>-->
-                </div>
-                <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
-            </div>    
-            <div class="media-body align-self-center">
-                <div class="inner_spacing px-0">
-                    <div class="product-description">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h6 class="card_title mb-1 ellips"><%= product.title %></h6>                                                                                    
-                            <!--<span class="rating-number">2.0</span>-->                                
-                        </div>
-                        <p><%= product.vendor_name %></p>
-                        <p class="border-bottom pb-1">In <%= product.category %></p>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <b><% if(product.inquiry_only == 0) { %>
-                                <%= product.price %>
-                            <% } %></b>
-
-                            <!-- @if($client_preference_detail)
-                                @if($client_preference_detail->rating_check == 1)
-                                    <% if(product.averageRating > 0){%>
-                                        <div class="rating-box">
-                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                            <span><%= product.averageRating %></span>
-                                        </div>
-                                    <% } %>
-                                @endif
-                            @endif   -->
-                        </div>                       
+        <div class="product-card-box position-relative">
+            <div class="add-to-fav 12">
+                <input id="fav_pro_one" type="checkbox">
+                <label for="fav_pro_one"><i class="fa fa-heart-o fav-heart" aria-hidden="true"></i></label>
+            </div>
+            <a class="common-product-box text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
+                <div class="img-outer-box position-relative">
+                    <img class="blur-up lazyload" src="<%= product.image_url %>" alt="">
+                    <div class="pref-timing">
+                        <!--<span>5-10 min</span>-->
                     </div>
                 </div>
-            </div>
-        </a>
+                <div class="media-body align-self-center">
+                    <div class="inner_spacing px-0">
+                        <div class="product-description">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h6 class="card_title mb-1 ellips"><%= product.title %></h6>
+                                @if($client_preference_detail)
+                                    @if($client_preference_detail->rating_check == 1)
+                                        <% if(product.averageRating > 0){%>
+                                            <span class="rating-number"><%= product.averageRating %></span>
+                                        <% } %>
+                                    @endif
+                                @endif
+                            </div>
+                            <p><%= product.vendor_name %></p>
+                            <p class="border-bottom pb-1">{{__('In')}} <%= product.category %></p>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <b><% if(product.inquiry_only == 0) { %>
+                                    <%= product.price %>
+                                <% } %></b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
     <% }); %>
 </script>
 
@@ -201,9 +193,13 @@
     <% _.each(trending_vendors, function(vendor, k){%>
 
         <div>
-            <a class="suppliers-box d-block px-2" href="{{route('vendorDetail')}}/<%= vendor.slug %>">
+            <a class="suppliers-box d-block mx-2" href="{{route('vendorDetail')}}/<%= vendor.slug %>">
                 <div class="suppliers-img-outer">
-                    <img class="fluid-img mx-auto" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
+                    <% if(vendor.is_vendor_closed == 1){%>
+                    <img class="fluid-img mx-auto blur-up lazyload grayscale-image" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
+                    <% }else { %>
+                    <img class="fluid-img mx-auto blur-up lazyload" src="<%= vendor.logo.image_fit %>200/200<%= vendor.logo['image_path'] %>" alt="">
+                    <%  } %>
                     <div class="pref-timing">
                         <span>35 min</span>
                     </div>
@@ -216,10 +212,10 @@
                         <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                             <ul class="timing-box mb-1">
                                 <li>
-                                    <small class="d-block"><img class="d-inline-block mr-1" src="{{ asset('front-assets/images/distance.png') }}" alt=""> <%= vendor.lineOfSightDistance %></small>
+                                    <small class="d-block"><img class="d-inline-block mr-1 blur-up lazyload" src="{{ asset('front-assets/images/distance.png') }}" alt=""> <%= vendor.lineOfSightDistance %></small>
                                 </li>
                                 <li>
-                                    <small class="d-block mx-1"><i class="fa fa-clock-o"></i> <%= vendor.timeofLineOfSightDistance %> min</small>
+                                    <small class="d-block mx-1"><i class="fa fa-clock-o"></i> <%= vendor.timeofLineOfSightDistance %></small>
                                 </li>
                             </ul>
                         <% } %>
@@ -252,161 +248,299 @@
         <% subtotal_order_price = total_order_price = total_tax_order_price = 0; %>
         <% _.each(order.vendors, function(vendor, k){ %>
         <%   product_total_count = product_subtotal_amount = product_taxable_amount = 0; %>
-        <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0 mt-3">
-            <% if((vendor.delivery_fee > 0) || (order.scheduled_date_time)){ %>
-                <div class="progress-order font-12">
-                <% if(order.scheduled_date_time){ %>
-                        <span class="badge badge-success ml-2">Scheduled</span>
-                        <span class="ml-2">Your order will arrive by <%= order.converted_scheduled_date_time %></span>
-                    <% } else { %>
-                        <span class="ml-2">Your order will arrive by <%= vendor.ETA %></span>
-                    <% } %>
-                </div>
-            <% } %>
-            <span class="left_arrow pulse"></span>
-            <div class="row">
-                <div class="col-5 col-sm-3">
-                    <h5 class="m-0">{{__('Order Status')}}</h5>
-                    <ul class="status_box mt-1 pl-0">
-                    <% if(vendor.order_status){ %>
-                        <li>
-                        <% if(vendor.order_status == 'placed'){ %>
-                                <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
-                        <% }else if(vendor.order_status == 'accepted'){ %>
-                                <img src="{{ asset('assets/images/payment_icon.svg') }}" alt="">
-                        <% } else if(vendor.order_status == 'processing'){ %>
-                                <img src="{{ asset('assets/images/customize_icon.svg') }}" alt="">
-                        <% } else if(vendor.order_status == 'out for delivery'){ %>
-                                <img src="{{ asset('assets/images/driver_icon.svg') }}" alt="">
+            <div class="order_detail order_detail_data align-items-top pb-3 card-box no-gutters mb-0 mt-3">
+                <% if((vendor.delivery_fee > 0) || (order.scheduled_date_time)){ %>
+                    <div class="progress-order font-12">
+                    <% if(order.scheduled_date_time){ %>
+                            <span class="badge badge-success ml-2">Scheduled</span>
+                            <span class="ml-2">{{__('Your order will arrive by')}} <%= order.converted_scheduled_date_time %></span>
+                        <% } else { %>
+                            <span class="ml-2">{{__('Your order will arrive by')}} <%= vendor.ETA %></span>
                         <% } %>
-                            <label class="m-0 in-progress"><%= (vendor.order_status).charAt(0).toUpperCase() + (vendor.order_status).slice(1) %></label>
-                        </li>
-                    <% } %>
-
-                    <% if(vendor.dispatch_traking_url){ %>
-                        <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
-                        <a href="{{route('front.booking.details')}}/<%= order.order_number %>" target="_blank">{{ __('Details') }}</a>
-                    <% } %>
-
-                    <% if(vendor.dineInTable){ %>
-                        <li>
-                            <h5 class="mb-1">{{ __('Dine-in') }}</h5>
-                            <h6 class="m-0"><%= vendor.dineInTableName %></h6>
-                            <h6 class="m-0">Category : <%=  vendor.dineInTableCategory %></h6>
-                            <h6 class="m-0">Capacity : <%= vendor.dineInTableCapacity %></h6>
-                        </li>
-                    <% } %>
-
-                    </ul>
-                </div>
-                <div class="col-7 col-sm-4">
-                    <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
-                    <% _.each(vendor.products, function(product, k){ %>
-                            <% if(vendor.vendor_id == product.vendor_id){ %>
-                                <li class="text-center">
-                                    <img src="<%= product.image_url %>" alt="">
-                                    <span class="item_no position-absolute">x <%= product.quantity %></span>
-                                    <label class="items_price">{{Session::get('currencySymbol')}}<%= product.price  * product.pricedoller_compare %></label>
-                                </li>
-                                <%
-                                    product_total_price = product.price * product.doller_compare;
-                                    product_total_count += product.quantity * product_total_price;
-                                    product_taxable_amount += product.taxable_amount;
-                                    total_tax_order_price += product.taxable_amount;
-                                %>
+                    </div>
+                <% } %>
+                <span class="left_arrow pulse"></span>
+                <div class="row">
+                    <div class="col-5 col-sm-3">
+                        <h5 class="m-0">{{__('Order Status')}}</h5>
+                        <ul class="status_box mt-1 pl-0">
+                        <% if(vendor.order_status){ %>
+                            <li>
+                            <% if(vendor.order_status == 'placed'){ %>
+                                    <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
+                            <% }else if(vendor.order_status == 'accepted'){ %>
+                                    <img src="{{ asset('assets/images/payment_icon.svg') }}" alt="">
+                            <% } else if(vendor.order_status == 'processing'){ %>
+                                    <img src="{{ asset('assets/images/customize_icon.svg') }}" alt="">
+                            <% } else if(vendor.order_status == 'out for delivery'){ %>
+                                    <img src="{{ asset('assets/images/driver_icon.svg') }}" alt="">
                             <% } %>
-                        <% }); %>
-                    </ul>
-                </div>
-                <div class="col-md-5 mt-md-0 mt-sm-2">
-                    <ul class="price_box_bottom m-0 p-0">
-                        <li class="d-flex align-items-center justify-content-between">
-                            <label class="m-0">{{__('Product Total')}}</label>
-                            <span>{{Session::get('currencySymbol')}} <%=(vendor.subtotal_amount)%></span>
-                        </li>
-                        <li class="d-flex align-items-center justify-content-between">
-                            <label class="m-0">{{__('Coupon Discount')}}</label>
-                            <span>{{Session::get('currencySymbol')}} <%=(vendor.discount_amount)%></span>
-                        </li>
-                        <li class="d-flex align-items-center justify-content-between">
-                            <label class="m-0">{{__('Delivery Fee')}}</label>
-                            <span>{{Session::get('currencySymbol')}} <%= (vendor.delivery_fee)%></span>
-                        </li>
-                        <li class="grand_total d-flex align-items-center justify-content-between">
-                            <label class="m-0">{{__('Amount')}}</label>
-                            <%
-                                product_subtotal_amount = product_total_count - vendor.discount_amount + vendor.delivery_fee;
-                                subtotal_order_price += product_subtotal_amount;
-                            %>
-                            <span>{{Session::get('currencySymbol')}} <%=(vendor.payable_amount)%></span>
-                        </li>
-                    </ul>
-                </div>
+                                <label class="m-0 in-progress"><%= (vendor.order_status).charAt(0).toUpperCase() + (vendor.order_status).slice(1) %></label>
+                            </li>
+                        <% } %>
 
+                        <% if(vendor.dispatch_traking_url){ %>
+                            <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
+                            <a href="{{route('front.booking.details')}}/<%= order.order_number %>" target="_blank">{{ __('Details') }}</a>
+                        <% } %>
+
+                        <% if(vendor.dineInTable){ %>
+                            <li>
+                                <h5 class="mb-1">{{ __('Dine-in') }}</h5>
+                                <h6 class="m-0"><%= vendor.dineInTableName %></h6>
+                                <h6 class="m-0">Category : <%=  vendor.dineInTableCategory %></h6>
+                                <h6 class="m-0">Capacity : <%= vendor.dineInTableCapacity %></h6>
+                            </li>
+                        <% } %>
+
+                        </ul>
+                    </div>
+                    <div class="col-7 col-sm-4">
+                        <ul class="product_list d-flex align-items-center p-0 flex-wrap m-0">
+                            <% _.each(vendor.products, function(product, k){ %>
+                                <% if(vendor.vendor_id == product.vendor_id){ %>
+                                    <li class="text-center">
+                                        <img class="blur-up lazyload" src="<%= product.image_url %>" alt="">
+                                        <span class="item_no position-absolute">x <%= product.quantity %></span>
+                                        <label class="items_price">{{Session::get('currencySymbol')}}<%= product.price  * product.pricedoller_compare %></label>
+                                    </li>
+                                    <%
+                                        product_total_price = product.price * product.doller_compare;
+                                        product_total_count += product.quantity * product_total_price;
+                                        product_taxable_amount += product.taxable_amount;
+                                        total_tax_order_price += product.taxable_amount;
+                                    %>
+                                <% } %>
+                            <% }); %>
+                        </ul>
+                    </div>
+                    <div class="col-md-5 mt-md-0 mt-sm-2">
+                        <ul class="price_box_bottom m-0 p-0">
+                            <li class="d-flex align-items-center justify-content-between">
+                                <label class="m-0">{{__('Product Total')}}</label>
+                                <span>{{Session::get('currencySymbol')}} <%=(vendor.subtotal_amount)%></span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between">
+                                <label class="m-0">{{__('Coupon Discount')}}</label>
+                                <span>{{Session::get('currencySymbol')}} <%=(vendor.discount_amount)%></span>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between">
+                                <label class="m-0">{{__('Delivery Fee')}}</label>
+                                <span>{{Session::get('currencySymbol')}} <%= (vendor.delivery_fee)%></span>
+                            </li>
+                            <li class="grand_total d-flex align-items-center justify-content-between">
+                                <label class="m-0">{{__('Amount')}}</label>
+                                <%
+                                    product_subtotal_amount = product_total_count - vendor.discount_amount + vendor.delivery_fee;
+                                    subtotal_order_price += product_subtotal_amount;
+                                %>
+                                <span>{{Session::get('currencySymbol')}} <%=(vendor.payable_amount)%></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
-
         <% }); %>
     <% }); %>
 </script>
 
-    <section class="section-b-space p-t-0 pt-3 pt-md-5 ratio_asos pb-0 shimmer_effect">
-        <div class="container">
+    <section class="section-b-space p-t-0 pt-4 ratio_asos shimmer_effect">
+        <div class="container mb-5">
+            <div class="row">
+                <div class="col-12 cards">
+                    <h2 class="h2-heading loading mb-3"></h2>
+                </div>
+            </div>
             <div class="grid-row grid-4-4">
                 <div class="cards">
                     <div class="card_image loading"></div>
-                    <div class="card_title loading"></div>
-                    <div class="card_content loading"></div>
-                    <div class="card_description loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
-                    <div class="card_title loading"></div>
-                    <div class="card_content loading"></div>
-                    <div class="card_description loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
-                    <div class="card_title loading"></div>
-                    <div class="card_content loading"></div>
-                    <div class="card_description loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
-                    <div class="card_title loading"></div>
-                    <div class="card_content loading"></div>
-                    <div class="card_description loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
-                    <div class="card_title loading"></div>
-                    <div class="card_content loading"></div>
-                    <div class="card_description loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
+                </div>
+            </div>
+        </div>
+        <div class="container mb-5">
+            <div class="row">
+                <div class="col-12 cards">
+                    <h2 class="h2-heading loading mb-3" style="width: 150px;"></h2>
+                </div>
+            </div>
+            <div class="grid-row grid-4-4">
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
-                    <div class="card_title loading"></div>
-                    <div class="card_content loading"></div>
-                    <div class="card_description loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
-                    <div class="card_title loading"></div>
-                    <div class="card_content loading"></div>
-                    <div class="card_description loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
                 </div>
                 <div class="cards">
                     <div class="card_image loading"></div>
-                    <div class="card_title loading"></div>
-                    <div class="card_content loading"></div>
-                    <div class="card_description loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
+                </div>
+            </div>
+        </div>
+        <div class="container mb-5">
+            <div class="row">
+                <div class="col-12 cards">
+                    <h2 class="h2-heading loading mb-3" style="width: 200px"></h2>
+                </div>
+            </div>
+            <div class="grid-row grid-4-4">
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
+                </div>
+                <div class="cards">
+                    <div class="card_image loading"></div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="card_title loading"></div>
+                        <div class="card_icon loading"></div>
+                    </div>
+                    <div class="card_content loading mt-0 w-75"></div>
+                    <div class="card_content loading mt-0 w-50"></div>
+                    <div class="card_line loading"></div>
+                    <div class="card_price loading"></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="section-b-space ratio_asos d-none pt-0 mt-0" id="our_vendor_main_div">
+<section class="section-b-space ratio_asos d-none pt-0 mt-0 pb-0" id="our_vendor_main_div">
     <div class="vendors">
         @foreach($homePageLabels as $key => $homePageLabel)
         @if($homePageLabel->slug == 'pickup_delivery')
@@ -420,7 +554,7 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-2 cw top-heading pr-0 text-center text-lg-left mb-3 mb-lg-0">
-                        <h2 class="h2-heading">{{ $homePageLabel->slug == 'brands' ? getNomenclatureName('brands', true) :  __($homePageLabel->title) }}</h2>
+                        <h2 class="h2-heading">{{ (!empty($homePageLabel->translations->first()->title)) ? $homePageLabel->translations->first()->title : getNomenclatureName('brands', true) }}</h2>
                         <!-- <p>Check out the favorites among people.</p> -->
                     </div>
                     <div class="col-lg-10 cw">
@@ -433,31 +567,29 @@
             </div>
         </section>
         @elseif($homePageLabel->slug == 'vendors')
-        <section class="suppliers-section pt-0 mb-2">
-        <div class="container">
+        <section class="suppliers-section">
+        <div class="container mb-0">
             <div class="row">
                 <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-2">
-                    <h2 class="h2-heading">{{ $homePageLabel->slug == 'vendors' ? getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2>
-                    <a class="btn btn-solid" href="{{route('vendor.all')}}">{{__("See all")}}</a>
+                    <h2 class="h2-heading">{{ (!empty($homePageLabel->translations->first()->title)) ? $homePageLabel->translations->first()->title : getNomenclatureName('vendors', true) }}</h2>
+                    <a class="" href="{{route('vendor.all')}}">{{__("See all")}}</a>
                 </div>
                 <div class="col-12">
-                    <div class="suppliers-slider render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
-
-
+                    <div class="suppliers-slider product-m render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
                     </div>
                 </div>
             </div>
         </div>
        </section>
        @elseif($homePageLabel->slug == 'trending_vendors')
-        <section class="suppliers-section pt-0 mt-4">
+        <section class="suppliers-section">
         <div class="container">
             <div class="row">
-                <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-3">
+                <div class="col-12 top-heading d-flex align-items-center justify-content-between">
                     <h2 class="h2-heading">{{ $homePageLabel->slug == 'trending_vendors' ? __('trending')." ".getNomenclatureName('vendors', true) :  __($homePageLabel->title) }}</h2>
                 </div>
                 <div class="col-12">
-                    <div class="suppliers-slider render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
+                    <div class="suppliers-slider product-m render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
 
 
                     </div>
@@ -468,7 +600,7 @@
         @else
         <section class="container mb-0 render_full_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}">
             <div class="row">
-                <div class="col-12 top-heading d-flex align-items-center justify-content-between  mb-0">
+                <div class="col-12 top-heading d-flex align-items-center justify-content-between">
                     <h2 class="h2-heading">
                     @php
                     if($homePageLabel->slug == 'vendors'){
@@ -482,7 +614,7 @@
 
                     </h2>
                     @if($homePageLabel->slug == 'vendors')
-                    <a class="btn btn-solid" href="{{route('vendor.all')}}">{{__('View More')}}</a>
+                    <a class="" href="{{route('vendor.all')}}">{{__('View More')}}</a>
                     @endif
                 </div>
             </div>
@@ -502,11 +634,31 @@
         @endforeach
     </div>
 </section>
-<div class="modal fade" id="age_restriction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<section class="no-store-wrapper mb-3">
+    <div class="container">
+       @if(count($for_no_product_found_html))     
+        @foreach($for_no_product_found_html as $key => $homePageLabel)
+            @include('frontend.included_files.dynamic_page')
+        @endforeach
+       @else 
+        <div class="row">
+            <div class="col-12">
+                <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <h4>{{__('There are no stores available in your area currently.')}}</h4>
+            </div>
+        </div>
+        @endif
+    </div>
+</section>
+<div class="modal age-restriction fade" id="age_restriction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <img src="{{asset('assets/images/18.png')}}" alt="">
+                <img class="blur-up lazyload" src="{{asset('assets/images/age-img.svg')}}" alt="">
                 <p class="mb-0 mt-3">{{ $client_preference_detail ? $client_preference_detail->age_restriction_title : 'Are you 18 or older?' }}</p>
                 <p class="mb-0">Are you sure you want to continue?</p>
             </div>

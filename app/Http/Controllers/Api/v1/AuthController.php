@@ -9,6 +9,7 @@ use Validation;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client as GCLIENT;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -597,7 +598,7 @@ class AuthController extends BaseController
                     return response()->json($errors, 422);
                 }
             }
-            $client = Client::select('id', 'name', 'email', 'phone_number', 'logo', 'sub_domain')->where('id', '>', 0)->first();
+            $client = Client::select('id', 'name', 'email', 'phone_number', 'logo', 'sub_domain','custom_domain')->where('id', '>', 0)->first();
             $data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
             if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
                 $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
@@ -609,8 +610,15 @@ class AuthController extends BaseController
                 $email_template = EmailTemplate::where('id', 3)->first();
                 if ($email_template) {
                     $email_template_content = $email_template->content;
+
+                    if(isset($client->custom_domain) && !empty($client->custom_domain) && $client->custom_domain != $client->sub_domain)
+                    $domain_link = "https://" . $client->custom_domain;
+                    else
+                    $domain_link = "https://" . $client->sub_domain . env('SUBMAINDOMAIN');
+
                     // $email_template_content = str_ireplace("{reset_link}", url('/reset-password/' . $token), $email_template_content);
-                    $email_template_content = str_ireplace("{reset_link}", "https://" . $client->sub_domain . env('SUBMAINDOMAIN') . "/reset-password/" . $token, $email_template_content);
+                //    $email_template_content = str_ireplace("{reset_link}", "https://" . $client->sub_domain . env('SUBMAINDOMAIN') . "/reset-password/" . $token, $email_template_content);
+                    $email_template_content = str_ireplace("{reset_link}", $domain_link . "/reset-password/" . $token, $email_template_content);
                 }
                 $data = [
                     'token' => $token,
@@ -1131,6 +1139,243 @@ class AuthController extends BaseController
             Log::info($e);
             Log::info($e->getMessage());
             return $this->errorResponse($e->getMessage(), 422);
+        }
+    }
+
+    public function driverSignup(Request $request)
+    {
+        try {
+            $dispatch_domain = $this->checkIfLastMileDeliveryOn();
+            if ($dispatch_domain && $dispatch_domain != false) {
+
+                $data = json_decode($this->driverDocuments());
+                $driver_registration_documents = $data->documents;
+
+                $rules_array = [
+                    'name' => 'required',
+                    'phone_number' => 'required',
+                    'type' => 'required',
+                    'team' => 'required',
+                    'vehicle_type_id' => 'required',
+                    'make_model' => 'required',
+                    'uid' => 'required',
+                    'plate_number' => 'required',
+                    'color' => 'required'
+                ];
+                foreach ($driver_registration_documents as $driver_registration_document) {
+                    if($driver_registration_document->is_required == 1){
+                        $name = str_replace(" ", "_", $driver_registration_document->name);
+                        $rules_array[$name] = 'required';
+                    }
+                }
+                $validator = Validator::make($request->all(), $rules_array, [
+                    "name.required" => __('The name field is required.'),
+                    "phone_number.required" => __('The phone number field is required.'),
+                    "type.required" => __('The type field is required.'),
+                    "vehicle_type_id.required" => __('The transport type is required.'),
+                    "make_model.required" => __('The transport details field is required.'),
+                    "uid.required" => __('The UID field is required.'),
+                    "plate_number.required" => __('The licence plate field is required.'),
+                    "color.required" => __('The color field is required.'),
+                    "team.required" => __('The team field is required.')
+                ]);
+                if ($validator->fails()) {
+                    foreach($validator->errors()->toArray() as $error_key => $error_value){
+                        $error = __($error_value[0]);
+                        return $this->errorResponse($error, 422);
+                    }
+                }
+
+                $files = [];
+                if ($driver_registration_documents != null) {
+                    foreach ($driver_registration_documents as $key => $driver_registration_document) {
+                        $driver_registration_document_file_type[$key] = $driver_registration_document->file_type;
+                        $files[$key]['file_type'] = $driver_registration_document_file_type[$key];
+                        $driver_registration_document_id[$key] = $driver_registration_document->id;
+                        $files[$key]['id'] = $driver_registration_document_id[$key];
+                        $driver_registration_document_name[$key] = $driver_registration_document->name;
+                        $files[$key]['name'] = $driver_registration_document_name[$key];
+                        $name = str_replace(" ", "_", $driver_registration_document->name);
+                        // $arr = explode(' ', $name);
+                        // $name = implode('_', $arr);
+                        $driver_registration_document_file_name[$key] = $request->$name;
+                        $files[$key]['file_name'] =  $driver_registration_document_file_name[$key];
+                    }
+                }
+                // $dispatch_domain->delivery_service_key_code = '649a9a';
+                //  $dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
+                $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
+                $url = $dispatch_domain->delivery_service_key_url;
+                $key1 = 0;
+                $key2 = 0;
+                $filedata = [];
+                $other = [];
+                $abc = [];
+                foreach ($files as $file) {
+                    if ($file['file_name'] != null) {
+                        if ($file['file_type'] != "Text") {
+                            $file_path          = $file['file_name']->getPathname();
+                            $file_mime          = $file['file_name']->getMimeType('image');
+                            $file_uploaded_name = $file['file_name']->getClientOriginalName();
+                            $filedata[$key2] =  [
+                                'Content-type' => 'multipart/form-data',
+                                'name' => 'uploaded_file[]',
+                                'file_type' => $file['file_type'],
+                                'id' => $file['id'],
+                                'filename' => $file_uploaded_name,
+                                'contents' => fopen($file_path, 'r'),
+
+                            ];
+                            $other[$key2] = [
+                                'filename1' => $file['name'],
+                                'file_type' => $file['file_type'],
+                                'id' => $file['id'],
+                            ];
+                            $key2++;
+                        } else {
+                            $abc[$key1] =  [
+                                'file_type' => $file['file_type'],
+                                'id' => $file['id'],
+                                'contents' => $file['file_name'],
+                                'label_name' => $file['name']
+                            ];
+                            $key1++;
+                        }
+                    }
+                }
+                $profile_photo = [];
+                if ($request->hasFile('upload_photo')) {
+                    $profile_photo =
+                        [
+                            'Content-type' => 'multipart/form-data',
+                            'name' => 'upload_photo',
+                            'filename' => $request->upload_photo->getClientOriginalName(),
+                            'Mime-Type' => $request->upload_photo->getMimeType('image'),
+                            'contents' =>  fopen($request->upload_photo, 'r'),
+                        ];
+                }
+                if ($profile_photo == null) {
+                    $profile_photo = ['name' => 'profile_photo[]', 'contents' => 'abc'];
+                }
+                if (!array_key_exists(0, $filedata)) {
+                    $filedata[0] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
+                }
+                if (!array_key_exists(1, $filedata)) {
+                    $filedata[1] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
+                }
+                if (!array_key_exists(2, $filedata)) {
+                    $filedata[2] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
+                }
+                if (!array_key_exists(3, $filedata)) {
+                    $filedata[3] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
+                }
+                if (!array_key_exists(4, $filedata)) {
+                    $filedata[4] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
+                }
+                if (!array_key_exists(5, $filedata)) {
+                    $filedata[5] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
+                }
+                if (!array_key_exists(6, $filedata)) {
+                    $filedata[6] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
+                }
+                if (!array_key_exists(7, $filedata)) {
+                    $filedata[7] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
+                }
+                if (!array_key_exists(8, $filedata)) {
+                    $filedata[8] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
+                }
+                if (!array_key_exists(9, $filedata)) {
+                    $filedata[9] = ['name' => 'uploaded_file[]', 'contents' => 'abc'];
+                }
+
+                $tags = '';
+                if ($request->has('tags') && !empty($request->get('tags'))) {
+                    $tagsArray = $request->get('tags');
+                    $tags = implode(',', $tagsArray);
+                }
+
+                $res = $client->post($url . '/api/agent/create', [
+
+                    'multipart' => [
+                        $filedata[0],
+                        $profile_photo,
+                        $filedata[1],
+                        $filedata[2],
+                        $filedata[3],
+                        $filedata[4],
+                        $filedata[5],
+                        $filedata[6],
+                        $filedata[7],
+                        $filedata[8],
+                        $filedata[9],
+                        [
+                            'name' => 'other',
+                            'contents' => json_encode($other)
+                        ],
+                        [
+                            'name' => 'files_text',
+                            'contents' => json_encode($abc)
+                        ],
+
+                        [
+                            'name' => 'count',
+                            'contents' => count($files)
+                        ],
+                        [
+                            'name' => 'name',
+                            'contents' => $request->name
+                        ],
+                        [
+                            'name' => 'phone_number',
+                            'contents' => $request->phone_number
+                        ],
+                        [
+                            'name' => 'country_code',
+                            'contents' => $request->country_code
+                        ],
+                        [
+                            'name' => 'type',
+                            'contents' => $request->type
+                        ],
+                        [
+                            'name' => 'vehicle_type_id',
+                            'contents' => $request->vehicle_type_id
+                        ],
+                        [
+                            'name' => 'make_model',
+                            'contents' => $request->make_model
+                        ],
+                        [
+                            'name' => 'uid',
+                            'contents' => $request->uid
+                        ],
+                        [
+                            'name' => 'plate_number',
+                            'contents' => $request->plate_number
+                        ],
+                        [
+                            'name' => 'color',
+                            'contents' => $request->color
+                        ],
+                        [
+                            'name' => 'team_id',
+                            'contents' => $request->team
+                        ],
+                        [
+                            'name' => 'tags',
+                            'contents' => $tags
+                        ],
+                    ]
+
+                ]);
+                $response = json_decode($res->getBody(), true);
+                return $response;
+            }
+        } catch (\Exception $e) {
+            $data = [];
+            $data['status'] = 400;
+            $data['message'] =  $e->getMessage();
+            return $data;
         }
     }
 }

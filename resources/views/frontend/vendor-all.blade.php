@@ -40,7 +40,7 @@
                                             <small class="d-block"><img class="d-inline-block mr-1" src="{{ asset('front-assets/images/distance.png') }}" alt=""> {{$vendor->lineOfSightDistance}}</small>
                                         </li>
                                         <li>
-                                            <small class="d-block mx-1"><i class="fa fa-clock-o"></i> {{$vendor->timeofLineOfSightDistance}} min</small>
+                                            <small class="d-block mx-1"><i class="fa fa-clock-o"></i> {{$vendor->timeofLineOfSightDistance}}</small>
                                         </li>
                                     </ul>
                                 @endif
@@ -50,7 +50,7 @@
                                     @if($vendor->vendorRating > 0)
                                         <ul class="custom-rating m-0 p-0">
                                             @for($i=0; $i < 5; $i++)
-                                                @php 
+                                                @php
                                                 if($i <= $vendor->vendorRating){
                                                     $starFillClass = 'fa-star';
                                                 }else{
@@ -108,6 +108,11 @@
 @else
 <section class="no-store-wrapper mb-3">
     <div class="container">
+        @if(count($for_no_product_found_html))     
+        @foreach($for_no_product_found_html as $key => $homePageLabel)
+            @include('frontend.included_files.dynamic_page')
+        @endforeach
+       @else 
         <div class="row">
             <div class="col-12">
                 <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
@@ -118,6 +123,7 @@
                 <h4>{{__('There are no stores available in your area currently.')}}</h4>
             </div>
         </div>
+        @endif
     </div>
 </section>
 @endif

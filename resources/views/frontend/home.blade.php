@@ -14,7 +14,7 @@
 
     .grid-row.grid-4-4 {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         grid-gap: 20px;
     }
 
@@ -31,7 +31,7 @@
     .shimmer_effect .card_title.loading {
         width: 50%;
         height: 1rem;
-        margin: 1rem;
+        margin: 1rem 0;
         border-radius: 3px;
         position: relative;
     }
@@ -42,8 +42,8 @@
     }
 
     .shimmer_effect .card_description.loading {
-        height: 3rem;
-        margin: 1rem;
+        height: 1rem;
+        margin: 1rem 0;
         border-radius: 3px;
     }
 
@@ -63,7 +63,9 @@
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
         animation: loading 0.8s infinite;
     }
-
+    .no-store-wrapper{
+        display: none;
+    }
     @keyframes loading {
         100% {
             transform: translateX(100%);
@@ -84,24 +86,9 @@
 </header>
 {{-- <div class="offset-top @if((\Request::route()->getName() != 'userHome') || ($client_preference_detail->show_icons == 0)) inner-pages-offset @endif @if($client_preference_detail->hide_nav_bar == 1) set-hide-nav-bar @endif"></div> --}}
 
-<section class="no-store-wrapper mb-3" style="display:none">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 text-center mt-2">
-                <h4>{{__('There are no stores available in your area currently.')}}</h4>
-            </div>
-        </div>
-    </div>
-</section>
-
 @if(count($banners))
 <section class="p-0 small-slider">
-    <div class="slide-1 home-slider">
+    <div class="slide-1 home-slider mb-md-4 mb-4">
         @foreach($banners as $banner)
         @php
         $url = '';
@@ -137,7 +124,12 @@
             <div class="img-wrapper">
                 <div class="front">
                     <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
-                        <img class="img-fluid blur-up lazyload m-auto bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
+                        <% if(vendor.is_vendor_closed == 1){%>
+                            <img class="img-fluid blur-up lazyload m-auto bg-img grayscale-image" alt="xx" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
+                            <% }else { %>
+                                <img class="img-fluid blur-up lazyload m-auto bg-img" alt="xx" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
+                            <%  } %>
+
                     </a>
                 </div>
             </div>
@@ -157,7 +149,7 @@
                 <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                     <h6 class="d-flex justify-content-between">
                         <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %></small>
-                        <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
+                        <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %></small>
                     </h6>
                 <% } %>
             </div>
@@ -168,7 +160,7 @@
 <script type="text/template" id="banner_template">
     <% _.each(brands, function(brand, k){%>
         <a class="barnd-img-outer" href="<%= brand.redirect_url %>">
-            <img src="<%= brand.image.image_fit %>500/500<%= brand.image.image_path %>" alt="">
+            <img class="blur-up lazyloaded" src="<%= brand.image.image_fit %>500/500<%= brand.image.image_path %>" alt="">
         </a>
     <% }); %>
 </script>
@@ -177,9 +169,9 @@
     <% _.each(products, function(product, k){ %>
         <div>
             <a class="card scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
-                <label class="product-tag"><%= type %></label>
+                <label class="product-tag"><% if(product.tag_title != 0) { %><%= product.tag_title %><% } else { %><%= type %><% } %></label>
                 <div class="product-image">
-                    <img src="<%= product.image_url %>" alt="">
+                    <img class="blur-up lazyloaded" src="<%= product.image_url %>" alt="">
                 </div>
                 <div class="media-body align-self-center">
                     <div class="inner_spacing px-0">
@@ -212,7 +204,11 @@
             <div class="img-wrapper">
                 <div class="front">
                     <a href="{{route('vendorDetail')}}/<%= vendor.slug %>">
-                        <img class="img-fluid blur-up lazyload m-auto bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
+                        <% if(vendor.is_vendor_closed == 1){%>
+                        <img class="img-fluid blur-up lazyload m-auto bg-img grayscale-image" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
+                        <% }else { %>
+                            <img class="img-fluid blur-up lazyload m-auto bg-img" alt="" src="<%= vendor.logo.proxy_url %>200/200<%= vendor.logo['image_path'] %>">
+                        <%  } %>
                     </a>
                 </div>
             </div>
@@ -232,7 +228,7 @@
                 <% if(vendor.timeofLineOfSightDistance != undefined){ %>
                     <h6 class="d-flex justify-content-between">
                         <small><i class="fa fa-map-marker"></i> <%= vendor.lineOfSightDistance %>km</small>
-                        <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %>min</small>
+                        <small><i class="fa fa-clock"></i> <%= vendor.timeofLineOfSightDistance %></small>
                     </h6>
                 <% } %>
             </div>
@@ -417,6 +413,26 @@
         </div>
         @endif
         @endforeach
+    </div>
+</section>
+<section class="no-store-wrapper mb-3">
+    <div class="container">
+        @if(count($for_no_product_found_html))     
+        @foreach($for_no_product_found_html as $key => $homePageLabel)
+            @include('frontend.included_files.dynamic_page')
+        @endforeach
+       @else 
+        <div class="row">
+            <div class="col-12">
+                <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <h4>{{__('There are no stores available in your area currently.')}}</h4>
+            </div>
+        </div>
+        @endif
     </div>
 </section>
 <div class="modal fade" id="age_restriction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

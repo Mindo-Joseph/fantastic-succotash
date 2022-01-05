@@ -99,12 +99,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <div class="col-lg-12">
                             <div class="row mobile-header align-items-center my-sm-2">
                                 <div class="col-12 col-sm-4 d-sm-flex align-items-center justify-content-sm-between">
-                                    <a class="navbar-brand mr-3 p-0 d-none d-sm-inline-block" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
+                                    <a class="navbar-brand mr-3 p-0 d-none d-sm-inline-flex align-items-center" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                                     <div class="d-flex justify-content-center">
                                     @if( (Session::get('preferences')))
                                         @if( (isset(Session::get('preferences')->is_hyperlocal)) && (Session::get('preferences')->is_hyperlocal == 1) )
-                                            <div class="location-bar d-flex d-sm-none align-items-center justify-content-start mb-2 my-lg-0" href="#edit-address" data-toggle="modal">
-                                                <div class="map-icon mr-2"><span>{{__('Your Location')}}</span> <i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                            <div class="location-bar d-none align-items-center justify-content-start mb-2 my-lg-0" href="#edit-address" data-toggle="modal">
+                                                <div class="map-icon mr-1"><span>{{__('Your Location')}}</span> <i class="fa fa-map-marker" aria-hidden="true"></i></div>
                                                 <div class="homepage-address text-left">
                                                     <h2><span data-placement="top">{{session('selectedAddress')}}</span></h2>
                                                 </div>
@@ -500,9 +500,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </div>
 
                         <ul id="main-menu" class="sm pixelstrap sm-horizontal menu-slider">
-                            <!-- <li>
-                                <div class="mobile-back text-end">{{__('Back')}}<i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
-                            </li> -->
                             @foreach($navCategories as $cate)
                                 @if($cate['name'])
                                 <li>
@@ -614,7 +611,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         </button>
       </div>
       <div class="modal-body">
-        <h6 class="m-0">{{__('Este cambio removerá los productos actuales en tu carrito. ¿Deseas continuar?')}}</h6>
+        <h6 class="m-0">{{__('This change will remove all your cart products. Do you really want to continue ?')}}</h6>
       </div>
       <div class="modal-footer flex-nowrap justify-content-center align-items-center">
         <button type="button" class="btn btn-solid black-btn" data-dismiss="modal">{{__('Cancel')}}</button>

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Front\{UserSubscriptionController, OrderController, WalletController, FrontController};
 use Auth, Log, Redirect;
-use App\Models\{PaymentOption, Cart, SubscriptionPlansUser, Order, Payment, CartAddon, CartCoupon, CartProduct, CartProductPrescription, UserVendor, User};
+use App\Models\{PaymentOption, Cart, SubscriptionPlansUser, Order, Payment, CartAddon, CartCoupon, CartProduct, CartProductPrescription, UserVendor, User,OrderProduct};
 
 class SquareController extends FrontController
 {
@@ -142,7 +142,7 @@ class SquareController extends FrontController
                 }
                 if($request->come_from == 'app')
                 {
-                    $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId.'&order='.$order_number;
+                    $returnUrl = route('payment.gateway.return.response').'/?gateway=square'.'&status=200&transaction_id='.$transactionId.'&order='.$order_number;
                 }else{
                     $returnUrl = route('order.return.success');
                 }
@@ -154,7 +154,7 @@ class SquareController extends FrontController
             $walletController->creditWallet($request);
             if($request->come_from == 'app')
             {
-                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId;
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=square'.'&status=200&transaction_id='.$transactionId;
             }else{
                 $returnUrl = route('user.wallet');
             }
@@ -166,19 +166,19 @@ class SquareController extends FrontController
             $orderController->tipAfterOrder($request);
             if($request->come_from == 'app')
             {
-                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId;
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=square'.'&status=200&transaction_id='.$transactionId;
             }else{
                 $returnUrl = route('user.orders');
             }
             return $returnUrl;
         }
         elseif($request->payment_from == 'subscription'){
-            $request->request->add(['payment_option_id' => 12, 'transaction_id' => $transactionId]);
+            $request->request->add(['payment_option_id' => 13, 'transaction_id' => $transactionId]);
             $subscriptionController = new UserSubscriptionController();
             $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription_id);
             if($request->come_from == 'app')
             {
-                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify'.'&status=200&transaction_id='.$transactionId;
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=square'.'&status=200&transaction_id='.$transactionId;
             }else{
                 $returnUrl = route('user.subscription.plans');
             }
@@ -203,7 +203,7 @@ class SquareController extends FrontController
             Order::where('id', $order->id)->delete();
             if($request->come_from == 'app')
             {
-                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify&status=0';
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=square&status=0';
             }else{
                 $returnUrl = route('showCart');
             }
@@ -212,7 +212,7 @@ class SquareController extends FrontController
         elseif($request->payment_form == 'wallet'){
             if($request->come_from == 'app')
             {
-                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify&status=0';
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=square&status=0';
             }else{
                 $returnUrl = route('user.wallet');
             }
@@ -221,7 +221,7 @@ class SquareController extends FrontController
         elseif($request->payment_form == 'tip'){
             if($request->come_from == 'app')
             {
-                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify&status=0';
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=square&status=0';
             }else{
                 $returnUrl = route('user.orders');
             }
@@ -230,7 +230,7 @@ class SquareController extends FrontController
         elseif($request->payment_form == 'subscription'){
             if($request->come_from == 'app')
             {
-                $returnUrl = route('payment.gateway.return.response').'/?gateway=simplify&status=0';
+                $returnUrl = route('payment.gateway.return.response').'/?gateway=square&status=0';
             }else{
                 $returnUrl = route('user.subscription.plans');
             }

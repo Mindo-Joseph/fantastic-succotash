@@ -79,7 +79,9 @@
 @endsection
 @section('content')
 <div class="container-fluid">
+
     <div class="row">
+
         <div class="col-8 d-flex align-items-center">
             <div class="page-title-box">
                 <h4 class="page-title">{{ __("Edit Product") }}</h4>
@@ -96,6 +98,7 @@
             <button type="button" class="btn btn-info waves-effect waves-light text-sm-right saveProduct"> {{ __("Submit") }}</button>
         </div>
     </div>
+    <a href="{{route('vendor.catalogs',$product->vendor_id)}}">{{ $product->vendor->name}} </a>
     <div class="row mb-2">
         <div class="col-sm-12">
             <div class="text-sm-left">
@@ -234,9 +237,20 @@
                                     {!! Form::number('quantity', $product->variant[0]->quantity, ['class'=>'form-control', 'id' => 'quantity', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                 </div>
                                 @endif
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     {!! Form::label('title', __('Sell When Out Of Stock'),['class' => 'control-label']) !!} <br />
                                     <input type="checkbox" bid="" id="sell_stock_out" data-plugin="switchery" name="sell_stock_out" class="chk_box" data-color="#43bee1" @if($product->sell_when_out_of_stock == 1) checked @endif>
+                                </div>
+                                @endif
+
+                                @if($configData->minimum_order_batch == 1 || $product->minimum_order_count > 0)
+                                <div class="col-sm-3">
+                                    {!! Form::label('title', __('Minimum Order Count'),['class' => 'control-label']) !!}
+                                    {!! Form::number('minimum_order_count', $product->minimum_order_count, ['class'=>'form-control', 'id' => 'minimum_order_count', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                                </div>
+                                <div class="col-sm-2">
+                                    {!! Form::label('title', __('Batch Count'),['class' => 'control-label']) !!}
+                                    {!! Form::number('batch_count', $product->batch_count, ['class'=>'form-control', 'id' => 'batch_count', 'placeholder' => '0', 'min' => '0', 'onkeypress' => 'return isNumberKey(event)']) !!}
                                 </div>
                                 @endif
                                 @if($configData->need_dispacher_home_other_service == 1 && $product->category->categoryDetail->type_id == 8)
@@ -392,10 +406,12 @@
                             {!! Form::label('title', __('New'),['class' => 'control-label']) !!}
                             <input type="checkbox" id="is_new" data-plugin="switchery" name="is_new" class="chk_box" data-color="#43bee1" @if($product->is_new == 1) checked @endif>
                         </div>
-                        <div class="col-md-6 d-flex justify-content-between mb-2">
-                            {!! Form::label('title', __('Featured'),['class' => 'control-label']) !!}
-                            <input type="checkbox" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#43bee1" @if($product->is_featured == 1) checked @endif>
-                        </div>
+                            @if(Auth::user()->is_superadmin == 1)
+                                <div class="col-md-6 d-flex justify-content-between mb-2">
+                                    {!! Form::label('title', __('Featured'),['class' => 'control-label']) !!}
+                                    <input type="checkbox" id="is_featured" data-plugin="switchery" name="is_featured" class="chk_box" data-color="#43bee1" @if($product->is_featured == 1) checked @endif>
+                                </div>
+                            @endif
                         @endif
                         @if($configData->need_delivery_service == 1 && $product->category->categoryDetail->type_id != 7 && (!in_array($client_preference_detail->business_type,['taxi','laundry'])))
                         <div class="col-md-6 d-flex justify-content-between mb-2">
@@ -533,7 +549,7 @@
                     </div>
                     @endif
                     @endif
-                  
+
                     <!-- <div class="row mb-2">
                         {!! Form::label('title', 'Physical',['class' => 'control-label col-sm-2']) !!}
                         <div class="col-sm-4">
@@ -1008,7 +1024,13 @@
         var psku = $('#sku').val();
         var pid = "{{$product->id}}";
         if (psku.trim() == '') {
-            alert('Enter Product sku.');
+            Swal.fire({
+               title: "Warning!",
+               text: "Enter Product sku.",
+               icon: "warning",
+               button: "OK",
+            });
+            // alert('Enter Product sku.');
             return false;
         }
         var vids = [];
@@ -1038,7 +1060,13 @@
             dataType: 'json',
             success: function(resp) {
                 if (resp.success == 'false') {
-                    alert(resp.msg);
+                    Swal.fire({
+                       title: "Error!",
+                       text: resp.msg,
+                       icon: "error",
+                       button: "OK",
+                    });
+                    // alert(resp.msg);
                     $('#variantRowDiv').html('');
                 } else {
                     $('#variantRowDiv').html(resp.html);
@@ -1069,7 +1097,13 @@
         var fileType = file['type'];
         var validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
         if (!validImageTypes.includes(fileType)) {
-            alert('select only images');
+            Swal.fire({
+                title: "Warning!",
+                text: "Select only images",
+                icon: "warning",
+                button: "OK",
+            });
+            // alert('select only images');
         } else {
 
             var form = document.getElementById('modalImageForm');
@@ -1205,7 +1239,13 @@
                 if (resp.success != 'false') {
                     $('#upload-media').modal('hide');
                 } else {
-                    alert(resp.msg);
+                    Swal.fire({
+                       title: "Error!",
+                       text: resp.msg,
+                       icon: "error",
+                       button: "OK",
+                    });
+                    // alert(resp.msg);
                     $('#upload-media').modal('hide');
                 }
             },
@@ -1253,13 +1293,19 @@
                   product_faq_id: product_faq_id
                },
                success: function(response) {
-                  if (response.status == "Success") {
-                     $.NotificationApp.send({{__('Success')}}, response.message, "top-right", "#5ba035", "success");
-                     setTimeout(function() {
-                        location.reload()
-                     }, 2000);
-                  }
+               if (response.status == 'Success') {
+
+                  $.NotificationApp.send("{{__('Success')}}", response.message, "top-right", "#5ba035", "success");
+                  setTimeout(function() {
+                     location.reload()
+                  }, 2000);
+               } else {
+                  $.NotificationApp.send({{__('Errors')}}, response.message, "top-right", "#ab0535", "error");
                }
+            },
+            error: function(response) {
+               $('#add_product_faq_modal .social_media_url_err').html('Error in delete.');
+            }
             });
          }
       });

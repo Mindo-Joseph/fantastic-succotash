@@ -18,6 +18,7 @@ if (Session::has('toaster')) {
 <script src="{{asset('assets/libs/select2/select2.min.js')}}"></script>
 <script src="{{asset('assets/libs/bootstrap-select/bootstrap-select.min.js')}}"></script>
 <script src="{{asset('assets/libs/bootstrap-touchspin/bootstrap-touchspin.min.js')}}"></script>
+<script src="{{asset('assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
 <script src="{{asset('assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
 <script src="{{asset('assets/libs/flatpickr/flatpickr.min.js')}}"></script>
 <script src="{{asset('front-assets/js/underscore.min.js')}}"></script>
@@ -40,11 +41,17 @@ if (Session::has('toaster')) {
 <script>
     let stripe_publishable_key = "{{ $stripe_publishable_key }}";
     let is_hyperlocal = 0;
-    @if(Session::has('preferences'))
-    @if((isset(Session::get('preferences')['is_hyperlocal'])) && (Session::get('preferences')['is_hyperlocal'] == 1))
-    is_hyperlocal = 1;
-    @endif;
-    @endif;
+    var business_type = '';
+    
+    @if($client_preference_detail)
+        @if((isset($client_preference_detail->is_hyperlocal)) && ($client_preference_detail->is_hyperlocal == 1))
+            is_hyperlocal = 1;
+        @endif
+
+        @if((isset($client_preference_detail->business_type)) && ($client_preference_detail->business_type != ''))
+            business_type = "{{$client_preference_detail->business_type}}";
+        @endif
+    @endif
     var base_url = "{{ url('/')}}";
 
     function gm_authFailure() {
@@ -154,7 +161,7 @@ if (Session::has('toaster')) {
         });
     }
 </script>
-@if(Session::has('preferences') && !empty(Session::get('preferences')['fcm_api_key']))
+@if(Session::has('preferences') && !empty(Session::get('preferences')->fcm_api_key))
 <script>
     var firebaseCredentials = {!!json_encode(Session::get('preferences')) !!};
     var firebaseConfig = {
