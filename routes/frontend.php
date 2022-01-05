@@ -222,6 +222,7 @@ Route::group(['middleware' => ['domain', 'webAuth']], function () {
 	Route::get('user/wallet', 'Front\WalletController@index')->name('user.wallet');
 	Route::post('user/wallet/credit', 'Front\WalletController@creditWallet')->name('user.creditWallet');
 	Route::post('wallet/transfer/user/verify', 'Front\WalletController@walletTransferUserVerify')->name('wallet.transfer.user.verify');
+	Route::post('wallet/transfer/confirm', 'Front\WalletController@walletTransferConfirm')->name('wallet.transfer.confirm');
 	Route::get('user/loyalty', 'Front\LoyaltyController@index')->name('user.loyalty');
 	Route::post('wallet/payment/option/list', 'Front\WalletController@paymentOptions')->name('wallet.payment.option.list');
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');

@@ -118,7 +118,7 @@ class WalletController extends FrontController
     }
 
     /**
-     * wallet payment options
+     * user verification for wallet transfer
      *
      * @return \Illuminate\Http\Response
      */
@@ -133,6 +133,43 @@ class WalletController extends FrontController
                 return $this->successResponse('', __('User is verified'), 201);
             }else{
                 return $this->errorResponse('User does not exist', 422);   
+            }
+        }
+        catch(Exception $ex){
+            return $this->errorResponse($ex->getMessage(), $ex->getCode);
+        }
+    }
+
+    /**
+     * transfer wallet balance to user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function walletTransferConfirm(Request $request, $domain = ''){
+        try{
+            $first_user = Auth::user();
+            $first_user_balance = $first_user->balanceFloat;
+            $username = $request->username;
+            $transfer_amount = $request->amount;
+
+            if($transfer_amount < 0){
+                return $this->errorResponse(__('Invalid Amount'), 422);
+            }
+            if($transfer_amount > $first_user_balance){
+                return $this->errorResponse(__('Insufficient funds in wallet'), 422);
+            }
+            
+            $second_user = User::where(function($q) use($username){
+                $q->where('email', $username)->orWhereRaw("CONCAT(`dial_code`, `phone_number`) = ?", $username);
+            })
+            ->where('status', 1)->first();
+            if($second_user){
+                $first_user->transfer($second_user, $transfer_amount, ['Wallet has been <b>Debited</b> by transfer']);
+                $message = __('Amount has been transferred successfully');
+                Session::put('success', $message);
+                return $this->successResponse('', $message, 201);
+            }else{
+                return $this->errorResponse('User does not exist', 422);
             }
         }
         catch(Exception $ex){

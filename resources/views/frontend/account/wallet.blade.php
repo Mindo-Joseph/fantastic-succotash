@@ -280,6 +280,7 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
                     <strong></strong>
                 </span>
               </div>
+              <span class="error-msg mt-2"></span>
               @endif
           </div>
           <div class="modal-footer d-block text-center">
@@ -478,6 +479,54 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
             $("#wallet_transfer_amountInput input").removeClass("is-invalid").addClass('valid');
             $("#wallet_transfer_amountInput span.invalid-feedback").children("strong").text('');
             $("#wallet_transfer_amountInput span.invalid-feedback").hide();
+        }
+    });
+
+    $(document).on('click', '.transfer_wallet_confirm', function() {
+        var amount = $("#wallet_transfer_amount").val();
+        var username = $("#wallet_transfer_user").val();
+        if((amount != '') && (username != '')){
+            var is_valid = true;
+            $('#wallet_transfer_form input').each(function(index, el) {
+                if($(el).hasClass("is-invalid")){
+                    $(el).trigger('focus');
+                    is_valid = false;
+                    return false;
+                }
+            });
+            if(!is_valid){
+                return false;
+            }
+
+            ajaxCall = $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "{{ route('wallet.transfer.confirm') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "username": username,
+                    "amount": amount
+                },
+                beforeSend: function() {
+                    if (ajaxCall != 'ToCancelPrevReq' && ajaxCall.readyState < 4) {
+                        ajaxCall.abort();
+                    }
+                },
+                success: function(response) {
+                    if(response.status == 'Success'){
+                        $(this).find(".error-msg").text('');
+                        window.location.reload();
+                    }
+                },
+                error: function(response) {
+                    let error = response.responseJSON;
+                    if (response.status === 422) {
+                        $(this).find(".error-msg").text(error.message);
+                    }
+                },
+            });
+        }else{
+            alert('All fields are required');
         }
     });
 </script>
