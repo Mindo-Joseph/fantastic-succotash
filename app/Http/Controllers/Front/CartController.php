@@ -1161,10 +1161,41 @@ class CartController extends FrontController
             CartProduct::where('cart_id', $cart_id)->delete();
             CartCoupon::where('cart_id', $cart_id)->delete();
             CartAddon::where('cart_id', $cart_id)->delete();
+
+         
             return response()->json(['status' => 'success', 'message' => 'Cart has been deleted successfully.']);
         } else {
             return response()->json(['status' => 'error', 'message' => 'Cart cannot be deleted.']);
         }
+    }
+
+
+    public function repeatOrder($domain = '', Request $request){
+
+        $order_vendor_id = $request->order_vendor_id;
+        $cart_id = $request->cart_id;
+        $getallproduct = OrderProduct::where('order_vendor_id',$order_vendor_id)->get();
+        
+        if(isset($cart_id) && !empty($cart_id)){
+            CartProduct::where('cart_id', $cart_id)->delete();
+            CartCoupon::where('cart_id', $cart_id)->delete();
+            CartAddon::where('cart_id', $cart_id)->delete();
+        }
+        
+
+        foreach($getallproduct as $data){
+            $request->vendor_id = $data->vendor_id;
+            $request->product_id = $data->product_id;
+            $request->quantity = $data->quantity;
+            $request->variant_id = $data->variant_id;
+            $this->postAddToCart($request);
+
+        }
+        
+        return response()->json(['status' => 'success', 'message' => 'Order added to cart.','cart_url' => route('showCart')]);
+
+       
+ 
     }
 
     /**
