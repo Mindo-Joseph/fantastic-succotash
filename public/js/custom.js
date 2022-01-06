@@ -1349,6 +1349,14 @@ $(document).ready(function() {
                 return false;
             }
         }
+        else if (payment_option_id == 17) {
+            var order = placeOrderBeforePayment(address_id, payment_option_id, tip);
+            if (order != '') {
+                paymentViaCheckout(address_id, order);
+            } else {
+                return false;
+            }
+        }
     });
 
 
