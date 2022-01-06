@@ -243,7 +243,7 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
 </div>
 <div class="modal fade" id="transfer_wallet" tabindex="-1" aria-labelledby="transfer_walletLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content" style="max-width: 400px;">
         <div class="modal-header border-bottom">
           <h5 class="modal-title text-17 mb-0 mt-0" id="transfer_walletLabel">{{__('Transfer Funds')}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -275,7 +275,7 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
               </div>
               <div class="form-group" id="wallet_transfer_userInput">
                 <label for="wallet_transfer_user">{{__('Transfer to')}}</label>
-                <input class="form-control" name="wallet_transfer_user" id="wallet_transfer_user" type="text" placeholder="{{__('Enter Email or Phone Number with Dial Code')}}">
+                <input class="form-control" name="wallet_transfer_user" id="wallet_transfer_user" type="text" placeholder="{{__('Enter Email or Phone Number with Country Code')}}">
                 <span class="invalid-feedback" role="alert">
                     <strong></strong>
                 </span>
