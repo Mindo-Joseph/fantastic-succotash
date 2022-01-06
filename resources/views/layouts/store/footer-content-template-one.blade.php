@@ -13,8 +13,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                 <div class="col-12 d-block d-md-none">
                     <div class="footer-contant">
                         <div class="store-btn mb-3 d-flex align-items-center">
-                            <a class="mt-2 mr-2" href="{{$client_preference_detail->ios_link??'#'}}"  target="_blank"><img class="blur-up lazyload" data-src="{{asset('front-assets/images/app-store.svg')}}" alt=""></a>
-                            <a class="mt-2" href="{{$client_preference_detail->android_app_link??'#'}}"  target="_blank"><img class="blur-up lazyload" data-src="{{asset('front-assets/images/google-play.svg')}}" alt=""></a>
+                            <a class="mt-2 mr-2" href="{{$client_preference_detail->ios_link??'#'}}"  target="_blank"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'135/24') }}" alt=""></a>
+                            <a class="mt-2" href="{{$client_preference_detail->android_app_link??'#'}}"  target="_blank"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'135/24') }}" alt=""></a>
                         </div>
                     </div>
                 </div>
@@ -108,8 +108,13 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                         <div class="footer-contant">
                             <div class="store-btn mb-3 d-none d-md-block">
+<<<<<<< HEAD
                                 <a href="{{$client_preference_detail->ios_link??'#'}}" target="_blank"><img class="blur-up lazyload" data-src="{{asset('front-assets/images/app-store.svg')}}" alt=""></a>
                                 <a class="ml-xl-2 mt-2 mt-xl-0" href="{{$client_preference_detail->android_app_link??'#'}}" target="_blank"><img class="blur-up lazyload" data-src="{{asset('front-assets/images/google-play.svg')}}" alt=""></a>
+=======
+                                <a href="{{$client_preference_detail->ios_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'135/24') }}" alt=""></a>
+                                <a class="ml-xl-2 mt-2 mt-xl-0" href="{{$client_preference_detail->android_app_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'135/24') }}" alt=""></a>
+>>>>>>> 182a4a696bedb9661ad095145b365bb04f7d1518
                             </div>
 
                             @if(count($social_media_details))
@@ -144,6 +149,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                             <div class="payment-card-bottom text-center d-flex">
                                 <ul>
                                     <li>
+<<<<<<< HEAD
                                         <a href="#"><img class="blur-up lazyload" data-src="{{asset('assets/images/visa.png')}}"></a>
                                     </li>
                                     <li>
@@ -157,6 +163,21 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                                     </li>
                                     <li>
                                         <a href="#"><img class="blur-up lazyload" data-src="{{asset('assets/images/discover.png')}}"></a>
+=======
+                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/visa.png'),'26/26') }}"></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/mastercard.png'),'26/26') }}"></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/paypal.png'),'26/26') }}"></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/american-express.png'),'26/26') }}"></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/discover.png'),'26/26') }}"></a>
+>>>>>>> 182a4a696bedb9661ad095145b365bb04f7d1518
                                     </li>
                                 </ul>
                             </div>

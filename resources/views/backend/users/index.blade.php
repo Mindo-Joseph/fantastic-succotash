@@ -428,6 +428,7 @@
     });
 
     $(document).on('click','.delete_customer',function(e){
+        var submit_url = $(this).attr('href');
         Swal.fire({
             title: "{{__('Are you sure?')}}",
             text:"{{__('You want to delete this customer.')}}",
@@ -437,7 +438,9 @@
         }).then((result) => {
             if(result.value)
             {
-                return true;
+                window.location.href = submit_url;
+            }else{
+               return false; 
             }
         });
         return false;

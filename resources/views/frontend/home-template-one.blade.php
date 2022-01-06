@@ -267,20 +267,20 @@
                         <% if(vendor.order_status){ %>
                             <li>
                             <% if(vendor.order_status == 'placed'){ %>
-                                    <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
+                                    <img class="blur-up lazyload" data-src="{{ asset('assets/images/order-icon.svg') }}" alt="">
                             <% }else if(vendor.order_status == 'accepted'){ %>
-                                    <img src="{{ asset('assets/images/payment_icon.svg') }}" alt="">
+                                    <img class="blur-up lazyload" data-src="{{ asset('assets/images/payment_icon.svg') }}" alt="">
                             <% } else if(vendor.order_status == 'processing'){ %>
-                                    <img src="{{ asset('assets/images/customize_icon.svg') }}" alt="">
+                                    <img class="blur-up lazyload" data-src="{{ asset('assets/images/customize_icon.svg') }}" alt="">
                             <% } else if(vendor.order_status == 'out for delivery'){ %>
-                                    <img src="{{ asset('assets/images/driver_icon.svg') }}" alt="">
+                                    <img class="blur-up lazyload" data-src="{{ asset('assets/images/driver_icon.svg') }}" alt="">
                             <% } %>
                                 <label class="m-0 in-progress"><%= (vendor.order_status).charAt(0).toUpperCase() + (vendor.order_status).slice(1) %></label>
                             </li>
                         <% } %>
 
                         <% if(vendor.dispatch_traking_url){ %>
-                            <img src="{{ asset('assets/images/order-icon.svg') }}" alt="">
+                            <img class="blur-up lazyload" data-src="{{ asset('assets/images/order-icon.svg') }}" alt="">
                             <a href="{{route('front.booking.details')}}/<%= order.order_number %>" target="_blank">{{ __('Details') }}</a>
                         <% } %>
 
@@ -643,7 +643,7 @@
        @else
         <div class="row">
             <div class="col-12">
-                <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
+                <img class="no-store-image w-100 mt-2 mb-2 blur-up lazyload" data-src="{{ getImageUrl(asset('images/no-stores.svg'),'250/250') }}" style="max-height: 250px;">
             </div>
         </div>
         <div class="row">
@@ -658,7 +658,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <img class="blur-up lazyload" data-src="{{asset('assets/images/age-img.svg')}}" alt="">
+                <img class="blur-up lazyload" data-src="{{getImageUrl(asset('assets/images/age-img.svg'),'150/150')}}" alt="">
                 <p class="mb-0 mt-3">{{ $client_preference_detail ? $client_preference_detail->age_restriction_title : 'Are you 18 or older?' }}</p>
                 <p class="mb-0">Are you sure you want to continue?</p>
             </div>
