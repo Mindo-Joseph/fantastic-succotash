@@ -63,7 +63,7 @@
                     expYear: $("#cc-exp-year").val(),
                     "_token": "{{ csrf_token() }}",
                 },
-                success: function(response){
+                success: function(response){ 
                     if(response.status == 'Success')
                     {
                         console.log(response.data);
