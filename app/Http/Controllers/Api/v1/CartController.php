@@ -1079,4 +1079,43 @@ class CartController extends BaseController
             return response()->json(['status'=>'Error', 'message'=>$ex->getMessage()]);
         }
     }
+
+    # repeat order vendor wise 
+
+    public function repeatOrder($domain = '', Request $request){
+
+        $order_vendor_id = $request->order_vendor_id;
+        $cart_id = $request->cart_id;
+        $getallproduct = OrderProduct::where('order_vendor_id',$order_vendor_id)->get();
+        
+        if(isset($cart_id) && !empty($cart_id)){
+            CartProduct::where('cart_id', $cart_id)->delete();
+            CartCoupon::where('cart_id', $cart_id)->delete();
+            CartAddon::where('cart_id', $cart_id)->delete();
+        }
+   
+        foreach($getallproduct as $data){
+            $request->vendor_id = $data->vendor_id;
+            $request->product_id = $data->product_id;
+            $request->quantity = $data->quantity;
+            $request->variant_id = $data->variant_id;
+
+            $addonID = OrderProductAddon::where('order_product_id',$data->id)->pluck('addon_id');
+            $addonoptID = OrderProductAddon::where('order_product_id',$data->id)->pluck('option_id');
+
+            if(count($addonID))
+            $request->request->add(['addonID' => $addonID->toArray()]);
+
+            if(count($addonoptID))
+            $request->request->add(['addonoptID' => $addonoptID->toArray()]);
+
+            $this->add($request);
+
+        }
+      
+        return response()->json(['status' => 'success', 'message' => 'Order added to cart.','cart_url' => route('showCart')]);
+
+       
+ 
+    }
 }
