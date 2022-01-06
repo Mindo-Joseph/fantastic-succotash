@@ -165,7 +165,10 @@ class CartController extends FrontController
                     }
                 }
                 if($productDetail->variant[0]->quantity < $request->quantity){
-                    $request->quantity = $productDetail->variant[0]->quantity;
+                    if($productDetail->variant[0]->quantity == 0){
+                        $productDetail->variant[0]->quantity = 1;
+                    }
+                     $request->quantity = $productDetail->variant[0]->quantity;
                 }
             }
 
