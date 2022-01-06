@@ -643,7 +643,7 @@
        @else 
         <div class="row">
             <div class="col-12">
-                <img class="no-store-image w-100 mt-2 mb-2" src="{{ asset('images/no-stores.svg') }}" style="max-height: 250px;">
+                <img class="no-store-image w-100 mt-2 mb-2" src="{{ getImageUrl(asset('images/no-stores.svg'),'250/250') }}" style="max-height: 250px;">
             </div>
         </div>
         <div class="row">
@@ -658,7 +658,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <img class="blur-up lazyload" src="{{asset('assets/images/age-img.svg')}}" alt="">
+                <img class="blur-up lazyload" src="{{getImageUrl(asset('assets/images/age-img.svg'),'150/150')}}" alt="">
                 <p class="mb-0 mt-3">{{ $client_preference_detail ? $client_preference_detail->age_restriction_title : 'Are you 18 or older?' }}</p>
                 <p class="mb-0">Are you sure you want to continue?</p>
             </div>

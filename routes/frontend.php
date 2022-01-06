@@ -8,6 +8,7 @@ Route::get('/debug-sentry', function () {
 
 
 Route::group(['middleware' => ['domain']], function () {
+	Route::any('webhook/lalamove', 'Front\LalaMovesController@webhooks')->name('webhook');
 	Route::get('dispatch-order-status-update/{id?}', 'Front\DispatcherController@dispatchOrderStatusUpdate')->name('dispatch-order-update'); // Order Status update Dispatch
 	Route::get('dispatch-pickup-delivery/{id?}', 'Front\DispatcherController@dispatchPickupDeliveryUpdate')->name('dispatch-pickup-delivery'); // pickup delivery update from dispatch
 	
@@ -32,6 +33,13 @@ Route::group(['middleware' => ['domain']], function () {
 
 	Route::get('payment/gateway/returnResponse', 'Front\PaymentController@getGatewayReturnResponse')->name('payment.gateway.return.response');
 
+	//lalMoves Test Route
+	Route::match(['get','post'],'order/lalamoves/quotation','Front\LalaMovesController@quotation')->name('order.lalamoves.quotation');
+
+	Route::match(['get','post'],'order/lalamoves/place-order','Front\LalaMovesController@placeOrder')->name('order.lalamoves.place_order');
+	
+
+	
 	////check Shiprocket
 	Route::get('carrier/test/shiprocket','ShiprocketController@checkShiprocket')->name('carrier.test.shiprocket');
 	Route::post('shiprocket_webhook','ShiprocketController@shiprocketWebhook')->name('carrier.webhook.shiprocket');
@@ -219,6 +227,8 @@ Route::group(['middleware' => ['domain', 'webAuth']], function () {
 	Route::get('user/addressBook', 'Front\AddressController@index')->name('user.addressBook');
 	Route::get('user/wallet', 'Front\WalletController@index')->name('user.wallet');
 	Route::post('user/wallet/credit', 'Front\WalletController@creditWallet')->name('user.creditWallet');
+	Route::post('wallet/transfer/user/verify', 'Front\WalletController@walletTransferUserVerify')->name('wallet.transfer.user.verify');
+	Route::post('wallet/transfer/confirm', 'Front\WalletController@walletTransferConfirm')->name('wallet.transfer.confirm');
 	Route::get('user/loyalty', 'Front\LoyaltyController@index')->name('user.loyalty');
 	Route::post('wallet/payment/option/list', 'Front\WalletController@paymentOptions')->name('wallet.payment.option.list');
 	Route::get('user/deleteAddress/{id}', 'Front\AddressController@delete')->name('deleteAddress');
