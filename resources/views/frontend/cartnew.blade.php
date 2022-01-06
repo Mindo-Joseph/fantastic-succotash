@@ -406,7 +406,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             {{-- Schedual code Start at down --}}
 
            
-            <% if(client_preference_detail.off_scheduling_at_cart != 1) { %>
+            <% if(client_preference_detail.off_scheduling_at_cart != 1 && cart_details.vendorCnt==1) { %>
                 @if($client_preference_detail->business_type != 'laundry')
             <div class="row d-flex align-items-center arabic-lng no-gutters mt-2 mb-md-4 mb-2" id="dateredio">
                 <div class="col-md-5 pr-md-2 mb-2 mb-md-0">
@@ -439,12 +439,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <% } else { %>
 
                        
-                            <input type="date" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%=  cart_details.scheduled.scheduled_date_time %>"  min="{{$now}}">
+                            <input type="date" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%=  cart_details.scheduled.scheduled_date_time %>"  min="<%= cart_details.delay_date %>" >
                         
                             <select name="slots" id="slot" class="form-control">
-                                <option value="">{{__("Select Slot")}}  </option>
+                                <option value="">{{__("Select Slot")}} </option>
                                 <% _.each(cart_details.slots, function(slot, sl){%>
-                                <option value="<%= slot.start_time %> - <%= slot.end_time  %>" <%= slot.start_time +' - '+ slot.end_time == cart_details.scheduled.slot ? 'selected' : '' %> ><%= slot.name %></option>
+                                <option value="<%= slot.value  %>" <%= slot.value == cart_details.scheduled.slot ? 'selected' : '' %> ><%= slot.name %></option>
                                 <% }) %>
                             </select> 
                     <% } %>

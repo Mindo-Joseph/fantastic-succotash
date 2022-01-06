@@ -86,6 +86,12 @@
                         {!! Form::label('title', __('24*7 Availability'),['class' => 'control-label']) !!}
                         <input type="checkbox" data-plugin="switchery" name="show_slot" class="form-control" data-color="#43bee1" @if($vendor->show_slot == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
                     </div>
+                    <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+                        <div class="form-group">
+                             {!! Form::label('title', __('Slot Duration (In minutes)'),['class' => 'control-label']) !!}
+                        <input type="number"  name="slot_minutes" class="form-control"  value="{{$vendor->slot_minutes??0}}" min="0">
+                        </div>
+                    </div>
                     @endif
                     @if($client_preference_detail->business_type != 'taxi')
                     <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">

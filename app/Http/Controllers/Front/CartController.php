@@ -12,7 +12,7 @@ use App\Http\Traits\{ApiResponser,CartManager};
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\PromoCodeController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation,ClientSlot};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation,ClientSlot, VendorSlot};
 
 class CartController extends FrontController
 {
@@ -26,8 +26,79 @@ class CartController extends FrontController
         }
         return $random_string;
     }
-    public function showCart(Request $request, $domain = '')
+
+    public function SplitTime($StartTime, $EndTime, $Duration="60"){
+        $ReturnArray = array ();
+        $StartTime    = strtotime ($StartTime); //Get Timestamp
+        $EndTime      = strtotime ($EndTime); //Get Timestamp
+       // echo ($StartTime .' - '.$EndTime);
+        //1641463200 - 1641484800
+        //1641484800 - 1641502800
+        $AddMins  = $Duration * 60;
+        $endtm = 0;
+        while ($StartTime <= $EndTime) 
+        {
+            $endtm = $StartTime + ($AddMins-60);
+            if($endtm>$EndTime)
+            {
+             $endtm =  $EndTime;
+            }
+
+            $ReturnArray[] = date ("G:i", $StartTime).' - '.date ("G:i", $endtm);
+            $StartTime += $AddMins+60; 
+            $endtm = 0;
+        }
+        
+        return $ReturnArray;
+    }
+
+    public function showSlot($myDate = null,$vid,$type = 'delivery',$duration)
     {
+    //type must be a : delivery , takeaway,dine_in
+    $client = Client::select('timezone')->first();
+    $viewSlot = array();
+       if(!empty($myDate))
+       {        $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
+       }else{ 
+        //$myDate  = date('Y-m-d',strtotime('+1 days')); 
+        $myDate  = date('Y-m-d'); 
+        $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
+        }
+        $mytime =$mytime->dayOfWeek+1;
+        $slots = VendorSlot::where('vendor_id',$vid)
+        ->whereHas('days',function($q)use($mytime,$type){
+            return $q->where('day',$mytime)->where($type,'1');
+        })
+        ->get();
+
+        if(isset($slots) && count($slots)>0){
+
+            foreach($slots as $slot){
+                if($slot->dayOne->id)
+                {   
+                   $slotss[] = $this->SplitTime($slot->start_time,$slot->end_time,$duration);
+                }
+            }
+        
+        $arr = array();
+        $count = count($slotss);
+        for($i=0;$i<$count;$i++){
+            $arr = array_merge($arr,$slotss[$i]);
+        }
+            
+            foreach($arr as $k=> $slt)
+            {
+                $sl = explode(' - ',$slt);
+                $viewSlot[$k]['name'] = date('h:i:A',strtotime($sl[0])).' - '.date('h:i:A',strtotime($sl[1]));
+                $viewSlot[$k]['value'] = $slt;
+            }
+        }
+        
+        return $viewSlot;
+    }
+
+    public function showCart(Request $request, $domain = '')
+    { 
         if(($request->has('gateway')) && (($request->gateway == 'mobbex')||($request->gateway == 'yoco'))){
             if($request->has('order')){
                 $order = Order::where('order_number', $request->order)->first();
@@ -638,7 +709,7 @@ class CartController extends FrontController
                         }
                     }
                 }
-
+                
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
 
 
@@ -717,7 +788,6 @@ class CartController extends FrontController
                         if($prod->product->delay_hrs_min > $delay_date)
                         $delay_date = $prod->product->delay_hrs_min;
                     }
-
                     if($prod->product->pickup_delay_hrs_min != 0){
                         if($prod->product->pickup_delay_hrs_min > $delay_date)
                         $pickup_delay_date = $prod->product->pickup_delay_hrs_min;
@@ -813,6 +883,7 @@ class CartController extends FrontController
                     }
 
                 }
+
                 if (in_array(1, $subscription_features)) {
                     $subscription_discount = $subscription_discount + $delivery_fee_charges;
                 }
@@ -931,13 +1002,24 @@ class CartController extends FrontController
                     $cart->wallet_amount_used = number_format($wallet_amount_used, 2, '.', '');
                 }
             }
-            $slots = ClientSlot::get();
-            $cart->slots = $slots;
+            
             $scheduled = (object)array(
                 'scheduled_date_time'=>(($cart->scheduled_slot)?date('Y-m-d',strtotime($cart->scheduled_date_time)):$cart->scheduled_date_time),'slot'=>$cart->scheduled_slot,
             );
+
+            $cart->vendorCnt = $cartData->count();
             $cart->scheduled = $scheduled;
-            $cart->slotsCnt = $slots->count();
+            if($cart->vendorCnt==1){
+                $vendorId = $cartData[0]->vendor_id;
+                //type must be a : delivery , takeaway,dine_in
+                $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();
+                $slots = (object)$this->showSlot('',$vendorId,'delivery',$duration->slot_minutes);
+                $cart->slots = $slots;
+            }else{
+                $slots = [];
+                $cart->slots = [];
+            }
+            $cart->slotsCnt = count((array)$slots);
             $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');
             $cart->loyalty_amount = number_format($loyalty_amount_saved, 2, '.', '');
             $cart->gross_amount = number_format(($total_payable_amount + $total_discount_amount + $loyalty_amount_saved + $wallet_amount_used - $total_taxable_amount), 2, '.', '');
@@ -952,8 +1034,14 @@ class CartController extends FrontController
             $cart->action = $action;
             $cart->left_section = view('frontend.cartnew-left')->with(['action' => $action,  'vendor_details' => $vendor_details, 'addresses'=> $user_allAddresses, 'countries'=> $countries, 'cart_dinein_table_id'=> $cart_dinein_table_id, 'preferences' => $preferences])->render();
             $cart->upSell_products = ($upSell_products) ? $upSell_products->first() : collect();
-            $cart->crossSell_products = ($crossSell_products) ? $crossSell_products->first() : collect();
-            $cart->delay_date =  $delay_date??0;
+            $cart->crossSell_products = ($crossSell_products) ? $crossSell_products->first() : collect(); 
+            
+            if($cart->slotsCnt>0){
+                $cart->delay_date =  (($delay_date>0)?$delay_date:date('Y-m-d'));
+            }else{
+                $cart->delay_date =  $delay_date??0;
+            }
+            
             $cart->pickup_delay_date =  $pickup_delay_date??0;
             $cart->dropoff_delay_date =  $dropoff_delay_date??0;
 
