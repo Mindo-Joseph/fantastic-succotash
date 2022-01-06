@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ShippingOption extends Model
+class Webhook extends Model
 {
     use HasFactory;
-    protected $fillable = ['title','code','id','path','status'];
+
+    protected $fillable = ['tracking_order_id','response','hook_from'];
+
 }
