@@ -252,7 +252,12 @@ $timezone = Auth::user()->timezone;
                                             @endif
                                         </th>
                                         <td>
+                                            @if($product->image_path)
                                             <img src="{{@$product->image_path['proxy_url'].'32/32'.@$product->image_path['image_path']}}" alt="product-img" height="32">
+                                            @else 
+                                            @php $image_path = getDefaultImagePath(); @endphp
+                                            <img src="{{$image_path['proxy_url'].'32/32'.$image_path['image_path']}}" alt="product-img" height="32">
+                                            @endif
                                         </td>
                                         <td>{{ $product->quantity }}</td>
                                         <td>
