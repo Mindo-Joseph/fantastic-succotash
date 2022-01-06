@@ -95,8 +95,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
             @endif
             <div class="col-lg-3 col-md-6 mb-md-0 mb-3 text-right d-none">
                 <div class="store-btn">
-                    <a href="{{$client_preference_detail->ios_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'135/24') }}" alt=""></a>
-                    <a class="ml-2" href="{{$client_preference_detail->android_app_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'135/24') }}" alt=""></a>
+                    <a href="{{$client_preference_detail->ios_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'270/48') }}" alt=""></a>
+                    <a class="ml-2" href="{{$client_preference_detail->android_app_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'270/48') }}" alt=""></a>
                 </div>
                 <ul class="social-links ml-md-auto mt-3">
                     @foreach($social_media_details as $social_media_detail)
