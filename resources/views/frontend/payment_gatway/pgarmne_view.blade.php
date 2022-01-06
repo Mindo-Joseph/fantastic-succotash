@@ -68,7 +68,8 @@
                     {
                         console.log(response.data);
                         $('#cc-card_id').val(response.data);
-                        $('#pagarme-payment-form').submit();
+                        submitForm();
+                       
                     }else{
                       $('#pagarme-payment-form').after("<div class='error'>{{__('Invalid Card Details.')}}</div>");
                     } 
@@ -76,6 +77,10 @@
             });
         });
     });
+    function submitForm()
+    {
+         $('#pagarme-payment-form').submit();
+    }
 </script>
 <body>
 
@@ -90,6 +95,11 @@
 </div>
 
 <div class="container">
+    @if(\Session::has('error'))
+        <div class="alert alert-danger">
+            <span>{!! \Session::get('error') !!}</span>
+        </div>
+    @endif
     <div class="row">
         <div class="offset-lg-3 col-lg-6">
             <form id="pagarme-payment-form" action="{{route('payment.pagarme.createPayment')}}" method="POST">
