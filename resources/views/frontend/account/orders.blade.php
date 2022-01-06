@@ -5,6 +5,7 @@
     @break
     @default
         <?php $ordertitle = 'Orders'; ?>
+         <?php $hidereturn = 1; ?>
 @endswitch
 @extends('layouts.store', ['title' => __('My '.$ordertitle)])
 @section('css')
@@ -741,6 +742,12 @@
                                                                                                     {{ __('Return') }}
                                                                                             </button>
                                                                                         @endif
+                                                                                          
+                                                                                        <button class="repeat-order-product btn btn-solid"
+                                                                                                data-id="{{ $order->id ?? 0 }}"
+                                                                                                data-vendor_id="{{ $vendor->vendor_id ?? 0 }}">
+                                                                                                <td class="text-center"
+                                                                                                    colspan="3">{{ __('Repeat Order') }}</button>
                                                                                     </ul>
                                                                                 </div>
                                                                             </div>
