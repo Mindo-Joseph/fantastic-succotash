@@ -14,8 +14,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                     <!-- <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a> -->
                     <div class="footer-contant">
                         <div class="store-btn mb-3 d-flex align-items-center">
-                            <a class="mt-2 mr-2" href="{{$client_preference_detail->ios_link??'#'}}"  target="_blank"><img src="{{asset('front-assets/images/app-store.svg')}}" alt=""></a>
-                            <a class="mt-2" href="{{$client_preference_detail->android_app_link??'#'}}"  target="_blank"><img src="{{asset('front-assets/images/google-play.svg')}}" alt=""></a>
+                            <a class="mt-2 mr-2" href="{{$client_preference_detail->ios_link??'#'}}"  target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'135/24') }}" alt=""></a>
+                            <a class="mt-2" href="{{$client_preference_detail->android_app_link??'#'}}"  target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'135/24') }}" alt=""></a>
                         </div>
                     </div>
                 </div>
@@ -109,8 +109,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                         <div class="footer-contant">
                             <div class="store-btn mb-3 d-none d-md-block">
-                                <a href="{{$client_preference_detail->ios_link??'#'}}" target="_blank"><img src="{{asset('front-assets/images/app-store.svg')}}" alt=""></a>
-                                <a class="ml-xl-2 mt-2 mt-xl-0" href="{{$client_preference_detail->android_app_link??'#'}}" target="_blank"><img src="{{asset('front-assets/images/google-play.svg')}}" alt=""></a>
+                                <a href="{{$client_preference_detail->ios_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'135/24') }}" alt=""></a>
+                                <a class="ml-xl-2 mt-2 mt-xl-0" href="{{$client_preference_detail->android_app_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'135/24') }}" alt=""></a>
                             </div>
 
                             @if(count($social_media_details))
@@ -145,19 +145,19 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                             <div class="payment-card-bottom text-center d-flex">
                                 <ul>
                                     <li>
-                                        <a href="#"><img src="{{asset('assets/images/visa.png')}}"></a>
+                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/visa.png'),'26/26') }}"></a>
                                     </li>
                                     <li>
-                                        <a href="#"><img src="{{asset('assets/images/mastercard.png')}}"></a>
+                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/mastercard.png'),'26/26') }}"></a>
                                     </li>
                                     <li>
-                                        <a href="#"><img src="{{asset('assets/images/paypal.png')}}"></a>
+                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/paypal.png'),'26/26') }}"></a>
                                     </li>
                                     <li>
-                                        <a href="#"><img src="{{asset('assets/images/american-express.png')}}"></a>
+                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/american-express.png'),'26/26') }}"></a>
                                     </li>
                                     <li>
-                                        <a href="#"><img src="{{asset('assets/images/discover.png')}}"></a>
+                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/discover.png'),'26/26') }}"></a>
                                     </li>
                                 </ul>
                             </div>
