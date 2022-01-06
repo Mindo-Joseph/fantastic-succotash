@@ -5947,6 +5947,13 @@ body[dir="rtl"] .inner_spacing h3 {
         padding-left: 0 !important;
     }
 }
+
+@media(min-width: 1600px) {
+    .container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1685px;
+    }
+}
+
 @media(min-width: 1400px) {
     .ds {
         position: absolute;
