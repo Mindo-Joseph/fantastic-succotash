@@ -29,7 +29,7 @@ $timezone = Auth::user()->timezone;
                                     <p>#{{$order->order_number}}</p>
                                 </div>
                             </div>
-                             @if(isset($order->vendors) && empty($order->vendors->first()->dispatch_traking_url) && ($order->vendors->first()->delivery_fee > 0) && ($order->vendors->first()->order_status_option_id >= 2))
+                             @if(isset($order->vendors) && empty($order->vendors->first()->dispatch_traking_url) && ($order->vendors->first()->delivery_fee > 0) && ($order->vendors->first()->order_status_option_id >= 2) && $order->shipping_delivery_type!='L')
                              <div class='inner-div d-inline-block' style="float: right;">
                                 <form method='POST' action='"+full.destroy_url+"'>
                                    
@@ -40,7 +40,7 @@ $timezone = Auth::user()->timezone;
                              </div>
                             @endif    
 
-                            @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null)
+                            @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null )
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <h5 class="mt-0">{{ __("Tracking ID") }}:</h5>
@@ -53,6 +53,17 @@ $timezone = Auth::user()->timezone;
                                     </p>
                                 </div>
                             </div>
+                            @elseif(isset($order->vendors) && isset($order->vendors->first()->lalamove_tracking_url) && $order->vendors->first()->lalamove_tracking_url !=null )
+
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <h5 class="mt-0">{{ __("Tracking ID") }}:</h5>
+                                    <p>
+                                        <a href="{{$order->vendors->first()->lalamove_tracking_url}}" target="_blank">#{{ $order->vendors->first()->web_hook_code }}</a>
+                                    </p>
+                                </div>
+                            </div>
+
                             @endif
                         </div>
                         <div class="row track-order-list">
@@ -140,7 +151,7 @@ $timezone = Auth::user()->timezone;
 
                            
 
-                            @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null)
+                            @if(isset($order->vendors) && ($order->vendors->first()->dispatch_traking_url !=null || $order->vendors->first()->lalamove_tracking_url !=null))
                             <div class="col-lg-6">
                                 <ul class="list-unstyled remove-curser">
                                     @foreach($dispatcher_status_options as $dispatcher_status_option)
