@@ -11,11 +11,10 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
 
                 @if($client_preference_detail->show_contact_us == 1)
                 <div class="col-12 d-block d-md-none">
-                    <!-- <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a> -->
                     <div class="footer-contant">
                         <div class="store-btn mb-3 d-flex align-items-center">
-                            <a class="mt-2 mr-2" href="{{$client_preference_detail->ios_link??'#'}}"  target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'270/48') }}" alt=""></a>
-                            <a class="mt-2" href="{{$client_preference_detail->android_app_link??'#'}}"  target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'270/48') }}" alt=""></a>
+                            <a class="mt-2 mr-2" href="{{$client_preference_detail->ios_link??'#'}}"  target="_blank"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'135/24') }}" alt=""></a>
+                            <a class="mt-2" href="{{$client_preference_detail->android_app_link??'#'}}"  target="_blank"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'135/24') }}" alt=""></a>
                         </div>
                     </div>
                 </div>
@@ -109,8 +108,10 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                         <div class="footer-contant">
                             <div class="store-btn mb-3 d-none d-md-block">
-                                <a href="{{$client_preference_detail->ios_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'270/48') }}" alt=""></a>
-                                <a class="ml-xl-2 mt-2 mt-xl-0" href="{{$client_preference_detail->android_app_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'270/48') }}" alt=""></a>
+
+                                <a href="{{$client_preference_detail->ios_link??'#'}}" target="_blank"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'270/48') }}" alt=""></a>
+                                <a class="ml-xl-2 mt-2 mt-xl-0" href="{{$client_preference_detail->android_app_link??'#'}}" target="_blank"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'270/48') }}" alt=""></a>
+
                             </div>
 
                             @if(count($social_media_details))
@@ -145,19 +146,19 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                             <div class="payment-card-bottom text-center d-flex">
                                 <ul>
                                     <li>
-                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/visa.png'),'26/26') }}"></a>
+                                        <a href="#"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('assets/images/visa.png'),'26/26') }}"></a>
                                     </li>
                                     <li>
-                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/mastercard.png'),'26/26') }}"></a>
+                                        <a href="#"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('assets/images/mastercard.png'),'26/26') }}"></a>
                                     </li>
                                     <li>
-                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/paypal.png'),'26/26') }}"></a>
+                                        <a href="#"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('assets/images/paypal.png'),'26/26') }}"></a>
                                     </li>
                                     <li>
-                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/american-express.png'),'26/26') }}"></a>
+                                        <a href="#"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('assets/images/american-express.png'),'26/26') }}"></a>
                                     </li>
                                     <li>
-                                        <a href="#"><img src="{{ getImageUrl(asset('assets/images/discover.png'),'26/26') }}"></a>
+                                        <a href="#"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('assets/images/discover.png'),'26/26') }}"></a>
                                     </li>
                                 </ul>
                             </div>
@@ -186,44 +187,6 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
         </div>
     </div>
 </footer>
-
-<!-- <div class="sticky-bottom-cart d-sm-block d-none">
-    <div class="container">
-        <div class="cart-content">
-            <div class="product-image">
-                <img src="../assets/images/pro3/1.jpg" class="img-fluid" alt="">
-                <div class="content d-lg-block d-none">
-                    <h5>WOMEN PINK SHIRT</h5>
-                    <h6>$32.96<del>$459.00</del><span>55% off</span></h6>
-                </div>
-            </div>
-            <div class="selection-section">
-                <div class="form-group mb-0">
-                    <select id="inputState" class="form-control">
-                        <option selected="">Choose color...</option>
-                        <option>pink</option>
-                        <option>blue</option>
-                        <option>grey</option>
-                    </select>
-                </div>
-                <div class="form-group mb-0">
-                    <select id="inputState" class="form-control">
-                        <option selected="">Choose size...</option>
-                        <option>small</option>
-                        <option>medium</option>
-                        <option>large</option>
-                        <option>extra large</option>
-                    </select>
-                </div>
-            </div>
-            <div class="add-btn">
-                <a data-bs-toggle="modal" data-bs-target="#addtocart" href="" class="btn btn-solid btn-sm">add to
-                    cart</a>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 
 <div class="modal fade single-vendor-order-modal" id="single_vendor_order_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="s_vendor_remove_cartLabel" style="background-color: rgba(0,0,0,0.8);">
     <div class="modal-dialog modal-dialog-centered">

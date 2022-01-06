@@ -743,7 +743,7 @@
                                                                                             </button>
                                                                                         @endif
                                                                                           
-                                                                                        <button class="repeat-order-product btn btn-solid"
+                                                                                        <button class="repeat-order-product btn btn-solid mr-2"
                                                                                                 data-id="{{ $order->id ?? 0 }}"
                                                                                                 data-order_vendor_id="{{ $vendor->id ?? 0 }}"
                                                                                                 data-vendor_id="{{ $vendor->vendor_id ?? 0 }}">
@@ -1757,7 +1757,7 @@
         });
 
         $(document).delegate("#repeat_cart_button", "click", function () {
-            
+
             let cart_id = $(this).attr("data-cart_id");
             let order_vendor_id = $(this).attr("data-order_vendor_id");
 

@@ -14,7 +14,7 @@ use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\PromoCodeController;
 use App\Http\Controllers\Front\LalaMovesController;
 use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
-
+use Log;
 class CartController extends FrontController
 {
     use ApiResponser,CartManager;
@@ -165,13 +165,16 @@ class CartController extends FrontController
                     }
                 }
                 if($productDetail->variant[0]->quantity < $request->quantity){
-                    $request->quantity = $productDetail->variant[0]->quantity;
+                    if($productDetail->variant[0]->quantity == 0){
+                        $productDetail->variant[0]->quantity = 1;
+                    }
+                     $request->quantity = $productDetail->variant[0]->quantity;
                 }
             }
 
 
-            $addonSets = $addon_ids = $addon_options = array();
-            if($request->has('addonID')){
+            $addonSets = $addon_ids = $addon_options = array();Log::info($request->addonID);
+            if($request->has('addonID')){Log::info('ok');
                 $addon_ids = $request->addonID;
             }
             if($request->has('addonoptID')){
@@ -1181,17 +1184,29 @@ class CartController extends FrontController
             CartCoupon::where('cart_id', $cart_id)->delete();
             CartAddon::where('cart_id', $cart_id)->delete();
         }
-        
 
+
+       
+        
         foreach($getallproduct as $data){
             $request->vendor_id = $data->vendor_id;
             $request->product_id = $data->product_id;
             $request->quantity = $data->quantity;
             $request->variant_id = $data->variant_id;
+
+            $addonID = OrderProductAddon::where('order_product_id',$data->id)->pluck('addon_id');
+            $addonoptID = OrderProductAddon::where('order_product_id',$data->id)->pluck('option_id');
+
+            if(count($addonID))
+            $request->request->add(['addonID' => $addonID->toArray()]);
+
+            if(count($addonoptID))
+            $request->request->add(['addonoptID' => $addonoptID->toArray()]);
+
             $this->postAddToCart($request);
 
         }
-        
+      
         return response()->json(['status' => 'success', 'message' => 'Order added to cart.','cart_url' => route('showCart')]);
 
        

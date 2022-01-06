@@ -108,7 +108,7 @@
             <a href="{{$url}}">
                 @endif
                 <div class="home text-center">
-                    <img src="{{$banner->image['image_fit'] . '1920/1080' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
+                    <img data-src="{{$banner->image['image_fit'] . '1920/1080' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
                 </div>
                 @if($url)
             </a>
@@ -417,11 +417,11 @@
 </section>
 <section class="no-store-wrapper mb-3">
     <div class="container">
-        @if(count($for_no_product_found_html))     
+        @if(count($for_no_product_found_html))
         @foreach($for_no_product_found_html as $key => $homePageLabel)
             @include('frontend.included_files.dynamic_page')
         @endforeach
-       @else 
+       @else
         <div class="row">
             <div class="col-12">
                 <img class="no-store-image w-100 mt-2 mb-2" src="{{ getImageUrl(asset('images/no-stores.svg'),'250/250') }}" style="max-height: 250px;">
@@ -439,7 +439,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <img src="{{asset('assets/images/18.png')}}" alt="">
+                <img class="img-fluid blur-up lazyload" data-src="{{asset('assets/images/18.png')}}" alt="">
                 <p class="mb-0 mt-3">{{ $client_preference_detail ? $client_preference_detail->age_restriction_title : 'Are you 18 or older?' }}</p>
                 <p class="mb-0">Are you sure you want to continue?</p>
             </div>
