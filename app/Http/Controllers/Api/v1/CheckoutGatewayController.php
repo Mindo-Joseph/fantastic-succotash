@@ -220,7 +220,7 @@ class CheckoutGatewayController extends BaseController
                         $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
                     }
                     $returnUrlParams = ''; //'?gateway=checkout&order=' . $order->id;
-                    $returnUrl = route('order.success', $order->id);
+                    $returnUrl = ''; //route('order.success', $order->id);
                     return $returnUrl . $returnUrlParams;
 
                     // Send Email
