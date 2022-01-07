@@ -401,7 +401,7 @@
                                     @endif
                                     <div class="product-buttons">
                                         @if($product->variant[0]->quantity > 0  || $product->sell_when_out_of_stock == 1)
-                                        @if($is_inwishlist_btn)
+                                        @if($is_inwishlist_btn && $is_available)
                                         <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
                                             {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? __('Remove From Wishlist') : __('Add To Wishlist') }}
                                         </button>
@@ -416,7 +416,9 @@
                                         $product_quantity_in_cart = $product_in_cart->quantity??0;
 
                                         @endphp
+                                        @if($is_available)
                                             <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart {{ ($vendor_info->is_vendor_closed == 1 || ($product->variant[0]->quantity <= $product_quantity_in_cart)) ? 'btn-disabled' : '' }}">{{__('Add To Cart')}}</a>
+                                        @endif
                                             @if($vendor_info->is_vendor_closed == 1)
                                             <p class="text-danger">Vendor is not accepting orders right now.</p>
                                             @endif

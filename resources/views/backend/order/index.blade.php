@@ -603,7 +603,7 @@
             } else {
                 Swal.fire({
                   title: "{{__('Are you Sure?')}}",
-                  icon: 'info',
+                  // icon: 'info',
                   showCancelButton: true,
                   confirmButtonText: 'Ok',
                 }).then((result) => {
