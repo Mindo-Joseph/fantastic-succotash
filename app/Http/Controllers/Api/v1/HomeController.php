@@ -153,14 +153,7 @@ class HomeController extends BaseController
             else
                 $domain_link = "https://" . $homeData['profile']->sub_domain . env('SUBMAINDOMAIN');
 
-            $slots = ClientSlot::select('name','start_time','end_time')->get();
-            if($slots){
-            foreach($slots as $sl => $slot)
-            {
-                $slot[]=array('name'=>(($slot->name)?$slot->name:'Slot'.++$sl),'slot'=>$slot->start_time.' - '.$slot->end_time);
-            }
-                $homeData['client_slots'] = $slot;
-            }
+            
             $homeData['domain_link'] = $domain_link;
             
             return $this->successResponse($homeData);
