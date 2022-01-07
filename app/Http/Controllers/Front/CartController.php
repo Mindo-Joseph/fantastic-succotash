@@ -1015,9 +1015,11 @@ class CartController extends FrontController
                 $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();
                 $slots = (object)$this->showSlot('',$vendorId,'delivery',$duration->slot_minutes);
                 $cart->slots = $slots;
+                $cart->vendor_id =  $vendorId;
             }else{
                 $slots = [];
                 $cart->slots = [];
+                $cart->vendor_id =  0;
             }
             $cart->schedule_type =  $cart->schedule_type;
             $cart->slotsCnt = count((array)$slots);
@@ -1057,7 +1059,7 @@ class CartController extends FrontController
     {
         $message = '';
         $status = 'Success';
-        $vendorId = '16';
+        $vendorId = $request->vendor_id??0;
         $option = "";
         //type must be a : delivery , takeaway,dine_in
         $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();

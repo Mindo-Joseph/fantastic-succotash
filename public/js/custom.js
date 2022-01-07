@@ -706,11 +706,13 @@ $(document).ready(function() {
 
     $(document).on("change", ".schedule_datetime", function() {
         var schedule_dt = $(this).val();
+        var vendor_id = $('#vendor_id').val();
+        
         $.ajax({
             type: "POST",
             dataType: 'json',
             url: check_schedule_slots,
-            data: { date: schedule_dt},
+            data: { date: schedule_dt,vendor_id:vendor_id},
             success: function(response) {
                 if (response.status == "Success") {
                     $('#slot').html(response.data);
