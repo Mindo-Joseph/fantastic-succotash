@@ -34,11 +34,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <!-- Start Cab Booking Header From Here -->
         <div class="cab-booking-header">
             <div class="container">
-                <div class="row">
-                    <div class="col-2">
+                <div class="row align-items-center">
+                    <div class="col-3 col-md-2">
                         <a class="navbar-brand mr-0" href="{{ route('userHome') }}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                     </div>
-                    <div class="top-header bg-transparent col-10 d-flex align-items-center justify-content-end">
+                    <div class="col-9 col-md-10 top-header bg-transparent d-flex align-items-center justify-content-end">
                         <ul class="header-dropdown">
                             <li class="onhover-dropdown change-language">
                                 <a href="javascript:void(0)">{{session()->get('locale')}}
