@@ -55,7 +55,7 @@
                     @if($url)
                     <a class="banner-img-outer" href="{{$url}}">
                         @endif
-                            <img class="blur-up lazyload" data-src="{{$banner->image['image_fit'] . '1370/300' . $banner->image['image_path']}}">
+                            <img class="blur-up lazyload" data-src="{{$banner->image['proxy_url'] . '1370/300' . $banner->image['image_path']}}">
                         @if($url)
                     </a>
                     @endif
