@@ -108,7 +108,7 @@
             <a href="{{$url}}">
                 @endif
                 <div class="home text-center">
-                    <img data-src="{{$banner->image['image_fit'] . '1920/1080' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
+                    <img src="{{$banner->image['image_fit'] . '1920/1080' . $banner->image['image_path']}}" class="bg-img blur-up lazyload">
                 </div>
                 @if($url)
             </a>
