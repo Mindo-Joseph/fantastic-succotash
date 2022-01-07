@@ -63,14 +63,20 @@ else if($client_preference_detail->show_dark_mode == 2){
   }
 
   .cab-booking-header img.img-fluid {
-      height: auto !important;
+      height: 50px;
   }
   .cab-booking-header{
       display: block !important;
   }
   .container .main-menu .d-block{
-             display: none;
-         }
+        display: none;
+    }
+
+    @media(max-width: 991px){
+      .cab-booking-header img.img-fluid {
+        height: auto !important;
+    }
+    }
   </style>
   @else
   <style>
