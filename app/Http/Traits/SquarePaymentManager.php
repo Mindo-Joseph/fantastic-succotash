@@ -18,7 +18,7 @@ trait SquarePaymentManager{
 
   private $application_id;
   private $access_token;
-  private $location_id, $idempotency_key;
+  private $location_id, $idempotency_key,$test_mode;
   public function __construct()
   {
     $square_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'square')->where('status', 1)->first();
