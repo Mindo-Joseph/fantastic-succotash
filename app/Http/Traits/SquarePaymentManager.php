@@ -18,7 +18,7 @@ trait SquarePaymentManager{
 
   private $application_id;
   private $access_token;
-  private $location_id, $idempotency_key,$test_mode;
+  private $location_id;
   public function __construct()
   {
     $square_creds = PaymentOption::select('credentials', 'test_mode')->where('code', 'square')->where('status', 1)->first();
@@ -26,17 +26,14 @@ trait SquarePaymentManager{
     $this->application_id = $creds_arr->application_id??''; 
     $this->access_token = $creds_arr->api_access_token??'';
     $this->location_id = $creds_arr->location_id??'';
-    $this->idempotency_key = Uuid::uuid4();
-    $this->test_mode = $square_creds->test_mode;
-
-
-
   }
+
   public function init()
   {
+    $square_creds = PaymentOption::select('test_mode')->where('code', 'square')->where('status', 1)->first();
     return new SquareClient([
         'accessToken' => $this->access_token,
-        'environment' => $this->test_mode ? Environment::PRODUCTION : Environment::SANDBOX,
+        'environment' => $square_creds ? Environment::PRODUCTION : Environment::SANDBOX,
       ]);
   }
 
