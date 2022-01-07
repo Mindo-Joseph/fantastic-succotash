@@ -59,7 +59,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <div class="row mt-2 mb-4 mb-lg-5">
         <div class="col-12 text-center">
             <div class="cart_img_outer">
-                <img src="{{asset('front-assets/images/empty_cart.png')}}">
+                <img class="blur-up lazyload" data-src="{{asset('front-assets/images/empty_cart.png')}}">
             </div>
             <h3>{{__('Your Cart Is Empty!')}}</h3>
             <p>{{__('Add items to it now.')}}</p>
@@ -98,6 +98,15 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         </div>
                     </div>
                 <% } %>
+
+                <% if( (parseFloat(product.vendor.order_min_amount) > 0) &&  (product.product_sub_total_amount < parseFloat(product.vendor.order_min_amount)) ) { %>
+                    <div class="col-12">
+                        <div class="text-danger">
+                            <i class="fa fa-exclamation-circle"></i> {{__('We are not accepting orders less then ')}} {{Session::get('currencySymbol')}}<%= Helper.formatPrice(product.vendor.order_min_amount) %>
+                        </div>
+                    </div>
+                <% } %>
+
                 <% if( (product.isDeliverable != undefined) && (product.isDeliverable == 0) ) { %>
                     <div class="col-12">
                         <div class="text-danger">
@@ -114,11 +123,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="row align-items-md-center vendor_products_tr" id="tr_vendor_products_<%= vendor_product.id %>">
                     <div class="product-img col-4 col-md-2 pr-0">
                         <% if(vendor_product.pvariant.media_one) { %>
-                            <img class='mr-2' src="<%= vendor_product.pvariant.media_one.pimage.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.pimage.image.path.image_path %>">
+                            <img class='blur-up lazyload' data-src="<%= vendor_product.pvariant.media_one.pimage.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_one.pimage.image.path.image_path %>">
                         <% }else if(vendor_product.pvariant.media_second){ %>
-                            <img class='mr-2' src="<%= vendor_product.pvariant.media_second.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_second.image.path.image_path %>">
+                            <img class='blur-up lazyload' data-src="<%= vendor_product.pvariant.media_second.image.path.proxy_url %>200/200<%= vendor_product.pvariant.media_second.image.path.image_path %>">
                         <% }else{ %>
-                            <img class='mr-2' src="<%= vendor_product.image_url %>">
+                            <img class='blur-up lazyload' data-src="<%= vendor_product.image_url %>">
                         <% } %>
                     </div>
                     <div class="col-8 col-md-10">
@@ -137,11 +146,14 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <div class="col-8 col-md-4 text-md-center order-3 order-md-2">
                                 <div class="number d-flex justify-content-md-center">
                                     <div class="counter-container d-flex align-items-center">
-                                        <span class="minus qty-minus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>" data-vendor_id="<%= vendor_product.vendor_id %>">
+                                        <span class="minus qty-minus" data-minimum_order_count="<%= vendor_product.product.minimum_order_count %>"
+                                        data-batch_count="<%= vendor_product.product.batch_count %>" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>" data-vendor_id="<%= vendor_product.vendor_id %>">
                                             <i class="fa fa-minus" aria-hidden="true"></i>
                                         </span>
-                                        <input placeholder="1" type="text" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>" readonly>
-                                        <span class="plus qty-plus" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
+                                        <input placeholder="1" type="text" data-minimum_order_count="<%= vendor_product.product.minimum_order_count %>"
+                                        data-batch_count="<%= vendor_product.product.batch_count %>" value="<%= vendor_product.quantity %>" class="input-number" step="0.01" id="quantity_<%= vendor_product.id %>" readonly>
+                                        <span class="plus qty-plus" data-minimum_order_count="<%= vendor_product.minimum_order_count %>"
+                                            data-batch_count="<%= vendor_product.product.batch_count %>" data-id="<%= vendor_product.id %>" data-base_price=" <%= vendor_product.pvariant.price %>">
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                         </span>
                                     </div>
@@ -215,7 +227,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     @if(!$guest_user)
                         <% if(product.is_promo_code_available > 0) { %>
                             <div class="coupon_box w-100">
-                                <img src="{{ asset('assets/images/discount_icon.svg') }}">
+                                <img class="blur-up lazyload" data-src="{{ asset('assets/images/discount_icon.svg') }}">
                                 <label class="mb-0 ml-2">
                                     <% if(product.coupon) { %>
                                         <%= product.coupon.promo.name %>
@@ -231,7 +243,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     @endif
                 </div>
                 <div class="col-lg-6">
-                    <div class="row">
+                    <div class="row mb-1">
                         <div class="col-8 text-lg-right">
                             <p class="total_amt m-0">{{__('Delivery Fee')}} :</p>
                             <% if(product.coupon_amount_used > 0) { %>
@@ -239,7 +251,42 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <% } %>
                         </div>
                         <div class="col-4 text-right">
-                            <p class="total_amt mb-1 <% if(product.delivery_fee_charges > 0) { %>{{ ((in_array(1, $subscription_features)) ) ? 'discard_price' : '' }}<% } %>  <% if(product.promo_free_deliver ==1) { %>discard_price <% } %> <% product.promo_free_deliver == 1? 'discard_price': '' %> ">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %></p>
+                           
+                        </div>
+                    </div>
+
+                    <% if(product.delivery_fee_charges > 0 ) { %>
+                        <div class="row mb-1">
+                            <div class="col-8 text-lg-right">
+                                <label class="radio pull-right">
+                                    {{__('Dispatcher')}} :
+                                    <input type="radio" name="deliveryFee[<%= product.vendor.id %>]" class="delivery-fee" value="<%= Helper.formatPrice(product.delivery_fee_charges) %>" data-dcode="D" <%= (cart_details.delivery_type == 'D')?'checked':'' %>  />
+                                    <span class="checkround"></span>
+                                </label>
+                            </div>
+                            <div class="col-4 text-right">
+                                {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %> 
+                            </div>
+                        </div>
+                    <% } %>                    
+
+                    <% if(product.delivery_fee_charges_lalamove > 0) { %>
+                        <div class="row mb-1">
+                            <div class="col-8 text-lg-right">
+                                <label class="radio pull-right">
+                                    {{__('Lalamove')}} :
+                                    <input type="radio" name="deliveryFee[<%= product.vendor.id %>]" class="delivery-fee" value="<%= Helper.formatPrice(product.delivery_fee_charges_lalamove) %>"  data-dcode="L" <%= (cart_details.delivery_type == 'L')?'checked':'' %> />
+                                    <span class="checkround"></span>
+                                </label>
+                            </div>
+                            <div class="col-4 text-right">
+                                {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges_lalamove) %>
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <div class="row">
+                        <div class="col-12 text-right">
                             <% if(product.coupon_amount_used > 0) { %>
                             <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.coupon_amount_used) %></p>
                             <% } %>
@@ -382,7 +429,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" style="margin-left: 10px;"  id="is_gift" name="is_gift" value="1">
 
-                                <label class="custom-control-label" for="is_gift"><img class="pr-1 align-middle" src="{{ asset('assets/images/gifts_icon.png') }}" alt=""> <span class="align-middle pt-1"> {{__('Does this include a gift?')}}</span></label>
+                                <label class="custom-control-label" for="is_gift"><img class="pr-1 align-middle blur-up lazyload" data-src="{{ asset('assets/images/gifts_icon.png') }}" alt=""> <span class="align-middle pt-1"> {{__('Does this include a gift?')}}</span></label>
                             </div>
                     </div>
                 </div>
@@ -473,7 +520,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <div class="col-lg-6 mt-3">
             <div class="coupon-code mt-0">
                 <div class="p-2">
-                    <img src="<%= promo_code.image.proxy_url %>100/35<%= promo_code.image.image_path %>" alt="">
+                    <img class="blur-up lazyload" data-src="<%= promo_code.image.proxy_url %>100/35<%= promo_code.image.image_path %>" alt="">
                     <h6 class="mt-0"><%= promo_code.title %></h6>
                 </div>
                 <hr class="m-0">
@@ -535,7 +582,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <div class="row mt-2 mb-4 mb-lg-5">
             <div class="col-12 text-center">
                 <div class="cart_img_outer">
-                    <img src="{{asset('front-assets/images/empty_cart.png')}}">
+                    <img class="blur-up lazyload" data-src="{{asset('front-assets/images/empty_cart.png')}}">
                 </div>
                 <h3>{{__('Your Cart Is Empty!')}}</h3>
                 <p>{{__('Add items to it now.')}}</p>
@@ -559,7 +606,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
                             <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
                                 <div class="img-outer-box position-relative">
-                                    <img src="<%= product.image_url %>" alt="">
+                                    <img class="blur-up lazyload" data-src="<%= product.image_url %>" alt="">
                                     <div class="pref-timing">
                                         <!--<span>5-10 min</span>-->
                                     </div>
@@ -610,7 +657,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
                             <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
                                 <div class="img-outer-box position-relative">
-                                    <img src="<%= product.image_url %>" alt="">
+                                    <img class="blur-up lazyload" data-src="<%= product.image_url %>" alt="">
                                         <div class="pref-timing">
                                             <!--<span>5-10 min</span>-->
                                         </div>
@@ -926,7 +973,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                   </div>
                   <form id="email-login-form" action="">
                       <div class="mail-icon text-center">
-                          <img alt="image" src="https://b.zmtcdn.com/Zwebmolecules/73b3ee9d469601551f2a0952581510831595917292.png" class="img-fluid">
+                          <img alt="image" class="blur-up lazyload img-fluid" data-src="https://b.zmtcdn.com/Zwebmolecules/73b3ee9d469601551f2a0952581510831595917292.png">
                       </div>
                       <div class="form-group">
                           <input class="from-control" type="text" placeholder="Email">
@@ -1050,22 +1097,26 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 @section('script')
 <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous">
 </script>
-<script src="https://js.stripe.com/v3/"></script>
-
-<script src="{{asset('assets/js/intlTelInput.js')}}"></script>
-
-
-
-
-
-<script>
-    // Replace the supplied `publicKey` with your own.
-    // Ensure that in production you use a production public_key.
+@if(in_array('razorpay',$client_payment_options)) 
+<script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
+@endif
+@if(in_array('stripe',$client_payment_options)) 
+<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+@endif
+@if(in_array('yoco',$client_payment_options)) 
+<script type="text/javascript" src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+<script type="text/javascript">
     var sdk = new window.YocoSDK({
         publicKey: yoco_public_key
     });
     var inline='';
 </script>
+@endif 
+
+<script src="{{asset('assets/js/intlTelInput.js')}}"></script>
+
+
+
 <script type="text/javascript">
    var guest_cart = {{ $guest_user ? 1 : 0 }};
     var base_url = "{{url('/')}}";

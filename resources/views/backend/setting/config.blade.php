@@ -1165,6 +1165,56 @@ $sms_crendential = json_decode($preference->sms_credentials);
                         <input type="checkbox" data-plugin="switchery" name="minimum_order_batch" id="minimum_order_batch" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->minimum_order_batch == '1')) checked='checked' @endif>
                      </div>
                   </div>
+
+                  <div class="col-md-4">
+                     <div class="form-group mb-3">
+                        <label for="gifting" class="mr-2 mb-0">{{__('Static Delivery fee')}}</label>
+                        <input type="checkbox" data-plugin="switchery" name="static_delivey_fee" id="static_delivey_fee" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->static_delivey_fee == '1')) checked='checked' @endif>
+                     </div>
+                  </div>
+
+                  <div class="col-md-12">
+                     <div class="form-group mb-0 text-md-left">
+                        <button class="btn btn-info d-block" type="submit">{{ __("Save") }}</button>
+                     </div>
+                  </div>
+               </div>
+            </form>
+         </div>
+
+         <div class="card-box">
+            <h4 class="header-title text-uppercase mb-2">{{ __("Edit Order By") }}</h4>
+            <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+               <input type="hidden" name="edit_order_modes" id="edit_order_modes" value="1">
+               @csrf
+
+               @php
+                   $vendormenu = getNomenclatureName('Vendors', true);
+                   $vendormenulabel = ($vendormenu=="Vendors")?__('Vendors'):$vendormenu;
+
+               @endphp
+
+               <div class="row align-items-center">
+                   <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="is_edit_order_admin" class="mr-2 mb-0"> {{ __("Admin") }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="is_edit_order_admin" id="is_edit_order_admin" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_edit_order_admin == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="is_edit_order_vendor" class="mr-2 mb-0">{{ $vendormenulabel }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="is_edit_order_vendor" id="is_edit_order_vendor" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_edit_order_vendor == '1')) checked='checked' @endif>
+                        </div>
+                     </div> 
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="is_edit_order_driver" class="mr-2 mb-0">{{ __("Driver") }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="is_edit_order_driver" id="is_edit_order_driver" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_edit_order_driver == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                 
+                 
                   <div class="col-md-12">
                      <div class="form-group mb-0 text-md-left">
                         <button class="btn btn-info d-block" type="submit">{{ __("Save") }}</button>
@@ -1875,25 +1925,32 @@ $sms_crendential = json_decode($preference->sms_credentials);
 
       $(document).on("click", ".delete_vendor_registration_document_btn", function() {
          var vendor_registration_document_id = $(this).data('vendor_registration_document_id');
-         if (confirm('Are you sure?')) {
-            $.ajax({
-               type: "POST",
-               dataType: 'json',
-               url: "{{ route('vendor.registration.document.delete') }}",
-               data: {
-                  _token: "{{ csrf_token() }}",
-                  vendor_registration_document_id: vendor_registration_document_id
-               },
-               success: function(response) {
-                  if (response.status == "Success") {
-                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                     setTimeout(function() {
-                        location.reload()
-                     }, 2000);
+         Swal.fire({
+            title: "{{__('Are you Sure?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+         }).then((result) => {
+            if (result.value) {
+               $.ajax({
+                  type: "POST",
+                  dataType: 'json',
+                  url: "{{ route('vendor.registration.document.delete') }}",
+                  data: {
+                     _token: "{{ csrf_token() }}",
+                     vendor_registration_document_id: vendor_registration_document_id
+                  },
+                  success: function(response) {
+                     if (response.status == "Success") {
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                        setTimeout(function() {
+                           location.reload()
+                        }, 2000);
+                     }
                   }
-               }
-            });
-         }
+               });
+            }
+         });
       });
       $(document).on('click', '.submitSaveVendorRegistrationDocument', function(e) {
          var vendor_registration_document_id = $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val();
@@ -1957,25 +2014,33 @@ $sms_crendential = json_decode($preference->sms_credentials);
       ///   product tag ////
       $(document).on("click", ".delete_product_tag_btn", function() {
          var tag_id = $(this).data('tag_id');
-         if (confirm('Are you sure?')) {
-            $.ajax({
-               type: "POST",
-               dataType: 'json',
-               url: "{{ route('tag.delete') }}",
-               data: {
-                  _token: "{{ csrf_token() }}",
-                  tag_id: tag_id
-               },
-               success: function(response) {
-                  if (response.status == "Success") {
-                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                     setTimeout(function() {
-                        location.reload()
-                     }, 2000);
+         Swal.fire({
+            title: "{{__('Are you Sure?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+          }).then((result) => {
+            if(result.value)
+            {
+               $.ajax({
+                  type: "POST",
+                  dataType: 'json',
+                  url: "{{ route('tag.delete') }}",
+                  data: {
+                     _token: "{{ csrf_token() }}",
+                     tag_id: tag_id
+                  },
+                  success: function(response) {
+                     if (response.status == "Success") {
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                        setTimeout(function() {
+                           location.reload()
+                        }, 2000);
+                     }
                   }
-               }
-            });
-         }
+               });
+            }
+         });
       });
       $(document).on('click', '.submitSaveProductTag', function(e) {
          var tag_id = $("#add_product_tag_modal input[name=tag_id]").val();
@@ -2115,25 +2180,33 @@ $sms_crendential = json_decode($preference->sms_credentials);
       });
       $(document).on("click", ".delete_driver_registration_document_btn", function() {
          var driver_registration_document_id = $(this).data('driver_registration_document_id');
-         if (confirm('Are you sure?')) {
-            $.ajax({
-               type: "POST",
-               dataType: 'json',
-               url: "{{ route('driver.registration.document.delete') }}",
-               data: {
-                  _token: "{{ csrf_token() }}",
-                  driver_registration_document_id: driver_registration_document_id
-               },
-               success: function(response) {
-                  if (response.status == "Success") {
-                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                     setTimeout(function() {
-                        location.reload()
-                     }, 2000);
+         Swal.fire({
+            title: "{{__('Are you Sure?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+         }).then((result) => {
+            if(result.value)
+            {
+               $.ajax({
+                  type: "POST",
+                  dataType: 'json',
+                  url: "{{ route('driver.registration.document.delete') }}",
+                  data: {
+                     _token: "{{ csrf_token() }}",
+                     driver_registration_document_id: driver_registration_document_id
+                  },
+                  success: function(response) {
+                     if (response.status == "Success") {
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                        setTimeout(function() {
+                           location.reload()
+                        }, 2000);
+                     }
                   }
-               }
-            });
-         }
+               });
+            }
+         });
       });
       $(document).on('click', '.submitSaveDriverRegistrationDocument', function(e) {
          var driver_registration_document_id = $("#add_driver_registration_document_modal input[name=driver_registration_document_id]").val();
@@ -2191,51 +2264,75 @@ $sms_crendential = json_decode($preference->sms_credentials);
          });
       });
       $('.cleanSoftDeleted').click(function(e) {
-         if (confirm('Are you Sure?')) {
-            e.preventDefault();
-            $.ajax({
-               url: "{{ route('config.cleanSoftDeleted') }}",
-               type: "POST",
-               data: {
-                  "_token": "{{ csrf_token() }}"
-               },
-               success: function(response) {
-                  $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
-               },
-            });
-         }
+         Swal.fire({
+            title: "{{__('Are you Sure?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+         }).then((result) => {
+            if(result.value)
+            {
+               e.preventDefault();
+               $.ajax({
+                  url: "{{ route('config.cleanSoftDeleted') }}",
+                  type: "POST",
+                  data: {
+                     "_token": "{{ csrf_token() }}"
+                  },
+                  success: function(response) {
+                     $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
+                  },
+               });
+            }
+         });
       });
 
       $('.importDemoContent').click(function(e) {
-         if (confirm('Are you Sure you want to hard delete?')) {
-            e.preventDefault();
-            $.ajax({
-               url: "{{ route('config.importDemoContent') }}",
-               type: "POST",
-               data: {
-                  "_token": "{{ csrf_token() }}"
-               },
-               success: function(response) {
-                  $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
-               },
-            });
-         }
+         Swal.fire({
+            title: "{{__('Are you Sure you want to hard delete?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+         }).then((result) => {
+            if(result.value)
+            {
+               e.preventDefault();
+               $.ajax({
+                  url: "{{ route('config.importDemoContent') }}",
+                  type: "POST",
+                  data: {
+                     "_token": "{{ csrf_token() }}"
+                  },
+                  success: function(response) {
+                     $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
+                  },
+               });
+            }
+         });
       });
 
       $('.hardDeleteEverything').click(function(e) {
-         if (confirm('Are you Sure you want to proceed?')) {
-            e.preventDefault();
-            $.ajax({
-               url: "{{ route('config.hardDeleteEverything') }}",
-               type: "POST",
-               data: {
-                  "_token": "{{ csrf_token() }}"
-               },
-               success: function(response) {
-                  $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
-               },
-            });
-         }
+         Swal.fire({
+            title: "{{__('Are you Sure you want to proceed?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+         }).then((result) => {
+            if(result.value)
+            {
+               e.preventDefault();
+               $.ajax({
+                  url: "{{ route('config.hardDeleteEverything') }}",
+                  type: "POST",
+                  data: {
+                     "_token": "{{ csrf_token() }}"
+                  },
+                  success: function(response) {
+                     $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
+                  },
+               });
+            }
+         });
       });
 
       function generateRandomString(length) {
@@ -2484,7 +2581,12 @@ $sms_crendential = json_decode($preference->sms_credentials);
          var takeaway_checked = $("#takeaway_check").is(":checked");
          var dinein_checked = $("#dinein_check").is(":checked");
          if (dinein_checked == false && takeaway_checked == false && delivery_checked == false) {
-            alert("One option must be enables");
+            Swal.fire({
+               title: "Warning!",
+               text: "One option must be enables",
+               icon: "warning",
+               button: "OK",
+            });
             $("#" + id).trigger('click');
          }
       }

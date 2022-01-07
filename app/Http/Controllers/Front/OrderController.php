@@ -49,6 +49,8 @@ use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Models\AutoRejectOrderCron;
 use Redirect;
+use App\Http\Controllers\Front\LalaMovesController;
+
 
 class OrderController extends FrontController
 {
@@ -599,6 +601,7 @@ class OrderController extends FrontController
         }
         return $cart;
     }
+    
     public function placeOrder(Request $request, $domain = '')
     {
 
@@ -671,6 +674,7 @@ class OrderController extends FrontController
             if (($request->has('address_id')) && ($request->address_id > 0)) {
                 $order->address_id = $request->address_id;
             }
+            $order->shipping_delivery_type = (($request->delivery_type)?$request->delivery_type:'D');
             $order->payment_option_id = $request->payment_option_id;
             $order->comment_for_pickup_driver = $cart->comment_for_pickup_driver ?? null;
             $order->comment_for_dropoff_driver = $cart->comment_for_dropoff_driver ?? null;
@@ -755,9 +759,18 @@ class OrderController extends FrontController
                             $payable_amount = $payable_amount + $product_tax;
                         }
                     }
+
                     if ($action == 'delivery') {
                         if ((!empty($vendor_cart_product->product->Requires_last_mile)) && ($vendor_cart_product->product->Requires_last_mile == 1)) {
-                            $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
+                         
+                            //Add here Delivery option Lalamove and dispatcher
+                            if($request->delivery_type=='L'){
+                                $lala = new LalaMovesController();
+                                $delivery_fee = $lala->getDeliveryFeeLalamove($vendor_cart_product->vendor_id);
+                            }else{
+                                $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
+                            }
+
                             if (!empty($delivery_fee) && $delivery_count == 0) {
                                 $delivery_count = 1;
                                 $vendor_cart_product->delivery_fee = number_format($delivery_fee, 2);
@@ -775,8 +788,11 @@ class OrderController extends FrontController
                                     }
                                 }
                             }
+
+
                         }
                     }
+
                     $taxable_amount += $product_taxable_amount;
                     $vendor_taxable_amount += $taxable_amount;
                     $total_amount += $vendor_cart_product->quantity * $variant->price;

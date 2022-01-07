@@ -106,12 +106,36 @@
                     </div>
                     @endif
 
-                    <!-- <div class="col-md-12">
+                     <div class="col-md-12">
                         <div class="form-group" id="order_min_amountInput">
                             {!! Form::label('title', 'Order Min Amount',['class' => 'control-label']) !!}
                             <input class="form-control" onkeypress="return isNumberKey(event)" name="order_min_amount" type="text" value="{{$vendor->order_min_amount}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
                         </div>
-                    </div> -->
+                    </div> 
+
+
+                    @if($client_preference_detail->static_delivey_fee == 1)
+                    <div class="col-md-12">
+                        <div class="form-group" id="order_amount_for_delivery_feeInput">
+                            {!! Form::label('title', 'Order Amount For Delivery Fee',['class' => 'control-label']) !!}
+                            <input class="form-control" onkeypress="return isNumberKey(event)" name="order_amount_for_delivery_fee" type="text" value="{{$vendor->order_amount_for_delivery_fee}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                        </div>
+                    </div> 
+
+                    <div class="col-md-12">
+                        <div class="form-group" id="delivery_fee_minimumInput">
+                            {!! Form::label('title', 'Delivery Fee For Below Amount',['class' => 'control-label']) !!}
+                            <input class="form-control" onkeypress="return isNumberKey(event)" name="delivery_fee_minimum" type="text" value="{{$vendor->delivery_fee_minimum}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                        </div>
+                    </div> 
+
+                    <div class="col-md-12">
+                        <div class="form-group" id="delivery_fee_maximumInput">
+                            {!! Form::label('title', 'Delivery Fee For Above Amount',['class' => 'control-label']) !!}
+                            <input class="form-control" onkeypress="return isNumberKey(event)" name="delivery_fee_maximum" type="text" value="{{$vendor->delivery_fee_maximum}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                        </div>
+                    </div> 
+                    @endif
                     <div class="col-12">
                         <button class="btn btn-info waves-effect waves-light w-100" {{$vendor->status == 1 ? '' : 'disabled'}}>{{ __("Save") }}</button>
                     </div>

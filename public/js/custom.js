@@ -172,7 +172,7 @@ window.initializeSlider = function initializeSlider() {
             { breakpoint: 420, settings: { slidesToShow: 1, arrows: true, slidesToScroll: 1 } }
         ]
     });
-    
+
     $(".recent-orders").slick({
         arrows: false,
         dots: false,
@@ -621,6 +621,10 @@ $(document).ready(function() {
             }
             else if (payment_option_id == 13) {
                 paymentViaSquare('', '');
+            }else if (payment_option_id == 14) {
+                paymentViaOzow('', '');
+            }else if (payment_option_id == 15) {
+                paymentViaPagarme('', '');
             }
         } else {
             _this.attr("disabled", false);
@@ -744,6 +748,10 @@ $(document).ready(function() {
     });
 
     $(document).on("click", "#order_placed_btn", function() {
+
+        //var delivery_fee = $("input[name='deliveryFee']:checked").val();
+        var delivery_type = $("input:radio.delivery-fee:checked").attr('data-dcode'); 
+        
         $('.alert-danger').html('');
         if ((typeof guest_cart != undefined) && (guest_cart == 1)) {
             // window.location.href = login_url;
@@ -815,14 +823,14 @@ $(document).ready(function() {
         }
 
             if (cartAmount == 0) {
-            placeOrder(address, 1, '', tip);
+            placeOrder(address, 1, '', tip,delivery_type);
             return false;
         } else {
             $.ajax({
                 type: "POST",
                 dataType: 'json',
                 url: update_cart_schedule,
-                data: { specific_instructions:specific_instructions,task_type: task_type,schedule_dropoff:schedule_dropoff, schedule_pickup:schedule_pickup,schedule_dt: schedule_dt , comment_for_pickup_driver: comment_for_pickup_driver , comment_for_dropoff_driver: comment_for_dropoff_driver , comment_for_vendor: comment_for_vendor ,slot:slot},
+                data: { specific_instructions:specific_instructions,task_type: task_type,schedule_dropoff:schedule_dropoff, schedule_pickup:schedule_pickup,schedule_dt: schedule_dt , comment_for_pickup_driver: comment_for_pickup_driver , comment_for_dropoff_driver: comment_for_dropoff_driver , comment_for_vendor: comment_for_vendor , delivery_type : delivery_type ,slot:slot},
                 success: function(response) {
                     if (response.status == "Success") {
                         $.ajax({
@@ -943,7 +951,7 @@ $(document).ready(function() {
 
 
 
-    function paymentViaStripe(stripe_token, address_id, payment_option_id) {
+    function paymentViaStripe(stripe_token, address_id, payment_option_id, delivery_type = 'D') {
         let total_amount = 0;
         let tip = 0;
         let cartElement = $("input[name='cart_total_payable_amount']");
@@ -971,7 +979,7 @@ $(document).ready(function() {
             success: function(resp) {
                 if (resp.status == 'Success') {
                     if (path.indexOf("cart") !== -1) {
-                        placeOrder(address_id, payment_option_id, resp.data.id, tip);
+                        placeOrder(address_id, payment_option_id, resp.data.id, tip,delivery_type);
                     } else if (path.indexOf("wallet") !== -1) {
                         creditWallet(total_amount, payment_option_id, resp.data.id);
                     } else if (path.indexOf("subscription") !== -1) {
@@ -1191,7 +1199,7 @@ $(document).ready(function() {
         });
     }
 
-    window.placeOrder = function placeOrder(address_id = 0, payment_option_id, transaction_id = 0, tip = 0) {
+    window.placeOrder = function placeOrder(address_id = 0, payment_option_id, transaction_id = 0, tip = 0 , delivery_type ='D') {
         var task_type = $("input[name='task_type']").val();
         var schedule_dt = $("#schedule_datetime").val();
         var slot = $("#slot").val();
@@ -1207,7 +1215,7 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: place_order_url,
-            data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt,is_gift:is_gift,slot:slot },
+            data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt,is_gift:is_gift ,delivery_type:delivery_type,slot:slot},
             success: function(response) {
                 if (response.status == "Success") {
                     var ip_address = window.location.host;
@@ -1300,7 +1308,8 @@ $(document).ready(function() {
     $(document).on("click", ".proceed_to_pay", function() {
         // startLoader('body',"{{getClientPreferenceDetail()->wb_color_rgb}}");
         $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
-
+        var delivery_type = $("input:radio.delivery-fee:checked").attr('data-dcode'); 
+       
         let address_id = $("input:radio[name='address_id']:checked").val();
 
         if ((vendor_type == 'delivery') && ((address_id == '') || (address_id < 1) || ($("input[name='address_id']").length < 1))) {
@@ -1309,18 +1318,18 @@ $(document).ready(function() {
         }
         //let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
         let payment_option_id = $("#cart_payment_form input[name='cart_payment_method']:checked").val();
-
+        
 
         let tip = $("#cart_tip_amount").val();
         if (payment_option_id == 1) {
-            placeOrder(address_id, payment_option_id, '', tip);
+            placeOrder(address_id, payment_option_id, '', tip, delivery_type);
         } else if (payment_option_id == 4) {
             stripe.createToken(card).then(function(result) {
                 if (result.error) {
                     $('#stripe_card_error').html(result.error.message);
                     $("#order_placed_btn, .proceed_to_pay").attr("disabled", false);
                 } else {
-                    paymentViaStripe(result.token.id, address_id, payment_option_id);
+                    paymentViaStripe(result.token.id, address_id, payment_option_id,delivery_type);
                 }
             });
         } else if (payment_option_id == 8) {
@@ -1385,6 +1394,14 @@ $(document).ready(function() {
             var order = placeOrderBeforePayment(address_id, payment_option_id, tip);
             if (order != '') {
                 paymentViaSquare(address_id, order);
+            } else {
+                return false;
+            }
+        }
+        else if (payment_option_id == 15) {
+            var order = placeOrderBeforePayment(address_id, payment_option_id, tip);
+            if (order != '') {
+                paymentViaPagarme(address_id, order);
             } else {
                 return false;
             }
@@ -1555,6 +1572,8 @@ $(document).ready(function() {
             paymentViaSquare('', '');
         }else if (payment_option_id == 14) {
             paymentViaOzow('', '');
+        }else if (payment_option_id == 15) {
+            paymentViaPagarme('', '');
         }
     });
     $(document).on("click", ".remove_promo_code_btn", function() {
@@ -1653,6 +1672,7 @@ $(document).ready(function() {
         var input = document.getElementById('address');
         if (input) {
             var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo('bounds', bindMap);
             google.maps.event.addListener(autocomplete, 'place_changed', function() {
                 var place = autocomplete.getPlace();
                 // document.getElementById('city').value = place.name;
@@ -1871,6 +1891,126 @@ $(document).ready(function() {
         });
     }
 
+
+
+    function cartHeaderDilivery(address_id,code) {
+        $(".shopping-cart").html("");
+        $(".spinner-box").show();
+        $.ajax({
+            data: { address_id: address_id, code : code },
+            type: "get",
+            dataType: 'json',
+            url: cart_product_url,
+            success: function(response) {
+                if (response.status == "success") {
+                    $("#cart_table").html('');
+                    $(".spinner-box").hide();
+                    var cart_details = response.cart_details;
+                    var client_preference_detail = response.client_preference_detail;
+                    if (response.cart_details.length != 0) {
+                        if (response.cart_details.products.length != 0) {
+
+                            var headerCartData = _.extend({ Helper: NumberFormatHelper }, { cart_details: cart_details, show_cart_url: show_cart_url, client_preference_detail: client_preference_detail });
+
+                            let header_cart_template = _.template($('#header_cart_template').html());
+                            $("#header_cart_main_ul").append(header_cart_template(headerCartData));
+                            if ($('#cart_main_page').length != 0) {
+
+                                // simplified mock of the helpers
+
+                                var extendedData = _.extend({ Helper: NumberFormatHelper }, { cart_details: cart_details, client_preference_detail: client_preference_detail });
+
+                                let cart_template = _.template($('#cart_template').html());
+                                $("#cart_table").append(cart_template(extendedData));
+                                $(".other_cart_products").html('');
+                                let other_cart_products_template = _.template($('#other_cart_products_template').html());
+                                $(".other_cart_products").append(other_cart_products_template(extendedData));
+                                initializeSlider();
+                                $('#placeorder_form .left_box').html('');
+                                $('#placeorder_form .left_box').html(cart_details.left_section);
+                                if (vendor_type != 'delivery') {
+                                    var latitude = $('#latitude').val();
+                                    var longitude = $('#longitude').val();
+                                    displayMapLocation(latitude, longitude, 'vendor-address-map');
+                                }
+                                initialize();
+                                if (cart_details.deliver_status == 0) {
+                                    $("#order_placed_btn").attr("disabled", true);
+                                    $("#order_placed_btn").addClass("d-none");
+                                } else {
+                                    $("#order_placed_btn").removeAttr("disabled");
+                                    $("#order_placed_btn").removeClass("d-none");
+                                }
+                            }
+                            cartTotalProductCount();
+
+                            if ($("#header_cart_template_ondemand").length != 0) {
+                                $("#header_cart_main_ul_ondemand").html('');
+                                let header_cart_template_ondemand = _.template($('#header_cart_template_ondemand').html());
+                                var CartTemplateOndemandData = _.extend({ Helper: NumberFormatHelper }, { cart_details: cart_details, show_cart_url: show_cart_url });
+
+                                $("#header_cart_main_ul_ondemand").append(header_cart_template_ondemand(CartTemplateOndemandData));
+                                $("#next-button-ondemand-2").show();
+                                $('#placeorder_form_ondemand .left_box').html('');
+                                $('#placeorder_form_ondemand .left_box').html(cart_details.left_section);
+                                initialize();
+                                if (cart_details.deliver_status == 0) {
+                                    $("#order_placed_btn").attr("disabled", true);
+                                    $("#order_placed_btn").addClass("d-none");
+                                } else {
+                                    $("#order_placed_btn").removeAttr("disabled");
+                                    $("#order_placed_btn").removeClass("d-none");
+                                }
+                            }
+
+                        } else {
+                            if ($('#cart_main_page').length != 0) {
+                                $('#cart_main_page').html('');
+                                let empty_cart_template = _.template($('#empty_cart_template').html());
+                                $("#cart_main_page").append(empty_cart_template());
+                            }
+                            if ($('.categories-product-list').length > 0) {
+                                $('#header_cart_main_ul_ondemand').html('');
+                                let empty_cart_template = _.template($('#empty_cart_template').html());
+                                $("#header_cart_main_ul_ondemand").append(empty_cart_template());
+                            }
+                        }
+                    } else {
+                        if ($('#cart_main_page').length != 0) {
+                            $('#cart_main_page').html('');
+                            let empty_cart_template = _.template($('#empty_cart_template').html());
+                            $("#cart_main_page").append(empty_cart_template());
+                        }
+                        if ($('.categories-product-list').length > 0) {
+                            $('#header_cart_main_ul_ondemand').html('');
+                            let empty_cart_template = _.template($('#empty_cart_template').html());
+                            $("#header_cart_main_ul_ondemand").append(empty_cart_template());
+                        }
+                    }
+                }
+            },
+            complete: function(data) {
+                if ($("#cart_table").length > 0) {
+                    $(".spinner-box").hide();
+                    $("#cart_table").show();
+                }
+
+                if ($("#header_cart_main_ul_ondemand").length > 0) {
+                    $(".spinner-box").hide();
+                    $("#header_cart_main_ul_ondemand").show();
+                    $(".number .qty-minus-ondemand .fa").removeAttr("class").addClass("fa fa-minus");
+                    $(".number .qty-plus-ondemand .fa").removeAttr("class").addClass("fa fa-plus");
+                }
+
+                if ($(".number .fa-spinner fa-pulse").length > 0) {
+                    $(".number .qty-minus .fa").removeAttr("class").addClass("fa fa-minus");
+                    $(".number .qty-plus .fa").removeAttr("class").addClass("fa fa-plus");
+
+                }
+            }
+        });
+    }
+
     function updateQuantity(cartproduct_id, quantity, base_price, iconElem = '') {
         if (iconElem != '') {
             let elemClasses = $(iconElem).attr("class");
@@ -1945,11 +2085,25 @@ $(document).ready(function() {
     $(document).on('click', '.qty-minus', function() {
         let base_price = $(this).data('base_price');
         let cartproduct_id = $(this).attr("data-id");
+        let minimum_order_count = $(this).attr("data-minimum_order_count");
+        let batch_count = $(this).attr("data-batch_count");
+        if(batch_count > 0)
+        batch_count = batch_count;
+        else
+        batch_count = 1;
+
+        if(minimum_order_count > 0)
+        minimum_order_count = minimum_order_count;
+        else
+        minimum_order_count = 1;
         let qty = $('#quantity_' + cartproduct_id).val();
+        let decrevalue = parseInt(qty)-parseInt(batch_count);
+
+
         $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
-        if (qty > 1) {
-            $('#quantity_' + cartproduct_id).val(--qty);
-            updateQuantity(cartproduct_id, qty, base_price);
+        if (decrevalue >= minimum_order_count) {
+            $('#quantity_' + cartproduct_id).val(decrevalue);
+            updateQuantity(cartproduct_id, decrevalue, base_price);
         } else {
             // alert('remove this product');
             $('#remove_item_modal').modal('show');
@@ -1962,10 +2116,32 @@ $(document).ready(function() {
         let base_price = $(this).data('base_price');
         let cartproduct_id = $(this).attr("data-id");
         let qty = $('#quantity_' + cartproduct_id).val();
-        $('#quantity_' + cartproduct_id).val(++qty);
+        let minimum_order_count = $(this).attr("data-minimum_order_count");
+        let batch_count = $(this).attr("data-batch_count");
+        if(batch_count > 0)
+        batch_count = batch_count;
+        else
+        batch_count = 1;
+
+        if(minimum_order_count > 0)
+        minimum_order_count = minimum_order_count;
+        else
+        minimum_order_count = 1;
+
+        let increvalue = parseInt(qty)+parseInt(batch_count);
+
+        $('#quantity_' + cartproduct_id).val(increvalue);
         $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
-        updateQuantity(cartproduct_id, qty, base_price);
+        updateQuantity(cartproduct_id, increvalue, base_price);
     });
+
+    $(document).on('change', '.delivery-fee', function() {
+        let code = $(this).data('dcode');
+        let address_id = $("input[type='radio'][name='address_id']:checked").val();
+        cartHeaderDilivery(address_id,code);
+    });
+
+
     cartHeader();
     $(document).on("click", "#cancel_save_address_btn", function() {
         $('#add_new_address').show();
@@ -2237,14 +2413,14 @@ $(document).ready(function() {
         batch_count = 1;
 
         if(minimum_order_count > 0)
-        batch_count = batch_count;
+        minimum_order_count = minimum_order_count;
         else
-        batch_count = 1;
-        
+        minimum_order_count = 1;
+
         let qty = $(this).next().val();
         let decrevalue = parseInt(qty)-parseInt(batch_count);
         if(!$.hasAjaxRunning()){
-            if (qty > 1) {
+            if (decrevalue >= minimum_order_count) {
                 if( $(this).hasClass('remove-customize') && $(this).hasClass('m-open') ){
                     $(this).find('.fa').removeClass("fa-minus").addClass("fa-spinner fa-pulse");
                     updateProductQuantity(product_id, cartproduct_id, decrevalue, base_price, this);
@@ -2422,9 +2598,17 @@ $(document).ready(function() {
             getProductAddons(slug, variant_id);
             return false;
         }
+
+        var minimum_order_count = $(that).data("minimum_order_count");
+        if(minimum_order_count > 0)
+        minimum_order_count = minimum_order_count;
+        else
+        minimum_order_count = 1;
+
+
         // end addons data
         if (!$.hasAjaxRunning()) {
-            addToCartProductsAddons(that);
+            addToCartProductsAddons(that,minimum_order_count);
         }
     }
 
@@ -2893,7 +3077,7 @@ $(document).ready(function() {
         else
         minimum_order_count = 1;
         // var res = parseInt(str.substring(10, str.length - 1));
-       
+
 
         console.log(minimum_order_count);
 
@@ -2903,13 +3087,13 @@ $(document).ready(function() {
         if (i - batch_count < minimum_order_count) {
                 alert("Minimum Quantity count is " + minimum_order_count);
                 return false;
-        }    
+        }
         !isNaN(i) && i > 1 && s.val(i - batch_count);
     });
     $(document).delegate('.quantity_count', 'change', function() {
         var quan = $(this).val();
         var str = $('#instock').val();
-      
+
 
         if (quan > str) {
             alert("Quantity is not available in stock");

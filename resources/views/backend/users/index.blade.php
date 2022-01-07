@@ -428,9 +428,21 @@
     });
 
     $(document).on('click','.delete_customer',function(e){
-        if (confirm("Are you sure? You want to delete this customer.")) {
-            return true;
-        }
+        var submit_url = $(this).attr('href');
+        Swal.fire({
+            title: "{{__('Are you sure?')}}",
+            text:"{{__('You want to delete this customer.')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+        }).then((result) => {
+            if(result.value)
+            {
+                window.location.href = submit_url;
+            }else{
+               return false; 
+            }
+        });
         return false;
     })
 </script>
