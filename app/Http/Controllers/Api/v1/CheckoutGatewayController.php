@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Front;
+namespace App\Http\Controllers\Api\v1;
 
 use Log;
 use Auth;
@@ -10,14 +10,14 @@ use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Front\FrontController;
-use App\Http\Controllers\Front\OrderController;
-use App\Http\Controllers\Front\WalletController;
-use App\Http\Controllers\Front\UserSubscriptionController;
+use App\Http\Controllers\Api\v1\BaseController;
+use App\Http\Controllers\Api\v1\OrderController;
+use App\Http\Controllers\Api\v1\WalletController;
+use App\Http\Controllers\Api\v1\UserSubscriptionController;
 use App\Models\{User, UserVendor, Cart, CartAddon, CartCoupon, CartProduct, CartProductPrescription, Payment, PaymentOption, Client, ClientPreference, ClientCurrency, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor, OrderTax, SubscriptionPlansUser};
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 
-class CheckoutGatewayController extends FrontController
+class CheckoutGatewayController extends BaseController
 {
     use ApiResponser;
     public $PUBLIC_KEY;
@@ -46,9 +46,9 @@ class CheckoutGatewayController extends FrontController
             $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($request->amount);
 
-            $returnUrl = route('order.return.success');
+            // $returnUrl = route('order.return.success');
             if ($request->payment_form == 'wallet') {
-                $returnUrl = route('user.wallet');
+                // $returnUrl = route('user.wallet');
             }
             $uniqid = uniqid();
             $customer_data = array(
@@ -156,7 +156,7 @@ class CheckoutGatewayController extends FrontController
 
             $returnUrl = $this->checkoutNotify($request, $result);
             if(isset($result->approved) && ($result->approved)){
-                return $this->successResponse($returnUrl, '', 201);
+                return $this->successResponse($result->id, '', 201);
             } else{
                 $msg = '';
                 if($http_status == '401'){
@@ -230,24 +230,24 @@ class CheckoutGatewayController extends FrontController
                 $request->request->add(['wallet_amount' => $request->amount, 'transaction_id' => $transactionId]);
                 $walletController = new WalletController();
                 $walletController->creditWallet($request);
-                $returnUrl = route('user.wallet');
+                $returnUrl = ''; //route('user.wallet');
                 return $returnUrl;
             }
             elseif($request->payment_form == 'tip'){
                 $request->request->add(['order_number' => $request->order_number, 'tip_amount' => $request->amount, 'transaction_id' => $transactionId]);
                 $orderController = new OrderController();
                 $orderController->tipAfterOrder($request);
-                $returnUrl = route('user.orders');
+                $returnUrl = ''; //route('user.orders');
                 return $returnUrl;
             }
             elseif($request->payment_form == 'subscription'){
                 $request->request->add(['payment_option_id' => 17, 'transaction_id' => $transactionId]);
                 $subscriptionController = new UserSubscriptionController();
                 $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription_id);
-                $returnUrl = route('user.subscription.plans');
+                $returnUrl = ''; //route('user.subscription.plans');
                 return $returnUrl;
             }
-            return route('order.return.success');
+            // return route('order.return.success');
         } 
         else {
             if($request->payment_form == 'cart'){
@@ -263,18 +263,18 @@ class CheckoutGatewayController extends FrontController
                 OrderVendor::where('order_id', $order->id)->delete();
                 OrderTax::where('order_id', $order->id)->delete();
                 Order::where('id', $order->id)->delete();
-                return Redirect::to(route('showCart'));
+                // return Redirect::to(route('showCart'));
             }
-            elseif($request->payment_form == 'wallet'){
-                return Redirect::to(route('user.wallet'));
-            }
-            elseif($request->payment_form == 'tip'){
-                return Redirect::to(route('user.orders'));
-            }
-            elseif($request->payment_form == 'subscription'){
-                return Redirect::to(route('user.subscription.plans'));
-            }
-            return Redirect::to(route('order.return.success'));
+            // elseif($request->payment_form == 'wallet'){
+            //     return Redirect::to(route('user.wallet'));
+            // }
+            // elseif($request->payment_form == 'tip'){
+            //     return Redirect::to(route('user.orders'));
+            // }
+            // elseif($request->payment_form == 'subscription'){
+            //     return Redirect::to(route('user.subscription.plans'));
+            // }
+            // return Redirect::to(route('order.return.success'));
         }
     }
 
