@@ -14,7 +14,7 @@ $(document).on('change', '#wallet_payment_methods input[name="wallet_payment_met
     }else{
         $("#wallet_payment_methods .stripe_element_wrapper").addClass('d-none');
     }
-    if (method.replace('radio-', '') == 'yoco') {
+    if (method == 'yoco') {
         $("#wallet_payment_methods .yoco_element_wrapper").removeClass('d-none');
         // Create a new dropin form instance
 
@@ -28,5 +28,11 @@ $(document).on('change', '#wallet_payment_methods input[name="wallet_payment_met
         inline.mount('#yoco-card-frame');
     } else {
         $("#wallet_payment_methods .yoco_element_wrapper").addClass('d-none');
+    }
+    if (method == 'checkout') {
+        $("#wallet_payment_methods .checkout_element_wrapper").removeClass('d-none');
+        Frames.init(checkout_public_key);
+    } else {
+        $("#wallet_payment_methods .checkout_element_wrapper").addClass('d-none');
     }
 });

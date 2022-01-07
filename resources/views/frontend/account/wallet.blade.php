@@ -346,6 +346,14 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
                         <span class="error text-danger" id="yoco_card_error"></span>
                     </div>
                 <% } %>
+                <% if(payment_option.slug == 'checkout') { %>
+                    <div class="col-md-12 mt-3 mb-3 checkout_element_wrapper d-none">
+                        <div class="form-control card-frame">
+                            <!-- form will be added here -->
+                        </div>
+                        <span class="error text-danger" id="checkout_card_error"></span>
+                    </div>
+                <% } %>
             <% } %>
         <% }); %>
     <% } %>
@@ -354,6 +362,7 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
 @section('script')
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+<script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
     var credit_wallet_url = "{{route('user.creditWallet')}}";
@@ -362,6 +371,7 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
     var payment_paylink_url = "{{route('payment.paylinkPurchase')}}";
     var payment_yoco_url = "{{route('payment.yocoPurchase')}}";
     var payment_razorpay_url = "{{route('payment.razorpayPurchase')}}";
+    var payment_checkout_url = "{{route('payment.checkoutPurchase')}}";
     var wallet_payment_options_url = "{{route('wallet.payment.option.list')}}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
     var payment_success_paylink_url = "{{route('payment.paylinkReturn')}}";
@@ -439,6 +449,12 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
             inline.mount('#yoco-card-frame');
         } else {
             $("#wallet_payment_methods .yoco_element_wrapper").addClass('d-none');
+        }
+        if (method == 'checkout') {
+            $("#wallet_payment_methods .checkout_element_wrapper").removeClass('d-none');
+            Frames.init(checkout_public_key);
+        } else {
+            $("#wallet_payment_methods .checkout_element_wrapper").addClass('d-none');
         }
     });
 

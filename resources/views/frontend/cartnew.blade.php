@@ -739,9 +739,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <h6>{{__('Payment Options Not Avaialable')}}</h6>
     <% }else{ %>
         <div class="modal-body pb-0">
-            <div class="payment_response">
-                <div class="alert p-0 m-0" role="alert"></div>
-            </div>
             <h5 class="text-17 mb-2">{{__('Debit From')}}</h5>
             <form method="POST" id="cart_payment_form">
                 @csrf
@@ -783,6 +780,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <% } %>
                     </div>
                 <% }); %>
+                <div class="payment_response">
+                    <div class="alert p-0 m-0" role="alert"></div>
+                </div>
             </form>
         </div>
         <div class="modal-footer d-block text-center">

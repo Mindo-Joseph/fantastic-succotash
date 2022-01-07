@@ -52,12 +52,12 @@ class CheckoutGatewayController extends FrontController
             }
             $uniqid = uniqid();
             $customer_data = array(
-                'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 // 'phone' => $user->phone_number
                 // 'identification' => '12123123'
             );
+            $meta_data = array();
             $reference_number = $description = '';
             $returnUrlParams = '?gateway=checkout&amount=' . $request->amount . '&payment_form=' . $request->payment_form;
 
@@ -65,7 +65,7 @@ class CheckoutGatewayController extends FrontController
                 $description = 'Order Checkout';
                 $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
                 $request->request->add(['cart_id' => $cart->id]);
-                $customer_data['cart_id'] = $cart->id;
+                $meta_data['cart_id'] = $cart->id;
                 if($request->has('order_number')){
                     $reference_number = $request->order_number;
                 }
@@ -77,7 +77,7 @@ class CheckoutGatewayController extends FrontController
             }
             if($request->payment_form == 'tip'){
                 $description = 'Tip Checkout';
-                $customer_data['order_number'] = $request->order_number;
+                $meta_data['order_number'] = $request->order_number;
                 if($request->has('order_number')){
                     $reference_number = $request->order_number;
                 }
@@ -88,7 +88,7 @@ class CheckoutGatewayController extends FrontController
                 if($request->has('subscription_id')){
                     $slug = $request->subscription_id;
                     $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
-                    $customer_data['subscription_id'] = $subscription_plan->id;
+                    $meta_data['subscription_id'] = $subscription_plan->id;
                     $reference_number = $request->subscription_id;
                     $returnUrlParams = $returnUrlParams . '&subscription=' . $request->subscription_id;
                 }
@@ -99,39 +99,44 @@ class CheckoutGatewayController extends FrontController
                     'type' => 'token',
                     'token' => $request->token
                 ),
-                'amount' => $amount,
+                'amount' => $amount * 100,
                 'currency' => 'USD', //$this->currency
                 'payment_type' => 'Regular',
                 'reference' => $reference_number,
                 'description' => $description,
                 'capture' => true,
-                'capture_on' => date('Y-m-dTH:m:sZ'),
-                'returnUrl' => url('payment/checkout/return' . $returnUrlParams),
-                'redirect' => false,
-                'test' => $this->test_mode, // True, testing, false, production
+                // 'capture_on' => date('Y-m-dTH:m:sZ'),
                 'customer' => $customer_data,
-                'billingAddress' => array(
+                'payment_ip' => getUserIP(),
+                'billing_descriptor' => array(
                     'name' => $user->address->first()->address,
-                    'address1' => $user->address->first()->address,
-                    'address2' => $user->address->first()->address,
+                    'address' => $user->address->first()->address,
                     'street' =>  $user->address->first()->street,
                     'city' => $user->address->first()->city,
                     'state' => $user->address->first()->state,
-                    'zip' => $user->address->first()->pincode,
-                    'country' => 'AED'
+                    'zip' => $user->address->first()->pincode
                 ),
-                'items' => array(
-                    'name' => 'Demo item',
-                    'sku' => 'sku-demo',
-                    'unitprice' => $amount,
-                    'quantity' => 1,
-                    'linetotal' => 100
-                )
+                'shipping' => array(
+                    'address' => array(
+                        'name' => $user->address->first()->address,
+                        'address_line1' => $user->address->first()->address,
+                        'address_line2' => $user->address->first()->address,
+                        'street' =>  $user->address->first()->street,
+                        'city' => $user->address->first()->city,
+                        'state' => $user->address->first()->state,
+                        'zip' => $user->address->first()->pincode
+                    ),
+                    'phone' => array(
+                        'country_code' => $user->address->first()->dial_code,
+                        'number' => $user->address->first()->phone_number
+                    )
+                ),
+                'metdata' => $meta_data
             );
 
-            $ch = curl_init('https://api.checkout.com/payments');
+            $ch = curl_init($this->getCheckoutUrl());
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+            // curl_setopt($ch, CURLINFO_HEADER_OUT, true);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
             curl_setopt(
@@ -145,47 +150,38 @@ class CheckoutGatewayController extends FrontController
             );
 
             $result = curl_exec($ch);
+            $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
             $result = json_decode($result);
-            if ($result->success == true) {
-                return $this->successResponse($result->result->redirectUrl, ['status' => $result->result->status]);
-            } else {
-                return $this->errorResponse($result->error, 400);
+
+            $returnUrl = $this->checkoutNotify($request, $result);
+            if(isset($result->approved) && ($result->approved)){
+                return $this->successResponse($returnUrl, '', 201);
+            } else{
+                $msg = '';
+                if($http_status == '401'){
+                    $msg = __('Unauthorized');
+                }elseif($http_status == '400' || $http_status == '422'){
+                    $msg = __('Invalid data was sent');
+                }elseif($http_status == '429'){
+                    $msg = __('Too many requests or duplicate request declined');
+                }elseif($http_status == '502'){
+                    $msg = __('Bad Gateway');
+                }
+                return $this->errorResponse($msg, $http_status);
             }
-        } catch (\Exception $ex) {
+        }
+        catch (\Exception $ex) {
             return $this->errorResponse($ex->getMessage(), 400);
         }
     }
 
-    public function checkoutNotify(Request $request, $domain = '')
+    public function checkoutNotify($request, $payment)
     {
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $this->getCheckoutUrl() . '/' . $request->checkout,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-                'X-PointCheckout-Api-Key:' . $this->API_KEY,
-                'X-PointCheckout-Api-Secret:' . $this->API_SECRET_KEY,
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $response = json_decode($response);
-
-        //  dd($response);
-        $transactionId = $request->checkout;
-
-        if ($response->result->status == 'PAID') {
+        if (isset($payment->approved) && ($payment->approved)) {
+            $transactionId = $payment->id;
             if($request->payment_form == 'cart'){
-                $order_number = $request->order;
+                $order_number = $request->order_number;
                 $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
                 if ($order) {
                     $order->payment_status = 1;
@@ -224,8 +220,8 @@ class CheckoutGatewayController extends FrontController
                         $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
                     }
                     $returnUrlParams = ''; //'?gateway=checkout&order=' . $order->id;
-                    $returnUrl = route('order.return.success');
-                    return Redirect::to(url($returnUrl . $returnUrlParams));
+                    $returnUrl = route('order.success', $order->id);
+                    return $returnUrl . $returnUrlParams;
 
                     // Send Email
                     //   $this->successMail();
@@ -235,27 +231,27 @@ class CheckoutGatewayController extends FrontController
                 $walletController = new WalletController();
                 $walletController->creditWallet($request);
                 $returnUrl = route('user.wallet');
-                return Redirect::to(url($returnUrl));
+                return $returnUrl;
             }
             elseif($request->payment_form == 'tip'){
-                $request->request->add(['order_number' => $request->order, 'tip_amount' => $request->amount, 'transaction_id' => $transactionId]);
+                $request->request->add(['order_number' => $request->order_number, 'tip_amount' => $request->amount, 'transaction_id' => $transactionId]);
                 $orderController = new OrderController();
                 $orderController->tipAfterOrder($request);
                 $returnUrl = route('user.orders');
-                return Redirect::to(url($returnUrl));
+                return $returnUrl;
             }
             elseif($request->payment_form == 'subscription'){
-                $request->request->add(['payment_option_id' => 9, 'transaction_id' => $transactionId]);
+                $request->request->add(['payment_option_id' => 17, 'transaction_id' => $transactionId]);
                 $subscriptionController = new UserSubscriptionController();
-                $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription);
+                $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription_id);
                 $returnUrl = route('user.subscription.plans');
-                return Redirect::to(url($returnUrl));
+                return $returnUrl;
             }
-            return Redirect::to(route('order.return.success'));
+            return route('order.return.success');
         } 
         else {
             if($request->payment_form == 'cart'){
-                $order_number = $request->order;
+                $order_number = $request->order_number;
                 $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
                 $order_products = OrderProduct::select('id')->where('order_id', $order->id)->get();
                 foreach ($order_products as $order_prod) {
@@ -282,7 +278,7 @@ class CheckoutGatewayController extends FrontController
         }
     }
 
-    public function checkoutNotifyApp(Request $request)
+    public function checkoutSuccessApp(Request $request)
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -386,12 +382,11 @@ class CheckoutGatewayController extends FrontController
     }
 
     private function getCheckoutUrl(){
-        if ($this->test_mode == true){
-            return 'https://api.test.pointcheckout.com/mer/v2.0/checkout';
-        }elseif($this->test_mode == false){
-            return 'https://api.pointcheckout.com/mer/v2.0/checkout';
+        if ($this->test_mode == false){
+            return 'https://api.checkout.com/payments';
+        }else{
+            return 'https://api.sandbox.checkout.com/payments';
         }
-        return 'https://api.staging.pointcheckout.com/mer/v2.0/checkout';
     }
 
 }
