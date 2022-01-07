@@ -1173,6 +1173,48 @@ $sms_crendential = json_decode($preference->sms_credentials);
                </div>
             </form>
          </div>
+
+         <div class="card-box">
+            <h4 class="header-title text-uppercase mb-2">{{ __("Edit Order By") }}</h4>
+            <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+               <input type="hidden" name="edit_order_modes" id="edit_order_modes" value="1">
+               @csrf
+
+               @php
+                   $vendormenu = getNomenclatureName('Vendors', true);
+                   $vendormenulabel = ($vendormenu=="Vendors")?__('Vendors'):$vendormenu;
+
+               @endphp
+
+               <div class="row align-items-center">
+                   <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="is_edit_order_admin" class="mr-2 mb-0"> {{ __("Admin") }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="is_edit_order_admin" id="is_edit_order_admin" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_edit_order_admin == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="is_edit_order_vendor" class="mr-2 mb-0">{{ $vendormenulabel }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="is_edit_order_vendor" id="is_edit_order_vendor" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_edit_order_vendor == '1')) checked='checked' @endif>
+                        </div>
+                     </div> 
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="is_edit_order_driver" class="mr-2 mb-0">{{ __("Driver") }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="is_edit_order_driver" id="is_edit_order_driver" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_edit_order_driver == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                 
+                 
+                  <div class="col-md-12">
+                     <div class="form-group mb-0 text-md-left">
+                        <button class="btn btn-info d-block" type="submit">{{ __("Save") }}</button>
+                     </div>
+                  </div>
+               </div>
+            </form>
+         </div>
       </div>
    </div>
 

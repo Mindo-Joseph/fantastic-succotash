@@ -206,10 +206,10 @@ class HomeController extends BaseController
                         sin( radians(' . $latitude . ') ) *
                         sin( radians( latitude ) ) ) )  AS vendorToUserDistance'))->withAvg('product', 'averageRating');
                 $vendorData = $vendorData->whereIn('id', $ses_vendors);
-                if($venderFilternear && ($venderFilternear == 1) ){
+                //if($venderFilternear && ($venderFilternear == 1) ){
                     //->orderBy('vendorToUserDistance', 'ASC')
                     $vendorData =   $vendorData->orderBy('vendorToUserDistance', 'ASC');
-                }
+                //}
             }
 
             //filter on ratings

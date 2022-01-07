@@ -1079,4 +1079,48 @@ class CartController extends BaseController
             return response()->json(['status'=>'Error', 'message'=>$ex->getMessage()]);
         }
     }
+
+    # repeat order vendor wise 
+
+    public function repeatOrder($domain = '', Request $request){
+
+        $order_vendor_id = $request->order_vendor_id;
+        $cart_id = $request->cart_id;
+        $getallproduct = OrderProduct::where('order_vendor_id',$order_vendor_id)->get();
+        
+        if(isset($cart_id) && !empty($cart_id)){
+            CartProduct::where('cart_id', $cart_id)->delete();
+            CartCoupon::where('cart_id', $cart_id)->delete();
+            CartAddon::where('cart_id', $cart_id)->delete();
+        }
+   
+        foreach($getallproduct as $data){
+            $request->vendor_id = $data->vendor_id;
+            $request->sku = $data->product->sku;
+            $request->quantity = $data->quantity;
+            $request->product_variant_id = $data->variant_id;
+
+            if(isset($getallproduct->order) && !empty($getallproduct->order))
+            $type = LuxuryOption::where('id',$getallproduct->order->luxury_option_id)->value('title');
+
+
+            $request->type = $type ?? 'delivery';
+
+            $addonID = OrderProductAddon::where('order_product_id',$data->id)->pluck('addon_id');
+            $addonoptID = OrderProductAddon::where('order_product_id',$data->id)->pluck('option_id');
+
+            if(count($addonID))
+            $request->request->add(['addon_ids' => $addonID->toArray()]);
+
+            if(count($addonoptID))
+            $request->request->add(['addon_options' => $addonoptID->toArray()]);
+
+            $this->add($request);
+
+        }
+      
+        return response()->json(['status' => 'success', 'message' => 'Order added to cart.']);
+
+      
+    }
 }
