@@ -43,6 +43,7 @@
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+       @if(Auth::user() && !isset(Auth::user()->phone_number))
         var input = document.querySelector("#phone");
                 window.intlTelInput(input, {
                     separateDialCode: true,
@@ -50,6 +51,7 @@
                     utilsScript: "{{asset('assets/js/utils.js')}}",
                     initialCountry: "{{ Session::get('default_country_code','US') }}",
                 });
+        @endif
 
         number = document.querySelector('#cc-number');
         cvc = document.querySelector('#cc-cvc');
@@ -116,7 +118,7 @@
                     <label>{{__('Card Holder Name')}}: </label>
                     <input class="form-control" id="cc-name" type="text" maxlength="20" autocomplete="off" name="holder_name" required autofocus />
                 </div>
-                @if(Auth::user() && isset(Auth::user()->phone_number))
+                @if(Auth::user() && !isset(Auth::user()->phone_number))
                 <div class="form-group">
                     <label>{{__('Phone Number')}}: </label>
                     <input type="tel" class="form-control phone @error('phone_number') is-invalid @enderror" id="phone" placeholder="Phone Number" name="phone_number" value="{{old('phone_number')}}" required="required" autofocus>
