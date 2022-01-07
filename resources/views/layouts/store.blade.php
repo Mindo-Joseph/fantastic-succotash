@@ -61,9 +61,9 @@ else if($client_preference_detail->show_dark_mode == 2){
   .site-topbar,.main-menu.d-block{
       display: none !important;
   }
-  
+
   .cab-booking-header img.img-fluid {
-      height: 50px;
+      height: auto !important;
   }
   .cab-booking-header{
       display: block !important;
@@ -83,7 +83,7 @@ else if($client_preference_detail->show_dark_mode == 2){
 
 
 <body  class="{{$dark_mode}}{{ Request::is('category/cabservice') ? 'cab-booking-body' : '' }}" dir="{{session()->get('locale') == 'ar' ? 'rtl' : ''}}">
-  
+
   @yield('content')
 
 
@@ -108,7 +108,7 @@ else if($client_preference_detail->show_dark_mode == 2){
   @if($client_preference_detail->hide_nav_bar == 1 || $set_common_business_type == 'taxi')
   <script>
     $('.main-menu').addClass('d-none').removeClass('d-block');
-    $('.menu-navigation').addClass('d-none').removeClass('d-block'); 
+    $('.menu-navigation').addClass('d-none').removeClass('d-block');
   </script>
   @endif
 
