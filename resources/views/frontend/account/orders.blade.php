@@ -1638,9 +1638,18 @@
 
 @endsection
 @section('script')
+    @if(in_array('razorpay',$client_payment_options)) 
+    <script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    @endif
+    @if(in_array('stripe',$client_payment_options)) 
     <script src="https://js.stripe.com/v3/"></script>
+    @endif
+    @if(in_array('yoco',$client_payment_options)) 
     <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+    @endif 
+    @if(in_array('checkout',$client_payment_options)) 
     <script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
+    @endif 
     <script src="{{ asset('js/tip_after_order.js') }}"></script>
     <script src="{{ asset('js/payment.js') }}"></script>
     <script type="text/javascript">

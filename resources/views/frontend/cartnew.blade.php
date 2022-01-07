@@ -1077,19 +1077,33 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 @section('script')
 <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous">
 </script>
-<script src="https://js.stripe.com/v3/"></script>
-<script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
-<script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
-<script src="{{asset('assets/js/intlTelInput.js')}}"></script>
 
 <script>
     // Replace the supplied `publicKey` with your own.
     // Ensure that in production you use a production public_key.
+@if(in_array('razorpay',$client_payment_options)) 
+<script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
+@endif
+@if(in_array('stripe',$client_payment_options)) 
+<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+@endif
+@if(in_array('yoco',$client_payment_options)) 
+<script type="text/javascript" src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+<script type="text/javascript">
     var sdk = new window.YocoSDK({
         publicKey: yoco_public_key
     });
     var inline='';
 </script>
+@endif 
+@if(in_array('checkout',$client_payment_options)) 
+<script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
+@endif 
+
+<script src="{{asset('assets/js/intlTelInput.js')}}"></script>
+
+
+
 <script type="text/javascript">
    var guest_cart = {{ $guest_user ? 1 : 0 }};
     var base_url = "{{url('/')}}";

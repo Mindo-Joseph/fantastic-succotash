@@ -1165,6 +1165,14 @@ $sms_crendential = json_decode($preference->sms_credentials);
                         <input type="checkbox" data-plugin="switchery" name="minimum_order_batch" id="minimum_order_batch" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->minimum_order_batch == '1')) checked='checked' @endif>
                      </div>
                   </div>
+
+                  <div class="col-md-4">
+                     <div class="form-group mb-3">
+                        <label for="gifting" class="mr-2 mb-0">{{__('Static Delivery fee')}}</label>
+                        <input type="checkbox" data-plugin="switchery" name="static_delivey_fee" id="static_delivey_fee" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->static_delivey_fee == '1')) checked='checked' @endif>
+                     </div>
+                  </div>
+
                   <div class="col-md-12">
                      <div class="form-group mb-0 text-md-left">
                         <button class="btn btn-info d-block" type="submit">{{ __("Save") }}</button>

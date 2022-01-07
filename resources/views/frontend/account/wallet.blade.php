@@ -360,9 +360,21 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
 </script>
 @endsection
 @section('script')
+@if(in_array('razorpay',$client_payment_options)) 
+<script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
+@endif
+@if(in_array('stripe',$client_payment_options)) 
 <script src="https://js.stripe.com/v3/"></script>
+@endif
+@if(in_array('yoco',$client_payment_options)) 
 <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 <script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
+<script type="text/javascript">
+    var sdk = new window.YocoSDK({
+        publicKey: yoco_public_key
+    });
+</script>
+@endif 
 <script type="text/javascript">
     var ajaxCall = 'ToCancelPrevReq';
     var credit_wallet_url = "{{route('user.creditWallet')}}";
@@ -383,9 +395,7 @@ $user_wallet_balance = $user->balanceFloat ? ($user->balanceFloat * $clientCurre
     var wallet_balance_insufficient_msg = "{{ __('Insufficient funds in wallet') }}";
     var user_wallet_balance = parseFloat("{{ $user_wallet_balance }}");
 
-    var sdk = new window.YocoSDK({
-        publicKey: yoco_public_key
-    });
+    
     var inline='';
     $('#wallet_amount').keypress(function(event) {
         if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
