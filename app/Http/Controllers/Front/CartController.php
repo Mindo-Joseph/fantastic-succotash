@@ -38,7 +38,7 @@ class CartController extends FrontController
         $endtm = 0;
         while ($StartTime <= $EndTime) 
         {
-            $endtm = $StartTime + ($AddMins-60);
+            $endtm = $StartTime + $AddMins;
             if($endtm>$EndTime)
             {
              $endtm =  $EndTime;
@@ -1019,6 +1019,7 @@ class CartController extends FrontController
                 $slots = [];
                 $cart->slots = [];
             }
+            $cart->schedule_type =  $cart->schedule_type;
             $cart->slotsCnt = count((array)$slots);
             $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');
             $cart->loyalty_amount = number_format($loyalty_amount_saved, 2, '.', '');
@@ -1044,6 +1045,7 @@ class CartController extends FrontController
             
             $cart->pickup_delay_date =  $pickup_delay_date??0;
             $cart->dropoff_delay_date =  $dropoff_delay_date??0;
+          
 
             // dd($cart->toArray());
             $cart->products = $cartData->toArray();
@@ -1055,7 +1057,7 @@ class CartController extends FrontController
     {
         $message = '';
         $status = 'Success';
-        $vendorId = '17';
+        $vendorId = '16';
         $option = "";
         //type must be a : delivery , takeaway,dine_in
         $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();
@@ -1394,14 +1396,18 @@ class CartController extends FrontController
                 } else {
                     $cart_detail = Cart::where('unique_identifier', $new_session_token)->first();
                 }
-
-                if(isset($request->slot))
-                {
-                    $time = explode(' - ',$request->slot);
-                    $time = date('Y-m-d',strtotime($request->schedule_dt)).' '.$time[0].':00'??null;
-                    $slot = $request->slot;
+                if($request->task_type!='now'){
+                    if(isset($request->slot))
+                    {
+                        $time = explode(' - ',$request->slot);
+                        $time = date('Y-m-d',strtotime($request->schedule_dt)).' '.$time[0].':00'??null;
+                        $slot = $request->slot;
+                    }else{
+                        $time = $request->schedule_dt;
+                        $slot = null;
+                    }
                 }else{
-                    $time = $request->schedule_dt;
+                    $time = null;
                     $slot = null;
                 }
                 //dd($slot);

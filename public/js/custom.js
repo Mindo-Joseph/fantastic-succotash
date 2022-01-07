@@ -727,6 +727,20 @@ $(document).ready(function() {
         });
     });
 
+    $(document).on('click','#taskschedule',function(){
+            $('#schedule_div').show();
+            $('.taskschedulebtn').hide();
+            $('.cross').show();
+            $('#tasknow').val('schedule');
+    });
+    $(document).on('click','.cross',function(){
+        $('#schedule_div').attr("style", "display: none !important");
+        $('.taskschedulebtn').show();
+        $('.cross').hide();
+        $('#schedule_datetime').val('');
+        $('#tasknow').val('now');
+    });
+
     $(document).on("click", "#order_placed_btn", function() {
         $('.alert-danger').html('');
         if ((typeof guest_cart != undefined) && (guest_cart == 1)) {
@@ -746,17 +760,17 @@ $(document).ready(function() {
                 return false;
             }
         }
-        var task_type = $("input[name='task_type']:checked").val();
+        var task_type = $("input[name='task_type']").val();
         var schedule_dt = $("#schedule_datetime").val();
         var slot = $("#slot").val();
         var checkSlot  = $('#checkSlot').val();
-        
-        if(slot){
-            var stime = 'T'+slot.split(" - ",1);
-            var schedule_dt = schedule_dt+stime;
-        }
         var now = new Date().toISOString();
         if (task_type == 'schedule') {
+            if(slot){
+                var stime = 'T'+slot.split(" - ",1);
+                var schedule_dt = schedule_dt+stime;
+            }
+
             if (schedule_dt == '') {
                 success_error_alert('error', 'Schedule date time is required', ".cart_response");
                 return false;
@@ -764,6 +778,8 @@ $(document).ready(function() {
                 success_error_alert('error', 'Invalid schedule date time', ".cart_response");
                 return false;
             }
+        }else{
+          var checkSlot = 0;
         }
         if(checkSlot=='1')
         {
@@ -1174,7 +1190,7 @@ $(document).ready(function() {
     }
 
     window.placeOrder = function placeOrder(address_id = 0, payment_option_id, transaction_id = 0, tip = 0) {
-        var task_type = $("input[name='task_type']:checked").val();
+        var task_type = $("input[name='task_type']").val();
         var schedule_dt = $("#schedule_datetime").val();
         var slot = $("#slot").val();
         var is_gift = $('#is_gift:checked').val() ?? 0;
@@ -1233,7 +1249,7 @@ $(document).ready(function() {
     }
 
     window.placeOrderBeforePayment = function placeOrderBeforePayment(address_id = 0, payment_option_id, tip = 0) {
-        var task_type = $("input[name='task_type']:checked").val();
+        var task_type = $("input[name='task_type']").val();
         var schedule_dt = $("#schedule_datetime").val();
         var slot = $("#slot").val();
         var is_gift = $('#is_gift:checked').val() ?? 0;
@@ -2972,10 +2988,10 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#tasknow', function() {
-        $('#schedule_div').attr("style", "display: none !important");
+        //$('#schedule_div').attr("style", "display: none !important");
     });
     $(document).on('click', '#taskschedule', function() {
-        $('#schedule_div').attr("style", "display: flex !important");
+       // $('#schedule_div').attr("style", "display: flex !important");
     });
     // var x = document.getElementById("schedule_div").autofocus;
 

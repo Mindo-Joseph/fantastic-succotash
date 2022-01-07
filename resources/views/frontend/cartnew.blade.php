@@ -408,24 +408,31 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
            
             <% if(client_preference_detail.off_scheduling_at_cart != 1 && cart_details.vendorCnt==1) { %>
                 @if($client_preference_detail->business_type != 'laundry')
-            <div class="row d-flex align-items-center arabic-lng no-gutters mt-2 mb-md-4 mb-2" id="dateredio">
-                <div class="col-md-5 pr-md-2 mb-2 mb-md-0">
+            <div class="row d-flex align-items-center arabic-lng no-gutters mt-2 mb-md-4 mb-2 position-relative" id="dateredio">
+                <div class="col-md-12 mb-2 mb-md-0 text-right">
                     <div class="login-form">
-                        <ul class="list-inline">
-                            <% if(cart_details.delay_date == 0) { %>
+                        <ul class="list-inline ml-auto d-flex align-items-center justify-content-end">
                             <li class="d-inline-block mr-1">
-                                <input type="radio" class="custom-control-input check" id="tasknow" name="task_type" value="now" <%= ((cart_details.schedule_type == 'now' || cart_details.schedule_type == '' || cart_details.schedule_type == null) ? 'checked' : '') %> >
-                                <label class="btn btn-solid" for="tasknow">{{__('Now')}}</label>
+                            <input type="hidden" class="custom-control-input check" id="tasknow" name="task_type" value="<%= ((cart_details.schedule_type == 'schedule') ? 'schedule' : 'now') %>" >
+                            <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button>
                             </li>
+                            <% if(cart_details.delay_date == 0) { %>
+                            {{-- <li class="d-inline-block mr-1">
+                                <input type="radio" class="custom-control-input check" id="tasknow" name="tasktype" value="now" <%= ((cart_details.schedule_type == 'now' || cart_details.schedule_type == '' || cart_details.schedule_type == null) ? 'checked' : '') %> >
+                                <label class="btn btn-solid" for="tasknow">{{__('Now')}}</label>
+                            </li> --}}
                             <% } %>
-                            <li class="d-inline-block">
-                                <input type="radio" class="custom-control-input check" id="taskschedule" name="task_type" value="schedule" <%= ((cart_details.schedule_type == 'schedule' || cart_details.delay_date != 0) ? 'checked' : '') %> >
-                                <label class="btn btn-solid" for="taskschedule">{{__('Schedule')}}</label>
+                            <li class="d-inline-block ">
+                                <input type="radio" class="custom-control-input check taskschedulebtn" id="taskschedule" name="tasktype" value="" <%= ((cart_details.schedule_type == 'schedule' || cart_details.delay_date != 0) ? 'checked' : '') %>  style="<%= ((cart_details.schedule_type != 'schedule') ? '' : 'display:none!important') %>">
+                                <label class="btn btn-solid mb-0 taskschedulebtn" for="taskschedule" style="<%= ((cart_details.schedule_type != 'schedule') ? '' : 'display:none!important') %>">{{__('Schedule')}}</label>
+                            </li>
+                            <li class="close-window">
+                                <i class="fa fa-window-close cross" style="<%= ((cart_details.schedule_type != 'schedule') ? 'display:none!important' : 'display:block!important') %>"  aria-hidden="true"></i>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-7 datenow d-flex align-items-center justify-content-between" id="schedule_div" style="<%= ((cart_details.schedule_type == 'now' || cart_details.schedule_type == '' || cart_details.schedule_type == null) ? 'display:none!important' : '') %>">
+                <div class="col-md-7 datenow d-flex align-items-center justify-content-between" id="schedule_div" style="<%= ((cart_details.schedule_type != 'schedule' ) ? 'display:none!important' : '') %>">
                     <% if(cart_details.slotsCnt ==0) { %>
                     <% if(cart_details.delay_date != 0) { %>
                         <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%= ((cart_details.schedule_type == 'schedule') ? cart_details.scheduled_date_time : '') %>"
@@ -517,7 +524,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <a href="{{route('user.addressBook')}}"><i class="fa fa-pencil" aria-hidden="true"></i> <span>{{ __('Edit Address') }}</span> </a>
                     </div>
                     <div class="col-sm-6 col-lg-8 text-sm-right">
-                        <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button>
+                        {{-- <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button> --}}
                     </div>
                 </div>
             </div>
