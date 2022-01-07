@@ -1050,6 +1050,31 @@ class CartController extends FrontController
         }
         return $cart;
     }
+
+    public function checkScheduleSlots(Request $request)
+    {
+        $message = '';
+        $status = 'Success';
+        $vendorId = '17';
+        $option = "";
+        //type must be a : delivery , takeaway,dine_in
+        $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();
+        $slots = (object)$this->showSlot($request->date,$vendorId,'delivery',$duration->slot_minutes);
+        //dd($slots);
+        $option ="<option value=''>".__("Select Slots")."</option>";
+        if(count((array)$slots)<=0){
+            $message = 'Slot not found.';
+            $status = 'error';
+        }else{
+            foreach($slots as $opt)
+            {
+                $option .="<option value='".$opt['value']."'>".$opt['name']."</option>";
+            }
+        }
+        $data = array('status'=>$status,'data'=>$option,'message'=>$message);
+        return response()->json($data);
+    }
+
     /**
      * Show Main Cart
      *

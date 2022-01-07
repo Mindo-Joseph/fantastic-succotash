@@ -439,8 +439,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <% } else { %>
 
                        
-                            <input type="date" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%=  cart_details.scheduled.scheduled_date_time %>"  min="<%= cart_details.delay_date %>" >
-                        
+                            <input type="date" id="schedule_datetime" class="form-control schedule_datetime" placeholder="Inline calendar" value="<%=  cart_details.scheduled.scheduled_date_time %>"  min="<%= cart_details.delay_date %>" >
+                            <input type="hidden" id="checkSlot" value="1">
                             <select name="slots" id="slot" class="form-control">
                                 <option value="">{{__("Select Slot")}} </option>
                                 <% _.each(cart_details.slots, function(slot, sl){%>
@@ -1080,6 +1080,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     var apply_promocode_coupon_url = "{{ route('verify.promocode') }}";
     var payment_success_paypal_url = "{{route('payment.paypalCompletePurchase')}}";
     var update_cart_schedule = "{{route('cart.updateSchedule')}}";
+    var check_schedule_slots = "{{route('cart.check_schedule_slots')}}";
     var login_via_username_url = "{{route('customer.loginViaUsername')}}";
     var forgot_password_url = "{{route('customer.forgotPass')}}";
     var order_success_return_url = "{{route('order.return.success')}}";

@@ -157,6 +157,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('add/vendorTable/cart', 'Front\CartController@addVendorTableToCart')->name('addVendorTableToCart');
 	Route::post('add/product/prescription', 'Front\CartController@uploadPrescription')->name('cart.uploadPrescription');
 	Route::post('cart/schedule/update', 'Front\CartController@updateSchedule')->name('cart.updateSchedule');
+	Route::post('cart/schedule/slots', 'Front\CartController@checkScheduleSlots')->name('cart.check_schedule_slots');
 	Route::post('cart/product-schedule/update', 'Front\CartController@updateProductSchedule')->name('cart.updateProductSchedule');
 	Route::get('cartProducts', 'Front\CartController@getCartData')->name('getCartProducts');
 	Route::get('cartDetails', 'Front\CartController@getCartProducts')->name('cartDetails');

@@ -703,6 +703,30 @@ $(document).ready(function() {
             cartHeader($(this).val());
         }
     });
+
+    $(document).on("change", ".schedule_datetime", function() {
+        var schedule_dt = $(this).val();
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: check_schedule_slots,
+            data: { date: schedule_dt},
+            success: function(response) {
+                if (response.status == "Success") {
+                    $('#slot').html(response.data);
+                }else{
+                    success_error_alert('error', response.message, ".cart_response");
+                   $('#slot').html(response.data);
+                }
+            },
+            error: function(error) {
+                var response = $.parseJSON(error.responseText);
+                success_error_alert('error', response.message, ".cart_response");
+                $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+            }
+        });
+    });
+
     $(document).on("click", "#order_placed_btn", function() {
         $('.alert-danger').html('');
         if ((typeof guest_cart != undefined) && (guest_cart == 1)) {
@@ -725,6 +749,12 @@ $(document).ready(function() {
         var task_type = $("input[name='task_type']:checked").val();
         var schedule_dt = $("#schedule_datetime").val();
         var slot = $("#slot").val();
+        var checkSlot  = $('#checkSlot').val();
+        
+        if(slot){
+            var stime = 'T'+slot.split(" - ",1);
+            var schedule_dt = schedule_dt+stime;
+        }
         var now = new Date().toISOString();
         if (task_type == 'schedule') {
             if (schedule_dt == '') {
@@ -732,6 +762,13 @@ $(document).ready(function() {
                 return false;
             } else if (schedule_dt < now) {
                 success_error_alert('error', 'Invalid schedule date time', ".cart_response");
+                return false;
+            }
+        }
+        if(checkSlot=='1')
+        {
+            if (!slot) {
+                success_error_alert('error', 'Slot is required.', ".cart_response");
                 return false;
             }
         }
