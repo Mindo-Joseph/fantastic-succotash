@@ -673,13 +673,13 @@ class PickupDeliveryController extends BaseController{
         ->with(['products.productRating.reviewFiles', 'products.product.category.categoryDetail.translation' => function($q) use($langId){
             $q->where('category_translations.language_id', $langId);
         }])
-        ->select('*','dispatcher_status_option_id as dispatcher_status')->first()->toArray();
+        ->select('*','dispatcher_status_option_id as dispatcher_status')->first();
         $response = Http::get($request->new_dispatch_traking_url);
         if($response->status() == 200){
             $type = VendorOrderDispatcherStatus::where(['order_id' =>  $order->order_id ,'vendor_id' =>$order->vendor_id ])->latest()->first();
             $order->dispatcher_status_type=  $type ?  $type->type :1;
            $response = $response->json();
-           $response['order_details'] = $order;
+           $response['order_details'] = $order->toArray();
            return $this->successResponse($response);
         }
     }
