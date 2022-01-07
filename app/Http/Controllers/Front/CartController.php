@@ -771,6 +771,8 @@ class CartController extends FrontController
 
 
                         }
+
+
                        
 
                     }
@@ -865,6 +867,18 @@ class CartController extends FrontController
                     $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendorData->vendor->service_fee_percent) / 100 ;
                     $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
                 }
+
+                if($preferences->static_delivey_fee == 1 &&  $vendorData->vendor->order_amount_for_delivery_fee != 0)
+                {
+                    if( $subtotal_amount >= (float)($vendorData->vendor->order_amount_for_delivery_fee)){ 
+                        $delivery_fee_charges = number_format($vendorData->vendor->delivery_fee_maximum, 2, '.', '');
+                    }
+
+                    if($subtotal_amount < (float)($vendorData->vendor->order_amount_for_delivery_fee)){
+                        $delivery_fee_charges = number_format($vendorData->vendor->delivery_fee_minimum, 2, '.', '');
+                    }
+                }
+               
                 //end applying service fee on vendor products total
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
                 $vendorData->coupon_amount_used = number_format($coupon_amount_used, 2, '.', '');
@@ -907,6 +921,9 @@ class CartController extends FrontController
                 if((float)($vendorData->vendor->order_min_amount) > $subtotal_amount){  # if any vendor total amount of order is less then minimum order amount
                     $delivery_status = 0;
                 }
+
+                
+                
 
                 
                 $total_payable_amount = $total_payable_amount + $payable_amount;

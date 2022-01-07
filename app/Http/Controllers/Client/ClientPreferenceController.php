@@ -203,6 +203,7 @@ class ClientPreferenceController extends BaseController{
             $preference->gifting = ($request->has('gifting') && $request->gifting == 'on') ? 1 : 0;
             $preference->pickup_delivery_service_area = ($request->has('pickup_delivery_service_area') && $request->pickup_delivery_service_area == 'on') ? 1 : 0;
             $preference->minimum_order_batch = ($request->has('minimum_order_batch') && $request->minimum_order_batch == 'on') ? 1 : 0;
+            $preference->static_delivey_fee = ($request->has('static_delivey_fee') && $request->static_delivey_fee == 'on') ? 1 : 0;
         }
 
         if($request->has('edit_order_modes') && $request->edit_order_modes == '1'){
