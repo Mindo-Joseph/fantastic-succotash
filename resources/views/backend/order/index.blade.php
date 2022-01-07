@@ -446,9 +446,17 @@
         });
     }
     $(document).ready(function() {
+
         setTimeout(function() {
             $("#pending_order-tab").trigger('click');
         }, 500);
+        setInterval(autoloaddashboad, 5000);
+        function autoloaddashboad(){
+            console.log('dasd');
+            var typ=  $("a.nav-link.active").data('rel');
+            init(typ, "{{ route('orders.filter') }}", '', false);
+
+        }
         $(document).on("click", ".load-more-btn", function() {
             $('#order_list_order').show();
             var url = $(this).data('url');
