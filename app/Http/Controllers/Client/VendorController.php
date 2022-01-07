@@ -412,8 +412,12 @@ class VendorController extends BaseController
         }
         $vendor_for_pickup_delivery = VendorCategory::where('vendor_id',$id)->whereHas('category',function($q){$q->where('type_id',7);})->count();
         $vendor_for_ondemand = VendorCategory::where('vendor_id',$id)->whereHas('category',function($q){$q->where('type_id',8);})->count();
+        $clientCurrency = ClientCurrency::where('is_primary', 1)->first();
 
-        return view('backend/vendor/show')->with($returnData)->with(['vendor_for_pickup_delivery' => $vendor_for_pickup_delivery,'vendor_for_ondemand' => $vendor_for_ondemand]);
+        return view('backend/vendor/show')->with($returnData)
+                ->with(['vendor_for_pickup_delivery' => $vendor_for_pickup_delivery,
+                    'clientCurrency'=>$clientCurrency,'vendor_for_ondemand' => $vendor_for_ondemand
+                ]);
     }
 
     /**   show vendor page - category tab      */
@@ -710,7 +714,7 @@ class VendorController extends BaseController
         }
 
         // $ex_countries = ['INDIA'];
-        
+
         // if((!empty($payout_creds->credentials)) && ($client_id != '') && (!in_array($client->country->name, $ex_countries))){
         //     $stripe_redirect_url = 'http://local.myorder.com/client/verify/oauth/token/stripe'; //$server_url."client/verify/oauth/token/stripe";
         //     $stripe_connect_url = 'https://connect.stripe.com/oauth/v2/authorize?response_type=code&state='.$id.'&client_id='.$client_id.'&scope=read_write&redirect_uri='.$stripe_redirect_url;
