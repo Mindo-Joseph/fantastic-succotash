@@ -57,7 +57,7 @@ trait PagarmePaymentManager{
                 'number' => '67415765095'
               ]
             ],
-            'phone_numbers' => [ '+'.$data['customer']->dial_code.$data['customer']->phone_number ]
+            'phone_numbers' => [ $data['phone'] ]
         ],
         'billing' => [
             'name' => $data['customer']->name,

@@ -30,6 +30,9 @@ class PagarmeController extends FrontController
         if($request->isMethod('post'))
         {
             $request['come_from'] = 'web';
+        }else{
+            $user = User::where('auth_token', $request->auth_token)->first();
+            Auth::login($user);
         }
         if(count($data) > 0)
         {
@@ -56,14 +59,23 @@ class PagarmeController extends FrontController
         try{
             if($request->come_from == "app")
             {
-                $user = User::where('auth_token', $request->auth_token)->first();
-                Auth::login($user);
+                if(!Auth::user())
+                {
+                    $user = User::where('auth_token', $request->auth_token)->first();
+                    Auth::login($user);
+                }
             }
             $user = Auth::user();
             $cart = Cart::where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($request->amount);
             $request['card_number'] = str_replace(' ', '', $request->number);
             $request['customer'] = $user;
+            if(isset($request->phone_number) && !is_null($request->phone_number))
+            {
+                $request['phone'] = '+'.$request->dialCode.$request->phone_number;
+            }else{
+                $request['phone'] = '+'.$user->dial_code.$user->phone_number;
+            }
             $request['amount'] = $amount*100;
             $request['items'] = [];
             $data = $request->all();
