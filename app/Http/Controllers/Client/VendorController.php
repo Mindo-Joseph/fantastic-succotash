@@ -874,6 +874,15 @@ class VendorController extends BaseController
         } else {
             $vendor->auto_reject_time = "";
         }
+        if ($request->has('order_amount_for_delivery_fee')) {
+            $vendor->order_amount_for_delivery_fee   = $request->order_amount_for_delivery_fee;
+        }
+        if ($request->has('delivery_fee_minimum')) {
+            $vendor->delivery_fee_minimum   = $request->delivery_fee_minimum;
+        }
+        if ($request->has('delivery_fee_maximum')) {
+            $vendor->delivery_fee_maximum   = $request->delivery_fee_maximum;
+        }
 
         $vendor->is_show_vendor_details = ($request->has('is_show_vendor_details') && $request->is_show_vendor_details == 'on') ? 1 : 0;
         if ($request->has('commission_percent')) {
