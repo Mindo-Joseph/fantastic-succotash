@@ -8,7 +8,6 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
         <div class="container">
             @if(count($pages))
             <div class="row footer-theme partition-f py-lg-4 pb-1">
-
                 @if($client_preference_detail->show_contact_us == 1)
                 <div class="col-12 d-block d-md-none">
                     <div class="footer-contant">
@@ -19,8 +18,6 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                     </div>
                 </div>
                 @endif
-
-
                 <div class="col-lg-3 col-md-6 col-5 pt-md-4 pt-lg-0">
                     <div class="sub-title">
                         <div class="footer-title mt-0">
@@ -29,7 +26,6 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         <div class="footer-contant">
                             <ul>
                                 @foreach($pages as $page)
-
                                 @if(isset($page->primary->type_of_form) && ($page->primary->type_of_form == 2))
                                 @if(isset($last_mile_common_set) && $last_mile_common_set != false)
                                 <li>
@@ -76,7 +72,6 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     @endif
                 @endif
-
                 @if(count($social_media_details))
                 <div class="col-lg-4 col-md-6 pl-lg-5  d-none">
                     <div class="sub-title">
@@ -100,7 +95,6 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                     </div>
                 </div>
                 @endif
-
                 <div class="col-lg-3 col-md-6 col-5 pl-xl-3 mobile-border">
                     <div class="sub-title">
                         <div class="footer-title mt-0 d-none d-md-block">
@@ -111,7 +105,6 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                                 <a href="{{$client_preference_detail->ios_link??'#'}}" target="_blank"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'270/48') }}" alt=""></a>
                                 <a class="ml-xl-2 mt-2 mt-xl-0" href="{{$client_preference_detail->android_app_link??'#'}}" target="_blank"><img class="blur-up lazyload" data-src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'270/48') }}" alt=""></a>
                             </div>
-
                             @if(count($social_media_details))
                             <div class="footer-title mt-0">
                                 <h4 class="mt-0">{{ __('Keep In Touch') }}</h4>
@@ -130,11 +123,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                         </div>
                     </div>
                 </div>
-
-
                 @if($client_preference_detail->show_payment_icons == 1)
                 <div class="col-lg-3 col-md-6 col-7 payment-card mobile-border">
-
                     <div class="sub-title">
                         <div class="footer-title mt-0">
                             <h4 class="mt-0">{{ __('Payment Method') }}</h4>
@@ -185,7 +175,6 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
         </div>
     </div>
 </footer>
-
 <div class="modal fade single-vendor-order-modal" id="single_vendor_order_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="s_vendor_remove_cartLabel" style="background-color: rgba(0,0,0,0.8);">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
