@@ -1,9 +1,4 @@
 var tip_for_past_order = 1;
-// Replace the supplied `publicKey` with your own.
-// Ensure that in production you use a production public_key.
-var sdk = new window.YocoSDK({
-    publicKey: yoco_public_key
-});
 var inline='';
 
 $(document).on('change', '#wallet_payment_methods input[name="wallet_payment_method"]', function() {

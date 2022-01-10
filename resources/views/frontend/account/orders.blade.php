@@ -1646,6 +1646,13 @@
     @endif
     @if(in_array('yoco',$client_payment_options)) 
     <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+    <script>
+        // Replace the supplied `publicKey` with your own.
+        // Ensure that in production you use a production public_key.
+        var sdk = new window.YocoSDK({
+            publicKey: yoco_public_key
+        });
+    </script>
     @endif 
     @if(in_array('checkout',$client_payment_options)) 
     <script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
