@@ -220,23 +220,23 @@ class LalaMovesController extends Controller
                
                    // dd($data);
                 $quotation = $this->getQuotations($data);
-                echo 'quotation';
-                print_r($quotation);
+                //echo 'quotation';
+               // print_r($quotation);
                 $response = json_decode($quotation['response']);
                 if($quotation['code']=='200'){
                         $response = $this->placeOrders($data,$response);
-                        echo 'Place order';
-                        print_r($response);
+                        //echo 'Place order';
+                       // print_r($response);
                         if($response['code']=='200'){
                             $response = json_decode($response['response']);
                         }else{
-                            //$response = 2;
+                            $response = 2;
                         }
                 }else{
-                    //$response = 2;
+                    $response = 2;
                 }
             }
-        dd($response);die;
+        //dd($response);die;
 
         return $response;
     	
