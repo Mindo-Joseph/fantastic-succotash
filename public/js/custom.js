@@ -361,14 +361,7 @@ $(document).ready(function() {
     $("#mobile_search_box_btn").click(function() {
         $('.radius-bar').slideToggle();
     });
-    // $("#mobile_search_box_btn").click(function () {
-    //     $('.search-overlay').slideToggle();
-    // });
-    // $(".closebtn").click(function () {
-    //     $('.search-overlay').slideUp();
-    // });
-    // $("#search_viewall").click(function () {
-    // });
+
     $(document).on("click", "#search_viewall", function(e) {
         let keyword = $("#main_search_box").val();
         let url = "/search-all/" + keyword;
@@ -711,8 +704,8 @@ $(document).ready(function() {
     $(document).on("click", "#order_placed_btn", function() {
 
         //var delivery_fee = $("input[name='deliveryFee']:checked").val();
-        var delivery_type = $("input:radio.delivery-fee:checked").attr('data-dcode'); 
-        
+        var delivery_type = $("input:radio.delivery-fee:checked").attr('data-dcode');
+
         $('.alert-danger').html('');
         if ((typeof guest_cart != undefined) && (guest_cart == 1)) {
             // window.location.href = login_url;
@@ -1251,8 +1244,8 @@ $(document).ready(function() {
     $(document).on("click", ".proceed_to_pay", function() {
         // startLoader('body',"{{getClientPreferenceDetail()->wb_color_rgb}}");
         $("#order_placed_btn, .proceed_to_pay").attr("disabled", true);
-        var delivery_type = $("input:radio.delivery-fee:checked").attr('data-dcode'); 
-       
+        var delivery_type = $("input:radio.delivery-fee:checked").attr('data-dcode');
+
         let address_id = $("input:radio[name='address_id']:checked").val();
 
         if ((vendor_type == 'delivery') && ((address_id == '') || (address_id < 1) || ($("input[name='address_id']").length < 1))) {
@@ -1261,7 +1254,7 @@ $(document).ready(function() {
         }
         //let payment_option_id = $('#proceed_to_pay_modal #v_pills_tab').find('.active').data('payment_option_id');
         let payment_option_id = $("#cart_payment_form input[name='cart_payment_method']:checked").val();
-        
+
 
         let tip = $("#cart_tip_amount").val();
         if (payment_option_id == 1) {
