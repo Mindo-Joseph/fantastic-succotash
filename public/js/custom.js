@@ -701,6 +701,45 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on("change", ".schedule_datetime", function() {
+        var schedule_dt = $(this).val();
+        var vendor_id = $('#vendor_id').val();
+        
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: check_schedule_slots,
+            data: { date: schedule_dt,vendor_id:vendor_id},
+            success: function(response) {
+                if (response.status == "Success") {
+                    $('#slot').html(response.data);
+                }else{
+                    success_error_alert('error', response.message, ".cart_response");
+                   $('#slot').html(response.data);
+                }
+            },
+            error: function(error) {
+                var response = $.parseJSON(error.responseText);
+                success_error_alert('error', response.message, ".cart_response");
+                $("#order_placed_btn, .proceed_to_pay").removeAttr("disabled");
+            }
+        });
+    });
+
+    $(document).on('click','#taskschedule',function(){
+            $('#schedule_div').show();
+            $('.taskschedulebtn').hide();
+            $('.cross').show();
+            $('#tasknow').val('schedule');
+    });
+    $(document).on('click','.cross',function(){
+        $('#schedule_div').attr("style", "display: none !important");
+        $('.taskschedulebtn').show();
+        $('.cross').hide();
+        $('#schedule_datetime').val('');
+        $('#tasknow').val('now');
+    });
+
     $(document).on("click", "#order_placed_btn", function() {
 
         //var delivery_fee = $("input[name='deliveryFee']:checked").val();
@@ -724,15 +763,31 @@ $(document).ready(function() {
                 return false;
             }
         }
-        var task_type = $("input[name='task_type']:checked").val();
+        var task_type = $("input[name='task_type']").val();
         var schedule_dt = $("#schedule_datetime").val();
+        var slot = $("#slot").val();
+        var checkSlot  = $('#checkSlot').val();
         var now = new Date().toISOString();
         if (task_type == 'schedule') {
+            if(slot){
+                var stime = 'T'+slot.split(" - ",1);
+                var schedule_dt = schedule_dt+stime;
+            }
+
             if (schedule_dt == '') {
                 success_error_alert('error', 'Schedule date time is required', ".cart_response");
                 return false;
             } else if (schedule_dt < now) {
                 success_error_alert('error', 'Invalid schedule date time', ".cart_response");
+                return false;
+            }
+        }else{
+          var checkSlot = 0;
+        }
+        if(checkSlot=='1')
+        {
+            if (!slot) {
+                success_error_alert('error', 'Slot is required.', ".cart_response");
                 return false;
             }
         }
@@ -768,7 +823,7 @@ $(document).ready(function() {
                 type: "POST",
                 dataType: 'json',
                 url: update_cart_schedule,
-                data: { specific_instructions:specific_instructions,task_type: task_type,schedule_dropoff:schedule_dropoff, schedule_pickup:schedule_pickup,schedule_dt: schedule_dt , comment_for_pickup_driver: comment_for_pickup_driver , comment_for_dropoff_driver: comment_for_dropoff_driver , comment_for_vendor: comment_for_vendor , delivery_type : delivery_type },
+                data: { specific_instructions:specific_instructions,task_type: task_type,schedule_dropoff:schedule_dropoff, schedule_pickup:schedule_pickup,schedule_dt: schedule_dt , comment_for_pickup_driver: comment_for_pickup_driver , comment_for_dropoff_driver: comment_for_dropoff_driver , comment_for_vendor: comment_for_vendor , delivery_type : delivery_type ,slot:slot},
                 success: function(response) {
                     if (response.status == "Success") {
                         $.ajax({
@@ -1138,8 +1193,9 @@ $(document).ready(function() {
     }
 
     window.placeOrder = function placeOrder(address_id = 0, payment_option_id, transaction_id = 0, tip = 0 , delivery_type ='D') {
-        var task_type = $("input[name='task_type']:checked").val();
+        var task_type = $("input[name='task_type']").val();
         var schedule_dt = $("#schedule_datetime").val();
+        var slot = $("#slot").val();
         var is_gift = $('#is_gift:checked').val() ?? 0;
 
         if ((task_type == 'schedule') && (schedule_dt == '')) {
@@ -1152,7 +1208,7 @@ $(document).ready(function() {
             type: "POST",
             dataType: 'json',
             url: place_order_url,
-            data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt,is_gift:is_gift ,delivery_type:delivery_type},
+            data: { address_id: address_id, payment_option_id: payment_option_id, transaction_id: transaction_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt,is_gift:is_gift ,delivery_type:delivery_type,slot:slot},
             success: function(response) {
                 if (response.status == "Success") {
                     var ip_address = window.location.host;
@@ -1196,8 +1252,9 @@ $(document).ready(function() {
     }
 
     window.placeOrderBeforePayment = function placeOrderBeforePayment(address_id = 0, payment_option_id, tip = 0) {
-        var task_type = $("input[name='task_type']:checked").val();
+        var task_type = $("input[name='task_type']").val();
         var schedule_dt = $("#schedule_datetime").val();
+        var slot = $("#slot").val();
         var is_gift = $('#is_gift:checked').val() ?? 0;
 
         if ((task_type == 'schedule') && (schedule_dt == '')) {
@@ -1212,7 +1269,7 @@ $(document).ready(function() {
             dataType: 'json',
             async: false,
             url: place_order_url,
-            data: { address_id: address_id, payment_option_id: payment_option_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt,is_gift:is_gift },
+            data: { address_id: address_id, payment_option_id: payment_option_id, tip: tip, task_type: task_type, schedule_dt: schedule_dt,is_gift:is_gift,slot:slot },
             success: function(response) {
                 if (response.status == "Success") {
                     orderResponse = response.data;
@@ -3110,10 +3167,10 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#tasknow', function() {
-        $('#schedule_div').attr("style", "display: none !important");
+        //$('#schedule_div').attr("style", "display: none !important");
     });
     $(document).on('click', '#taskschedule', function() {
-        $('#schedule_div').attr("style", "display: flex !important");
+       // $('#schedule_div').attr("style", "display: flex !important");
     });
     // var x = document.getElementById("schedule_div").autofocus;
 

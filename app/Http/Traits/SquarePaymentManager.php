@@ -33,7 +33,7 @@ trait SquarePaymentManager{
     $square_creds = PaymentOption::select('test_mode')->where('code', 'square')->where('status', 1)->first();
     return new SquareClient([
         'accessToken' => $this->access_token,
-        'environment' => $square_creds ? Environment::PRODUCTION : Environment::SANDBOX,
+        'environment' => $square_creds->test_mode ? Environment::SANDBOX : Environment::PRODUCTION,
       ]);
   }
 

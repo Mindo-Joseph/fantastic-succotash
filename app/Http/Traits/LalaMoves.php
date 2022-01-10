@@ -128,13 +128,16 @@ trait LalaMoves{
 
 
     $bodyArr = array(
+      //"scheduleAt"=> $data->schedule_time,
       'serviceType' => $this->service_type,
       'specialRequests' => [ ], //optional parameters "COD", "HELP_BUY", "LALABAG"
       'requesterContact' => $requesters,
       'stops' => $stops,
       'deliveries' =>$deliveries
     );
-
+    if(isset($data->schedule_time)){
+      $bodyArr['scheduleAt'] = $data->schedule_time; 
+    }
     //Quotation json array build 
     return $body = json_encode($bodyArr);
   }
