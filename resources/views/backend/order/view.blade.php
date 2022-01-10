@@ -40,7 +40,7 @@ $timezone = Auth::user()->timezone;
                              </div>
                             @endif    
 
-                            @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null )
+                            @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null && $order->vendors->first()->dispatch_traking_url !=0 )
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <h5 class="mt-0">{{ __("Tracking ID") }}:</h5>
@@ -488,5 +488,23 @@ $timezone = Auth::user()->timezone;
             });
         }
     });
+
+
+        // setInterval(function () {
+        //     $.ajax({
+        //         url: "{{ route('order.webhook') }}",
+        //         type: "POST",
+        //         data: {
+        //             order_id: "{{$order->id}}",
+        //             "_token": "{{ csrf_token() }}"
+        //         },
+        //         success: function(response) {
+        //             //location.reload();   
+        //         },
+        //     });
+        // }
+
+        // }, 5000);
+
 </script>
 @endsection
