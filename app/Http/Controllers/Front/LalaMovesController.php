@@ -333,7 +333,7 @@ class LalaMovesController extends Controller
             OrderVendor::where('web_hook_code',$json->data->order->id)
             ->update(['lalamove_tracking_url'=>$json->data->order->shareLink]);
             $details = OrderVendor::where('web_hook_code',$json->data->order->id)->first();
-            VendorOrderDispatcherStatus::UpdateOrCreate(['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id],['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id,'dispatcher_status_option_id'=>'5']);
+            VendorOrderDispatcherStatus::UpdateOrCreate(['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id],['order_id'=>$details->order_id,'vendor_id'=>$details->vendor_id,'dispatcher_status_option_ids'=>'5','type'=>'2']);
         }
 
 
