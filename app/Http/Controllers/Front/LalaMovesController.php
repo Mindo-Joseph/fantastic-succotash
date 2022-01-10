@@ -210,7 +210,9 @@ class LalaMovesController extends Controller
                         'user_phone' => $customer->phone_number,
                         'remarks' => 'Delivery vendor message remarks'
                     );
-                   print_r($data);
+                   //print_r($data);
+                dd($data);die;
+
                 $quotation = $this->getQuotations($data);
                 dd($quotation);die;
                 $response = json_decode($quotation['response']);
