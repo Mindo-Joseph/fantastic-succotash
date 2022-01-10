@@ -151,11 +151,11 @@ class LalaMovesController extends Controller
         $scheduledAt = '';
         $order = Order::find($order_id);
         $customer = User::find($user_id);
-        if(isset($order->scheduled_date_time) && $order->scheduled_date_time){
-            $date = date('Y-m-d',strtotime($order->scheduled_date_time));
-            $time = date('H:i:s',strtotime($order->scheduled_date_time));
-            $scheduledAt = $date.'T'.$time.'Z';
-        }
+        // if(isset($order->scheduled_date_time) && $order->scheduled_date_time){
+        //     $date = date('Y-m-d',strtotime($order->scheduled_date_time));
+        //     $time = date('H:i:s',strtotime($order->scheduled_date_time));
+        //     $scheduledAt = $date.'T'.$time.'Z';
+        // }
         $cus_address = UserAddress::find($order->address_id);
                 if ($cus_address && $this->lalamove_status==1){
 
@@ -172,7 +172,7 @@ class LalaMovesController extends Controller
                         'user_name' => $customer->name,
                         'user_phone' => $customer->phone_number,
                         'remarks' => 'Delivery vendor message remarks',
-                        'schedule_time' => $scheduledAt,
+                       // 'schedule_time' => $scheduledAt,
                     );
                    
                 $quotation = $this->getQuotations($data);
