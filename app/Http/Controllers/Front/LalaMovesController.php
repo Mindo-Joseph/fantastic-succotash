@@ -219,6 +219,7 @@ class LalaMovesController extends Controller
                             $response = json_decode($response['response']);
                             dd($response);die;
                         }else{
+                            dd($response);die;
                             $response = 2;
                         }
                 }else{
