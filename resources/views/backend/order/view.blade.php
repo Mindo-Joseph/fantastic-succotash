@@ -444,7 +444,6 @@ $timezone = Auth::user()->timezone;
                     order_vendor_id: order_vendor_id,
                 },
                 success: function(response) {
-                    console.log(response);
                     that.addClass("completed");
                     if (status_option_id == 2) {
                         that.next('li').remove();
@@ -456,7 +455,7 @@ $timezone = Auth::user()->timezone;
                     $('#text_muted_' + status_option_id).html('<small class="text-muted">' + response.created_date + '</small>');
                     if (status_option_id == 2)
                         $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                    //location.reload();
+                    location.reload();
                 },
             });
         }
