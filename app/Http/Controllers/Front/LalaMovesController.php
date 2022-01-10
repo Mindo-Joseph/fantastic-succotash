@@ -301,7 +301,10 @@ class LalaMovesController extends Controller
         //     }
         //   }';
 
-        $json = json_decode($request);
+        $json = json_decode($request->input());
+        if($request){
+            Webhook::create(['tracking_order_id'=>'1222','response'=>json_encode($request->input())]);
+           }
         if(isset($json->eventType) && $json->eventType == 'ORDER_STATUS_CHANGED' && $json->data->order->status == 'ASSIGNING_DRIVER')
         {
             // ASSIGNING_DRIVER means Order is placed and assigning drivers
@@ -336,9 +339,9 @@ class LalaMovesController extends Controller
 
 
 
-        if($request && isset($json->data)){
-         Webhook::create(['tracking_order_id'=>(($json->data->order->id)?$json->data->order->id:''),'response'=>$request]);
-        }
+        // if($request && isset($json->data)){
+        //  Webhook::create(['tracking_order_id'=>(($json->data->order->id)?$json->data->order->id:''),'response'=>$request]);
+        // }
 
         return response([],200);
          // header("HTTP/1.1 200 OK");
