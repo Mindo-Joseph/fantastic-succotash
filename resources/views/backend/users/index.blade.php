@@ -37,9 +37,12 @@
             </div>
         </div>
         <div class="col-sm-6 text-right">
+            <button class="btn btn-info waves-effect waves-light text-sm-right importUserModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> {{ __('Import') }}
+            </button>
             <button class="btn btn-info waves-effect waves-light text-sm-right addUserModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> {{ __("Add") }}
             </button>
         </div>
+       
     </div>
 
     <div class="row">
@@ -157,6 +160,7 @@
                 });
             }
         });
+
 
         function initDataTable() {
             try {
