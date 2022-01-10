@@ -492,7 +492,7 @@ $timezone = Auth::user()->timezone;
 
         // setInterval(function () {
         //     $.ajax({
-        //         url: "{{ route('order.webhook') }}",
+        //         url: "{{ url('order.webhook') }}",
         //         type: "POST",
         //         data: {
         //             order_id: "{{$order->id}}",
