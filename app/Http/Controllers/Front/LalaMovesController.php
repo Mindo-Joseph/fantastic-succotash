@@ -302,7 +302,7 @@ class LalaMovesController extends Controller
         //   }';
 
        
-        Webhook::create(['tracking_order_id'=>'1222','response'=>$request]);
+        Webhook::create(['tracking_order_id'=>'1222','response'=>$request->getContent()]);
         Webhook::create(['tracking_order_id'=>'122222','response'=>json_encode($request)]);
            
            $json = json_decode($request->input());
