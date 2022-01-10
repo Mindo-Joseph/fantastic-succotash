@@ -218,12 +218,13 @@ class LalaMovesController extends Controller
                         if($response['code']=='200'){
                             $response = json_decode($response['response']);
                         }else{
-                            $response = 2;
+                            //$response = 2;
                         }
                 }else{
-                    $response = 2;
+                    //$response = 2;
                 }
             }
+        dd($response);die;
 
         return $response;
     	
