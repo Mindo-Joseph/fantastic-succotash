@@ -218,7 +218,7 @@ class LalaMovesController extends Controller
                     );
                    //print_r($data);
                
-
+                    dd($data);
                 $quotation = $this->getQuotations($data);
                // dd($quotation);die;
                 $response = json_decode($quotation['response']);
