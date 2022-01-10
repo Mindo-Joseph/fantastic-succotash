@@ -941,15 +941,13 @@ class CartController extends FrontController
 
                 if($preferences->static_delivey_fee == 1 &&  $vendorData->vendor->order_amount_for_delivery_fee != 0)
                 {
-                    if((float)($vendorData->vendor->order_amount_for_delivery_fee) >= $subtotal_amount){
+                    if( $subtotal_amount >= (float)($vendorData->vendor->order_amount_for_delivery_fee)){ 
                         $delivery_fee_charges = number_format($vendorData->vendor->delivery_fee_maximum, 2, '.', '');
                     }
 
-                    if((float)($vendorData->vendor->order_amount_for_delivery_fee) < $subtotal_amount){
+                    if($subtotal_amount < (float)($vendorData->vendor->order_amount_for_delivery_fee)){
                         $delivery_fee_charges = number_format($vendorData->vendor->delivery_fee_minimum, 2, '.', '');
                     }
-
-                    
                 }
                
                 //end applying service fee on vendor products total
