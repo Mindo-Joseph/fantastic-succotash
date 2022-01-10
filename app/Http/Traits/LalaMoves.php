@@ -288,7 +288,7 @@ $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 curl_close($curl);
 
 // echo "Total elapsed http request/response time in milliseconds: ".floor((microtime(true) - $this->startTime)*1000)."\r\n";
-
+dd($response);die;
 return array('code'=>$httpCode,'response'=>$response,'totalTime'=>floor((microtime(true) - $this->startTime)*1000));
 // Response
 // {
