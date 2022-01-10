@@ -210,12 +210,12 @@ class LalaMovesController extends Controller
                         'user_phone' => $customer->phone_number,
                         'remarks' => 'Delivery vendor message remarks'
                     );
-                   
+                   print_r($data);
                 $quotation = $this->getQuotations($data);
+                dd($quotation);die;
                 $response = json_decode($quotation['response']);
                 if($quotation['code']=='200'){
                         $response = $this->placeOrders($data,$response);
-                        dd($data);die;
 
                         if($response['code']=='200'){
                             $response = json_decode($response['response']);
