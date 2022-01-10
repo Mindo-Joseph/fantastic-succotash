@@ -215,6 +215,8 @@ class LalaMovesController extends Controller
                 $response = json_decode($quotation['response']);
                 if($quotation['code']=='200'){
                         $response = $this->placeOrders($data,$response);
+                        dd($data);die;
+
                         if($response['code']=='200'){
                             $response = json_decode($response['response']);
                         }else{
