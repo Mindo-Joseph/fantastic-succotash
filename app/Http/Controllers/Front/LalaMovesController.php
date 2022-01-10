@@ -146,7 +146,6 @@ class LalaMovesController extends Controller
         }
 
     }
-
     public function placeOrderToLalamove($vendor_id,$user_id,$order_id)
     {
         $order = Order::find($order_id);
@@ -176,6 +175,49 @@ class LalaMovesController extends Controller
                         $response = $this->placeOrders($data,$response);
                         if($response['code']=='200'){
                             $response = json_decode($response['response']);
+                        }else{
+                            $response = 2;
+                        }
+                }else{
+                    $response = 2;
+                }
+            }
+
+        return $response;
+    	
+    }
+
+    //for Developer use only
+    public function placeOrderToLalamoveDev($vendor_id,$user_id,$order_id)
+    {
+        $order = Order::find($order_id);
+        $customer = User::find($user_id);
+        //$cus_address = UserAddress::where('user_id', $customer->id)->orderBy('is_primary', 'desc')->first();
+        $cus_address = UserAddress::find($order->address_id);
+                if ($cus_address && $this->lalamove_status==1){
+
+                    $vendor_details = Vendor::find($vendor_id);
+                    $data = (object) array(
+                        'pick_lat' => $vendor_details->latitude,
+                        'pick_lng' => $vendor_details->longitude,
+                        'pick_address' => $vendor_details->address,
+                        'vendor_name' => $vendor_details->name,
+                        'vendor_contact' => $vendor_details->phone_no,
+                        'drop_lat' => $cus_address->latitude,
+                        'drop_lng' => $cus_address->longitude,
+                        'drop_address' => $cus_address->address,
+                        'user_name' => $customer->name,
+                        'user_phone' => $customer->phone_number,
+                        'remarks' => 'Delivery vendor message remarks'
+                    );
+                   
+                $quotation = $this->getQuotations($data);
+                $response = json_decode($quotation['response']);
+                if($quotation['code']=='200'){
+                        $response = $this->placeOrders($data,$response);
+                        if($response['code']=='200'){
+                            $response = json_decode($response['response']);
+                            dd($response);die;
                         }else{
                             $response = 2;
                         }
