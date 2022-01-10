@@ -211,7 +211,7 @@ class LalaMovesController extends Controller
                         'remarks' => 'Delivery vendor message remarks'
                     );
                    //print_r($data);
-                dd($data);die;
+               
 
                 $quotation = $this->getQuotations($data);
                 dd($quotation);die;
