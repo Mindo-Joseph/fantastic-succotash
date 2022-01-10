@@ -523,8 +523,7 @@ class OrderController extends BaseController
         $checkdeliveryFeeAdded = OrderVendor::where(['order_id' => $request->order_id, 'vendor_id' => $request->vendor_id])->first();
         $checkOrder = Order::findOrFail($request->order_id);
             if ($checkdeliveryFeeAdded && $checkdeliveryFeeAdded->delivery_fee > 0.00){
-            $order_lalamove = $lala->placeOrderToLalamoveDev($request->vendor_id,$checkOrder->user_id,$checkOrder->id);
-            dd($order_lalamove);
+            $order_lalamove = $lala->placeOrderToLalamove($request->vendor_id,$checkOrder->user_id,$checkOrder->id);
             }
 
             if ($order_lalamove->totalFee >0){

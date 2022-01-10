@@ -214,7 +214,7 @@ class LalaMovesController extends Controller
                
 
                 $quotation = $this->getQuotations($data);
-                dd($quotation);die;
+               // dd($quotation);die;
                 $response = json_decode($quotation['response']);
                 if($quotation['code']=='200'){
                         $response = $this->placeOrders($data,$response);
