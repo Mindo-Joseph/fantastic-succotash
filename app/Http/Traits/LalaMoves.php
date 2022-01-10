@@ -135,7 +135,9 @@ trait LalaMoves{
       'stops' => $stops,
       'deliveries' =>$deliveries
     );
-
+    if(isset($data->schedule_time)){
+      $bodyArr['scheduleAt'] = $data->schedule_time; 
+    }
     //Quotation json array build 
     return $body = json_encode($bodyArr);
   }

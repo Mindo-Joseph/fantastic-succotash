@@ -148,9 +148,14 @@ class LalaMovesController extends Controller
     }
     public function placeOrderToLalamove($vendor_id,$user_id,$order_id)
     {
+        $scheduledAt = '';
         $order = Order::find($order_id);
         $customer = User::find($user_id);
-        //$cus_address = UserAddress::where('user_id', $customer->id)->orderBy('is_primary', 'desc')->first();
+        if(isset($order->scheduled_date_time) && $order->scheduled_date_time){
+            $date = date('Y-m-d',strtotime($order->scheduled_date_time));
+            $time = date('H:i:s',strtotime($order->scheduled_date_time));
+            $scheduledAt = $date.'T'.$time.'Z';
+        }
         $cus_address = UserAddress::find($order->address_id);
                 if ($cus_address && $this->lalamove_status==1){
 
@@ -166,7 +171,8 @@ class LalaMovesController extends Controller
                         'drop_address' => $cus_address->address,
                         'user_name' => $customer->name,
                         'user_phone' => $customer->phone_number,
-                        'remarks' => 'Delivery vendor message remarks'
+                        'remarks' => 'Delivery vendor message remarks',
+                        'schedule_time' => $scheduledAt,
                     );
                    
                 $quotation = $this->getQuotations($data);
@@ -253,7 +259,7 @@ class LalaMovesController extends Controller
                         'drop_address' => $cus_address->address,
                         'user_name' => $customer->name,
                         'user_phone' => $customer->phone_number,
-                        'remarks' => 'Delivery vendor message remarks'
+                        'remarks' => 'Delivery vendor message remarks',
                     );
 
                 $quotation = $this->getQuotations($data);
@@ -302,7 +308,7 @@ class LalaMovesController extends Controller
         //   }';
 
     
-           
+           $trackingId = '';
            $json = json_decode($request->getContent());
            if(isset($json->eventType) && $json->eventType == 'ORDER_STATUS_CHANGED' && $json->data->order->status == 'ASSIGNING_DRIVER')
         {
