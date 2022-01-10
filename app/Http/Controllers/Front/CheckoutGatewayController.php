@@ -155,8 +155,12 @@ class CheckoutGatewayController extends FrontController
             $result = json_decode($result);
 
             $returnUrl = $this->checkoutNotify($request, $result);
-            if(isset($result->approved) && ($result->approved)){
-                return $this->successResponse($returnUrl, '', 201);
+            if(isset($result->approved)){
+                if($result->approved){
+                    return $this->successResponse($returnUrl, __('Payment has been done successfully'), 201);
+                }else{
+                    return $this->errorResponse(__($result->response_summary), 422);
+                }
             } else{
                 $msg = '';
                 if($http_status == '401'){

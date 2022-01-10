@@ -5,15 +5,11 @@ namespace App\Http\Controllers\Api\v1;
 use Log;
 use Auth;
 //use WebhookCall;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Api\v1\BaseController;
-use App\Http\Controllers\Api\v1\OrderController;
-use App\Http\Controllers\Api\v1\WalletController;
-use App\Http\Controllers\Api\v1\UserSubscriptionController;
+use App\Http\Controllers\Api\v1\{BaseController, OrderController, WalletController, UserSubscriptionController};
 use App\Models\{User, UserVendor, Cart, CartAddon, CartCoupon, CartProduct, CartProductPrescription, Payment, PaymentOption, Client, ClientPreference, ClientCurrency, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor, OrderTax, SubscriptionPlansUser};
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 
@@ -42,34 +38,31 @@ class CheckoutGatewayController extends BaseController
     public function checkoutPurchase(Request $request)
     {
         try {
+            $rules = [
+                'amount'   => 'required',
+                'action'   => 'required',
+                'token'   => 'required'
+            ];
+
             $user = Auth::user();
-            $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
             $amount = $this->getDollarCompareAmount($request->amount);
 
-            // $returnUrl = route('order.return.success');
-            if ($request->payment_form == 'wallet') {
-                // $returnUrl = route('user.wallet');
-            }
-            $uniqid = uniqid();
+            $request->request->add(['payment_form' => $request->action]);
+
             $customer_data = array(
                 'name' => $user->name,
-                'email' => $user->email,
-                // 'phone' => $user->phone_number
-                // 'identification' => '12123123'
+                'email' => $user->email
             );
             $meta_data = array();
             $reference_number = $description = '';
-            $returnUrlParams = '?gateway=checkout&amount=' . $request->amount . '&payment_form=' . $request->payment_form;
 
             if($request->payment_form == 'cart'){
                 $description = 'Order Checkout';
                 $cart = Cart::select('id')->where('status', '0')->where('user_id', $user->id)->first();
                 $request->request->add(['cart_id' => $cart->id]);
                 $meta_data['cart_id'] = $cart->id;
-                if($request->has('order_number')){
-                    $reference_number = $request->order_number;
-                }
-                $returnUrlParams = $returnUrlParams . '&cart_id=' . $cart->id . '&order=' . $request->order_number;
+                $reference_number = $request->order_number;
+                $rules['order_number'] = 'required';
             }
             elseif($request->payment_form == 'wallet'){
                 $description = 'Wallet Checkout';
@@ -78,20 +71,20 @@ class CheckoutGatewayController extends BaseController
             if($request->payment_form == 'tip'){
                 $description = 'Tip Checkout';
                 $meta_data['order_number'] = $request->order_number;
-                if($request->has('order_number')){
-                    $reference_number = $request->order_number;
-                }
-                $returnUrlParams = $returnUrlParams . '&order=' . $request->order_number;
+                $reference_number = $request->order_number;
             }
             elseif($request->payment_form == 'subscription'){
                 $description = 'Subscription Checkout';
-                if($request->has('subscription_id')){
-                    $slug = $request->subscription_id;
-                    $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
-                    $meta_data['subscription_id'] = $subscription_plan->id;
-                    $reference_number = $request->subscription_id;
-                    $returnUrlParams = $returnUrlParams . '&subscription=' . $request->subscription_id;
-                }
+                $slug = $request->subscription_id;
+                $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
+                $meta_data['subscription_id'] = $subscription_plan->id;
+                $reference_number = $request->subscription_id;
+                $rules['subscription_id'] = 'required';
+            }
+
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return $this->errorResponse(__($validator->errors()->first()), 422);
             }
 
             $data = array(
@@ -136,7 +129,6 @@ class CheckoutGatewayController extends BaseController
 
             $ch = curl_init($this->getCheckoutUrl());
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            // curl_setopt($ch, CURLINFO_HEADER_OUT, true);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
             curl_setopt(
@@ -155,8 +147,12 @@ class CheckoutGatewayController extends BaseController
             $result = json_decode($result);
 
             $returnUrl = $this->checkoutNotify($request, $result);
-            if(isset($result->approved) && ($result->approved)){
-                return $this->successResponse($result->id, '', 201);
+            if(isset($result->approved)){
+                if($result->approved){
+                    return $this->successResponse($result->id, __('Payment has been done successfully'), 201);
+                }else{
+                    return $this->errorResponse(__($result->response_summary), 422);
+                }
             } else{
                 $msg = '';
                 if($http_status == '401'){
@@ -172,7 +168,7 @@ class CheckoutGatewayController extends BaseController
             }
         }
         catch (\Exception $ex) {
-            return $this->errorResponse($ex->getMessage(), 400);
+            return $this->errorResponse($ex->getMessage(), $ex->getCode());
         }
     }
 
@@ -219,35 +215,28 @@ class CheckoutGatewayController extends BaseController
                         $super_admin = User::where('is_superadmin', 1)->pluck('id');
                         $orderController->sendOrderPushNotificationVendors($super_admin, $vendor_order_detail);
                     }
-                    $returnUrlParams = ''; //'?gateway=checkout&order=' . $order->id;
-                    $returnUrl = ''; //route('order.success', $order->id);
-                    return $returnUrl . $returnUrlParams;
 
                     // Send Email
                     //   $this->successMail();
                 }
             } elseif($request->payment_form == 'wallet'){
-                $request->request->add(['wallet_amount' => $request->amount, 'transaction_id' => $transactionId]);
+                $request->request->add(['transaction_id' => $transactionId]);
                 $walletController = new WalletController();
-                $walletController->creditWallet($request);
-                $returnUrl = ''; //route('user.wallet');
-                return $returnUrl;
+                $res = $walletController->creditMyWallet($request);
+                return $res;
             }
             elseif($request->payment_form == 'tip'){
-                $request->request->add(['order_number' => $request->order_number, 'tip_amount' => $request->amount, 'transaction_id' => $transactionId]);
+                $request->request->add(['tip_amount' => $request->amount, 'transaction_id' => $transactionId]);
                 $orderController = new OrderController();
-                $orderController->tipAfterOrder($request);
-                $returnUrl = ''; //route('user.orders');
-                return $returnUrl;
+                $res = $orderController->tipAfterOrder($request);
+                return $res;
             }
             elseif($request->payment_form == 'subscription'){
                 $request->request->add(['payment_option_id' => 17, 'transaction_id' => $transactionId]);
                 $subscriptionController = new UserSubscriptionController();
-                $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription_id);
-                $returnUrl = ''; //route('user.subscription.plans');
-                return $returnUrl;
+                $res = $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription_id);
+                return $res;
             }
-            // return route('order.return.success');
         } 
         else {
             if($request->payment_form == 'cart'){
@@ -263,18 +252,7 @@ class CheckoutGatewayController extends BaseController
                 OrderVendor::where('order_id', $order->id)->delete();
                 OrderTax::where('order_id', $order->id)->delete();
                 Order::where('id', $order->id)->delete();
-                // return Redirect::to(route('showCart'));
             }
-            // elseif($request->payment_form == 'wallet'){
-            //     return Redirect::to(route('user.wallet'));
-            // }
-            // elseif($request->payment_form == 'tip'){
-            //     return Redirect::to(route('user.orders'));
-            // }
-            // elseif($request->payment_form == 'subscription'){
-            //     return Redirect::to(route('user.subscription.plans'));
-            // }
-            // return Redirect::to(route('order.return.success'));
         }
     }
 
