@@ -89,6 +89,7 @@ class SquareController extends FrontController
 	    else {
 	        $returnUrl = $this->failedPayment($request);
 	    }
+        Log::info($returnUrl);
     	
         return Redirect::to(url($returnUrl));
     }
