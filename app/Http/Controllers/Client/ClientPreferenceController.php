@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Client\BaseController;
-use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency, Nomenclature, ReferAndEarn,SocialMedia, VendorRegistrationDocument, PageTranslation, BrandTranslation, VariantTranslation, ProductTranslation, Category_translation, AddonOptionTranslation, DriverRegistrationDocument, VariantOptionTranslation,Tag};
+use App\Models\{Client, ClientPreference, MapProvider, SmsProvider, Template, Currency, Language, ClientLanguage, ClientCurrency, Nomenclature, ReferAndEarn,SocialMedia, VendorRegistrationDocument, PageTranslation, BrandTranslation, VariantTranslation, ProductTranslation, Category_translation, AddonOptionTranslation, ClientSlot, DriverRegistrationDocument, VariantOptionTranslation,Tag};
 use GuzzleHttp\Client as GCLIENT;
 use DB;
 use App\Http\Traits\ApiResponser;
@@ -54,8 +54,8 @@ class ClientPreferenceController extends BaseController{
         }
         
         $tags = Tag::with('primary')->get();
-
-        return view('backend/setting/config')->with(['tags' => $tags,'laundry_teams' => $laundry_teams,'last_mile_teams' => $last_mile_teams,'client' => $client, 'preference' => $preference, 'mapTypes'=> $mapTypes, 'smsTypes' => $smsTypes, 'client_languages' => $client_languages, 'file_types' => $file_types, 'vendor_registration_documents' => $vendor_registration_documents, 'driver_registration_documents' => $driver_registration_documents, 'reffer_by' => $reffer_by, 'reffer_to' => $reffer_to, 'file_types_driver' => $file_types_driver]);
+        $slots = ClientSlot::get();
+        return view('backend/setting/config')->with(['tags' => $tags,'slots'=>$slots,'laundry_teams' => $laundry_teams,'last_mile_teams' => $last_mile_teams,'client' => $client, 'preference' => $preference, 'mapTypes'=> $mapTypes, 'smsTypes' => $smsTypes, 'client_languages' => $client_languages, 'file_types' => $file_types, 'vendor_registration_documents' => $vendor_registration_documents, 'driver_registration_documents' => $driver_registration_documents, 'reffer_by' => $reffer_by, 'reffer_to' => $reffer_to, 'file_types_driver' => $file_types_driver]);
     }
 
     public function getCustomizePage(ClientPreference $clientPreference){

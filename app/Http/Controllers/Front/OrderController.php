@@ -605,6 +605,7 @@ class OrderController extends FrontController
     
     public function placeOrder(Request $request, $domain = '')
     {
+
         //$stock = $this->ProductVariantStoke('18');
 
         // dd($request->all());
@@ -986,7 +987,12 @@ class OrderController extends FrontController
             $order->subscription_discount = $total_subscription_discount;
             $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
             $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
+
+          
             $order->scheduled_date_time = $cart->schedule_type == 'schedule' ? $cart->scheduled_date_time : null;
+            
+           
+            $order->scheduled_slot = (($cart->scheduled_slot)?$cart->scheduled_slot:null);
             $order->luxury_option_id = $luxury_option->id;
             $order->payable_amount = $payable_amount;
             if (($payable_amount == 0) || (($request->has('transaction_id')) && (!empty($request->transaction_id)))) {

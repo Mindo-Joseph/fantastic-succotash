@@ -3936,7 +3936,7 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     background-position: center right 10px;
 }
 .login-form label {
-    padding: 8px 10px;
+    /* padding: 8px 10px; */
     display: inline-block;
     cursor: pointer;
     border-radius: 4px;
@@ -3947,6 +3947,18 @@ input.form-control.pac-target-input.gm-err-autocomplete {
     text-align: center;
     width: 100%;
 }
+
+#schedule_div {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.close-window .fa.fa-window-close {
+    font-size: 40px;
+    color: var(--theme-deafult);
+}
+
 .login-form .blank-label {
     display: none;
 }
@@ -6552,3 +6564,8 @@ body[dir="rtl"] .inner_spacing h3 {
         height: 100px !important;
     }
 }
+
+input#schedule_datetime {
+    width: 50% !important;
+        margin-right: 10px;
+    }
