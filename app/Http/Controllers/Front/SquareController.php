@@ -89,7 +89,6 @@ class SquareController extends FrontController
 	    else {
 	        $returnUrl = $this->failedPayment($request);
 	    }
-        Log::info($returnUrl);
     	
         return Redirect::to(url($returnUrl));
     }
@@ -189,7 +188,6 @@ class SquareController extends FrontController
     }
     public function failedPayment($request)
     {
-        Log::info($request->all());
     	if($request->payment_from == 'cart'){
             $order_number = $request->order_number;
             $order = Order::with(['paymentOption', 'user_vendor', 'vendors:id,order_id,vendor_id'])->where('order_number', $order_number)->first();
@@ -211,7 +209,7 @@ class SquareController extends FrontController
             }
             return $returnUrl;
         }
-        elseif($request->payment_form == 'wallet'){
+        elseif($request->payment_from == 'wallet'){
             if($request->come_from == 'app')
             {
                 $returnUrl = route('payment.gateway.return.response').'/?gateway=square&status=0';
@@ -220,7 +218,7 @@ class SquareController extends FrontController
             }
             return $returnUrl;
         }
-        elseif($request->payment_form == 'tip'){
+        elseif($request->payment_from == 'tip'){
             if($request->come_from == 'app')
             {
                 $returnUrl = route('payment.gateway.return.response').'/?gateway=square&status=0';
@@ -229,7 +227,7 @@ class SquareController extends FrontController
             }
             return $returnUrl;
         }
-        elseif($request->payment_form == 'subscription'){
+        elseif($request->payment_from == 'subscription'){
             if($request->come_from == 'app')
             {
                 $returnUrl = route('payment.gateway.return.response').'/?gateway=square&status=0';
