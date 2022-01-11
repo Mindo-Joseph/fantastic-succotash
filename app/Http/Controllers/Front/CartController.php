@@ -954,7 +954,7 @@ class CartController extends FrontController
                 
 
                 if(isset($deliveryCharges) && !empty($deliveryCharges)){
-                     CartDeliveryFee::updateOrCreate(['cart_id' => $cart->id, 'vendor_id' => $vendorData->vendor->id],['delivery_fee' => $deliveryCharges,'shipping_delivery_type' => $code]);
+                     CartDeliveryFee::updateOrCreate(['cart_id' => $cart->id, 'vendor_id' => $vendorData->vendor->id],['delivery_fee' => $deliveryCharges,'shipping_delivery_type' => $code??'D']);
                 }
                 
                
