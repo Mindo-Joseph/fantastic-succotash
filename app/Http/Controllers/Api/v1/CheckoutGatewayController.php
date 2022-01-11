@@ -234,7 +234,7 @@ class CheckoutGatewayController extends BaseController
             elseif($request->payment_form == 'subscription'){
                 $request->request->add(['payment_option_id' => 17, 'transaction_id' => $transactionId]);
                 $subscriptionController = new UserSubscriptionController();
-                $res = $subscriptionController->purchaseSubscriptionPlan($request, '', $request->subscription_id);
+                $res = $subscriptionController->purchaseSubscriptionPlan($request, $request->subscription_id);
                 return $res;
             }
         } 
