@@ -245,10 +245,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="col-lg-6">
                     <div class="row mb-1">
                         <div class="col-8 text-lg-right">
-                            <p class="total_amt m-0">{{__('Delivery Fee')}} :</p>
                             <% if(product.coupon_amount_used > 0) { %>
                             <p class="total_amt m-0">{{__('Coupon Discount')}} :</p>
                             <% } %>
+                            <p class="total_amt m-0">{{__('Delivery Fee')}}</p>
+                          
                         </div>
                         <div class="col-4 text-right">
                            
@@ -268,7 +269,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %> 
                             </div>
                         </div>
-                    <% } %>                    
+                    <% } %> 
+                                   
 
                     <% if(product.delivery_fee_charges_lalamove > 0) { %>
                         <div class="row mb-1">

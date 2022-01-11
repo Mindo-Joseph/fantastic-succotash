@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\PromoCodeController;
 use App\Http\Controllers\Front\LalaMovesController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation,CartDeliveryFee};
 use Log;
 class CartController extends FrontController
 {
@@ -612,7 +612,7 @@ class CartController extends FrontController
             $d = 0;
             foreach ($cartData as $ven_key => $vendorData) {
                 $is_promo_code_available = 0;
-                $vendor_products_total_amount = $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
+                $vendor_products_total_amount = $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = $delivery_fee_charges_static = 0.00;
                 $delivery_count = 0;
                 $delivery_count_lm = 0;
                 $coupon_amount_used = 0;
@@ -750,6 +750,8 @@ class CartController extends FrontController
                                 $prod->deliver_charge = number_format($deliver_charge, 2, '.', '');
                                 // $payable_amount = $payable_amount + $deliver_charge;
 
+                                $shipping_delivery_type = 'D';
+
                             }
                         $delivery_fee_charges = $deliver_charge;
                         $deliveryCharges = $delivery_fee_charges;
@@ -760,7 +762,7 @@ class CartController extends FrontController
                         {   
                              $delivery_count_lm = 1;
                              $prod->deliver_charge_lalamove = number_format($deliver_lalmove_fee, 2, '.', '');
-
+                             $shipping_delivery_type = 'L';
                         }
                        $deliver_charges_lalmove = $deliver_lalmove_fee;
                         //End Lalamove Delivery changes code
@@ -769,15 +771,28 @@ class CartController extends FrontController
                             $deliveryCharges = $deliver_charges_lalmove;
                         }
 
+                        # for static fees 
+                        if($preferences->static_delivey_fee == 1 &&  $vendorData->vendor->order_amount_for_delivery_fee != 0)
+                        {
+                            if( $payable_amount >= (float)($vendorData->vendor->order_amount_for_delivery_fee)){ 
+                                $deliveryCharges = number_format($vendorData->vendor->delivery_fee_maximum, 2, '.', '');
+                            }
+
+                            if($payable_amount < (float)($vendorData->vendor->order_amount_for_delivery_fee)){
+                                $deliveryCharges = number_format($vendorData->vendor->delivery_fee_minimum, 2, '.', '');
+                            }
+
+                            $delivery_fee_charges_static =  $deliveryCharges;
+                            $delivery_fee_charges =  $delivery_fee_charges_lalamove = $deliveryCharges;
+
+                        }
 
                         }
 
 
-                       
-
+                        
                     }
-                   
-
+                    
                     $product = Product::with([
                         'variant' => function ($sel) {
                             $sel->groupBy('product_id');
@@ -868,22 +883,19 @@ class CartController extends FrontController
                     $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
                 }
 
-                if($preferences->static_delivey_fee == 1 &&  $vendorData->vendor->order_amount_for_delivery_fee != 0)
-                {
-                    if( $subtotal_amount >= (float)($vendorData->vendor->order_amount_for_delivery_fee)){ 
-                        $delivery_fee_charges = number_format($vendorData->vendor->delivery_fee_maximum, 2, '.', '');
-                    }
+                
 
-                    if($subtotal_amount < (float)($vendorData->vendor->order_amount_for_delivery_fee)){
-                        $delivery_fee_charges = number_format($vendorData->vendor->delivery_fee_minimum, 2, '.', '');
-                    }
+                if(isset($deliveryCharges) && !empty($deliveryCharges)){
+                     CartDeliveryFee::updateOrCreate(['cart_id' => $cart->id, 'vendor_id' => $vendorData->vendor->id],['delivery_fee' => $deliveryCharges,'shipping_delivery_type' => $code]);
                 }
+                
                
                 //end applying service fee on vendor products total
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
                 $vendorData->coupon_amount_used = number_format($coupon_amount_used, 2, '.', '');
                 $vendorData->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
                 $vendorData->delivery_fee_charges = number_format($delivery_fee_charges, 2, '.', '');
+                $vendorData->delivery_fee_charges_static = number_format($delivery_fee_charges_static, 2, '.', '');;
                 $vendorData->delivery_fee_charges_lalamove = number_format($deliver_charges_lalmove, 2, '.', '');
                 $vendorData->payable_amount = number_format($payable_amount, 2, '.', '');
                 $vendorData->discount_amount = number_format($discount_amount, 2, '.', '');
