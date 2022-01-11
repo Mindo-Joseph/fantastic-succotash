@@ -259,6 +259,8 @@ class OrderController extends BaseController
                     $ETA = $order_pre_time + $user_to_vendor_time;
                     // $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : convertDateTimeInTimeZone($vendor->created_at, $user->timezone, 'h:i A');
                     $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : dateTimeInUserTimeZone($vendor->created_at, $user->timezone);
+                    $order->converted_scheduled_date_time = $order->scheduled_date_time;
+                    //$order->converted_scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
                 }
 
                 $vendor->product_total_count = $product_total_count;
