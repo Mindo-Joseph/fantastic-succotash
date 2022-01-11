@@ -28,7 +28,9 @@ return [
     */
 
     'blade' => true,
-
+    'css' => true,
+    'js' => true,
+ 
     /*
     |--------------------------------------------------------------------------
     | Force Blade Optimizations
