@@ -24,6 +24,7 @@
         "genealabs/laravel-sign-in-with-apple": "^0.5.0",
         "genealabs/laravel-socialiter": "^0.3.3",
         "guzzlehttp/guzzle": "^6.3.1|^7.0.1",
+        "htmlmin/htmlmin": "^8.0",
         "intervention/image": "^2.5",
         "jackiedo/timezonelist": "5.*",
         "jenssegers/agent": "^2.6",
