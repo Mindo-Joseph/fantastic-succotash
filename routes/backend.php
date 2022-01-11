@@ -216,6 +216,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::resource('customer', 'Client\UserController')->middleware('onlysuperadmin');
         Route::get('customer/account/{user}/{action}', 'Client\UserController@deleteCustomer')->name('customer.account.action');
         Route::get('customer/edit/{id}', 'Client\UserController@newEdit')->name('customer.new.edit');
+        Route::post('customer/import', 'Client\UserController@importCsv')->name('customer.import');
         Route::put('newUpdate/edit/{id}', 'Client\UserController@newUpdate')->name('customer.new.update');
         Route::put('profile/{id}', 'Client\UserController@updateProfile')->name('client.profile.update');
         Route::post('password/update', 'Client\UserController@changePassword')->name('client.password.update');
@@ -247,6 +248,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::resource('promocode', 'Client\PromocodeController');
         Route::resource('payoption', 'Client\PaymentOptionController');
         Route::resource('shipoption', 'Client\ShippingOptionController');
+        Route::resource('deliveryoption', 'Client\DeliveryOptionController');
         Route::post('updateAll', 'Client\PaymentOptionController@updateAll')->name('payoption.updateAll');
         Route::post('shippment/updateAll', 'Client\ShippingOptionController@updateAll')->name('shipoption.updateAll');
         Route::post('payoutUpdateAll', 'Client\PaymentOptionController@payoutUpdateAll')->name('payoutOption.payoutUpdateAll');
