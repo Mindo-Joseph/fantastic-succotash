@@ -1158,7 +1158,7 @@ $sms_crendential = json_decode($preference->sms_credentials);
                         <label for="gifting" class="mr-2 mb-0">{{__('Pickup Delivery Service Area')}}</label>
                         <input type="checkbox" data-plugin="switchery" name="pickup_delivery_service_area" id="pickup_delivery_service_area" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pickup_delivery_service_area == '1')) checked='checked' @endif>
                      </div>
-                  </div> 
+                  </div>
                   <div class="col-md-4">
                      <div class="form-group mb-3">
                         <label for="gifting" class="mr-2 mb-0">{{__('Minumum Order/Batch')}}</label>
@@ -1206,15 +1206,15 @@ $sms_crendential = json_decode($preference->sms_credentials);
                            <label for="is_edit_order_vendor" class="mr-2 mb-0">{{ $vendormenulabel }}</label>
                            <input type="checkbox" data-plugin="switchery" name="is_edit_order_vendor" id="is_edit_order_vendor" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_edit_order_vendor == '1')) checked='checked' @endif>
                         </div>
-                     </div> 
+                     </div>
                      <div class="col-md-4">
                         <div class="form-group mb-3">
                            <label for="is_edit_order_driver" class="mr-2 mb-0">{{ __("Driver") }}</label>
                            <input type="checkbox" data-plugin="switchery" name="is_edit_order_driver" id="is_edit_order_driver" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_edit_order_driver == '1')) checked='checked' @endif>
                         </div>
                      </div>
-                 
-                 
+
+
                   <div class="col-md-12">
                      <div class="form-group mb-0 text-md-left">
                         <button class="btn btn-info d-block" type="submit">{{ __("Save") }}</button>
@@ -1616,8 +1616,8 @@ $sms_crendential = json_decode($preference->sms_credentials);
          </div>
       </div>
    </div>
-   <div id="add_vendor_registration_document_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
+   <div id="add_vendor_registration_document_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  standard-modalLabel aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
          <div class="modal-content">
             <div class="modal-header border-bottom">
                <h4 class="modal-title" id="standard-modalLabel">{{ __("Add Vendor Registration Document") }}</h4>
@@ -1633,10 +1633,11 @@ $sms_crendential = json_decode($preference->sms_credentials);
                            <div class="form-group position-relative">
                               <label for="">Type</label>
                               <div class="input-group mb-2">
-                                 <select class="form-control" name="file_type">
+                                 <select class="form-control" name="file_type" id="file_type_select">
                                     <option value="Text">Text</option>
                                     <option value="Image">Image</option>
                                     <option value="Pdf">PDF</option>
+                                    <option value="selector">Selector</option>
                                  </select>
                               </div>
                            </div>
@@ -1669,6 +1670,52 @@ $sms_crendential = json_decode($preference->sms_credentials);
                         </div>
                         @empty
                         @endforelse
+                        <div id="selector_div" class="col-md-12 d-none">
+                            <div class="card">
+                            <div class="card-box mb-0 ">
+                                <div class="d-flex align-items-center justify-content-between">
+                                   <h4 class="header-title text-uppercase">{{__('Options')}}</h4>
+                                   {{-- <div class="col-md-4 col-xl-4 mb-2 ">
+                                        <div class="form-group mb-0">
+                                            <select class="form-control" name="option_language_id" id="option_client_language">
+                                            @foreach($client_languages as $client_language)
+                                                <option value="{{$client_language->langId}}">{{$client_language->langName}}</option>
+                                            @endforeach
+                                            </select>
+                                        </div>
+                                    </div> --}}
+                                </div>
+                                <div id="option_div">
+
+                                        <div class="selector-option table-responsive">
+                                            <table class="table table-borderless mb-0 optionTableAdd" id="selector-datatable">
+                                                <tr class="trForClone">
+
+                                                    @foreach($client_languages as $langs)
+                                                        <th>{{$langs->langName}}</th>
+                                                    @endforeach
+                                                    <th></th>
+                                                </tr>
+                                                <tbody id="table_body">
+                                                    {{-- <tr>
+                                                    @foreach($client_languages as $key => $langs)
+                                                        <td>
+                                                            {{-- <input type="hidden" name="option_language_id[]"  value="{{$langs->langId}}" class="form-control">
+                                                            <input type="hidden" name="option_id[{{$key}}][]"   class="form-control" >
+                                                            <input type="text" name="option_names[{{$key}}][]" class="form-control" @if($langs->is_primary == 1) required @endif>
+                                                        </td>
+                                                        @endforeach
+                                                        <td class="lasttd"></td>
+                                                    </tr> --}}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+                                </div>
+                            </div>
+                            </div>
+                        </div>
                      </div>
                   </div>
                </form>
@@ -1783,6 +1830,48 @@ $sms_crendential = json_decode($preference->sms_credentials);
       </div>
    </div>
    <!-- end product tags -->
+   <script type="text/template" id="vendorSelectorTemp">
+
+
+        <tr class ="option_section" id ="option_section_<%= id %>" data-section_number="<%= id %>">
+        <input type="hidden" name="option_id[<%= id-1 %>][]"  id="option_id<%= id %>" data-id ="<%= id %>" value ="<%= data?data.id:'' %>">
+        @foreach($client_languages as $key => $langs)
+        <td>
+            <div class="form-group mb-0">
+                <input type="hidden" name="option_lang_id[<%= id-1 %>][]"   value ="{{$langs->langId}}">
+                <input type="text" name="option_name[<%= id-1 %>][]" class="form-control" @if($langs->is_primary == 1) required @endif   id="option_name_<%= id-1 %>_{{$langs->langId}}" placeholder="" data-id ="<%= id %>" value ="<%= data?(data.translations?data.translations.name:''):'' %>">
+            </div>
+        </td>
+
+        @endforeach
+        <td class="lasttd d-flex align-items-center justify-content-center">
+            <% if(id > 1) { %>
+                <a href="javascript:void(0)" class="action-icon remove_more_button"  id ="remove_button_<%= id %>" data-id ="<%= id %>"> <i class="mdi mdi-delete"></i></a>
+            <% } %>
+            <a href="javascript:void(0)" class="add_more_button" id ="add_button_<%= id %>" data-id ="<%= id %>"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+
+        </td>
+
+    </tr>
+
+
+</script>
+<script type="text/template" id="vendorSelectorTemp1">
+
+    <div class ="option_section" id ="option_section_<%= id %>" data-section_number="<%= id %>">
+        @foreach($client_languages as $key => $langs)
+        <div class="form-group">
+            <label for="option_title_<%= id %>">{{__('Option')}}</label>
+            <input type="hidden" name="option_id[{{$langs->langId}}][]"  id="option_id<%= id %>" data-id ="<%= id %>" value ="<%= data?data.id:'' %>">
+            <input type="text" name="option_name[{{$langs->langId}}][]" class="form-control option_title" requrid id="question<%= id %>" placeholder="{{__('Enter Option')}}" data-id ="<%= id %>" value ="<%= data?(data.translation?data.translation.name:''):'' %>">
+        </div>
+        @endforeach
+        <button type="button" class="btn btn-primary add_more_button mb-3" id ="add_button_<%= id %>" data-id ="<%= id %>" style=" margin-top: 17px;"> + {{__('Add Option')}}</button>
+        <% if(id > 1) { %>
+        <button type="button" class="btn btn-danger remove_more_button mb-3" id ="remove_button_<%= id %>" data-id ="<%= id %>" style=" margin-top: 17px;"> - {{__('Remove Option')}}</button>
+        <% } %>
+    </div>
+</script>
    @endsection
    @section('script')
    <script type="text/javascript">
@@ -1799,6 +1888,65 @@ $sms_crendential = json_decode($preference->sms_credentials);
          $('#add_product_tag_modal').modal('show');
          $('#add_product_tag__modal #standard-modalLabel').html('Add Tag');
       });
+
+    $(document).on("change", "#file_type_select", function() {
+        var file_type = $(this).val();
+        if(file_type == 'selector'){
+            $("#selector_div").removeClass("d-none");
+            var classoption_section = $('#option_div').find('.option_section');
+            if(classoption_section.length==0){
+                addoptionTemplate(0);
+            }
+        }
+        else{
+            $("#selector_div").addClass("d-none");
+        }
+    });
+    $(document).on('click','.add_more_button',function(){
+        var main_id = $(this).data('id');
+        addoptionTemplate(main_id);
+        console.log($('.add_more_button').length);
+    });
+    $(document).on('click','.remove_more_button',function(){
+        var main_id =$(this).data('id');
+        removeSeletOptionSectionTemplate(main_id);
+        $('.add_more_button').each(function(key,value){
+            if(key == ($('.add_more_button').length-1)){
+                $('#add_button_'+$(this).data('id')).show();
+            }
+        });
+    });
+    $(document).on("change","#option_client_language",function() {
+        let vendor_registration_document_id = $('input[name="vendor_registration_document_id"]').val();
+        editVendorRegistrationForm(vendor_registration_document_id);
+    });
+    function removeSeletOptionSectionTemplate(div_id){
+        $('#option_section_'+div_id).remove();
+    }
+    $(document).on('click', '.addOptionRow-Add', function(e) {
+        var d = new Date();
+        var n = d.getTime();
+        var $tr = $('.optionTableAdd tbody>tr:first').next('tr');
+        var $clone = $tr.clone();
+        $clone.find(':text').val('');
+        $clone.find('.hexa-colorpicker').attr("id", "hexa-colorpicker-" + n);
+        $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
+        $('.optionTableAdd').append($clone);
+
+    });
+
+    function addoptionTemplate(section_id){
+        section_id                = parseInt(section_id);
+        section_id                = section_id +1;
+        var data                  = '';
+
+        var price_section_temp    = $('#vendorSelectorTemp').html();
+        var modified_temp         = _.template(price_section_temp);
+        var result_html           = modified_temp({id:section_id,data:data});
+        $("#table_body").append(result_html);
+        $('.add_more_button').hide();
+        $('#add_button_'+section_id).show();
+    }
 
       $(document).on("click", ".delete_vendor_registration_document_btn", function() {
          var vendor_registration_document_id = $(this).data('vendor_registration_document_id');
@@ -1837,6 +1985,8 @@ $sms_crendential = json_decode($preference->sms_credentials);
             var post_url = "{{ route('vendor.registration.document.create') }}";
          }
          var form_data = new FormData(document.getElementById("vendorRegistrationDocumentForm"));
+
+
          $.ajax({
             url: post_url,
             method: 'POST',
@@ -1861,16 +2011,48 @@ $sms_crendential = json_decode($preference->sms_credentials);
       });
       $(document).on("click", ".edit_vendor_registration_document_btn", function() {
          let vendor_registration_document_id = $(this).data('vendor_registration_document_id');
+         editVendorRegistrationForm(vendor_registration_document_id);
+      });
+
+      function editVendorRegistrationForm(vendor_registration_document_id){
+        let language_id = $('#option_client_language').val();
          $('#add_vendor_registration_document_modal input[name=vendor_registration_document_id]').val(vendor_registration_document_id);
          $.ajax({
             method: 'GET',
             data: {
-               vendor_registration_document_id: vendor_registration_document_id
+               vendor_registration_document_id: vendor_registration_document_id,
+               language_id:language_id
             },
             url: "{{ route('vendor.registration.document.edit') }}",
             success: function(response) {
                if (response.status = 'Success') {
+                    if(response.data.file_type=="selector"){
+                        $("#selector_div").removeClass("d-none");
+                        $('.option_section').remove();
+                        var options = response.data.options;
+                        var section_id =0
+                        var row =0
+                        var option_section_temp    = $('#vendorSelectorTemp').html();
+                        var modified_temp         = _.template(option_section_temp);
+                        $(options).each(function(index, value) {
+                            section_id                = parseInt(section_id);
+                            row                       = parseInt(section_id)
+                            section_id                = section_id +1;
+                            $('#table_body').append(modified_temp({ id:section_id,data:value}));
+                            var options_trans = value.translations;
+                            $(options_trans).each(function(trans_index, trans_value) {
+                                var input_id = '#option_name_'+row+'_'+trans_value.language_id;
+                                $(input_id).val(trans_value.name);
+                            });
+                            $('.add_more_button').hide();
+                            $('#add_button_'+section_id).show();
+                        });
+                    }else{
+                        $('.option_section').remove();
+                        $("#selector_div").addClass("d-none");
+                    }
                   $(document).find("#add_vendor_registration_document_modal select[name=file_type]").val(response.data.file_type).change();
+
                   $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val(response.data.id);
                   $(document).find("#add_vendor_registration_document_modal select[name=is_required]").val(response.data.is_required).change();
                   $('#add_vendor_registration_document_modal #standard-modalLabel').html('Update Vendor Registration Document');
@@ -1884,7 +2066,8 @@ $sms_crendential = json_decode($preference->sms_credentials);
 
             }
          });
-      });
+
+      }
 
 
 
