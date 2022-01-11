@@ -517,6 +517,7 @@ class OrderController extends BaseController
 
     public function placeOrderRequestlalamove($request)
     {
+       
         $lala = new LalaMovesController();
         //Create Shipping place order request for Lalamove
         $checkdeliveryFeeAdded = OrderVendor::where(['order_id' => $request->order_id, 'vendor_id' => $request->vendor_id])->first();

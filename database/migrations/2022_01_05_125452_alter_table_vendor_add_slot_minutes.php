@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterCartAddonsTable extends Migration
+class AlterTableVendorAddSlotMinutes extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class AlterCartAddonsTable extends Migration
      */
     public function up()
     {
-        Schema::table('cart_addons', function (Blueprint $table) { 
-            $table->id()->first();
-            $table->bigInteger('cart_id')->unsigned()->after('id');
-        });
+        //
+        if (!Schema::hasColumn('vendors', 'slot_minutes')) {
+            Schema::table('vendors', function (Blueprint $table) {
+                $table->integer('slot_minutes')->nullable();
+            });
+         }
     }
 
     /**
