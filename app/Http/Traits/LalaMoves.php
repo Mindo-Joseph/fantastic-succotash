@@ -234,7 +234,7 @@ public function getOrderBody($data)
   
   $quotedTotalFee = array(
     'quotedTotalFee' => $quotedFee,
-    'sms' => false, //Send delivery updates via SMS to THE recipient, or the recipient of the LAST STOP for multi-stop orders once the order has been picked-up by the driver. default 'true'
+    'sms' => true, //Send delivery updates via SMS to THE recipient, or the recipient of the LAST STOP for multi-stop orders once the order has been picked-up by the driver. default 'true'
     'pod' => false, //Request driver to carry out "Proof Of Delivery" for all stops in the order. Default to false. See Proof Of Delivery for details.
   );
 
