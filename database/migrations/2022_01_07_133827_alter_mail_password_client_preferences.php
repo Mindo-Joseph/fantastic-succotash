@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterCartAddonsTable extends Migration
+class AlterMailPasswordClientPreferences extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class AlterCartAddonsTable extends Migration
      */
     public function up()
     {
-        Schema::table('cart_addons', function (Blueprint $table) { 
-            $table->id()->first();
-            $table->bigInteger('cart_id')->unsigned()->after('id');
-        });
+        Schema::table('client_preferences', function ($table) {
+            $table->string('mail_password', 100)->change();
+       });
     }
 
     /**
@@ -26,6 +25,6 @@ class AlterCartAddonsTable extends Migration
      */
     public function down()
     {
-        //
+
     }
 }

@@ -69,7 +69,7 @@
                 @csrf
                 <div class="row">
                     <div class="col-md-12">
-                        <h4 class="mb-2 "> <span class="">{{ __("Configuration") }}</span></h4>
+                        <h4 class="mb-2 "> <span class="">{{ __("Settings") }}</span></h4>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -108,7 +108,7 @@
 
                      <div class="col-md-12">
                         <div class="form-group" id="order_min_amountInput">
-                            {!! Form::label('title', 'Order Min Amount',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'Absolute Min Order Value [AMOV]',['class' => 'control-label']) !!}
                             <input class="form-control" onkeypress="return isNumberKey(event)" name="order_min_amount" type="text" value="{{$vendor->order_min_amount}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
                         </div>
                     </div> 
@@ -117,21 +117,21 @@
                     @if($client_preference_detail->static_delivey_fee == 1)
                     <div class="col-md-12">
                         <div class="form-group" id="order_amount_for_delivery_feeInput">
-                            {!! Form::label('title', 'Order Amount For Delivery Fee',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'Min Order Value (with Delivery fee) [MOV]',['class' => 'control-label']) !!}
                             <input class="form-control" onkeypress="return isNumberKey(event)" name="order_amount_for_delivery_fee" type="text" value="{{$vendor->order_amount_for_delivery_fee}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
                         </div>
                     </div> 
 
                     <div class="col-md-12">
                         <div class="form-group" id="delivery_fee_minimumInput">
-                            {!! Form::label('title', 'Delivery Fee For Below Amount',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'Delivery Fee For Below MOV',['class' => 'control-label']) !!}
                             <input class="form-control" onkeypress="return isNumberKey(event)" name="delivery_fee_minimum" type="text" value="{{$vendor->delivery_fee_minimum}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
                         </div>
                     </div> 
 
                     <div class="col-md-12">
                         <div class="form-group" id="delivery_fee_maximumInput">
-                            {!! Form::label('title', 'Delivery Fee For Above Amount',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'Delivery Fee For Above MOV',['class' => 'control-label']) !!}
                             <input class="form-control" onkeypress="return isNumberKey(event)" name="delivery_fee_maximum" type="text" value="{{$vendor->delivery_fee_maximum}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
                         </div>
                     </div> 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterCartAddonsTable extends Migration
+class AlterDeletedAtVendorRegistrationSelectOptions extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AlterCartAddonsTable extends Migration
      */
     public function up()
     {
-        Schema::table('cart_addons', function (Blueprint $table) { 
-            $table->id()->first();
-            $table->bigInteger('cart_id')->unsigned()->after('id');
+        Schema::table('vendor_registration_select_options', function (Blueprint $table) {
+            $table->softDeletes()->after('updated_at');
         });
     }
 
@@ -26,6 +25,8 @@ class AlterCartAddonsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('vendor_registration_select_options', function (Blueprint $table) {
+            //
+        });
     }
 }
