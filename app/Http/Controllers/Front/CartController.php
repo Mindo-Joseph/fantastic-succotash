@@ -575,7 +575,7 @@ class CartController extends FrontController
      * Get Cart Items
      *
      */
-    public function getCart($cart, $address_id=0 , $code = null)
+    public function getCart($cart, $address_id=0 , $code = 'D')
     {
         $address = [];
         $cart_id = $cart->id;
@@ -664,7 +664,7 @@ class CartController extends FrontController
 
             $cart->scheduled_date_time = convertDateTimeInTimeZone($cart->scheduled_date_time, $user->timezone, 'Y-m-d\TH:i');
         }
-        $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = 0.00;
+        $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = $deliver_charges_lalmove = 0.00;
         if ($cartData) {
             $cart_dinein_table_id = NULL;
             $action = (Session::has('vendorType')) ? Session::get('vendorType') : 'delivery';

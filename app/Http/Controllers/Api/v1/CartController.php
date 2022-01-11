@@ -461,6 +461,7 @@ class CartController extends BaseController
         return response()->json(['message' => __('Empty cart successfully.')]);
     }
 
+
     /**         *       Empty cart       *          */
     public function getCart($cart, $langId = '1', $currency = '1', $type = 'delivery')
     {
@@ -873,7 +874,8 @@ class CartController extends BaseController
                 }
                 $vendorData->is_promo_code_available = $is_promo_code_available;
             }
-        }
+        }//End cart Vendor loop
+
         $cart_product_luxury_id = CartProduct::where('cart_id', $cartID)->select('luxury_option_id', 'vendor_id')->first();
         if ($cart_product_luxury_id) {
             if ($cart_product_luxury_id->luxury_option_id == 2 || $cart_product_luxury_id->luxury_option_id == 3) {
