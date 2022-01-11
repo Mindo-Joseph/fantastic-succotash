@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
 use App\Http\Controllers\Api\v1\PromoCodeController;
-use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet, UserAddress, ClientPreference, LuxuryOption, Vendor, LoyaltyCard, SubscriptionInvoicesUser, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation, OrderVendor, OrderProductAddon, OrderTax, OrderProduct, OrderProductPrescription, VendorOrderStatus};
+use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet, Client as ModelsClient, UserAddress, ClientPreference, LuxuryOption, Vendor, LoyaltyCard, SubscriptionInvoicesUser, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation, OrderVendor, OrderProductAddon, OrderTax, OrderProduct, OrderProductPrescription, VendorOrderStatus, VendorSlot};
 use GuzzleHttp\Client as GCLIENT;
 use Log;
 class CartController extends BaseController
@@ -470,6 +470,7 @@ class CartController extends BaseController
         if (!$cart) {
             return false;
         }
+        $vondorCnt = 0;
         $address = [];
         $latitude = '';
         $longitude = '';
@@ -874,6 +875,7 @@ class CartController extends BaseController
                 }
                 $vendorData->is_promo_code_available = $is_promo_code_available;
             }
+            ++$vondorCnt;
         }//End cart Vendor loop
 
         $cart_product_luxury_id = CartProduct::where('cart_id', $cartID)->select('luxury_option_id', 'vendor_id')->first();
@@ -887,6 +889,20 @@ class CartController extends BaseController
             $total_disc_amount = $total_disc_amount + $total_subscription_discount;
             $cart->total_subscription_discount = $total_subscription_discount * $clientCurrency->doller_compare;
         }
+
+        if($cartData->count() == '1'){
+            $vendorId = $cartData[0]->vendor_id;
+            //type must be a : delivery , takeaway,dine_in
+            $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();
+            $slots = (object)$this->showSlot('',$vendorId,'delivery',$duration->slot_minutes);
+            $cart->slots = $slots;
+           // $cart->vendor_id =  $vendorId;
+        }else{
+            $slots = [];
+            $cart->slots = [];
+            //$cart->vendor_id =  0;
+        }
+
         $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');
         $cart->total_tax = $total_tax;
         $cart->tax_details = $tax_details;
@@ -939,6 +955,78 @@ class CartController extends BaseController
         $cart->dropoff_delay_date =  $dropoff_delay_date??0;
         return $cart;
     }
+
+
+    public function SplitTime($StartTime, $EndTime, $Duration="60"){
+        $ReturnArray = array ();
+        $StartTime    = strtotime ($StartTime); //Get Timestamp
+        $EndTime      = strtotime ($EndTime); //Get Timestamp
+       // echo ($StartTime .' - '.$EndTime);
+        //1641463200 - 1641484800
+        //1641484800 - 1641502800
+        $AddMins  = $Duration * 60;
+        $endtm = 0;
+        while ($StartTime <= $EndTime) 
+        {
+            $endtm = $StartTime + $AddMins;
+            if($endtm>$EndTime)
+            {
+             $endtm =  $EndTime;
+            }
+
+            $ReturnArray[] = date ("G:i", $StartTime).' - '.date ("G:i", $endtm);
+            $StartTime += $AddMins+60; 
+            $endtm = 0;
+        }
+        
+        return $ReturnArray;
+    }
+
+    public function showSlot($myDate = null,$vid,$type = 'delivery',$duration)
+    {
+    //type must be a : delivery , takeaway,dine_in
+    $client = ModelsClient::select('timezone')->first();
+    $viewSlot = array();
+       if(!empty($myDate))
+       {        $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
+       }else{ 
+        //$myDate  = date('Y-m-d',strtotime('+1 days')); 
+        $myDate  = date('Y-m-d'); 
+        $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
+        }
+        $mytime =$mytime->dayOfWeek+1;
+        $slots = VendorSlot::where('vendor_id',$vid)
+        ->whereHas('days',function($q)use($mytime,$type){
+            return $q->where('day',$mytime)->where($type,'1');
+        })
+        ->get();
+
+        if(isset($slots) && count($slots)>0){
+
+            foreach($slots as $slot){
+                if($slot->dayOne->id)
+                {   
+                   $slotss[] = $this->SplitTime($slot->start_time,$slot->end_time,$duration);
+                }
+            }
+        
+        $arr = array();
+        $count = count($slotss);
+        for($i=0;$i<$count;$i++){
+            $arr = array_merge($arr,$slotss[$i]);
+        }
+            
+            foreach($arr as $k=> $slt)
+            {
+                $sl = explode(' - ',$slt);
+                $viewSlot[$k]['name'] = date('h:i:A',strtotime($sl[0])).' - '.date('h:i:A',strtotime($sl[1]));
+                $viewSlot[$k]['value'] = $slt;
+            }
+        }
+        
+        return $viewSlot;
+    }
+
 
     public function getDeliveryFeeDispatcher($vendor_id)
     {

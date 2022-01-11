@@ -822,6 +822,8 @@ class CartController extends FrontController
                             }
                         $delivery_fee_charges = $deliver_charge;
                         $deliveryCharges = $delivery_fee_charges;
+                        
+                        
                         //Lalamove Delivery changes code
                         $lalamove = new LalaMovesController();
                         $deliver_lalmove_fee = $lalamove->getDeliveryFeeLalamove($vendorData->vendor_id);
@@ -838,6 +840,8 @@ class CartController extends FrontController
                             $deliveryCharges = $deliver_charges_lalmove;
                         }
 
+
+
                         # for static fees 
                         if($preferences->static_delivey_fee == 1 &&  $vendorData->vendor->order_amount_for_delivery_fee != 0)
                         {
@@ -852,9 +856,10 @@ class CartController extends FrontController
                             $delivery_fee_charges_static =  $deliveryCharges;
                             $delivery_fee_charges =  $delivery_fee_charges_lalamove = $deliveryCharges;
 
-                        }
+                        }//End statis fe code
 
-                        }
+
+                        }//End Check last time stone 
 
 
                         
@@ -1113,6 +1118,7 @@ class CartController extends FrontController
             }else{
                 $cart->delay_date =  $delay_date??0;
             }
+
             
             $cart->pickup_delay_date =  $pickup_delay_date??0;
             $cart->dropoff_delay_date =  $dropoff_delay_date??0;
@@ -1526,12 +1532,13 @@ class CartController extends FrontController
                     $time = null;
                     $slot = null;
                 }
-                //dd($slot);
+                //dd($request->delivery_type);
 
                 $cart_detail = $cart_detail->update(['specific_instructions' => $request->specific_instructions??null,
                 'schedule_type' => $request->task_type,
                 'scheduled_date_time' => $time??null,
                 'scheduled_slot' => $slot??null,
+                //'shipping_delivery_type' => $request->delivery_type??'D',
                 'comment_for_pickup_driver' => $request->comment_for_pickup_driver??null,
                 'comment_for_dropoff_driver' => $request->comment_for_dropoff_driver??null,
                 'comment_for_vendor' => $request->comment_for_vendor??null,
