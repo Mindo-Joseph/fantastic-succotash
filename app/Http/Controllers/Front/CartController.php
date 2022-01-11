@@ -719,17 +719,14 @@ class CartController extends FrontController
                 }
                 
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
-
-
-
-                    if($prod->product->sell_when_out_of_stock == 0){
+                    if($prod->product->sell_when_out_of_stock == 0 && $prod->product->has_inventory == 1){
                         $quantity_check = productvariantQuantity($prod->variant_id);
                         if($quantity_check < $prod->quantity ){
                             $delivery_status = 0;
                             $product_out_of_stock = 1;
                         }
                     }
-                    $prod->product_out_of_stock =  $product_out_of_stock;
+                    $prod->product_out_of_stock =  $product_out_of_stock; 
 
                     if($cart_dinein_table_id > 0){
                         $prod->update(['vendor_dinein_table_id' => $cart_dinein_table_id]);
