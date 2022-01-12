@@ -337,9 +337,7 @@ class OrderController extends FrontController
                     $email_template_content = str_ireplace("{products}", $returnHTML, $email_template_content);
                     $email_template_content = str_ireplace("{address}", $address->address . ', ' . $address->state . ', ' . $address->country . ', ' . $address->pincode, $email_template_content);
                 }
-                // Log::info($cartDetails);
-                // dd($cartDetails);
-                // die;
+                
                 $email_data = [
                     'code' => $otp,
                     'link' => "link",
@@ -881,7 +879,7 @@ class OrderController extends FrontController
                             $orderAddon->order_product_id = $order_product->id;
                             $orderAddon->save();
                         }
-                        CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
+                     //   CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                     }
                 }
                 $coupon_id = null;
