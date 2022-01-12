@@ -879,6 +879,11 @@ class OrderController extends BaseController
                 if (!empty($data['admin_email'])) {
                     $email_data['admin_email'] = $data['admin_email'];
                 }
+                if ($vendor_id == "") { 
+                    $email_data['send_to_cc'] = 1;
+                }else{
+                    $email_data['send_to_cc'] = 0;
+                }
                 dispatch(new \App\Jobs\SendOrderSuccessEmailJob($email_data))->onQueue('verify_email');
                 $notified = 1;
             } catch (\Exception $e) {
