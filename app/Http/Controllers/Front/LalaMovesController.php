@@ -188,17 +188,12 @@ class LalaMovesController extends Controller
                         'remarks' => 'Delivery vendor message remarks',
                         'schedule_time' => $scheduledAt
                     );
-                   //print_r($data);
-               
-                   // dd($data);
+        
                 $quotation = $this->getQuotations($data);
-                //echo 'quotation';
-               // print_r($quotation);
+            
                 $response = json_decode($quotation['response']);
                 if($quotation['code']=='200'){
                         $response = $this->placeOrders($data,$response);
-                        //echo 'Place order';
-                       // print_r($response);
                         if($response['code']=='200'){
                             $response = json_decode($response['response']);
                         }else{
@@ -208,51 +203,11 @@ class LalaMovesController extends Controller
                     $response = 2;
                 }
             }
-        //dd($response);die;
 
         return $response;
     	
     }
 
-
-    public function placeOrder($vendor_id)
-    {
-        $customer = User::find(Auth::id());
-        $cus_address = UserAddress::find('150');
-                if ($cus_address && $this->lalamove_status==1){
-                    //dd($vendor_id);
-                    $vendor_details = Vendor::find('16');
-                    $data = (object) array(
-                        'pick_lat' => $vendor_details->latitude,
-                        'pick_lng' => $vendor_details->longitude,
-                        'pick_address' => $vendor_details->address,
-                        'vendor_name' => $vendor_details->name,
-                        'vendor_contact' => $vendor_details->phone_no,
-                        'drop_lat' => $cus_address->latitude,
-                        'drop_lng' => $cus_address->longitude,
-                        'drop_address' => $cus_address->address,
-                        'user_name' => $customer->name,
-                        'user_phone' => $customer->phone_number,
-                        'remarks' => 'Delivery vendor message remarks',
-                    );
-
-                $quotation = $this->getQuotations($data);
-                $response = json_decode($quotation['response']);
-                if($quotation['code']=='200'){
-                        $response = $this->placeOrders($data,$response);
-                        if($quotation['code']=='200'){
-                            $response = json_decode($quotation['response']);
-                        }else{
-                            $response = json_decode($quotation['response']);
-                        }
-                }else{
-                    $response;
-                }
-            }
-
-        return $response;
-    	
-    }
 
     public function placeOrder2($vendor_id)
     {
@@ -262,26 +217,6 @@ class LalaMovesController extends Controller
 
     public function webhooks(Request $request)
     {
-        // $request = '{
-        //     "apiKey": "pk_test_11c917c792586a46bef122660d6e04b9",
-        //     "timestamp": 1640697361,
-        //     "signature": "92153b66e867160b139f1288c07170bf2e66851a7c77113f546cd3c143e5d349",
-        //     "eventId": "52C93E91-FD46-F542-67B1-225F324AD809",
-        //     "eventType": "ORDER_STATUS_CHANGED",
-        //     "data": {
-        //       "order": {
-        //         "id": "195610807268",
-        //         "city": "MY_KUL",
-        //         "status": "ASSIGNING_DRIVER",
-        //         "driverId": "",
-        //         "shareLink": "https://share.sandbox.lalamove.com/?MY100211228211600794410010041218730&lang=en_MY&source=api_wrapper&sign=757a3f926c2ca25fc2e121c21eec4dd5",
-        //         "previousStatus": "",
-        //         "updatedAt": "2021-12-28T21:16.00Z"
-        //       }
-        //     }
-        //   }';
-
-    
            $trackingId = '';
            $json = json_decode($request->getContent());
            if(isset($json->eventType) && $json->eventType == 'ORDER_STATUS_CHANGED' && $json->data->order->status == 'ASSIGNING_DRIVER')
