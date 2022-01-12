@@ -7,6 +7,7 @@ use App\Models\ProductVariant;
 use App\Models\ClientPreference;
 use App\Models\Client as ClientData;
 use App\Models\PaymentOption;
+use App\Models\ShippingOption;
 use App\Models\VendorSlot;
 
 function changeDateFormate($date,$date_format){
@@ -222,6 +223,39 @@ function getUserIP() {
         $ipaddress = 'UNKNOWN';
     return $ipaddress;
 }
+
+
+    function getBaseprice($dist)
+    {
+
+        $simp_creds = ShippingOption::select('credentials', 'test_mode','status')->where('code', 'lalamove')->where('status', 1)->first();
+        if($simp_creds && $simp_creds->credentials){
+            $creds_arr = json_decode($simp_creds->credentials);
+            $base_price = $creds_arr->base_price??'0';
+            if($base_price>0)
+            {
+                $distance = $creds_arr->distance??'0';
+                $amount_per_km = $creds_arr->amount_per_km??'0';
+
+            }
+            $lalamove_status = $simp_creds->status??'';
+        }
+
+        
+        $distance = ($dist - $distance);  
+        if($distance < 1 || $base_price < 1)
+        {
+            return 0;    
+        }
+
+        $base_price = $base_price;
+        $amount_per_km = $amount_per_km;
+        $total = $base_price + ($distance * $amount_per_km);
+        return  $total;
+        
+    // + ($paid_duration * $pricingRule->duration_price);
+
+    }
 
 
 function SplitTime($StartTime, $EndTime, $Duration="60"){
