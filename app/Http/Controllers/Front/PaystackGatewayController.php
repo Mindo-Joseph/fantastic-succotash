@@ -15,6 +15,7 @@ class PaystackGatewayController extends FrontController
 {
     use ApiResponser;
     public $gateway;
+    public $currency;
 
     public function __construct()
     {
@@ -28,6 +29,9 @@ class PaystackGatewayController extends FrontController
         $this->gateway->setPublicKey($public_key);
         $this->gateway->setTestMode($testmode); //set it to 'false' when go live
         // dd($this->gateway);
+
+        $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
+        $this->currency = (isset($primaryCurrency->currency->iso_code)) ? $primaryCurrency->currency->iso_code : 'USD';
     }
 
     public function paystackPurchase(Request $request){
@@ -44,7 +48,7 @@ class PaystackGatewayController extends FrontController
             $returnUrlParams = $returnUrlParams.'&gateway=paystack';
             $response = $this->gateway->purchase([
                 'amount' => $amount,
-                'currency' => 'ZAR',
+                'currency' => 'ZAR', //$this->currency,
                 'email' => $user->email,
                 'returnUrl' => url($request->returnUrl . $returnUrlParams),
                 'cancelUrl' => url($request->cancelUrl),
