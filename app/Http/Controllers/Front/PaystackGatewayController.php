@@ -7,6 +7,7 @@ use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
 use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{PaymentOption, Client, ClientPreference, ClientCurrency};
@@ -109,11 +110,12 @@ class PaystackGatewayController extends FrontController
             $response = $transaction->send();
             if ($response->isSuccessful()){
             //    $this->successMail();
-                // return $this->successResponse($response->getTransactionReference());
-                return view('frontend.account.gatewayReturnResponse')->with(['status'=>'200', 'transaction_id'=>$response->getTransactionReference(), 'action'=>$request->action]);
+                $url = 'payment/gateway/returnResponse?status=200&gateway=paystack&action='.$request->action.'&transaction_id='.$response->getTransactionReference();
+                return Redirect::to($url);
             } else {
                 // $this->failMail();
-                return $this->errorResponse($response->getMessage(), 400);
+                $url = 'payment/gateway/returnResponse?status=0&gateway=paystack&action='.$request->action;
+                return Redirect::to($url);
             }
         } else {
             // $this->failMail();
