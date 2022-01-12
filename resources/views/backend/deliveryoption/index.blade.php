@@ -288,6 +288,21 @@
 
                     @if ( (strtolower($opt->code) == 'shiprocket') )
                     <div id="shiprocket_fields_wrapper" @if($opt->status != 1) style="display:none" @endif>
+
+                        <div class="col-12 mt-3">
+
+                            <h5 class="d-inline-block mt-3">
+                                <span>{{ __('Webhook Url') }} : </span>
+                                <a href="javascript:;" ><span id="pwd_spn" class="password-span">{{route('carrier.webhook.shiprocket')}}</span></a>
+                            </h5>
+                            <sup class="position-relative">
+                                <a class="copy-icon ml-2" id="copy_icon2" data-urls="{{route('carrier.webhook.shiprocket')}}" style="cursor:pointer;">
+                                    <i class="fa fa-copy"></i>
+                                </a>
+                                <h6 id="copy_message2" class="copy-message mt-2"></h6>
+                            </sup>
+                        </div>
+
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group mb-0">
@@ -302,6 +317,45 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <div class="col-md-12 ">
+                            <div class="form-group mb-0 switchery-demo">
+                                <label for="" class="mr-3">{{ __("Set Base Price Fare") }}</label>
+                                <input type="checkbox"  data-title="{{$delOption->code}}" data-plugin="switchery" name="base_active" class="chk_box base_select" data-color="#43bee1" @if($base_price > 0) checked @endif>
+                            </div>
+                    <hr/>
+
+                        </div>
+                       
+                      
+                    <div class="row mt-3" id="shiprocket_fields_wrapper_base" @if($base_price < 1) style="display:none" @endif >
+                       
+                        <div class="col-md-4">
+                            <div class="form-group mb-0">
+                                <label for="shiprocket_base_price" class="mr-3">{{ __("Base Price") }}</label>
+                                <input type="text" name="base_price" id="shiprocket_base_price" class="form-control" value="{{@$base_price}}" >
+                            </div>  
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group mb-0">
+                                <label for="shiprocket_distance" class="mr-3">{{ __("Distance") }}</label>
+                                <input type="text" name="distance" id="shiprocket_distance" class="form-control" value="{{@$distance}}" >
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group mb-0">
+                                <label for="shiprocket_amount_per_km" class="mr-3">{{ __("Amount Per Killometer") }}</label>
+                                <input type="text" name="amount_per_km" id="shiprocket_amount_per_km" class="form-control" value="{{@$amount_per_km}}" >
+                            </div>
+                        </div>
+                       
+
+                    </div>
+
+
                     </div>
                     @endif
 
@@ -358,6 +412,7 @@
     $("#copy_icon").click(function(){
         var temp = $("<input>");
         var url = $(this).data('url');
+        alert(url);
         $("body").append(temp);
         temp.val(url).select();
         document.execCommand("copy");
@@ -365,6 +420,20 @@
         $("#copy_message").text("{{ __('URL Copied!') }}").show();
         setTimeout(function(){
             $("#copy_message").text('').hide();
+        }, 3000);
+    });
+
+    $("#copy_icon2").click(function(){
+        var temp = $("<input>");
+        var url = $(this).data('urls');
+        alert(url);
+        $("body").append(temp);
+        temp.val(url).select();
+        document.execCommand("copy");
+        temp.remove();
+        $("#copy_message2").text("{{ __('URL Copied!') }}").show();
+        setTimeout(function(){
+            $("#copy_message2").text('').hide();
         }, 3000);
     });
 

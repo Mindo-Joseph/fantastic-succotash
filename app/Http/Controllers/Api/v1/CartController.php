@@ -957,6 +957,24 @@ class CartController extends BaseController
     }
 
 
+    public function checkScheduleSlots(Request $request)
+    {
+        $slot = [];
+        $vendorId = $request->vendor_id??0;
+        $delivery = $request->delivery??'delivery';
+        //type must be a : delivery , takeaway,dine_in
+        $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();
+       // $duration = $duration->slot_minutes??'';
+        $slots = showSlot($request->date,$vendorId,$delivery,$duration->slot_minutes);
+        if(count($slots)<=0){
+            $slot = [];
+        }else{
+            $slot = $slots;
+        }
+        return response()->json($slot);
+    }
+
+
     public function getDeliveryFeeDispatcher($vendor_id)
     {
         try {
