@@ -15,10 +15,12 @@ use Illuminate\Support\Facades\Validator;
 use Log;
 use App\Models\{Order, OrderProduct, OrderTax, Cart, CartAddon, CartProduct, CartProductPrescription, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, VendorOrderDispatcherStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client, UserVendor, LuxuryOption, EmailTemplate, ProductVariantSet};
 use App\Models\AutoRejectOrderCron;
+use App\Http\Traits\OrderTrait;
 
 class OrderController extends BaseController
 {
     use ApiResponser;
+    use OrderTrait;
     /**
      * Display a listing of the resource.
      *
@@ -514,6 +516,7 @@ class OrderController extends BaseController
                         $stats = $this->insertInVendorOrderDispatchStatus($request);
                 }
                 OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id]);
+                $this->ProductVariantStoke($order_id);
                 DB::commit();
                 // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
             }
@@ -1391,6 +1394,7 @@ class OrderController extends BaseController
 
     public function orderDetails_for_notification($order_id, $vendor_id = "")
     {
+
         $user = Auth::user();
         if ($user->is_superadmin != 1) {
             $userVendorPermissions = UserVendor::where(['user_id' => $user->id])->pluck('vendor_id')->toArray();
