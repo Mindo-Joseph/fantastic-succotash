@@ -54,11 +54,8 @@ $timezone = Auth::user()->timezone;
                      </div>
                      <div style="padding: 0 0 0 15px;">
                         <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;margin: 0 0 3px;">{{$vendor_product['product']['translation_one']['title']}}</h3>
-
-                        @foreach($vendor_product->addon as $addon) 
-                        <p style="color: #777777;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;"> {{ $addon->option->title ?? '' }}</p>
-                        @endforeach
-
+                        {{ $vendor_product }}
+                      
                         {{-- <p style="color: #777777;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;">Extra olives</p>
                         <p style="color: #777777;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;">Extra cheese</p> --}}
                      </div>

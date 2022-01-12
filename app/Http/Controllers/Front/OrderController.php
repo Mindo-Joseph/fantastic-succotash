@@ -337,6 +337,9 @@ class OrderController extends FrontController
                     $email_template_content = str_ireplace("{products}", $returnHTML, $email_template_content);
                     $email_template_content = str_ireplace("{address}", $address->address . ', ' . $address->state . ', ' . $address->country . ', ' . $address->pincode, $email_template_content);
                 }
+                // Log::info($cartDetails);
+                // dd($cartDetails);
+                // die;
                 $email_data = [
                     'code' => $otp,
                     'link' => "link",
@@ -773,8 +776,7 @@ class OrderController extends FrontController
                                 $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
                             }
 
-                           Log::info($deliver_fee_data);
-                           Log::info($vendor_cart_product);
+                    
 
                             if($deliver_fee_data)
                             $delivery_fee  = $deliver_fee_data->delivery_fee??0.00;
