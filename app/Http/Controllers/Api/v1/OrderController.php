@@ -853,10 +853,10 @@ class OrderController extends BaseController
                 }
                 if ($cart) {
                     $cartDetails = $this->getCart($cart);
-                } 
+                }
                 if ($email_template) {
                     $email_template_content = $email_template->content;
-                    if ($vendor_id == "") { 
+                    if ($vendor_id == "") {
                         $returnHTML = view('email.newOrderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
                     } else {
                         $returnHTML = view('email.newOrderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id, 'currencySymbol' => $currSymbol])->render();
@@ -1435,7 +1435,8 @@ class OrderController extends BaseController
         $order->item_count = $order_item_count;
         $order->created_at = dateTimeInUserTimeZone($order->created_at, $user->timezone);
         $order->created = dateTimeInUserTimeZone($order->created_at, $user->timezone);
-        $order->scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
+        $order->scheduled_date_time = !empty($order->scheduled_date_time) ? dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone) : '';
+
         foreach ($order->products as $product) {
             $order_item_count += $product->quantity;
         }
