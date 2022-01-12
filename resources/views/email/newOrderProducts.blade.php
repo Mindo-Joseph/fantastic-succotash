@@ -54,9 +54,11 @@ $timezone = Auth::user()->timezone;
                      </div>
                      <div style="padding: 0 0 0 15px;">
                         <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;margin: 0 0 3px;">{{$vendor_product['product']['translation_one']['title']}}</h3>
-                        @foreach ($vendor_product->addon as $addon)
-                        <p style="color: #777777;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;">{{$addon->option->title??''}}</p>
+                        @if(count($vendor_product['addon']))
+                        @foreach ($vendor_product['addon'] as $addon)
+                        <p style="color: #777777;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;">{{$addon['option']['title']??''}}</p>
                         @endforeach
+                        @endif
                         {{-- <p style="color: #777777;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;">Extra olives</p>
                         <p style="color: #777777;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;">Extra cheese</p> --}}
                      </div>
@@ -69,9 +71,11 @@ $timezone = Auth::user()->timezone;
                </td>
                <td style="width: 35%;padding: 15px 0 10px;  text-align: right;">
                   <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;margin: 0 0 3px;">{{ $currencySymbol . number_format(($vendor_product['pvariant']['price']), 2, '.', '')}}</h3>
-                  @foreach ($vendor_product->addon as $addon)
-                  <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;margin: 0 0 3px;">{{ $currencySymbol . number_format((@$addon->option->quantity_price), 2, '.', '')}}</h3>
+                  @if(count($vendor_product['addon']))
+                  @foreach ($vendor_product['addon'] as $addon)
+                  <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;margin: 0 0 3px;">{{ $currencySymbol . number_format((@$addon['option']['quantity_price']), 2, '.', '')}}</h3>
                   @endforeach
+                  @endif
                   {{-- <p style="font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;color: #777777;">$90.00</p>
                   <p style="font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;color: #777777;">$90.00</p> --}}
                   <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;margin: 5px 0 0;padding: 5px 0 0;color: #000000;display: inline-block;border-top: 1px solid #ddd;min-width: 80px;">{{ $currencySymbol . number_format(($vendor_product['pvariant']['price']*$vendor_product['quantity']), 2, '.', '')}}</h3>
