@@ -73,6 +73,9 @@ $timezone = Auth::user()->timezone;
                   <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;margin: 0 0 3px;">{{ $currencySymbol . number_format(($vendor_product['pvariant']['price']), 2, '.', '')}}</h3>
                   @if(count($vendor_product['addon']))
                   @foreach ($vendor_product['addon'] as $addon)
+                  @php
+                     $vendor_product['pvariant']['price'] = $vendor_product['pvariant']['price'] + $addon['option']['price_in_cart']
+                  @endphp
                   <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;margin: 0 0 3px;">{{ $currencySymbol . number_format((@$addon['option']['quantity_price']), 2, '.', '')}}</h3>
                   @endforeach
                   @endif
