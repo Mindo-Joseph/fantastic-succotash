@@ -464,7 +464,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <li class="d-inline-block mr-1">
                             <input type="hidden" class="custom-control-input check" id="vendor_id" name="vendor_id" value="<%= cart_details.vendor_id %>" >
                             <input type="hidden" class="custom-control-input check" id="tasknow" name="task_type" value="<%= ((cart_details.schedule_type == 'schedule') ? 'schedule' : 'now') %>" >
-                            <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button>
+                           <!-- <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button> -->
                             </li>
                             <% if(cart_details.delay_date == 0) { %>
                             {{-- <li class="d-inline-block mr-1">
@@ -574,7 +574,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <a href="{{route('user.addressBook')}}"><i class="fa fa-pencil" aria-hidden="true"></i> <span>{{ __('Edit Address') }}</span> </a>
                     </div>
                     <div class="col-sm-6 col-lg-8 text-sm-right">
-                        {{-- <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button> --}}
+                        <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button>
                     </div>
                 </div>
             </div>
@@ -1108,9 +1108,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous">
 </script>
 
-<script>
-    // Replace the supplied `publicKey` with your own.
-    // Ensure that in production you use a production public_key.
+
 @if(in_array('razorpay',$client_payment_options)) 
 <script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
 @endif
