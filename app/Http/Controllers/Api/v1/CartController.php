@@ -894,7 +894,7 @@ class CartController extends BaseController
             $vendorId = $cartData[0]->vendor_id;
             //type must be a : delivery , takeaway,dine_in
             $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();
-            $slots = (object)showSlot('',$vendorId,'delivery',$duration->slot_minutes);
+            $slots = showSlot('',$vendorId,'delivery',$duration->slot_minutes);
             $cart->slots = $slots;
            // $cart->vendor_id =  $vendorId;
         }else{
