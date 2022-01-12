@@ -117,6 +117,10 @@ $timezone = Auth::user()->timezone;
                 <td style="text-align: right;">{{$currencySymbol . number_format($order->taxable_amount, 2, '.', '')}}</td>
              </tr>
              <tr>
+               <td style="text-align: left;"><b>{{__('Delivery fee')}}:</b></td>
+               <td style="text-align: right;">{{$currencySymbol . number_format($order->total_delivery_fee, 2, '.', '')}}</td>
+            </tr>
+             <tr>
                 <td style="text-align: left;"><b>{{__('Total')}}:</b></td>
                 <td style="text-align: right;"><b>{{$currencySymbol . number_format($order->payable_amount, 2, '.', '')}}</b></td>
              </tr>
