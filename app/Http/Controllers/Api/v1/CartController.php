@@ -894,7 +894,7 @@ class CartController extends BaseController
             $vendorId = $cartData[0]->vendor_id;
             //type must be a : delivery , takeaway,dine_in
             $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();
-            $slots = (object)$this->showSlot('',$vendorId,'delivery',$duration->slot_minutes);
+            $slots = (object)showSlot('',$vendorId,'delivery',$duration->slot_minutes);
             $cart->slots = $slots;
            // $cart->vendor_id =  $vendorId;
         }else{
@@ -954,77 +954,6 @@ class CartController extends BaseController
         $cart->pickup_delay_date =  $pickup_delay_date??0;
         $cart->dropoff_delay_date =  $dropoff_delay_date??0;
         return $cart;
-    }
-
-
-    public function SplitTime($StartTime, $EndTime, $Duration="60"){
-        $ReturnArray = array ();
-        $StartTime    = strtotime ($StartTime); //Get Timestamp
-        $EndTime      = strtotime ($EndTime); //Get Timestamp
-       // echo ($StartTime .' - '.$EndTime);
-        //1641463200 - 1641484800
-        //1641484800 - 1641502800
-        $AddMins  = $Duration * 60;
-        $endtm = 0;
-        while ($StartTime <= $EndTime) 
-        {
-            $endtm = $StartTime + $AddMins;
-            if($endtm>$EndTime)
-            {
-             $endtm =  $EndTime;
-            }
-
-            $ReturnArray[] = date ("G:i", $StartTime).' - '.date ("G:i", $endtm);
-            $StartTime += $AddMins+60; 
-            $endtm = 0;
-        }
-        
-        return $ReturnArray;
-    }
-
-    public function showSlot($myDate = null,$vid,$type = 'delivery',$duration)
-    {
-    //type must be a : delivery , takeaway,dine_in
-    $client = ModelsClient::select('timezone')->first();
-    $viewSlot = array();
-       if(!empty($myDate))
-       {        $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
-       }else{ 
-        //$myDate  = date('Y-m-d',strtotime('+1 days')); 
-        $myDate  = date('Y-m-d'); 
-        $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
-        }
-        $mytime =$mytime->dayOfWeek+1;
-        $slots = VendorSlot::where('vendor_id',$vid)
-        ->whereHas('days',function($q)use($mytime,$type){
-            return $q->where('day',$mytime)->where($type,'1');
-        })
-        ->get();
-
-        if(isset($slots) && count($slots)>0){
-
-            foreach($slots as $slot){
-                if($slot->dayOne->id)
-                {   
-                   $slotss[] = $this->SplitTime($slot->start_time,$slot->end_time,$duration);
-                }
-            }
-        
-        $arr = array();
-        $count = count($slotss);
-        for($i=0;$i<$count;$i++){
-            $arr = array_merge($arr,$slotss[$i]);
-        }
-            
-            foreach($arr as $k=> $slt)
-            {
-                $sl = explode(' - ',$slt);
-                $viewSlot[$k]['name'] = date('h:i:A',strtotime($sl[0])).' - '.date('h:i:A',strtotime($sl[1]));
-                $viewSlot[$k]['value'] = $slt;
-            }
-        }
-        
-        return $viewSlot;
     }
 
 

@@ -7,6 +7,7 @@ use App\Models\ProductVariant;
 use App\Models\ClientPreference;
 use App\Models\Client as ClientData;
 use App\Models\PaymentOption;
+use App\Models\VendorSlot;
 
 function changeDateFormate($date,$date_format){
     return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format($date_format);
@@ -220,4 +221,72 @@ function getUserIP() {
     else
         $ipaddress = 'UNKNOWN';
     return $ipaddress;
+}
+
+
+function SplitTime($StartTime, $EndTime, $Duration="60"){
+    $ReturnArray = array ();
+    $StartTime    = strtotime ($StartTime); //Get Timestamp
+    $EndTime      = strtotime ($EndTime); //Get Timestamp
+    $AddMins  = $Duration * 60;
+    $endtm = 0;
+    while ($StartTime <= $EndTime) 
+    {
+        $endtm = $StartTime + $AddMins;
+        if($endtm>$EndTime)
+        {
+         $endtm =  $EndTime;
+        }
+
+        $ReturnArray[] = date ("G:i", $StartTime).' - '.date ("G:i", $endtm);
+        $StartTime += $AddMins+60; 
+        $endtm = 0;
+    }
+    
+    return $ReturnArray;
+}
+
+function showSlot($myDate = null,$vid,$type = 'delivery',$duration)
+{
+//type must be a : delivery , takeaway,dine_in
+$client = ClientData::select('timezone')->first();
+$viewSlot = array();
+   if(!empty($myDate))
+   {        $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
+   }else{ 
+    //$myDate  = date('Y-m-d',strtotime('+1 days')); 
+    $myDate  = date('Y-m-d'); 
+    $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
+    }
+    $mytime =$mytime->dayOfWeek+1;
+    $slots = VendorSlot::where('vendor_id',$vid)
+    ->whereHas('days',function($q)use($mytime,$type){
+        return $q->where('day',$mytime)->where($type,'1');
+    })
+    ->get();
+
+    if(isset($slots) && count($slots)>0){
+
+        foreach($slots as $slot){
+            if($slot->dayOne->id)
+            {   
+               $slotss[] = SplitTime($slot->start_time,$slot->end_time,$duration);
+            }
+        }
+    
+    $arr = array();
+    $count = count($slotss);
+    for($i=0;$i<$count;$i++){
+        $arr = array_merge($arr,$slotss[$i]);
+    }
+        
+        foreach($arr as $k=> $slt)
+        {
+            $sl = explode(' - ',$slt);
+            $viewSlot[$k]['name'] = date('h:i:A',strtotime($sl[0])).' - '.date('h:i:A',strtotime($sl[1]));
+            $viewSlot[$k]['value'] = $slt;
+        }
+    }
+    
+    return $viewSlot;
 }
