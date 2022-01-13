@@ -1433,7 +1433,8 @@ class OrderController extends BaseController
         $order_item_count = 0;
         $order->payment_option_title = $order->paymentOption->title;
         $order->item_count = $order_item_count;
-        $order->created_at = dateTimeInUserTimeZone($order->created_at, $user->timezone);
+        //$order->created_at = dateTimeInUserTimeZone($order->created_at, $user->timezone);
+       // $order->date_time = dateTimeInUserTimeZone($order->created_at, $user->timezone);
         $order->created = dateTimeInUserTimeZone($order->created_at, $user->timezone);
         $order->scheduled_date_time = !empty($order->scheduled_date_time) ? dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone) : '';
 
