@@ -29,6 +29,10 @@ Route::group(['middleware' => ['domain']], function () {
 	});
 
 
+	// Start edit order routes
+	Route::post('edit-order/search/vendor/products', 'Front\VendorController@vendorProductsSearchResultsForEditOrder');
+	// End edit order routes
+
 	
 
 	Route::get('payment/gateway/returnResponse', 'Front\PaymentController@getGatewayReturnResponse')->name('payment.gateway.return.response');
