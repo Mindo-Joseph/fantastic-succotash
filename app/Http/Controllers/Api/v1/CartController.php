@@ -971,6 +971,7 @@ class CartController extends BaseController
         }else{
             $slot = $slots;
         }
+        
         return response()->json($slot);
     }
 
@@ -1063,9 +1064,26 @@ class CartController extends BaseController
                 if(isset($request->schedule_dropoff) && !empty($request->schedule_dropoff))  # for pickup laundry
                 $request->schedule_dropoff = Carbon::parse($request->schedule_dropoff, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
 
+                if($request->task_type!='now'){
+                    if(isset($request->slot))
+                    {
+                        $time = explode(' - ',$request->slot);
+                        $time = date('Y-m-d',strtotime($request->schedule_dt)).' '.$time[0].':00'??null;
+                        $slot = $request->slot;
+                    }else{
+                        $time = $request->schedule_dt;
+                        $slot = null;
+                    }
+                }else{
+                    $time = null;
+                    $slot = null;
+                }
+
                 Cart::where('status', '0')->where('user_id', $user->id)->update(['specific_instructions' => $request->specific_instructions ?? null,
                 'schedule_type' => $request->task_type??null,
-                'scheduled_date_time' => $request->schedule_dt??null,
+                //'scheduled_date_time' => $request->schedule_dt??null,
+                'scheduled_date_time' => $time??null,
+                'scheduled_slot' => $slot??null,
                 'comment_for_pickup_driver' => $request->comment_for_pickup_driver??null,
                 'comment_for_dropoff_driver' => $request->comment_for_dropoff_driver??null,
                 'comment_for_vendor' => $request->comment_for_vendor??null,

@@ -9,6 +9,7 @@ use App\Models\Client as ClientData;
 use App\Models\PaymentOption;
 use App\Models\ShippingOption;
 use App\Models\VendorSlot;
+use Illuminate\Support\Facades\Auth;
 
 function changeDateFormate($date,$date_format){
     return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format($date_format);
@@ -157,6 +158,32 @@ function dateTimeInUserTimeZone($date, $timezone, $showDate=true, $showTime=true
     return $date->isoFormat($format);
 }
 
+function dateTimeInUserTimeZone24($date, $timezone, $showDate=true, $showTime=true, $showSeconds=false){
+    $preferences = ClientPreference::select('date_format', 'time_format')->where('id', '>', 0)->first();
+    $date_format = (!empty($preferences->date_format)) ? $preferences->date_format : 'YYYY-MM-DD';
+    if($date_format == 'DD/MM/YYYY'){
+        $date_format = 'DD-MM-YYYY';
+    }
+    $time_format = (!empty($preferences->time_format)) ? $preferences->time_format : '24';
+    $date = Carbon::parse($date, 'UTC');
+    $date->setTimezone($timezone);
+    $secondsKey = '';
+    $timeFormat = '';
+    $dateFormat = '';
+    if($showDate){
+        $dateFormat = $date_format;
+    }
+    if($showTime){
+        if($showSeconds){
+            $secondsKey = ':ss';
+        }
+    $timeFormat = ' HH:mm'.$secondsKey; 
+    }
+
+    $format = $dateFormat . $timeFormat;
+    return $date->isoFormat($format);
+}
+
 function helper_number_formet($number){
     return number_format($number,2);
 }
@@ -258,12 +285,29 @@ function getUserIP() {
     }
 
 
-function SplitTime($StartTime, $EndTime, $Duration="60"){
+function SplitTime($myDate,$StartTime, $EndTime, $Duration="60")
+{
+    $user = Auth::user();
+    $cr = Carbon::now()->addMinutes(30);
+    $now =  dateTimeInUserTimeZone24($cr, $user->timezone);
+    $nowT = Carbon::createFromFormat('Y-m-d H:i', $now)->timestamp;
+    $nowS = Carbon::createFromFormat('Y-m-d H:i:s', $myDate.' '.$StartTime)->timestamp;
+    $nowE = Carbon::createFromFormat('Y-m-d H:i:s', $myDate.' '.$EndTime)->timestamp;
+    if($nowT > $nowE)
+    {
+        return [];
+    }elseif($nowT>$nowS)
+    {
+        $StartTime = date('H:m',strtotime($now));
+    }
+
+
     $ReturnArray = array ();
     $StartTime    = strtotime ($StartTime); //Get Timestamp
     $EndTime      = strtotime ($EndTime); //Get Timestamp
     $AddMins  = $Duration * 60;
     $endtm = 0;
+
     while ($StartTime <= $EndTime) 
     {
         $endtm = $StartTime + $AddMins;
@@ -304,15 +348,21 @@ $viewSlot = array();
         foreach($slots as $slot){
             if($slot->dayOne->id)
             {   
-               $slotss[] = SplitTime($slot->start_time,$slot->end_time,$duration);
+               $slotss[] = SplitTime($myDate,$slot->start_time,$slot->end_time,$duration);
             }
+
         }
+        //dd($slotss);
+
     
     $arr = array();
     $count = count($slotss);
-    for($i=0;$i<$count;$i++){
-        $arr = array_merge($arr,$slotss[$i]);
+    if($count>1){
+        for($i=0;$i<$count;$i++){
+            $arr = array_merge($arr,$slotss[$i]);
+        }
     }
+    
         
         foreach($arr as $k=> $slt)
         {
