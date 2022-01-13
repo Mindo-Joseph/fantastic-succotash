@@ -1394,6 +1394,19 @@ class CartController extends FrontController
             $cart_details = $this->getCart($cart, $address_id,$request->code);
         }
         $client_preference_detail = ClientPreference::first();
+
+
+
+
+        // foreach($cart_details->products as )
+        // {
+
+
+
+        // }
+
+        // dd($cart_details->products);
+
         return response()->json(['status' => 'success', 'cart_details' => $cart_details, 'client_preference_detail' => $client_preference_detail]);
     }
 

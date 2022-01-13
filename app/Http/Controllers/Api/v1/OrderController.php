@@ -15,10 +15,12 @@ use Illuminate\Support\Facades\Validator;
 use Log;
 use App\Models\{Order, OrderProduct, OrderTax, Cart, CartAddon, CartProduct, CartProductPrescription, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, VendorOrderDispatcherStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client, UserVendor, LuxuryOption, EmailTemplate, ProductVariantSet};
 use App\Models\AutoRejectOrderCron;
+use App\Http\Traits\OrderTrait;
 
 class OrderController extends BaseController
 {
     use ApiResponser;
+    use OrderTrait;
     /**
      * Display a listing of the resource.
      *
@@ -514,6 +516,7 @@ class OrderController extends BaseController
                         $stats = $this->insertInVendorOrderDispatchStatus($request);
                 }
                 OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id]);
+                $this->ProductVariantStoke($order_id);
                 DB::commit();
                 // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
             }
@@ -850,10 +853,10 @@ class OrderController extends BaseController
                 }
                 if ($cart) {
                     $cartDetails = $this->getCart($cart);
-                } 
+                }
                 if ($email_template) {
                     $email_template_content = $email_template->content;
-                    if ($vendor_id == "") { 
+                    if ($vendor_id == "") {
                         $returnHTML = view('email.newOrderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
                     } else {
                         $returnHTML = view('email.newOrderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id, 'currencySymbol' => $currSymbol])->render();
@@ -1396,6 +1399,7 @@ class OrderController extends BaseController
 
     public function orderDetails_for_notification($order_id, $vendor_id = "")
     {
+
         $user = Auth::user();
         if ($user->is_superadmin != 1) {
             $userVendorPermissions = UserVendor::where(['user_id' => $user->id])->pluck('vendor_id')->toArray();
@@ -1434,9 +1438,11 @@ class OrderController extends BaseController
         $order_item_count = 0;
         $order->payment_option_title = $order->paymentOption->title;
         $order->item_count = $order_item_count;
-        $order->created_at = dateTimeInUserTimeZone($order->created_at, $user->timezone);
+        //$order->created_at = dateTimeInUserTimeZone($order->created_at, $user->timezone);
+       // $order->date_time = dateTimeInUserTimeZone($order->created_at, $user->timezone);
         $order->created = dateTimeInUserTimeZone($order->created_at, $user->timezone);
-        $order->scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
+        $order->scheduled_date_time = !empty($order->scheduled_date_time) ? dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone) : '';
+
         foreach ($order->products as $product) {
             $order_item_count += $product->quantity;
         }
