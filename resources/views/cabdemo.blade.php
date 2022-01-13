@@ -2,7 +2,7 @@
 @section('content')
 
 <style>
-    
+
 /* Jet Taxi Home Page Css */
 .jet-taxi-banner {
     background: linear-gradient(180deg, rgb(248 242 255), #FFFFFF 99.91%);
@@ -11,8 +11,8 @@
 
 .jet-banner-right {
     height: 430px;
-    margin: auto;  
-    width: auto; 
+    margin: auto;
+    width: auto;
 }
 
 .jet-banner-right img {
@@ -116,7 +116,7 @@
 </style>
 
     <!-- royo default demo -->
-    
+
     <div class="cab-content-area">
 
 
@@ -246,7 +246,7 @@
 
         <!-- Royo Business Start From Here -->
         <section class="royo-business p-0">
-            <div class="container p-64">
+            <div class="container p-64 pl-0 pr-0">
                 <div class="row">
                     <div class="col-12">
                         <h2 class="title-36">Royo for Business</h2>
@@ -261,8 +261,8 @@
 
         <!-- Royo Business Start From Here -->
         <section class="royo-rental p-0">
-            <div class="container">                
-               
+            <div class="container">
+
                 <div class="row align-items-center p-64">
                     <div class="col-sm-6">
                         <div class="cab-img-box">
@@ -296,7 +296,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </section>
 
@@ -491,11 +491,11 @@
     <section class="cab-bottom-banner">
         <img class="img-fluid" src="{{asset('assets/images/ic_bg1@2x.png')}}" alt="">
     </section>
-        
+
 
     </div>
 
-    
+
 
 
     <script src="{{asset('front-assets/js/popper.min.js')}}"></script>
@@ -515,9 +515,9 @@
 
     <script src="{{asset('assets/js/pages/form-pickers.init.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
-    
+
     <script type="text/javascript">
-        
+
     </script>
 
     <script>
@@ -552,9 +552,9 @@
     banner.src = URL.createObjectURL(event.target.files[0]);
    };
 
-  
+
     </script>
 
-   
-    
+
+
 @endsection

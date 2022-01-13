@@ -170,9 +170,11 @@
     var bindMap=new google.maps.Map(document.getElementById("nearmap"), bindmapProp);
 </script>
 
-<script type="text/javascript" src="{{asset('front-assets/js/all-min.js')}}"></script>
+<script type="text/javascript" src="{{asset('front-assets/js/all-min.js')}}" defer></script>
+<script type="text/javascript"
+
+src="{{asset('front-assets/js/slick.js')}}"></script>
 {{--<script type="text/javascript" src="{{asset('front-assets/js/popper.min.js')}}"></script>
-    <script type="text/javascript" src="{{asset('front-assets/js/slick.js')}}"></script>
     <script type="text/javascript" src="{{asset('front-assets/js/menu.js')}}"></script>
     <script type="text/javascript" src="{{asset('front-assets/js/lazysizes.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('front-assets/js/bootstrap.js')}}"></script>
@@ -200,6 +202,13 @@
 <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
 <script>
+
+    var tag = document.createElement('script');
+    tag.src = "{{asset('front-assets/js/all-min.js')}}";
+    tag.setAttribute('defer','');
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
     var firebaseCredentials = {!!json_encode(Session::get('preferences')) !!};
     var firebaseConfig = {
         apiKey: firebaseCredentials.fcm_api_key,

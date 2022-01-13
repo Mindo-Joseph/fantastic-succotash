@@ -6,14 +6,10 @@
 <button type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#login_modal"> Launch demo modal </button> @if(count($banners))
 <section class="home-slider-wrapper pt-4">
 	<div class="container">
-		<div class="row">
-			<div class="col-12">
-				<div class="shimmer_effect">
-					<div class="loading"></div>
-				</div>
-				<div class="home-banner-slider"> @foreach($banners as $banner) @php $url=''; if($banner->link=='category'){if($banner->category !=null){$url=route('categoryDetail', $banner->category->slug);}}else if($banner->link=='vendor'){if($banner->vendor !=null){$url=route('vendorDetail', $banner->vendor->slug);}}@endphp @if($url) <a class="banner-img-outer" href="{{$url}}"> @endif <img alt="" title="" class="blur-up lazyload" data-src="{{$banner->image['proxy_url'] . '1370/300' . $banner->image['image_path']}}"> @if($url) </a> @endif @endforeach </div>
-			</div>
-		</div>
+      <div class="shimmer_effect">
+         <div class="loading"></div>
+      </div>
+      <div class="home-banner-slider"> @foreach($banners as $banner) @php $url=''; if($banner->link=='category'){if($banner->category !=null){$url=route('categoryDetail', $banner->category->slug);}}else if($banner->link=='vendor'){if($banner->vendor !=null){$url=route('vendorDetail', $banner->vendor->slug);}}@endphp @if($url) <a class="banner-img-outer" href="{{$url}}"> @endif <img alt="" title="" class="blur-up lazyload" data-src="{{$banner->image['proxy_url'] . '1370/300' . $banner->image['image_path']}}"> @if($url) </a> @endif @endforeach </div>
 	</div>
 </section> @endif
 <script type="text/template" id="vendors_template">
