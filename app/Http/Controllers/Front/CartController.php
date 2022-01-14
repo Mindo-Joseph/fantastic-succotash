@@ -601,6 +601,7 @@ class CartController extends FrontController
             $vendor_details = [];
             $delivery_status = 1;
             $is_vendor_closed = 0;
+            $closed_store_order_scheduled = 0;
             $deliver_charge = 0;
             $deliveryCharges = 0;
             $delay_date = 0;
@@ -909,6 +910,8 @@ class CartController extends FrontController
                 $vendorData->isDeliverable = 1;
                 $vendorData->promo_free_deliver = $PromoFreeDeliver;
                 $vendorData->is_vendor_closed = $is_vendor_closed;
+                $vendorData->closed_store_order_scheduled = $product->vendor->closed_store_order_scheduled;
+                   // dd($product->vendor);
                 // if (!empty($subscription_features)) {
                 //     $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount - $subscription_discount), 2, '.', '');
                 // }
@@ -1010,22 +1013,41 @@ class CartController extends FrontController
             $scheduled = (object)array(
                 'scheduled_date_time'=>(($cart->scheduled_slot)?date('Y-m-d',strtotime($cart->scheduled_date_time)):$cart->scheduled_date_time),'slot'=>$cart->scheduled_slot,
             );
-
+            $cart->deliver_status = $delivery_status;
             $cart->vendorCnt = $cartData->count();
             $cart->scheduled = $scheduled;
+            $cart->schedule_type =  $cart->schedule_type;
             if($cart->vendorCnt==1){
                 $vendorId = $cartData[0]->vendor_id;
                 //type must be a : delivery , takeaway,dine_in
-                $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();
-                $slots = (object)showSlot('',$vendorId,'delivery',$duration->slot_minutes);
+                $duration = Vendor::where('id',$vendorId)->select('slot_minutes','closed_store_order_scheduled')->first();
+                $myDate  = date('Y-m-d'); 
+                if($cart->deliver_status == 0 && $duration->closed_store_order_scheduled ==1)
+                {
+                    $cart->deliver_status = $duration->closed_store_order_scheduled;
+                    $cart->closed_store_order_scheduled = $duration->closed_store_order_scheduled;
+                    $myDate  = date('Y-m-d',strtotime('+1 day')); 
+                    $cart->schedule_type =  'schedule';
+                }
+
+                $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
+                if(count((array)$slots) == 0){
+                    $myDate  = date('Y-m-d',strtotime('+2 day')); 
+                    $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
+                }
+
+                if(count((array)$slots) == 0){
+                    $myDate  = date('Y-m-d',strtotime('+3 day')); 
+                    $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
+                }
                 $cart->slots = $slots;
                 $cart->vendor_id =  $vendorId;
+
             }else{
                 $slots = [];
                 $cart->slots = [];
                 $cart->vendor_id =  0;
             }
-            $cart->schedule_type =  $cart->schedule_type;
             $cart->slotsCnt = count((array)$slots);
             $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');
             $cart->loyalty_amount = number_format($loyalty_amount_saved, 2, '.', '');
@@ -1037,14 +1059,15 @@ class CartController extends FrontController
             $cart->tip_5_percent = number_format((0.05 * $total_payable_amount), 2, '.', '');
             $cart->tip_10_percent = number_format((0.1 * $total_payable_amount), 2, '.', '');
             $cart->tip_15_percent = number_format((0.15 * $total_payable_amount), 2, '.', '');
-            $cart->deliver_status = $delivery_status;
+          
+
             $cart->action = $action;
             $cart->left_section = view('frontend.cartnew-left')->with(['action' => $action,  'vendor_details' => $vendor_details, 'addresses'=> $user_allAddresses, 'countries'=> $countries, 'cart_dinein_table_id'=> $cart_dinein_table_id, 'preferences' => $preferences])->render();
             $cart->upSell_products = ($upSell_products) ? $upSell_products->first() : collect();
             $cart->crossSell_products = ($crossSell_products) ? $crossSell_products->first() : collect(); 
             
             if($cart->slotsCnt>0){
-                $cart->delay_date =  (($delay_date>0)?$delay_date:date('Y-m-d'));
+                $cart->delay_date =  $myDate;
             }else{
                 $cart->delay_date =  $delay_date??0;
             }

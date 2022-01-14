@@ -159,6 +159,11 @@ class LalaMovesController extends Controller
     	
     }
 
+    public function cancelOrderRequestlalamove($reffId)
+    {
+       $this->orderCancel($reffId);
+    }
+
     //for Developer use only
     public function placeOrderToLalamoveDev($vendor_id,$user_id,$order_id)
     {

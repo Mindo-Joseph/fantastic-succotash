@@ -1,4 +1,6 @@
 <?php
+
+use App\Models\CartProduct;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use App\Models\Nomenclature;
@@ -285,22 +287,26 @@ function getUserIP() {
     }
 
 
-function SplitTime($myDate,$StartTime, $EndTime, $Duration="60")
+function SplitTime($myDate,$StartTime, $EndTime, $Duration="60",$delayMin = 0)
 {
+    $Duration = (($Duration==0)?'60':$Duration);
     $user = Auth::user();
     $cr = Carbon::now()->addMinutes(30);
     $now =  dateTimeInUserTimeZone24($cr, $user->timezone);
     $nowT = Carbon::createFromFormat('Y-m-d H:i', $now)->timestamp;
-    $nowS = Carbon::createFromFormat('Y-m-d H:i:s', $myDate.' '.$StartTime)->timestamp;
+    $nowA = Carbon::createFromFormat('Y-m-d H:i:s', $myDate.' '.$StartTime);
+    $nowAM = Carbon::createFromFormat('Y-m-d H:i:s', $nowA)->addMinute($delayMin);
+    $nowS = Carbon::createFromFormat('Y-m-d H:i:s', $nowA)->addMinute($delayMin)->timestamp;
     $nowE = Carbon::createFromFormat('Y-m-d H:i:s', $myDate.' '.$EndTime)->timestamp;
     if($nowT > $nowE)
     {
         return [];
     }elseif($nowT>$nowS)
     {
-        $StartTime = date('H:m',strtotime($now));
+        $StartTime = date('H:i',strtotime($now));
+    }else{
+        $StartTime = date('H:i',strtotime($nowAM));
     }
-
 
     $ReturnArray = array ();
     $StartTime    = strtotime ($StartTime); //Get Timestamp
@@ -320,6 +326,7 @@ function SplitTime($myDate,$StartTime, $EndTime, $Duration="60")
         $StartTime += $AddMins+60; 
         $endtm = 0;
     }
+    //dd($ReturnArray);
     
     return $ReturnArray;
 }
@@ -343,25 +350,28 @@ $viewSlot = array();
     })
     ->get();
 
+    $cart = CartProduct::where('vendor_id',$vid)->get();
+    foreach($cart as $product)
+    {
+       $min[] = (($product->product->delay_order_hrs * 60) + $product->product->delay_order_min);
+    }
+
     if(isset($slots) && count($slots)>0){
 
         foreach($slots as $slot){
             if($slot->dayOne->id)
             {   
-               $slotss[] = SplitTime($myDate,$slot->start_time,$slot->end_time,$duration);
+               $slotss[] = SplitTime($myDate,$slot->start_time,$slot->end_time,$duration,max($min));
             }
 
         }
-        //dd($slotss);
-
-    
     $arr = array();
     $count = count($slotss);
-    if($count>1){
+    //if($count>1){
         for($i=0;$i<$count;$i++){
             $arr = array_merge($arr,$slotss[$i]);
         }
-    }
+    //}
     
         
         foreach($arr as $k=> $slt)

@@ -91,10 +91,16 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="col-12">
                     <div class="countdownholder alert-danger" id="min_order_validation_error_<%= product.vendor.id %>" style="display:none;">Your cart will be expired in </div>
                 </div>
-                <% if( product.is_vendor_closed == 1 ) { %>
+                <% if( product.is_vendor_closed == 1 && product.closed_store_order_scheduled == 0 ) { %>
                     <div class="col-12">
                         <div class="text-danger">
                             <i class="fa fa-exclamation-circle"></i> {{__('Vendor is not accepting orders right now.')}}
+                        </div>
+                    </div>
+                <% }else if( product.is_vendor_closed == 1 && product.closed_store_order_scheduled == 1 ){ %>
+                    <div class="col-12">
+                        <div class="text-danger">
+                            <i class="fa fa-exclamation-circle"></i> {{__('We are not accepting orders right now. You can schedule this for future Date.')}}
                         </div>
                     </div>
                 <% } %>
@@ -454,7 +460,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
             {{-- Schedual code Start at down --}}
 
-           
             <% if(client_preference_detail.off_scheduling_at_cart != 1 && cart_details.vendorCnt==1) { %>
                 @if($client_preference_detail->business_type != 'laundry')
             <div class="row d-flex align-items-center arabic-lng no-gutters mt-2 mb-md-4 mb-2 position-relative" id="dateredio">
@@ -476,9 +481,11 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <input type="radio" class="custom-control-input check taskschedulebtn" id="taskschedule" name="tasktype" value="" <%= ((cart_details.schedule_type == 'schedule' || cart_details.delay_date != 0) ? 'checked' : '') %>  style="<%= ((cart_details.schedule_type != 'schedule') ? '' : 'display:none!important') %>">
                                 <label class="btn btn-solid mb-0 taskschedulebtn" for="taskschedule" style="<%= ((cart_details.schedule_type != 'schedule') ? '' : 'display:none!important') %>">{{__('Schedule')}}</label>
                             </li>
+
                             <li class="close-window">
-                                <i class="fa fa-window-close cross" style="<%= ((cart_details.schedule_type != 'schedule') ? 'display:none!important' : 'display:block!important') %>"  aria-hidden="true"></i>
+                                <i class="fa fa-window-close cross" style="<%= ((cart_details.schedule_type != 'schedule' || cart_details.closed_store_order_scheduled == 1) ? 'display:none!important' : 'display:block!important') %>"  aria-hidden="true"></i>
                             </li>
+
                         </ul>
                     </div>
                 </div>
@@ -489,7 +496,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         min="<%= ((cart_details.delay_date != '0') ? cart_details.delay_date : '') %>">
                         <% } else { %>
                             <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%= ((cart_details.schedule_type == 'schedule') ? cart_details.scheduled_date_time : '') %>"
-                            min="{{$now}}">
+                            min="<%= ((cart_details.delay_date != '0') ? cart_details.delay_date : '') %>">
 
                             <% } %>
 

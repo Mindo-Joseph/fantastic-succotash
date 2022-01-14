@@ -419,7 +419,7 @@ class OrderController extends BaseController
                 $orderData = Order::find($request->order_id);
                 if ($request->status_option_id == 2) {
                     //Check Order delivery type
-                    if ($orderData->shipping_delivery_type!='L') {
+                    if ($orderData->shipping_delivery_type=='L') {
                         //Create Shipping request for dispatcher
                         $order_dispatch = $this->checkIfanyProductLastMileon($request);
                         if ($order_dispatch && $order_dispatch == 1)
@@ -433,8 +433,16 @@ class OrderController extends BaseController
                 OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id, 'reject_reason' => $request->reject_reason]);
 
                 if (!empty($currentOrderStatus->dispatch_traking_url) && ($request->status_option_id == 3)) {
-                    $dispatch_traking_url = str_replace('/order/', '/order-cancel/', $currentOrderStatus->dispatch_traking_url);
-                    $response = Http::get($dispatch_traking_url);
+                    
+                    if ($orderData->shipping_delivery_type=='D') {
+                        $dispatch_traking_url = str_replace('/order/', '/order-cancel/', $currentOrderStatus->dispatch_traking_url);
+                        $response = Http::get($dispatch_traking_url);
+                    }elseif($orderData->shipping_delivery_type=='L'){
+                        //Cancel Shipping place order request for Lalamove
+                        $lala = new LalaMovesController();
+                        $order_lalamove = $lala->cancelOrderRequestlalamove($currentOrderStatus->web_hook_code);
+                    }
+
                 }
                 if($request->status_option_id == 2){
                     $this->ProductVariantStoke($request->order_id);
