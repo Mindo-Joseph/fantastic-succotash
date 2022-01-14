@@ -26,4 +26,19 @@ class AddonSet extends Model
 	{
 		return $this->hasOne('App\Models\AddonSetTranslation', 'addon_id', 'id');
 	}
+	public function translation_many()
+	{
+		return $this->hasMany('App\Models\AddonSetTranslation', 'addon_id', 'id');
+	}
+	public function checkAddon($addOn,$vendor_id)
+	{
+		return self::where([
+			'vendor_id' => $vendor_id,
+			'title' => $addOn->title
+		])->first();
+	}
+	public function getById($id)
+	{
+		return self::where('id',$id)->first();
+	}
 }
