@@ -128,7 +128,7 @@ class Product extends Model{
       return $this->hasMany('App\Models\ProductTag', 'product_id', 'id'); 
     }
 
-
+    
     public function getDelayHrsMinAttribute()
     {
        $delay_order_hrs = $this->attributes['delay_order_hrs'];
@@ -149,6 +149,7 @@ class Product extends Model{
        return 0;
       
     }
+
 
     public function getPickupDelayHrsMinAttribute()
     {

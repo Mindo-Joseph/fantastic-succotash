@@ -74,7 +74,7 @@ class VendorController extends FrontController
         $tag_id = $request->has('tag') && $request->tag ? $request->tag : null;
         $preferences = Session::get('preferences');
         $vendor = Vendor::with('slot.day', 'slotDate')
-            ->select('id','email', 'name', 'slug', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id', 'is_show_vendor_details', 'website', 'show_slot')->where('slug', $slug)->where('status', 1)->firstOrFail();
+            ->select('id','email', 'name', 'slug', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id', 'is_show_vendor_details', 'website', 'show_slot','closed_store_order_scheduled')->where('slug', $slug)->where('status', 1)->firstOrFail();
         $vendor->is_vendor_closed = 0;
         if($vendor->show_slot == 0){ 
             if( ($vendor->slotDate->isEmpty()) && ($vendor->slot->isEmpty()) ){
@@ -173,9 +173,21 @@ class VendorController extends FrontController
                 // abort(404);
             }
         }
+
+        $is_vendor_closed = 0;
+        if($vendor->show_slot == 0){
+            if( ($vendor->slotDate->isEmpty()) && ($vendor->slot->isEmpty()) ){
+                $is_vendor_closed = 1;
+            }else{
+                $is_vendor_closed = 0;
+            }
+        }
+
         $tags = Tag::with('primary')->get();
+        //dd($page);
+
         // $page = ($vendor->vendor_templete_id == 2) ? 'categories' : 'products';
-        return view('frontend/vendor-'.$page)->with(['show_range' => $show_range,'tags' => $tags, 'range_products' => $range_products, 'vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands]);
+        return view('frontend/vendor-'.$page)->with(['show_range' => $show_range,'tags' => $tags, 'range_products' => $range_products, 'vendor' => $vendor, 'listData' => $listData, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'variantSets' => $variantSets, 'brands' => $brands,'is_vendor_closed'=>$is_vendor_closed]);
     }
 
     /**
@@ -188,7 +200,7 @@ class VendorController extends FrontController
         // slug2 =>category slug
         $tag_id = $request->has('tag') && $request->tag ? $request->tag : null;
         $preferences = Session::get('preferences');
-        $vendor = Vendor::select('id','email', 'name', 'slug', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id', 'is_show_vendor_details', 'website', 'show_slot')->where('slug', $slug1)->where('status', 1)->firstOrFail();
+        $vendor = Vendor::select('id','email', 'name', 'slug', 'desc', 'logo', 'banner', 'address', 'latitude', 'longitude', 'order_min_amount', 'order_pre_time', 'auto_reject_time', 'dine_in', 'takeaway', 'delivery', 'vendor_templete_id', 'is_show_vendor_details', 'website', 'show_slot','closed_store_order_scheduled')->where('slug', $slug1)->where('status', 1)->firstOrFail();
         $category = Category::select('id')->where('slug', $slug2)->firstOrFail();
         $vendor_categories = VendorCategory::where('vendor_id', $vendor->id)->where('category_id', $category->id)->where('status', 1)->first();
         $vendor->is_vendor_closed = 0;

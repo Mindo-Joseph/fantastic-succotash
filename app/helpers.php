@@ -11,6 +11,7 @@ use App\Models\Client as ClientData;
 use App\Models\PaymentOption;
 use App\Models\ShippingOption;
 use App\Models\VendorSlot;
+use Session;
 use Illuminate\Support\Facades\Auth;
 
 function changeDateFormate($date,$date_format){
@@ -287,16 +288,15 @@ function getUserIP() {
     }
 
 
-function SplitTime($myDate,$StartTime, $EndTime, $Duration="60",$delayMin = 0)
+function SplitTime($myDate,$StartTime, $EndTime, $Duration="60",$delayMin = 5)
 {
     $Duration = (($Duration==0)?'60':$Duration);
     $user = Auth::user();
-    $cr = Carbon::now()->addMinutes(30);
+    $cr = Carbon::now()->addMinutes($delayMin);
     $now =  dateTimeInUserTimeZone24($cr, $user->timezone);
     $nowT = Carbon::createFromFormat('Y-m-d H:i', $now)->timestamp;
     $nowA = Carbon::createFromFormat('Y-m-d H:i:s', $myDate.' '.$StartTime);
-    $nowAM = Carbon::createFromFormat('Y-m-d H:i:s', $nowA)->addMinute($delayMin);
-    $nowS = Carbon::createFromFormat('Y-m-d H:i:s', $nowA)->addMinute($delayMin)->timestamp;
+    $nowS = Carbon::createFromFormat('Y-m-d H:i:s', $nowA)->timestamp;
     $nowE = Carbon::createFromFormat('Y-m-d H:i:s', $myDate.' '.$EndTime)->timestamp;
     if($nowT > $nowE)
     {
@@ -305,8 +305,9 @@ function SplitTime($myDate,$StartTime, $EndTime, $Duration="60",$delayMin = 0)
     {
         $StartTime = date('H:i',strtotime($now));
     }else{
-        $StartTime = date('H:i',strtotime($nowAM));
+        $StartTime = date('H:i',strtotime($nowA));
     }
+
 
     $ReturnArray = array ();
     $StartTime    = strtotime ($StartTime); //Get Timestamp
@@ -331,8 +332,9 @@ function SplitTime($myDate,$StartTime, $EndTime, $Duration="60",$delayMin = 0)
     return $ReturnArray;
 }
 
-function showSlot($myDate = null,$vid,$type = 'delivery',$duration)
+function showSlot($myDate = null,$vid,$type = 'delivery',$duration="60")
 {
+  $type = ((Session::get('vendorType'))?Session::get('vendorType'):$type);
 //type must be a : delivery , takeaway,dine_in
 $client = ClientData::select('timezone')->first();
 $viewSlot = array();
@@ -349,7 +351,7 @@ $viewSlot = array();
         return $q->where('day',$mytime)->where($type,'1');
     })
     ->get();
-
+    $min[] = '';
     $cart = CartProduct::where('vendor_id',$vid)->get();
     foreach($cart as $product)
     {
@@ -384,3 +386,28 @@ $viewSlot = array();
     
     return $viewSlot;
 }
+
+function findSlot($myDate = null,$vid,$type = 'delivery',$dt)
+{
+  $myDate  = date('Y-m-d',strtotime('+1 day')); 
+  $type = ((Session::get('vendorType'))?Session::get('vendorType'):$type);
+        $slots = showSlot($myDate,$vid,'delivery');
+            if(count((array)$slots) == 0){
+                $myDate  = date('Y-m-d',strtotime('+1 day')); 
+                $slots = showSlot($myDate,$vid,'delivery');
+            }
+
+            if(count((array)$slots) == 0){
+                $myDate  = date('Y-m-d',strtotime('+1 day')); 
+                $slots = showSlot($myDate,$vid,'delivery');
+            }
+
+            if(count((array)$slots) == 0){
+                $myDate  = date('Y-m-d',strtotime('+2 day')); 
+                $slots = showSlot($myDate,$vid,'delivery');
+            }
+        $time = explode(' - ',$slots[0]['value']);
+        return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
+
+}
+

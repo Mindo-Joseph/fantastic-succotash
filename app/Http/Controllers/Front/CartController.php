@@ -1017,22 +1017,27 @@ class CartController extends FrontController
             $cart->vendorCnt = $cartData->count();
             $cart->scheduled = $scheduled;
             $cart->schedule_type =  $cart->schedule_type;
+            $cart->closed_store_order_scheduled =  0;
             if($cart->vendorCnt==1){
                 $vendorId = $cartData[0]->vendor_id;
                 //type must be a : delivery , takeaway,dine_in
                 $duration = Vendor::where('id',$vendorId)->select('slot_minutes','closed_store_order_scheduled')->first();
                 $myDate  = date('Y-m-d'); 
-                if($cart->deliver_status == 0 && $duration->closed_store_order_scheduled ==1)
+                if($cart->deliver_status == 0 && $duration->closed_store_order_scheduled == 1)
                 {
                     $cart->deliver_status = $duration->closed_store_order_scheduled;
                     $cart->closed_store_order_scheduled = $duration->closed_store_order_scheduled;
                     $myDate  = date('Y-m-d',strtotime('+1 day')); 
                     $cart->schedule_type =  'schedule';
+                    //$cart->closed_store_order_scheduled =  1;
                 }
-
                 $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
                 if(count((array)$slots) == 0){
-                    $myDate  = date('Y-m-d',strtotime('+2 day')); 
+                    $myDate  = date('Y-m-d',strtotime('+1 day')); 
+                    $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
+                }
+                if(count((array)$slots) == 0){
+                    $myDate  = date('Y-m-d',strtotime('+1 day')); 
                     $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
                 }
 
@@ -1041,12 +1046,14 @@ class CartController extends FrontController
                     $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
                 }
                 $cart->slots = $slots;
+                $cart->delaySlot = findSlot($myDate,$vendorId,'','');
                 $cart->vendor_id =  $vendorId;
 
             }else{
                 $slots = [];
                 $cart->slots = [];
                 $cart->vendor_id =  0;
+                $cart->delaySlot = 'future date';
             }
             $cart->slotsCnt = count((array)$slots);
             $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');

@@ -71,7 +71,7 @@
 
                 <div class="card-box h-100">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h4 class="header-title mb-0">{{$delOption->title}}</h4>
+                        <h3 class="mb-1">{{$delOption->title}}</h3>
                     </div>
                     <div class="row">
                         <div class="col-3">
@@ -241,9 +241,9 @@
         <div class="row align-items-center">
             <div class="col-sm-8">
                 <div class="text-sm-left">
-                    <div class="page-title-box">
+                    {{-- <div class="page-title-box">
                         <h4 class="page-title">{{ __("Shipping Options") }}</h4>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <div class="col-sm-4 text-right">
@@ -261,11 +261,16 @@
                 $creds = json_decode($opt->credentials);
                 $username = (isset($creds->username)) ? $creds->username : '';
                 $password = (isset($creds->password)) ? $creds->password : '';
+                
+
+                $base_price = (isset($creds->base_price)) ? $creds->base_price : '';
+                $distance = (isset($creds->distance)) ? $creds->distance : '';
+                $amount_per_km = (isset($creds->amount_per_km)) ? $creds->amount_per_km : '';
                 ?>
 
                 <div class="card-box h-100">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h4 class="header-title mb-0">{{$opt->title}}</h4>
+                        <h3 class="mb-1">{{$opt->title}}</h3>
                     </div>
                     <div class="row">
                         <div class="col-3">
@@ -277,7 +282,7 @@
                         @if ( (strtolower($opt->code) == 'shiprocket'))
                         <div class="col-3">
                             <div class="form-group mb-0 switchery-demo">
-                                <label for="" class="mr-3">{{ __('Sandbox') }}</label>
+                                <label for="" class="mr-3 ">{{ __('Sandbox') }}</label>
                                 <input type="checkbox" data-id="{{$opt->id}}" data-title="{{$opt->code}}" data-plugin="switchery" name="sandbox[{{$opt->id}}]" class="chk_box" data-color="#43bee1" @if($opt->test_mode == 1) checked @endif>
                             </div>
                         </div>
@@ -320,9 +325,9 @@
 
 
                         <div class="col-md-12 ">
-                            <div class="form-group mb-0 switchery-demo">
+                            <div class="form-group mt-2 switchery-demo">
                                 <label for="" class="mr-3">{{ __("Set Base Price Fare") }}</label>
-                                <input type="checkbox"  data-title="{{$delOption->code}}" data-plugin="switchery" name="base_active" class="chk_box base_select" data-color="#43bee1" @if($base_price > 0) checked @endif>
+                                <input type="checkbox"  data-title="{{$opt->code}}" data-plugin="switchery" name="base_active" class="chk_box base_select" data-color="#43bee1" @if($base_price > 0) checked @endif>
                             </div>
                     <hr/>
 
@@ -407,6 +412,7 @@
             $("#" + code + "_fields_wrapper_base").find('input').removeAttr('required');
         }
     });
+
 
 
     $("#copy_icon").click(function(){
