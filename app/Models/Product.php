@@ -137,7 +137,7 @@ class Product extends Model{
        $delay_order_hrs = $this->attributes['delay_order_hrs'];
        $delay_order_min = $this->attributes['delay_order_min'];
 
-       if($delay_order_hrs > 0 || $delay_order_min > 0){
+       if(@$delay_order_hrs > 0 || @$delay_order_min > 0){
          $total_minutues = ($delay_order_hrs * 60) + $delay_order_min;
 
          $date = Carbon::now()
