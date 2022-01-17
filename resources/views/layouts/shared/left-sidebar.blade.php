@@ -317,7 +317,15 @@
                                 <span> {{ __('Delivery Options') }} </span>
                             </a>
                         </li>
-                    @endif
+                        @endif
+                        @if(in_array('Tools',$allowed) || Auth::user()->is_superadmin == 1)
+                        <li>
+                            <a href="{{route('tools.index')}}">
+                                <span class="icon-payment-options"></span>
+                                <span> {{ __('Tools') }} </span>
+                            </a>
+                        </li>
+                        @endif
                     </ul>
                 </li>
                 @endif

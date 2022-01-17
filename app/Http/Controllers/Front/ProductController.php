@@ -25,7 +25,7 @@ class ProductController extends FrontController{
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $domain = '', $url_slug){
+    public function index(Request $request, $domain = '',$vendor,$url_slug){
         $user = Auth::user();
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
@@ -39,7 +39,10 @@ class ProductController extends FrontController{
         $curId = Session::get('customerCurrency');
 
         $navCategories = $this->categoryNav($langId);
-        $product = Product::select('id', 'vendor_id')->where('url_slug', $url_slug)->firstOrFail();
+        $product = Product::select('id', 'vendor_id')->where('url_slug', $url_slug)
+            ->whereHas('vendor',function($q) use($vendor){
+                $q->where('slug',$vendor);
+            })->firstOrFail();
         $product_in_cart = CartProduct::where(["product_id" => $product->id]);
         if ($user) {
              $product_in_cart = $product_in_cart->whereHas('cart', function($query) use($user){
