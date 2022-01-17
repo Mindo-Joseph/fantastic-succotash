@@ -7,6 +7,7 @@ use Omnipay\Omnipay;
 use Illuminate\Http\Request;
 use Omnipay\Common\CreditCard;
 use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Front\FrontController;
 use App\Models\{PaymentOption, Client, ClientPreference, ClientCurrency};
@@ -15,6 +16,7 @@ class PaystackGatewayController extends FrontController
 {
     use ApiResponser;
     public $gateway;
+    public $currency;
 
     public function __construct()
     {
@@ -28,6 +30,9 @@ class PaystackGatewayController extends FrontController
         $this->gateway->setPublicKey($public_key);
         $this->gateway->setTestMode($testmode); //set it to 'false' when go live
         // dd($this->gateway);
+
+        $primaryCurrency = ClientCurrency::where('is_primary', '=', 1)->first();
+        $this->currency = (isset($primaryCurrency->currency->iso_code)) ? $primaryCurrency->currency->iso_code : 'USD';
     }
 
     public function paystackPurchase(Request $request){
@@ -44,7 +49,7 @@ class PaystackGatewayController extends FrontController
             $returnUrlParams = $returnUrlParams.'&gateway=paystack';
             $response = $this->gateway->purchase([
                 'amount' => $amount,
-                'currency' => 'ZAR',
+                'currency' => 'ZAR', //$this->currency,
                 'email' => $user->email,
                 'returnUrl' => url($request->returnUrl . $returnUrlParams),
                 'cancelUrl' => url($request->cancelUrl),
@@ -88,6 +93,32 @@ class PaystackGatewayController extends FrontController
             }
         } else {
             $this->failMail();
+            return $this->errorResponse('Transaction has been declined', 400);
+        }
+    }
+
+
+    public function paystackCompletePurchaseApp(Request $request)
+    {
+        // Once the transaction has been approved, we need to complete it.
+        if($request->has(['reference'])){
+            $amount = $this->getDollarCompareAmount($request->amount);
+            $transaction = $this->gateway->completePurchase(array(
+                'amount'                => $amount,
+                'transactionReference'  => $request->reference
+            ));
+            $response = $transaction->send();
+            if ($response->isSuccessful()){
+            //    $this->successMail();
+                $url = 'payment/gateway/returnResponse?status=200&gateway=paystack&action='.$request->action.'&transaction_id='.$response->getTransactionReference();
+                return Redirect::to($url);
+            } else {
+                // $this->failMail();
+                $url = 'payment/gateway/returnResponse?status=0&gateway=paystack&action='.$request->action;
+                return Redirect::to($url);
+            }
+        } else {
+            // $this->failMail();
             return $this->errorResponse('Transaction has been declined', 400);
         }
     }

@@ -683,11 +683,11 @@ class CartController extends FrontController
             $d = 0;
             foreach ($cartData as $ven_key => $vendorData) {
                 $is_promo_code_available = 0;
-                $vendor_products_total_amount = $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = $delivery_fee_charges_static = 0.00;
+                $vendor_products_total_amount = $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = $delivery_fee_charges_static =  $deliver_charges_lalmove = 0.00;
                 $delivery_count = 0;
                 $delivery_count_lm = 0;
                 $coupon_amount_used = 0;
-
+         
                 if(Session::has('vendorTable')){
                     if((Session::has('vendorTableVendorId')) && (Session::get('vendorTableVendorId') == $vendorData->vendor_id)){
                         $cart_dinein_table_id = Session::get('vendorTable');
@@ -954,7 +954,7 @@ class CartController extends FrontController
                 
 
                 if(isset($deliveryCharges) && !empty($deliveryCharges)){
-                     CartDeliveryFee::updateOrCreate(['cart_id' => $cart->id, 'vendor_id' => $vendorData->vendor->id],['delivery_fee' => $deliveryCharges,'shipping_delivery_type' => $code]);
+                     CartDeliveryFee::updateOrCreate(['cart_id' => $cart->id, 'vendor_id' => $vendorData->vendor->id],['delivery_fee' => $deliveryCharges,'shipping_delivery_type' => $code??'D']);
                 }
                 
                
@@ -1394,7 +1394,39 @@ class CartController extends FrontController
             $cart_details = $this->getCart($cart, $address_id,$request->code);
         }
         $client_preference_detail = ClientPreference::first();
+
+        // $vendors = $this->searchProductExpection($cart_details);
+        //  dd($vendors);
+
         return response()->json(['status' => 'success', 'cart_details' => $cart_details, 'client_preference_detail' => $client_preference_detail]);
+    }
+
+
+    public function searchProductExpection($cart_details){
+
+       $langId = Session::get('customerLanguage');
+
+        $all_vendors = array();
+        $keywords = array();
+            foreach($cart_details->products as $product)
+            {
+                foreach ($product['vendor_products'] as $vendor_product) {
+                    $keywords[] = isset($vendor_product['product']['translation_one']) ? $vendor_product['product']['translation_one']['title'] :  $vendor_product['product']['sku'];
+                }
+            }
+
+            $all_vendors = Vendor::OrderBy('id','desc')->with(['products.translation' => function($q) use($langId, $keywords){
+                $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                }
+            ])->whereHas('products.translation',function($q) use($langId, $keywords){
+            $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+            }
+            )->where('status',1)->get()->toArray();
+       
+
+            print_r("<pre>");
+            print_r($all_vendors);
+            return $all_vendors;
     }
 
 
