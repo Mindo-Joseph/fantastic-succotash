@@ -70,6 +70,8 @@ class ProductController extends FrontController{
                 }
             }
         }
+
+
         $p_id = $product->id;
         $product = Product::with([
             'variant' => function ($sel) {
@@ -112,7 +114,7 @@ class ProductController extends FrontController{
                 $query->where('user_wishlists.user_id', $user->id);
             });
         }
-        $product = $product->with('related')->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating','sell_when_out_of_stock','minimum_order_count','batch_count' )
+        $product = $product->with('related')->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating','sell_when_out_of_stock','minimum_order_count','batch_count','delay_order_hrs','delay_order_min')
             ->where('url_slug', $url_slug)
             ->where('is_live', 1)
             ->firstOrFail();
@@ -248,6 +250,7 @@ class ProductController extends FrontController{
             // ->telegram()
             ->whatsapp();
             // ->reddit();
+                // dd($vendor);
 
             $category = $product->category->categoryDetail;
             return view('frontend.product')->with(['shareComponent' => $shareComponent, 'sets' => $sets, 'vendor_info' => $vendor, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn, 'category' => $category, 'product_in_cart' => $product_in_cart,'is_available'=>$is_available]); 

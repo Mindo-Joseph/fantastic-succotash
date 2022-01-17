@@ -301,14 +301,7 @@
                                 </a>
                             </li>
                         @endif
-                         @if(in_array('shipping',$allowed) || Auth::user()->is_superadmin == 1)
-                            <li>
-                                <a href="{{route('shipoption.index')}}">
-                                    <span class="icon-payment-options"></span>
-                                    <span> {{ __('Shipping Options') }} </span>
-                                </a>
-                            </li>
-                        @endif
+                        
 
                         @if(in_array('DeliveryOption',$allowed) || Auth::user()->is_superadmin == 1)
                         <li>
