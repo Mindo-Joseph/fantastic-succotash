@@ -79,7 +79,7 @@ class ToolsController extends Controller
 
                     foreach($from_products as $from_product)
                     {
-                        $product_slug = createSlug($from_product->title);
+                        $product_slug = createSlug(!is_null($from_product->title) ? $from_product->title : $from_product->url_slug);
                         $product_sku = $sku_url.'.'.$product_slug;
                         $check_product = $this->productObj->getProductBySku($product_sku);
                         if($check_product){
