@@ -1341,7 +1341,8 @@ h6 {
 }
 .edit_address .modal-content {
     border-radius: 12px;
-    overflow: hidden;
+    /*overflow: hidden;*/
+    overflow: visible!important;
 }
 .edit-close {
     top: 20px;
@@ -1833,8 +1834,13 @@ label {
 .map-icon .fa.fa-map-marker {
     color: var(--theme-deafult);
 }
+.delivery_address > .form-group{
+    position: relative;
+}
 .pac-container {
     z-index: 9999;
+    top: 72px!important;
+    left: 0px!important;
 }
 .down-icon .fa.fa-angle-down {
     color: var(--theme-deafult);
