@@ -37,8 +37,4 @@ class AddonSet extends Model
 			'title' => $addOn->title
 		])->first();
 	}
-	public function getById($id)
-	{
-		return self::where('id',$id)->first();
-	}
 }

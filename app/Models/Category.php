@@ -127,5 +127,11 @@ class Category extends Model
   public function translationSetUnique(){
     return $this->hasMany('App\Models\Category_translation')->join('client_languages as cl', 'cl.language_id', 'category_translations.language_id')->join('languages', 'category_translations.language_id', 'languages.id')->select('category_translations.*', 'languages.id as langId', 'languages.name as langName', 'cl.is_primary')->where('cl.is_active', 1)->groupBy('category_translations.language_id')->orderBy('cl.is_primary', 'desc');
   }
+  public function checkCategory($category,$vendor_id){
+    return self::where([
+      'vendor_id' => $vendor_id,
+      'slug' => $category->slug
+    ])->first();
+  }
 
 }

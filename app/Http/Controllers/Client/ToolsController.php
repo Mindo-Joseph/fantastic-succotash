@@ -151,10 +151,9 @@ class ToolsController extends Controller
         foreach($from_product->addOn as $addOn)
         {
             $addOn_id = $addOn->addon_id;
-            $check_addon = $this->addOnSetObj->checkAddon($addOn,$copy_to);
+            $check_addon = $this->addOnSetObj->checkAddon($addOn->addOnName,$copy_to);
             if(is_null($check_addon)){
                 $add_addOn = $this->addCompleteAddOn($addOn,$copy_to);
-                // dd($add_addOn);
                 $addOn_id = $add_addOn->id;
             }
             $new_addOn = $addOn;
@@ -165,9 +164,19 @@ class ToolsController extends Controller
         }
         if(isset($from_product->category) && !is_null($from_product->category))
         {
+            $category_id = $from_product->category->category_id;
+            if(!is_null($from_product->category->categoryDetail->vendor_id)){
+                $check_category = $this->categoryObj->checkCategory($from_product->category->categoryDetail,$copy_to);
+                if(is_null($check_category))
+                {
+                    $add_category = $this->addCompleteCategory($from_product->category->categoryDetail,$copy_to);
+                    $category_id = $add_category->id;
+                }
+            }
             $new_category = $from_product->category;
             $new_category = $new_category->replicate();
             $new_category->product_id = $product->id;
+            $new_category->category_id = $category_id;
             $new_category->save();
         }
         foreach($from_product->celebrities as $celebrity)
@@ -230,7 +239,7 @@ class ToolsController extends Controller
     }
     public function addCompleteAddOn($addOn,$copy_to)
     {
-        $addOnSet = $this->addOnSetObj->getById($addOn->addon_id);
+        $addOnSet = $addOn->addOnName;
         $new_addOnSet = $addOnSet;
         $new_addOnSet = $new_addOnSet->replicate();
         $new_addOnSet->vendor_id = $copy_to;
@@ -257,5 +266,14 @@ class ToolsController extends Controller
             }
         }
         return $new_addOnSet;
+    }
+    public function addCompleteCategory($category, $copy_to)
+    {
+        $new_category = $category;
+        $new_category = $new_category->replicate();
+        $new_category->vendor_id = $copy_to;
+        $new_category->slug = $category->slug.'_'.$copy_to;
+        $new_category->save();
+        return $new_category;
     }
 }
