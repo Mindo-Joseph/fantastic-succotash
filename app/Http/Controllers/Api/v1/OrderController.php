@@ -882,7 +882,7 @@ class OrderController extends BaseController
                 if (!empty($data['admin_email'])) {
                     $email_data['admin_email'] = $data['admin_email'];
                 }
-                if ($vendor_id == "") { 
+                if ($vendor_id == "") {
                     $email_data['send_to_cc'] = 1;
                 }else{
                     $email_data['send_to_cc'] = 0;
@@ -1442,7 +1442,18 @@ class OrderController extends BaseController
        // $order->date_time = dateTimeInUserTimeZone($order->created_at, $user->timezone);
         $order->created = dateTimeInUserTimeZone($order->created_at, $user->timezone);
         $order->scheduled_date_time = !empty($order->scheduled_date_time) ? dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone) : '';
-
+        $luxury_option_name = '';
+        if ($order->luxury_option_id > 0) {
+            $luxury_option = LuxuryOption::where('id', $order->luxury_option_id)->first();
+            if ($luxury_option->title == 'takeaway') {
+                $luxury_option_name = $this->getNomenclatureName('Takeaway', $user->language, false);
+            } elseif ($luxury_option->title == 'dine_in') {
+                $luxury_option_name = 'Dine-In';
+            } else {
+                $luxury_option_name = 'Delivery';
+            }
+        }
+        $order->luxury_option_name = $luxury_option_name;
         foreach ($order->products as $product) {
             $order_item_count += $product->quantity;
         }
