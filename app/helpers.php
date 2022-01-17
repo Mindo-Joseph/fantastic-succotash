@@ -11,7 +11,7 @@ use App\Models\Client as ClientData;
 use App\Models\PaymentOption;
 use App\Models\ShippingOption;
 use App\Models\VendorSlot;
-use Session;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Auth;
 
 function changeDateFormate($date,$date_format){
@@ -334,7 +334,7 @@ function SplitTime($myDate,$StartTime, $EndTime, $Duration="60",$delayMin = 5)
 
 function showSlot($myDate = null,$vid,$type = 'delivery',$duration="60")
 {
-  $type = ((Session::get('vendorType'))?Session::get('vendorType'):$type);
+  $type = ((session()->get('vendorType'))?session()->get('vendorType'):$type);
 //type must be a : delivery , takeaway,dine_in
 $client = ClientData::select('timezone')->first();
 $viewSlot = array();
@@ -390,7 +390,7 @@ $viewSlot = array();
 function findSlot($myDate = null,$vid,$type = 'delivery',$dt)
 {
   $myDate  = date('Y-m-d',strtotime('+1 day')); 
-  $type = ((Session::get('vendorType'))?Session::get('vendorType'):$type);
+  $type = ((session()->get('vendorType'))?session()->get('vendorType'):$type);
         $slots = showSlot($myDate,$vid,'delivery');
             if(count((array)$slots) == 0){
                 $myDate  = date('Y-m-d',strtotime('+1 day')); 
