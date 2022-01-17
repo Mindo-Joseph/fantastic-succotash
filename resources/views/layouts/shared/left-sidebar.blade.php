@@ -318,10 +318,10 @@
                             </a>
                         </li>
                         @endif
-                        @if(in_array('Tools',$allowed) || Auth::user()->is_superadmin == 1)
+                        @if(Auth::user()->is_superadmin == 1)
                         <li>
                             <a href="{{route('tools.index')}}">
-                                <span class="icon-payment-options"></span>
+                                <span class="icon-settings-1-1"></span>
                                 <span> {{ __('Tools') }} </span>
                             </a>
                         </li>
