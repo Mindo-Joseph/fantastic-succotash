@@ -649,7 +649,7 @@
             @forelse($product->related_products as $related_product)
             <div>
 				<a class="common-product-box scale-effect text-center"
-						href="{{$related_product->vendor->slug}}/{{route('productDetail')}}/{{ $related_product->url_slug }}">
+						href="{{route('productDetail',[$related_product->vendor->slug,$related_product->url_slug])}}">
 					<div class="img-outer-box position-relative">
 						<img class="img-fluid blur-up lazyload" data-src="{{ $related_product->image_url }}" alt="">
 						<!-- <div class="pref-timing">
