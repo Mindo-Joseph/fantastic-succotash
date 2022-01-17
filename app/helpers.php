@@ -416,5 +416,3 @@ function findSlot($myDate = null,$vid,$type = 'delivery',$dt)
         return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
 
 }
-
->>>>>>> 50a448648a763c3f25658fe6c850029fbd37225d
