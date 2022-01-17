@@ -113,7 +113,9 @@ class ProductController extends FrontController{
             });
         }
         $product = $product->with('related')->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating','sell_when_out_of_stock','minimum_order_count','batch_count' )
-            ->where('url_slug', $url_slug)
+            ->whereHas('vendor',function($q) use($vendor){
+                $q->where('slug',$vendor);
+            })->where('url_slug', $url_slug)
             ->where('is_live', 1)
             ->firstOrFail();
         $doller_compare = 1;
