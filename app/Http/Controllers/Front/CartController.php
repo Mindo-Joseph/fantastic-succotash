@@ -1046,7 +1046,7 @@ class CartController extends FrontController
                     $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
                 }
                 $cart->slots = $slots;
-                $cart->delaySlot = findSlot($myDate,$vendorId,'','');
+                $cart->delaySlot = findSlot($myDate,$vendorId,'');
                 $cart->vendor_id =  $vendorId;
 
             }else{
