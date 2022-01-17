@@ -66,6 +66,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('payment/paystack', 'Front\PaystackGatewayController@paystackPurchase')->name('payment.paystackPurchase');
 	Route::post('payment/paystack/completePurchase', 'Front\PaystackGatewayController@paystackCompletePurchase')->name('payment.paystackCompletePurchase');
 	Route::get('payment/paystack/completePurchase/app', 'Front\PaystackGatewayController@paystackCompletePurchaseApp')->name('payment.paystackCompletePurchaseApp');
+	Route::get('payment/paystack/cancelPurchase/app', 'Front\PaystackGatewayController@paystackCancelPurchaseApp')->name('payment.paystackCancelPurchaseApp');
 
 	// Payfast
 	Route::post('payment/payfast', 'Front\PayfastGatewayController@payfastPurchase')->name('payment.payfastPurchase');
