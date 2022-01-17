@@ -26,7 +26,7 @@ class ToolsController extends Controller
      */
     public function index()
     {
-        $vendors = Vendor::select('id','name','slug');
+        $vendors = Vendor::where('status',1)->select('id','name','slug');
         if (Auth::user()->is_superadmin == 0) {
             $vendors = $vendors->whereHas('permissionToUser', function ($query) {
                 $query->where('user_id', Auth::user()->id);
@@ -287,6 +287,13 @@ class ToolsController extends Controller
             $new_tag = $new_tag->replicate();
             $new_tag->category_id = $new_category->id;
             $new_tag->save();
+        }
+        foreach($category->brands as $brand)
+        {
+            $new_brand = $brand;
+            $new_brand = $new_brand->replicate();
+            $new_brand->category_id = $new_category->id;
+            $new_brand->save();
         }
         return $new_category;
     }
