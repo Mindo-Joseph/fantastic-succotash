@@ -387,7 +387,7 @@ $viewSlot = array();
     return $viewSlot;
 }
 
-function findSlot($myDate = null,$vid,$type = 'delivery',$dt)
+function findSlot($myDate = null,$vid,$type = 'delivery')
 {
   $myDate  = date('Y-m-d',strtotime('+1 day')); 
   $type = ((session()->get('vendorType'))?session()->get('vendorType'):$type);
