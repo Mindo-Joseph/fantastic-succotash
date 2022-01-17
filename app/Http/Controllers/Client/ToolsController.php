@@ -274,6 +274,20 @@ class ToolsController extends Controller
         $new_category->vendor_id = $copy_to;
         $new_category->slug = $category->slug.'_'.$copy_to;
         $new_category->save();
+        foreach($category->translationSet as $translation)
+        {
+            $new_translation = $translation;
+            $new_translation = $new_translation->replicate();
+            $new_translation->category_id = $new_category->id;
+            $new_translation->save();
+        }
+        foreach($category->tags as $tag)
+        {
+            $new_tag = $tag;
+            $new_tag = $new_tag->replicate();
+            $new_tag->category_id = $new_category->id;
+            $new_tag->save();
+        }
         return $new_category;
     }
 }
