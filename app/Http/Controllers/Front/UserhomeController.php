@@ -517,7 +517,7 @@ class UserhomeController extends FrontController
                 'averageRating' => number_format($feature_product_detail->averageRating, 1, '.', ''),
                 'inquiry_only' => $feature_product_detail->inquiry_only,
                 'vendor_name' => $feature_product_detail->vendor ? $feature_product_detail->vendor->name : '',
-                'vendor' => $new_product_detail->vendor,
+                'vendor' => $feature_product_detail->vendor,
                 'price' => Session::get('currencySymbol') . ' ' . (number_format($feature_product_detail->variant->first()->price * $multiply, 2)),
                 'category' => (@$feature_product_detail->category->categoryDetail->translation) ? @$feature_product_detail->category->categoryDetail->translation->first()->name : @$feature_product_detail->category->categoryDetail->slug
             );
@@ -535,7 +535,7 @@ class UserhomeController extends FrontController
                 'averageRating' => number_format($on_sale_product_detail->averageRating, 1, '.', ''),
                 'inquiry_only' => $on_sale_product_detail->inquiry_only,
                 'vendor_name' => $on_sale_product_detail->vendor ? $on_sale_product_detail->vendor->name : '',
-                'vendor' => $new_product_detail->vendor,
+                'vendor' => $on_sale_product_detail->vendor,
                 'price' => Session::get('currencySymbol') . ' ' . (number_format($on_sale_product_detail->variant->first()->price * $multiply, 2)),
                 'category' => ($on_sale_product_detail->category->categoryDetail->translation) ? ( $on_sale_product_detail->category->categoryDetail->translation->first()->name ?? $on_sale_product_detail->category->categoryDetail->slug): $on_sale_product_detail->category->categoryDetail->slug
             );
