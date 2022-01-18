@@ -369,6 +369,7 @@ $viewSlot = array();
         }
     $arr = array();
     $count = count($slotss);
+    dd($count);
     if($count){
         for($i=0;$i<$count;$i++){
             $arr = array_merge($arr,$slotss[$i]);
