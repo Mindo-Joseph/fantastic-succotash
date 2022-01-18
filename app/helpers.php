@@ -290,7 +290,7 @@ function getUserIP() {
 
 function SplitTime($myDate,$StartTime, $EndTime, $Duration="60",$delayMin = 5)
 {
-    // $Duration = (($Duration==0)?'60':$Duration);
+     $Duration = (($Duration==0)?'60':$Duration);
     // $user = Auth::user();
     // $cr = Carbon::now()->addMinutes($delayMin);
     // $now =  dateTimeInUserTimeZone24($cr, $user->timezone);
@@ -408,6 +408,10 @@ function findSlot($myDate = null,$vid,$type = 'delivery')
                 $myDate  = date('Y-m-d',strtotime('+2 day')); 
                 $slots = showSlot($myDate,$vid,'delivery');
             }
+
+            $time = explode(' - ',$slots[0]['value']);
+            return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
+
         if(isset($slots) && count((array)$slots)>0){
             $time = explode(' - ',$slots[0]['value']);
             return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
