@@ -377,19 +377,20 @@ $viewSlot = array();
     $arr = array();
     $count = count($slotss);
     //dd($slotss);
-    //if($count>1){
+    if($count>1){
         for($i=0;$i<$count;$i++){
             $arr = array_merge($arr,$slotss[$i]);
         }
-    //}0
+    }
     
-        
+    if(isset($arr)){
         foreach($arr as $k=> $slt)
         {
             $sl = explode(' - ',$slt);
             $viewSlot[$k]['name'] = date('h:i:A',strtotime($sl[0])).' - '.date('h:i:A',strtotime($sl[1]));
             $viewSlot[$k]['value'] = $slt;
         }
+      }
     }
     
     return $viewSlot;
@@ -414,7 +415,10 @@ function findSlot($myDate = null,$vid,$type = 'delivery')
                 $myDate  = date('Y-m-d',strtotime('+2 day')); 
                 $slots = showSlot($myDate,$vid,'delivery');
             }
-        $time = explode(' - ',$slots[0]['value']);
-        return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
-
+        if(isset($slots) && count((array)$slots)>0){
+            $time = explode(' - ',$slots[0]['value']);
+            return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
+        }else{
+            return date('d M, Y',strtotime($myDate));
+        }
 }
