@@ -70,6 +70,8 @@ class ProductController extends FrontController{
                 }
             }
         }
+
+
         $p_id = $product->id;
         $product = Product::with([
             'variant' => function ($sel) {
@@ -250,7 +252,8 @@ class ProductController extends FrontController{
             // ->telegram()
             ->whatsapp();
             // ->reddit();
-
+                // dd($vendor);
+               // dd($product->vendor_id);
             $category = $product->category->categoryDetail;
             return view('frontend.product')->with(['shareComponent' => $shareComponent, 'sets' => $sets, 'vendor_info' => $vendor, 'product' => $product, 'navCategories' => $navCategories, 'newProducts' => $newProducts, 'rating_details' => $rating_details, 'is_inwishlist_btn' => $is_inwishlist_btn, 'category' => $category, 'product_in_cart' => $product_in_cart,'is_available'=>$is_available]); 
 

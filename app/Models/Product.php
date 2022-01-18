@@ -24,7 +24,7 @@ class Product extends Model{
     }
 
     public function vendor(){
-       return $this->belongsTo('App\Models\Vendor')->select('id', 'slug', 'name', 'desc', 'logo', 'show_slot', 'status'); 
+       return $this->belongsTo('App\Models\Vendor')->select('id', 'slug', 'name', 'desc', 'logo', 'show_slot', 'status','closed_store_order_scheduled'); 
     }
 
     public function related(){
@@ -131,13 +131,13 @@ class Product extends Model{
       return $this->hasMany('App\Models\ProductTag', 'product_id', 'id'); 
     }
 
-
+    
     public function getDelayHrsMinAttribute()
     {
        $delay_order_hrs = $this->attributes['delay_order_hrs'];
        $delay_order_min = $this->attributes['delay_order_min'];
 
-       if($delay_order_hrs > 0 || $delay_order_min > 0){
+       if(@$delay_order_hrs > 0 || @$delay_order_min > 0){
          $total_minutues = ($delay_order_hrs * 60) + $delay_order_min;
 
          $date = Carbon::now()
@@ -152,6 +152,7 @@ class Product extends Model{
        return 0;
       
     }
+
 
     public function getPickupDelayHrsMinAttribute()
     {
