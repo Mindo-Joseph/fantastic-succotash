@@ -357,7 +357,7 @@ $viewSlot = array();
     {
        $min[] = (($product->product->delay_order_hrs * 60) + $product->product->delay_order_min);
     }
-
+    $slotss[] = '';
     if(isset($slots) && count($slots)>0){
 
         foreach($slots as $slot){
@@ -369,7 +369,7 @@ $viewSlot = array();
         }
     $arr = array();
     $count = count($slotss);
-    //if($count>1){
+    //if($count){
         for($i=0;$i<$count;$i++){
             $arr = array_merge($arr,$slotss[$i]);
         }
