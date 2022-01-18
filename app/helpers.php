@@ -375,11 +375,11 @@ $viewSlot = array();
         }
     $arr = array();
     $count = count($slotss);
-    //if($count){
+    if($count){
         for($i=0;$i<$count;$i++){
             $arr = array_merge($arr,$slotss[$i]);
         }
-    //}
+    }
     
         
         foreach($arr as $k=> $slt)
