@@ -373,7 +373,7 @@ $viewSlot = array();
             {   
                $slotss[] = SplitTime($myDate,$slot->start_time,$slot->end_time,$duration,max($min));
             }else{
-               // return $viewSlot;
+                $slotss[] = [];
             }
 
         }
