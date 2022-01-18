@@ -418,7 +418,7 @@
     $("#copy_icon").click(function(){
         var temp = $("<input>");
         var url = $(this).data('url');
-        alert(url);
+       // alert(url);
         $("body").append(temp);
         temp.val(url).select();
         document.execCommand("copy");
