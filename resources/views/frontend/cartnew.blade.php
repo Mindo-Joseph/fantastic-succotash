@@ -618,7 +618,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="product-4 product-m no-arrow">
                         <% _.each(cart_details.upSell_products, function(product, key){%>
 
-                            <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
+                            <a class="common-product-box scale-effect text-center" href="<%= product.vendor.slug %>/product/<%= product.url_slug %>">
                                 <div class="img-outer-box position-relative">
                                     <img class="blur-up lazyload" data-src="<%= product.image_url %>" alt="">
                                     <div class="pref-timing">
@@ -669,7 +669,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="product-4 product-m no-arrow">
                         <% _.each(cart_details.crossSell_products, function(product, key){%>
 
-                            <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
+                            <a class="common-product-box scale-effect text-center" href="<%= product.vendor.slug %>/product/<%= product.url_slug %>">
                                 <div class="img-outer-box position-relative">
                                     <img class="blur-up lazyload" data-src="<%= product.image_url %>" alt="">
                                         <div class="pref-timing">
@@ -1119,7 +1119,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 @section('script')
 <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous">
 </script>
-
 
 @if(in_array('razorpay',$client_payment_options)) 
 <script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>

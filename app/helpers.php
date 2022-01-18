@@ -254,6 +254,12 @@ function getUserIP() {
     return $ipaddress;
 }
 
+function createSlug($str, $delimiter = '-'){
+
+    $slug = strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $str))))), $delimiter));
+    return $slug;
+
+}
 
     function getBaseprice($dist)
     {
@@ -419,4 +425,3 @@ function findSlot($myDate = null,$vid,$type = 'delivery')
             return date('d M, Y',strtotime($myDate));
         }
 }
-

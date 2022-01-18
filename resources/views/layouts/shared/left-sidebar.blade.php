@@ -310,7 +310,15 @@
                                 <span> {{ __('Delivery Options') }} </span>
                             </a>
                         </li>
-                    @endif
+                        @endif
+                        @if(Auth::user()->is_superadmin == 1)
+                        <li>
+                            <a href="{{route('tools.index')}}">
+                                <span class="icon-settings-1-1"></span>
+                                <span> {{ __('Tools') }} </span>
+                            </a>
+                        </li>
+                        @endif
                     </ul>
                 </li>
                 @endif

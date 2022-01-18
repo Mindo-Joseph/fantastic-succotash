@@ -25,7 +25,7 @@ class ProductController extends FrontController{
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $domain = '', $url_slug){
+    public function index(Request $request, $domain = '',$vendor,$url_slug){
         $user = Auth::user();
         $preferences = Session::get('preferences');
         $langId = Session::get('customerLanguage');
@@ -39,7 +39,10 @@ class ProductController extends FrontController{
         $curId = Session::get('customerCurrency');
 
         $navCategories = $this->categoryNav($langId);
-        $product = Product::select('id', 'vendor_id')->where('url_slug', $url_slug)->firstOrFail();
+        $product = Product::select('id', 'vendor_id')->where('url_slug', $url_slug)
+            ->whereHas('vendor',function($q) use($vendor){
+                $q->where('slug',$vendor);
+            })->firstOrFail();
         $product_in_cart = CartProduct::where(["product_id" => $product->id]);
         if ($user) {
              $product_in_cart = $product_in_cart->whereHas('cart', function($query) use($user){
@@ -111,8 +114,10 @@ class ProductController extends FrontController{
                 $query->where('user_wishlists.user_id', $user->id);
             });
         }
-        $product = $product->with('related')->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating','sell_when_out_of_stock','minimum_order_count','batch_count','delay_order_hrs','delay_order_min')
-            ->where('url_slug', $url_slug)
+        $product = $product->with('related')->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating','sell_when_out_of_stock','minimum_order_count','batch_count' )
+            ->whereHas('vendor',function($q) use($vendor){
+                $q->where('slug',$vendor);
+            })->where('url_slug', $url_slug)
             ->where('is_live', 1)
             ->firstOrFail();
         $doller_compare = 1;

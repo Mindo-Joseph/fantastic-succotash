@@ -2233,13 +2233,13 @@ class OrderController extends FrontController
                 $order = Order::select('id', 'tip_amount')->where('order_number', $order_number)->first();
                 if (($order->tip_amount == 0) || empty($order->tip_amount)) {
                     $tip = Order::where('order_number', $order_number)->update(['tip_amount' => $request->tip_amount]);
-                    Payment::insert([
-                        'date' => date('Y-m-d'),
-                        'order_id' => $order->id,
-                        'transaction_id' => $request->transaction_id,
-                        'balance_transaction' => $request->tip_amount,
-                        'type' => 'tip'
-                    ]);
+                    $payment = new Payment();
+                    $payment->date = date('Y-m-d');
+                    $payment->order_id = $order->id;
+                    $payment->transaction_id = $request->transaction_id;
+                    $payment->balance_transaction = $request->tip_amount;
+                    $payment->type = 'tip';
+                    $payment->save();
                 }
                 $message = 'Tip has been submitted successfully';
                 $response['tip_amount'] = $request->tip_amount;
