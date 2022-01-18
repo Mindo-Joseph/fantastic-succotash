@@ -357,23 +357,25 @@ $viewSlot = array();
     {
        $min[] = (($product->product->delay_order_hrs * 60) + $product->product->delay_order_min);
     }
-    $slotss[] = '';
-    if(isset($slots) && count($slots)>0){
 
+    if(isset($slots) && count($slots)>0){
         foreach($slots as $slot){
             if(isset($slot->dayOne->id))
             {   
                $slotss[] = SplitTime($myDate,$slot->start_time,$slot->end_time,$duration,max($min));
+            }else{
+                continue;
             }
 
         }
     $arr = array();
     $count = count($slotss);
-    if($count>1){
+    //dd($slotss);
+    //if($count>1){
         for($i=0;$i<$count;$i++){
             $arr = array_merge($arr,$slotss[$i]);
         }
-    }
+    //}0
     
         
         foreach($arr as $k=> $slt)
