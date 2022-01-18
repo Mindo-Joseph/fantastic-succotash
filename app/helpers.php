@@ -359,23 +359,28 @@ $viewSlot = array();
     }
 
     if(isset($slots) && count($slots)>0){
+    
+
         foreach($slots as $slot){
-            if(isset($slot->dayOne->id))
+            //  echo '=h-='.$slot->dayOne->id;
+            if(isset($slot->dayOne->id) && ($slot->dayOne->id > 0))
             {   
                $slotss[] = SplitTime($myDate,$slot->start_time,$slot->end_time,$duration,max($min));
             }else{
-                continue;
+               // return $viewSlot;
             }
 
         }
+   // dd($slotss);
+
     $arr = array();
     $count = count($slotss);
     //dd($slotss);
-    if($count>1){
+   // if($count>1){
         for($i=0;$i<$count;$i++){
             $arr = array_merge($arr,$slotss[$i]);
         }
-    }
+   // }
     
     if(isset($arr)){
         foreach($arr as $k=> $slt)
@@ -399,7 +404,7 @@ function findSlot($myDate = null,$vid,$type = 'delivery')
                 $myDate  = date('Y-m-d',strtotime('+1 day')); 
                 $slots = showSlot($myDate,$vid,'delivery');
             }
-
+            //dd($myDate);
             if(count((array)$slots) == 0){
                 $myDate  = date('Y-m-d',strtotime('+1 day')); 
                 $slots = showSlot($myDate,$vid,'delivery');
