@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api\v1;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Validator;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation, OrderVendor, LuxuryOption};
+use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation, OrderVendor, LuxuryOption, ClientLanguage, ProductCategory, ProductVariant, ProductTranslation};
 
 class StoreController extends BaseController{
     use ApiResponser;
@@ -258,5 +259,107 @@ class StoreController extends BaseController{
             return $this->errorResponse($e->getMessage(), $e->getCode());
     	}
 	}
+
+	public function VendorCategory(Request $request)
+	{
+		try {
+			$user = Auth::user();			
+			$vendorid = $request->vendor_id;	
+			$product_categories = VendorCategory::with(['category', 'category.translation' => function($q) {
+				$q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
+				;
+			}])->where('status', 1)->where('vendor_id', $vendorid)->groupBy('category_id')->get();
+			$p_categories = collect();
+			$product_categories_hierarchy = '';
+			if ($product_categories) {
+				foreach($product_categories as $pc){
+					$p_categories->push($pc->category);
+				}
+				$product_categories_build = $this->buildTree($p_categories->toArray());
+				$product_categories_hierarchy = $this->printCategoryOptionsHeirarchy($product_categories_build);
+				foreach($product_categories_hierarchy as $k => $cat){
+					$myArr = array(1,3,7,8,9);
+					if (isset($cat['type_id']) && !in_array($cat['type_id'], $myArr)) {
+						unset($product_categories_hierarchy[$k]);
+					}
+				}
+			}
+			$data = ['vendor_categories' => $product_categories_hierarchy];
+			return $this->successResponse($data, '', 200);
+    	} catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+    	}
+	}
+
+	public function addProduct(Request $request)
+	{
+		//return $product = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related', 'upSell', 'crossSell', 'celebrities')->where('id', 232)->firstOrFail();
+		try{
+			$validator = Validator::make($request->all(), [
+				'sku' => 'required|unique:products',
+				'url_slug' => 'required',
+				'category_id' => 'required',
+				'product_name' => 'required',
+				'vendor_id'	=>	'required'
+			]);
+
+			if ($validator->fails()) {
+			// return $this->error($validator->errors()->first());
+				return $this->errorResponse($validator->errors(), 422);
+			}
+			
+			$user = Auth::user();		
+			
+			$product = new Product();
+			$product->sku = $request->sku;
+			$product->url_slug = $request->url_slug;
+			$product->title = $request->product_name;        
+			$product->category_id = $request->category_id;
+			$product->type_id = 1;
+			$product->vendor_id = $request->vendor_id;
+			$client_lang = ClientLanguage::where('is_primary', 1)->first();
+			if (!$client_lang) {
+				$client_lang = ClientLanguage::where('is_active', 1)->first();
+			}
+			$product->save();
+			if ($product->id > 0) {
+				$datatrans[] = [
+					'title' => $request->product_name??null,
+					'body_html' => '',
+					'meta_title' => '',
+					'meta_keyword' => '',
+					'meta_description' => '',
+					'product_id' => $product->id,
+					'language_id' => $client_lang->language_id
+				];
+				$product_category = new ProductCategory();
+				$product_category->product_id = $product->id;
+				$product_category->category_id = $request->category_id;
+				$product_category->save();
+				$proVariant = new ProductVariant();
+				$proVariant->sku = $request->sku;
+				$proVariant->product_id = $product->id;            
+				$proVariant->barcode = $this->generateBarcodeNumber();
+				$proVariant->save();
+				ProductTranslation::insert($datatrans);
+				
+				$product_detail = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related', 'upSell', 'crossSell', 'celebrities')->where('id', $product->id)->firstOrFail();
+				$data = ['product_detail' => $product_detail];
+				return $this->successResponse($data, 'Product added successfully!', 200);
+			}
+		} catch (Exception $e) {
+			return $this->errorResponse($e->getMessage(), $e->getCode());
+		}
+		
+	}	
+
+	private function generateBarcodeNumber()
+    {
+        $random_string = substr(md5(microtime()), 0, 14);
+        while (ProductVariant::where('barcode', $random_string)->exists()) {
+            $random_string = substr(md5(microtime()), 0, 14);
+        }
+        return $random_string;
+    }
 
 }
