@@ -415,9 +415,6 @@ function findSlot($myDate = null,$vid,$type = 'delivery')
                 $slots = showSlot($myDate,$vid,'delivery');
             }
 
-            $time = explode(' - ',$slots[0]['value']);
-            return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
-
         if(isset($slots) && count((array)$slots)>0){
             $time = explode(' - ',$slots[0]['value']);
             return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
