@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\PromoCodeController;
 use App\Http\Controllers\Front\LalaMovesController;
-use App\Models\{AddonSet, Cart, CartAddon, CartProduct, User, Product, ClientCurrency, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, CartCoupon, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation, VendorSlot,CartDeliveryFee};
+use App\Models\{AddonSet, Cart, CartAddon, CartProduct, CartCoupon, CartDeliveryFee, User, Product, ClientCurrency, ClientLanguage, CartProductPrescription, ProductVariantSet, Country, UserAddress, Client, ClientPreference, Vendor, Order, OrderProduct, OrderProductAddon, OrderProductPrescription, VendorOrderStatus, OrderVendor,PaymentOption, OrderTax, LuxuryOption, UserWishlist, SubscriptionInvoicesUser, LoyaltyCard, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation, VendorSlot};
 use Log;
 class CartController extends FrontController
 {
@@ -244,8 +244,8 @@ class CartController extends FrontController
             }
 
 
-            $addonSets = $addon_ids = $addon_options = array();Log::info($request->addonID);
-            if($request->has('addonID')){Log::info('ok');
+            $addonSets = $addon_ids = $addon_options = array();
+            if($request->has('addonID')){
                 $addon_ids = $request->addonID;
             }
             if($request->has('addonoptID')){
@@ -1395,19 +1395,38 @@ class CartController extends FrontController
         }
         $client_preference_detail = ClientPreference::first();
 
-
-
-
-        // foreach($cart_details->products as )
-        // {
-
-
-
-        // }
-
-        // dd($cart_details->products);
+        // $vendors = $this->searchProductExpection($cart_details);
+        //  dd($vendors);
 
         return response()->json(['status' => 'success', 'cart_details' => $cart_details, 'client_preference_detail' => $client_preference_detail]);
+    }
+
+
+    public function searchProductExpection($cart_details){
+
+       $langId = Session::get('customerLanguage');
+
+        $all_vendors = array();
+        $keywords = array();
+            foreach($cart_details->products as $product)
+            {
+                foreach ($product['vendor_products'] as $vendor_product) {
+                    $keywords[] = isset($vendor_product['product']['translation_one']) ? $vendor_product['product']['translation_one']['title'] :  $vendor_product['product']['sku'];
+                }
+            }
+
+            $all_vendors = Vendor::OrderBy('id','desc')->with(['products.translation' => function($q) use($langId, $keywords){
+                $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                }
+            ])->whereHas('products.translation',function($q) use($langId, $keywords){
+            $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+            }
+            )->where('status',1)->get()->toArray();
+       
+
+            print_r("<pre>");
+            print_r($all_vendors);
+            return $all_vendors;
     }
 
 
