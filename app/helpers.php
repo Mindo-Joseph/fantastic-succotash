@@ -261,10 +261,9 @@ function createSlug($str, $delimiter = '-'){
 
 }
 
-    function getBaseprice($dist)
+    function getBaseprice($dist,$option = 'lalamove')
     {
-
-        $simp_creds = ShippingOption::select('credentials', 'test_mode','status')->where('code', 'lalamove')->where('status', 1)->first();
+        $simp_creds = ShippingOption::select('credentials', 'test_mode','status')->where('code',$option)->where('status', 1)->first();
         if($simp_creds && $simp_creds->credentials){
             $creds_arr = json_decode($simp_creds->credentials);
             $base_price = $creds_arr->base_price??'0';
@@ -288,9 +287,7 @@ function createSlug($str, $delimiter = '-'){
         $amount_per_km = $amount_per_km;
         $total = $base_price + ($distance * $amount_per_km);
         return  $total;
-        
     // + ($paid_duration * $pricingRule->duration_price);
-
     }
 
 
@@ -422,3 +419,61 @@ function findSlot($myDate = null,$vid,$type = 'delivery')
             return date('d M, Y',strtotime($myDate));
         }
 }
+
+function GoogleDistanceMatrix($latitude, $longitude)
+{
+    $send   = [];
+    $client = ClientPreference::where('id', 1)->first();
+    $lengths = count($latitude) - 1;
+    $value = [];
+    
+    for ($i = 1; $i<=$lengths; $i++) {
+        $count  = 0;
+        $count1 = 1;
+        $ch = curl_init();
+        $headers = array('Accept: application/json',
+                'Content-Type: application/json',
+                );
+         $url =  'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins='.$latitude[$count].','.$longitude[$count].'&destinations='.$latitude[$count1].','.$longitude[$count1].'&key='.$client->map_key.'';
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $response = curl_exec($ch);
+        $result = json_decode($response);
+        curl_close($ch); // Close the connection
+        $new =   $result;
+       // dd($result);
+        array_push($value, $result->rows[0]->elements);
+        $count++;
+        $count1++;
+    }
+  
+    if (isset($value)) {
+        $totalDistance = 0;
+        $totalDuration = 0;
+        foreach ($value as $item) {
+            //dd($item);
+            $totalDistance = $totalDistance + $item[0]->distance->value;
+            $totalDuration = $totalDuration + $item[0]->duration->value;
+        }
+       
+       
+        if ($client->distance_unit == 'metric') {
+            $send['distance'] = round($totalDistance/1000, 2);      //km
+        } else {
+            $send['distance'] = round($totalDistance/1609.34, 2);  //mile
+        }
+        //
+        $newvalue = round($totalDuration/60, 2);
+        $whole = floor($newvalue);
+        $fraction = $newvalue - $whole;
+
+        if ($fraction >= 0.60) {
+            $send['duration'] = $whole + 1;
+        } else {
+            $send['duration'] = $whole;
+        }
+    }
+    return $send;
+}
+
