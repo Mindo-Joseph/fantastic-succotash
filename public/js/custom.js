@@ -1,14 +1,9 @@
 jQuery(window).scroll(function() {
     var scroll = jQuery(window).scrollTop();
-
     if (scroll <= 50) {
-
         jQuery(".site-header").removeClass("fixed-bar");
-
     } else {
-
         jQuery(".site-header").addClass("fixed-bar");
-
     }
 });
 
@@ -164,12 +159,14 @@ window.initializeSlider = function initializeSlider() {
         infinite: true,
         dots: false,
         speed: 300,
-        slidesToShow: 5,
+        slidesToShow: 4,
+        centerMode: true,
+        centerPadding: '60px',
         slidesToScroll: 4,
         responsive: [
             { breakpoint: 1200, settings: { slidesToShow: 3, slidesToScroll: 3 } },
             { breakpoint: 991, settings: { slidesToShow: 2, arrows: true, slidesToScroll: 2 } },
-            { breakpoint: 420, settings: { slidesToShow: 1, arrows: true, slidesToScroll: 1 } }
+            { breakpoint: 420, settings: { slidesToShow: 1, arrows: true, slidesToScroll: 2 } }
         ]
     });
 
@@ -207,8 +204,8 @@ window.initializeSlider = function initializeSlider() {
         dots: false,
         infinite: true,
         speed: 300,
-        slidesToShow: 5,
-        slidesToScroll: 3,
+        slidesToShow: 6,
+        slidesToScroll: 1,
         centerMode: false,
         centerPadding: '60px',
         arrows: false,
@@ -244,8 +241,8 @@ window.initializeSlider = function initializeSlider() {
             {
                 breakpoint: 576,
                 settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
                     dots: false,
                     centerMode: true,
                 }
@@ -278,15 +275,15 @@ window.initializeSlider = function initializeSlider() {
         responsive: [{
                 breakpoint: 1200,
                 settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
+                    slidesToShow: 3,
+                    slidesToScroll: 3
                 }
             },
             {
                 breakpoint: 767,
                 settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
                     arrows: true
                 }
             }
@@ -575,7 +572,7 @@ $(document).ready(function() {
         // var subscription_id = $('#subscription_payment_form #subscription_id').val();
         var payment_option_id = selected_option.data("payment_option_id");
         if ((selected_option.length > 0) && (payment_option_id > 0)) {
-            $('#subscription_payment').modal('hide');
+            // $('#subscription_payment').modal('hide');
             if (payment_option_id == 4) {
                 stripe.createToken(card).then(function(result) {
                     if (result.error) {
@@ -618,6 +615,8 @@ $(document).ready(function() {
                 paymentViaOzow('', '');
             }else if (payment_option_id == 15) {
                 paymentViaPagarme('', '');
+            }else if (payment_option_id == 17) {
+                paymentViaCheckout('', '');
             }
         } else {
             _this.attr("disabled", false);
@@ -704,7 +703,7 @@ $(document).ready(function() {
     $(document).on("change", ".schedule_datetime", function() {
         var schedule_dt = $(this).val();
         var vendor_id = $('#vendor_id').val();
-        
+
         $.ajax({
             type: "POST",
             dataType: 'json',
@@ -1399,6 +1398,14 @@ $(document).ready(function() {
                 return false;
             }
         }
+        else if (payment_option_id == 17) {
+            var order = placeOrderBeforePayment(address_id, payment_option_id, tip);
+            if (order != '') {
+                paymentViaCheckout(address_id, order);
+            } else {
+                return false;
+            }
+        }
     });
 
 
@@ -1523,7 +1530,7 @@ $(document).ready(function() {
 
         $(".topup_wallet_confirm").attr("disabled", true);
 
-        $('#topup_wallet').modal('hide');
+        // $('#topup_wallet').modal('hide');
 
         if (payment_option_id == 4) {
             stripe.createToken(card).then(function(result) {
@@ -1567,6 +1574,8 @@ $(document).ready(function() {
             paymentViaOzow('', '');
         }else if (payment_option_id == 15) {
             paymentViaPagarme('', '');
+        }else if (payment_option_id == 17) {
+            paymentViaCheckout('', '');
         }
     });
     $(document).on("click", ".remove_promo_code_btn", function() {

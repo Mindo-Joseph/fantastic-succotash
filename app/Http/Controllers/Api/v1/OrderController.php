@@ -15,10 +15,12 @@ use Illuminate\Support\Facades\Validator;
 use Log;
 use App\Models\{Order, OrderProduct, OrderTax, Cart, CartAddon, CartProduct, CartProductPrescription, Product, OrderProductAddon, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, VendorOrderDispatcherStatus, OrderStatusOption, Vendor, LoyaltyCard, NotificationTemplate, User, Payment, SubscriptionInvoicesUser, UserDevice, Client, UserVendor, LuxuryOption, EmailTemplate, ProductVariantSet};
 use App\Models\AutoRejectOrderCron;
+use App\Http\Traits\OrderTrait;
 
 class OrderController extends BaseController
 {
     use ApiResponser;
+    use OrderTrait;
     /**
      * Display a listing of the resource.
      *
@@ -408,7 +410,7 @@ class OrderController extends BaseController
                         $this->sendSuccessEmail($request, $order, $vendor_id);
                     }
                     $this->sendSuccessEmail($request, $order);
-                    $ex_gateways = [6, 7, 8, 9, 10, 11, 12, 13]; // if mobbex, payfast, yoco, razorpay, gcash, simplify, square
+                    $ex_gateways = [5, 6, 7, 8, 9, 10, 11, 12, 13, 17]; // if paystack, mobbex, payfast, yoco, razorpay, gcash, simplify, square, checkout
                     if (!in_array($request->payment_option_id, $ex_gateways)) {
                         Cart::where('id', $cart->id)->update(['schedule_type' => NULL, 'scheduled_date_time' => NULL]);
                         CartCoupon::where('cart_id', $cart->id)->delete();
@@ -514,6 +516,7 @@ class OrderController extends BaseController
                         $stats = $this->insertInVendorOrderDispatchStatus($request);
                 }
                 OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id]);
+                $this->ProductVariantStoke($order_id);
                 DB::commit();
                 // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
             }
@@ -854,9 +857,9 @@ class OrderController extends BaseController
                 if ($email_template) {
                     $email_template_content = $email_template->content;
                     if ($vendor_id == "") {
-                        $returnHTML = view('email.orderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
+                        $returnHTML = view('email.newOrderProducts')->with(['cartData' => $cartDetails, 'order' => $order, 'currencySymbol' => $currSymbol])->render();
                     } else {
-                        $returnHTML = view('email.orderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id, 'currencySymbol' => $currSymbol])->render();
+                        $returnHTML = view('email.newOrderVendorProducts')->with(['cartData' => $cartDetails, 'id' => $vendor_id, 'currencySymbol' => $currSymbol])->render();
                     }
                     $email_template_content = str_ireplace("{customer_name}", ucwords($user->name), $email_template_content);
                     $email_template_content = str_ireplace("{order_id}", $order->order_number, $email_template_content);
@@ -878,6 +881,11 @@ class OrderController extends BaseController
                 ];
                 if (!empty($data['admin_email'])) {
                     $email_data['admin_email'] = $data['admin_email'];
+                }
+                if ($vendor_id == "") { 
+                    $email_data['send_to_cc'] = 1;
+                }else{
+                    $email_data['send_to_cc'] = 0;
                 }
                 dispatch(new \App\Jobs\SendOrderSuccessEmailJob($email_data))->onQueue('verify_email');
                 $notified = 1;
@@ -1263,7 +1271,7 @@ class OrderController extends BaseController
         }
     }
 
-    public function sendOrderPushNotificationVendors($user_ids, $orderData, $header_code)
+    public function sendOrderPushNotificationVendors($user_ids, $orderData, $header_code='')
     {
         $devices = UserDevice::whereNotNull('device_token')->whereIn('user_id', $user_ids)->pluck('device_token')->toArray();
 
@@ -1272,6 +1280,9 @@ class OrderController extends BaseController
             $from = $client_preferences->fcm_server_key;
             $notification_content = NotificationTemplate::where('id', 4)->first();
             if ($notification_content) {
+                if($header_code == ''){
+                    $header_code = Client::orderBy('id', 'asc')->first()->code;
+                }
                 $code = $header_code;
                 $client = Client::where('code', $code)->first();
                 $redirect_URL = "https://" . $client->sub_domain . env('SUBMAINDOMAIN') . "/client/order";
@@ -1388,6 +1399,7 @@ class OrderController extends BaseController
 
     public function orderDetails_for_notification($order_id, $vendor_id = "")
     {
+
         $user = Auth::user();
         if ($user->is_superadmin != 1) {
             $userVendorPermissions = UserVendor::where(['user_id' => $user->id])->pluck('vendor_id')->toArray();
@@ -1426,9 +1438,11 @@ class OrderController extends BaseController
         $order_item_count = 0;
         $order->payment_option_title = $order->paymentOption->title;
         $order->item_count = $order_item_count;
-        $order->created_at = dateTimeInUserTimeZone($order->created_at, $user->timezone);
+        //$order->created_at = dateTimeInUserTimeZone($order->created_at, $user->timezone);
+       // $order->date_time = dateTimeInUserTimeZone($order->created_at, $user->timezone);
         $order->created = dateTimeInUserTimeZone($order->created_at, $user->timezone);
-        $order->scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
+        $order->scheduled_date_time = !empty($order->scheduled_date_time) ? dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone) : '';
+
         foreach ($order->products as $product) {
             $order_item_count += $product->quantity;
         }

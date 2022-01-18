@@ -48,6 +48,7 @@ use App\Models\ProductVariantSet;
 use GuzzleHttp\Client as GCLIENT;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use App\Models\AutoRejectOrderCron;
+use App\Models\CartDeliveryFee;
 use Redirect;
 use App\Http\Controllers\Front\LalaMovesController;
 
@@ -336,6 +337,7 @@ class OrderController extends FrontController
                     $email_template_content = str_ireplace("{products}", $returnHTML, $email_template_content);
                     $email_template_content = str_ireplace("{address}", $address->address . ', ' . $address->state . ', ' . $address->country . ', ' . $address->pincode, $email_template_content);
                 }
+                
                 $email_data = [
                     'code' => $otp,
                     'link' => "link",
@@ -352,6 +354,12 @@ class OrderController extends FrontController
                 if (!empty($data['admin_email'])) {
                     $email_data['admin_email'] = $data['admin_email'];
                 }
+                if ($vendor_id == "") { 
+                    $email_data['send_to_cc'] = 1;
+                }else{
+                    $email_data['send_to_cc'] = 0;
+                }
+
                 dispatch(new \App\Jobs\SendOrderSuccessEmailJob($email_data))->onQueue('verify_email');
                 $notified = 1;
             } catch (\Exception $e) {
@@ -761,7 +769,8 @@ class OrderController extends FrontController
                     }
 
                     if ($action == 'delivery') {
-                        if ((!empty($vendor_cart_product->product->Requires_last_mile)) && ($vendor_cart_product->product->Requires_last_mile == 1)) {
+                        $deliver_fee_data = CartDeliveryFee::where('cart_id',$vendor_cart_product->cart_id)->where('vendor_id',$vendor_cart_product->vendor_id)->first();
+                        if (((!empty($vendor_cart_product->product->Requires_last_mile)) && ($vendor_cart_product->product->Requires_last_mile == 1)) || isset($deliver_fee_data)) {
                          
                             //Add here Delivery option Lalamove and dispatcher
                             if($request->delivery_type=='L'){
@@ -770,6 +779,11 @@ class OrderController extends FrontController
                             }else{
                                 $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
                             }
+
+                    
+
+                            if($deliver_fee_data)
+                            $delivery_fee  = $deliver_fee_data->delivery_fee??0.00;
 
                             if (!empty($delivery_fee) && $delivery_count == 0) {
                                 $delivery_count = 1;
@@ -871,7 +885,7 @@ class OrderController extends FrontController
                             $orderAddon->order_product_id = $order_product->id;
                             $orderAddon->save();
                         }
-                        CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
+                     //   CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                     }
                 }
                 $coupon_id = null;
@@ -996,7 +1010,7 @@ class OrderController extends FrontController
             }
             // $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
-            $ex_gateways = [7, 8, 9, 10]; //  mobbex, yoco, pointcheckout, razorpay
+            $ex_gateways = [7, 8, 9, 10, 17]; //  mobbex, yoco, pointcheckout, razorpay, checkout
             if (!in_array($request->payment_option_id, $ex_gateways)) {
                 Cart::where('id', $cart->id)->update([
                     'schedule_type' => null, 'scheduled_date_time' => null,
@@ -2174,7 +2188,12 @@ class OrderController extends FrontController
      */
     public function tipAfterOrder(Request $request, $domain = '')
     {
-        $user = Auth::user();
+        if( (isset($request->user_id)) && (!empty($request->user_id)) ){
+            $user = User::find($request->user_id);
+        }else{
+            $user = Auth::user();
+        }
+
         if ($user) {
             $order_number = $request->order_number;
             if ($order_number > 0) {

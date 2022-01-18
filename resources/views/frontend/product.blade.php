@@ -284,7 +284,7 @@
                                         @if($product->inquiry_only == 0)
                                         <div class="product-description border-product pb-0">
                                             <h6 class="product-title mt-0">{{__('Quantity')}}:
-                                                @if(!$product->variant[0]->quantity > 0 && $product->sell_when_out_of_stock != 1)
+                                                @if($product->has_inventory && !$product->variant[0]->quantity > 0 && $product->sell_when_out_of_stock != 1)
                                                     <span id="outofstock" style="color: red;">{{ __('Out of Stock')}}</span>
                                                 @else
                                                 @php
@@ -293,7 +293,7 @@
                                                     <input type="hidden" id="instock" value="{{ ($product->variant[0]->quantity - $product_quantity_in_cart)}}">
                                                 @endif
                                             </h6>
-                                            @if($product->variant[0]->quantity > 0 || $product->sell_when_out_of_stock == 1)
+                                            @if(!$product->has_inventory || $product->variant[0]->quantity > 0 || $product->sell_when_out_of_stock == 1)
                                             @if($product->minimum_order_count > 1)
                                             {{-- <p class="mb-1 product_price">   {{__('Minimum Quantity') }} : {{ $product->minimum_order_count }} </p>
                                             <p class="mb-1 product_price">   {{__('Batch') }} : {{ $product->batch_count }} </p> --}}
@@ -400,7 +400,7 @@
                                     </div>
                                     @endif
                                     <div class="product-buttons">
-                                        @if($product->variant[0]->quantity > 0  || $product->sell_when_out_of_stock == 1)
+                                        @if(!$product->has_inventory || $product->variant[0]->quantity > 0  || $product->sell_when_out_of_stock == 1)
                                         @if($is_inwishlist_btn && $is_available)
                                         <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
                                             {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? __('Remove From Wishlist') : __('Add To Wishlist') }}
@@ -417,7 +417,7 @@
 
                                         @endphp
                                         @if($is_available)
-                                            <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart {{ ($vendor_info->is_vendor_closed == 1 || ($product->variant[0]->quantity <= $product_quantity_in_cart)) ? 'btn-disabled' : '' }}">{{__('Add To Cart')}}</a>
+                                            <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart {{ ($vendor_info->is_vendor_closed == 1 || ($product->variant[0]->quantity <= $product_quantity_in_cart && $product->has_inventory)) ? 'btn-disabled' : '' }}">{{__('Add To Cart')}}</a>
                                         @endif
                                             @if($vendor_info->is_vendor_closed == 1)
                                             <p class="text-danger">Vendor is not accepting orders right now.</p>

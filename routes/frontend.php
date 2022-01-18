@@ -59,6 +59,7 @@ Route::group(['middleware' => ['domain']], function () {
 	// Paystack
 	Route::post('payment/paystack', 'Front\PaystackGatewayController@paystackPurchase')->name('payment.paystackPurchase');
 	Route::post('payment/paystack/completePurchase', 'Front\PaystackGatewayController@paystackCompletePurchase')->name('payment.paystackCompletePurchase');
+	Route::get('payment/paystack/completePurchase/app', 'Front\PaystackGatewayController@paystackCompletePurchaseApp')->name('payment.paystackCompletePurchaseApp');
 
 	// Payfast
 	Route::post('payment/payfast', 'Front\PayfastGatewayController@payfastPurchase')->name('payment.payfastPurchase');
@@ -92,7 +93,11 @@ Route::group(['middleware' => ['domain']], function () {
 	//Pagarme
 	Route::match(['get','post'],'payment/pagarme/page','Front\PagarmeController@beforePayment')->name('payment.pagarme.beforePayment');
 	Route::post('payment/pagarme','Front\PagarmeController@createPayment')->name('payment.pagarme.createPayment');
-	Route::post('payment/pagarme/card','Front\PagarmeController@createPaymentCard')->name('payment.pagarme.createPaymentCard'); 
+	Route::post('payment/pagarme/card','Front\PagarmeController@createPaymentCard')->name('payment.pagarme.createPaymentCard');
+
+	// Checkout
+	Route::post('payment/checkout', 'Front\CheckoutGatewayController@checkoutPurchase')->name('payment.checkoutPurchase');
+	Route::post('payment/checkout/notify', 'Front\CheckoutGatewayController@checkoutNotify')->name('payment.checkoutNotify');
 
 
 

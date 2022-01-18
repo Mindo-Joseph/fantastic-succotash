@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterCartAddonsTable extends Migration
+class AddQuickLinkHeaderToClientPreferencesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AlterCartAddonsTable extends Migration
      */
     public function up()
     {
-        Schema::table('cart_addons', function (Blueprint $table) { 
-            $table->id()->first();
-            $table->bigInteger('cart_id')->unsigned()->after('id');
+        Schema::table('client_preferences', function (Blueprint $table) {
+            $table->tinyInteger('header_quick_link')->nullable()->default(0)->comment('0-No, 1-Yes');
         });
     }
 
@@ -26,6 +25,8 @@ class AlterCartAddonsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('client_preferences', function (Blueprint $table) {
+            //
+        });
     }
 }

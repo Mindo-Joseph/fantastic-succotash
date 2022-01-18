@@ -20,6 +20,10 @@
 
     \Session::forget('success');
 @endphp
+
+@if(isset($set_template)  && $set_template->template_id == 1)
+<link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/custom-template-one.css')}}">
+@endif
 <script type="text/javascript" src="{{asset('front-assets/js/jquery-3.3.1.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('front-assets/js/jquery-ui.min.js')}}"></script>
 <script type="text/javascript">
