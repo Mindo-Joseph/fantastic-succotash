@@ -1834,6 +1834,10 @@ label {
 .map-icon .fa.fa-map-marker {
     color: var(--theme-deafult);
 }
+.address-input-group .pac-container {
+    top: 35px!important;
+    left: 0!important;
+}
 .delivery_address > .form-group{
     position: relative;
 }
