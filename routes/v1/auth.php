@@ -56,8 +56,10 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
         Route::get('primary/address/{id}', 'Api\v1\AddressController@postUpdatePrimaryAddress');
         Route::post('update/order/status', 'Api\v1\OrderController@postVendorOrderStatusUpdate');
         Route::get('payment/options/{page}', 'Api\v1\PaymentOptionController@getPaymentOptions');
-        Route::post('mystore/product/add', 'Api\v1\StoreController@addProduct');
         Route::post('mystore/vendor/category', 'Api\v1\StoreController@VendorCategory');
+        Route::post('mystore/product/add', 'Api\v1\StoreController@addProduct');
+        Route::post('mystore/product/detail', 'Api\v1\StoreController@productDetail');        
+        Route::post('mystore/product/update', 'Api\v1\StoreController@updateProduct');
       
         Route::get('payment/{gateway}', 'Api\v1\PaymentOptionController@postPayment');
         Route::post('payment/razorpay/pay/{amount}/{order}', 'Api\v1\RazorpayGatewayController@razorpayCompletePurchase')->name('payment.razorpayCompletePurchase');

@@ -248,6 +248,7 @@ class ProductController extends BaseController
      */
     public function update(Request $request, $domain = '', $id)
     {
+       // dd($request->all());
         $product = Product::where('id', $id)->firstOrFail();
         $rule = array(
             'product_name' => 'required|string',

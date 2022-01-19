@@ -7,10 +7,12 @@ use Validator;
 use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation, OrderVendor, LuxuryOption, ClientLanguage, ProductCategory, ProductVariant, ProductTranslation};
+use Illuminate\Support\Facades\Storage;
+use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation, OrderVendor, LuxuryOption, ClientLanguage, ProductCategory, ProductVariant, ProductTranslation, Variant, Brand, AddonSet, TaxCategory, ClientPreference, Celebrity, ProductImage, ProductAddon, ProductUpSell, ProductCrossSell, ProductRelated, ProductCelebrity, ProductTag, VendorMedia};
 
 class StoreController extends BaseController{
     use ApiResponser;
+	private $folderName = 'prods';
 
     public function getMyStoreProductList(Request $request){
     	try {
@@ -284,7 +286,12 @@ class StoreController extends BaseController{
 					}
 				}
 			}
-			$data = ['vendor_categories' => $product_categories_hierarchy];
+			$output = [];
+			foreach($product_categories_hierarchy as $singlecat)
+			{
+				$output[] = $singlecat;
+			}			
+			$data = $output;
 			return $this->successResponse($data, '', 200);
     	} catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
@@ -297,15 +304,15 @@ class StoreController extends BaseController{
 		try{
 			$validator = Validator::make($request->all(), [
 				'sku' => 'required|unique:products',
-				'url_slug' => 'required',
+				'url_slug' => 'required|unique:products',
 				'category_id' => 'required',
 				'product_name' => 'required',
 				'vendor_id'	=>	'required'
 			]);
 
 			if ($validator->fails()) {
-			// return $this->error($validator->errors()->first());
-				return $this->errorResponse($validator->errors(), 422);
+			
+				return $this->errorResponse($validator->errors()->first(), 422);
 			}
 			
 			$user = Auth::user();		
@@ -342,8 +349,9 @@ class StoreController extends BaseController{
 				$proVariant->barcode = $this->generateBarcodeNumber();
 				$proVariant->save();
 				ProductTranslation::insert($datatrans);
-				
-				$product_detail = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related', 'upSell', 'crossSell', 'celebrities')->where('id', $product->id)->firstOrFail();
+				//$product_detail = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related', 'upSell', 'crossSell', 'celebrities')->where('id', $product->id)->firstOrFail();
+				$product_detail = Product::where('id', $product->id)->firstOrFail();
+				//$data = $this->preProductDetail($product->id);
 				$data = ['product_detail' => $product_detail];
 				return $this->successResponse($data, 'Product added successfully!', 200);
 			}
@@ -351,7 +359,319 @@ class StoreController extends BaseController{
 			return $this->errorResponse($e->getMessage(), $e->getCode());
 		}
 		
-	}	
+	}		
+
+	public function productDetail(Request $request)
+	{
+		try{
+			$validator = Validator::make($request->all(), [
+				'product_id' => 'required',				
+			]);
+
+			if ($validator->fails()) {			
+				return $this->errorResponse($validator->errors()->first(), 422);
+			}
+			$user = Auth::user();	
+			$productid = $request->product_id;
+
+			$data = $this->preProductDetail($productid);			
+			return $this->successResponse($data, 'Product detail!', 200);
+
+		} catch (Exception $e) {
+			return $this->errorResponse($e->getMessage(), $e->getCode());
+		}
+	}
+
+	public function updateProduct(Request $request)
+	{
+		$product = Product::where('id', $request->product_id)->firstOrFail();
+		try{
+			$validator = Validator::make($request->all(), [
+				'product_id' => 'required',		
+				'product_name' => 'required|string',
+				'sku' => 'required|unique:products,sku,'.$product->id,
+				'url_slug' => 'required|unique:products,url_slug,'.$product->id,		
+			]);
+
+			if ($validator->fails()) {			
+				return $this->errorResponse($validator->errors()->first(), 422);
+			}
+			$user = Auth::user();	
+			$productid = $product->id;
+
+			$product_category = ProductCategory::where('product_id', $productid)->where('category_id', $request->category_id)->first();
+			if(!$product_category){
+				$product_category = new ProductCategory();
+				$product_category->product_id = $productid;
+				$product_category->category_id = $request->category_id;
+				$product_category->save();
+			}
+
+			if ($product->is_live == 0) {
+				$product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
+			}
+
+			foreach ($request->only('country_origin_id', 'weight', 'weight_unit', 'is_live', 'brand_id') as $k => $val) {
+				$product->{$k} = $val;
+			}
+
+			$product->sku = $request->sku;
+			$product->url_slug = $request->url_slug;
+			$product->tags        = $request->tags??null;
+			$product->category_id = $request->category_id;
+			$product->inquiry_only = $request->inquiry_only ?? 0;
+			$product->tax_category_id = $request->tax_category;
+			$product->is_new                    = $request->is_new ?? 0;
+			$product->is_featured               = $request->is_featured ?? 0;
+			$product->is_physical               = $request->is_physical ?? 0;
+			$product->pharmacy_check            = $request->pharmacy_check ?? 0;
+			$product->has_inventory             = $request->has_inventory ?? 0;
+			$product->sell_when_out_of_stock    = $request->sell_stock_out ?? 0;
+			$product->requires_shipping         = $request->require_ship ?? 0;
+			$product->Requires_last_mile        = $request->last_mile ?? 0;
+			$product->need_price_from_dispatcher = $request->need_price_from_dispatcher ?? 0;
+			$product->mode_of_service        = $request->mode_of_service??null;
+			$product->delay_order_hrs        = $request->delay_order_hrs??0;
+			$product->delay_order_min        = $request->delay_order_min??0;
+			$product->pickup_delay_order_hrs        = $request->pickup_delay_order_hrs??0;
+			$product->pickup_delay_order_min        = $request->pickup_delay_order_min??0;
+			$product->dropoff_delay_order_hrs        = $request->dropoff_delay_order_hrs??0;
+			$product->dropoff_delay_order_min        = $request->dropoff_delay_order_min??0;
+			$product->minimum_order_count        = $request->minimum_order_count??0;
+			$product->batch_count        = $request->batch_count??1;
+			if (empty($product->publish_at)) {
+				$product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
+			}
+			$product->has_variant = ($request->has('variant_ids') && count($request->variant_ids) > 0) ? 1 : 0;
+			if($product){
+				if(isset($product->category) && in_array($product->category->categoryDetail->type_id,[8,9]))
+				$product->sell_when_out_of_stock = 1;
+			}
+			$product->save();
+			if ($product->id > 0) {
+				$trans = ProductTranslation::where('product_id', $product->id)->where('language_id', $request->language_id)->first();
+				if (!$trans) {
+					$trans = new ProductTranslation();
+					$trans->product_id = $product->id;
+					$trans->language_id = $request->language_id;
+				}
+				$trans->title               = $request->product_name;
+				$trans->body_html           = $request->body_html;
+				$trans->meta_title          = $request->meta_title;
+				$trans->meta_keyword        = $request->meta_keyword;
+				$trans->meta_description    = $request->meta_description;
+				$trans->save();
+				$varOptArray = $prodVarSet = $updateImage = array();
+				$i = 0;
+
+				if ($request->has('file')) {
+					//$imageId = [];
+					$files = $request->file('file');
+					if (is_array($files)) {
+						foreach ($files as $file) {
+							$img = new VendorMedia();
+							$img->media_type = 1;
+							$img->vendor_id = $product->vendor_id;
+							$img->path = Storage::disk('s3')->put($this->folderName, $file, 'public');
+							$img->save();
+							$path1 = $img->path['proxy_url'] . '40/40' . $img->path['image_path'];
+							if ($img->id > 0) {
+								$imageId = $img->id;
+								$image = new ProductImage();
+								$image->product_id = $product->id;
+								$image->is_default = 1;
+								$image->media_id = $img->id;
+								$image->save();
+								// if ($request->has('variantId')) {
+								// 	$resp .= '<div class="col-md-3 col-sm-4 col-12 mb-3">
+								// 				<div class="product-img-box">
+								// 					<div class="form-group checkbox checkbox-success">
+								// 						<input type="checkbox" id="image' . $image->id . '" class="imgChecks" imgId="' . $image->id . '" checked variant_id="' . $request->variantId . '">
+								// 						<label for="image' . $image->id . '">
+								// 						<img src="' . $path1 . '" alt="">
+								// 						</label>
+								// 					</div>
+								// 				</div>
+								// 			</div>';
+								// }
+							}
+						}
+						
+					} else {
+						$img = new VendorMedia();
+						$img->media_type = 1;
+						$img->vendor_id = $product->vendor_id;
+						$img->path = Storage::disk('s3')->put($this->folderName, $files, 'public');
+						$img->save();
+						$imageId = $img->id;
+						if ($img->id > 0) {
+							$imageId = $img->id;
+							$image = new ProductImage();
+							$image->product_id = $product->id;
+							$image->is_default = 1;
+							$image->media_id = $img->id;
+							$image->save();
+						}
+					}					
+				}
+
+				// $productImageSave = array();
+				// if ($request->has('fileIds')) {
+				// 	foreach ($request->fileIds as $key => $value) {
+				// 		$productImageSave[] = [
+				// 			'product_id' => $product->id,
+				// 			'media_id' => $value,
+				// 			'is_default' => 1
+				// 		];
+				// 	}
+				// }
+				// ProductImage::insert($productImageSave);
+				$cat = $addonsArray = $upArray = $crossArray = $relateArray = $tagSetArray = array();
+				$delete = ProductAddon::where('product_id', $product->id)->delete();
+				$delete = ProductUpSell::where('product_id', $product->id)->delete();
+				$delete = ProductCrossSell::where('product_id', $product->id)->delete();
+				$delete = ProductRelated::where('product_id', $product->id)->delete();
+				$delete = ProductCelebrity::where('product_id', $product->id)->delete();
+				$delete = ProductTag::where('product_id', $product->id)->delete();
+				
+				if ($request->has('addon_sets') && count($request->addon_sets) > 0) {
+					foreach ($request->addon_sets as $key => $value) {
+						$addonsArray[] = [
+							'product_id' => $product->id,
+							'addon_id' => $value
+						];
+					}
+					ProductAddon::insert($addonsArray);
+				}
+	
+				if ($request->has('tag_sets') && count($request->tag_sets) > 0) {
+					foreach ($request->tag_sets as $key => $value) {
+						$tagSetArray[] = [
+							'product_id' => $product->id,
+							'tag_id' => $value
+						];
+					}
+					ProductTag::insert($tagSetArray);
+				}
+	
+				if ($request->has('celebrities') && count($request->celebrities) > 0) {
+					foreach ($request->celebrities as $key => $value) {
+						$celebArray[] = [
+							'celebrity_id' => $value,
+							'product_id' => $product->id
+						];
+					}
+					ProductCelebrity::insert($celebArray);
+				}
+	
+				if ($request->has('up_cell') && count($request->up_cell) > 0) {
+					foreach ($request->up_cell as $key => $value) {
+						$upArray[] = [
+							'product_id' => $product->id,
+							'upsell_product_id' => $value
+						];
+					}
+					ProductUpSell::insert($upArray);
+				}
+	
+				if ($request->has('cross_cell') && count($request->cross_cell) > 0) {
+					foreach ($request->cross_cell as $key => $value) {
+						$crossArray[] = [
+							'product_id' => $product->id,
+							'cross_product_id' => $value
+						];
+					}
+					ProductCrossSell::insert($crossArray);
+				}
+	
+				if ($request->has('releted_product') && count($request->releted_product) > 0) {
+					foreach ($request->releted_product as $key => $value) {
+						$relateArray[] = [
+							'product_id' => $product->id,
+							'related_product_id' => $value
+						];
+					}
+					ProductRelated::insert($relateArray);
+				}
+	
+				$existv = array();
+	
+				if ($request->has('variant_ids')) {
+					foreach ($request->variant_ids as $key => $value) {
+						$variantData = ProductVariant::where('id', $value)->first();
+						$existv[] = $value;
+	
+						if ($variantData) {
+							$variantData->title             = $request->variant_titles[$key];
+							$variantData->price             = $request->variant_price[$key];
+							$variantData->compare_at_price  = $request->variant_compare_price[$key];
+							$variantData->cost_price        = $request->variant_cost_price[$key];
+							$variantData->quantity          = $request->variant_quantity[$key];
+							$variantData->tax_category_id   = $request->tax_category;
+							$variantData->save();
+						}
+					}
+					$delOpt = ProductVariant::whereNotIN('id', $existv)->where('product_id', $product->id)->whereNull('title')->delete();
+				} else {
+					$variantData = ProductVariant::where('product_id', $product->id)->first();
+					if (!$variantData) {
+						$variantData = new ProductVariant();
+						$variantData->product_id    = $product->id;
+						$variantData->sku           = $product->sku;
+						$variantData->title         = $product->sku;
+						$variantData->barcode       = $this->generateBarcodeNumber();
+					}
+					$variantData->price             = $request->price;
+					$variantData->compare_at_price  = $request->compare_at_price;
+					$variantData->cost_price        = $request->cost_price;
+					$variantData->quantity          = $request->quantity;
+					$variantData->tax_category_id   = $request->tax_category;
+					$variantData->save();
+				}
+			}
+
+			$data = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related', 'upSell', 'crossSell', 'celebrities')->where('id', $product->id)->firstOrFail();	
+			return $this->successResponse($data, 'Product Updated successfully!', 200);
+
+		} catch (Exception $e) {
+			return $this->errorResponse($e->getMessage(), $e->getCode());
+		}
+	}
+
+	private function preProductDetail($productid)
+	{		
+		$user = Auth::user();
+		$product = Product::with('brand', 'variant.set', 'variant.vimage.pimage.image', 'primary', 'category.cat', 'variantSet', 'vatoptions', 'addOn', 'media.image', 'related', 'upSell', 'crossSell', 'celebrities')->where('id', $productid)->firstOrFail();
+		$productVariants = Variant::with('option', 'varcategory.cate.primary')
+		->select('variants.*')
+		->join('variant_categories', 'variant_categories.variant_id', 'variants.id')
+		->where('variant_categories.category_id', $product->category_id)
+		->where('variants.status', '!=', 2)
+		->orderBy('position', 'asc')->get();
+
+		$brands = Brand::join('brand_categories as bc', 'bc.brand_id', 'brands.id')
+		->select('brands.id', 'brands.title', 'brands.image')
+		->where('bc.category_id', $product->category_id)->where('status',1)->get();
+		
+		$clientLanguages = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
+		->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.is_primary')
+		->where('client_languages.client_code', Auth::user()->code)
+		->where('client_languages.is_active', 1)
+		->orderBy('client_languages.is_primary', 'desc')->get();
+
+		$addons = AddonSet::with('option')->select('id', 'title')
+		->where('status', '!=', 2)
+		->where('vendor_id', $product->vendor_id)
+		->orderBy('position', 'asc')->get();
+
+		$taxCate = TaxCategory::all();
+
+		$otherProducts = Product::with('primary')->select('id', 'sku')->where('is_live', 1)->where('id', '!=', $product->id)->where('vendor_id', $product->vendor_id)->get();
+		$configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode','need_dispacher_home_other_service','delay_order','product_order_form','business_type','minimum_order_batch')->first();
+		$celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
+		$data = ['product_detail' => $product, 'product_variants'=>$productVariants, 'brands'=> $brands, 'client_languages' => $clientLanguages, 'addons' => $addons, 'tax_category'=>$taxCate,'other_products' => $otherProducts, 'config_data' => $configData, 'celebrities' => $celebrities];
+		return $data;
+	}
 
 	private function generateBarcodeNumber()
     {
