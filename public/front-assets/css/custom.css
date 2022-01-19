@@ -123,6 +123,7 @@ table.table.wishlist-table.border {background-color: #fff;}
 .dark .card.subscript-box{background-color: #232323;}
 .al_count_tabs ul li{margin: 0;}
 .header-dropdown li{margin: 0;}
+#main-menu .slick-list{overflow: inherit;}
 
 /* ------------------------------- al css start end ----------------------------- */
 

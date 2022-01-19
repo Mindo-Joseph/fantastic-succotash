@@ -9,18 +9,18 @@
                 <h4 class="modal-title">{{ __("Add") }} {{ $vendor }}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
-            <form id="save_banner_form" method="post" enctype="multipart/form-data">
+            <form id="save_banner_form" class="al_overall_form" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body" >
                     <div class="row">
                         <div class="col-md-8">
                             <div class="row mb-2">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label>{{ __('Upload Logo') }} </label>
                                     <input type="file" accept="image/*" data-plugins="dropify" name="logo" class="dropify" data-default-file="" />
                                     <label class="logo-size text-right w-100">{{ __('Logo Size') }} 170x96</label>
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-9">
                                     <label>{{ __('Upload banner image') }}</label>
                                     <input type="file" accept="image/*" data-plugins="dropify" name="banner" class="dropify" data-default-file="" />
                                     <label class="logo-size text-right w-100">{{ __("Image Size") }} 830x200</label>
@@ -82,7 +82,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group mb-3" id="latitudeInput">
-                                        {!! Form::label('title', __('latitude'),['class' => 'control-label']) !!}
+                                        {!! Form::label('title', __('Latitude'),['class' => 'control-label']) !!}
                                         <input type="text" name="latitude" id="add_latitude" placeholder="24.9876755" class="form-control" value="">
                                         @if($errors->has('latitude'))
                                         <span class="text-danger" role="alert">
@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group mb-3" id="longitudeInput">
-                                        {!! Form::label('title', __('longitude'),['class' => 'control-label']) !!}
+                                        {!! Form::label('title', __('Longitude'),['class' => 'control-label']) !!}
                                         <input type="text" name="longitude" id="add_longitude" placeholder="11.9871371723" class="form-control" value="">
                                         @if($errors->has('longitude'))
                                         <span class="text-danger" role="alert">
@@ -147,41 +147,74 @@
                             </div>
                         </div>
 
+                        <!-- al_add_user start -->
                         <div class="col-md-4 al_add_user">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h5>ADD USER </h5>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="title" class="control-label">Name</label>
-                                        <input class="form-control" name="name" type="text">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="title" class="control-label">Email</label>
-                                        <input class="form-control" name="email" type="text">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="title" class="control-label">Phone Number</label>
-                                        <input class="form-control" name="phone_number" type="tel">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="title" class="control-label">Password</label>
-                                        <input type="password" class="form-control" id="password" placeholder="Password" required="" name="password" value="">
+                            <h5>SEARCH USER </h5>
+                            <div class="form-group">
+                                <div class="btn-group w-100">
+                                    <input type="text" class="dropdown-toggle form-control w-100" value="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="search user">
+
+                                    <div class="dropdown-menu w-100">
+                                        <!-- <p class="d-flex justify-content-start pt-1 pb-1 al_select_user">
+                                            <span><input class="mt-1 mr-1" type="checkbox"></span>
+                                            <span>Select All</span>
+                                            <sup>Clear All</sup>
+                                        </p> -->
+                                        <ul>
+                                            <li class="d-flex justify-content-start align-items-center">
+                                                <p class="al_checkbox">
+                                                    <input type="checkbox" class="mt-2 mr-1">
+                                                    <img class="user_img mr-2" src="https://imgproxy.royoorders.com/insecure/fill/90/90/ce/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/vendor/cEXYgrL4KBhUCu8ZpE9FkVq7C605d5usO2CBEUHL.jpg@webp" alt="">
+                                                </p>
+                                                <p class="al_username">
+                                                    <span> Amit </span>
+                                                    <small>amit@gmail.com</small>
+                                                </p>
+                                                <sup>&#128473;</sup>
+                                            </li>
+                                            <li class="d-flex justify-content-start align-items-center border-top">
+                                                <p class="al_checkbox">
+                                                    <input type="checkbox" class="mt-2 mr-1">
+                                                    <img class="user_img mr-2" src="https://imgproxy.royoorders.com/insecure/fill/90/90/ce/0/plain/https://s3.us-west-2.amazonaws.com/royoorders2.0-assets/vendor/cEXYgrL4KBhUCu8ZpE9FkVq7C605d5usO2CBEUHL.jpg@webp" alt="">
+                                                </p>
+                                                <p class="al_username">
+                                                    <span> Amit </span>
+                                                    <small>amit@gmail.com</small>
+                                                </p>
+                                                <sup>&#128473;</sup>
+                                            </li>
+
+
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
+                            <h5>ADD USER </h5>
+                            <div class="form-group">
+                                <label for="title" class="control-label">Name</label>
+                                <input class="form-control" name="name" type="text">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label for="title" class="control-label">Email</label>
+                                    <input class="form-control" name="email" type="text">
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for="title" class="control-label">Phone Number</label>
+                                    <input class="form-control" name="phone_number" type="tel">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="title" class="control-label">Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="Password" required="" name="password" value="">
+                            </div>
+                            <button type="button" class="btn w-100 btn-info waves-effect waves-light submitAddForm">ADD NEW USER</button>
+
                         </div>
-                    </div>
+                    </div><!-- al_add_user end -->
 
                     <div class="row">
-                        <!-- al_custom_modal start -->
+                        <!-- al_custom_modal start ADVANCED DETAILS -->
                         <div class="al_custom_modal col-md-12 pt-2 border-top">
                                 <h5 class="mb-2">ADVANCED DETAILS</h5>
 
@@ -341,7 +374,7 @@
                             </div><!-- al_custom_modal end -->
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-3 al_licence_imgbox">
                         <div class="col-md-6">
                             <div class="row">
                             @foreach($vendor_registration_documents as $vendor_registration_document)
@@ -387,10 +420,6 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Dummy 2</label>
-                                <input type="text" class="w-100 form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="">Dummy 3</label>
                                 <input type="text" class="w-100 form-control">
                             </div>
                         </div>
@@ -523,3 +552,4 @@
         </div>
     </div>
 </div>
+
