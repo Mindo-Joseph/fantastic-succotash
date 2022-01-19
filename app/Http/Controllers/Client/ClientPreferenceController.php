@@ -274,6 +274,7 @@ class ClientPreferenceController extends BaseController{
                 $exist_cid[] = $value;
                 $curr = ClientCurrency::where('currency_id', $value)->where('client_code',Auth::user()->code)->first();
                 $multiplier = array_key_exists($key, $request->multiply_by) ? $request->multiply_by[$key] : 1;
+
                 if(!$curr){
                     $cur_multi[] = [
                         'currency_id'=> $value,
@@ -282,8 +283,12 @@ class ClientPreferenceController extends BaseController{
                         'doller_compare'=> $multiplier
                     ];
                 }else{
-                    ClientCurrency::where('currency_id', $value)->where('client_code',Auth::user()->code)
-                                ->update(['doller_compare' => $multiplier]);
+                    $curr->doller_compare =  $multiplier;
+                    $curr->save();
+
+                    // $res = ClientCurrency::where('currency_id', $value)->where('client_code',Auth::user()->code)
+                    //             ->update(['doller_compare' => $multiplier]);
+                               // pr($res);
                 }
             }
             ClientCurrency::insert($cur_multi);
