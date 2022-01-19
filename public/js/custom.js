@@ -1728,6 +1728,9 @@ $(document).ready(function() {
                     }
                 }
             });
+            setTimeout(function(){ 
+                $(".pac-container").appendTo("#add_new_address_form .address-input-group");
+            }, 300);
         }
     }
     initialize();
@@ -2162,6 +2165,7 @@ $(document).ready(function() {
     });
     $(document).on("click", "#add_new_address_btn", function() {
         $(this).hide();
+        initialize();
         $('#add_new_address_form').show();
     });
     $(document).on("click", "#save_address", function() {
@@ -2175,6 +2179,7 @@ $(document).ready(function() {
         let latitude = $('#add_new_address_form #latitude').val();
         let longitude = $('#add_new_address_form #longitude').val();
         let house_number = $('#add_new_address_form #house_number').val();
+        let extra_instruction = $('#add_new_address_form #extra_instruction').val();
         $.ajax({
             type: "post",
             dataType: "json",
@@ -2190,6 +2195,7 @@ $(document).ready(function() {
                 "latitude": latitude,
                 "longitude": longitude,
                 "house_number": house_number,
+                "extra_instruction" : extra_instruction
             },
             beforeSend: function() {
                 if ($("#cart_table").length > 0) {
