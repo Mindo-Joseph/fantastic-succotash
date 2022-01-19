@@ -17,9 +17,9 @@ input[type=radio], input[type=checkbox]{
 .slick-slider.slick-initialized {
     visibility: visible;
 }
-.navbar-brand {
+/* .navbar-brand {
     height: 70px;
-}
+} */
 .onhover-dropdown .onhover-show-div {
     display: none;
 }
@@ -5874,12 +5874,11 @@ body[dir="rtl"] .inner_spacing h3 {
     .step-indicator{
         margin-top: 0;
     }
-    .navbar-brand {
+    /* .navbar-brand {
         height: 40px;
-    }
+    } */
     .navbar-brand .img-fluid {
         max-width: max-content;
-        width: 100px;
     }
     .site-header {
         position: relative !important;
@@ -6184,9 +6183,9 @@ body[dir="rtl"] .inner_spacing h3 {
     }
 }
 @media(max-width:767px) {
-    .navbar-brand {
+    /* .navbar-brand {
         height: 45px;
-    }
+    } */
     .homepage-address {
         width: calc(100% - 100px);
     }
@@ -6434,12 +6433,12 @@ body[dir="rtl"] .inner_spacing h3 {
         display: none;
     }
     .navbar-brand {
-        padding: 0;
-        height: 30px !important;
+        /* padding: 0;
+        height: 30px !important; */
         margin: auto;
     }
     .navbar-brand .img-fluid {
-        max-width: 70px !important;
+        /* max-width: 70px !important; */
         width: 100%;
     }
     .site-topbar .location-bar h2:after {
@@ -6579,3 +6578,16 @@ input#schedule_datetime {
     width: 50% !important;
         margin-right: 10px;
     }
+/* al_bg_color */
+.al_bg_color {
+    background-color: #fff;
+    box-shadow: 0 0 6px rgb(0,0 ,0, .3);
+    padding: 21px 0;
+    border-radius: 20px;
+}
+
+.al_bg_color .vendor_products_tr h4 {
+    font-size: 12px;
+    word-wrap: break-word;
+}
+.al_total_sum p{font-size: 20px;font-weight: 600; color: #000;}

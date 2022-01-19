@@ -395,7 +395,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                                         @endif
                                         {{$cate['name']}}</a>
                                     @if(!empty($cate['children']))
-                                        <ul>
+                                        <ul >
                                             @foreach($cate['children'] as $childs)
                                             <li>
                                                 <a href="{{route('categoryDetail', $childs['slug'])}}"><span class="new-tag">{{$childs['name']}}</span></a>

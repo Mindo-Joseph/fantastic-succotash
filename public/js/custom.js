@@ -1817,8 +1817,11 @@ $(document).ready(function() {
                                 let other_cart_products_template = _.template($('#other_cart_products_template').html());
                                 $(".other_cart_products").append(other_cart_products_template(extendedData));
                                 initializeSlider();
-                                $('#placeorder_form .left_box').html('');
+                                $('#placeorder_form .left_box').html(''); 
                                 $('#placeorder_form .left_box').html(cart_details.left_section);
+                                $('#expected_vendors').html(''); 
+                                $('#expected_vendors').html(response.expected_vendor_html);
+                                
                                 if (vendor_type != 'delivery') {
                                     var latitude = $('#latitude').val();
                                     var longitude = $('#longitude').val();
