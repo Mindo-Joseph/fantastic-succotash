@@ -34,7 +34,9 @@ class ToolsController extends Controller
         }
         $vendors = $vendors->get(); 
         $taxCategory = TaxCategory::all();
-        $parentCategory = Category::with(['translation_one','childs'])->where('deleted_at', NULL)->whereIn('type_id', ['1', '3', '6', '8','9'])->where('is_core', 1)->where('status', 1)->get();
+        $parentCategory = Category::with(['translation_one','childs'])->where('deleted_at', NULL)
+        // ->whereIn('type_id', ['1', '3', '6', '8','9'])
+        ->where('is_core', 1)->where('status', 1)->get();
         return view('backend.tools.index')->with(['vendors'=>$vendors,'taxCategory'=>$taxCategory,'parentCategory'=>$parentCategory]);
     }
 

@@ -6585,3 +6585,9 @@ input#schedule_datetime {
     width: 50% !important;
         margin-right: 10px;
     }
+.exzoom .exzoom_img_ul_outer .exzoom_img_ul {
+    top: 50%;
+    -webkit-transform: translate(0, -50%);
+    -moz-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+}
