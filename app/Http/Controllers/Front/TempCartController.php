@@ -780,7 +780,7 @@ class TempCartController extends FrontController
             }
             $langId = ClientLanguage::where(['is_primary' => 1, 'is_active' => 1])->value('language_id');
             $currId = ClientCurrency::where(['is_primary' => 1])->value('currency_id');
-            $cart = TempCart::with('coupon.promo')->where('status', '0')->where('user_id', $request->user_id)->first();
+            $cart = TempCart::where('status', '0')->where('user_id', $request->user_id)->first();
             if(!$cart){
                 foreach($getallproduct->products as $data){
                     $request->request->add([
@@ -800,7 +800,7 @@ class TempCartController extends FrontController
                     $this->postAddToTempCart($request);
                 }
             }
-            $cart = TempCart::with('coupon.promo')->where('status', '0')->where('user_id', $request->user_id)->first();
+            $cart = TempCart::with(['address','currency','coupon.promo'])->where('status', '0')->where('user_id', $request->user_id)->first();
             $cartData = $this->getCart($cart, $langId, $currId, '');
 
             return $this->successResponse($cartData, 'Order added to cart.', 201);
