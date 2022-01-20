@@ -126,7 +126,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
          <div class="row align-items-center position-initial">
             <div class="col-lg-12">
                <div class="row mobile-header align-items-center justify-content-between my-sm-2">
-                  <div class="logo order-lg-2">
+                  <div class="logo @if($mod_count > 1) order-lg-2 @else order-lg-1 @endif">
                      <a class="navbar-brand mr-3 p-0 d-none d-sm-inline-flex align-items-center" href="{{route('userHome')}}"><img class="img-fluid" alt="" src="{{$urlImg}}" ></a>
                   </div>
                   <div class="al_count_tabs order-lg-1">
