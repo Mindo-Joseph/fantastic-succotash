@@ -11,7 +11,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::any('webhook/lalamove', 'Front\LalaMovesController@webhooks')->name('webhook');
 	Route::get('dispatch-order-status-update/{id?}', 'Front\DispatcherController@dispatchOrderStatusUpdate')->name('dispatch-order-update'); // Order Status update Dispatch
 	Route::get('dispatch-pickup-delivery/{id?}', 'Front\DispatcherController@dispatchPickupDeliveryUpdate')->name('dispatch-pickup-delivery'); // pickup delivery update from dispatch
-	
+
 
 	Route::get('dispatch-order-status-update-details/{id?}', 'Front\DispatcherController@dispatchOrderDetails')->name('dispatch-order-update-details'); // Order Status update Dispatch details
 
@@ -20,6 +20,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('demo/cabBooking', 'Front\CustomerAuthController@getDemoCabBookingPage');
 	Route::get('fcm', 'Front\CustomerAuthController@fcm');
 	Route::get('send-notification', 'Front\CustomerAuthController@sendNotification');
+    Route::get('vendor-notification', 'Front\DispatcherController@test');
 	Route::get('test/email', function () {
 		$send_mail = 'test@yopmail.com';
 		// App\Jobs\SendRefferalCodeEmailJob::dispatch($send_mail);
@@ -29,6 +30,13 @@ Route::group(['middleware' => ['domain']], function () {
 	});
 
 
+	// Start edit order routes
+	Route::post('edit-order/search/vendor/products', 'Front\VendorController@vendorProductsSearchResultsForEditOrder');
+	Route::post('edit-order/vendor/products/getProductsInCart', 'Front\TempCartController@getProductsInCart');
+	Route::post('edit-order/temp-cart/product/add', 'Front\TempCartController@postAddToTempCart');
+	Route::post('edit-order/temp-cart/product/updateQuantity', 'Front\TempCartController@updateQuantity');
+	// End edit order routes
+
 	
 
 	Route::get('payment/gateway/returnResponse', 'Front\PaymentController@getGatewayReturnResponse')->name('payment.gateway.return.response');
@@ -37,9 +45,9 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::match(['get','post'],'order/lalamoves/quotation','Front\LalaMovesController@quotation')->name('order.lalamoves.quotation');
 
 	Route::match(['get','post'],'order/lalamoves/place-order','Front\LalaMovesController@placeOrder')->name('order.lalamoves.place_order');
-	
 
-	
+
+
 	////check Shiprocket
 	Route::get('carrier/test/shiprocket','ShiprocketController@checkShiprocket')->name('carrier.test.shiprocket');
 	Route::post('shiprocket_webhook','ShiprocketController@shiprocketWebhook')->name('carrier.webhook.shiprocket');
@@ -60,6 +68,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::post('payment/paystack', 'Front\PaystackGatewayController@paystackPurchase')->name('payment.paystackPurchase');
 	Route::post('payment/paystack/completePurchase', 'Front\PaystackGatewayController@paystackCompletePurchase')->name('payment.paystackCompletePurchase');
 	Route::get('payment/paystack/completePurchase/app', 'Front\PaystackGatewayController@paystackCompletePurchaseApp')->name('payment.paystackCompletePurchaseApp');
+	Route::get('payment/paystack/cancelPurchase/app', 'Front\PaystackGatewayController@paystackCancelPurchaseApp')->name('payment.paystackCancelPurchaseApp');
 
 	// Payfast
 	Route::post('payment/payfast', 'Front\PayfastGatewayController@payfastPurchase')->name('payment.payfastPurchase');
@@ -165,7 +174,7 @@ Route::group(['middleware' => ['domain']], function () {
 
 	Route::post('primaryData', 'Front\UserhomeController@changePrimaryData')->name('changePrimaryData');
 	Route::post('paginateValue', 'Front\UserhomeController@changePaginate')->name('changePaginate');
-	Route::get('/product/{id?}', 'Front\ProductController@index')->name('productDetail');
+	Route::get('{vendor?}/product/{id?}', 'Front\ProductController@index')->name('productDetail');
 	Route::post('/product/variant/{id}', 'Front\ProductController@getVariantData')->name('productVariant');
 	Route::post('cart/product/lastAdded', 'Front\CartController@getLastAddedProductVariant')->name('getLastAddedProductVariant');
 	Route::post('cart/product/variant/different-addons', 'Front\CartController@getProductVariantWithDifferentAddons')->name('getProductVariantWithDifferentAddons');
@@ -188,7 +197,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('category/{slug1}/{slug2}', 'Front\CategoryController@categoryVendorProducts')->name('categoryVendorProducts');
 	Route::post('category/filters/{id}', 'Front\CategoryController@categoryFilters')->name('productFilters');
 	Route::get('vendor/all', 'Front\VendorController@viewAll')->name('vendor.all');
-	Route::get('vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
+	Route::match(['get','post'],'vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
 	Route::get('vendor/{slug1}/{slug2}', 'Front\VendorController@vendorCategoryProducts')->name('vendorCategoryProducts');
 	Route::post('vendor/filters/{id}', 'Front\VendorController@vendorFilters')->name('vendorProductFilters');
 	Route::post('vendor/products/searchResults', 'Front\VendorController@vendorProductsSearchResults')->name('vendorProductsSearchResults');
@@ -212,7 +221,7 @@ Route::group(['middleware' => ['domain']], function () {
 });
 Route::group(['middleware' => ['domain', 'webAuth']], function () {
 	Route::get('user/orders', 'Front\OrderController@orders')->name('user.orders');
-	Route::post('user/orders/tip-after-order', 'Front\OrderController@tipAfterOrder')->name('user.tip_after_order'); 
+	Route::post('user/orders/tip-after-order', 'Front\OrderController@tipAfterOrder')->name('user.tip_after_order');
 	Route::post('user/store', 'Front\AddressController@store')->name('address.store');
 	Route::get('user/addAddress', 'Front\AddressController@add')->name('addNewAddress');
 	Route::get('user/address/{id}', 'Front\AddressController@address')->name('user.address');
@@ -263,12 +272,12 @@ Route::group(['middleware' => ['domain', 'webAuth']], function () {
 	Route::post('user/subscription/cancel/{slug}', 'Front\UserSubscriptionController@cancelSubscriptionPlan')->name('user.subscription.plan.cancel');
 	Route::get('user/subscription/checkActive/{slug}', 'Front\UserSubscriptionController@checkActiveSubscription')->name('user.subscription.plan.checkActive');
 	Route::post('user/save_fcm_token', 'Front\ProfileController@save_fcm')->name('user.save_fcm');
-	// Rating & review 
+	// Rating & review
 	Route::group(['prefix' => 'rating'], function () {
 		Route::post('update-product-rating', 'Front\RatingController@updateProductRating')->name('update.order.rating');
 		Route::get('get-product-rating', 'Front\RatingController@getProductRating')->name('get-product-rating-details');
 	});
-	// Return product 
+	// Return product
 	Route::group(['prefix' => 'return-order'], function () {
 		Route::get('get-order-data-in-model', 'Front\ReturnOrderController@getOrderDatainModel')->name('getOrderDatainModel');
 		Route::get('get-return-products', 'Front\ReturnOrderController@getReturnProducts')->name('get-return-products');
@@ -276,9 +285,9 @@ Route::group(['middleware' => ['domain', 'webAuth']], function () {
 
 		Route::get('get-vendor-order-for-cancel', 'Front\ReturnOrderController@getVendorOrderForCancel')->name('get-vendor-order-for-cancel');
 		Route::post('vendor-order-for-cancel', 'Front\ReturnOrderController@vendorOrderForCancel')->name('order.cancel.customer');
-      
+
 	});
-	// Return product 
+	// Return product
 	Route::group(['prefix' => 'looking'], function () {
 		Route::get('/', 'Front\BookingController@index')->name('bookingIndex');
 		Route::get('details/{id?}', 'Front\BookingController@bookingDetails')->name('front.booking.details');

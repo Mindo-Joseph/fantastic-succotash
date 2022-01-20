@@ -94,7 +94,6 @@
                                                     <% if((vendor.delivery_fee > 0) || (order.scheduled_date_time)){ %>
                                                         <% if(order.scheduled_slot == null){ %>
                                                         <% if(order.scheduled_date_time){ %>
-                                                               <span class="badge badge-success ml-2">Scheduled</span>
                                                                <span class="ml-2">{{__('Your order will arrive by')}} <%= order.converted_scheduled_date_time %></span>
                                                            <% } else { %>
                                                                <span class="ml-2">{{__('Your order will arrive by')}} <%= vendor.ETA %></span>
@@ -163,6 +162,27 @@
                                                         <% } %>
                                                     </li>
                                                     <% } %>
+                                                    <% if(vendor.taxable_amount > 0 || vendor.taxable_amount < 0) { %>
+                                                        <li class="d-flex align-items-center justify-content-between">
+                                                            <label class="m-0">{{ __('Tax') }}</label>
+                                                            <% if(vendor.taxable_amount !== null) { %>
+                                                            <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(vendor.taxable_amount) %></span>
+                                                            <% }else { %>
+                                                                <span>{{$clientCurrency->currency->symbol}} 0.00</span>
+                                                            <% } %>
+                                                        </li>
+                                                        <% } %>
+
+                                                        <% if(vendor.service_fee_percentage_amount > 0 || vendor.service_fee_percentage_amount < 0) { %>
+                                                            <li class="d-flex align-items-center justify-content-between">
+                                                                <label class="m-0">{{ __('Service Fee') }}</label>
+                                                                <% if(vendor.service_fee_percentage_amount !== null) { %>
+                                                                <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(vendor.service_fee_percentage_amount) %></span>
+                                                                <% }else { %>
+                                                                    <span>{{$clientCurrency->currency->symbol}} 0.00</span>
+                                                                <% } %>
+                                                            </li>
+                                                            <% } %>    
 
                                                     <li class="grand_total d-flex align-items-center justify-content-between">
                                                         <label class="m-0">{{ __('Amount') }}</label>
@@ -227,6 +247,12 @@
                                         <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.total_delivery_fee) %></span>
                                     </li>
                                     <% } %>
+                                    <% if(order.tip_amount > 0 || order.tip_amount < 0) { %>
+                                        <li class="d-flex align-items-center justify-content-between">
+                                            <label class="m-0">{{__('Tip Amount')}}</label>
+                                            <span>{{$clientCurrency->currency->symbol}}<%= Helper.formatPrice(order.tip_amount) %></span>
+                                        </li>
+                                        <% } %>
                                     <% if(order.loyalty_amount_saved > 0 || order.loyalty_amount_saved < 0) { %>
                                     <li class="d-flex align-items-center justify-content-between">
                                         <label class="m-0">{{ __('Loyalty Used') }}</label>

@@ -98,7 +98,9 @@
 							{{__('In')}}
 								<%=product.category %></span>
 							</p>
-							<div class="d-flex align-items-center justify-content-between al_clock"> <b><% if(product.inquiry_only==0){%> <%=product.price %> <%}%></b> <p><i class="fa fa-clock-o"></i> 30-40 min</p> </div>
+							<div class="d-flex align-items-center justify-content-between al_clock"> <b><% if(product.inquiry_only==0){%> <%=product.price %> <%}%></b> 
+								<!-- <p><i class="fa fa-clock-o"></i> 30-40 min</p>  -->
+							</div>
 						</div>
 					</div>
 				</div>
@@ -108,35 +110,25 @@
 </script>
 <script type="text/template" id="trending_vendors_template">
 	<% _.each(trending_vendors, function(vendor, k){%>
-		<div>
-			<a class="suppliers-box d-block mx-2" href="{{route('vendorDetail')}}/<%=vendor.slug %>">
-				<div class="suppliers-img-outer">
+		<div class="product-card-box position-relative">
+			<a class="suppliers-box d-block" href="{{route('vendorDetail')}}/<%=vendor.slug %>">
+				<div class="suppliers-img-outer position-relative">
 					<% if(vendor.is_vendor_closed==1){%> <img class="fluid-img mx-auto blur-up lazyload grayscale-image" data-src="<%=vendor.logo.image_fit %>200/200<%=vendor.logo['image_path'] %>" alt="" title="">
 						<%}else{%> <img class="fluid-img mx-auto blur-up lazyload" data-src="<%=vendor.logo.image_fit %>200/200<%=vendor.logo['image_path'] %>" alt="" title="">
 							<%}%>
-								<div class="pref-timing"> <span>35 min</span> </div>
+								<% if(vendor.timeofLineOfSightDistance !=undefined){%>
+									<div class="pref-timing"> <span><%=vendor.timeofLineOfSightDistance %></span> </div>
+									<%}%>
 				</div>
 				<div class="supplier-rating">
-					<h6 class="mb-1"><%=vendor.name %></h6>
-					<p title="<%=vendor.categoriesList %>" class="vendor-cate border-bottom pb-1 mb-1 ellips">
+					<div class="d-flex align-items-center justify-content-between">
+						<h6 class="mb-1 ellips"><%=vendor.name %></h6> @if($client_preference_detail) @if($client_preference_detail->rating_check==1)
+						<% if(vendor.vendorRating > 0){%> <span class="rating-number"><%=vendor.vendorRating %></span>
+							<%}%> @endif @endif </div>
+					<p title="<%=vendor.categoriesList %>" class="vendor-cate mb-1 ellips">
 						<%=vendor.categoriesList %>
 					</p>
-					<div class="product-timing"> <small title="<%=vendor.address %>" class="ellips d-block"><i class="fa fa-map-marker"></i> <%=vendor.address %></small>
-						<% if(vendor.timeofLineOfSightDistance !=undefined){%>
-							<ul class="timing-box mb-1">
-								<li> <small class="d-block"><img class="d-inline-block mr-1 blur-up lazyload" data-src="{{asset('front-assets/images/distance.png')}}" alt="" title=""> <%=vendor.lineOfSightDistance %></small> </li>
-								<li> <small class="d-block mx-1"><i class="fa fa-clock-o"></i> <%=vendor.timeofLineOfSightDistance %></small> </li>
-							</ul>
-							<%}%>
-					</div>@if($client_preference_detail) @if($client_preference_detail->rating_check==1)
-					<% if(vendor.vendorRating > 0){%>
-						<ul class="custom-rating m-0 p-0">
-							<% for(var i=0; i < 5; i++){%>
-								<% if(i <=vendor.vendorRating){var starFillClass='fa-star';}else{var starFillClass='fa-star-o';}%>
-									<li><i class="fa <%=starFillClass %>" aria-hidden="true"></i></li>
-									<%}%>
-						</ul>
-						<%}%> @endif @endif </div>
+				</div>
 			</a>
 		</div>
 		<% }); %>
