@@ -8,7 +8,7 @@ use App\Http\Traits\ApiResponser;
 use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation, OrderVendor, LuxuryOption, ClientLanguage, ProductCategory, ProductVariant, ProductTranslation, Variant, Brand, AddonSet, TaxCategory, ClientPreference, Celebrity, ProductImage, ProductAddon, ProductUpSell, ProductCrossSell, ProductRelated, ProductCelebrity, ProductTag, VendorMedia};
+use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation, OrderVendor, LuxuryOption, ClientLanguage, ProductCategory, ProductVariant, ProductTranslation, Variant, Brand, AddonSet, TaxCategory, ClientPreference, Celebrity, ProductImage, ProductAddon, ProductUpSell, ProductCrossSell, ProductRelated, ProductCelebrity, ProductTag, VendorMedia, ProductVariantSet};
 
 class StoreController extends BaseController{
     use ApiResponser;
@@ -382,6 +382,131 @@ class StoreController extends BaseController{
 		}
 	}
 
+	public function makeVariantRows(Request $request)
+	{
+		try{
+			$validator = Validator::make($request->all(), [
+				'product_id' 	=> 'required',		
+				'optionIds'  	=>	'required',
+				'variantIds'	=>	'required'
+			]);
+
+			if ($validator->fails()) {			
+				return $this->errorResponse($validator->errors()->first(), 422);
+			}
+			//return $request->all();
+			$multiArray = array();
+			$variantNames = array();
+			$product = Product::where('id', $request->product_id)->firstOrFail();
+			$msgRes = 'Please check variants to create variant set.';
+			if (!$request->has('optionIds') || !$request->has('variantIds')) {
+				return $this->errorResponse($msgRes, 422);            
+			}
+			foreach ($request->optionIds as $key => $value) {
+				$name = explode(';', $request->variantIds[$key]);
+				if (!in_array($name[1], $variantNames)) {
+					$variantNames[] = $name[1];
+				}
+				$multiArray[$request->variantIds[$key]][] = $value;
+			}
+
+			$combination = $this->array_combinations($multiArray);
+			$new_combination = array();
+			$edit = 0;
+
+			if ($request->has('existing') && !empty($request->existing)) {
+				$existingComb = $request->existing;
+				$edit = 1;
+				foreach ($combination as $key => $value) {
+					$comb = $arrayVal = '';
+					foreach ($value as $k => $v) {
+						$arrayVal = explode(';', $v);
+						$comb .= $arrayVal[0] . '*';
+					}
+
+					$comb = rtrim($comb, '*');
+
+					if (!in_array($comb, $existingComb)) {
+						$new_combination[$key] = $value;
+					}
+				}
+				$combination = $new_combination;
+				$msgRes = 'No new variant set found.';
+			}
+
+			if (count($combination) < 1) {
+				return $this->errorResponse($msgRes, 422); 
+			}
+
+			$data = $this->combinationVariants($combination, $multiArray, $variantNames, $product->id, $request->sku, $edit);
+			return $this->successResponse($data, 'Variant detail!', 200);
+		} catch (Exception $e) {
+			return $this->errorResponse($e->getMessage(), $e->getCode());
+		}
+	}
+
+	function combinationVariants($combination, $multiArray, $variantNames, $product_id, $sku = '',  $edit = 0)
+    {
+        $arrVal = array();
+        foreach ($multiArray as $key => $value) {
+            $varStr = $optStr = array();
+            $vv = explode(';', $key);
+
+            foreach ($value as $k => $v) {
+                $ov = explode(';', $v);
+                $optStr[] = $ov[0];
+            }
+
+            $arrVal[$vv[0]] = $optStr;
+        }
+        $name1 = '';
+
+        $all_variant_sets = array();
+		$output_data = [];
+        $inc = 0;
+        foreach ($combination as $key => $value) {
+            $names = array();
+            $ids = array();
+            foreach ($value as $k => $v) {
+                $variant = explode(';', $v);
+                $ids[] = $variant[0];
+                $names[] = $variant[1];
+            }
+            $proSku = $sku . '-' . implode('*', $ids);
+            $proVariant = ProductVariant::where('sku', $proSku)->first();
+            if (!$proVariant) {
+                $proVariant = new ProductVariant();
+                $proVariant->sku = $proSku;
+                $proVariant->title = $sku . '-' . implode('-', $names);
+                $proVariant->product_id = $product_id;
+                $proVariant->barcode = $this->generateBarcodeNumber();
+                $proVariant->save();
+
+                foreach ($ids as $id1) {
+                    $all_variant_sets[$inc] = [
+                        'product_id' => $product_id,
+                        'product_variant_id' => $proVariant->id,
+                        'variant_option_id' => $id1,
+                    ];
+
+                    foreach ($arrVal as $key => $value) {
+
+                        if (in_array($id1, $value)) {
+                            $all_variant_sets[$inc]['variant_type_id'] = $key;
+                        }
+                    }
+                    $inc++;
+                }
+            }
+			$varient = array('id'=>$proVariant->id, 'title'=>$proVariant->title, 'names'=>implode(", ", $names));
+			$output_data[] = $varient;
+            
+        }
+        ProductVariantSet::insert($all_variant_sets);
+        
+        return $output_data;
+    }
+
 	public function updateProduct(Request $request)
 	{
 		$product = Product::where('id', $request->product_id)->firstOrFail();
@@ -654,7 +779,7 @@ class StoreController extends BaseController{
 		->where('bc.category_id', $product->category_id)->where('status',1)->get();
 		
 		$clientLanguages = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-		->select('lang.id as langId', 'lang.name as langName', 'lang.sort_code', 'client_languages.is_primary')
+		->select('lang.id as langId', 'lang.name as label', 'lang.name as value', 'lang.sort_code', 'client_languages.is_primary')
 		->where('client_languages.client_code', Auth::user()->code)
 		->where('client_languages.is_active', 1)
 		->orderBy('client_languages.is_primary', 'desc')->get();
@@ -680,6 +805,28 @@ class StoreController extends BaseController{
             $random_string = substr(md5(microtime()), 0, 14);
         }
         return $random_string;
+    }
+
+	private function array_combinations($arrays)
+    {
+        $result = array();
+        $arrays = array_values($arrays);
+        $sizeIn = sizeof($arrays);
+        $size = $sizeIn > 0 ? 1 : 0;
+        foreach ($arrays as $array)
+            $size = $size * sizeof($array);
+        for ($i = 0; $i < $size; $i++) {
+            $result[$i] = array();
+            for ($j = 0; $j < $sizeIn; $j++)
+                array_push($result[$i], current($arrays[$j]));
+            for ($j = ($sizeIn - 1); $j >= 0; $j--) {
+                if (next($arrays[$j]))
+                    break;
+                elseif (isset($arrays[$j]))
+                    reset($arrays[$j]);
+            }
+        }
+        return $result;
     }
 
 }

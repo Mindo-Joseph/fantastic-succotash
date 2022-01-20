@@ -483,6 +483,7 @@ class ProductController extends BaseController
     /**      Make variant rows          */
     public function makeVariantRows(Request $request)
     {
+        //return $request->all();
         $multiArray = array();
         $variantNames = array();
         $product = Product::where('id', $request->pid)->firstOrFail();
