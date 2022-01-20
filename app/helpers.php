@@ -361,7 +361,9 @@ $viewSlot = array();
     $cart = CartProduct::where('vendor_id',$vid)->get();
     foreach($cart as $product)
     {
-       $min[] = (($product->product->delay_order_hrs * 60) + $product->product->delay_order_min);
+        $delay_order_hrs = $product->product->delay_order_time['delay_order_hrs'];
+        $delay_order_min = $product->product->delay_order_time['delay_order_min'];
+        $min[] = (($delay_order_hrs * 60) + $delay_order_min);
     }
 
     if(isset($slots) && count($slots)>0){
@@ -369,7 +371,7 @@ $viewSlot = array();
 
         foreach($slots as $slot){
             //  echo '=h-='.$slot->dayOne->id;
-            if(isset($slot->dayOne->id) && ($slot->dayOne->id > 0))
+            if(isset($slot->days->id) && ($slot->dayOne->id > 0))
             {   
                $slotss[] = SplitTime($myDate,$slot->start_time,$slot->end_time,$duration,max($min));
             }else{
