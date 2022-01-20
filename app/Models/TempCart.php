@@ -16,7 +16,7 @@ class TempCart extends Model
     }
 
     public function coupon(){
-      return $this->hasOne('App\Models\TempCartCoupon')->select("cart_id", "coupon_id", "vendor_id");
+      return $this->hasOne('App\Models\TempCartCoupon', 'cart_id', 'id')->select("cart_id", "coupon_id", "vendor_id");
     }
 
     public function product(){
@@ -29,5 +29,13 @@ class TempCart extends Model
 
     public function cartvendor(){
       return $this->hasMany('App\Models\TempCartProduct')->select('cart_id', 'vendor_id');
+    }
+
+    public function address(){
+      return $this->belongsTo('App\Models\UserAddress', 'address_id', 'id');
+    }
+
+    public function currency(){
+      return $this->belongsTo('App\Models\Currency', 'currency_id', 'id');
     }
 }
