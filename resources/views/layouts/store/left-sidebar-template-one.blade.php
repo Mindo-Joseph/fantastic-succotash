@@ -414,7 +414,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
             </div>
             <div class="delivery_address p-2 mb-2 position-relative">
                <button type="button" class="close edit-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-               <div class="form-group">
+               <div class="form-group address-input-group">
                   <label class="delivery-head mb-2">{{__('SELECT YOUR LOCATION')}}</label>
                   <div class="address-input-field d-flex align-items-center justify-content-between"> <i class="fa fa-map-marker" aria-hidden="true"></i> <input class="form-control border-0 map-input" type="text" name="address-input" id="address-input" value="{{session('selectedAddress')}}"> <input type="hidden" name="address_latitude" id="address-latitude" value="{{session('latitude')}}"/> <input type="hidden" name="address_longitude" id="address-longitude" value="{{session('longitude')}}"/> <input type="hidden" name="address_place_id" id="address-place-id" value="{{session('selectedPlaceId')}}"/> </div>
                </div>
