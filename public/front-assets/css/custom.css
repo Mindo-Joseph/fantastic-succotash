@@ -6591,3 +6591,8 @@ input#schedule_datetime {
     -moz-transform: translate(0, -50%);
     transform: translate(0, -50%);
 }
+.footer-contant ul.contact-list li a {
+    width: 90%;
+    float: right;
+    word-break: break-word;
+}
