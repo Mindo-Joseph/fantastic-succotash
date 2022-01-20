@@ -178,7 +178,7 @@ function dateTimeInUserTimeZone24($date, $timezone, $showDate=true, $showTime=tr
     }
     if($showTime){
     
-    $timeFormat = 'HH:🇲🇲:ss';
+    $timeFormat = 'HH:mm:ss';
     }
     
     $format = $dateFormat . $timeFormat;
@@ -259,10 +259,10 @@ function createSlug($str, $delimiter = '-'){
 
 }
 
-    function getBaseprice($dist)
+    function getBaseprice($dist,$option = 'lalamove')
     {
 
-        $simp_creds = ShippingOption::select('credentials', 'test_mode','status')->where('code', 'lalamove')->where('status', 1)->first();
+        $simp_creds = ShippingOption::select('credentials', 'test_mode','status')->where('code',$option)->where('status', 1)->first();
         if($simp_creds && $simp_creds->credentials){
             $creds_arr = json_decode($simp_creds->credentials);
             $base_price = $creds_arr->base_price??'0';
@@ -276,7 +276,7 @@ function createSlug($str, $delimiter = '-'){
         }
 
         
-        $distance = ($dist - $distance);  
+        $distance = $dist;
         if($distance < 1 || $base_price < 1)
         {
             return 0;    
@@ -345,8 +345,6 @@ function createSlug($str, $delimiter = '-'){
     $StartTime += $AddMins+60;
     $endtm = 0;
     }
-    //dd($ReturnArray);
-    
     return $ReturnArray;
 }
 
@@ -359,7 +357,6 @@ $viewSlot = array();
 if(!empty($myDate))
 { $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
 }else{
-//$myDate = date('Y-m-d',strtotime('+1 days'));
 $myDate = date('Y-m-d');
 $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
 }
@@ -388,11 +385,10 @@ $slotss[] = [];
 
 $arr = array();
 $count = count($slotss);
-// if($count>1){
+
 for($i=0;$i<$count;$i++){
 $arr = array_merge($arr,$slotss[$i]);
 }
-// }
 
 if(isset($arr)){
 foreach($arr as $k=> $slt)
@@ -413,23 +409,81 @@ function findSlot($myDate = null,$vid,$type = 'delivery')
   $type = ((session()->get('vendorType'))?session()->get('vendorType'):$type);
         $slots = showSlot($myDate,$vid,'delivery');
             if(count((array)$slots) == 0){
-                $myDate  = date('Y-m-d',strtotime('+1 day')); 
+                $myDate  = date('Y-m-d',strtotime('+2 day')); 
                 $slots = showSlot($myDate,$vid,'delivery');
             }
            
             if(count((array)$slots) == 0){
-                $myDate  = date('Y-m-d',strtotime('+1 day')); 
+                $myDate  = date('Y-m-d',strtotime('+3 day')); 
                 $slots = showSlot($myDate,$vid,'delivery');
             }
 
             if(count((array)$slots) == 0){
-                $myDate  = date('Y-m-d',strtotime('+2 day')); 
+                $myDate  = date('Y-m-d',strtotime('+4 day')); 
                 $slots = showSlot($myDate,$vid,'delivery');
             }
         if(isset($slots) && count((array)$slots)>0){
             $time = explode(' - ',$slots[0]['value']);
             return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
         }else{
-            return date('d M, Y',strtotime($myDate));
+            return ", But no Slots are avialable";
         }
 }
+
+function GoogleDistanceMatrix($latitude, $longitude)
+{
+    $send   = [];
+    $client = ClientPreference::where('id', 1)->first();
+    $lengths = count($latitude) - 1;
+    $value = [];
+    
+    for ($i = 1; $i<=$lengths; $i++) {
+        $count  = 0;
+        $count1 = 1;
+        $ch = curl_init();
+        $headers = array('Accept: application/json',
+                'Content-Type: application/json',
+                );
+         $url =  'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins='.$latitude[$count].','.$longitude[$count].'&destinations='.$latitude[$count1].','.$longitude[$count1].'&key='.$client->map_key.'';
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $response = curl_exec($ch);
+        $result = json_decode($response);
+        curl_close($ch); // Close the connection
+        $new =   $result;
+       // dd($result);
+        array_push($value, $result->rows[0]->elements);
+        $count++;
+        $count1++;
+    }
+  
+    if (isset($value)) {
+        $totalDistance = 0;
+        $totalDuration = 0;
+        foreach ($value as $item) {
+            //dd($item);
+            $totalDistance = $totalDistance + $item[0]->distance->value;
+            $totalDuration = $totalDuration + $item[0]->duration->value;
+        }
+       
+       
+        if ($client->distance_unit == 'metric') {
+            $send['distance'] = round($totalDistance/1000, 2);      //km
+        } else {
+            $send['distance'] = round($totalDistance/1609.34, 2);  //mile
+        }
+        //
+        $newvalue = round($totalDuration/60, 2);
+        $whole = floor($newvalue);
+        $fraction = $newvalue - $whole;
+
+        if ($fraction >= 0.60) {
+            $send['duration'] = $whole + 1;
+        } else {
+            $send['duration'] = $whole;
+        }
+    }
+    return $send;
+}
+
