@@ -274,7 +274,7 @@ function createSlug($str, $delimiter = '-'){
         }
 
         
-        $distance = ($dist - $distance);  
+        $distance = $dist;  
         if($distance < 1 || $base_price < 1)
         {
             return 0;    
@@ -341,8 +341,6 @@ function createSlug($str, $delimiter = '-'){
     $StartTime += $AddMins+60;
     $endtm = 0;
     }
-    //dd($ReturnArray);
-    
     return $ReturnArray;
 }
 
@@ -355,12 +353,11 @@ $viewSlot = array();
 if(!empty($myDate))
 { $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
 }else{
-//$myDate = date('Y-m-d',strtotime('+1 days'));
 $myDate = date('Y-m-d');
 $mytime = Carbon::createFromFormat('Y-m-d', $myDate)->setTimezone($client->timezone);
 }
 $mytime =$mytime->dayOfWeek+1;
-$slots = VendorSlot::with('dayOne')->where('vendor_id',$vid)
+$slots = VendorSlot::where('vendor_id',$vid)
 ->whereHas('days',function($q)use($mytime,$type){
 return $q->where('day',$mytime)->where($type,'1');
 })
@@ -374,7 +371,7 @@ $min[] = (($product->product->delay_order_hrs * 60) + $product->product->delay_o
 
 if(isset($slots) && count($slots)>0){
 foreach($slots as $slott){
-if(isset($slott->dayOne->id))
+if(isset($slott->days->id))
 {
 $slotss[] = SplitTime($myDate,$slott->start_time,$slott->end_time,$duration,max($min));
 }else{
@@ -384,11 +381,9 @@ $slotss[] = [];
 
 $arr = array();
 $count = count($slotss);
-// if($count>1){
 for($i=0;$i<$count;$i++){
 $arr = array_merge($arr,$slotss[$i]);
 }
-// }
 
 if(isset($arr)){
 foreach($arr as $k=> $slt)
@@ -409,25 +404,24 @@ function findSlot($myDate = null,$vid,$type = 'delivery')
   $type = ((session()->get('vendorType'))?session()->get('vendorType'):$type);
         $slots = showSlot($myDate,$vid,'delivery');
             if(count((array)$slots) == 0){
-                $myDate  = date('Y-m-d',strtotime('+1 day')); 
+                $myDate  = date('Y-m-d',strtotime('+2 day')); 
                 $slots = showSlot($myDate,$vid,'delivery');
             }
            
             if(count((array)$slots) == 0){
-                $myDate  = date('Y-m-d',strtotime('+1 day')); 
+                $myDate  = date('Y-m-d',strtotime('+3 day')); 
                 $slots = showSlot($myDate,$vid,'delivery');
             }
 
             if(count((array)$slots) == 0){
-                $myDate  = date('Y-m-d',strtotime('+2 day')); 
+                $myDate  = date('Y-m-d',strtotime('+4 day')); 
                 $slots = showSlot($myDate,$vid,'delivery');
             }
-
         if(isset($slots) && count((array)$slots)>0){
             $time = explode(' - ',$slots[0]['value']);
             return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
         }else{
-            return date('d M, Y',strtotime($myDate));
+            return ", But no Slots are avialable";
         }
 }
 
