@@ -123,6 +123,10 @@ table.table.wishlist-table.border {background-color: #fff;}
 .dark .card.subscript-box{background-color: #232323;}
 .al_count_tabs ul li{margin: 0;}
 .header-dropdown li{margin: 0;}
+#main-menu .slick-list{overflow: inherit;}
+.suppliers-img-outer img, .product-card-box img{-webkit-transition: 1s !important;transition: 1s !important;}
+.suppliers-box .suppliers-img-outer, .img-outer-box{overflow: hidden;}
+.product-card-box:hover img {-webkit-transform: scale(1.1);transform: scale(1.1);}
 
 /* ------------------------------- al css start end ----------------------------- */
 
