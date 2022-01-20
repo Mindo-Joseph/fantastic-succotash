@@ -434,7 +434,7 @@ class CustomerAuthController extends FrontController
                 $body = "Please enter OTP ".$phoneCode." to verify your account.";
                 if(!empty($provider) ){
                     $send = $this->sendSms($provider, $prefer->sms_key, $prefer->sms_secret, $prefer->sms_from, $to, $body);
-                    if($send){
+                    if($send ==1){
                         $request->request->add(['codeSent' => 1]);
                         $message = __('An otp has been sent to your phone. Please check.');
                         $response = $request->all();
@@ -760,7 +760,7 @@ class CustomerAuthController extends FrontController
             if ($vendor_registration_documents->count() > 0) {
                 foreach ($vendor_registration_documents as $vendor_registration_document) {
                     $doc_name = str_replace(" ", "_", $vendor_registration_document->primary->slug);
-                    if ($vendor_registration_document->file_type != "Text") {
+                    if ($vendor_registration_document->file_type != "Text" && $vendor_registration_document->file_type != "selector") {
                         if ($request->hasFile($doc_name)) {
                             $vendor_docs =  new VendorDocs();
                             $vendor_docs->vendor_id = $vendor->id;

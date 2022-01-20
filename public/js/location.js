@@ -577,7 +577,7 @@ function initMap() {
         const map = autocompletes[i].map;
         const marker = autocompletes[i].marker;
 
-        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {         
             marker.setVisible(false);
             const place = autocomplete.getPlace();
 
@@ -607,6 +607,9 @@ function initMap() {
             marker.setVisible(true);
 
         });
+        setTimeout(function(){ 
+            $(".pac-container").appendTo("#edit-address .address-input-group");
+        }, 300);
     }
 }
 
@@ -627,6 +630,10 @@ $(document).on("input",".edit-other-stop",function() {
      initializeNewCabHome(random_id,rel);
 });
 
+
+$(document).delegate("#edit-address #address-input", "focus", function(){
+    initMap();
+});
 
 
   function initializeNewCabHome(random_id,rel) {

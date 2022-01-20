@@ -259,6 +259,8 @@ class OrderController extends BaseController
                     $ETA = $order_pre_time + $user_to_vendor_time;
                     // $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : convertDateTimeInTimeZone($vendor->created_at, $user->timezone, 'h:i A');
                     $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : dateTimeInUserTimeZone($vendor->created_at, $user->timezone);
+                    //$order->converted_scheduled_date_time = $order->scheduled_date_time;
+                    $order->converted_scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
                 }
 
                 $vendor->product_total_count = $product_total_count;
@@ -417,12 +419,12 @@ class OrderController extends BaseController
                 $orderData = Order::find($request->order_id);
                 if ($request->status_option_id == 2) {
                     //Check Order delivery type
-                    if ($orderData->shipping_delivery_type!='L') {
+                    if ($orderData->shipping_delivery_type=='D') {
                         //Create Shipping request for dispatcher
                         $order_dispatch = $this->checkIfanyProductLastMileon($request);
                         if ($order_dispatch && $order_dispatch == 1)
                             $stats = $this->insertInVendorOrderDispatchStatus($request);
-                    
+
                     }elseif($orderData->shipping_delivery_type=='L'){
                         //Create Shipping place order request for Lalamove
                         $order_lalamove = $this->placeOrderRequestlalamove($request);
@@ -431,11 +433,19 @@ class OrderController extends BaseController
                 OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id, 'reject_reason' => $request->reject_reason]);
 
                 if (!empty($currentOrderStatus->dispatch_traking_url) && ($request->status_option_id == 3)) {
-                    $dispatch_traking_url = str_replace('/order/', '/order-cancel/', $currentOrderStatus->dispatch_traking_url);
-                    $response = Http::get($dispatch_traking_url);
+
+                    if ($orderData->shipping_delivery_type=='D') {
+                        $dispatch_traking_url = str_replace('/order/', '/order-cancel/', $currentOrderStatus->dispatch_traking_url);
+                        $response = Http::get($dispatch_traking_url);
+                    }elseif($orderData->shipping_delivery_type=='L'){
+                        //Cancel Shipping place order request for Lalamove
+                        $lala = new LalaMovesController();
+                        $order_lalamove = $lala->cancelOrderRequestlalamove($currentOrderStatus->web_hook_code);
+                    }
+
                 }
                 if($request->status_option_id == 2){
-                    $this->ProductVariantStoke($request->order_id);
+                    $this->ProductVariantStock($request->order_id);
                 }
                 DB::commit();
                 // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
@@ -517,19 +527,19 @@ class OrderController extends BaseController
 
     public function placeOrderRequestlalamove($request)
     {
-       
+
         $lala = new LalaMovesController();
         //Create Shipping place order request for Lalamove
         $checkdeliveryFeeAdded = OrderVendor::where(['order_id' => $request->order_id, 'vendor_id' => $request->vendor_id])->first();
         $checkOrder = Order::findOrFail($request->order_id);
             if ($checkdeliveryFeeAdded && $checkdeliveryFeeAdded->delivery_fee > 0.00){
-            $order_lalamove = $lala->placeOrderToLalamove($request->vendor_id,$checkOrder->user_id,$checkOrder->id);
+            $order_lalamove = $lala->placeOrderToLalamoveDev($request->vendor_id,$checkOrder->user_id,$checkOrder->id);
             }
 
             if ($order_lalamove->totalFee >0){
                 $up_web_hook_code = OrderVendor::where(['order_id' => $checkOrder->id, 'vendor_id' => $request->vendor_id])
                 ->update(['web_hook_code' => $order_lalamove->orderRef]);
-            
+
                 return 1;
             }
 
@@ -647,7 +657,7 @@ class OrderController extends BaseController
                 } else {
                     $task_type = 'now';
                 }
- 
+
             $tasks[] = array(
                 'task_type_id' => 1,
                 'latitude' => $vendor_details->latitude ?? '',

@@ -91,10 +91,16 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <div class="col-12">
                     <div class="countdownholder alert-danger" id="min_order_validation_error_<%= product.vendor.id %>" style="display:none;">Your cart will be expired in </div>
                 </div>
-                <% if( product.is_vendor_closed == 1 ) { %>
+                <% if( product.is_vendor_closed == 1 && product.closed_store_order_scheduled == 0 ) { %>
                     <div class="col-12">
                         <div class="text-danger">
                             <i class="fa fa-exclamation-circle"></i> {{__('Vendor is not accepting orders right now.')}}
+                        </div>
+                    </div>
+                <% }else if( product.is_vendor_closed == 1 && product.closed_store_order_scheduled == 1 ){ %>
+                    <div class="col-12">
+                        <div class="text-danger">
+                            <i class="fa fa-exclamation-circle"></i> {{__('We are not accepting orders right now. You can schedule this for ')}}<%= cart_details.delaySlot %>
                         </div>
                     </div>
                 <% } %>
@@ -198,15 +204,15 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <% } %>
                     </div>
 
-                    <% if( (vendor_product.product.delay_order_hrs != undefined && vendor_product.product.delay_order_min != undefined ) &&  ((vendor_product.product.delay_order_hrs != 0) || (vendor_product.product.delay_order_hrs != 0))) { %>
+                    <% if( (vendor_product.product.delay_order_time.delay_order_hrs != undefined && vendor_product.product.delay_order_time.delay_order_min != undefined ) &&  ((vendor_product.product.delay_order_time.delay_order_hrs != 0) || (vendor_product.product.delay_order_time.delay_order_hrs != 0))) { %>
                         <div class="col-12">
                             <div class="text-danger" style="font-size:12px;">
                                 <i class="fa fa-exclamation-circle"></i>Preparation Time is
-                                <% if(vendor_product.product.delay_order_hrs > 0) { %>
-                                    <%= vendor_product.product.delay_order_hrs %> Hrs
+                                <% if(vendor_product.product.delay_order_time.delay_order_hrs > 0) { %>
+                                    <%= vendor_product.product.delay_order_time.delay_order_hrs %> Hrs
                                 <% } %>
-                                <% if(vendor_product.product.delay_order_min > 0) { %>
-                                    <%= vendor_product.product.delay_order_min %> Minutes
+                                <% if(vendor_product.product.delay_order_time.delay_order_min > 0) { %>
+                                    <%= vendor_product.product.delay_order_time.delay_order_min %> Minutes
                                 <% } %>
                             </div>
                         </div>
@@ -248,11 +254,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <% if(product.coupon_amount_used > 0) { %>
                             <p class="total_amt m-0">{{__('Coupon Discount')}} :</p>
                             <% } %>
-                            <p class="total_amt m-0">{{__('Delivery Fee')}}</p>
+                            <p class="total_amt mt-2">{{__('Delivery Fee')}}</p>
                           
                         </div>
                         <div class="col-4 text-right">
-                           
+                            <% if(product.coupon_amount_used > 0) { %>
+                                <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.coupon_amount_used) %></p>
+                                <% } %>
                         </div>
                     </div>
 
@@ -289,9 +297,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
                     <div class="row">
                         <div class="col-12 text-right">
-                            <% if(product.coupon_amount_used > 0) { %>
-                            <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.coupon_amount_used) %></p>
-                            <% } %>
+                            
                             <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.product_total_amount) %></p>
                         </div>
                     </div>
@@ -454,7 +460,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
             {{-- Schedual code Start at down --}}
 
-           
             <% if(client_preference_detail.off_scheduling_at_cart != 1 && cart_details.vendorCnt==1) { %>
                 @if($client_preference_detail->business_type != 'laundry')
             <div class="row d-flex align-items-center arabic-lng no-gutters mt-2 mb-md-4 mb-2 position-relative" id="dateredio">
@@ -464,7 +469,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <li class="d-inline-block mr-1">
                             <input type="hidden" class="custom-control-input check" id="vendor_id" name="vendor_id" value="<%= cart_details.vendor_id %>" >
                             <input type="hidden" class="custom-control-input check" id="tasknow" name="task_type" value="<%= ((cart_details.schedule_type == 'schedule') ? 'schedule' : 'now') %>" >
-                            <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button>
+                           <!-- <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button> -->
                             </li>
                             <% if(cart_details.delay_date == 0) { %>
                             {{-- <li class="d-inline-block mr-1">
@@ -476,9 +481,16 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <input type="radio" class="custom-control-input check taskschedulebtn" id="taskschedule" name="tasktype" value="" <%= ((cart_details.schedule_type == 'schedule' || cart_details.delay_date != 0) ? 'checked' : '') %>  style="<%= ((cart_details.schedule_type != 'schedule') ? '' : 'display:none!important') %>">
                                 <label class="btn btn-solid mb-0 taskschedulebtn" for="taskschedule" style="<%= ((cart_details.schedule_type != 'schedule') ? '' : 'display:none!important') %>">{{__('Schedule')}}</label>
                             </li>
+                            <% if(cart_details.closed_store_order_scheduled != 1 && cart_details.deliver_status == 0) { %>
                             <li class="close-window">
-                                <i class="fa fa-window-close cross" style="<%= ((cart_details.schedule_type != 'schedule') ? 'display:none!important' : 'display:block!important') %>"  aria-hidden="true"></i>
+                                <i class="fa fa-window-close cross"  aria-hidden="true"></i>
                             </li>
+                            <% }else{ %>
+                                <li class="close-window">
+                                    <i class="fa fa-window-close cross" style="display:none!important"  aria-hidden="true"></i>
+                                </li>
+                                <% } %>
+
                         </ul>
                     </div>
                 </div>
@@ -489,14 +501,14 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         min="<%= ((cart_details.delay_date != '0') ? cart_details.delay_date : '') %>">
                         <% } else { %>
                             <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="<%= ((cart_details.schedule_type == 'schedule') ? cart_details.scheduled_date_time : '') %>"
-                            min="{{$now}}">
+                            min="<%= ((cart_details.delay_date != '0') ? cart_details.delay_date : '') %>">
 
                             <% } %>
 
                     <% } else { %>
 
                        
-                            <input type="date" id="schedule_datetime" class="form-control schedule_datetime" placeholder="Inline calendar" value="<%=  cart_details.scheduled.scheduled_date_time %>"  min="<%= cart_details.delay_date %>" >
+                            <input type="date" id="schedule_datetime" class="form-control schedule_datetime" placeholder="Inline calendar" value="<%=  ((cart_details.scheduled.scheduled_date_time != '')?cart_details.scheduled.scheduled_date_time : cart_details.delay_date ) %>"  min="<%= cart_details.delay_date %>" >
                             <input type="hidden" id="checkSlot" value="1">
                             <select name="slots" id="slot" class="form-control">
                                 <option value="">{{__("Select Slot")}} </option>
@@ -574,7 +586,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <a href="{{route('user.addressBook')}}"><i class="fa fa-pencil" aria-hidden="true"></i> <span>{{ __('Edit Address') }}</span> </a>
                     </div>
                     <div class="col-sm-6 col-lg-8 text-sm-right">
-                        {{-- <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button> --}}
+                        <button id="order_placed_btn" class="btn btn-solid d-none" type="button" {{$addresses->count() == 0 ? 'disabled': ''}}>{{__('Place Order')}}</button>
                     </div>
                 </div>
             </div>
@@ -597,6 +609,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <div class="other_cart_products"></div>
 
 </div>
+
+
+{{-- <div id="expected_vendors" class="mb-4">
+</div> --}}
+
+
 <script type="text/template" id="other_cart_products_template">
     <div class="container mt-3 mb-5">
         <% if(cart_details.upSell_products != ''){ %>
@@ -606,7 +624,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="product-4 product-m no-arrow">
                         <% _.each(cart_details.upSell_products, function(product, key){%>
 
-                            <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
+                            <a class="common-product-box scale-effect text-center" href="<%= product.vendor.slug %>/product/<%= product.url_slug %>">
                                 <div class="img-outer-box position-relative">
                                     <img class="blur-up lazyload" data-src="<%= product.image_url %>" alt="">
                                     <div class="pref-timing">
@@ -657,7 +675,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                     <div class="product-4 product-m no-arrow">
                         <% _.each(cart_details.crossSell_products, function(product, key){%>
 
-                            <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/<%= product.url_slug %>">
+                            <a class="common-product-box scale-effect text-center" href="<%= product.vendor.slug %>/product/<%= product.url_slug %>">
                                 <div class="img-outer-box position-relative">
                                     <img class="blur-up lazyload" data-src="<%= product.image_url %>" alt="">
                                         <div class="pref-timing">
@@ -769,9 +787,6 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
         <h6>{{__('Payment Options Not Avaialable')}}</h6>
     <% }else{ %>
         <div class="modal-body pb-0">
-            <div class="payment_response">
-                <div class="alert p-0 m-0" role="alert"></div>
-            </div>
             <h5 class="text-17 mb-2">{{__('Debit From')}}</h5>
             <form method="POST" id="cart_payment_form">
                 @csrf
@@ -803,8 +818,19 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <span class="error text-danger" id="yoco_card_error"></span>
                             </div>
                         <% } %>
+                        <% if(payment_option.slug == 'checkout') { %>
+                            <div class="col-md-12 mt-3 mb-3 checkout_element_wrapper d-none">
+                                <div class="form-control card-frame">
+                                    <!-- form will be added here -->
+                                </div>
+                                <span class="error text-danger" id="checkout_card_error"></span>
+                            </div>
+                        <% } %>
                     </div>
                 <% }); %>
+                <div class="payment_response">
+                    <div class="alert p-0 m-0" role="alert"></div>
+                </div>
             </form>
         </div>
         <div class="modal-footer d-block text-center">
@@ -1099,6 +1125,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 @section('script')
 <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous">
 </script>
+
 @if(in_array('razorpay',$client_payment_options)) 
 <script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
 @endif
@@ -1113,6 +1140,9 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     });
     var inline='';
 </script>
+@endif 
+@if(in_array('checkout',$client_payment_options)) 
+<script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
 @endif 
 
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
@@ -1134,6 +1164,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     var payment_yoco_url = "{{route('payment.yocoPurchase')}}";
     var payment_paylink_url = "{{route('payment.paylinkPurchase')}}";
     var payment_razorpay_url = "{{route('payment.razorpayPurchase')}}";
+    var payment_checkout_url = "{{route('payment.checkoutPurchase')}}";
     var update_qty_url = "{{ url('product/updateCartQuantity') }}";
     var promocode_list_url = "{{ route('verify.promocode.list') }}";
     var payment_option_list_url = "{{route('payment.option.list')}}";
@@ -1263,6 +1294,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
             inline.mount('#yoco-card-frame');
         } else {
             $("#cart_payment_form .yoco_element_wrapper").addClass('d-none');
+        }
+
+        if (method.replace('radio-', '') == 'checkout') {
+            $("#cart_payment_form .checkout_element_wrapper").removeClass('d-none');
+            Frames.init(checkout_public_key);
+        } else {
+            $("#cart_payment_form .checkout_element_wrapper").addClass('d-none');
         }
     });
 

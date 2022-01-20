@@ -35,6 +35,11 @@
                      </div>
                      <div style="padding: 0 0 0 15px;">
                         <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;margin: 0 0 3px;">{{$vendor_product['product']['translation_one']['title']}}</h3>
+                        @if(count($vendor_product['addon']))
+                        @foreach ($vendor_product['addon'] as $addon)
+                        <p style="color: #777777;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;">{{$addon['option']['title']??''}}</p>
+                        @endforeach
+                        @endif
                         {{-- <p style="color: #777777;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;">Extra olives</p>
                         <p style="color: #777777;font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;">Extra cheese</p> --}}
                      </div>
@@ -47,49 +52,54 @@
                </td>
                <td style="width: 35%;padding: 15px 0 10px;  text-align: right;">
                   <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;margin: 0 0 3px;">{{ $currencySymbol . number_format(($vendor_product['pvariant']['price']), 2, '.', '')}}</h3>
+                  @if(count($vendor_product['addon']))
+                  @foreach ($vendor_product['addon'] as $addon)
+                  @php
+                     $vendor_product['pvariant']['price'] = $vendor_product['pvariant']['price'] + $addon['option']['price_in_cart']
+                  @endphp
                   {{-- <p style="font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;color: #777777;">$90.00</p>
                   <p style="font-size: 15px;letter-spacing: 0;line-height: 18px;margin: 0 0 3px;color: #777777;">$90.00</p> --}}
                   <h3 style="color: #000000;font-size: 15px;letter-spacing: 0;line-height: 19px;margin: 5px 0 0;padding: 5px 0 0;color: #000000;display: inline-block;border-top: 1px solid #ddd;min-width: 80px;">{{ $currencySymbol . number_format(($vendor_product['pvariant']['price']*$vendor_product['quantity']), 2, '.', '')}}</h3>
                </td>
             </tr>
 
-             <tr>
-                <td colspan="3" style="border-bottom: 1px solid #9797973b;padding: 5px 0;"></td>
-             </tr> 
-             @endforeach
-             <tr>
-                <td style="text-align: left;"><b>{{__('Subtotal')}}:</b></td>
-                <td></td>
-                <td style="text-align: right;">{{$currencySymbol . number_format($total_products, 2, '.', '')}}</td>
-             </tr>
+           <tr>
+              <td colspan="3" style="border-bottom: 1px solid #9797973b;padding: 5px 0;"></td>
+           </tr> 
+           @endforeach
+           <tr>
+              <td style="text-align: left;"><b>{{__('Subtotal')}}:</b></td>
+              <td></td>
+              <td style="text-align: right;">{{$currencySymbol . number_format($total_products, 2, '.', '')}}</td>
+           </tr>
 
-             <tr>
-                <td style="text-align: left;"><b>{{__('TAX')}}:</b></td>
-                <td></td>
-                <td style="text-align: right;">{{$currencySymbol . number_format($product['taxable_amount'], 2, '.', '')}}</td>
-             </tr>
+           <tr>
+              <td style="text-align: left;"><b>{{__('TAX')}}:</b></td>
+              <td></td>
+              <td style="text-align: right;">{{$currencySymbol . number_format($product['taxable_amount'], 2, '.', '')}}</td>
+           </tr>
 
-             <tr>
-                <td style="text-align: left;"><b>{{__('SHIPPING Charge')}}:</b></td>
-                <td></td>
-                <td style="text-align: right;">{{$currencySymbol . number_format($product['delivery_fee_charges'], 2, '.', '')}}</td>
-             </tr>
+           <tr>
+              <td style="text-align: left;"><b>{{__('SHIPPING Charge')}}:</b></td>
+              <td></td>
+              <td style="text-align: right;">{{$currencySymbol . number_format($product['delivery_fee_charges'], 2, '.', '')}}</td>
+           </tr>
 
-             <tr>
-                <td style="text-align: left;"><b>{{__('Discount')}}:</b></td>
-                <td></td>
-                <td style="text-align: right;">{{$currencySymbol . number_format($product['discount_amount'], 2, '.', '')}}</td>
-             </tr>
-             
-             <tr>
-                <td style="text-align: left;"><b>{{__('Total')}}:</b></td>
-                <td></td>
-                <td style="text-align: right;">{{$currencySymbol . number_format($product['payable_amount'], 2, '.', '')}}</td>
-             </tr>
-            
-            
-         </table>
-         @endif
-         @endforeach
-     </td>
- </tr>
+           <tr>
+              <td style="text-align: left;"><b>{{__('Discount')}}:</b></td>
+              <td></td>
+              <td style="text-align: right;">{{$currencySymbol . number_format($product['discount_amount'], 2, '.', '')}}</td>
+           </tr>
+           
+           <tr>
+              <td style="text-align: left;"><b>{{__('Total')}}:</b></td>
+              <td></td>
+              <td style="text-align: right;">{{$currencySymbol . number_format($product['payable_amount'], 2, '.', '')}}</td>
+           </tr>
+          
+          
+       </table>
+       @endif
+       @endforeach
+   </td>
+</tr>

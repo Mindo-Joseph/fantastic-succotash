@@ -143,7 +143,7 @@ class OrderController extends FrontController
                 ->get();
                 $vendor->vendor_dispatcher_status_count = 6;
                 $vendor->dispatcher_status_icons = [asset('assets/icons/driver_1_1.png'),asset('assets/icons/driver_2_1.png'),asset('assets/icons/driver_4_1.png'),asset('assets/icons/driver_3_1.png'),asset('assets/icons/driver_4_2.png'),asset('assets/icons/driver_5_1.png')];
-           
+
             }
         }
 
@@ -337,6 +337,7 @@ class OrderController extends FrontController
                     $email_template_content = str_ireplace("{products}", $returnHTML, $email_template_content);
                     $email_template_content = str_ireplace("{address}", $address->address . ', ' . $address->state . ', ' . $address->country . ', ' . $address->pincode, $email_template_content);
                 }
+
                 $email_data = [
                     'code' => $otp,
                     'link' => "link",
@@ -353,6 +354,12 @@ class OrderController extends FrontController
                 if (!empty($data['admin_email'])) {
                     $email_data['admin_email'] = $data['admin_email'];
                 }
+                if ($vendor_id == "") {
+                    $email_data['send_to_cc'] = 1;
+                }else{
+                    $email_data['send_to_cc'] = 0;
+                }
+
                 dispatch(new \App\Jobs\SendOrderSuccessEmailJob($email_data))->onQueue('verify_email');
                 $notified = 1;
             } catch (\Exception $e) {
@@ -602,11 +609,11 @@ class OrderController extends FrontController
         }
         return $cart;
     }
-    
+
     public function placeOrder(Request $request, $domain = '')
     {
 
-        //$stock = $this->ProductVariantStoke('18');
+        //$stock = $this->ProductVariantStock('18');
 
         // dd($request->all());
         // if ($request->input("payment-group") == '1') {
@@ -764,17 +771,16 @@ class OrderController extends FrontController
                     if ($action == 'delivery') {
                         $deliver_fee_data = CartDeliveryFee::where('cart_id',$vendor_cart_product->cart_id)->where('vendor_id',$vendor_cart_product->vendor_id)->first();
                         if (((!empty($vendor_cart_product->product->Requires_last_mile)) && ($vendor_cart_product->product->Requires_last_mile == 1)) || isset($deliver_fee_data)) {
-                         
+
                             //Add here Delivery option Lalamove and dispatcher
-                            if($request->delivery_type=='L'){
+                            if($deliver_fee_data->shipping_delivery_type=='L'){
                                 $lala = new LalaMovesController();
                                 $delivery_fee = $lala->getDeliveryFeeLalamove($vendor_cart_product->vendor_id);
                             }else{
                                 $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
                             }
 
-                           Log::info($deliver_fee_data);
-                           Log::info($vendor_cart_product);
+
 
                             if($deliver_fee_data)
                             $delivery_fee  = $deliver_fee_data->delivery_fee??0.00;
@@ -879,7 +885,7 @@ class OrderController extends FrontController
                             $orderAddon->order_product_id = $order_product->id;
                             $orderAddon->save();
                         }
-                        CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
+                     //   CartAddon::where('cart_product_id', $vendor_cart_product->id)->delete();
                     }
                 }
                 $coupon_id = null;
@@ -988,10 +994,10 @@ class OrderController extends FrontController
             $order->loyalty_points_earned = $loyalty_points_earned['per_order_points'];
             $order->loyalty_membership_id = $loyalty_points_earned['loyalty_card_id'];
 
-          
+
             $order->scheduled_date_time = $cart->schedule_type == 'schedule' ? $cart->scheduled_date_time : null;
-            
-           
+
+
             $order->scheduled_slot = (($cart->scheduled_slot)?$cart->scheduled_slot:null);
             $order->luxury_option_id = $luxury_option->id;
             $order->payable_amount = $payable_amount;
@@ -1004,7 +1010,7 @@ class OrderController extends FrontController
             }
             // $this->sendOrderNotification($user->id, $vendor_ids);
             $this->sendSuccessEmail($request, $order);
-            $ex_gateways = [7, 8, 9, 10]; //  mobbex, yoco, pointcheckout, razorpay
+            $ex_gateways = [7, 8, 9, 10, 17]; //  mobbex, yoco, pointcheckout, razorpay, checkout
             if (!in_array($request->payment_option_id, $ex_gateways)) {
                 Cart::where('id', $cart->id)->update([
                     'schedule_type' => null, 'scheduled_date_time' => null,
@@ -1061,7 +1067,7 @@ class OrderController extends FrontController
             }
             DB::commit();
             $this->sendSuccessSMS($request, $order);
-         
+
             return $this->successResponse($order);
         } catch (Exception $e) {
             DB::rollback();
@@ -1265,6 +1271,7 @@ class OrderController extends FrontController
         $order_vendors = OrderVendor::where('order_id', $order_id)->whereHas('vendor', function ($q) {
             $q->where('auto_accept_order', 1);
         })->get();
+        $orderData = Order::find($order_id);
         //  Log::info($order_vendors);
         foreach ($order_vendors as $ov) {
             //     Log::info($ov);
@@ -1291,15 +1298,23 @@ class OrderController extends FrontController
                 $vendor_order_status->order_vendor_id = $request->order_vendor_id;
                 $vendor_order_status->order_status_option_id = $request->status_option_id;
                 $vendor_order_status->save();
+
                 if ($request->status_option_id == 2) {
+
+                    if ($orderData->shipping_delivery_type=='D') {
                     //             Log::info($request->status_option_id);
                     $order_dispatch = $this->checkIfanyProductLastMileon($request);
                     if ($order_dispatch && $order_dispatch == 1) {
                         $stats = $this->insertInVendorOrderDispatchStatus($request);
                     }
+                   }elseif($orderData->shipping_delivery_type=='L'){
+                        //Create Shipping place order request for Lalamove
+                        $order_lalamove = $this->placeOrderRequestlalamove($request);
+                    }
+
                 }
                 OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id]);
-                $this->ProductVariantStoke($order_id);
+                $this->ProductVariantStock($order_id);
                 DB::commit();
                 $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
             }
@@ -1312,6 +1327,30 @@ class OrderController extends FrontController
 
 
     /// ******************  check If any Product Last Mile on   ************************ ///////////////
+
+
+    public function placeOrderRequestlalamove($request)
+    {
+
+        $lala = new LalaMovesController();
+        //Create Shipping place order request for Lalamove
+        $checkdeliveryFeeAdded = OrderVendor::where(['order_id' => $request->order_id, 'vendor_id' => $request->vendor_id])->first();
+        $checkOrder = Order::findOrFail($request->order_id);
+            if ($checkdeliveryFeeAdded && $checkdeliveryFeeAdded->delivery_fee > 0.00){
+            $order_lalamove = $lala->placeOrderToLalamoveDev($request->vendor_id,$checkOrder->user_id,$checkOrder->id);
+            }
+
+            if ($order_lalamove->totalFee >0){
+                $up_web_hook_code = OrderVendor::where(['order_id' => $checkOrder->id, 'vendor_id' => $request->vendor_id])
+                ->update(['web_hook_code' => $order_lalamove->orderRef]);
+
+                return 1;
+            }
+
+        return 2;
+    }
+
+
     public function checkIfanyProductLastMileon($request)
     {
         $order_dispatchs = 2;
@@ -2182,20 +2221,25 @@ class OrderController extends FrontController
      */
     public function tipAfterOrder(Request $request, $domain = '')
     {
-        $user = Auth::user();
+        if( (isset($request->user_id)) && (!empty($request->user_id)) ){
+            $user = User::find($request->user_id);
+        }else{
+            $user = Auth::user();
+        }
+
         if ($user) {
             $order_number = $request->order_number;
             if ($order_number > 0) {
                 $order = Order::select('id', 'tip_amount')->where('order_number', $order_number)->first();
                 if (($order->tip_amount == 0) || empty($order->tip_amount)) {
                     $tip = Order::where('order_number', $order_number)->update(['tip_amount' => $request->tip_amount]);
-                    Payment::insert([
-                        'date' => date('Y-m-d'),
-                        'order_id' => $order->id,
-                        'transaction_id' => $request->transaction_id,
-                        'balance_transaction' => $request->tip_amount,
-                        'type' => 'tip'
-                    ]);
+                    $payment = new Payment();
+                    $payment->date = date('Y-m-d');
+                    $payment->order_id = $order->id;
+                    $payment->transaction_id = $request->transaction_id;
+                    $payment->balance_transaction = $request->tip_amount;
+                    $payment->type = 'tip';
+                    $payment->save();
                 }
                 $message = 'Tip has been submitted successfully';
                 $response['tip_amount'] = $request->tip_amount;
