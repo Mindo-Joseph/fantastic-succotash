@@ -272,9 +272,7 @@ function createSlug($str, $delimiter = '-'){
             }
             $lalamove_status = $simp_creds->status??'';
         }
-
-        
-        $distance = $dist;  
+         $distance = $dist;  
         if($distance < 1 || $base_price < 1)
         {
             return 0;    
