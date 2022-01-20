@@ -346,11 +346,14 @@ function createSlug($str, $delimiter = '-'){
     $StartTime += $AddMins+60;
     $endtm = 0;
     }
-    //dd($ReturnArray);
     
+    $ReturnArray[] = date ("G:i", $StartTime).' - '.date ("G:i", $endtm);
+    $StartTime += $AddMins+60;
+    $endtm = 0;
+    }
     return $ReturnArray;
 }
-
+    
 function showSlot($myDate = null,$vid,$type = 'delivery',$duration="60")
 {
 $type = ((session()->get('vendorType'))?session()->get('vendorType'):$type);
