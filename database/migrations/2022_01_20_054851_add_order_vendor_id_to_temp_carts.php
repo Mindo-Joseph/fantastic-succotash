@@ -16,6 +16,8 @@ class AddOrderVendorIdToTempCarts extends Migration
         Schema::table('temp_carts', function (Blueprint $table) {
             $table->unsignedBigInteger('order_vendor_id')->nullable();
             $table->unsignedBigInteger('address_id')->nullable();
+            $table->tinyInteger('is_submitted')->nullable()->default(0)->comment('0-No, 1-Yes');
+            $table->tinyInteger('is_approved')->nullable()->default(0)->comment('0-No, 1-Yes');
         });
     }
 
@@ -29,6 +31,8 @@ class AddOrderVendorIdToTempCarts extends Migration
         Schema::table('temp_carts', function (Blueprint $table) {
             $table->dropColumn('order_vendor_id');
             $table->dropColumn('address_id');
+            $table->dropColumn('is_submitted');
+            $table->dropColumn('is_approved');
         });
     }
 }
