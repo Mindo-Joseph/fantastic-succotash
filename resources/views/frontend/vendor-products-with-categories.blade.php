@@ -392,10 +392,11 @@
                                                 @empty
                                                 @endforelse
                                         </li> --}}
-                                                    <li class="d-block vendor-location">
-                                                        <i class="icon-location"></i> {{ $vendor->address }}
-                                                    </li>
+
                                                     @if($vendor->is_show_vendor_details == 1)
+                                                        <li class="d-block vendor-location">
+                                                            <i class="icon-location"></i> {{ $vendor->address }}
+                                                        </li>
                                                         @if($vendor->email)
                                                         <li class="d-block vendor-email">
                                                             <i class="fa fa-envelope"></i> {{$vendor->email}}
