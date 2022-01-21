@@ -5,10 +5,11 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Validator;
 use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation, OrderVendor, LuxuryOption, ClientLanguage, ProductCategory, ProductVariant, ProductTranslation, Variant, Brand, AddonSet, TaxCategory, ClientPreference, Celebrity, ProductImage, ProductAddon, ProductUpSell, ProductCrossSell, ProductRelated, ProductCelebrity, ProductTag, VendorMedia, ProductVariantSet};
+use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation, OrderVendor, LuxuryOption, ClientLanguage, ProductCategory, ProductVariant, ProductTranslation, Variant, Brand, AddonSet, TaxCategory, ClientPreference, Celebrity, ProductImage, ProductAddon, ProductUpSell, ProductCrossSell, ProductRelated, ProductCelebrity, ProductTag, VendorMedia, ProductVariantSet, CartProduct, UserWishlist};
 
 class StoreController extends BaseController{
     use ApiResponser;
@@ -763,6 +764,79 @@ class StoreController extends BaseController{
 		}
 	}
 
+	public function deleteProduct(Request $request)
+	{		
+		try{
+			$validator = Validator::make($request->all(), [
+				'product_id' => 'required',					
+			]);
+
+			if ($validator->fails()) {			
+				return $this->errorResponse($validator->errors()->first(), 422);
+			}
+			$id = $request->product_id;
+			DB::beginTransaction();
+            $product = Product::find($id);
+			if(!$product)
+			{
+				return $this->errorResponse('Product not found', 422);
+			}
+            $dynamic = time();
+
+            Product::where('id', $id)->update(['sku' => $product->sku.$dynamic ,'url_slug' => $product->url_slug.$dynamic]);
+
+            $tot_var  = ProductVariant::where('product_id', $id)->get();
+            foreach($tot_var as $varr)
+            {
+                $dynamic = time().substr(md5(mt_rand()), 0, 7);
+                ProductVariant::where('id', $varr->id)->update(['sku' => $product->sku.$dynamic]);
+            }
+
+            Product::where('id', $id)->delete();
+
+            CartProduct::where('product_id', $id)->delete();
+            UserWishlist::where('product_id', $id)->delete();
+			
+            DB::commit();
+			return $this->successResponse('', 'Product deleted successfully!', 200);
+		} catch (Exception $e) {
+			DB::rollback();
+			return $this->errorResponse($e->getMessage(), $e->getCode());
+		}
+	}
+
+	public function deleteProductVariant(Request $request)
+	{		
+		try{
+			$validator = Validator::make($request->all(), [
+				'product_id' => 'required',	
+				'variant_id' => 'required',	
+			]);
+
+			if ($validator->fails()) {			
+				return $this->errorResponse($validator->errors()->first(), 422);
+			}
+			$product_id = $request->product_id;
+			$variant_id = $request->variant_id;
+			
+			$product_variant = ProductVariant::where('id', $variant_id)->where('product_id', $product_id)->first();
+			if(!$product_variant)
+			{
+				return $this->errorResponse('Product variant not found', 422);
+			}
+			$product_variant->status = 0;
+			$product_variant->save();
+			// if ($request->is_product_delete > 0) {
+			// 	Product::where('id', $request->product_id)->delete();
+			// }
+			return $this->successResponse('', 'Product variant deleted successfully!', 200);
+		} catch (Exception $e) {
+			DB::rollback();
+			return $this->errorResponse($e->getMessage(), $e->getCode());
+		}
+	}
+		
+
 	private function preProductDetail($productid)
 	{		
 		$user = Auth::user();
@@ -779,7 +853,7 @@ class StoreController extends BaseController{
 		->where('bc.category_id', $product->category_id)->where('status',1)->get();
 		
 		$clientLanguages = ClientLanguage::join('languages as lang', 'lang.id', 'client_languages.language_id')
-		->select('lang.id as langId', 'lang.name as label', 'lang.name as value', 'lang.sort_code', 'client_languages.is_primary')
+		->select('lang.id as langId', 'lang.name as langTitle', 'lang.sort_code', 'client_languages.is_primary')
 		->where('client_languages.client_code', Auth::user()->code)
 		->where('client_languages.is_active', 1)
 		->orderBy('client_languages.is_primary', 'desc')->get();
