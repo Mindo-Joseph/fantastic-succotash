@@ -765,7 +765,7 @@ class CartController extends FrontController
                              $prod->deliver_charge_lalamove = number_format($deliver_lalmove_fee, 2, '.', '');
                              $shipping_delivery_type = 'L';
                         }
-                       $deliver_charges_lalmove = $deliver_lalmove_fee;
+                        $deliver_charges_lalmove = $deliver_lalmove_fee;
                         //End Lalamove Delivery changes code
                         if($code =='L' && $deliver_lalmove_fee>0)
                         {
@@ -821,7 +821,6 @@ class CartController extends FrontController
 
                 if (isset($vendorData->coupon) && !empty($vendorData->coupon) ) {
                     //pr($vendorData->coupon->promo);
-
                     if (isset($vendorData->coupon->promo) && !empty($vendorData->coupon->promo)) {
                         if($vendorData->coupon->promo->first_order_only==1){
                             if(Auth::user()){
@@ -834,8 +833,16 @@ class CartController extends FrontController
                                 }
                             }
                         }
-
+                        if ($PromoDelete !=1) {
+                            if(!($vendorData->coupon->promo->expiry_date >= $nowdate) ){
+                                $cart->coupon()->delete();
+                                $vendorData->coupon()->delete();
+                                unset($vendorData->coupon);
+                                $PromoDelete =1;
+                            }
+                        }
                         if ( $PromoDelete !=1) {
+
                             $minimum_spend = 0;
                             if (isset($vendorData->coupon->promo->minimum_spend)) {
                                 $minimum_spend = $vendorData->coupon->promo->minimum_spend * $customerCurrency->doller_compare;
@@ -846,7 +853,7 @@ class CartController extends FrontController
                                 $maximum_spend = $vendorData->coupon->promo->maximum_spend * $customerCurrency->doller_compare;
                             }
 
-                            if( ($minimum_spend <= $payable_amount ) && ($maximum_spend >= $payable_amount)  && ($vendorData->coupon->promo->expiry_date > $nowdate )  )
+                            if( ($minimum_spend <= $payable_amount ) && ($maximum_spend >= $payable_amount)    )
                             {
                                 if ($vendorData->coupon->promo->promo_type_id == 2) {
                                     $total_discount_percent = $vendorData->coupon->promo->amount;

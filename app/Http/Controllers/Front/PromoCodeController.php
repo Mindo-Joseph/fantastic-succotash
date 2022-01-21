@@ -73,6 +73,7 @@ class PromoCodeController extends Controller{
                     });
                 })->where('is_deleted', 0)->where(['promo_visibility' => 'public'])->get();
                 $promo_codes = $promo_codes->merge($result1);
+
                 $vendor_promo_code_details = PromoCodeDetail::whereHas('promocode')->where('refrence_id', $vendor_id)->pluck('promocode_id');
                 $result2 = Promocode::where('restriction_on', 1)->where(function ($query) use ($vendor_promo_code_details,$firstOrderCheck) {
                     $query->where(function ($query2) use ($vendor_promo_code_details) {
@@ -81,6 +82,9 @@ class PromoCodeController extends Controller{
                             $query2->whereNotIn('id', $vendor_promo_code_details->toArray());
                         }
                     });
+                    if($firstOrderCheck){
+                        $query->where('first_order_only', 0);
+                    }
                     $query->orWhere(function ($query1) use ($vendor_promo_code_details) {
                         $query1->where('restriction_type', 0);
                         if (!empty($vendor_promo_code_details->toArray())) {
