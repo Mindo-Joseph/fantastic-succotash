@@ -33,7 +33,9 @@ Route::group(['middleware' => ['domain']], function () {
 	// Start edit order routes
 	Route::post('edit-order/search/vendor/products', 'Front\VendorController@vendorProductsSearchResultsForEditOrder');
 	Route::post('edit-order/vendor/products/getProductsInCart', 'Front\TempCartController@getProductsInCart');
+	Route::post('edit-order/temp-cart/product/add', 'Front\TempCartController@postAddToTempCart');
 	Route::post('edit-order/temp-cart/product/updateQuantity', 'Front\TempCartController@updateQuantity');
+	Route::post('edit-order/vendor/product/{id}', 'Front\TempCartController@getProductById');
 	// End edit order routes
 
 	
@@ -196,7 +198,7 @@ Route::group(['middleware' => ['domain']], function () {
 	Route::get('category/{slug1}/{slug2}', 'Front\CategoryController@categoryVendorProducts')->name('categoryVendorProducts');
 	Route::post('category/filters/{id}', 'Front\CategoryController@categoryFilters')->name('productFilters');
 	Route::get('vendor/all', 'Front\VendorController@viewAll')->name('vendor.all');
-	Route::get('vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
+	Route::match(['get','post'],'vendor/{id?}', 'Front\VendorController@vendorProducts')->name('vendorDetail');
 	Route::get('vendor/{slug1}/{slug2}', 'Front\VendorController@vendorCategoryProducts')->name('vendorCategoryProducts');
 	Route::post('vendor/filters/{id}', 'Front\VendorController@vendorFilters')->name('vendorProductFilters');
 	Route::post('vendor/products/searchResults', 'Front\VendorController@vendorProductsSearchResults')->name('vendorProductsSearchResults');

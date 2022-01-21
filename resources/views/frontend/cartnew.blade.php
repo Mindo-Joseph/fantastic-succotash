@@ -94,7 +94,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 <% if( product.is_vendor_closed == 1 && product.closed_store_order_scheduled == 0 ) { %>
                     <div class="col-12">
                         <div class="text-danger">
-                            <i class="fa fa-exclamation-circle"></i> {{__('Vendor is not accepting orders right now.')}}
+                            <i class="fa fa-exclamation-circle"></i>{{getNomenclatureName('Vendors', true) . __(' is not accepting orders right now.')}}
                         </div>
                     </div>
                 <% }else if( product.is_vendor_closed == 1 && product.closed_store_order_scheduled == 1 ){ %>
@@ -204,15 +204,15 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                         <% } %>
                     </div>
 
-                    <% if( (vendor_product.product.delay_order_hrs != undefined && vendor_product.product.delay_order_min != undefined ) &&  ((vendor_product.product.delay_order_hrs != 0) || (vendor_product.product.delay_order_hrs != 0))) { %>
+                    <% if( (vendor_product.product.delay_order_time.delay_order_hrs != undefined && vendor_product.product.delay_order_time.delay_order_min != undefined ) &&  ((vendor_product.product.delay_order_time.delay_order_hrs != 0) || (vendor_product.product.delay_order_time.delay_order_hrs != 0))) { %>
                         <div class="col-12">
                             <div class="text-danger" style="font-size:12px;">
                                 <i class="fa fa-exclamation-circle"></i>Preparation Time is
-                                <% if(vendor_product.product.delay_order_hrs > 0) { %>
-                                    <%= vendor_product.product.delay_order_hrs %> Hrs
+                                <% if(vendor_product.product.delay_order_time.delay_order_hrs > 0) { %>
+                                    <%= vendor_product.product.delay_order_time.delay_order_hrs %> Hrs
                                 <% } %>
-                                <% if(vendor_product.product.delay_order_min > 0) { %>
-                                    <%= vendor_product.product.delay_order_min %> Minutes
+                                <% if(vendor_product.product.delay_order_time.delay_order_min > 0) { %>
+                                    <%= vendor_product.product.delay_order_time.delay_order_min %> Minutes
                                 <% } %>
                             </div>
                         </div>
@@ -255,7 +255,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <p class="total_amt m-0">{{__('Coupon Discount')}} :</p>
                             <% } %>
                             <p class="total_amt mt-2">{{__('Delivery Fee')}}</p>
-                          
+
                         </div>
                         <div class="col-4 text-right">
                             <% if(product.coupon_amount_used > 0) { %>
@@ -277,8 +277,8 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %> 
                             </div>
                         </div>
-                    <% } %> 
-                                   
+                    <% } %>
+
 
                     <% if(product.delivery_fee_charges_lalamove > 0) { %>
                         <div class="row mb-1">
@@ -312,7 +312,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
                     <div class="row">
                         <div class="col-12 text-right">
-                            
+
                             <p class="total_amt m-0">{{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.product_total_amount) %></p>
                         </div>
                     </div>
@@ -522,7 +522,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 
                     <% } else { %>
 
-                       
+
                             <input type="date" id="schedule_datetime" class="form-control schedule_datetime" placeholder="Inline calendar" value="<%=  ((cart_details.scheduled.scheduled_date_time != '')?cart_details.scheduled.scheduled_date_time : cart_details.delay_date ) %>"  min="<%= cart_details.delay_date %>" >
                             <input type="hidden" id="checkSlot" value="1">
                             <select name="slots" id="slot" class="form-control">
@@ -530,13 +530,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <% _.each(cart_details.slots, function(slot, sl){%>
                                 <option value="<%= slot.value  %>" <%= slot.value == cart_details.scheduled.slot ? 'selected' : '' %> ><%= slot.name %></option>
                                 <% }) %>
-                            </select> 
+                            </select>
                     <% } %>
 
                 </div>
             </div>
             @endif
-            <% } %> 
+            <% } %>
 
             {{-- Schedual code end at down --}}
 
@@ -624,6 +624,12 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     <div class="other_cart_products"></div>
 
 </div>
+
+
+{{-- <div id="expected_vendors" class="mb-4">
+</div> --}}
+
+
 <script type="text/template" id="other_cart_products_template">
     <div class="container mt-3 mb-5">
         <% if(cart_details.upSell_products != ''){ %>
@@ -1135,13 +1141,13 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous">
 </script>
 
-@if(in_array('razorpay',$client_payment_options)) 
+@if(in_array('razorpay',$client_payment_options))
 <script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
 @endif
-@if(in_array('stripe',$client_payment_options)) 
+@if(in_array('stripe',$client_payment_options))
 <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
 @endif
-@if(in_array('yoco',$client_payment_options)) 
+@if(in_array('yoco',$client_payment_options))
 <script type="text/javascript" src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 <script type="text/javascript">
     var sdk = new window.YocoSDK({
@@ -1149,10 +1155,10 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
     });
     var inline='';
 </script>
-@endif 
-@if(in_array('checkout',$client_payment_options)) 
+@endif
+@if(in_array('checkout',$client_payment_options))
 <script src="https://cdn.checkout.com/js/framesv2.min.js"></script>
-@endif 
+@endif
 
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
 

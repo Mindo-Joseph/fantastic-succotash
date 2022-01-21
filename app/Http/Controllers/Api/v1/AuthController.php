@@ -202,7 +202,7 @@ class AuthController extends BaseController
                 return response()->json(['error' => 'The email has already been taken.' ], 422);
             }
         }
-
+        $client_timezone = Client::where('id', '>', 0)->value('timezone');
         $user = new User();
 
         foreach ($signReq->only('name', 'country_id', 'phone_number', 'dial_code') as $key => $value) {
@@ -225,6 +225,7 @@ class AuthController extends BaseController
         $user->country_id = $country_detail->id;
         $user->phone_token_valid_till = $sendTime;
         $user->email_token_valid_till = $sendTime;
+        $user->timezone = $client_timezone;
         $user->save();
         $wallet = $user->wallet;
         $userRefferal = new UserRefferal();
@@ -459,7 +460,7 @@ class AuthController extends BaseController
                     $body = "Dear " . ucwords($user->name) . ", Please enter OTP " . $otp . " to verify your account.";
                     if (!empty($data->sms_key) && !empty($data->sms_secret) && !empty($data->sms_from)) {
                         $send = $this->sendSms($provider, $data->sms_key, $data->sms_secret, $data->sms_from, $to, $body);
-                        if ($send) {
+                        if ($send ==1) {
                             $message = __('An otp has been sent to your phone. Please check.');
                             return $this->successResponse([], $message);
                         }
@@ -674,7 +675,7 @@ class AuthController extends BaseController
         // $user->save();
         // if($notified == 1){
         //     return response()->json(['success' => 'An otp has been sent to your email. Please check.'], 200);
-        // } 
+        // }
     }
 
     /**
@@ -822,7 +823,7 @@ class AuthController extends BaseController
     {
         try {
             $errors = array();
-            
+
             $phone_regex = '/^[0-9\-\(\)\/\+\s]*$/';
             $email_regex = '/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/';
             $username = $request->username;
@@ -917,7 +918,7 @@ class AuthController extends BaseController
                     'device_type'   => 'required|string',
                     'device_token'  => 'required|string',
                 ]);
-    
+
                 if($validator->fails()){
                     foreach($validator->errors()->toArray() as $error_key => $error_value){
                         $errors['error'] = __($error_value[0]);
@@ -1062,6 +1063,7 @@ class AuthController extends BaseController
         try {
             $user = new User();
             $country = Country::where('code', strtoupper($req->countryData))->first();
+            $client_timezone = Client::where('id', '>', 0)->value('timezone');
             // $emailCode = mt_rand(100000, 999999);
             $email = ''; //'ro_'.Carbon::now()->timestamp . '.' . uniqid() . '@royoorders.com';
             $user->type = 1;
@@ -1077,6 +1079,7 @@ class AuthController extends BaseController
             // $user->email_token = $emailCode;
             $user->phone_number = $req->phone_number;
             $user->phone_token_valid_till = $req->sendTime;
+            $user->timezone = $client_timezone;
             // $user->email_token_valid_till = $sendTime;
             // $user->password = Hash::make($req->password);
             $user->save();

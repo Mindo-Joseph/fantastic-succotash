@@ -102,9 +102,9 @@
                                             @endphp
                                         <div class="col-md-12 text-center">
                                             @if($vendor->is_vendor_closed == 1 && $checkSlot == 0)
-                                            <p class="text-danger">Vendor is not accepting orders right now.</p>
+                                            <p class="text-danger">{{getNomenclatureName('Vendors', true) . __(' is not accepting orders right now.')}}</p>
                                             @elseif($vendor->is_vendor_closed == 1 && $vendor->closed_store_order_scheduled == 1)
-                                            <p class="text-danger">We are not accepting orders right now. You can schedule this for {{$checkSlot}}.</p>
+                                            <p class="text-danger">{{__('We are not accepting orders right now. You can schedule this for '). $checkSlot }}.</p>
                                             @endif
                                             </div>
 
@@ -419,7 +419,7 @@
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ route('vendorProductFilters', $vendor->id) }}",
+            url: "{{ route('vendorDetail', $vendor->slug) }}",
             data: {
                 "_token": "{{ csrf_token() }}",
                 "brands": brands,
