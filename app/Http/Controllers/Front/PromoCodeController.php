@@ -95,9 +95,7 @@ class PromoCodeController extends Controller{
                             $query1->where('id', 0);
                         }
                     });
-                    if($firstOrderCheck){
-                        $query->where('first_order_only', 0);
-                    }
+
                 })->where('is_deleted', 0)->whereDate('expiry_date', '>=', $now)->where(['promo_visibility' => 'public'])->get();
                 $promo_codes = $promo_codes->merge($result2);
             }
