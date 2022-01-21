@@ -818,7 +818,7 @@ class CartController extends FrontController
                         $crossSell_products->push($cross_prods);
                     }
                 }
-
+                $couponGetAmount =$payable_amount ;
                 if (isset($vendorData->coupon) && !empty($vendorData->coupon) ) {
                     //pr($vendorData->coupon->promo);
                     if (isset($vendorData->coupon->promo) && !empty($vendorData->coupon->promo)) {
@@ -885,7 +885,16 @@ class CartController extends FrontController
                         }
                     }
                 }
-
+                $promoCodeController = new PromoCodeController();
+                $promoCodeRequest = new Request();
+                $promoCodeRequest->setMethod('POST');
+                $promoCodeRequest->request->add(['vendor_id' => $vendorData->vendor_id,'amount' => $couponGetAmount]);
+                $promoCodeResponse = $promoCodeController->postPromoCodeList($promoCodeRequest)->getData();
+                if($promoCodeResponse->status == 'Success'){
+                    if(!empty($promoCodeResponse->data)){
+                        $is_promo_code_available = 1;
+                    }
+                }
                 if (in_array(1, $subscription_features)) {
                     $subscription_discount = $subscription_discount + $deliveryCharges;
                 }
@@ -966,16 +975,7 @@ class CartController extends FrontController
                 $total_discount_percent = $total_discount_percent + $discount_percent;
                 $total_subscription_discount = $total_subscription_discount + $subscription_discount;
 
-                $promoCodeController = new PromoCodeController();
-                $promoCodeRequest = new Request();
-                $promoCodeRequest->setMethod('POST');
-                $promoCodeRequest->request->add(['vendor_id' => $vendorData->vendor_id,'doller_compare' =>$customerCurrency->doller_compare ,'amount' => $vendorData->product_total_amount]);
-                $promoCodeResponse = $promoCodeController->postPromoCodeList($promoCodeRequest)->getData();
-                if($promoCodeResponse->status == 'Success'){
-                    if(!empty($promoCodeResponse->data)){
-                        $is_promo_code_available = 1;
-                    }
-                }
+
                 $vendorData->is_promo_code_available = $is_promo_code_available;
             }
             $is_percent = 0;

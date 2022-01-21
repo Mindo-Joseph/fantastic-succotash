@@ -45,8 +45,10 @@ class PromoCodeController extends Controller{
                     $firstOrderCheck = 1;
                 }
             }
+            $curId = Session::get('customerCurrency');
+            $customerCurrency = ClientCurrency::where('currency_id', $curId)->first();
 
-            $doller_compare = $request->doller_compare ?  $request->doller_compare : 1 ;
+            $doller_compare = $customerCurrency->doller_compare ?  $customerCurrency->doller_compare : 1 ;
             //pr($firstOrderCheck);
             // $order_vendor_coupon_list = OrderVendor::whereNotNull('coupon_id')->where('user_id', $user->id)->get([DB::raw('coupon_id'),  DB::raw('sum(coupon_id) as total')]);
             $now = Carbon::now()->toDateTimeString();
