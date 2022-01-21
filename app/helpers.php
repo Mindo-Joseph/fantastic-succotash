@@ -286,7 +286,7 @@ function createSlug($str, $delimiter = '-'){
     }
 
 
-    function SplitTime($myDate,$StartTime, $EndTime, $Duration="60",$delayMin = 5)
+    function SplitTime($myDate,$StartTime, $EndTime, $Duration="60",$delayMin = 0)
     {
     $Duration = (($Duration==0)?'60':$Duration);
 
@@ -419,8 +419,33 @@ function findSlot($myDate = null,$vid,$type = 'delivery')
             $time = explode(' - ',$slots[0]['value']);
             return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
         }else{
-            return ", But no Slots are avialable";
+            return 0;
         }
+}
+
+function findSlotNew($myDate,$vid)
+{
+        $slots = showSlot($myDate,$vid,'delivery');
+            if(count((array)$slots) == 0){
+                $myDate  = date('Y-m-d',strtotime('+1 day')); 
+                $slots = showSlot($myDate,$vid,'delivery');
+            }
+           
+            if(count((array)$slots) == 0){
+                $myDate  = date('Y-m-d',strtotime('+2 day')); 
+                $slots = showSlot($myDate,$vid,'delivery');
+            }
+
+            if(count((array)$slots) == 0){
+                $myDate  = date('Y-m-d',strtotime('+3 day')); 
+                $slots = showSlot($myDate,$vid,'delivery');
+            }
+            if(isset($slots)){
+                $slots = $slots;
+                return array('mydate'=>$myDate,'slots'=>$slots);
+            }else{
+                return array('mydate'=>'','slots'=>[]);
+            }
 }
 
 function GoogleDistanceMatrix($latitude, $longitude)

@@ -753,7 +753,9 @@ $(document).ready(function() {
 
         //var delivery_fee = $("input[name='deliveryFee']:checked").val();
         var delivery_type = $("input:radio.delivery-fee:checked").attr('data-dcode'); 
-        
+        var selected = document.querySelectorAll(".delivery-fee.radio");
+        selected.forEach(p => console.log(p.value));
+
         $('.alert-danger').html('');
         if ((typeof guest_cart != undefined) && (guest_cart == 1)) {
             // window.location.href = login_url;
