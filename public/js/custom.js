@@ -745,7 +745,6 @@ $(document).ready(function() {
     });
 
     $(document).on("click", "#order_placed_btn", function() {
-
         //var delivery_fee = $("input[name='deliveryFee']:checked").val();
         var delivery_type = $("input:radio.delivery-fee:checked").attr('data-dcode');
 
@@ -2264,12 +2263,25 @@ $(document).ready(function() {
             var max_select = $(this).attr("data-max");
             var addon_set_title = $(this).attr("data-addonset-title");
             if ((min_select > 0) && ($(this).find(".productDetailAddonOption:checked").length < min_select)) {
-                alert("Minimum " + min_select + " " + addon_set_title + " required");
+                Swal.fire({
+                   // title: "Warning!",
+                   text: "Minimum " + min_select + " " + addon_set_title + " required",
+                   icon : "warning",
+                   button: "OK",
+                });
+                // alert("Minimum " + min_select + " " + addon_set_title + " required");
+
                 breakOut = true;
                 return false;
             }
             if ((max_select > 0) && ($(this).find(".productDetailAddonOption:checked").length > max_select)) {
-                alert("You can select maximum " + max_select + " " + addon_set_title);
+                Swal.fire({
+                   // title: "Warning!",
+                   text: "You can select maximum " + max_select + " " + addon_set_title,
+                   icon : "warning",
+                   button: "OK",
+                });
+                // alert("You can select maximum " + max_select + " " + addon_set_title);
                 breakOut = true;
                 return false;
             }
