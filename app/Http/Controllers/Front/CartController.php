@@ -681,6 +681,7 @@ class CartController extends FrontController
                     $prod->quantity_price = number_format($quantity_price, 2, '.', '');
                     $payable_amount = $payable_amount + $quantity_price;
                     $vendor_products_total_amount = $vendor_products_total_amount + $quantity_price;
+
                     $taxData = array();
                     if (!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0) {
                         foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
@@ -818,6 +819,7 @@ class CartController extends FrontController
                         $crossSell_products->push($cross_prods);
                     }
                 }
+
                 $couponGetAmount = $payable_amount ;
                 if (isset($vendorData->coupon) && !empty($vendorData->coupon) ) {
                     //pr($vendorData->coupon->promo);
@@ -845,12 +847,12 @@ class CartController extends FrontController
 
                             $minimum_spend = 0;
                             if (isset($vendorData->coupon->promo->minimum_spend)) {
-                                $minimum_spend = $vendorData->coupon->promo->minimum_spend * $customerCurrency->doller_compare;
+                                $minimum_spend = $vendorData->coupon->promo->minimum_spend * $doller_compare;
                             }
 
                             $maximum_spend = 0;
                             if (isset($vendorData->coupon->promo->maximum_spend)) {
-                                $maximum_spend = $vendorData->coupon->promo->maximum_spend * $customerCurrency->doller_compare;
+                                $maximum_spend = $vendorData->coupon->promo->maximum_spend * $doller_compare;
                             }
 
                             if( ($minimum_spend <= $payable_amount ) && ($maximum_spend >= $payable_amount)    )
@@ -885,6 +887,7 @@ class CartController extends FrontController
                         }
                     }
                 }
+
                 $promoCodeController = new PromoCodeController();
                 $promoCodeRequest = new Request();
                 $promoCodeRequest->setMethod('POST');
