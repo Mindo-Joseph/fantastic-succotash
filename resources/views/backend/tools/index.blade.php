@@ -1,4 +1,8 @@
 @extends('layouts.vertical', ['demo' => 'creative', 'title' => 'Tools'])
+@section('css')
+<link href="{{asset('assets/libs/dropzone/dropzone.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('assets/css/dropzone.css')}}" rel="stylesheet" />
+@endsection
 
 @section('content')
 
@@ -36,6 +40,7 @@
         </div>
     </div>
     <div class="row">
+        @if(Auth::user()->is_superadmin == 1)
         <div class="col-md-3">
             <form method="POST" id="catalog_copy_tools" action="{{route('tools.store')}}">
             @csrf
@@ -74,7 +79,7 @@
                     </div>
                 </div>             
             </form>
-        </div>
+        </div> 
         <div class="col-md-3">
             <form method="POST" id="tax_copy_tools" action="{{route('tools.taxCopy')}}">
             @csrf
@@ -121,14 +126,94 @@
                 </div>             
             </form>
         </div>
+        @endif 
+        <div class="col-md-6">
+            <form method="POST" id="upload_image_tool" action="{{route('tools.uploadImage')}}"> 
+            @csrf
+            @method('POST')
+                <div class="card-box h-100 mb-0">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h4 class="header-title mb-0">{{ __('Upload Multiple Image Tool')}}</h4>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div class="card-box">
+                                <!-- <div class="row mb-2"></div> -->
+                                <div class="dropzone dropzone-previews" id="my-awesome-dropzone"></div>
+                                <!-- <div class="imageDivHidden"></div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2 al_custom_copypath" style="display: none;">
+                        <div class="col-md-12">
+                            <p>
+                                <a href="#"><span id="pwd_spn" class="password-span" style="display: none;"></span></a>
+                                <label class="copy_link float-right" id="cp_btn" title="copy">
+                                    <img src="{{ asset('assets/icons/domain_copy_icon.svg')}}" alt="">
+                                    <span class="copied_txt" id="show_copy_msg_on_click_copy" style="display:none;">{{ __("Copied") }}</span>
+                                </label>
+
+                                <a id="copyAllImageUrl" href=""><label class="copy_link " id="cp_btn" title="copy">Copy all<span class="copied_txt" id="show_copy_msg_on_click_copy" style="display: none;">Copied</span></label></a>
+                            </p>
+                            <table>
+                                <tbody class="imageCopyName"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>             
+            </form>
+        </div>
     </div>
-</div>
+</div> 
 
 @endsection
 
 @section('script')
+<script src="{{asset('assets/js/dropzone.js')}}"></script> 
 
 <script type="text/javascript">
+    var uploadedDocumentMap = {};
+    Dropzone.autoDiscover = false;
+    $(document).ready(function() {
+
+        $("div#my-awesome-dropzone").dropzone({
+            acceptedFiles: ".jpeg,.jpg,.png,.svg",
+            addRemoveLinks: true,
+            url: "{{route('tools.uploadImage')}}",
+            // params: {
+            //     prodId: "1"
+            // },
+            parameter: "{{route('tools.uploadImage')}}",
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}" 
+            },
+            success: function(file, res) {
+                $('.al_custom_copypath').show();
+                $('.imageCopyName').append('<tr id="'+res.data.image_id+'"><td style="padding: 5px"><img src="'+res.data.image_url+'"></td><td style="padding: 5px"><a href="'+res.data.image_url+'" target="_blank" style="font-size: 12px;">'+res.data.image_path+'</td><td style="padding: 5px"><label class="copy_link " id="cp_btn" title="copy"><img src="{{asset("assets/icons/domain_copy_icon.svg")}}" alt="" style="margin: 0"><span class="copied_txt" id="show_copy_msg_on_click_copy" style="display: none;">Copied</span> </label></td></tr>');
+                uploadedDocumentMap[file.name] = res.data.image_id;
+                var imageUrl = $('#pwd_spn').text();
+                alert();
+                if(imageUrl != "")
+                {
+                    imageUrl = imageUrl+", ";
+                }
+                imageUrl = imageUrl+''+res.data.image_path;
+                $('#pwd_spn').html(imageUrl);
+            },
+            removedfile: function(file) {
+                file.previewElement.remove();
+                var name = ''
+                if (typeof file.file_name !== 'undefined') {
+                    name = file.file_name
+                } else {
+                    name = uploadedDocumentMap[file.name]
+                }
+                $('#'+name).remove();
+
+            },
+        });
+
+    });
 $(document).ready(function() {
     $('#catalog_copy_tools').submit(function(e) {
         e.preventDefault();
@@ -151,7 +236,7 @@ $(document).ready(function() {
         e.preventDefault();
         Swal.fire({
             title: "{{__('Are you sure?')}}",
-            // text:"{{__('This will update tax for all product.')}}",
+            text:"{{__('This will update tax for all products in the selected category.')}}",
                 // icon: 'info',
             showCancelButton: true,
             confirmButtonText: 'Ok',
@@ -165,5 +250,18 @@ $(document).ready(function() {
         });
     });
 });
+</script>
+<script>
+    $(document).on('click', '.copy_link', function() { 
+        var $temp = $("<input>"); 
+        $("body").append($temp);
+        $temp.val($('#pwd_spn').text()).select(); 
+        document.execCommand("copy");
+        $temp.remove();
+        $("#show_copy_msg_on_click_copy").show();
+        setTimeout(function() {
+            $("#show_copy_msg_on_click_copy").hide();
+        }, 1000);
+    });
 </script>
 @endsection
