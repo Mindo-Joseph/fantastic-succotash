@@ -964,51 +964,7 @@ class StoreController extends BaseController{
 		}			
     }
 
-	public function getProductImages(Request $request){
-		try{
-			$validator = Validator::make($request->all(), [
-				'product_id' => 'required',	
-				'variant_id' => 'required',	
-			]);
-
-			if ($validator->fails()) {			
-				return $this->errorResponse($validator->errors()->first(), 422);
-			}
-			$product_id = $request->product_id;
-			$variant_id = $request->variant_id;
-
-			$product = Product::where('id', $product_id)->first();
-			if(!$product)
-			{
-				return $this->errorResponse('Product not found', 422);
-			}
-			$variantImages = array();
-			if ($variant_id > 0) {
-				$varImages = ProductVariantImage::where('product_variant_id', $variant_id)->get();
-				if ($varImages) {
-					foreach ($varImages as $key => $value) {
-						$variantImages[] = $value->product_image_id;
-					}
-				}
-			}			
-			//$variId = ($request->has('variant_id') && $request->variant_id > 0) ? $request->variant_id : 0;
-			$images = ProductImage::with('image')->where('product_images.product_id', $product->id)->get();
-			$k=0;
-			foreach($images as $singleimage)
-			{
-				if(in_array($singleimage->id,$variantImages))
-				{
-					$images[$k]->is_selected = 1;
-				}else{
-					$images[$k]->is_selected = 0;
-				}
-				$k++;
-			}
-			return $this->successResponse($images, 'Product images details!', 200);
-		} catch (Exception $e) {			
-			return $this->errorResponse($e->getMessage(), $e->getCode());
-		}			
-    }
+	
 
 	private function preProductDetail($productid)
 	{		
