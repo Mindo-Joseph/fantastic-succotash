@@ -13,9 +13,9 @@
 				@foreach($banners as $key => $banner)
 					@php $url=''; if($banner->link=='category'){if($banner->category !=null){$url=route('categoryDetail', $banner->category->slug);}}else if($banner->link=='vendor'){if($banner->vendor !=null){$url=route('vendorDetail', $banner->vendor->slug);}}@endphp
 					<div class="carousel-item @if($key == 0) active @endif">
-					@if($url) <a class="banner-img-outer" href="{{$url}}"> @endif
-						 <img alt="" title="" class="blur-up lazyload w-100" data-src="{{$banner->image['proxy_url'] . '1370/300' . $banner->image['image_path']}}">
-					@if($url) </a> @endif
+					 <a class="banner-img-outer" href="{{$url??'#'}}"> 
+						<img alt="" title="" class="blur-up lazyload w-100" data-src="{{$banner->image['proxy_url'] . '1370/300' . $banner->image['image_path']}}">
+					</a>
 					</div>
 				@endforeach
 
@@ -79,7 +79,7 @@
 				<input id="fav_pro_one" type="checkbox">
 				<label for="fav_pro_one"><i class="fa fa-heart-o fav-heart" aria-hidden="true"></i></label>
 			</div>
-			<a class="common-product-box text-center" href="{{route('productDetail')}}/<%=product.url_slug %>">
+			<a class="common-product-box text-center" href="<%=product.vendor.slug %>/product/<%=product.url_slug %>">
 				<div class="img-outer-box position-relative"> <img class="blur-up lazyload" data-src="<%=product.image_url %>" alt="" title="">
 					<div class="pref-timing"> </div>
 				</div>
@@ -416,7 +416,7 @@
 				<div class="al_top_heading col-md-12">
 					<div class="row d-flex justify-content-between">
 						<h2 class="h2-heading text-capitalize">{{(!empty($homePageLabel->translations->first()->title)) ? $homePageLabel->translations->first()->title : getNomenclatureName('brands', true)}}</h2>
-						<a class="" href="">See All</a>
+						{{-- <a class="" href="">See All</a> --}}
 					</div>
 				</div>
 				<div class="row ">
