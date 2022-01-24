@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Api\v1\BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation, OrderVendor, LuxuryOption, ClientLanguage, ProductCategory, ProductVariant, ProductTranslation, Variant, Brand, AddonSet, TaxCategory, ClientPreference, Celebrity, ProductImage, ProductAddon, ProductUpSell, ProductCrossSell, ProductRelated, ProductCelebrity, ProductTag, VendorMedia, ProductVariantSet, CartProduct, UserWishlist};
+use App\Models\{User, Vendor, Order,UserVendor, PaymentOption, VendorCategory, Product, VendorOrderStatus, OrderStatusOption,ClientCurrency, Category_translation, OrderVendor, LuxuryOption, ClientLanguage, ProductCategory, ProductVariant, ProductTranslation, Variant, Brand, AddonSet, TaxCategory, ClientPreference, Celebrity, ProductImage, ProductAddon, ProductUpSell, ProductCrossSell, ProductRelated, ProductCelebrity, ProductTag, VendorMedia, ProductVariantSet, CartProduct, ProductVariantImage, UserWishlist};
 
 class StoreController extends BaseController{
     use ApiResponser;
@@ -265,13 +265,24 @@ class StoreController extends BaseController{
 
 	public function VendorCategory(Request $request)
 	{
-		try {
-			$user = Auth::user();			
-			$vendorid = $request->vendor_id;	
+		try {			
+			$validator = Validator::make($request->all(), [
+				'vendor_id'	=>	'required'
+			]);
+
+			if ($validator->fails()) {			
+				return $this->errorResponse($validator->errors()->first(), 422);
+			}
+			$user = Auth::user();	
+			$vendorid = $request->vendor_id;
 			$product_categories = VendorCategory::with(['category', 'category.translation' => function($q) {
 				$q->select('category_translations.name', 'category_translations.meta_title', 'category_translations.meta_description', 'category_translations.meta_keywords', 'category_translations.category_id')
 				;
 			}])->where('status', 1)->where('vendor_id', $vendorid)->groupBy('category_id')->get();
+			if(count($product_categories)==0)
+			{
+				return $this->errorResponse('No category found', 422);
+			}
 			$p_categories = collect();
 			$product_categories_hierarchy = '';
 			if ($product_categories) {
@@ -499,7 +510,7 @@ class StoreController extends BaseController{
                     $inc++;
                 }
             }
-			$varient = array('id'=>$proVariant->id, 'title'=>$proVariant->title, 'names'=>implode(", ", $names));
+			$varient = array('id'=>$proVariant->id, 'product_id'=>$product_id, 'title'=>$proVariant->title, 'names'=>implode(", ", $names));
 			$output_data[] = $varient;
             
         }
@@ -835,7 +846,169 @@ class StoreController extends BaseController{
 			return $this->errorResponse($e->getMessage(), $e->getCode());
 		}
 	}
-		
+
+	public function productImages(Request $request){
+        
+		try{
+			$validator = Validator::make($request->all(), [
+				'product_id' => 'required',					
+			]);
+
+			if ($validator->fails()) {			
+				return $this->errorResponse($validator->errors()->first(), 422);
+			}
+			$product_id = $request->product_id;
+			$variant_id = $request->variant_id;
+			$imageid = $request->image_id;
+			
+			$resp = '';
+			$product = Product::findOrFail($product_id);
+			if(!$product)
+			{
+				return $this->errorResponse('Product not found', 422);
+			}
+
+			//delete prev variant images
+			if($variant_id && $variant_id!="")
+			{
+				$deleteVarImg = ProductVariantImage::where('product_variant_id', $variant_id)->delete();
+			}
+			if ($request->has('image_id')) {				
+				foreach ($imageid as $key => $value) {
+					$saveImage[] = [
+						'product_variant_id' => $variant_id,
+						'product_image_id' => $value
+					];
+				}
+				ProductVariantImage::insert($saveImage);
+			}
+
+			if ($request->has('file')) {
+				$imageId = '';
+				$files = $request->file('file');
+				if(is_array($files)) {
+					foreach ($files as $file) {
+						$img = new VendorMedia();
+						$img->media_type = 1;
+						$img->vendor_id = $product->vendor_id;
+						$img->path = Storage::disk('s3')->put($this->folderName, $file, 'public');
+						$img->save();
+						$path1 = $img->path['proxy_url'] . '40/40' . $img->path['image_path'];
+						if ($img->id > 0) {
+							$imageId = $img->id;
+							$image = new ProductImage();
+							$image->product_id = $product->id;
+							$image->is_default = 1;
+							$image->media_id = $imageId;
+							$image->save();
+							if($image->id > 0 && $variant_id!="")
+							{
+								$varientimage = new ProductVariantImage();
+								$varientimage->product_variant_id = $variant_id;
+								$varientimage->product_image_id = $image->id;
+								$varientimage->save();
+							}							
+						}
+					}
+					//return response()->json(['htmlData' => $resp]);
+				} else {
+					$img = new VendorMedia();
+					$img->media_type = 1;
+					$img->vendor_id = $product->vendor_id;
+					$img->path = Storage::disk('s3')->put($this->folderName, $files, 'public');
+					$img->save();					
+					if ($img->id > 0) {
+						$imageId = $img->id;
+						$image = new ProductImage();
+						$image->product_id = $product->id;
+						$image->is_default = 1;
+						$image->media_id = $img->id;
+						$image->save();
+						if($image->id > 0 && $variant_id!="")
+						{
+							$varientimage = new ProductVariantImage();
+							$varientimage->product_variant_id = $variant_id;
+							$varientimage->product_image_id = $image->id;
+							$varientimage->save();
+						}						
+					}
+				}
+			}
+
+			return $this->successResponse('', 'Product image added successfully!', 200);			
+			
+		} catch (Exception $e) {
+			DB::rollback();
+			return $this->errorResponse($e->getMessage(), $e->getCode());
+		}
+    }
+	
+	public function deleteProductImage(Request $request){
+		try{
+			$validator = Validator::make($request->all(), [
+				'product_id' => 'required',	
+				'media_id' => 'required',	
+			]);
+
+			if ($validator->fails()) {			
+				return $this->errorResponse($validator->errors()->first(), 422);
+			}
+			$product_id = $request->product_id;
+			$image_id = $request->media_id;
+			$product = Product::findOrfail($product_id);
+			$img = VendorMedia::findOrfail($image_id);
+			$img->delete();
+			return $this->successResponse('', 'Product image deleted successfully!', 200);
+		} catch (Exception $e) {			
+			return $this->errorResponse($e->getMessage(), $e->getCode());
+		}			
+    }
+
+	public function getProductImages(Request $request){
+		try{
+			$validator = Validator::make($request->all(), [
+				'product_id' => 'required',	
+				'variant_id' => 'required',	
+			]);
+
+			if ($validator->fails()) {			
+				return $this->errorResponse($validator->errors()->first(), 422);
+			}
+			$product_id = $request->product_id;
+			$variant_id = $request->variant_id;
+
+			$product = Product::where('id', $product_id)->first();
+			if(!$product)
+			{
+				return $this->errorResponse('Product not found', 422);
+			}
+			$variantImages = array();
+			if ($variant_id > 0) {
+				$varImages = ProductVariantImage::where('product_variant_id', $variant_id)->get();
+				if ($varImages) {
+					foreach ($varImages as $key => $value) {
+						$variantImages[] = $value->product_image_id;
+					}
+				}
+			}			
+			//$variId = ($request->has('variant_id') && $request->variant_id > 0) ? $request->variant_id : 0;
+			$images = ProductImage::with('image')->where('product_images.product_id', $product->id)->get();
+			$k=0;
+			foreach($images as $singleimage)
+			{
+				if(in_array($singleimage->id,$variantImages))
+				{
+					$images[$k]->is_selected = 1;
+				}else{
+					$images[$k]->is_selected = 0;
+				}
+				$k++;
+			}
+			return $this->successResponse($images, 'Product images details!', 200);
+		} catch (Exception $e) {			
+			return $this->errorResponse($e->getMessage(), $e->getCode());
+		}			
+    }
 
 	private function preProductDetail($productid)
 	{		

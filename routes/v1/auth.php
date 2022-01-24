@@ -63,6 +63,10 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
         Route::post('mystore/product/update', 'Api\v1\StoreController@updateProduct');
         Route::post('mystore/product/delete', 'Api\v1\StoreController@deleteProduct');
         Route::post('mystore/product/deletevariant', 'Api\v1\StoreController@deleteProductVariant');
+        Route::post('mystore/product/addProductImage', 'Api\v1\StoreController@productImages');
+        Route::post('mystore/product/getProductImages', 'Api\v1\StoreController@getProductImages');
+        Route::post('mystore/product/deleteimage', 'Api\v1\StoreController@deleteProductImage');
+        
       
         Route::get('payment/{gateway}', 'Api\v1\PaymentOptionController@postPayment');
         Route::post('payment/razorpay/pay/{amount}/{order}', 'Api\v1\RazorpayGatewayController@razorpayCompletePurchase')->name('payment.razorpayCompletePurchase');
