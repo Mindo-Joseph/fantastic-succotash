@@ -1085,8 +1085,8 @@ class CartController extends BaseController
                 if($request->task_type!='now'){
                     if(isset($request->slot))
                     {
-                        $time = explode(' - ',$request->slot);
-                        $time = date('Y-m-d',strtotime($request->schedule_dt)).' '.$time[0].':00'??null;
+                        $request->schedule_dt = Carbon::parse($request->schedule_dt, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
+                        $time = $request->schedule_dt;
                         $slot = $request->slot;
                     }else{
                         $time = $request->schedule_dt;
