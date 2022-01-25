@@ -548,9 +548,7 @@ class CartController extends BaseController
                 $vendor_products_total_amount = $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
                 $cart_dinein_table_id = $vendorData->vendor_dinein_table_id;
-                $slotsDate = findSlot('',$vendorData->vendor_id,'');
-                $vendorData->delaySlot = (($slotsDate)?$slotsDate:'');
-
+                $vendorData->vendor->closed_store_order_scheduled = $vendorData->vendor->closed_store_order_scheduled;
                 if ($action != 'delivery') {
                     $vendor_details['vendor_address'] = $vendorData->vendor->select('id', 'latitude', 'longitude', 'address')->where('id', $vendorData->vendor_id)->first();
                     if ($action == 'dine_in') {
@@ -831,6 +829,7 @@ class CartController extends BaseController
                 $total_discount_percent = $total_discount_percent + $discount_percent;
                 $vendorData->vendor->is_vendor_closed = $is_vendor_closed;
 
+
                 if (!empty($vendorData->coupon->promo)) {
                     unset($vendorData->coupon->promo);
                 }
@@ -859,9 +858,16 @@ class CartController extends BaseController
                     $vendorData->is_vendor_closed = 1;
                     $delivery_status = 0;
                 }
-
-                
-
+                $slotsDate = 0;
+                $slotsDate = findSlot('',$vendorData->vendor_id,'');
+                if($vendorData->vendor->is_vendor_closed){
+                    $vendorData->delaySlot = $slotsDate;
+                    $vendorData->closed_store_order_scheduled = $vendorData->vendor->closed_store_order_scheduled;
+                  }else{
+                    $vendorData->delaySlot = 0;
+                    $vendorData->closed_store_order_scheduled = 0;
+                }
+               
                 $order_sub_total = $order_sub_total + $vendor_products_total_amount;
 
                 if((float)($vendorData->vendor->order_min_amount) > $payable_amount){  # if any vendor total amount of order is less then minimum order amount
@@ -907,7 +913,6 @@ class CartController extends BaseController
                     $cart->closed_store_order_scheduled = $duration->closed_store_order_scheduled;
                     $myDate  = date('Y-m-d',strtotime('+1 day')); 
                     $cart->schedule_type =  'schedule';
-                    //$cart->closed_store_order_scheduled =  1;
                 }
                 $slotData = findSlotNew($myDate,$vendorId);
                 $cart->slots = $slotData['slots'];
