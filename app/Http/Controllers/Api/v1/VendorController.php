@@ -100,7 +100,8 @@ class VendorController extends BaseController{
             }
             $slotsDate = 0;
             $slotsDate = findSlot('',$vendor->id,'');
-            $vendor->delaySlot = $slotsDate;
+            $vendor->delaySlot = (($slotsDate)?$slotsDate:'');
+
             $vendor->closed_store_order_scheduled = (($slotsDate)?$vendor->closed_store_order_scheduled:0);
 
         if($vendor->closed_store_order_scheduled == 1 && $vendor->is_vendor_closed == 1)
@@ -380,8 +381,9 @@ class VendorController extends BaseController{
                             }
                         }
                     }
-                    $slotsDate = findSlot('',$vendor->vendor_id,'');
-                    $vendor->delaySlot = $slotsDate;
+                    $slotsDate = 0;
+                    $slotsDate = findSlot('',$vendor->id,'');
+                    $vendor->delaySlot = (($slotsDate)?$slotsDate:'');
                     $vendor->closed_store_order_scheduled = (($slotsDate)?$vendor->closed_store_order_scheduled:0);
                     $code = $request->header('code');
                     $client = Client::where('code', $code)->first();

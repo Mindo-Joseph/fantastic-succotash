@@ -172,7 +172,10 @@ class ProductController extends BaseController
                     }
                 }
             }
-            
+
+            $slotsDate = 0;
+            $slotsDate = findSlot('',$product->vendor->id,'');
+            $product->delaySlot = (($slotsDate)?$slotsDate:'');
 
             $product->is_wishlist = $product->category->categoryDetail->show_wishlist;
             $clientCurrency = ClientCurrency::where('currency_id', $user->currency)->first();
