@@ -156,7 +156,7 @@ class CartController extends FrontController
             ])->find($request->product_id);
 
             # if product type is not equal to on demand
-            if($productDetail->category->categoryDetail->type_id != 8  && $productDetail->sell_when_out_of_stock == 0){
+            if( ($productDetail->category->categoryDetail->type_id != 8) && ($productDetail->has_inventory == 1)  && ($productDetail->sell_when_out_of_stock == 0)){
                 if(!empty($already_added_product_in_cart)){
                     if($productDetail->variant[0]->quantity <= $already_added_product_in_cart->quantity){
                         return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart s')]);
@@ -597,6 +597,7 @@ class CartController extends FrontController
         }
         $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = $deliver_charges_lalmove = 0.00;
         if ($cartData) {
+
             $cart_dinein_table_id = NULL;
             $action = (Session::has('vendorType')) ? Session::get('vendorType') : 'delivery';
             $vendor_details = [];
@@ -642,10 +643,13 @@ class CartController extends FrontController
                 else{
                     if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
                         if($address_id > 0){
-                            $serviceArea = $vendorData->vendor->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                                $query->select('vendor_id')
+
+                            if (!empty($latitude) && !empty($longitude)) {
+                                $serviceArea = $vendorData->vendor->whereHas('serviceArea', function ($query) use ($latitude, $longitude) {
+                                    $query->select('vendor_id')
                                 ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                            })->where('id', $vendorData->vendor_id)->get();
+                                })->where('id', $vendorData->vendor_id)->get();
+                            }
                         }
                     }
                 }
@@ -658,11 +662,12 @@ class CartController extends FrontController
                             $product_out_of_stock = 1;
                         }
                     }
-                    $prod->product_out_of_stock =  $product_out_of_stock;
 
                     if($cart_dinein_table_id > 0){
                         $prod->update(['vendor_dinein_table_id' => $cart_dinein_table_id]);
                     }
+                    $prod->product_out_of_stock =  $product_out_of_stock;
+
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
                     $price_in_currency = $prod->pvariant->price;
@@ -909,6 +914,10 @@ class CartController extends FrontController
                 //}
                 //$payable_amount = $payable_amount + $deliver_charge;
                 //Start applying service fee on vendor products total
+
+                $slotsDate = findSlot('',$vendorData->vendor->id,'');
+                $vendorData->delaySlot = (($slotsDate)?$slotsDate:'');
+
                 $vendor_service_fee_percentage_amount = 0;
                 if($vendorData->vendor->service_fee_percent > 0){
                     $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendorData->vendor->service_fee_percent) / 100 ;
@@ -981,6 +990,7 @@ class CartController extends FrontController
 
                 $vendorData->is_promo_code_available = $is_promo_code_available;
             }
+
             $is_percent = 0;
             $amount_value = 0;
             if ($cart->coupon) {
@@ -1065,14 +1075,12 @@ class CartController extends FrontController
                     $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
                 }
                 $cart->slots = $slots;
-                $cart->delaySlot = findSlot($myDate,$vendorId,'');
                 $cart->vendor_id =  $vendorId;
 
             }else{
                 $slots = [];
                 $cart->slots = [];
                 $cart->vendor_id =  0;
-                $cart->delaySlot = 'future date';
             }
             $cart->slotsCnt = count((array)$slots);
             $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');
