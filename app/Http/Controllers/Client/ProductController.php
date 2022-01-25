@@ -253,11 +253,16 @@ class ProductController extends BaseController
         $rule = array(
             'product_name' => 'required|string',
             'sku' => 'required|unique:products,sku,'.$product->id,
-            'url_slug' => 'required|unique:products,url_slug,'.$product->id,
+            'url_slug' => 'required',
         );
         $validation  = Validator::make($request->all(), $rule);
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
+        }
+        $check_url_slug = Product::where('id','!=',$id)->where('vendor_id',$request->vendor_id)->where('url_slug',$request->url_slug)->first();
+        if(!is_null($check_url_slug))
+        {
+            return redirect()->back()->with('url_slug_error','The url slug has already been taken.');
         }
         $product_category = ProductCategory::where('product_id', $id)->where('category_id', $request->category_id)->first();
         if(!$product_category){
@@ -293,6 +298,10 @@ class ProductController extends BaseController
         $product->mode_of_service        = $request->mode_of_service??null;
         $product->delay_order_hrs        = $request->delay_order_hrs??0;
         $product->delay_order_min        = $request->delay_order_min??0;
+        $product->delay_order_hrs_for_dine_in = $request->delay_order_hrs_for_dine_in??0;
+        $product->delay_order_min_for_dine_in = $request->delay_order_min_for_dine_in??0;
+        $product->delay_order_hrs_for_takeway = $request->delay_order_hrs_for_takeway??0;
+        $product->delay_order_min_for_takeway = $request->delay_order_min_for_takeway??0;
         $product->pickup_delay_order_hrs        = $request->pickup_delay_order_hrs??0;
         $product->pickup_delay_order_min        = $request->pickup_delay_order_min??0;
         $product->dropoff_delay_order_hrs        = $request->dropoff_delay_order_hrs??0;

@@ -97,6 +97,17 @@
                                                 <p>{{$vendor->desc}}</p>
                                             </div>
                                         @endif
+                                            @php
+                                               $checkSlot = findSlot('',$vendor->id,'');
+                                            @endphp
+                                        <div class="col-md-12 text-center">
+                                            @if($vendor->is_vendor_closed == 1 && $checkSlot == 0)
+                                            <p class="text-danger">{{getNomenclatureName('Vendors', true) . __(' is not accepting orders right now.')}}</p>
+                                            @elseif($vendor->is_vendor_closed == 1 && $vendor->closed_store_order_scheduled == 1)
+                                            <p class="text-danger">{{__('We are not accepting orders right now. You can schedule this for '). $checkSlot }}.</p>
+                                            @endif
+                                            </div>
+
                                     </div>
                                 </form>
                             </div>
@@ -194,7 +205,7 @@
                                     }*/ ?>
 
 
-                                    <a class="common-product-box scale-effect text-center border-bottom pb-2 mt-2" href="{{route('productDetail', $new['url_slug'])}}">
+                                    <a class="common-product-box scale-effect text-center border-bottom pb-2 mt-2" href="{{route('productDetail', [$new['vendor']['slug'],$new['url_slug']])}}">
                                         <div class="img-outer-box position-relative">
                                             <img class="blur-up lazyload" data-src="{{$new['image_url']}}" alt="">
                                             <div class="pref-timing">
@@ -301,7 +312,7 @@
                                                         $imagePath2 = $data->media[$i]->image->path['image_fit'] . '600/600' . $data->media[$i]->image->path['image_path'];
                                                     }*/ ?>
                                                     <div class="col-xl-3 col-md-4 col-6 col-grid-box mt-4">
-                                                        <a href="{{route('productDetail', $data->url_slug)}}" class="common-product-box scale-effect mt-0">
+                                                        <a href="{{route('productDetail', [$data->vendor->slug,$data->url_slug])}}" class="common-product-box scale-effect mt-0">
                                                             <div class="img-outer-box position-relative">
                                                                 <img class="img-fluid blur-up lazyload" data-src="{{$data->image_url}}" alt="">
                                                                 <div class="pref-timing">
@@ -408,7 +419,7 @@
         ajaxCall = $.ajax({
             type: "post",
             dataType: "json",
-            url: "{{ route('vendorProductFilters', $vendor->id) }}",
+            url: "{{ route('vendorDetail', $vendor->slug) }}",
             data: {
                 "_token": "{{ csrf_token() }}",
                 "brands": brands,

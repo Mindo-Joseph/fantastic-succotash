@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category, Product, ClientPreference,EmailTemplate, ClientCurrency, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser,Country,UserAddress,CartProduct, Vendor, VendorCategory, ClientLanguage};
+use App\Models\{Client, Category, Product, ClientPreference,EmailTemplate, ClientCurrency, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser,Country,UserAddress,CartProduct, Vendor, VendorCategory, ClientLanguage, LoyaltyCard, Order};
 
 class FrontController extends Controller
 {
@@ -299,18 +299,18 @@ class FrontController extends Controller
 
     public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption)
     {
-        $config = array(
-            'driver' => $mail_driver,
-            'host' => $mail_host,
-            'port' => $mail_port,
-            'encryption' => $mail_encryption,
-            'username' => $mail_username,
-            'password' => $mail_password,
-            'sendmail' => '/usr/sbin/sendmail -bs',
-            'pretend' => false,
-        );
+        // $config = array(
+        //     'driver' => $mail_driver,
+        //     'host' => $mail_host,
+        //     'port' => $mail_port,
+        //     'encryption' => $mail_encryption,
+        //     'username' => $mail_username,
+        //     'password' => $mail_password,
+        //     'sendmail' => '/usr/sbin/sendmail -bs',
+        //     'pretend' => false,
+        // );
 
-        Config::set('mail', $config);
+        // Config::set('mail', $config);
         $app = App::getInstance();
         $app->register('Illuminate\Mail\MailServiceProvider');
         return '1';
@@ -334,6 +334,24 @@ class FrontController extends Controller
             setcookie("uuid", "", time() - 3600);
             return redirect()->route('user.checkout');
         }
+    }
+
+    /**     * check if cookie already exist     */
+    public function getLoyaltyPoints($userid, $multiplier){
+        $loyalty_earned_amount = 0;
+        $redeem_points_per_primary_currency = '';
+        $loyalty_card = LoyaltyCard::where('status', '0')->first();
+        if ($loyalty_card) {
+            $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
+        }
+        $order_loyalty_points_earned_detail = Order::where('user_id', $userid)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
+        if ($order_loyalty_points_earned_detail) {
+            $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
+            if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
+                $loyalty_earned_amount = $loyalty_points_used / $redeem_points_per_primary_currency;
+            }
+        }
+        return $loyalty_earned_amount;
     }
 
     /**     * check if cookie already exist     */
@@ -452,6 +470,31 @@ class FrontController extends Controller
                 catch(\Exception $e){
                     return response()->json(['data' => $e->getMessage()]);
                 }
+            }
+        }
+    }
+
+    public function testOrderMail($emailData){
+        $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
+        $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from', 'mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
+        
+        if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
+            $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+            $client_name = $emailData['client_name'];
+            $mail_from = $emailData['mail_from'];
+            $sendto = $emailData['email'];
+            try{
+                Mail::send([], [],
+                function ($message) use($sendto, $client_name, $mail_from, $emailData) {
+                    $message->from($mail_from, $client_name);
+                    $message->to($sendto)->subject('Order mail');
+                    $message->setBody($emailData['email_template_content'], 'text/html'); // for HTML rich messages
+                });
+                $response['send_email'] = 1;
+                return count(Mail::failures());
+            }
+            catch(\Exception $e){
+                return response()->json(['data' => $e->getMessage()]);
             }
         }
     }

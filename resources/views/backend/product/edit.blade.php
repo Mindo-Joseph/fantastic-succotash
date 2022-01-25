@@ -87,7 +87,7 @@
                 <h4 class="page-title">{{ __("Edit Product") }}</h4>
             </div>
             <div class="site_link position-relative ml-3">
-                <a href="{{route('productDetail',$product->url_slug)}}" target="_blank"><span id="pwd_spn" class="password-span">{{route('productDetail',$product->url_slug)}}</span></a>
+                <a href="{{route('productDetail',[$product->vendor->slug,$product->url_slug])}}" target="_blank"><span id="pwd_spn" class="password-span"> {{route('productDetail',[$product->vendor->slug,$product->url_slug])}}</span></a>
                 <label class="copy_link float-right" id="cp_btn" title="copy">
                     <img src="{{ asset('assets/icons/domain_copy_icon.svg')}}" alt="">
                     <span class="copied_txt" id="show_copy_msg_on_click_copy" style="display:none;">{{ __("Copied") }}</span>
@@ -121,6 +121,13 @@
                             @endforeach
                         </ul>
                     </div>
+                @elseif(Session::has('url_slug_error'))
+                    <div class="alert alert-danger">
+                        <button type="button" class="close p-0" data-dismiss="alert">x</button>
+                        <ul class="m-0">
+                                <li>{{ Session::get('url_slug_error') }}</li>
+                        </ul>
+                    </div>
                 @endif
             </div>
         </div>
@@ -137,6 +144,7 @@
                             {!! Form::label('title', __('SKU (a-z, A-Z, 0-9, -,_)'),['class' => 'control-label']) !!}
                             <span class="text-danger">*</span>
                             {!! Form::text('sku', $product->sku, ['class'=>'form-control','id' => 'sku', 'onkeypress' => "return alplaNumeric(event)",'name' => 'sku']) !!}
+                            {!! Form::hidden('vendor_id', $product->vendor_id, ['name' => 'vendor_id']) !!}
 
                             @if($errors->has('sku'))
                             <span class="text-danger" role="alert">
@@ -153,6 +161,10 @@
                             @if($errors->has('url_slug'))
                             <span class="text-danger" role="alert">
                                 {{ $errors->first('url_slug') }}
+                            </span>
+                             @elseif(Session::has('url_slug_error'))
+                            <span class="text-danger" role="alert">
+                                {{ Session::get('url_slug_error') }}
                             </span>
                             @endif
                         </div>
@@ -534,9 +546,20 @@
                        </div>
                     </div>
                     @else
+                    @php
+                        $Delivery = getNomenclatureName('Delivery', true);
+                        $Delivery = ($Delivery === 'Delivery') ? __('Delivery') : $Delivery;
+                        $Dine_In = getNomenclatureName('Dine-In', true);
+                        $Dine_In = ($Dine_In === 'Dine-In') ? __('Dine-In') : $Dine_In;
+                        $Takeaway = getNomenclatureName('Takeaway', true);
+                        $Takeaway = ($Takeaway === 'Takeaway') ? __('Takeaway') : $Takeaway;
+                    @endphp
+                    <div class="row mt-2">
+                        <label class="control-label">{{__('Set Delay Time')}}</label>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
-                            {!! Form::label('title', __('Set Delay Time'),['class' => 'control-label']) !!}
+                            {!! Form::label('title', __('For ').$Delivery,['class' => 'control-label']) !!}
                          </div>
                         <div class="col-md-6 mb-2">
                             {!! Form::label('title', __('Hrs'),['class' => 'control-label']) !!}
@@ -545,6 +568,32 @@
                         <div class="col-md-6 mb-2">
                             {!! Form::label('title', __('Minutes'),['class' => 'control-label']) !!}
                            <input type="number"  class="form-control" value="{{$product->delay_order_min}}" name="delay_order_min" placeholder="{{__('minutes')}}">
+                       </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {!! Form::label('title', __('For ').$Dine_In,['class' => 'control-label']) !!}
+                         </div>
+                        <div class="col-md-6 mb-2">
+                            {!! Form::label('title', __('Hrs'),['class' => 'control-label']) !!}
+                             <input type="number"  class="form-control" value="{{$product->delay_order_hrs_for_dine_in}}" name="delay_order_hrs_for_dine_in" placeholder="{{__('hrs')}}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            {!! Form::label('title', __('Minutes'),['class' => 'control-label']) !!}
+                           <input type="number"  class="form-control" value="{{$product->delay_order_min_for_dine_in}}" name="delay_order_min_for_dine_in" placeholder="{{__('minutes')}}">
+                       </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {!! Form::label('title',__('For ').$Takeaway,['class' => 'control-label']) !!}
+                         </div>
+                        <div class="col-md-6 mb-2">
+                            {!! Form::label('title', __('Hrs'),['class' => 'control-label']) !!}
+                             <input type="number"  class="form-control" value="{{$product->delay_order_hrs_for_takeway}}" name="delay_order_hrs_for_takeway" placeholder="{{__('hrs')}}">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            {!! Form::label('title', __('Minutes'),['class' => 'control-label']) !!}
+                           <input type="number"  class="form-control" value="{{$product->delay_order_min_for_takeway}}" name="delay_order_min_for_takeway" placeholder="{{__('minutes')}}">
                        </div>
                     </div>
                     @endif

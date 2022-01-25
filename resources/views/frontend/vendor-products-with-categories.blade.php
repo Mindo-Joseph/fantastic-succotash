@@ -392,9 +392,23 @@
                                                 @empty
                                                 @endforelse
                                         </li> --}}
-                                                    <li class="d-block vendor-location">
-                                                        <i class="icon-location"></i> {{ $vendor->address }}
-                                                    </li>
+
+                                                    @if($vendor->is_show_vendor_details == 1)
+                                                        <li class="d-block vendor-location">
+                                                            <i class="icon-location"></i> {{ $vendor->address }}
+                                                        </li>
+                                                        @if($vendor->email)
+                                                        <li class="d-block vendor-email">
+                                                            <i class="fa fa-envelope"></i> {{$vendor->email}}
+                                                        </li>
+                                                        @endif
+                                                        @if($vendor->website)
+                                                        <li class="d-block vendor-website">
+                                                            <i class="fa fa-home"></i> {{$vendor->website}}
+                                                        </li>
+                                                        @endif
+
+                                                    @endif
                                                     <li class="d-block vendor-timing">
                                                         <i class="icon-time"></i>
                                                         @if ($vendor->is_vendor_closed == 0 && $vendor->show_slot == 0)
@@ -410,7 +424,7 @@
                                                         {{-- <span data-toggle="tooltip" data-placement="right" title="Tooltip on right"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
                                             <span class="tooltip-text d-none">Mon-Sun : 11am - 11pm</span> --}}
                                                         </span>
-                                                        
+
                                                     </li>
                                                     @if($vendor->order_min_amount > 0)
                                                     <span class="badge badge-danger">{{__('Minimum order value')}} {{ Session::get('currencySymbol') . number_format($vendor->order_min_amount, 2, '.', '') }}</span>
@@ -507,7 +521,7 @@
                                                             data-p_sku="{{ $prod->sku }}"
                                                             data-slug="{{ $prod->url_slug }}">
                                                             <div class="col-2">
-                                                              <a  target="_blank" href="{{route('productDetail',$prod->url_slug)}}">
+                                                              <a  target="_blank" href="{{route('productDetail',[$prod->vendor->slug,$prod->url_slug])}}">
                                                                 <div class="class_img product_image">
                                                                   <img src="{{ $prod->product_image }}" alt="{{ $prod->translation_title }}">
                                                                 </div>
@@ -521,7 +535,7 @@
                                                                             class="d-flex align-items-start justify-content-between">
                                                                             <h5 class="mt-0">
                                                                                 {{ $prod->translation_title }}
-                                                                                
+
                                                                             </h5>
                                                                             <div class="product_variant_quantity_wrapper">
                                                                                 @php
