@@ -12,397 +12,401 @@ $timezone = Auth::user()->timezone;
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="page-title-box">
+                <div class="page-title-box d-flex justify-content-between ">
                     <h4 class="page-title">{{ __("Order Detail") }}</h4>
+                    <button class="al_print_btn badge badge-info" onclick='printDiv();'>Print <img src=""> </button>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-4 mb-3">
-                <div class="card mb-0 h-100">
-                    <div class="card-body">
-                        <h4 class="header-title mb-3">{{__('Track Order')}}</h4>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-4">
-                                    <h5 class="mt-0">{{__('Order ID')}}:</h5>
-                                    <p>#{{$order->order_number}}</p>
-                                </div>
-                            </div>
-                             @if(isset($order->vendors) && empty($order->vendors->first()->dispatch_traking_url) && ($order->vendors->first()->delivery_fee > 0) && ($order->vendors->first()->order_status_option_id >= 2) && $order->shipping_delivery_type=='D')
-                             <div class='inner-div d-inline-block' style="float: right;">
-                                <form method='POST' action='"+full.destroy_url+"'>
-                                   
-                                        <button type='button' class='btn btn-danger' id="create_dispatch_request"  data-order_vendor_id="{{$order->vendors->first()->id}}">{{__('Create Dispatch Request')}}</i>
-                                        </button>
-                                   
-                                </form>
-                             </div>
-                            @endif    
 
-                            @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null && $order->vendors->first()->dispatch_traking_url !=0 )
-                            <div class="col-lg-6">
-                                <div class="mb-4">
-                                    <h5 class="mt-0">{{ __("Tracking ID") }}:</h5>
-                                    <p>
+        <div class="al_print_area">
+            <div class="row" id="">
+                <div class="col-lg-4 mb-3">
+                    <div class="card mb-0 h-100">
+                        <div class="card-body">
+                            <h4 class="header-title mb-3">{{__('Track Order')}}</h4>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">{{__('Order ID')}}:</h5>
+                                        <p>#{{$order->order_number}}</p>
+                                    </div>
+                                </div>
+                                 @if(isset($order->vendors) && empty($order->vendors->first()->dispatch_traking_url) && ($order->vendors->first()->delivery_fee > 0) && ($order->vendors->first()->order_status_option_id >= 2) && $order->shipping_delivery_type=='D')
+                                 <div class='inner-div d-inline-block' style="float: right;">
+                                    <form method='POST' action='"+full.destroy_url+"'>
+                                       
+                                            <button type='button' class='btn btn-danger' id="create_dispatch_request"  data-order_vendor_id="{{$order->vendors->first()->id}}">{{__('Create Dispatch Request')}}</i>
+                                            </button>
+                                       
+                                    </form>
+                                 </div>
+                                @endif    
+
+                                @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null && $order->vendors->first()->dispatch_traking_url !=0 )
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">{{ __("Tracking ID") }}:</h5>
+                                        <p>
+                                            @php
+                                            $track = explode('/',$order->vendors->first()->dispatch_traking_url);
+                                            $track_code = end($track);
+                                            @endphp
+                                            <a href="{{$order->vendors->first()->dispatch_traking_url}}" target="_blank">#{{ $track_code }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                @elseif(isset($order->vendors) && isset($order->vendors->first()->lalamove_tracking_url) && $order->vendors->first()->lalamove_tracking_url !=null )
+
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">{{ __("Tracking ID") }}:</h5>
+                                        <p>
+                                            <a href="{{$order->vendors->first()->lalamove_tracking_url}}" target="_blank">#{{ $order->vendors->first()->web_hook_code }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                @endif
+                            </div>
+                            <div class="row track-order-list">
+                                <div class="col-lg-6">
+                                    <!-- <button type="button" class="btn btn-danger waves-effect waves-light">
+                                        <i class="mdi mdi-close"></i>
+                                     </button> -->
+                                    <ul class="list-unstyled" id="order_statuses">
                                         @php
-                                        $track = explode('/',$order->vendors->first()->dispatch_traking_url);
-                                        $track_code = end($track);
-                                        @endphp
-                                        <a href="{{$order->vendors->first()->dispatch_traking_url}}" target="_blank">#{{ $track_code }}</a>
-                                    </p>
-                                </div>
-                            </div>
-                            @elseif(isset($order->vendors) && isset($order->vendors->first()->lalamove_tracking_url) && $order->vendors->first()->lalamove_tracking_url !=null )
-
-                            <div class="col-lg-6">
-                                <div class="mb-4">
-                                    <h5 class="mt-0">{{ __("Tracking ID") }}:</h5>
-                                    <p>
-                                        <a href="{{$order->vendors->first()->lalamove_tracking_url}}" target="_blank">#{{ $order->vendors->first()->web_hook_code }}</a>
-                                    </p>
-                                </div>
-                            </div>
-
-                            @endif
-                        </div>
-                        <div class="row track-order-list">
-                            <div class="col-lg-6">
-                                <!-- <button type="button" class="btn btn-danger waves-effect waves-light">
-                                    <i class="mdi mdi-close"></i>
-                                 </button> -->
-                                <ul class="list-unstyled" id="order_statuses">
-                                    @php
-                                    if($order->vendors->first()->order_status_option_id == 2)
-                                    $open_option = ['4'];
-                                    elseif ($order->vendors->first()->order_status_option_id == 3)
-                                    $open_option = ['0'];
-                                    elseif ($order->vendors->first()->order_status_option_id == 1)
-                                    $open_option = ['2','3'];
-                                    else
-                                    $open_option = [$order->vendors->first()->order_status_option_id + 1];
-                                    @endphp
-
-                                    <!-- List of completed order status -->
-                                    @foreach ($vendor_order_statuses as $key => $vendor_order_status)
-                                        @php
-                                            $order_status = $order_status_options->where('id', $vendor_order_status->order_status_option_id)->pluck('title')->first();
-                                            $glow = '';
-                                            if( $key < count($vendor_order_statuses)-1 ){
-                                                $glow = 'completed';
-                                            }
-                                            $date = isset($vendor_order_status_created_dates[$vendor_order_status->order_status_option_id]) ? $vendor_order_status_created_dates[$vendor_order_status->order_status_option_id] : '';
+                                        if($order->vendors->first()->order_status_option_id == 2)
+                                        $open_option = ['4'];
+                                        elseif ($order->vendors->first()->order_status_option_id == 3)
+                                        $open_option = ['0'];
+                                        elseif ($order->vendors->first()->order_status_option_id == 1)
+                                        $open_option = ['2','3'];
+                                        else
+                                        $open_option = [$order->vendors->first()->order_status_option_id + 1];
                                         @endphp
 
-                                        <li class="{{$glow}} disabled" data-status_option_id="{{$vendor_order_status->order_status_option_id}}" data-order_vendor_id="{{$vendor_order_status->vendor_id}}">
-                                            @if( ($vendor_order_status->order_status_option_id == 5) && (($order->luxury_option_id == 2) || ($order->luxury_option_id == 3)) )
-                                                <h5 class="mt-0 mb-1">{{__('Order Prepared')}}</h5>
-                                            @else
-                                                <h5 class="mt-0 mb-1">{{$order_status}}</h5>
-                                            @endif
-                                            <p class="text-muted" id="text_muted_{{$vendor_order_status->order_status_option_id}}">
+                                        <!-- List of completed order status -->
+                                        @foreach ($vendor_order_statuses as $key => $vendor_order_status)
+                                            @php
+                                                $order_status = $order_status_options->where('id', $vendor_order_status->order_status_option_id)->pluck('title')->first();
+                                                $glow = '';
+                                                if( $key < count($vendor_order_statuses)-1 ){
+                                                    $glow = 'completed';
+                                                }
+                                                $date = isset($vendor_order_status_created_dates[$vendor_order_status->order_status_option_id]) ? $vendor_order_status_created_dates[$vendor_order_status->order_status_option_id] : '';
+                                            @endphp
+
+                                            <li class="{{$glow}} disabled" data-status_option_id="{{$vendor_order_status->order_status_option_id}}" data-order_vendor_id="{{$vendor_order_status->vendor_id}}">
+                                                @if( ($vendor_order_status->order_status_option_id == 5) && (($order->luxury_option_id == 2) || ($order->luxury_option_id == 3)) )
+                                                    <h5 class="mt-0 mb-1">{{__('Order Prepared')}}</h5>
+                                                @else
+                                                    <h5 class="mt-0 mb-1">{{$order_status}}</h5>
+                                                @endif
+                                                <p class="text-muted" id="text_muted_{{$vendor_order_status->order_status_option_id}}">
+                                                    @if($date)
+                                                        <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
+                                                    @endif
+                                                </p>
+                                            </li>
+                                        @endforeach
+
+                                        <!-- List of incomplete order status if order is not rejected -->
+                                        
+                                        @if(!in_array(3, $vendor_order_status_option_ids))
+                                            @foreach($order_status_options as $order_status_option)
+                                                @if(!in_array($order_status_option->id, $vendor_order_status_option_ids))
+                                                    @php
+                                                        $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'disabled': '';
+                                                        if($order_status_option->id == $order->vendors->first()->order_status_option_id)
+                                                            $glow = '';
+                                                        else
+                                                            $glow = 'completed';
+                                                            $date = isset($vendor_order_status_created_dates[$order_status_option->id]) ? $vendor_order_status_created_dates[$order_status_option->id] : '';
+                                                    @endphp
+                                                    @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 2)
+                                                        @continue
+                                                    @endif
+                                                    @if (in_array(2, $vendor_order_status_option_ids) && $order_status_option->id == 3)
+                                                        @continue
+                                                    @endif
+
+                                                    <li class="{{$class}} {{$glow}}  @if(in_array($order_status_option->id, $open_option))open-for-update-status @else disabled @endif" data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
+                                                        @if( ($order_status_option->id == 5) && (($order->luxury_option_id == 2) || ($order->luxury_option_id == 3)) )
+                                                            <h5 class="mt-0 mb-1">{{__('Order Prepared')}}</h5>
+                                                        @else
+                                                            <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
+                                                        @endif
+                                                        <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
+                                                            @if($date)
+                                                                <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
+                                                            @endif
+                                                        </p>
+                                                    </li>
+                                                    @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 3)
+                                                        @break
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </ul>
+                                </div>
+
+                               
+
+                                @if(isset($order->vendors) && ($order->vendors->first()->dispatch_traking_url !=null || $order->vendors->first()->lalamove_tracking_url !=null))
+                                <div class="col-lg-6">
+                                    <ul class="list-unstyled remove-curser">
+                                        @foreach($dispatcher_status_options as $dispatcher_status_option)
+                                        @php
+                                        if($dispatcher_status_option->vendorOrderDispatcherStatus && $dispatcher_status_option->id == $dispatcher_status_option->vendorOrderDispatcherStatus->dispatcher_status_option_id??'')
+                                        $class = 'disabled';
+
+                                        if($dispatcher_status_option->id == $order->vendors->first()->dispatcher_status_option_id)
+                                        $glow = '';
+                                        else
+                                        $glow = 'completed';
+
+                                        $date = isset($dispatcher_status_option->vendorOrderDispatcherStatus) ? $dispatcher_status_option->vendorOrderDispatcherStatus->created_at : '';
+                                        @endphp
+                                        <li class="{{$class}} {{$glow}}" data-status_option_id="{{$dispatcher_status_option->id}}">
+                                            <h5 class="mt-0 mb-1">{{$dispatcher_status_option->title}}</h5>
+                                            <p class="text-muted" id="dispatch_text_muted_{{$dispatcher_status_option->id}}">
                                                 @if($date)
-                                                    <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
+                                                <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
                                                 @endif
                                             </p>
                                         </li>
-                                    @endforeach
-
-                                    <!-- List of incomplete order status if order is not rejected -->
-                                    
-                                    @if(!in_array(3, $vendor_order_status_option_ids))
-                                        @foreach($order_status_options as $order_status_option)
-                                            @if(!in_array($order_status_option->id, $vendor_order_status_option_ids))
-                                                @php
-                                                    $class = in_array($order_status_option->id, $vendor_order_status_option_ids) ? 'disabled': '';
-                                                    if($order_status_option->id == $order->vendors->first()->order_status_option_id)
-                                                        $glow = '';
-                                                    else
-                                                        $glow = 'completed';
-                                                        $date = isset($vendor_order_status_created_dates[$order_status_option->id]) ? $vendor_order_status_created_dates[$order_status_option->id] : '';
-                                                @endphp
-                                                @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 2)
-                                                    @continue
-                                                @endif
-                                                @if (in_array(2, $vendor_order_status_option_ids) && $order_status_option->id == 3)
-                                                    @continue
-                                                @endif
-
-                                                <li class="{{$class}} {{$glow}}  @if(in_array($order_status_option->id, $open_option))open-for-update-status @else disabled @endif" data-status_option_id="{{$order_status_option->id}}" data-order_vendor_id="{{$order_status_option->order_vendor_id}}">
-                                                    @if( ($order_status_option->id == 5) && (($order->luxury_option_id == 2) || ($order->luxury_option_id == 3)) )
-                                                        <h5 class="mt-0 mb-1">{{__('Order Prepared')}}</h5>
-                                                    @else
-                                                        <h5 class="mt-0 mb-1">{{$order_status_option->title}}</h5>
-                                                    @endif
-                                                    <p class="text-muted" id="text_muted_{{$order_status_option->id}}">
-                                                        @if($date)
-                                                            <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
-                                                        @endif
-                                                    </p>
-                                                </li>
-                                                @if (in_array(3, $vendor_order_status_option_ids) && $order_status_option->id == 3)
-                                                    @break
-                                                @endif
-                                            @endif
                                         @endforeach
-                                    @endif
-                                </ul>
+                                    </ul>
+                                </div>
+                                @endif
+
+
                             </div>
-
-                           
-
-                            @if(isset($order->vendors) && ($order->vendors->first()->dispatch_traking_url !=null || $order->vendors->first()->lalamove_tracking_url !=null))
-                            <div class="col-lg-6">
-                                <ul class="list-unstyled remove-curser">
-                                    @foreach($dispatcher_status_options as $dispatcher_status_option)
-                                    @php
-                                    if($dispatcher_status_option->vendorOrderDispatcherStatus && $dispatcher_status_option->id == $dispatcher_status_option->vendorOrderDispatcherStatus->dispatcher_status_option_id??'')
-                                    $class = 'disabled';
-
-                                    if($dispatcher_status_option->id == $order->vendors->first()->dispatcher_status_option_id)
-                                    $glow = '';
-                                    else
-                                    $glow = 'completed';
-
-                                    $date = isset($dispatcher_status_option->vendorOrderDispatcherStatus) ? $dispatcher_status_option->vendorOrderDispatcherStatus->created_at : '';
-                                    @endphp
-                                    <li class="{{$class}} {{$glow}}" data-status_option_id="{{$dispatcher_status_option->id}}">
-                                        <h5 class="mt-0 mb-1">{{$dispatcher_status_option->title}}</h5>
-                                        <p class="text-muted" id="dispatch_text_muted_{{$dispatcher_status_option->id}}">
-                                            @if($date)
-                                            <small class="text-muted">{{dateTimeInUserTimeZone($date, $timezone)}}</small>
-                                            @endif
-                                        </p>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @endif
-
-
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-8 mb-3">
-                <div class="card mb-0 h-100">
-                    <div class="card-body">
-                        <h4 class="header-title mb-3">
- 
-                            <div class='form-ul'> {{ $vendor_data->name }}
-                                
-                            </div>
+                <div class="col-lg-8 mb-3">
+                    <div class="card mb-0 h-100">
+                        <div class="card-body">
+                            <h4 class="header-title mb-3">
+     
+                                <div class='form-ul'> {{ $vendor_data->name }}
+                                    
+                                </div>
 
 
 
-                            @if($order->luxury_option_name != '')
-                                <span class="badge badge-info mr-2">{{$order->luxury_option_name}}</span>
-                            @endif
-                            {{ __("Items from Order") }} #{{$order->order_number}}
-                            {{-- <a href="{{ route('order.edit.detail',[$order->id,$order->vendors->first()->vendor_id])}}">{{__('Edit Order')}}</a> --}}
-                        </h4>
-                        @if($order->luxury_option_id == 2)
-                            @foreach($order->vendors as $vendor)
-                                <p>{{ $vendor->dineInTableName }} | Category : {{ $vendor->dineInTableCategory }} | Capacity : {{ $vendor->dineInTableCapacity }}</p>
-                            @endforeach
-                        @endif
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-centered mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>{{ __("Product Name") }}</th>
-                                        <th>{{ __("Product") }}</th>
-                                        <th>{{ __("Quantity") }}</th>
-                                        <th>{{ __("Price") }}</th>
-
-                                        <th>{{ __("Total") }}</th>
-                                    </tr>
-                                </thead>
+                                @if($order->luxury_option_name != '')
+                                    <span class="badge badge-info mr-2">{{$order->luxury_option_name}}</span>
+                                @endif
+                                {{ __("Items from Order") }} #{{$order->order_number}}
+                                {{-- <a href="{{ route('order.edit.detail',[$order->id,$order->vendors->first()->vendor_id])}}">{{__('Edit Order')}}</a> --}}
+                            </h4>
+                            @if($order->luxury_option_id == 2)
                                 @foreach($order->vendors as $vendor)
-                                <tbody>
-                                    @php
-                                    $sub_total = 0;
-                                    $taxable_amount = 0;
-                                    @endphp
-                                    @foreach($vendor->products as $product)
-                                    @if($product->order_id == $order->id)
-                                    @php
-                                    // $taxable_amount += $product->taxable_amount;
-                                    // $sub_total += $product->quantity * $product->price;
-                                    $taxable_amount = $vendor->taxable_amount;
-                                    $vendor_service_fee = $vendor->service_fee_percentage_amount;
-                                    $sub_total += $product->total_amount;
-                                    @endphp
-                                    <tr>
-                                        <th scope="row">{{$product->product_name}}
-                                            <p class="p-0 m-0">
-                                                @if(isset($product->scheduled_date_time)) {{dateTimeInUserTimeZone($product->scheduled_date_time, $timezone)}} @endif
-                                            </p>
-                                                @foreach($product->prescription as $pres)
-                                                <br><a target="_blank" href="{{ ($pres) ? @$pres->prescription['proxy_url'].'74/100'.@$pres->prescription['image_path'] : ''}}">{{($product->prescription) ? 'Prescription' : ''}}</a>
-                                                @endforeach
-
-                                                <p class="p-0 m-0">{{ substr($product->product_variant_sets, 0, -2) }}</p>
-                                            @if($product->addon && count($product->addon))
-                                                <hr class="my-2">
-                                                <h6 class="m-0 pl-0"><b>{{__('Add Ons')}}</b></h6>
-                                                @foreach($product->addon as $addon)
-                                                    <p class="p-0 m-0">{{ $addon->option->translation_title }}</p>
-                                                @endforeach
-                                            @endif
-                                        </th>
-                                        <td>
-                                            @if($product->image_path)
-                                            <img src="{{@$product->image_path['proxy_url'].'32/32'.@$product->image_path['image_path']}}" alt="product-img" height="32">
-                                            @else 
-                                            @php $image_path = getDefaultImagePath(); @endphp
-                                            <img src="{{$image_path['proxy_url'].'32/32'.$image_path['image_path']}}" alt="product-img" height="32">
-                                            @endif
-                                        </td>
-                                        <td>{{ $product->quantity }}</td>
-                                        <td>
-                                            {{$clientCurrency->currency->symbol}}@money($product->price)
-                                            @if($product->addon->isNotEmpty())
-                                                <hr class="my-2">
-                                                @foreach($product->addon as $addon)
-                                                    <p class="p-0 m-0">{{$clientCurrency->currency->symbol}}{{ $addon->option->price_in_cart }}</p>
-                                                    {{-- <p class="p-0 m-0">${{ $addon->option->quantity_price }}</p> --}}
-                                                @endforeach
-                                            @endif
-                                        </td>
-
-                                        <td>{{$clientCurrency->currency->symbol}}@money($product->total_amount)</td>
-                                    </tr>
-                                    @endif
-                                    @endforeach
-                                    <tr>
-                                        <th scope="row" colspan="4" class="text-end">{{__('Delivery Fee')}} :</th>
-                                        <td>{{$clientCurrency->currency->symbol}}@money($vendor->delivery_fee)</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row" colspan="4" class="text-end">{{ __("Sub Total") }} :</th>
-                                        <td>
-                                            <div class="fw-bold">{{$clientCurrency->currency->symbol}}@money($sub_total)</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row" colspan="4" class="text-end">{{__('Total Discount')}} :</th>
-                                        <td>{{$clientCurrency->currency->symbol}}@money($vendor->discount_amount)</td>
-                                    </tr>
-
-                                    <tr>
-                                        <th scope="row" colspan="4" class="text-end">{{ __("Estimated Tax") }} :</th>
-                                        <td>{{$clientCurrency->currency->symbol}}@money($taxable_amount)</td>
-                                    </tr>
-                                    @if($vendor_service_fee > 0)
-                                        <tr>
-                                            <th scope="row" colspan="4" class="text-end">{{ __("Service Fee") }} :</th>
-                                            <td>{{$clientCurrency->currency->symbol}}@money($vendor_service_fee)</td>
-                                        </tr>
-                                    @endif
-                                    <tr>
-                                        <th scope="row" colspan="4" class="text-end">{{ __("Reject Reason") }} :</th>
-                                        <td style="width:200px;">{{$vendor->reject_reason}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row" colspan="4" class="text-end">{{ __("Total") }} :</th>
-                                        <td>
-                                            <div class="fw-bold">{{$clientCurrency->currency->symbol}}@money($vendor->payable_amount * $clientCurrency->doller_compare)</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                    <p>{{ $vendor->dineInTableName }} | Category : {{ $vendor->dineInTableCategory }} | Capacity : {{ $vendor->dineInTableCapacity }}</p>
                                 @endforeach
-                            </table>
+                            @endif
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-centered mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>{{ __("Product Name") }}</th>
+                                            <th>{{ __("Product") }}</th>
+                                            <th>{{ __("Quantity") }}</th>
+                                            <th>{{ __("Price") }}</th>
+
+                                            <th>{{ __("Total") }}</th>
+                                        </tr>
+                                    </thead>
+                                    @foreach($order->vendors as $vendor)
+                                    <tbody>
+                                        @php
+                                        $sub_total = 0;
+                                        $taxable_amount = 0;
+                                        @endphp
+                                        @foreach($vendor->products as $product)
+                                        @if($product->order_id == $order->id)
+                                        @php
+                                        // $taxable_amount += $product->taxable_amount;
+                                        // $sub_total += $product->quantity * $product->price;
+                                        $taxable_amount = $vendor->taxable_amount;
+                                        $vendor_service_fee = $vendor->service_fee_percentage_amount;
+                                        $sub_total += $product->total_amount;
+                                        @endphp
+                                        <tr>
+                                            <th scope="row">{{$product->product_name}} 
+                                                <p class="p-0 m-0">
+                                                    @if(isset($product->scheduled_date_time)) {{dateTimeInUserTimeZone($product->scheduled_date_time, $timezone)}} @endif
+                                                </p>
+                                                    @foreach($product->prescription as $pres)
+                                                    <br><a target="_blank" href="{{ ($pres) ? @$pres->prescription['proxy_url'].'74/100'.@$pres->prescription['image_path'] : ''}}">{{($product->prescription) ? 'Prescription' : ''}}</a>
+                                                    @endforeach
+
+                                                    <p class="p-0 m-0">{{ substr($product->product_variant_sets, 0, -2) }}</p>
+                                                @if($product->addon && count($product->addon))
+                                                    <hr class="my-2">
+                                                    <h6 class="m-0 pl-0"><b>{{__('Add Ons')}}</b></h6>
+                                                    @foreach($product->addon as $addon)
+                                                        <p class="p-0 m-0">{{ $addon->option->translation_title }}</p>
+                                                    @endforeach
+                                                @endif
+                                            </th>
+                                            <td>
+                                                @if($product->image_path)
+                                                <img src="{{@$product->image_path['proxy_url'].'32/32'.@$product->image_path['image_path']}}" alt="product-img" height="32">
+                                                @else 
+                                                @php $image_path = getDefaultImagePath(); @endphp
+                                                <img src="{{$image_path['proxy_url'].'32/32'.$image_path['image_path']}}" alt="product-img" height="32">
+                                                @endif
+                                            </td>
+                                            <td>{{ $product->quantity }}</td>
+                                            <td>
+                                                {{$clientCurrency->currency->symbol}}@money($product->price)
+                                                @if($product->addon->isNotEmpty())
+                                                    <hr class="my-2">
+                                                    @foreach($product->addon as $addon)
+                                                        <p class="p-0 m-0">{{$clientCurrency->currency->symbol}}{{ $addon->option->price_in_cart }}</p>
+                                                        {{-- <p class="p-0 m-0">${{ $addon->option->quantity_price }}</p> --}}
+                                                    @endforeach
+                                                @endif
+                                            </td>
+
+                                            <td>{{$clientCurrency->currency->symbol}}@money($product->total_amount)</td>
+                                        </tr>
+                                        @endif
+                                        @endforeach
+                                        <tr>
+                                            <th scope="row" colspan="4" class="text-end">{{__('Delivery Fee')}} :</th>
+                                            <td>{{$clientCurrency->currency->symbol}}@money($vendor->delivery_fee)</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" colspan="4" class="text-end">{{ __("Sub Total") }} :</th>
+                                            <td>
+                                                <div class="fw-bold">{{$clientCurrency->currency->symbol}}@money($sub_total)</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" colspan="4" class="text-end">{{__('Total Discount')}} :</th>
+                                            <td>{{$clientCurrency->currency->symbol}}@money($vendor->discount_amount)</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th scope="row" colspan="4" class="text-end">{{ __("Estimated Tax") }} :</th>
+                                            <td>{{$clientCurrency->currency->symbol}}@money($taxable_amount)</td>
+                                        </tr>
+                                        @if($vendor_service_fee > 0)
+                                            <tr>
+                                                <th scope="row" colspan="4" class="text-end">{{ __("Service Fee") }} :</th>
+                                                <td>{{$clientCurrency->currency->symbol}}@money($vendor_service_fee)</td>
+                                            </tr>
+                                        @endif
+                                        <tr>
+                                            <th scope="row" colspan="4" class="text-end">{{ __("Reject Reason") }} :</th>
+                                            <td style="width:200px;">{{$vendor->reject_reason}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" colspan="4" class="text-end">{{ __("Total") }} :</th>
+                                            <td>
+                                                <div class="fw-bold">{{$clientCurrency->currency->symbol}}@money($vendor->payable_amount * $clientCurrency->doller_compare)</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    @endforeach
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
 
-        <div class="row">
-            @if($order->address)
-            <div class="col-lg-6 mb-3">
-                <div class="card mb-0 h-100">
-                    <div class="card-body">
-                        <h4 class="header-title mb-3">{{ __("Delivery Information") }}</h4>
-                        <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
-                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("Email") }}:</span> {{ $order->user->email ? $order->user->email : ''}}</p>
-                        <p class="mb-2"><span class="fw-semibold me-2">{{ __('Phone')}}:</span> {{'+'.$order->user->dial_code.$order->user->phone_number}}</p>
-                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->address->house_number ? $order->address->house_number."," : ''}} {{ $order->address ? $order->address->address : ''}}</p>
-                        @if(isset($order->address) && !empty($order->address->street))
-                        <p class="mb-2"><span class="fw-semibold me-2">{{__('Street')}}:</span> {{ $order->address ? $order->address->street : ''}}</p>
-                        @endif
-                        <p class="mb-2"><span class="fw-semibold me-2">{{__('City')}}:</span> {{ $order->address ? $order->address->city : ''}}</p>
-                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("State") }}:</span> {{ $order->address ? $order->address->state : ''}}</p>
-                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Zip Code") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
+            <div class="row">
+                @if($order->address)
+                <div class="col-lg-6 mb-3">
+                    <div class="card mb-0 h-100">
+                        <div class="card-body">
+                            <h4 class="header-title mb-3">{{ __("Delivery Information") }}</h4>
+                            <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
+                            <p class="mb-2"><span class="fw-semibold me-2">{{ __("Email") }}:</span> {{ $order->user->email ? $order->user->email : ''}}</p>
+                            <p class="mb-2"><span class="fw-semibold me-2">{{ __('Phone')}}:</span> {{'+'.$order->user->dial_code.$order->user->phone_number}}</p>
+                            <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->address->house_number ? $order->address->house_number."," : ''}} {{ $order->address ? $order->address->address : ''}}</p>
+                            @if(isset($order->address) && !empty($order->address->street))
+                            <p class="mb-2"><span class="fw-semibold me-2">{{__('Street')}}:</span> {{ $order->address ? $order->address->street : ''}}</p>
+                            @endif
+                            <p class="mb-2"><span class="fw-semibold me-2">{{__('City')}}:</span> {{ $order->address ? $order->address->city : ''}}</p>
+                            <p class="mb-2"><span class="fw-semibold me-2">{{ __("State") }}:</span> {{ $order->address ? $order->address->state : ''}}</p>
+                            <p class="mb-0"><span class="fw-semibold me-2">{{ __("Zip Code") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            @elseif( ($order->luxury_option_id == 2) || ($order->luxury_option_id == 3) )
-            <div class="col-lg-6 mb-3">
-                <div class="card mb-0 h-100">
-                    <div class="card-body">
-                        <h4 class="header-title mb-3">{{ __("User Information") }}</h4>
-                        <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
-                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->user->address->first() ? $order->user->address->first()->address : __('Not Available')}}</p>
-                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Mobile") }}:</span> {{$order->user->phone_number ? $order->user->phone_number : __('Not Available')}}</p>
-                        @if(isset($order->address) && !empty($order->address->street))
-                        <p class="mb-2"><span class="fw-semibold me-2">{{__('Street')}}:</span> {{ $order->address ? $order->address->street : ''}}</p>
-                        @endif
-                        <p class="mb-2"><span class="fw-semibold me-2">{{__('City')}}:</span> {{ $order->address ? $order->address->city : ''}}</p>
-                        <p class="mb-2"><span class="fw-semibold me-2">{{ __("State") }}:</span> {{ $order->address ? $order->address->state : ''}}</p>
-                        <p class="mb-0"><span class="fw-semibold me-2">{{ __("Zip Code") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
+                @elseif( ($order->luxury_option_id == 2) || ($order->luxury_option_id == 3) )
+                <div class="col-lg-6 mb-3">
+                    <div class="card mb-0 h-100">
+                        <div class="card-body">
+                            <h4 class="header-title mb-3">{{ __("User Information") }}</h4>
+                            <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
+                            <p class="mb-2"><span class="fw-semibold me-2">{{ __("Address") }}:</span> {{ $order->user->address->first() ? $order->user->address->first()->address : __('Not Available')}}</p>
+                            <p class="mb-0"><span class="fw-semibold me-2">{{ __("Mobile") }}:</span> {{$order->user->phone_number ? $order->user->phone_number : __('Not Available')}}</p>
+                            @if(isset($order->address) && !empty($order->address->street))
+                            <p class="mb-2"><span class="fw-semibold me-2">{{__('Street')}}:</span> {{ $order->address ? $order->address->street : ''}}</p>
+                            @endif
+                            <p class="mb-2"><span class="fw-semibold me-2">{{__('City')}}:</span> {{ $order->address ? $order->address->city : ''}}</p>
+                            <p class="mb-2"><span class="fw-semibold me-2">{{ __("State") }}:</span> {{ $order->address ? $order->address->state : ''}}</p>
+                            <p class="mb-0"><span class="fw-semibold me-2">{{ __("Zip Code") }}:</span>  {{ $order->address ? $order->address->pincode : ''}}</p>
+
+                        </div>
+                    </div>
+                </div>
+                @endif
+
+                <div class="col-lg-6 mb-3">
+                    <div class="card mb-0 h-100">
+                        <div class="card-body">
+                            <h4 class="header-title mb-3">{{ __('Payment Information') }}</h4>
+                            <p class="mb-2"><span class="fw-semibold me-2">{{ __('Payment By') }} :</span> {{ $order->paymentOption  ? $order->paymentOption->title : ''}}</p>
+                            @if($order->payment)
+                            <p class="mb-2"><span class="fw-semibold me-2">{{ __('Transaction Id') }} :</span> {{ $order->payment  ? $order->payment->transaction_id : ''}}</p>
+                            @endif
+                        </div>
+
+
+                        <div class="card-body">
+                            <h4 class="header-title mb-3 ">{{ __('Comment/Schedule Information') }}</h4>
+                            @if($order->comment_for_pickup_driver)
+                              <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Comment for Pickup Driver') }} :</span> {{ $order->comment_for_pickup_driver ?? ''}}</p>
+                            @endif
+
+                            @if($order->comment_for_dropoff_driver)
+                              <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Comment for Dropoff Driver') }} :</span> {{ $order->comment_for_dropoff_driver ?? ''}}</p>
+                            @endif
+
+                            @if($order->comment_for_vendor)
+                              <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Comment for Vendor') }} :</span> {{ $order->comment_for_vendor ?? ''}}</p>
+                            @endif
+
+                            @if($order->schedule_pickup)
+                              <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Schedule Pickup') }} :</span> {{dateTimeInUserTimeZone($order->schedule_pickup, $timezone)}} </p>
+                            @endif
+
+                            @if($order->schedule_dropoff)
+                              <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Schedule Dropoff') }} :</span> {{dateTimeInUserTimeZone($order->schedule_dropoff, $timezone)}} </p>
+                            @endif
+
+                            @if($order->specific_instructions)
+                              <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Specific instructions') }} :</span> {{ $order->specific_instructions ?? ''}}</p>
+                            @endif
+
+                        </div>
+
 
                     </div>
                 </div>
+
+
             </div>
-            @endif
-
-            <div class="col-lg-6 mb-3">
-                <div class="card mb-0 h-100">
-                    <div class="card-body">
-                        <h4 class="header-title mb-3">{{ __('Payment Information') }}</h4>
-                        <p class="mb-2"><span class="fw-semibold me-2">{{ __('Payment By') }} :</span> {{ $order->paymentOption  ? $order->paymentOption->title : ''}}</p>
-                        @if($order->payment)
-                        <p class="mb-2"><span class="fw-semibold me-2">{{ __('Transaction Id') }} :</span> {{ $order->payment  ? $order->payment->transaction_id : ''}}</p>
-                        @endif
-                    </div>
-
-
-                    <div class="card-body">
-                        <h4 class="header-title mb-3 ">{{ __('Comment/Schedule Information') }}</h4>
-                        @if($order->comment_for_pickup_driver)
-                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Comment for Pickup Driver') }} :</span> {{ $order->comment_for_pickup_driver ?? ''}}</p>
-                        @endif
-
-                        @if($order->comment_for_dropoff_driver)
-                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Comment for Dropoff Driver') }} :</span> {{ $order->comment_for_dropoff_driver ?? ''}}</p>
-                        @endif
-
-                        @if($order->comment_for_vendor)
-                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Comment for Vendor') }} :</span> {{ $order->comment_for_vendor ?? ''}}</p>
-                        @endif
-
-                        @if($order->schedule_pickup)
-                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Schedule Pickup') }} :</span> {{dateTimeInUserTimeZone($order->schedule_pickup, $timezone)}} </p>
-                        @endif
-
-                        @if($order->schedule_dropoff)
-                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Schedule Dropoff') }} :</span> {{dateTimeInUserTimeZone($order->schedule_dropoff, $timezone)}} </p>
-                        @endif
-
-                        @if($order->specific_instructions)
-                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Specific instructions') }} :</span> {{ $order->specific_instructions ?? ''}}</p>
-                        @endif
-
-                    </div>
-
-
-                </div>
-            </div>
-
-
         </div>
 
 
@@ -425,6 +429,11 @@ $timezone = Auth::user()->timezone;
         </div>
     </div>
 </div>
+<!-- Order Invoice Code -->
+<div style="display: none;">
+@include('backend.order.print')
+</div>
+<!--End Order Invoice Code -->
 @endsection
 @section('script')
 <script>
@@ -489,23 +498,15 @@ $timezone = Auth::user()->timezone;
             });
         }
     });
-
-
-        // setInterval(function () {
-        //     $.ajax({
-        //         url: "{{ url('order.webhook') }}",
-        //         type: "POST",
-        //         data: {
-        //             order_id: "{{$order->id}}",
-        //             "_token": "{{ csrf_token() }}"
-        //         },
-        //         success: function(response) {
-        //             //location.reload();   
-        //         },
-        //     });
-        // }
-
-        // }, 5000);
+    function printDiv() 
+    {
+        var divToPrint=document.getElementById('al_print_area');
+        var newWin=window.open('','Print-Window');
+        newWin.document.open();
+        newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+        newWin.document.close();
+        setTimeout(function(){newWin.close();},10);
+    }
 
 </script>
 @endsection
