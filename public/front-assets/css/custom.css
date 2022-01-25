@@ -146,7 +146,7 @@ body.dark .suppliers-box h6{color: #fff;}
 .top-banner-content.small-section {padding-top: 25px;padding-bottom: 25px;margin-bottom: 30px;}
 .ratio_asos .top-banner-wrapper .top-banner-content h4 {margin: 0;font-weight: 600 !important;}
 .collection-filter  .collection-filter-block{border:none;}
-.offer-slider .img-outer-box i.fa.fa-heart-o.fav-heart {position: absolute; top: 0; left: 6px; }
+.offer-slider .img-outer-box i.fa.fa-heart-o.fav-heart {position: absolute;top: 0;right: 0;}
 .dark .product-timing svg{fill: var(--theme-deafult)}
 .dark .ratio_asos .top-banner-wrapper .top-banner-content h4{color: #000;}
 body.dark .top-banner-wrapper p{color: #000 ;}
@@ -169,7 +169,10 @@ body.dark .supplier-rating h6{color: #fff;}
 body .footer-theme .sub-title .contact-list li{position: relative;overflow: hidden;min-height: 24px;}
 body .footer-theme .sub-title .contact-list li i{position: absolute;top: 0;}
 body .footer-theme .sub-title .contact-list li span{padding-left: 30px;}
-
+.site-topbar .location-bar i {font-size: 15px;top: 0px;}
+.site-topbar .location-bar h2:after {font-size: 16px;margin-left: 10px;}
+.site-topbar .map-icon .yl-text {line-height: normal; height: 20px;display: inline-block; vertical-align: middle;}
+.store-btn a{display: inline-block;}
 /* al_bg_color */
 .al_bg_color {background-color: #fff;box-shadow: 0 0 6px rgb(0,0 ,0, .3);padding: 21px 0;border-radius: 20px;}
 .al_bg_color .vendor_products_tr h4 {font-size: 12px;word-wrap: break-word;}
@@ -188,7 +191,8 @@ body .pixelstrap li ul li>a{width: 100%;text-align: left;}
 .product-wrapper-grid.list-view {margin-top: 20px;}
 .product-wrapper-grid.list-view .product-box{margin-bottom: 20px;}
 .cart-page-layout .product-img {width: auto;max-height: initial;}
-.common-product-box .img-outer-box.position-relative i {position: absolute;right: 10px;top: 10px;}
+/* .common-product-box .img-outer-box.position-relative i {position: absolute;right: 10px;top: 10px;} */
+
 /* ------------------------------- al css start end ----------------------------- */
 
 /* Responsiveness Css Start From Here */
