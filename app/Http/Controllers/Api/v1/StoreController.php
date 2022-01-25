@@ -601,56 +601,56 @@ class StoreController extends BaseController{
 				$varOptArray = $prodVarSet = $updateImage = array();
 				$i = 0;
 
-				if ($request->has('file')) {
-					//$imageId = [];
-					$files = $request->file('file');
-					if (is_array($files)) {
-						foreach ($files as $file) {
-							$img = new VendorMedia();
-							$img->media_type = 1;
-							$img->vendor_id = $product->vendor_id;
-							$img->path = Storage::disk('s3')->put($this->folderName, $file, 'public');
-							$img->save();
-							$path1 = $img->path['proxy_url'] . '40/40' . $img->path['image_path'];
-							if ($img->id > 0) {
-								$imageId = $img->id;
-								$image = new ProductImage();
-								$image->product_id = $product->id;
-								$image->is_default = 1;
-								$image->media_id = $img->id;
-								$image->save();
-								// if ($request->has('variantId')) {
-								// 	$resp .= '<div class="col-md-3 col-sm-4 col-12 mb-3">
-								// 				<div class="product-img-box">
-								// 					<div class="form-group checkbox checkbox-success">
-								// 						<input type="checkbox" id="image' . $image->id . '" class="imgChecks" imgId="' . $image->id . '" checked variant_id="' . $request->variantId . '">
-								// 						<label for="image' . $image->id . '">
-								// 						<img src="' . $path1 . '" alt="">
-								// 						</label>
-								// 					</div>
-								// 				</div>
-								// 			</div>';
-								// }
-							}
-						}
+				// if ($request->has('file')) {
+				// 	//$imageId = [];
+				// 	$files = $request->file('file');
+				// 	if (is_array($files)) {
+				// 		foreach ($files as $file) {
+				// 			$img = new VendorMedia();
+				// 			$img->media_type = 1;
+				// 			$img->vendor_id = $product->vendor_id;
+				// 			$img->path = Storage::disk('s3')->put($this->folderName, $file, 'public');
+				// 			$img->save();
+				// 			$path1 = $img->path['proxy_url'] . '40/40' . $img->path['image_path'];
+				// 			if ($img->id > 0) {
+				// 				$imageId = $img->id;
+				// 				$image = new ProductImage();
+				// 				$image->product_id = $product->id;
+				// 				$image->is_default = 1;
+				// 				$image->media_id = $img->id;
+				// 				$image->save();
+				// 				// if ($request->has('variantId')) {
+				// 				// 	$resp .= '<div class="col-md-3 col-sm-4 col-12 mb-3">
+				// 				// 				<div class="product-img-box">
+				// 				// 					<div class="form-group checkbox checkbox-success">
+				// 				// 						<input type="checkbox" id="image' . $image->id . '" class="imgChecks" imgId="' . $image->id . '" checked variant_id="' . $request->variantId . '">
+				// 				// 						<label for="image' . $image->id . '">
+				// 				// 						<img src="' . $path1 . '" alt="">
+				// 				// 						</label>
+				// 				// 					</div>
+				// 				// 				</div>
+				// 				// 			</div>';
+				// 				// }
+				// 			}
+				// 		}
 						
-					} else {
-						$img = new VendorMedia();
-						$img->media_type = 1;
-						$img->vendor_id = $product->vendor_id;
-						$img->path = Storage::disk('s3')->put($this->folderName, $files, 'public');
-						$img->save();
-						$imageId = $img->id;
-						if ($img->id > 0) {
-							$imageId = $img->id;
-							$image = new ProductImage();
-							$image->product_id = $product->id;
-							$image->is_default = 1;
-							$image->media_id = $img->id;
-							$image->save();
-						}
-					}					
-				}
+				// 	} else {
+				// 		$img = new VendorMedia();
+				// 		$img->media_type = 1;
+				// 		$img->vendor_id = $product->vendor_id;
+				// 		$img->path = Storage::disk('s3')->put($this->folderName, $files, 'public');
+				// 		$img->save();
+				// 		$imageId = $img->id;
+				// 		if ($img->id > 0) {
+				// 			$imageId = $img->id;
+				// 			$image = new ProductImage();
+				// 			$image->product_id = $product->id;
+				// 			$image->is_default = 1;
+				// 			$image->media_id = $img->id;
+				// 			$image->save();
+				// 		}
+				// 	}					
+				// }
 
 				// $productImageSave = array();
 				// if ($request->has('fileIds')) {
@@ -964,7 +964,51 @@ class StoreController extends BaseController{
 		}			
     }
 
-	
+	public function getProductImages(Request $request){
+		try{
+			$validator = Validator::make($request->all(), [
+				'product_id' => 'required',	
+				'variant_id' => 'required',	
+			]);
+
+			if ($validator->fails()) {			
+				return $this->errorResponse($validator->errors()->first(), 422);
+			}
+			$product_id = $request->product_id;
+			$variant_id = $request->variant_id;
+
+			$product = Product::where('id', $product_id)->first();
+			if(!$product)
+			{
+				return $this->errorResponse('Product not found', 422);
+			}
+			$variantImages = array();
+			if ($variant_id > 0) {
+				$varImages = ProductVariantImage::where('product_variant_id', $variant_id)->get();
+				if ($varImages) {
+					foreach ($varImages as $key => $value) {
+						$variantImages[] = $value->product_image_id;
+					}
+				}
+			}			
+			//$variId = ($request->has('variant_id') && $request->variant_id > 0) ? $request->variant_id : 0;
+			$images = ProductImage::with('image')->where('product_images.product_id', $product->id)->get();
+			$k=0;
+			foreach($images as $singleimage)
+			{
+				if(in_array($singleimage->id,$variantImages))
+				{
+					$images[$k]->is_selected = 1;
+				}else{
+					$images[$k]->is_selected = 0;
+				}
+				$k++;
+			}
+			return $this->successResponse($images, 'Product images details!', 200);
+		} catch (Exception $e) {			
+			return $this->errorResponse($e->getMessage(), $e->getCode());
+		}			
+    }
 
 	private function preProductDetail($productid)
 	{		
