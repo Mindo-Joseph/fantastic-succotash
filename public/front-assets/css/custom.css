@@ -668,3 +668,14 @@ a.show_subet_addeon {
     max-height: 200px;
     overflow: auto;
 } */
+#edit-address .address-input-group .pac-container{
+    top:75px!important;
+    left:0!important;
+}
+.address-input-group{
+    position: relative;
+}
+.address-input-group .pac-container{
+    top:35px!important;
+    left:0!important;
+}
