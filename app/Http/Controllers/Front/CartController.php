@@ -651,7 +651,7 @@ class CartController extends FrontController
                         }
                     }
                 }
-
+                Session()->put('vid','');
                 foreach ($vendorData->vendorProducts as $ven_key => $prod) {
                     if($prod->product->sell_when_out_of_stock == 0 && $prod->product->has_inventory == 1){
                         $quantity_check = productvariantQuantity($prod->variant_id);
@@ -740,72 +740,37 @@ class CartController extends FrontController
                     if($action == 'delivery'){
                         $delivery_fee_charges = 0;
                         $deliver_charges_lalmove =0;
-                       // $deliveryCharges = 0;
-
+                        $deliveryCharges = 0;
+                       $select = '';
                         if (!empty($prod->product->Requires_last_mile) && ($prod->product->Requires_last_mile == 1)) {
-
-                           // $deliveries = $this->getDeliveryOptions($vendorData,$preferences,$payable_amount);
-
-                            //Dispatcher Delivery changes code
-                            $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
-                            if (!empty($deliver_charge) && $delivery_count == 0) {
-                                $delivery_count = 1;
-                                $prod->deliver_charge = number_format($deliver_charge, 2, '.', '');
-                                // $payable_amount = $payable_amount + $deliver_charge;
-                                $shipping_delivery_type = 'D';
+                            $deliveries = $this->getDeliveryOptions($vendorData,$preferences,$payable_amount);
+                           if(isset($deliveries[0]))
+                           {
+                            $select .= '<select name="vendorDeliveryFee" class="form-control delivery-fee">'; 
+                            foreach($deliveries as $k=> $opt)
+                                {
+                                    $select .= '<option value="'.$opt['code'].'" '.(($opt['code']==$code)?'selected':'').'  >'.$opt['courier_name'].', Rate : '.$opt['rate'].'</option>'; 
+                                }
+                            $select .= '</select>'; 
+                                if($code){
+                                    $new = array_filter($deliveries, function ($var) use ($code) {
+                                        return ($var['code'] == $code);
+                                    });
+                                    foreach($new as $rate){
+                                        $deliveryCharges = $rate['rate'];
+                                    }
+                                }else{
+                                    $deliveryCharges = $deliveries[0]['rate'];
+                                }
                             }
-                        $delivery_fee_charges = $deliver_charge;
-                        $deliveryCharges = $delivery_fee_charges;
 
+                            //dd($code);
+                         
 
-                        //Lalamove Delivery changes code
-                        $lalamove = new LalaMovesController();
-                        $deliver_lalmove_fee = $lalamove->getDeliveryFeeLalamove($vendorData->vendor_id);
-                        if($deliver_lalmove_fee>0 && $delivery_count_lm == 0)
-                        {
-                             $delivery_count_lm = 1;
-                             $prod->deliver_charge_lalamove = number_format($deliver_lalmove_fee, 2, '.', '');
-                             $shipping_delivery_type = 'L';
-                        }
-                        $deliver_charges_lalmove = $deliver_lalmove_fee;
-                        //End Lalamove Delivery changes code
-                        if($code =='L' && $deliver_lalmove_fee>0)
-                        {
-                            $deliveryCharges = $deliver_charges_lalmove;
-                        }
-
-                        $deliver_charges_ship = 0;
-                        //getShiprocketFee Delivery changes code
-                        // $ship = new ShiprocketController();
-                        // $deliver_ship_fee = $ship->getShiprocketFee($vendorData->vendor_id);
-                        // if($deliver_ship_fee>0 && $delivery_count_sr == 0)
-                        // {   
-                        //      $delivery_count_sr = 1;
-                        //      $prod->deliver_charge_shiprocket = number_format($deliver_ship_fee, 2, '.', '');
-                        //      $shipping_delivery_type = 'SR';
-                        // }
-                        // $deliver_charges_ship = $deliver_ship_fee;
-                        // //End shiprocket Delivery changes code
-                        // if($code =='SR' && $deliver_ship_fee>0)
-                        // {
-                        //     $deliveryCharges = $deliver_charges_ship;
-                        // }
-
-                        # for static fees
-                        if($preferences->static_delivey_fee == 1 &&  $vendorData->vendor->order_amount_for_delivery_fee != 0)
-                        {
-                            if( $payable_amount >= (float)($vendorData->vendor->order_amount_for_delivery_fee)){
-                                $deliveryCharges = number_format($vendorData->vendor->delivery_fee_maximum, 2, '.', '');
-                            }
-                            if($payable_amount < (float)($vendorData->vendor->order_amount_for_delivery_fee)){
-                                $deliveryCharges = number_format($vendorData->vendor->delivery_fee_minimum, 2, '.', '');
-                            }
-                            $delivery_fee_charges_static =  $deliveryCharges;
-                            $delivery_fee_charges =  $delivery_fee_charges_lalamove = $deliveryCharges;
-                        }//End statis fe code
-                      }//End Check last time stone 
+                    
+                    }//End Check last time stone 
                         
-                    }
+                }
 
                     $product = Product::with([
                         'variant' => function ($sel) {
@@ -945,9 +910,11 @@ class CartController extends FrontController
                 $vendorData->isDeliverable = 1;
                 $vendorData->promo_free_deliver = $PromoFreeDeliver;
                 $vendorData->is_vendor_closed = $is_vendor_closed;
-                $slotsDate = findSlot('',$vendorData->vendor_id,'');
+                $slotsDate = findSlot('',$vendorData->vendor->id,'');
                 $vendorData->delaySlot = (($slotsDate)?$slotsDate:'');
                 $vendorData->closed_store_order_scheduled = (($slotsDate)?$product->vendor->closed_store_order_scheduled:0);
+                $vendorData->delOptions = $select;
+                
                    // dd($product->vendor);
                 // if (!empty($subscription_features)) {
                 //     $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount - $subscription_discount), 2, '.', '');
@@ -1089,6 +1056,7 @@ class CartController extends FrontController
             }else{
                 $cart->delay_date =  $delay_date??0;
             }
+            
 
 
             $cart->pickup_delay_date =  $pickup_delay_date??0;
@@ -1416,16 +1384,16 @@ class CartController extends FrontController
         {
             $option = array(); 
             $delivery_count = 0;
-            $vid = 0;
             try {
-                if($vendorData->vendor_id != $vid)
+                if($vendorData->vendor_id)
                 {
-                    $vid = Session()->put('vid',$vendorData->vendor_id);
-                    $vid = $vendorData->vendor_id;
-
+                   Session()->put('vid',$vendorData->vendor_id);
+                
+            if($preferences->static_delivey_fee != 1 &&  $vendorData->vendor->order_amount_for_delivery_fee == 0)
+            {
                 //Dispatcher Delivery changes code
                 $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
-                if (!empty($deliver_charge)) {
+                if (!empty($deliver_charge)){
                     $deliver_charge = number_format($deliver_charge, 2, '.', '');
                     $option[] = array(
                         'type'=>'D',
@@ -1434,7 +1402,8 @@ class CartController extends FrontController
                         'courier_company_id' => 0,
                         'etd' => 0,
                         'etd_hours' => 0,
-                        'estimated_delivery_days' => 0
+                        'estimated_delivery_days' => 0,
+                        'code' => 'D_0'
                     );
                 }
          
@@ -1453,43 +1422,51 @@ class CartController extends FrontController
                     'courier_company_id' => 0,
                     'etd' => 0,
                     'etd_hours' => 0,
-                    'estimated_delivery_days' => 0
+                    'estimated_delivery_days' => 0,
+                    'code' => 'L_0'
                 );
                 $option = array_merge($option,$optionLala);
             }
             //End Lalamove Delivery changes code
 
-            
             //getShiprocketFee Delivery changes code
             $ship = new ShiprocketController();
             $deliver_ship_fee = $ship->getCourierService($vendorData->vendor_id);
+            //dd($deliver_ship_fee);
             if($deliver_ship_fee)
-            {   
+            {  
                 $option = array_merge($option,$deliver_ship_fee);
             }
+            
+        }else{
+             # for static fees 
+           
+                if( $payable_amount >= (float)($vendorData->vendor->order_amount_for_delivery_fee)){ 
+                    $deliveryCharges = number_format($vendorData->vendor->delivery_fee_maximum, 2, '.', '');
+                }
 
-            // # for static fees 
-            // if($preferences->static_delivey_fee == 1 &&  $vendorData->vendor->order_amount_for_delivery_fee != 0)
-            // {
-            //     if( $payable_amount >= (float)($vendorData->vendor->order_amount_for_delivery_fee)){ 
-            //         $deliveryCharges = number_format($vendorData->vendor->delivery_fee_maximum, 2, '.', '');
-            //     }
+                if($payable_amount < (float)($vendorData->vendor->order_amount_for_delivery_fee)){
+                    $option[] = array(
+                        'type'=>'S',
+                        'courier_name'=>__('Static'),
+                        'rate' => number_format($vendorData->vendor->delivery_fee_minimum, 2, '.', ''),
+                        'courier_company_id' => 0,
+                        'etd' => 0,
+                        'etd_hours' => 0,
+                        'estimated_delivery_days' => 0,
+                        'code' => 'S_0'
+                    );
+                }
 
-            //     if($payable_amount < (float)($vendorData->vendor->order_amount_for_delivery_fee)){
-            //         $deliveryCharges = number_format($vendorData->vendor->delivery_fee_minimum, 2, '.', '');
-            //     }
+                $delivery_fee_charges_static =  $deliveryCharges;
+                $delivery_fee_charges =  $delivery_fee_charges_lalamove = $deliveryCharges;
 
-            //     $delivery_fee_charges_static =  $deliveryCharges;
-            //     $delivery_fee_charges =  $delivery_fee_charges_lalamove = $deliveryCharges;
+           }//End statis fe code
 
-            // }//End statis fe code
-            }
-            echo "<pre>";
-           print_r($option);
-
+          }
         } catch (\Exception $e) {
         }
-
+        return $option;
     }
 
 

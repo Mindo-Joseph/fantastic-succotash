@@ -254,7 +254,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                             <% if(product.coupon_amount_used > 0) { %>
                             <p class="total_amt m-0">{{__('Coupon Discount')}} :</p>
                             <% } %>
-                            <p class="total_amt mt-2">{{__('Delivery Fee')}}</p>
+                            {{-- <p class="total_amt mt-2">{{__('Delivery Fee')}}</p> --}}
 
                         </div>
                         <div class="col-4 text-right">
@@ -263,6 +263,18 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 <% } %>
                         </div>
                     </div>
+                    
+                    <% if(product.delOptions) { %>
+                        <div class="row mb-1">
+                            <div class="col-5 text-lg-right">
+                            </div>
+                            <div class="col-md-7">
+                                <label class="radio pull-right">
+                                    {{__('Delivery Fee')}} :</label>
+                                        <%= product.delOptions %>
+                            </div>
+                        </div>
+                    <% } %>
 
                     <% if(product.delivery_fee_charges > 0 ) { %>
                         <div class="row mb-1">

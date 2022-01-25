@@ -2148,7 +2148,7 @@ $(document).ready(function() {
     });
 
     $(document).on('change', '.delivery-fee', function() {
-        let code = $(this).data('dcode');
+        let code = $(this).val();
         let address_id = $("input[type='radio'][name='address_id']:checked").val();
         cartHeaderDilivery(address_id,code);
     });

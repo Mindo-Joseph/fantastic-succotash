@@ -3,7 +3,8 @@ namespace App\Http\Traits;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use App\Models\{ShippingOption};
+use App\Models\{ShippingOption, UserAddress, Vendor};
+use Illuminate\Support\Facades\Auth;
 
 trait ShiprocketManager{
 
@@ -218,14 +219,19 @@ trait ShiprocketManager{
 
     }
 
-    public function checkCourierService($token)
+    public function checkCourierService($token,$vid)
     {
         $vendors = array();
+        $cus_address = UserAddress::where('user_id', Auth::id())->orderBy('is_primary', 'desc')->first();
+        //dd($cus_address);
+        // $vendor_details = Vendor::find($vid);
+         if($cus_address->pincode!='')
+         {
         $this->credentials();
         $endpoint='/courier/serviceability';
         $data = array (
-          'pickup_postcode' => 135001,
-          'delivery_postcode' => 160022,
+          'pickup_postcode' => '160022',
+          'delivery_postcode' => (($cus_address->pincode)?$cus_address->pincode:'160022'),
           'cod' => 0,
           'weight' => 2,
           //'length' => 15,
@@ -233,6 +239,7 @@ trait ShiprocketManager{
           //'height' => 5,
           //'declared_value' => 50,
         );
+       // dd($data);
 
         $result = $this->getCurl($endpoint,$data,trim($token));
         //courier_name , rate, courier_company_id , etd , etd_hours , estimated_delivery_days
@@ -243,13 +250,15 @@ trait ShiprocketManager{
               $vendors[] = array(
                 'type'=>'SR',
                 'courier_name' => $data->courier_name,
-                'rate' => $data->rate,
+                'rate' => number_format(round($data->rate), 2, '.', ''),
                 'courier_company_id' => $data->courier_company_id,
                 'etd' => $data->etd,
                 'etd_hours' => $data->etd_hours,
-                'estimated_delivery_days' => $data->estimated_delivery_days
+                'estimated_delivery_days' => $data->estimated_delivery_days,
+                'code' => 'SR_'.$data->courier_company_id
             );
           }
+        }
         }
         return $vendors;
     }
