@@ -35,7 +35,7 @@
             <div class="text-sm-left">
                 <div class="page-title-box">
                     <h4 class="page-title">{{ __("Tools") }}</h4>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
@@ -54,7 +54,7 @@
                             <div class="form-group mb-2">
                                 <label for="copy_from" class="mr-3">{{ __("Copy From") }}</label>
                                 <select class="form-control" id='copy_from' name="copy_from" required>
-                                    <option value="">{{ __("Select vendor for copy") }}</option> 
+                                    <option value="">{{ __("Select vendor for copy") }}</option>
                                     @foreach($vendors as $vendor)
                                     <option value="{{$vendor->id}}">{{$vendor->name}}</option>
                                     @endforeach
@@ -77,9 +77,9 @@
                             </div>
                         </div>
                     </div>
-                </div>             
+                </div>
             </form>
-        </div> 
+        </div>
         <div class="col-md-3">
             <form method="POST" id="tax_copy_tools" action="{{route('tools.taxCopy')}}">
             @csrf
@@ -91,7 +91,7 @@
                     <div class="row mt-2">
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="tax_category" class="mr-3">{{ __("Tax Category") }}</label> 
+                                <label for="tax_category" class="mr-3">{{ __("Tax Category") }}</label>
                                 <select class="form-control" id='tax_category' name="tax_category" required>
                                     <option value="">{{ __("Select Tax Category") }}</option>
                                     @foreach($taxCategory as $tax)
@@ -102,7 +102,7 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label for="product_category" class="mr-3">{{ __("Product Category") }}</label> 
+                                <label for="product_category" class="mr-3">{{ __("Product Category") }}</label>
                                 <select class="form-control select2-multiple" id='product_category' name="product_category[]" data-toggle="select2" multiple="multiple" data-placeholder="Choose ..." required>
                                     <option value="">{{ __("Select Product Category") }}</option>
                                     @foreach($parentCategory as $parent)
@@ -116,19 +116,19 @@
                                 </select>
                             </div>
                         </div>
-                       
+
                         <div class="col-md-2 mt-3">
                             <div class="form-group mb-0 text-center">
                                 <button class="btn btn-info btn-block" id="tax_copy_button" type="submit"> {{ __("Update") }} </button>
                             </div>
                         </div>
                     </div>
-                </div>             
+                </div>
             </form>
         </div>
-        @endif 
+        @endif
         <div class="col-md-6">
-            <form method="POST" id="upload_image_tool" action="{{route('tools.uploadImage')}}"> 
+            <form method="POST" id="upload_image_tool" action="{{route('tools.uploadImage')}}">
             @csrf
             @method('POST')
                 <div class="card-box h-100 mb-0">
@@ -160,16 +160,16 @@
                             </table>
                         </div>
                     </div>
-                </div>             
+                </div>
             </form>
         </div>
     </div>
-</div> 
+</div>
 
 @endsection
 
 @section('script')
-<script src="{{asset('assets/js/dropzone.js')}}"></script> 
+<script src="{{asset('assets/js/dropzone.js')}}"></script>
 
 <script type="text/javascript">
     var uploadedDocumentMap = {};
@@ -185,7 +185,7 @@
             // },
             parameter: "{{route('tools.uploadImage')}}",
             headers: {
-                'X-CSRF-TOKEN': "{{ csrf_token() }}" 
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
             success: function(file, res) {
                 $('.al_custom_copypath').show();

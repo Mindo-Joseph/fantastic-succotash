@@ -438,65 +438,95 @@ $timezone = Auth::user()->timezone;
 @section('script')
 <script>
     $("#order_statuses li").click(function() {
-        if (confirm("Are you Sure?")) {
-            let that = $(this);
-            var status_option_id = that.data("status_option_id");
-            var order_vendor_id = that.data("order_vendor_id");
-            $.ajax({
-                url: "{{ route('order.changeStatus') }}",
-                type: "POST",
-                data: {
-                    order_id: "{{$order->id}}",
-                    vendor_id: "{{$vendor_id}}",
-                    "_token": "{{ csrf_token() }}",
-                    status_option_id: status_option_id,
-                    order_vendor_id: order_vendor_id,
-                },
-                success: function(response) {
-                    console.log(response);
-                    that.addClass("completed");
-                    if (status_option_id == 2) {
-                        that.next('li').remove();
-                    }
-                    if (status_option_id == 3) {
-                        that.prev('li').remove();
-                        that.nextAll('li').remove();
-                    }
-                    $('#text_muted_' + status_option_id).html('<small class="text-muted">' + response.created_date + '</small>');
-                    if (status_option_id == 2)
-                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                    location.reload();
-                },
-            });
-        }
+        Swal.fire({
+            title: "{{__('Are you sure?')}}",
+           // text:"{{__('You want to delete the banner.')}}",
+                // icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+        }).then((result) => {
+            if(result.value)
+            {
+                let that = $(this);
+                var status_option_id = that.data("status_option_id");
+                var order_vendor_id = that.data("order_vendor_id");
+                $.ajax({
+                    url: "{{ route('order.changeStatus') }}",
+                    type: "POST",
+                    data: {
+                        order_id: "{{$order->id}}",
+                        vendor_id: "{{$vendor_id}}",
+                        "_token": "{{ csrf_token() }}",
+                        status_option_id: status_option_id,
+                        order_vendor_id: order_vendor_id,
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        that.addClass("completed");
+                        if (status_option_id == 2) {
+                            that.next('li').remove();
+                        }
+                        if (status_option_id == 3) {
+                            that.prev('li').remove();
+                            that.nextAll('li').remove();
+                        }
+                        $('#text_muted_' + status_option_id).html('<small class="text-muted">' + response.created_date + '</small>');
+                        if (status_option_id == 2)
+                            $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                        location.reload();
+                    },
+                });
+            }else{
+                return false;
+            }
+        });
+
     });
 
 
     $("#create_dispatch_request").click(function() {
-        if (confirm("Are you Sure?")) {
-            let that = $(this);
-            var order_vendor_id = that.data("order_vendor_id");
-            $.ajax({
-                url: "{{ route('create.dispatch.request') }}",
-                type: "POST",
-                data: {
-                    order_id: "{{$order->id}}",
-                    vendor_id: "{{$vendor_id}}",
-                    "_token": "{{ csrf_token() }}",
-                    order_vendor_id: order_vendor_id,
-                },
-                success: function(response) {
-                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", response.status);
+        Swal.fire({
+            title: "{{__('Are you sure?')}}",
+           // text:"{{__('You want to delete the banner.')}}",
+                // icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+        }).then((result) => {
+            if(result.value)
+            {
+
+                let that = $(this);
+                var order_vendor_id = that.data("order_vendor_id");
+                $.ajax({
+                    url: "{{ route('create.dispatch.request') }}",
+                    type: "POST",
+                    data: {
+                        order_id: "{{$order->id}}",
+                        vendor_id: "{{$vendor_id}}",
+                        "_token": "{{ csrf_token() }}",
+                        order_vendor_id: order_vendor_id,
+                    },
+                    success: function(response) {
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", response.status);
+                    // location.reload();
+                    },
+                    error: function(error) {
+                    var response = $.parseJSON(error.responseText);
+                    let error_messages = response.message;
+                    Swal.fire({
+                        // title: "Warning!",
+                        text: error_messages,
+                        icon : "error",
+                        button: "{{__('ok')}}",
+                    });
+                    //  alert(error_messages);
                     location.reload();
-                },
-                error: function(error) {
-                var response = $.parseJSON(error.responseText);
-                let error_messages = response.message;
-                alert(error_messages);
-                location.reload();
-                }
-            });
-        }
+                    }
+                });
+            }else{
+                return false;
+            }
+        });
     });
     function printDiv() 
     {
