@@ -191,13 +191,14 @@
                 $('.al_custom_copypath').show();
                 $('.imageCopyName').append('<tr id="'+res.data.image_id+'"><td style="padding: 5px"><img src="'+res.data.image_url+'"></td><td style="padding: 5px"><a href="'+res.data.image_url+'" target="_blank" style="font-size: 12px;" id="image_'+res.data.image_id+'">'+res.data.image_path+' </td><td style="padding: 5px"><label class="copy_link " id="cp_btn" title="copy" data-image_id="'+res.data.image_id+'" onclick="copyUrl(this)"><img src="{{asset("assets/icons/domain_copy_icon.svg")}}" alt="" style="margin: 0"><span class="copied_txt" id="show_copy_msg_on_click_copy" style="display: none;">Copied</span> </label></td></tr>');
                 uploadedDocumentMap[file.name] = res.data.image_id;
-                // var imageUrl = $('#pwd_spn').text();
-                // if(imageUrl != "")
-                // {
-                //     imageUrl = imageUrl+", ";
-                // }
-                // imageUrl = imageUrl+''+res.data.image_path;
-                // $('#pwd_spn').html(imageUrl);
+                var imageUrl = $('#pwd_spn').text();
+                //alert();
+                if(imageUrl != "")
+                {
+                    imageUrl = imageUrl+", ";
+                }
+                imageUrl = imageUrl+''+res.data.image_path;
+                $('#pwd_spn').html(imageUrl);
             },
             removedfile: function(file) {
                 file.previewElement.remove();
