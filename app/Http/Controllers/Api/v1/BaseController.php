@@ -199,7 +199,7 @@ class BaseController extends Controller{
         return $products;
     }
 
-    function getVendorDistanceWithTime($userLat='', $userLong='', $vendor, $preferences){
+    function getVendorDistanceWithTime($userLat='', $userLong='', $vendor, $preferences, $type = 'delivery'){
         if(($preferences) && ($preferences->is_hyperlocal == 1)){
             if( (empty($userLat)) && (empty($userLong)) ){
                 $userLat = (!empty($preferences->Default_latitude)) ? floatval($preferences->Default_latitude) : 0;
@@ -215,7 +215,13 @@ class BaseController extends Controller{
             $distance_to_time_multiplier = (!empty($preferences->distance_to_time_multiplier)) ? $preferences->distance_to_time_multiplier : 2;
             $distance = $this->calulateDistanceLineOfSight($lat1, $long1, $lat2, $long2, $distance_unit);
             $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
-            $pretime =  number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
+            if($type == 'delivery')
+            {
+                $pretime =  number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', '');
+                // distance is multiplied by distance time multiplier to calculate travel time
+            }else{
+                $pretime =  number_format(floatval($vendor->order_pre_time), 0, '.', '') + 0;
+            }
             // if($pretime >= 60){
             //     $vendor->timeofLineOfSightDistance =  $this->vendorTime($pretime) . '-' . $this->vendorTime((intval($pretime) + 5)).' '. __('hour');
             // }else{
@@ -271,10 +277,14 @@ class BaseController extends Controller{
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
             $latitude = ($latitude) ? $latitude : $preferences->Default_latitude;
             $longitude = ($longitude) ? $longitude : $preferences->Default_longitude;
-            $serviceAreaVendors = $serviceAreaVendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
+
+            if(!empty($latitude) && !empty($longitude) ){
+                $serviceAreaVendors = $serviceAreaVendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
                     $query->select('vendor_id')
                     ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
                 });
+            }
+           
         }
         $serviceAreaVendors = $serviceAreaVendors->where('status', 1)->get();
 
@@ -355,17 +365,17 @@ class BaseController extends Controller{
     }
 
     public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption){
-        $config = array(
-            'driver' => $mail_driver,
-            'host' => $mail_host,
-            'port' => $mail_port,
-            'encryption' => $mail_encryption,
-            'username' => $mail_username,
-            'password' => $mail_password,
-            'sendmail' => '/usr/sbin/sendmail -bs',
-            'pretend' => false,
-        );
-        Config::set('mail', $config);
+        // $config = array(
+        //     'driver' => $mail_driver,
+        //     'host' => $mail_host,
+        //     'port' => $mail_port,
+        //     'encryption' => $mail_encryption,
+        //     'username' => $mail_username,
+        //     'password' => $mail_password,
+        //     'sendmail' => '/usr/sbin/sendmail -bs',
+        //     'pretend' => false,
+        // );
+        // Config::set('mail', $config);
         $app = App::getInstance();
         $app->register('Illuminate\Mail\MailServiceProvider');
         return '1';
