@@ -281,80 +281,91 @@
             <div class="custom-dd-empty dd" id="pickup_datatable">
                 <ol class="dd-list p-0" id="pickup_ol" >
                     @foreach($cab_booking_layouts as $key => $home_page_label)
-                    <li class="dd-item dd3-item d-flex align-items-center d-flex justify-content-between on_click{{$home_page_label->slug}}" data-id="1" data-row-id="{{$home_page_label->id}}">
-                        <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
-                            {{$home_page_label->title}}
-                        </a>
-
-                        <div class="language-inputs style-4">
-                            <div class="row no-gutters flex-nowrap align-items-center my-2">
-                                @foreach($langs as $lang)
-                                @php
-                                $exist = 0;
-                                $value = '';
-                                @endphp
-                                <div class="col-3 pl-1">
-                                    <input class="form-control" type="hidden" value="{{$home_page_label->id}}" name="home_labels[]">
-                                    <input class="form-control" type="hidden" value="{{$lang->langId}}" name="languages[]">
-                                    @foreach($home_page_label->translations as $translation)
-                                    @if($translation->language_id == $lang->langId)
-                                    @php
-                                    $exist = 1;
-                                    $value = $translation->title;
-                                    @endphp
-                                    @endif
-                                    @endforeach
-                                    <input class="form-control" value="{{$exist == 1 ? $value : '' }}" type="text" name="names[]" placeholder="{{ $lang->langName }}">
+                    <div id="al_web_styling" class="row dd-item dd3-item d-flex align-items-center justify-content-between on_click{{$home_page_label->slug}}" data-id="1" data-row-id="{{$home_page_label->id}}">
+                        <div class="col-md-6">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-5">
+                                    <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
+                                        {{$home_page_label->title}}
+                                    </a>
                                 </div>
-                                @endforeach
+                                <div class="col-md-7">
+                                    <div class="language-input style-4">
+                                        <div class="row no-gutters flex-nowrap align-items-center my-2">
+                                            @foreach($langs as $lang)
+                                            @php
+                                            $exist = 0;
+                                            $value = '';
+                                            @endphp
+                                            <div class="col-6 pl-1">
+                                                <input class="form-control" type="hidden" value="{{$home_page_label->id}}" name="home_labels[]">
+                                                <input class="form-control" type="hidden" value="{{$lang->langId}}" name="languages[]">
+                                                @foreach($home_page_label->translations as $translation)
+                                                @if($translation->language_id == $lang->langId)
+                                                @php
+                                                $exist = 1;
+                                                $value = $translation->title;
+                                                @endphp
+                                                @endif
+                                                @endforeach
+                                                <input class="form-control" value="{{$exist == 1 ? $value : '' }}" type="text" name="names[]" placeholder="{{ $lang->langName }}">
+                                            </div>
+                                            @endforeach
 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class=" d-flex align-items-center justify-content-end">
+                                @if($home_page_label->slug == 'pickup_delivery')
+                                    <div class="col pl-1">
+                                        <select class="form-control select2-multiple" required id="categories" name="categories[{{$key}}][check]" data-toggle="select2"  data-placeholder="Choose ...">
+
+                                        {{-- <select class="form-control w-100">  --}}
+                                            @foreach ($all_pickup_category as $category)
+                                            <option value="{{$category->id}}"
+                                                @if(isset($home_page_label->pickupCategories->first()->categoryDetail) && !empty($home_page_label->pickupCategories->first()) && $home_page_label->pickupCategories->first()->categoryDetail->id == $category->id)
+                                                selected="selected"
+                                                @endif>{{$category->translation_one->name??''}}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
+
+
+                                @if($home_page_label->slug == 'pickup_delivery')
+                                <a class="action-icon openBannerModal" userId="{{$home_page_label->id}}" data-row-id="{{$home_page_label->id}}" href="javascript:void(0);">
+                                    <i class="mdi mdi-pencil"></i>
+                                </a>
+                                @endif
+                                @if($home_page_label->slug == 'dynamic_page')
+                                <a class="action-icon edit_dynamic_page" data-row-id="{{$home_page_label->id}}" href="javascript:void(0);">
+                                    <i class="mdi mdi-pencil"></i>
+                                </a>
+                                @endif
+                                @if($home_page_label->slug == 'dynamic_page')
+                                <input type="checkbox" name="for_no_product_found_html[{{$key}}]" {{$home_page_label->for_no_product_found_html == 1 ? 'checked' : ''}} >{{__('For No Records')}}
+                                @else
+                                <input type="hidden" name="for_no_product_found_html[{{$key}}]">
+                                @endif
+
+                                <div class="mb-0 ml-1">
+                                    <input class="form-control" type="hidden" value="{{$home_page_label->id}}" name="pickup_labels[]">
+
+                                    <input type="checkbox" {{$home_page_label->is_active == 1 ? 'checked' : ''}} id="{{$home_page_label->slug}}" data-plugin="switchery" name="is_active[{{$key}}][check]" class="chk_box2" data-color="#43bee1">
+                                </div>
+
+                                <a class="action-icon deletePickupSectionx" href="{{route('pickup.delete.section', $home_page_label->id)}}" onclick="return confirm('Are you sure you want to delete this section?');"  dataid="{{$home_page_label->id}}" href="javascript:void(0);">
+                                    <i class="mdi mdi-delete"></i>
+                                </a>
                             </div>
                         </div>
+                    </div>
 
-                        @if($home_page_label->slug == 'pickup_delivery')
-                            <div class="col-2 pl-1">
-                                <select class="form-control select2-multiple" required id="categories" name="categories[{{$key}}][check]" data-toggle="select2"  data-placeholder="Choose ...">
-
-                                {{-- <select class="form-control w-100">  --}}
-                                    @foreach ($all_pickup_category as $category)
-                                    <option value="{{$category->id}}"
-                                        @if(isset($home_page_label->pickupCategories->first()->categoryDetail) && !empty($home_page_label->pickupCategories->first()) && $home_page_label->pickupCategories->first()->categoryDetail->id == $category->id)
-                                        selected="selected"
-                                        @endif>{{$category->translation_one->name??''}}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endif
-
-
-                         @if($home_page_label->slug == 'pickup_delivery')
-                        <a class="action-icon openBannerModal" userId="{{$home_page_label->id}}" data-row-id="{{$home_page_label->id}}" href="javascript:void(0);">
-                            <i class="mdi mdi-pencil"></i>
-                        </a>
-                        @endif
-                        @if($home_page_label->slug == 'dynamic_page')
-                        <a class="action-icon edit_dynamic_page" data-row-id="{{$home_page_label->id}}" href="javascript:void(0);">
-                            <i class="mdi mdi-pencil"></i>
-                        </a>
-                        @endif
-                        @if($home_page_label->slug == 'dynamic_page')
-                        <input type="checkbox" name="for_no_product_found_html[{{$key}}]" {{$home_page_label->for_no_product_found_html == 1 ? 'checked' : ''}} >{{__('For No Records')}}
-                        @else
-                        <input type="hidden" name="for_no_product_found_html[{{$key}}]">
-                        @endif
-
-                        <div class="mb-0 ml-1">
-                            <input class="form-control" type="hidden" value="{{$home_page_label->id}}" name="pickup_labels[]">
-
-                            <input type="checkbox" {{$home_page_label->is_active == 1 ? 'checked' : ''}} id="{{$home_page_label->slug}}" data-plugin="switchery" name="is_active[{{$key}}][check]" class="chk_box2" data-color="#43bee1">
-                        </div>
-
-                        <a class="action-icon deletePickupSectionx" href="{{route('pickup.delete.section', $home_page_label->id)}}" onclick="return confirm('Are you sure you want to delete this section?');"  dataid="{{$home_page_label->id}}" href="javascript:void(0);">
-                            <i class="mdi mdi-delete"></i>
-                        </a>
-
-                    </li>
                     @endforeach
                 </ol>
             </div>
