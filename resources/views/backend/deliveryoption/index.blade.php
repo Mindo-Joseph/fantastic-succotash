@@ -243,6 +243,10 @@
                 $base_price = (isset($creds->base_price)) ? $creds->base_price : '';
                 $distance = (isset($creds->distance)) ? $creds->distance : '';
                 $amount_per_km = (isset($creds->amount_per_km)) ? $creds->amount_per_km : '';
+
+                $height = (isset($creds->height)) ? $creds->height : '';
+                $width = (isset($creds->width)) ? $creds->width : '';
+                $weight = (isset($creds->weight)) ? $creds->weight : '';
                 ?>
 
                 <div class="card-box h-100">
@@ -338,34 +342,30 @@
                                 <input type="text" name="amount_per_km" id="shiprocket_amount_per_km" class="form-control" value="{{@$amount_per_km}}" >
                             </div>
                         </div>
-                       
-
                     </div>
-
-
 
                    
                     <div class="form-group mt-2">
-                        <label for="" class="mr-3">{{ __("Product Unit Details") }}</label>
+                        <label for="" class="mr-3">{{ __("Item weight") }}</label>
                     </div>
                     <div class="row" >
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <div class="form-group mb-0">
-                                <label for="shiprocket_base_price" class="mr-3">{{ __("Product Height") }}</label>
+                                <label for="shiprocket_base_price" class="mr-3">{{ __("Product Height (cms)") }}</label>
                                 <input type="text" name="height" class="form-control" value="{{@$height}}" >
                             </div>  
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group mb-0">
-                                <label for="shiprocket_distance" class="mr-3">{{ __("Product Width") }}</label>
+                                <label for="shiprocket_distance" class="mr-3">{{ __("Product Width (cms)") }}</label>
                                 <input type="text" name="width" class="form-control" value="{{@$width}}" >
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-4">
                             <div class="form-group mb-0">
-                                <label for="shiprocket_amount_per_km" class="mr-3">{{ __("Product Weight") }}</label>
+                                <label for="shiprocket_amount_per_km" class="mr-3">{{ __("Product Weight (Kgs)") }}</label>
                                 <input type="text" name="weight" class="form-control" value="{{@$weight}}" >
                             </div>
                         </div>

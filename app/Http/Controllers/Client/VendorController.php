@@ -215,6 +215,7 @@ class VendorController extends BaseController
         $vendor->email = $request->email;
         $vendor->website = $request->website;
         $vendor->phone_no = $request->phone_no;
+        $vendor->pincode = $request->pincode;
         $vendor->slug = Str::slug($request->name, "-");
         if(Vendor::where('slug',$vendor->slug)->count() > 0)
         $vendor->slug = Str::slug($request->name, "-").rand(10,100);

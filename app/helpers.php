@@ -3,7 +3,7 @@
 use App\Models\CartProduct;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
-use App\Models\{User, TempCartProduct};
+use App\Models\{User, TempCartProduct, Vendor};
 use App\Models\Nomenclature;
 use App\Models\UserRefferal;
 use App\Models\ProductVariant;
@@ -345,6 +345,8 @@ function createSlug($str, $delimiter = '-'){
     
 function showSlot($myDate = null,$vid,$type = 'delivery',$duration="60")
 {
+$slotDuration = Vendor::select('slot_minutes')->where('id',$vid)->first();
+$duration = ($slotDuration->slot_minutes) ?? $duration;
 $type = ((session()->get('vendorType'))?session()->get('vendorType'):$type);
 //type must be a : delivery , takeaway,dine_in
 $client = ClientData::select('timezone')->first();
