@@ -1796,21 +1796,11 @@ class OrderController extends FrontController
                 'name' => 'required',
                 'phone_number' => 'required',
                 'type' => 'required',
-                'vehicle_type_id' => 'required',
-                'make_model' => 'required',
-                'uid' => 'required',
-                'plate_number' => 'required',
-                'color' => 'required',
                 'team' => 'required',
             ], [
                 "name.required" => __('The name field is required.'),
                 "phone_number.required" => __('The phone number field is required.'),
                 "type.required" => __('The type field is required.'),
-                "vehicle_type_id.required" => __('The transport type is required.'),
-                "make_model.required" => __('The transport details field is required.'),
-                "uid.required" => __('The UID field is required.'),
-                "plate_number.required" => __('The licence plate field is required.'),
-                "color.required" => __('The color field is required.'),
                 "team.required" => __('The team field is required.')
             ]);
             if($validator->fails()){
@@ -1976,23 +1966,23 @@ class OrderController extends FrontController
                         ],
                         [
                             'name' => 'vehicle_type_id',
-                            'contents' => $request->vehicle_type_id
+                            'contents' => $request->vehicle_type_id??null
                         ],
                         [
                             'name' => 'make_model',
-                            'contents' => $request->make_model
+                            'contents' => $request->make_model??null
                         ],
                         [
                             'name' => 'uid',
-                            'contents' => $request->uid
+                            'contents' => $request->uid??null
                         ],
                         [
                             'name' => 'plate_number',
-                            'contents' => $request->plate_number
+                            'contents' => $request->plate_number??null
                         ],
                         [
                             'name' => 'color',
-                            'contents' => $request->color
+                            'contents' => $request->color??null
                         ],
                         [
                             'name' => 'team_id',
