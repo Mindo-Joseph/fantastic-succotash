@@ -638,6 +638,7 @@ class BaseController extends Controller{
             $sendto = $emailData['email'];
 
             try{
+                //dd('base',\Config::get('mail'));
                 Mail::send([], [],
                 function ($message) use($sendto, $client_name, $mail_from, $emailData) {
                     $message->from($mail_from, $client_name);
