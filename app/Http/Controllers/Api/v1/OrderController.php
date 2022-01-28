@@ -297,7 +297,6 @@ class OrderController extends BaseController
                                 }
                             }
                         }
-
                         $coupon_id = null;
                         $coupon_name = null;
                         $actual_amount = $vendor_payable_amount;
@@ -321,6 +320,8 @@ class OrderController extends BaseController
                         $vendor_service_fee_percentage_amount = 0;
                         if ($vendor_cart_product->vendor->service_fee_percent > 0) {
                             $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendor_cart_product->vendor->service_fee_percent) / 100;
+                           
+                           
                             $vendor_payable_amount += $vendor_service_fee_percentage_amount;
                             $payable_amount += $vendor_service_fee_percentage_amount;
                         }
