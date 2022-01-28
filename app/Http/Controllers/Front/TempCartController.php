@@ -152,10 +152,13 @@ class TempCartController extends FrontController
                 } else {
                     if ((isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1)) {
                         if ($address_id > 0) {
-                            $serviceArea = $vendorData->vendor->whereHas('serviceArea', function ($query) use ($latitude, $longitude) {
-                                $query->select('vendor_id')
+
+                            if (!empty($latitude) && !empty($longitude)) {
+                                $serviceArea = $vendorData->vendor->whereHas('serviceArea', function ($query) use ($latitude, $longitude) {
+                                    $query->select('vendor_id')
                                     ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(" . $latitude . " " . $longitude . ")'))");
-                            })->where('id', $vendorData->vendor_id)->get();
+                                })->where('id', $vendorData->vendor_id)->get();
+                            }
                         }
                     }
                 }
@@ -561,23 +564,32 @@ class TempCartController extends FrontController
      */
     public function updateQuantity(Request $request, $domain = '')
     {
-        $cartProduct = TempCartProduct::find($request->cartproduct_id);
-        $variant_id = $cartProduct->variant_id;
-        $productDetail = Product::with([
-            'variant' => function ($sel) use($variant_id) {
-                $sel->where('id', $variant_id);
-                $sel->groupBy('product_id');
+        try{
+            if ($request->quantity < 1) {
+                return $this->errorResponse(__('Quantity should not be less than 1'), 422);
             }
-        ])->find($cartProduct->product_id);
-
-        if($productDetail->category->categoryDetail->type_id != 8 && $productDetail->sell_when_out_of_stock == 0){
-            if($productDetail->variant[0]->quantity < $request->quantity){
-                return $this->errorResponse(__('Maximum quantity already added in your cart'), 422);
+            $langId = ClientLanguage::where(['is_primary' => 1, 'is_active' => 1])->value('language_id');
+            $currId = ClientCurrency::where(['is_primary' => 1])->value('currency_id');
+            $cart = TempCart::with(['address','currency','coupon.promo'])->where('user_id', $request->user_id)->where('id', $request->cart_id)->first();
+            if (!$cart) {
+                return $this->errorResponse(__('User cart not exist.'), 404);
             }
+            $cartProduct = TempCartProduct::where('cart_id', $cart->id)->where('id', $request->cart_product_id)->first();
+            if (!$cartProduct) {
+                return $this->errorResponse(__('Product does not exist in cart.'), 404);
+            }
+            $cartProduct->quantity = $request->quantity;
+            $cartProduct->save();
+            $totalProducts = TempCartProduct::where('cart_id', $cart->id)->sum('quantity');
+            $cart->item_count = $totalProducts;
+            $cart->save();
+            
+            $cartData = $this->getCart($cart, $langId, $currId, '');
+            return $this->successResponse($cartData, 'Cart updated successfully', 200);
         }
-        $cartProduct->quantity = $request->quantity;
-        $cartProduct->save();
-        return $this->successResponse('', 'Successfully Updated', 200);
+        catch(Exception $ex){
+            return $this->errorResponse($ex->getMessage(), $ex->getCode());
+        }
     }
 
     /**
@@ -585,13 +597,13 @@ class TempCartController extends FrontController
      *
      * @return \Illuminate\Http\Response
      */
-    public function deleteCartProduct(Request $request, $domain = '')
-    {
-        TempCartProduct::where('id', $request->cartproduct_id)->delete();
-        TempCartCoupon::where('vendor_id', $request->vendor_id)->delete();
-        TempCartAddon::where('cart_product_id', $request->cartproduct_id)->delete();
-        return response()->json(['status' => 'success', 'message' => __('Product removed from cart successfully.') ]);
-    }
+    // public function deleteCartProduct(Request $request, $domain = '')
+    // {
+    //     TempCartProduct::where('id', $request->cartproduct_id)->delete();
+    //     TempCartCoupon::where('vendor_id', $request->vendor_id)->delete();
+    //     TempCartAddon::where('cart_product_id', $request->cartproduct_id)->delete();
+    //     return response()->json(['status' => 'success', 'message' => __('Product removed from cart successfully.') ]);
+    // }
 
     /**
      * Empty Cart
@@ -600,17 +612,57 @@ class TempCartController extends FrontController
      */
     public function emptyCartData(Request $request, $domain = '')
     {
-        $cart_id = $request->cart_id;
-        if (($cart_id != '') && ($cart_id > 0)) {
-            // Cart::where('id', $cart_id)->delete();
-            TempCartProduct::where('cart_id', $cart_id)->delete();
-            TempCartCoupon::where('cart_id', $cart_id)->delete();
-            TempCartAddon::where('cart_id', $cart_id)->delete();
+        try{
+            $cart_id = $request->cart_id;
+            if (($cart_id != '') && ($cart_id > 0)) {
+                TempCart::where('id', $cart_id)->delete();
+                TempCartProduct::where('cart_id', $cart_id)->delete();
+                TempCartCoupon::where('cart_id', $cart_id)->delete();
+                TempCartAddon::where('cart_id', $cart_id)->delete();
+                TempCartDeliveryFee::where('cart_id', $cart_id)->delete();
+                return $this->successResponse('', 'Cart has been deleted successfully.', 200);
+            } else {
+                return $this->errorResponse('Cart cannot be deleted.', 422);
+            }
+        }
+        catch(Exception $ex){
+            return $this->errorResponse($ex->getMessage(), $ex->getCode());
+        }
+    }
 
-         
-            return response()->json(['status' => 'success', 'message' => 'Cart has been deleted successfully.']);
-        } else {
-            return response()->json(['status' => 'error', 'message' => 'Cart cannot be deleted.']);
+
+    /**
+     * Delete Cart Product
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function removeItem(Request $request, $domain='')
+    {
+        try{
+            $langId = ClientLanguage::where(['is_primary' => 1, 'is_active' => 1])->value('language_id');
+            $currId = ClientCurrency::where(['is_primary' => 1])->value('currency_id');
+            $cart = TempCart::with(['address','currency','coupon.promo'])->where('id', $request->cart_id)->where('user_id', $request->user_id)->first();
+            if (!$cart) {
+                return $this->errorResponse(__('Cart not exist'), 404);
+            }
+            
+            $totalProductCount = TempCartProduct::where('cart_id', $cart->id)->count();
+            if ($totalProductCount < 2) {
+                return $this->errorResponse(__('Cart can not be empty.'), 404);
+            }        
+            $cartProduct = TempCartProduct::where('cart_id', $cart->id)->where('id', $request->cart_product_id)->first();
+            if (!$cartProduct) {
+                return $this->errorResponse(__('Product does not exist in cart.'), 404);
+            }
+            $cartProduct->delete();
+            $totalProducts = TempCartProduct::where('cart_id', $cart->id)->sum('quantity');
+            $cart->item_count = $totalProducts;
+            $cart->save();
+            $cartData = $this->getCart($cart, $langId, $currId, '');
+            return $this->successResponse($cartData, __("Product removed from cart successfully."), 200);
+        }
+        catch(Exception $ex){
+            return $this->errorResponse($ex->getMessage(), $ex->getCode());
         }
     }
 
@@ -768,6 +820,27 @@ class TempCartController extends FrontController
         }
     }
 
+
+    /**
+     * submit cart if order edit is done
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function submitCart(Request $request, $domain = '')
+    {
+        try{
+            $cart_id = $request->cart_id;
+            if (($cart_id != '') && ($cart_id > 0)) {
+                TempCart::where('id', $cart_id)->update(['is_submitted' => 1]);
+                return $this->successResponse('', 'Order has been submitted successfully.', 200);
+            } else {
+                return $this->errorResponse('Order cannot be submitted.', 422);
+            }
+        }
+        catch(Exception $ex){
+            return $this->errorResponse($ex->getMessage(), $ex->getCode());
+        }
+    }
 
     ////////////////// Put order in Cart /////////////////////
     public function getProductsInCart(Request $request, $domain='')
@@ -1122,6 +1195,64 @@ class TempCartController extends FrontController
         catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), $e->getCode());
         }    
+    }
+
+    public function vendorProductsSearchResults(Request $request, $domain = '')
+    {
+       // return 1;
+        try {
+            $keyword = $request->input('keyword');
+            $vid = $request->input('vendor');
+
+            $limit = $request->has('limit') ? $request->limit : 10;
+            $page = $request->has('page') ? $request->page : 1;
+
+            $clientLanguage = ClientLanguage::where('is_primary', 1)->first();
+            $langId = $clientLanguage ? $clientLanguage->language_id : 1;
+
+            $response = array();
+            
+            $products = Product::with(['media.image',
+            'translation' => function($q) use($langId, $keyword){
+                $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description')->where('language_id', $langId);
+                if($keyword){
+                    $q->where(function ($q1) use ($keyword) {
+                        $q1->where('title', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('body_html', 'LIKE', '%' . $keyword . '%');
+                    });
+                }
+                $q->groupBy('product_id');
+            }])
+            ->select('id', 'sku', 'title', 'description', 'category_id', 'requires_shipping', 'sell_when_out_of_stock', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'Requires_last_mile', 'averageRating', 'inquiry_only');
+            if($keyword){
+                $products = $products->where(function ($q) use ($keyword, $langId) {
+                    $q->where(function ($q1) use ($keyword) {
+                        $q1->where('sku', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('url_slug', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('title', 'LIKE', '%' . $keyword . '%');
+                    });
+                    $q->orWhereHas('translation', function ($q1) use ($keyword, $langId) {
+                        $q1->where(function ($q2) use ($keyword) {
+                            $q2->where('title', 'LIKE', '%' . $keyword . '%');
+                        });
+                    });
+                });                
+            }
+            
+            $products = $products->where('is_live', 1)
+                ->where('vendor_id', $vid)
+                ->whereNull('products.deleted_at')
+                ->paginate($limit, $page);
+            foreach ($products as $product) {
+                // $product->response_type = 'product';
+                $product->image_url = ($product->media->isNotEmpty()) ? $product->media->first()->image->path['image_fit'] . '300/300' . $product->media->first()->image->path['image_path'] : '';
+                $response[] = $product;
+            }
+            return $this->successResponse($response);
+        }
+        catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), $e->getCode());
+        }
     }
 
 }

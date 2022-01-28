@@ -1,3 +1,38 @@
+@font-face {
+font-family: 'Armonioso';
+src: url('../hokitch/fonts/armonioso-trial-webfont.woff2') format('woff2'),
+url('../hokitch/font/armonioso-trial-webfont.woff') format('woff');
+font-weight: normal;
+font-style: normal;
+}
+@font-face {
+font-family: 'gothamblack';
+src: url('../hokitch/fonts/gotham-black-webfont.woff2') format('woff2'),
+url('../hokitch/font/gotham-black-webfont.woff') format('woff');
+font-weight: normal;
+font-style: normal;
+}
+@font-face {
+font-family: 'gothambold';
+src: url('../hokitch/fonts/gotham-bold-webfont.woff2') format('woff2'),
+url('../hokitch/font/gotham-bold-webfont.woff') format('woff');
+font-weight: normal;
+font-style: normal;
+}
+@font-face {
+font-family: 'gothammedium';
+src: url('../hokitch/fonts/gothammedium-webfont.woff2') format('woff2'),
+url('../hokitch/font/gothammedium-webfont.woff') format('woff');
+font-weight: normal;
+font-style: normal;
+}
+@font-face {
+font-family: 'gothamlight';
+src: url('../hokitch/fonts/gothamlight-webfont.woff2') format('woff2'),
+url('../hokitch/font/gothamlight-webfont.woff') format('woff');
+font-weight: normal;
+font-style: normal;
+}
  *{
         margin: 0px;
         padding: 0px;
@@ -12,14 +47,7 @@ body{
     font-family: "Gotham", Sans-serif;
     line-height: 1.4 !important;
 }
-@font-face {
-	  font-family: Gotham-Font;
-	  src: url(.https://sales.alerthire.com/hokitch/font/Gotham-Light.otf);
-		}
-@font-face {
-   font-family: Armonioso;
-   src: url(.https://sales.alerthire.com/hokitch/font/Armonioso-trial.otf);
-}
+
 /*----Home hokitch  page css here=----------- */
 .process-child:before {
     content: '';
@@ -87,7 +115,6 @@ body{
 .right_colomn {
     width: auto !important;
 }
-
 .left-column {
     width: auto !important;
 }
@@ -106,7 +133,8 @@ body{
 .outer-hokitch {
     justify-content: center;
 }
-
+.outer-align-hokitch {
+}
 .view-result {
     width: auto !important;
     margin: 32px 20px !important;
@@ -137,7 +165,6 @@ body{
     background: #000 !important;
     display: inline-block;
 }
-
 .outer-coulmn1:hover .ds_custom_text1 {
     background: #000 !important;
     display: inline-block;
@@ -158,7 +185,6 @@ body{
 .kitch-work1 {
     width: auto !important;
 }
-
 .wrapper-list {
     width: auto !important;
 }
@@ -168,9 +194,8 @@ body{
 }
 }
 
-
-@media screen and (min-width: 820px) and (max-width: 1180px){
-    .head-right {
+@media  screen and (min-width: 820px) and (max-width: 1180px) {
+.head-right {
     padding: 12px 0px !important;
 }
 .set-res {
@@ -218,7 +243,6 @@ body{
 .brand-build {
     width: auto !important;
 }
-/*--------food partner page css start here------------*/
 .sign_in {
     padding: 20px 0px !important;
 }
@@ -250,14 +274,13 @@ body{
 .bg-child {
     width: auto !important;
 }
-/*------------hokitch Homepage responsive css here-------------*/
 .kitch-work1 {
     width: auto !important;
 }
 .wrapper-list {
     width: auto !important;
 }
-/*client review css here-----*/
+
 .review_outer {
     width: auto !important;
     display: inherit !important;
@@ -282,8 +305,8 @@ body{
     margin-top: 20px !important;
 }
 .testimonial-video iframe {
-    width: 100% !important;
-    height: 298px;
+    width: 80% !important;
+    height: 298px !important;
 }
 .order-text {
     display: flex;
@@ -318,8 +341,8 @@ body{
     width: 100% !important;
     margin: 0 auto !important;
 }
-.testimonial-text {width: 100% !important;margin-top: 50px !important;}
-
+.testimonial-text {
+    width: 100% !important;margin-top: 50px !important;}
 .banner_homepage {
     height: 50vh !important;
 }
@@ -346,6 +369,7 @@ body{
 .hokitch_women {
     width: auto !important;
 }
+
 }
 
 
@@ -832,9 +856,6 @@ header{
 .customber_video iframe {
     width: 100% !important;
 }
-iframe {
-    width: 400px !important;
-}
 .order-text {
     display: flex !important;
     align-items: center !important;
@@ -843,7 +864,13 @@ iframe {
     width: auto !important;
     padding: 15px !important;
 }
-
+iframe {
+    width: 340px !important;
+    height:250px !important;
+}
+.review_column .flickity-viewport {
+    height:275px !important;
+}
 
 }
 

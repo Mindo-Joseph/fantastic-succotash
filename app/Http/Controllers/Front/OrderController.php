@@ -682,7 +682,6 @@ class OrderController extends FrontController
             if (($request->has('address_id')) && ($request->address_id > 0)) {
                 $order->address_id = $request->address_id;
             }
-            $order->shipping_delivery_type = (($request->delivery_type)?$request->delivery_type:'D');
             $order->payment_option_id = $request->payment_option_id;
             $order->comment_for_pickup_driver = $cart->comment_for_pickup_driver ?? null;
             $order->comment_for_dropoff_driver = $cart->comment_for_dropoff_driver ?? null;
@@ -771,15 +770,17 @@ class OrderController extends FrontController
                     if ($action == 'delivery') {
                         $deliver_fee_data = CartDeliveryFee::where('cart_id',$vendor_cart_product->cart_id)->where('vendor_id',$vendor_cart_product->vendor_id)->first();
                         if (((!empty($vendor_cart_product->product->Requires_last_mile)) && ($vendor_cart_product->product->Requires_last_mile == 1)) || isset($deliver_fee_data)) {
-
+                            $OrderVendor->shipping_delivery_type = $deliver_fee_data->shipping_delivery_type;
+                            $OrderVendor->courier_id = $deliver_fee_data->courier_id;
+                            
                             //Add here Delivery option Lalamove and dispatcher
-                            if($deliver_fee_data->shipping_delivery_type=='L'){
-                                $lala = new LalaMovesController();
-                                $delivery_fee = $lala->getDeliveryFeeLalamove($vendor_cart_product->vendor_id);
-                            }else{
-                                $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
-                            }
 
+                            // if($delType=='L'){
+                            //     $lala = new LalaMovesController();
+                            //     $delivery_fee = $lala->getDeliveryFeeLalamove($vendor_cart_product->vendor_id);
+                            // }else{
+                            //     $delivery_fee = $this->getDeliveryFeeDispatcher($vendor_cart_product->vendor_id, $user->id);
+                            // }
 
 
                             if($deliver_fee_data)
@@ -802,7 +803,6 @@ class OrderController extends FrontController
                                     }
                                 }
                             }
-
 
                         }
                     }
@@ -1933,11 +1933,11 @@ class OrderController extends FrontController
                     'phone_number' => 'required',
                     'type' => 'required',
                     'team' => 'required',
-                    'vehicle_type_id' => 'required',
-                    'make_model' => 'required',
-                    'uid' => 'required',
-                    'plate_number' => 'required',
-                    'color' => 'required'
+                    // 'vehicle_type_id' => 'required',
+                    // 'make_model' => 'required',
+                    // 'uid' => 'required',
+                    // 'plate_number' => 'required',
+                    // 'color' => 'required'
                 ];
                 foreach ($driver_registration_documents as $driver_registration_document) {
                     if($driver_registration_document->is_required == 1){
@@ -2113,23 +2113,23 @@ class OrderController extends FrontController
                         ],
                         [
                             'name' => 'vehicle_type_id',
-                            'contents' => $request->vehicle_type_id
+                            'contents' => $request->vehicle_type_id??null
                         ],
                         [
                             'name' => 'make_model',
-                            'contents' => $request->make_model
+                            'contents' => $request->make_model??null
                         ],
                         [
                             'name' => 'uid',
-                            'contents' => $request->uid
+                            'contents' => $request->uid??null
                         ],
                         [
                             'name' => 'plate_number',
-                            'contents' => $request->plate_number
+                            'contents' => $request->plate_number??null
                         ],
                         [
                             'name' => 'color',
-                            'contents' => $request->color
+                            'contents' => $request->color??null
                         ],
                         [
                             'name' => 'team_id',
