@@ -511,7 +511,7 @@ function SplitTimeTemp($user_id, $myDate,$StartTime, $EndTime, $Duration="60",$d
     return $ReturnArray;
 }
 
-function findSlot($myDate = null,$vid,$type = 'delivery')
+function findSlot($myDate = null,$vid,$type = 'delivery',$api = null)
 {
   $myDate  = date('Y-m-d',strtotime('+1 day')); 
   $type = ((session()->get('vendorType'))?session()->get('vendorType'):$type);
@@ -532,7 +532,13 @@ function findSlot($myDate = null,$vid,$type = 'delivery')
             }
         if(isset($slots) && count((array)$slots)>0){
             $time = explode(' - ',$slots[0]['value']);
-            return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
+
+            if($api != 'api'){
+                return date('d M, Y h:i:A',strtotime($myDate.'T'.$time[0]));
+            }else{
+                return date('Y-m-d',strtotime($myDate.'T'.$time[0]));
+            }
+            
         }else{
             return 0;
         }
@@ -618,5 +624,21 @@ function GoogleDistanceMatrix($latitude, $longitude)
         }
     }
     return $send;
+}
+function getDynamicMail(){
+    $data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
+    $config = array(
+        'driver' => $data->mail_driver,
+        'host' => $data->mail_host,
+        'port' => $data->mail_port,
+        'from'       => array('address' => $data->mail_from, 'name' => $data->mail_from),
+        'encryption' => $data->mail_encryption,
+        'username' => $data->mail_username,
+        'password' => $data->mail_password,
+        'sendmail' => '/usr/sbin/sendmail -bs',
+        'pretend' => false,
+    );
+    \Config::set('mail.mailers.smtp', $config);
+    return 2;
 }
 
