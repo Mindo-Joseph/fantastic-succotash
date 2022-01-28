@@ -14,7 +14,8 @@ use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\v1\BaseController;
-use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet, UserAddress, ClientPreference, LuxuryOption, Vendor, LoyaltyCard, SubscriptionInvoicesUser, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation, OrderVendor, OrderProductAddon, OrderTax, OrderProduct, OrderProductPrescription, VendorOrderStatus};
+use App\Http\Controllers\Api\v1\PromoCodeController;
+use App\Models\{User, Product, Cart, ProductVariantSet, ProductVariant, CartProduct, CartCoupon, ClientCurrency, Brand, CartAddon, UserDevice, AddonSet, Client as ModelsClient, UserAddress, ClientPreference, LuxuryOption, Vendor, LoyaltyCard, SubscriptionInvoicesUser, VendorDineinCategory, VendorDineinTable, VendorDineinCategoryTranslation, VendorDineinTableTranslation, OrderVendor, OrderProductAddon, OrderTax, OrderProduct, OrderProductPrescription, VendorOrderStatus, VendorSlot};
 use GuzzleHttp\Client as GCLIENT;
 use Log;
 class CartController extends BaseController
@@ -117,7 +118,7 @@ class CartController extends BaseController
 
             if ($product->category->categoryDetail->type_id == 8) {
             } else {
-                if (($product->sell_when_out_of_stock == 0 && $productVariant->quantity < $request->quantity)) {
+                if ( ($product->sell_when_out_of_stock == 0) && ($productVariant->quantity < $request->quantity) ) {
                     return $this->errorResponse('You Can not order more than ' . $productVariant->quantity . ' quantity.', 404);
                 }
             }
@@ -460,6 +461,7 @@ class CartController extends BaseController
         return response()->json(['message' => __('Empty cart successfully.')]);
     }
 
+
     /**         *       Empty cart       *          */
     public function getCart($cart, $langId = '1', $currency = '1', $type = 'delivery')
     {
@@ -468,6 +470,7 @@ class CartController extends BaseController
         if (!$cart) {
             return false;
         }
+        $vondorCnt = 0;
         $address = [];
         $latitude = '';
         $longitude = '';
@@ -539,8 +542,9 @@ class CartController extends BaseController
             $pickup_delay_date = 0;
             $dropoff_delay_date = 0;
             $total_service_fee = 0;
+            $product_out_of_stock = 0;
             foreach ($cartData as $ven_key => $vendorData) {
-
+                $is_promo_code_available = 0;
                 $vendor_products_total_amount = $codeApplied = $is_percent = $proSum = $proSumDis = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = 0.00;
                 $delivery_count = 0;
 
@@ -558,10 +562,13 @@ class CartController extends BaseController
                 } else {
                     if ((isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1)) {
                         if ($address_id > 0) {
-                            $serviceArea = $vendorData->vendor->whereHas('serviceArea', function ($query) use ($latitude, $longitude) {
-                                $query->select('vendor_id')
+
+                            if (!empty($latitude) && !empty($longitude)) {
+                                $serviceArea = $vendorData->vendor->whereHas('serviceArea', function ($query) use ($latitude, $longitude) {
+                                    $query->select('vendor_id')
                                     ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(" . $latitude . " " . $longitude . ")'))");
-                            })->where('id', $vendorData->vendor_id)->get();
+                                })->where('id', $vendorData->vendor_id)->get();
+                            }
                         }
                     }
                 }
@@ -594,8 +601,12 @@ class CartController extends BaseController
                         if ($vendorData->coupon->promo->promo_type_id == 1) {
                             $is_percent = 1;
                             $discount_percent = round($vendorData->coupon->promo->amount);
+
+
                         } else {
                             $discount_amount = $vendorData->coupon->promo->amount * $clientCurrency->doller_compare;
+
+
                         }
                         if ($vendorData->coupon->promo->restriction_on == 0) {
                             foreach ($vendorData->coupon->promo->details as $key => $value) {
@@ -608,6 +619,15 @@ class CartController extends BaseController
 
                 foreach ($vendorData->vendorProducts as $pkey => $prod) {
                     if(isset($prod->product) && !empty($prod->product)){
+
+                        if($prod->product->sell_when_out_of_stock == 0){
+                            $quantity_check = productvariantQuantity($prod->variant_id);
+                            if($quantity_check < $prod->quantity ){
+                                $delivery_status=0;
+                                $product_out_of_stock = 1;
+                            }
+                        }
+                        $prod->product_out_of_stock =  $product_out_of_stock;
 
                         $price_in_currency = $price_in_doller_compare = $pro_disc = $quantity_price = 0;
                         $variantsData = $taxData = $vendorAddons = array();
@@ -663,7 +683,10 @@ class CartController extends BaseController
                                     $variantsData['coupon_msg'] = "Spend Minimum " . $minimum_spend . " to apply this coupon";
                                     $variantsData['coupon_not_appiled'] = 1;
                                 }
+
+
                             }
+
                             $variantsData['discount_amount'] = $pro_disc;
                             $variantsData['coupon_applied'] = $codeApplied;
                             $variantsData['quantity_price'] = $quantity_price;
@@ -736,7 +759,7 @@ class CartController extends BaseController
                         $prod->variants = $variantsData;
                         $prod->variant_options = $variant_options;
                         $prod->product_addons = $vendorAddons;
-                        
+
                         $product = Product::with([
                             'variant' => function ($sel) {
                                 $sel->groupBy('product_id');
@@ -744,7 +767,7 @@ class CartController extends BaseController
                             'variant.media.pimage.image', 'upSell', 'crossSell', 'vendor', 'media.image', 'translation' => function ($q) use ($langId) {
                                 $q->select('product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                                 $q->where('language_id', $langId);
-                            }])->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating')
+                            }])->select('id', 'sku', 'inquiry_only', 'url_slug', 'weight', 'weight_unit', 'vendor_id', 'has_variant', 'has_inventory', 'averageRating','minimum_order_count','batch_count')
                             ->where('url_slug', $prod->product->url_slug)
                             ->first();
                         $doller_compare = ($clientCurrency) ? $clientCurrency->doller_compare : 1;
@@ -774,13 +797,17 @@ class CartController extends BaseController
                         $vendorData->coupon_not_appiled = 1;
                     }
                 }
+
+
+
+
+
                 $deliver_charge = $deliver_charge * $clientCurrency->doller_compare;
                 $vendorData->proSum = $proSum;
                 $vendorData->addonSum = $ttAddon;
                 $vendorData->deliver_charge = $deliver_charge;
                 $total_delivery_amount += $deliver_charge;
                 $vendorData->coupon_apply_on_vendor = $couponApplied;
-                $vendorData->is_coupon_applied = $is_coupon_applied;
                 $vendorData->is_coupon_applied = $is_coupon_applied;
                 if (empty($couponData)) {
                     $vendorData->couponData = NULL;
@@ -790,7 +817,7 @@ class CartController extends BaseController
                 $vendor_service_fee_percentage_amount = 0;
                 if($vendorData->vendor->service_fee_percent > 0){
                     $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendorData->vendor->service_fee_percent) / 100 ;
-                    // $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
+                     $payable_amount = $payable_amount + $vendor_service_fee_percentage_amount;
                 }
                 $total_service_fee = $total_service_fee + $vendor_service_fee_percentage_amount;
                 $vendorData->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
@@ -835,8 +862,25 @@ class CartController extends BaseController
                 }
 
                 $order_sub_total = $order_sub_total + $vendor_products_total_amount;
+
+                if((float)($vendorData->vendor->order_min_amount) > $payable_amount){  # if any vendor total amount of order is less then minimum order amount
+                    $delivery_status = 0;
+                }
+                $promoCodeController = new PromoCodeController();
+                $promoCodeRequest = new Request();
+                $promoCodeRequest->setMethod('POST');
+                $promoCodeRequest->request->add(['vendor_id' => $vendorData->vendor_id, 'cart_id' => $cartID]);
+                $promoCodeResponse = $promoCodeController->postPromoCodeList($promoCodeRequest)->getData();
+                if($promoCodeResponse->status == 'Success'){
+                    if($promoCodeResponse->data){
+                        $is_promo_code_available = 1;
+                    }
+                }
+                $vendorData->is_promo_code_available = $is_promo_code_available;
             }
-        }
+            ++$vondorCnt;
+        }//End cart Vendor loop
+
         $cart_product_luxury_id = CartProduct::where('cart_id', $cartID)->select('luxury_option_id', 'vendor_id')->first();
         if ($cart_product_luxury_id) {
             if ($cart_product_luxury_id->luxury_option_id == 2 || $cart_product_luxury_id->luxury_option_id == 3) {
@@ -848,6 +892,20 @@ class CartController extends BaseController
             $total_disc_amount = $total_disc_amount + $total_subscription_discount;
             $cart->total_subscription_discount = $total_subscription_discount * $clientCurrency->doller_compare;
         }
+
+        if($cartData->count() == '1'){
+            $vendorId = $cartData[0]->vendor_id;
+            //type must be a : delivery , takeaway,dine_in
+            $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();
+            $slots = showSlot('',$vendorId,'delivery',$duration->slot_minutes);
+            $cart->slots = $slots;
+           // $cart->vendor_id =  $vendorId;
+        }else{
+            $slots = [];
+            $cart->slots = [];
+            //$cart->vendor_id =  0;
+        }
+
         $cart->total_service_fee = number_format($total_service_fee, 2, '.', '');
         $cart->total_tax = $total_tax;
         $cart->tax_details = $tax_details;
@@ -883,7 +941,7 @@ class CartController extends BaseController
                 $cart->total_payable_amount = $cart->total_payable_amount - $wallet_amount_used;
                 $cart->wallet_amount_used = $wallet_amount_used;
             }
-        }
+        } 
         $cart->deliver_status = $delivery_status;
         $cart->loyalty_amount = $loyalty_amount_saved;
         $cart->tip = array(
@@ -900,6 +958,26 @@ class CartController extends BaseController
         $cart->dropoff_delay_date =  $dropoff_delay_date??0;
         return $cart;
     }
+
+
+    public function checkScheduleSlots(Request $request)
+    {
+        $slot = [];
+        $vendorId = $request->vendor_id??0;
+        $delivery = $request->delivery??'delivery';
+        //type must be a : delivery , takeaway,dine_in
+        $duration = Vendor::where('id',$vendorId)->select('slot_minutes')->first();
+       // $duration = $duration->slot_minutes??'';
+        $slots = showSlot($request->date,$vendorId,$delivery,$duration->slot_minutes);
+        if(count($slots)<=0){
+            $slot = [];
+        }else{
+            $slot = $slots;
+        }
+        
+        return response()->json($slot);
+    }
+
 
     public function getDeliveryFeeDispatcher($vendor_id)
     {
@@ -989,9 +1067,26 @@ class CartController extends BaseController
                 if(isset($request->schedule_dropoff) && !empty($request->schedule_dropoff))  # for pickup laundry
                 $request->schedule_dropoff = Carbon::parse($request->schedule_dropoff, $user->timezone)->setTimezone('UTC')->format('Y-m-d H:i:s');
 
+                if($request->task_type!='now'){
+                    if(isset($request->slot))
+                    {
+                        $time = explode(' - ',$request->slot);
+                        $time = date('Y-m-d',strtotime($request->schedule_dt)).' '.$time[0].':00'??null;
+                        $slot = $request->slot;
+                    }else{
+                        $time = $request->schedule_dt;
+                        $slot = null;
+                    }
+                }else{
+                    $time = null;
+                    $slot = null;
+                }
+
                 Cart::where('status', '0')->where('user_id', $user->id)->update(['specific_instructions' => $request->specific_instructions ?? null,
                 'schedule_type' => $request->task_type??null,
-                'scheduled_date_time' => $request->schedule_dt??null,
+                //'scheduled_date_time' => $request->schedule_dt??null,
+                'scheduled_date_time' => $time??null,
+                'scheduled_slot' => $slot??null,
                 'comment_for_pickup_driver' => $request->comment_for_pickup_driver??null,
                 'comment_for_dropoff_driver' => $request->comment_for_dropoff_driver??null,
                 'comment_for_vendor' => $request->comment_for_vendor??null,
@@ -1053,5 +1148,49 @@ class CartController extends BaseController
             DB::rollback();
             return response()->json(['status'=>'Error', 'message'=>$ex->getMessage()]);
         }
+    }
+
+    # repeat order vendor wise
+
+    public function repeatOrder($domain = '', Request $request){
+
+        $order_vendor_id = $request->order_vendor_id;
+        $cart_id = $request->cart_id;
+        $getallproduct = OrderProduct::where('order_vendor_id',$order_vendor_id)->get();
+
+        if(isset($cart_id) && !empty($cart_id)){
+            CartProduct::where('cart_id', $cart_id)->delete();
+            CartCoupon::where('cart_id', $cart_id)->delete();
+            CartAddon::where('cart_id', $cart_id)->delete();
+        }
+
+        foreach($getallproduct as $data){
+            $request->vendor_id = $data->vendor_id;
+            $request->sku = $data->product->sku;
+            $request->quantity = $data->quantity;
+            $request->product_variant_id = $data->variant_id;
+
+            if(isset($getallproduct->order) && !empty($getallproduct->order))
+            $type = LuxuryOption::where('id',$getallproduct->order->luxury_option_id)->value('title');
+
+
+            $request->type = $type ?? 'delivery';
+
+            $addonID = OrderProductAddon::where('order_product_id',$data->id)->pluck('addon_id');
+            $addonoptID = OrderProductAddon::where('order_product_id',$data->id)->pluck('option_id');
+
+            if(count($addonID))
+            $request->request->add(['addon_ids' => $addonID->toArray()]);
+
+            if(count($addonoptID))
+            $request->request->add(['addon_options' => $addonoptID->toArray()]);
+
+            $this->add($request);
+
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'Order added to cart.']);
+
+
     }
 }

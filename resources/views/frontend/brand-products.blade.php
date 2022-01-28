@@ -59,7 +59,7 @@
                 <div class="col-12">
                     <div class="top-banner-wrapper text-center">
                         @if(!empty($brand->image_banner))
-                            <div class="common-banner"><img alt="" src="{{$brand->image_banner['image_fit'] . '1920/1080' . $brand->image_banner['image_path']}}" class="img-fluid blur-up lazyload"></div>
+                            <div class="common-banner"><img alt="" data-src="{{$brand->image_banner['image_fit'] . '1920/1080' . $brand->image_banner['image_path']}}" class="img-fluid blur-up lazyload"></div>
                         @endif
                         <div class="top-banner-content small-section">
                             <h4>{{ $brand->translation_title }}</h4>
@@ -81,7 +81,7 @@
                                 <h3 class="collapse-block-title">{{$sets->title}}</h3>
                                 <div class="collection-collapse-block-content">
                                     <div class="collection-brand-filter">
-                                        
+
                                     @if($sets->type == 2)
                                         @foreach($sets->options as $ok => $opt)
                                             <div class="chiller_cb small_label d-inline-block color-selector mt-2">
@@ -92,10 +92,10 @@
                                                     <span style="background: #FFFFFF; border-color:#000;" class="check_icon white_check"></span>
                                                 @else
                                                     <span class="check_icon" style="background:{{$opt->hexacode}}; border-color: {{$opt->hexacode}};"></span>
-                                                @endif                                        
+                                                @endif
                                             </div>
                                         @endforeach
-                                     
+
                                     @else
                                         @foreach($sets->options as $ok => $opt)
                                             <div class="custom-control custom-checkbox collection-filter-checkbox">
@@ -104,7 +104,7 @@
                                             </div>
                                         @endforeach
                                     @endif
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -125,7 +125,7 @@
                     <!-- side-bar single product slider start -->
                     <div class="theme-card">
                         <h5 class="title-border d-flex align-items-center justify-content-between">
-                            <span>{{__('New Product')}}</span>  
+                            <span>{{__('New Product')}}</span>
                             <span class="filter-back d-lg-none d-inline-block">
                                 <i class="fa fa-angle-left" aria-hidden="true"></i> {{__('Back')}}
                             </span>
@@ -140,23 +140,23 @@
                                             $imagePath = $v['image']['path']['image_fit'].'300/300'.$v['image']['path']['image_path'];
                                         }*/ ?>
 
-                                        <a class="common-product-box scale-effect text-center border-bottom pb-2 mt-2" href="{{route('productDetail', $new['url_slug'])}}">
+                                        <a class="common-product-box scale-effect text-center border-bottom pb-2 mt-2" href="{{route('productDetail', [$new['vendor']['slug'],$new['url_slug']])}}">
                                             <div class="img-outer-box position-relative">
-                                                <img src="{{$new['image_url']}}" alt="">
+                                                <img class="blur-up lazyload" data-src="{{$new['image_url']}}" alt="">
                                                 <div class="pref-timing">
                                                     <!--<span>5-10 min</span>-->
                                                 </div>
-                                                <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
-                                            </div>    
+                                                {{--<i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>--}}
+                                            </div>
                                             <div class="media-body align-self-center">
                                                 <div class="inner_spacing px-0">
                                                     <div class="product-description">
                                                         <div class="d-flex align-items-center justify-content-between">
-                                                            <h6 class="card_title mb-1 ellips">{{ $new['translation_title'] }}</h6>                                                                                    
-                                                            <!--<span class="rating-number">2.0</span>-->                                
+                                                            <h6 class="card_title mb-1 ellips">{{ $new['translation_title'] }}</h6>
+                                                            <!--<span class="rating-number">2.0</span>-->
                                                         </div>
                                                         <p>{{$new['vendor']['name']}}</p>
-                                                        <p class="pb-1">In {{$new['category_name']}}</p>
+                                                        <p class="pb-1">{{__('In')}} {{$new['category_name']}}</p>
                                                         <div class="d-flex align-items-center justify-content-between">
                                                             <b>
                                                                 @if($new['inquiry_only'] == 0)
@@ -175,17 +175,17 @@
                                                                     @endif
                                                                 @endif
                                                             @endif   -->
-                                                        </div>                       
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </a>
 
                                         {{-- <div class="media">
-                                            <a href="{{route('productDetail', $new['sku'])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" src="{{$imagePath}}" alt="" ></a>
+                                            <a href="{{route('productDetail',[$new['vendor']['slug'],$new['sku']])}} "><img class="img-fluid blur-up lazyload" style="max-width: 200px;" data-src="{{$imagePath}}" alt="" ></a>
                                             <div class="media-body align-self-center">
                                                 <div class="inner_spacing">
-                                                    <a href="{{route('productDetail', $new['url_slug'])}}">
+                                                    <a href="{{route('productDetail', [$new['vendor']['slug'],$new['url_slug']])}}">
                                                         <h3>{{ $new['translation_title'] }}</h3>
                                                     </a>
                                                     <h6 class="mt-0 mb-1"><b>{{$new['vendor']['name']}}</b></h6>
@@ -195,7 +195,7 @@
                                                         {{ Session::get('currencySymbol').' '.(number_format($new['variant_price'] * $multiply,2))}} </h4>
                                                     @endif
                                                     @if($client_preference_detail)
-                                                        @if($client_preference_detail->rating_check == 1)  
+                                                        @if($client_preference_detail->rating_check == 1)
                                                             @if($new['averageRating'] > 0)
                                                                 <span class="rating">{{ $new['averageRating'] }} <i class="fa fa-star text-white p-0"></i></span>
                                                             @endif
@@ -233,17 +233,17 @@
                                                     </div>
                                                     {{-- <div class="collection-grid-view">
                                                         <ul>
-                                                            <li><img src=" " alt="" class="product-2-layout-view"></li>
-                                                            <li><img src="{{asset('front-assets/images/icon/3.png')}}" alt="" class="product-3-layout-view"></li>
-                                                            <li><img src="{{asset('front-assets/images/icon/4.png')}}" alt="" class="product-4-layout-view"></li>
-                                                            <li><img src="{{asset('front-assets/images/icon/6.png')}}" alt="" class="product-6-layout-view"></li>
+                                                            <li><img class="blur-up lazyload" data-src=" " alt="" class="product-2-layout-view"></li>
+                                                            <li><img class="blur-up lazyload" data-src="{{asset('front-assets/images/icon/3.png')}}" alt="" class="product-3-layout-view"></li>
+                                                            <li><img class="blur-up lazyload" data-src="{{asset('front-assets/images/icon/4.png')}}" alt="" class="product-4-layout-view"></li>
+                                                            <li><img class="blur-up lazyload" data-src="{{asset('front-assets/images/icon/6.png')}}" alt="" class="product-6-layout-view"></li>
                                                         </ul>
                                                     </div> --}}
                                                     {{-- <div class="product-page-per-view">
                                                         <?php $pnum = (Session::has('cus_paginate')) ? Session::get('cus_paginate') : 8; ?>
                                                         <select class="customerPaginate">
 
-                                                            <option value="8" @if($pnum == 8) selected @endif>Show 8 
+                                                            <option value="8" @if($pnum == 8) selected @endif>Show 8
                                                             </option>
                                                             <option value="12" @if($pnum == 12) selected @endif>Show 12 </option>
                                                             <option value="24" @if($pnum == 24) selected @endif>Show 24
@@ -265,7 +265,7 @@
 
                                                 <?php /*$imagePath = $imagePath2 = '';
                                                 $mediaCount = count($data->media);
-                                                for ($i = 0; $i < $mediaCount && $i < 2; $i++) { 
+                                                for ($i = 0; $i < $mediaCount && $i < 2; $i++) {
                                                     if($i == 0){
                                                         $imagePath = $data->media[$i]->image->path['image_fit'].'300/300'.$data->media[$i]->image->path['image_path'];
                                                     }
@@ -275,22 +275,22 @@
                                                     <div class="product-box scale-effect">
                                                         <div class="img-wrapper">
                                                             <div class="front">
-                                                                <a href="{{route('productDetail', $data->sku)}}"><img class="img-fluid blur-up lazyload" src="{{$data->image_url}}" alt=""></a>
+                                                                <a href="{{route('productDetail', [$data->vendor->slug,$data->sku])}}"><img class="img-fluid blur-up lazyload" data-src="{{$data->image_url}}" alt=""></a>
                                                             </div>
                                                             <div class="cart-info cart-wrap">
-                                                                <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button> 
+                                                                <button data-toggle="modal" data-target="#addtocart" title="Add to cart"><i class="ti-shopping-cart"></i></button>
                                                                 <a href="javascript:void(0)" title="Add to Wishlist" class="addWishList" proSku="{{$data->sku}}"><i class="ti-heart" aria-hidden="true"></i></a>
                                                             </div>
                                                         </div>
                                                         <div class="product-detail">
                                                             <div class="inner_spacing">
-                                                                <a href="{{route('productDetail', $data->sku)}}">
+                                                                <a href="{{route('productDetail', [$data->vendor->slug,$data->sku])}}">
                                                                     <h3>{{ $data->translation_title }}</h3>
                                                                 </a>
                                                                 <h6 class="mt-0"><b>{{$data->vendor->name}}</b></h6>
                                                                 <h4 class="mt-1">{{Session::get('currencySymbol').(number_format($data->variant_price * $data->variant_multiplier,2))}}</h4>
                                                                 @if($client_preference_detail)
-                                                                    @if($client_preference_detail->rating_check == 1)  
+                                                                    @if($client_preference_detail->rating_check == 1)
                                                                         @if($data->averageRating > 0)
                                                                             <span class="rating">{{ number_format($data->averageRating, 1, '.', '') }} <i class="fa fa-star text-white p-0"></i></span>
                                                                         @endif
@@ -371,7 +371,7 @@
             data: {
                 "_token": "{{ csrf_token() }}",
                 "brands": brands,
-                "variants": variants, 
+                "variants": variants,
                 "options": options,
                 "range": range
             },

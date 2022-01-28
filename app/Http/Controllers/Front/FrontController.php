@@ -18,17 +18,45 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category, Product, ClientPreference,EmailTemplate, ClientCurrency, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser,Country,UserAddress,CartProduct, Vendor, VendorCategory, ClientLanguage};
+use App\Models\{Client, Category, Product, ClientPreference,EmailTemplate, ClientCurrency, UserDevice, UserLoyaltyPoint, Wallet, UserSavedPaymentMethods, SubscriptionInvoicesUser,Country,UserAddress,CartProduct, Vendor, VendorCategory, ClientLanguage, LoyaltyCard, Order};
 
 class FrontController extends Controller
 {
+    use \App\Http\Traits\smsManager;
+
     private $field_status = 2;
     protected function sendSms($provider, $sms_key, $sms_secret, $sms_from, $to, $body){
         try{
-            $client = new TwilioClient($sms_key, $sms_secret);
-            $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+            $client_preference =  getClientPreferenceDetail();
+            if($client_preference->sms_provider == 1)
+            {
+                if(!empty($sms_secret) && !empty($sms_from)){
+                    $client = new TwilioClient($sms_key, $sms_secret);
+                    $send =  $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+                }else{
+                    return 2;
+                }
+
+            }elseif($client_preference->sms_provider == 2) //for mtalkz gateway
+            {
+                $crendentials = json_decode($client_preference->sms_credentials);
+                $send = $this->mTalkz_sms($to,$body,$crendentials);
+            }elseif($client_preference->sms_provider == 3) //for mazinhost gateway
+            {
+                $crendentials = json_decode($client_preference->sms_credentials);
+                $send = $this->mazinhost($to,$body,$crendentials);
+            }else{
+                if(!empty($sms_secret) && !empty($sms_from)){
+                    $client = new TwilioClient($sms_key, $sms_secret);
+                    $send =  $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+                }else{
+                    return 2;
+                }
+            }
+            return $send;
         }
         catch(\Exception $e){
+          //  pr($e->getMessage());
             return '2';
         }
         return '1';
@@ -42,7 +70,7 @@ class FrontController extends Controller
         $status = $this->field_status;
         if ($preferences) {
             if ((isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1)) {
-                $vendors = (Session::has('vendors')) ? Session::get('vendors') : array();
+                $vendors = (Session::has('vendors')) ? Session::get('vendors') : $this->getServiceAreaVendors();
                 $categories = $categories->leftJoin('vendor_categories as vct', 'categories.id', 'vct.category_id')
                     ->where(function ($q1) use ($vendors, $status, $lang_id) {
                         $q1->whereIn('vct.vendor_id', $vendors)
@@ -136,10 +164,13 @@ class FrontController extends Controller
             $serviceAreaVendors = $serviceAreaVendors->where($vendorType, 1);
         }
         if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
-            $serviceAreaVendors = $serviceAreaVendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
+
+            if (!empty($latitude) && !empty($longitude)) {
+                $serviceAreaVendors = $serviceAreaVendors->whereHas('serviceArea', function ($query) use ($latitude, $longitude) {
                     $query->select('vendor_id')
                     ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
                 });
+            }
         }
         $serviceAreaVendors = $serviceAreaVendors->where('status', 1)->get();
 
@@ -157,7 +188,7 @@ class FrontController extends Controller
         $proxy_url = \Config::get('app.IMG_URL1');
         $image_path = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png');
         $image_fit = \Config::get('app.FIT_URl');
-        $default_url = $image_fit .'300/300'. $image_path;
+        $default_url = $image_fit .'300/300'. $image_path.'@webp';
         return $default_url;
     }
 
@@ -180,7 +211,7 @@ class FrontController extends Controller
                 $q->select('sku', 'product_id', 'quantity', 'price', 'barcode')->orderBy('price');
                 $q->groupBy('product_id');
             },
-        ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating', 'inquiry_only');
+        ])->select('id', 'sku', 'url_slug', 'weight_unit', 'weight', 'vendor_id', 'has_variant', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'averageRating', 'inquiry_only','minimum_order_count','batch_count');
 
         if ($where !== '') {
             $products = $products->where($where, 1);
@@ -239,7 +270,7 @@ class FrontController extends Controller
                             $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                             $q->groupBy('product_id');
                         },
-                    ])->select('id', 'sku', 'averageRating', 'url_slug', 'is_new', 'is_featured', 'vendor_id', 'inquiry_only')
+                    ])->select('id', 'sku', 'averageRating', 'url_slug', 'is_new', 'is_featured', 'vendor_id', 'inquiry_only','minimum_order_count','batch_count')
                     ->whereIn('id', $productIds)
                     ->whereNotNull('category_id');
         $products = $products->get();
@@ -271,18 +302,18 @@ class FrontController extends Controller
 
     public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption)
     {
-        $config = array(
-            'driver' => $mail_driver,
-            'host' => $mail_host,
-            'port' => $mail_port,
-            'encryption' => $mail_encryption,
-            'username' => $mail_username,
-            'password' => $mail_password,
-            'sendmail' => '/usr/sbin/sendmail -bs',
-            'pretend' => false,
-        );
+        // $config = array(
+        //     'driver' => $mail_driver,
+        //     'host' => $mail_host,
+        //     'port' => $mail_port,
+        //     'encryption' => $mail_encryption,
+        //     'username' => $mail_username,
+        //     'password' => $mail_password,
+        //     'sendmail' => '/usr/sbin/sendmail -bs',
+        //     'pretend' => false,
+        // );
 
-        Config::set('mail', $config);
+        // Config::set('mail', $config);
         $app = App::getInstance();
         $app->register('Illuminate\Mail\MailServiceProvider');
         return '1';
@@ -306,6 +337,24 @@ class FrontController extends Controller
             setcookie("uuid", "", time() - 3600);
             return redirect()->route('user.checkout');
         }
+    }
+
+    /**     * check if cookie already exist     */
+    public function getLoyaltyPoints($userid, $multiplier){
+        $loyalty_earned_amount = 0;
+        $redeem_points_per_primary_currency = '';
+        $loyalty_card = LoyaltyCard::where('status', '0')->first();
+        if ($loyalty_card) {
+            $redeem_points_per_primary_currency = $loyalty_card->redeem_points_per_primary_currency;
+        }
+        $order_loyalty_points_earned_detail = Order::where('user_id', $userid)->select(DB::raw('sum(loyalty_points_earned) AS sum_of_loyalty_points_earned'), DB::raw('sum(loyalty_points_used) AS sum_of_loyalty_points_used'))->first();
+        if ($order_loyalty_points_earned_detail) {
+            $loyalty_points_used = $order_loyalty_points_earned_detail->sum_of_loyalty_points_earned - $order_loyalty_points_earned_detail->sum_of_loyalty_points_used;
+            if ($loyalty_points_used > 0 && $redeem_points_per_primary_currency > 0) {
+                $loyalty_earned_amount = $loyalty_points_used / $redeem_points_per_primary_currency;
+            }
+        }
+        return $loyalty_earned_amount;
     }
 
     /**     * check if cookie already exist     */
@@ -561,7 +610,12 @@ class FrontController extends Controller
             $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
             $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
             $pretime = $this->getEvenOddTime($vendor->timeofLineOfSightDistance);
-            $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5);
+           // $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5);
+            if($pretime >= 60){
+                $vendor->timeofLineOfSightDistance =  '~ '.$this->vendorTime($pretime) .' '. __('hour');
+            }else{
+                $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5).' '. __('min');
+            }
         }
         return $vendor;
     }
@@ -583,9 +637,16 @@ class FrontController extends Controller
                 $distance_to_time_multiplier = ($preferences->distance_to_time_multiplier > 0) ? $preferences->distance_to_time_multiplier : 2;
                 $distance = $this->calulateDistanceLineOfSight($lat1, $long1, $lat2, $long2, $distance_unit);
                 $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
+
                 $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
                 $pretime = $this->getEvenOddTime($vendor->timeofLineOfSightDistance);
-                $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5);
+                if($pretime >= 60){
+
+                    $vendor->timeofLineOfSightDistance =  '~ '.$this->vendorTime($pretime) .' '. __('hour');
+                }else{
+                    $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5).' '. __('min');
+                }
+
             }else{
                 $vendor->lineOfSightDistance = 0;
                 $vendor->timeofLineOfSightDistance = 0;
@@ -637,19 +698,24 @@ class FrontController extends Controller
         // // $time = convertDateTimeInTimeZone($datetime, Auth::user()->timezone, $format);
         // $time = Carbon::parse($datetime)->format($format);
 
+
+
         if(isset($user) && !empty($user))
         $user =  $user;
         else
         $user = Auth::user();
+
         $timezone = $user->timezone;
         $preferences = ClientPreference::select('date_format', 'time_format')->where('id', '>', 0)->first();
         $date_format = $preferences->date_format;
         $time_format = $preferences->time_format;
 
         if($scheduleTime != ''){
-            $datetime = dateTimeInUserTimeZone($scheduleTime, $timezone);
+            $datetime = Carbon::parse($scheduleTime)->addMinutes($minutes);
+            $datetime = dateTimeInUserTimeZone($datetime, $timezone);
         }else{
-            $datetime = dateTimeInUserTimeZone($order_vendor_created_at, $timezone);
+            $datetime = Carbon::parse($order_vendor_created_at)->addMinutes($minutes);
+            $datetime = dateTimeInUserTimeZone($datetime, $timezone);
         }
         if(Carbon::parse($datetime)->isToday()){
             if($time_format == '12'){
@@ -665,5 +731,50 @@ class FrontController extends Controller
     public function getClientCode(){
         $code = Client::orderBy('id','asc')->value('code');
         return $code;
+    }
+    public function sendmailtest(){
+
+        $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
+        $data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
+        //         echo "<pre>";
+        // print_r($data->toArray());
+        // exit();
+
+        if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
+                $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+                $client_name = $client->name;
+                $mail_from = $data->mail_from;
+                $sendto = "harbans.singh@codebrewinnovations.com";
+                try{
+                    $data = [
+                        'customer_name' => "harbans",
+                        'code_text' => '',
+                        'logo' => $client->logo['original'],
+                        'frequency' => 'asd',
+                        'end_date' => "asd",
+                        'link'=> "http://local.myorder.com/user/subscription/select/",
+                    ];
+                     $mail=   Mail::send('email.notifyUserSubscriptionBilling', ['mailData'=>$data],
+                        function ($message) use($sendto, $client_name, $mail_from) {
+                            $message->from($mail_from, $client_name);
+                            $message->to($sendto)->subject('Upcoming Subscription Billing');
+                        });
+        //                                 echo "<pre>";
+        // print_r($mail);
+        // exit();
+                $response['send_email'] = 1;
+                }
+                catch(\Exception $e){
+                    return response()->json(['data' => $e->getMessage()]);
+                }
+            }
+
+    }
+
+    public function vendorTime($minutes){
+        $hours = intdiv($minutes, 60).':'. ($minutes % 60);
+
+        return $hours;
+
     }
 }

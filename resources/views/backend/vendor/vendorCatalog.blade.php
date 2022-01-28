@@ -127,13 +127,15 @@
                                 {{ __('Catalog') }}
                             </a>
                         </li>
+                        @if(($client_preference_detail->business_type != 'taxi') || (($client_preference_detail->business_type == 'taxi') && ($client_preference_detail->pickup_delivery_service_area == 1)))
+                        <li class="nav-item">
+                            <a href="{{ route('vendor.show', $vendor->id) }}" aria-expanded="false"
+                                class="nav-link {{ $tab == 'configuration' ? 'active' : '' }} {{ $vendor->status == 1 ? '' : 'disabled' }}">
+                                {{ __('Configuration') }}
+                            </a>
+                        </li>
+                        @endif
                         @if ($client_preference_detail->business_type != 'taxi')
-                            <li class="nav-item">
-                                <a href="{{ route('vendor.show', $vendor->id) }}" aria-expanded="false"
-                                    class="nav-link {{ $tab == 'configuration' ? 'active' : '' }} {{ $vendor->status == 1 ? '' : 'disabled' }}">
-                                    {{ __('Configuration') }}
-                                </a>
-                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('vendor.categories', $vendor->id) }}" aria-expanded="true"
                                     class="nav-link {{ $tab == 'category' ? 'active' : '' }} {{ $vendor->status == 1 ? '' : 'disabled' }}">
@@ -225,6 +227,10 @@
                                     </div>
                                     <div class="col-6 d-flex align-items-center justify-content-end mb-3">
 
+                                            <!-- <div class="vendor-search">
+                                                <input class="form-control" type="search" placeholder="Product Search">
+                                            </div> -->
+
                                             <a class="btn btn-info  waves-effect waves-light text-sm-right action_product_button" dataid="0"
                                                 id="action_product_button" href="javascript:void(0);"
                                                 style="display: none;"><i class="mdi mdi-plus-circle mr-1"></i>
@@ -280,7 +286,7 @@
                                                                     <img alt="{{ $product->id }}" class="rounded-circle"
                                                                         src="{{ $product->media[0]->image->path['proxy_url'] . '30/30' . $product->media[0]->image->path['image_path'] }}">
                                                                 @else
-                                                                    {{ $product->sku }}
+                                                                    {{-- {{ $product->sku }} --}}
                                                                 @endif
                                                             </td>
                                                             <td> <a href="{{ route('product.edit', $product->id) }}"
@@ -363,7 +369,7 @@
                                         <div class="form-group" id="product_nameInput">
                                             {!! Form::label('title', __('Product Name'), ['class' => 'control-label']) !!}
                                             <span class="text-danger">*</span>
-                                            {!! Form::text('product_name', null, ['class' => 'form-control', 'id' => 'product_name', 'onkeyup' => 'return setSkuFromName(event)', 'placeholder' => 'Apple iMac', 'autocomplete' => 'off']) !!}
+                                            {!! Form::text('product_name', null, ['class' => 'form-control', 'id' => 'product_name', 'onkeyup' => 'return setSkuFromName(event)', 'placeholder' => __('Product Name'), 'autocomplete' => 'off']) !!}
 
                                             <span class="invalid-feedback" role="alert">
                                                 <strong></strong>
@@ -377,7 +383,7 @@
                                         <div class="form-group" id="skuInput">
                                             {!! Form::label('title', __('SKU'), ['class' => 'control-label']) !!}
                                             <span class="text-danger">*</span>
-                                            {!! Form::text('sku', null, ['class' => 'form-control', 'id' => 'sku', 'onkeyup' => 'return alplaNumeric(event)', 'placeholder' => 'Apple-iMac']) !!}
+                                            {!! Form::text('sku', null, ['class' => 'form-control', 'id' => 'sku', 'onkeyup' => 'return alplaNumeric(event)', 'placeholder' =>  __('SKU')]) !!}
                                             <span class="invalid-feedback" role="alert">
                                                 <strong></strong>
                                             </span>
@@ -391,7 +397,7 @@
                                     <div class="col-6">
                                         <div class="form-group" id="url_slugInput">
                                             {!! Form::label('title', __('URL Slug'), ['class' => 'control-label']) !!}
-                                            {!! Form::text('url_slug', null, ['class' => 'form-control', 'id' => 'url_slug', 'placeholder' => 'Apple iMac', 'onkeypress' => 'return slugify(event)']) !!}
+                                            {!! Form::text('url_slug', null, ['class' => 'form-control', 'id' => 'url_slug', 'placeholder' =>  __('URL Slug'), 'onkeypress' => 'return slugify(event)']) !!}
                                             <span class="invalid-feedback" role="alert">
                                                 <strong></strong>
                                             </span>

@@ -144,7 +144,7 @@
 @endsection
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid vendor-show-page">
 
     <!-- start page title -->
     <div class="row">
@@ -207,16 +207,20 @@
                             {{ __('Catalog') }}
                         </a>
                     </li>
+                    @if(($client_preference_detail->business_type != 'taxi') || (($client_preference_detail->business_type == 'taxi') && ($client_preference_detail->pickup_delivery_service_area == 1)))
                     <li class="nav-item">
                         <a href="{{ route('vendor.show', $vendor->id) }}" aria-expanded="false" class="nav-link {{($tab == 'configuration') ? 'active' : '' }} {{$vendor->status == 1 ? '' : 'disabled'}}">
                             {{ __('Configuration') }}
                         </a>
                     </li>
+                    @endif
+                    @if ($client_preference_detail->business_type != 'taxi')
                     <li class="nav-item">
                         <a href="{{ route('vendor.categories', $vendor->id) }}" aria-expanded="true" class="nav-link {{($tab == 'category') ? 'active' : '' }} {{$vendor->status == 1 ? '' : 'disabled'}}">
                             {{ __('Categories & Add Ons') }}
                         </a>
                     </li>
+                    @endif
                     @if ($is_payout_enabled == 1)
                         <li class="nav-item">
                             <a href="{{ route('vendor.payout', $vendor->id) }}" aria-expanded="false" class="nav-link {{ $tab == 'payout' ? 'active' : '' }} {{ $vendor->status == 1 ? '' : 'disabled' }}">
@@ -273,7 +277,7 @@
                                         </div>
                                         <div class="row mb-2">
                                             <div class="col-md-2">
-                                                {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!} 
+                                                {!! Form::label('title', 'Can Add Category',['class' => 'control-label']) !!}
                                                 <div>
                                                     <input type="checkbox" data-plugin="switchery" name="add_category" class="form-control can_add_category1" data-color="#43bee1" @if($vendor->add_category == 1) checked @endif >
                                                 </div>
@@ -286,7 +290,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group" id="commission_fixed_per_orderInput">
-                                                    {!! Form::label('title', 'Commission Fixed Per Order',['class' => 'control-label']) !!} 
+                                                    {!! Form::label('title', 'Commission Fixed Per Order',['class' => 'control-label']) !!}
                                                     <input class="form-control" name="commission_fixed_per_order" type="text" value="{{$vendor->commission_fixed_per_order}}" onkeypress="return isNumberKey(event)">
                                                 </div>
                                             </div>
@@ -303,7 +307,7 @@
 
                         @include('backend.vendor.vendorSubscriptions')
 
-                        @if(session('preferences.is_hyperlocal') == 1)
+                        @if((session('preferences.is_hyperlocal') == 1) || ($client_preference_detail->business_type == 'taxi'))
                         <div class="card-box">
                             <div class="row">
                                 <div class="col-md-12">
@@ -351,21 +355,21 @@
 
                                             <form action="{{  route('draw.circle.with.radius',$vendor->id) }}" method="post">
                                                 @csrf()
-                                             <div class="row">   
-                                                <div class="col-md-4"> 
+                                             <div class="row">
+                                                <div class="col-md-4">
                                                 {!! Form::label('title', 'Draw area with radius(Miles)',['class' => 'control-label']) !!}
                                                 </div>
-                                                <div class="col-md-4"> 
-                                                      
+                                                <div class="col-md-4">
+
                                                     <div class="form-group" id="commission_monthlyInput">
-                                                        <input class="form-control"  name="radius" type="number" required>
-                                                        
+                                                        <input class="form-control"  name="radius" type="number" min="0.01" step="0.01" required>
+
                                                     </div>
-                                                </div>  
+                                                </div>
                                                 <div class="col-md-4">
                                                     <button type="submit" class="btn btn-info"> {{ __('Go') }}</button>
                                                 </div>
-                                             </div>   
+                                             </div>
                                             </form>
 
                                         </div>
@@ -479,7 +483,7 @@
                                                                 <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$vendor_table->table_number}}</a>
                                                             </td>
                                                             <td class="table-user">
-                                                                <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$vendor_table->category->title}}</a>
+                                                                <a href="javascript:void(0);" class="text-body font-weight-semibold">{{$vendor_table->category->title??null}}</a>
                                                             </td>
                                                             <td class="table-user">
                                                             {{ QrCode::size(100)->generate($vendor_table->qr_url); }}
@@ -549,7 +553,7 @@
                         </div>
                         <div class="col-sm-3 mb-2">
                             {!! Form::label('title', __('Category'),['class' => 'control-label']) !!}
-                            <select class="selectize-select form-control" name="vendor_dinein_category_id" id="assignTo">
+                            <select class="selectize-select form-control" name="vendor_dinein_category_id">
                                 @foreach($dinein_categories as $dinein_category)
                                 <option value="{{$dinein_category->id}}">{{$dinein_category->title}}</option>
                                 @endforeach
@@ -730,9 +734,10 @@
 <script src="{{asset('assets/js/calendar_main-5.9.js')}}"></script>
 <script src="{{ asset('assets/js/pages/jquery.cookie.js') }}"></script>
 <script>
+    var pickup_delivery_service_area = "{{ isset($client_preference_detail->pickup_delivery_service_area) ? $client_preference_detail->pickup_delivery_service_area : 0 }}"
     $( document ).ready(function() {
         $(".base_url").html(base_url);
-    }); 
+    });
     $(document).on("click", ".editTablebtn", function() {
         let table_id = $(this).data('id');
         $.ajax({
@@ -799,15 +804,7 @@
 <script type="text/javascript">
     var all_coordinates = @json($all_coordinates);
     var areajson_json = all_coordinates; //{all_coordinates};
-   
-    /*function gm_authFailure() {
 
-        $('.excetion_keys').append('<span><i class="mdi mdi-block-helper mr-2"></i> <strong>Google Map</strong> key is not valid</span><br/>');
-        $('.displaySettingsError').show();
-    }*/
-
-
- 
     function initialize_show() {
 
         // var myLatlng = new google.maps.LatLng("{{ $center['lat'] }}","{{ $center['lng']  }}");
@@ -848,7 +845,6 @@
                 fillOpacity: 0.35,
                 geo_name: data.name,
                 geo_pos: data.coordinates[i],
-
             });
 
             no_parking_geofences_json_geo_area.setMap(map);
@@ -1092,7 +1088,7 @@
             });
         }
     }
-    if (is_hyperlocal) {
+    if ((is_hyperlocal) || (pickup_delivery_service_area == 1)) {
         google.maps.event.addDomListener(window, 'load', initialize);
         google.maps.event.addDomListener(window, 'load', initialize_show);
         google.maps.event.addDomListener(window, 'load', initialize_edit);
@@ -1128,6 +1124,8 @@
         //         }
         //       });
         // }
+
+        if($('#calendar').length > 0){
         var calendarEl = document.getElementById('calendar');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -1157,7 +1155,6 @@
             nowIndicator: true,
             eventMaxStack: 1,
             select: function(arg) {
-
                 // calendar.addEvent({
                 //     title: '',
                 //     start: arg.start,
@@ -1174,15 +1171,14 @@
                 if (arg.allDay == true) {
                     document.getElementById('start_time').value = "00:00";
                     document.getElementById('end_time').value = "23:59";
-
                 } else {
                     var startTime = ("0" + arg.start.getHours()).slice(-2) + ":" + ("0" + arg.start.getMinutes()).slice(-2);
                     var EndTime = ("0" + arg.end.getHours()).slice(-2) + ":" + ("0" + arg.end.getMinutes()).slice(-2);
 
                     document.getElementById('start_time').value = startTime;
                     document.getElementById('end_time').value = EndTime;
-
                 }
+
 
                 $('#slot_date').flatpickr({
                     minDate: "today",
@@ -1237,7 +1233,7 @@
                                 var slotStartTime = moment(data.start).format('H:mm');
                                 var slotEndTime = moment(data.end).format('H:mm');
                             @endif
-                            
+
                             $.each(days, function(key, value){
                                 if(slotDay == key + 1){
                                     if(slotDayList.includes(slotDay)){
@@ -1267,28 +1263,7 @@
                     }
                 });
             },
-
-            // eventDidMount: function(ev) {
-            //     var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            //     var day = ev.event.start.getDay() + 1;
-            //     $.each(days, function(key, value){
-            //         if(day == key + 1){
-            //             var startTime = ("0" + ev.event.start.getHours()).slice(-2) + ":" + ("0" + ev.event.start.getMinutes()).slice(-2);
-            //             var endTime = '';
-            //             if (ev.event.end) {
-            //                 endTime = ("0" + ev.event.end.getHours()).slice(-2) + ":" + ("0" + ev.event.end.getMinutes()).slice(-2);
-            //             }
-            //             if($("#calendar_slot_alldays_table tbody tr[data-slotDay='"+day+"']").length > 0){
-            //                 $("#calendar_slot_alldays_table tbody tr[data-slotDay='"+day+"']").html("<td>"+value+"</td><td>"+startTime+" - "+endTime+"</td>");
-            //             }else{
-            //                 $("#calendar_slot_alldays_table tbody").append("<tr data-slotDay="+day+"><td>"+value+"</td><td>"+startTime+" - "+endTime+"</td></tr>");
-            //             }
-            //         }
-            //     });
-            // },
             eventResize: function(arg) {
-                // console.log(arg.event.extendedProps);
-
             },
             eventClick: function(ev) {
                 $('#edit-slot-modal').modal({
@@ -1307,7 +1282,8 @@
                 document.getElementById('deleteSlotDayid').value = ev.event.extendedProps.type_id;
                 document.getElementById('deleteSlotId').value = ev.event.extendedProps.slot_id;
                 document.getElementById('deleteSlotType').value = ev.event.extendedProps.type;
-                
+                document.getElementById('deleteSlotTypeOld').value = ev.event.extendedProps.type;
+
                 if(ev.event.extendedProps.type == 'date'){
                     $("#edit_slotDate").prop("checked", true);
                     $(".modal .forDateEdit").show();
@@ -1347,6 +1323,7 @@
         });
 
         calendar.render();
+        }
 
     });
 
@@ -1374,6 +1351,7 @@
 
     $(document).on('change', '.slotTypeEdit', function() {
         var val = $(this).val();
+        $('#edit-slot-modal #deleteSlotType').val(val);
         if (val == 'day') {
             $('.modal .weekDaysEdit').show();
             $('.modal .forDateEdit').hide();
@@ -1384,6 +1362,8 @@
     });
 
     $(document).on('click', '#deleteSlotBtn', function() {
+        var date = $('#edit_slot_date').val();
+        $('#edit-slot-modal #deleteSlotDate').val(date);
         if (confirm("Are you sure? You want to delete this slot.")) {
             $('#deleteSlotForm').submit();
         }

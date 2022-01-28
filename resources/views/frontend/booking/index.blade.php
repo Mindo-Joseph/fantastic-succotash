@@ -63,7 +63,7 @@
 
                 </div>
                 <div class="scheduled-ride">
-                    <button><i class="fa fa-clock-o" aria-hidden="true"></i> <span class="mx-2 scheduleDateTimeApnd">Now</span> <i class="fa fa-angle-down" aria-hidden="true"></i></button>
+                    <button><i class="fa fa-clock-o" aria-hidden="true"></i> <span class="mx-2 scheduleDateTimeApnd">{{__('Now')}}</span> <i class="fa fa-angle-down" aria-hidden="true"></i></button>
                 </div>
                 @if($wallet_balance < 0)
                 <div class="row">
@@ -73,11 +73,11 @@
                         <div class="col-md-5 text-md-right text-center">
                             <button type="button" class="btn btn-solid" id="topup_wallet_btn" data-toggle="modal" data-target="#topup_wallet">{{__('Topup Wallet')}}</button>
                         </div>
-                    </div>        
-                  
+                    </div>
+
                 @endif
                 <div class="loader cab-booking-main-loader"></div>
-                <div class="location-list style-4"> 
+                <div class="location-list style-4">
                         <a class="select-location row align-items-center" id="get-current-location" href="javascript:void(0)">
                             <div class="col-2 text-center pl-4">
                                 <div class="round-shape active-location">
@@ -85,8 +85,8 @@
                                 </div>
                             </div>
                             <div class="col-10 pl-3">
-                                <h4><b>Allow location Access</b></h4>
-                                <div class="current-location ellips text-color mb-2">Your current location</div>
+                                <h4><b>{{__('Allow location Access')}}</b></h4>
+                                <div class="current-location ellips text-color mb-2">{{__('Your current location')}}</div>
                                 <hr class="m-0">
                             </div>
                         </a>
@@ -110,8 +110,8 @@
                     @empty
                     @endforelse
                 </div>
-                <div class="scheduled-ride-list"> 
-                    <div class="scheduled-ride-list-heading d-flex align-items-center justify-content-between"> 
+                <div class="scheduled-ride-list">
+                    <div class="scheduled-ride-list-heading d-flex align-items-center justify-content-between">
                         <h3>Choose Date And Time</h3>
                         <span class="skip-clear">
                             Skip
@@ -127,7 +127,7 @@
                     </div>
                 </div>
                 <div class="table-responsive style-4">
-                    <div class="cab-button d-flex flex-nowrap align-items-center py-2" id="vendor_main_div"></div>
+                    <div class="cab-button d-flex flex-nowrap align-items-center py-2 pl-2" id="vendor_main_div"></div>
                 </div>
                 <div class="vehical-container style-4" id="search_product_main_div"></div>
             </div>
@@ -138,6 +138,7 @@
             <% }); %>
         </script>
         <script type="text/template" id="products_template">
+            <% if(results != ''){ %>
             <% _.each(results, function(result, key){%>
                 <a class="vehical-view-box row align-items-center no-gutters px-2 my-2" href="javascript:void(0)" data-product_id="<%= result.id %>">
                     <div class="col-3 vehicle-icon">
@@ -151,11 +152,16 @@
                             <div class="col-4 ride-price pl-2 text-right">
                                 <p class="mb-0"><b>{{Session::get('currencySymbol')}}<%= result.tags_price%></b></p>
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </a>
                 <hr class="m-0">
             <% }); %>
+            <% }else{ %>
+                <div class="col-12 vehicle-details">
+                    {{ __('No result found. Please try a new search') }}
+                </div>
+            <% } %>
         </script>
         <script type="text/template" id="scheduleTime_template">
             <div class="scheduleTime">
@@ -165,7 +171,7 @@
             </div>
         </script>
         <script type="text/template" id="destination_location_template">
-            <i class="fa fa-search destination-icon" aria-hidden="true"></i> 
+            <i class="fa fa-search destination-icon" aria-hidden="true"></i>
             <input class="form-control pickup-text" type="text" name="destination_location_name[]" placeholder="{{__('Add A Stop')}}" id="destination_location_<%= random_id %>" data-rel="<%= random_id %>"/>
             <input type="hidden" name="destination_location_latitude[]" value="" id="destination_location_latitude_<%= random_id %>" data-rel="<%= random_id %>"/>
             <input type="hidden" name="destination_location_longitude[]" value="" id="destination_location_longitude_<%= random_id %>" data-rel="<%= random_id %>"/>
@@ -175,7 +181,7 @@
                 <div class="title title-24 position-relative edit-other-stop" id="<%= random_id %>">  {{__('To')}} - <span id="dropoff-where-to-<%= random_id %>"></span><i class="fa fa-angle-down" aria-hidden="true"></i></div>
                 <i class="fa fa-times ml-1 apremove" aria-hidden="true" data-rel="<%= random_id %>"></i>
             </li>
-        </script> 
+        </script>
         <script type="text/template" id="cab_detail_box_template">
             <div class="cab-outer style-4">
                 <div class="bg-white p-2">
@@ -202,40 +208,87 @@
                     </div>
                 </div>
                 <div class="coupon_box d-flex w-100 py-2 align-items-center justify-content-between">
-                    <label class="mb-0 ml-1">   
+                    <label class="mb-0 ml-1">
                         <img src="{{asset('assets/images/discount_icon.svg')}}">
                         <span class="code-text">{{__('Select a promo code')}}</span>
                     </label>
                     <a href="javascript:void(0)" class="ml-1" data-product_id="<%= result.id %>"  data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" id="promo_code_list_btn_cab_booking">Apply</a>
                     <a class="remove-coupon" href="javascript:void(0)" id="remove_promo_code_cab_booking_btn" data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.tags_price%>" style="display:none;">Remove</a>
-                
+
                 </div>
-               <!-- <div class="text-center my-3">
-                    <button class="clproduct_order_form btn btn-solid w-100"  id="add_product_order_form"  data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" >Product Order Form</button>
-                </div> -->
+                <% if((result.faqlist) && (result.faqlist) > 0 ){ %>
+                <div class="text-center my-3 btn-product-order-form-div">
+                    <button class="clproduct_order_form btn btn-solid w-100"  id="add_product_order_form"  data-product_id="<%= result.id %>" data-vendor_id="<%= result.vendor_id %>" >{{__('Product Order Form')}}</button>
+                </div>
+                <% } %>
                 <div class="form-group pmd-textfield pmd-textfield-floating-label" style="display:none;" id="schedule_datetime_main_div">
-                    <label class="control-label" for="datetimepicker-default">Select Date and Time</label>
+                    <label class="control-label" for="datetimepicker-default">{{__('Select Date and Time')}}</label>
                     <input type="datetime-local" id="schedule_datetime" class="form-control" placeholder="Inline calendar" value="">
                 </div>
             </div>
             <span id="show_error_of_booking" class="error"></span>
-                  
+
             <div class="payment-promo-container p-2">
-                <h4 class="d-flex align-items-center justify-content-between mb-2"  data-toggle="modal" data-target="#payment_modal">
+                <h4 class="d-flex align-items-center justify-content-between mb-2 cab_payment_method_selection"  data-toggle="modal" data-target="#payment_modal">
                     <span id="payment_type">
-                        <i class="fa fa-money" aria-hidden="true"></i> Cash
+                        <i class="fa fa-money" aria-hidden="true"></i> {{__('Cash')}}
                     </span>
                     <i class="fa fa-angle-down" aria-hidden="true"></i>
                 </h4>
                 <div class="row">
                     <div class="col-12">
-                        <button class="btn btn-solid w-100" id="pickup_now" data-payment_method="1" data-product_id="<%= result.id %>" data-coupon_id ="" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_now" data-task_type="now">Pickup</button>
+                        <button class="btn btn-solid w-100" id="pickup_now" data-payment_method="1" data-product_id="<%= result.id %>" data-coupon_id ="" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_now" data-task_type="now">{{__('Pickup')}}</button>
                     </div>
                     <!--<div class="col-6">
                         <button class="btn btn-solid w-100" id="pickup_later" data-payment_method="1" data-product_id="<%= result.id %>" data-coupon_id ="" data-vendor_id="<%= result.vendor_id %>" data-amount="<%= result.original_tags_price%>" data-image="<%= result.image_url %>" data-rel="pickup_later">Pickup Later</button>
                     </div>-->
                 </div>
             </div>
+        </script>
+
+        <script type="text/template" id="payment_methods_template">
+            <% if(payment_options != '') { %>
+                <form method="POST" id="cab_payment_method_form">
+                    @csrf
+                    @method('POST')
+                    <% _.each(payment_options, function(payment_option, k){%>
+                        <div>
+                            <label class="radio mt-2">
+                                <span><%= payment_option.title %></span>
+                                <input type="radio" class="select_cab_payment_method" name="select_cab_payment_method" id="radio-<%= payment_option.slug %>" value="<%= payment_option.id %>" data-payment_method="<%= payment_option.id %>">
+                                <span class="checkround"></span>
+                            </label>
+                            <% if(payment_option.slug == 'stripe') { %>
+                                <div class="col-md-12 mt-3 mb-3 stripe_element_wrapper d-none">
+                                    <div class="form-control">
+                                        <label class="d-flex flex-row pt-1 pb-1 mb-0">
+                                            <div id="stripe-card-element"></div>
+                                        </label>
+                                    </div>
+                                    <span class="error text-danger" id="stripe_card_error"></span>
+                                </div>
+                            <% } %>
+                            <% if(payment_option.slug == 'yoco') { %>
+                                <div class="col-md-12 mt-3 mb-3 yoco_element_wrapper d-none">
+                                    <div class="form-control">
+                                        <div id="yoco-card-frame">
+                                        <!-- Yoco Inline form will be added here -->
+                                        </div>
+                                    </div>
+                                    <span class="error text-danger" id="yoco_card_error"></span>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                    {{-- <div>
+                        <label class="radio mt-2">
+                            <span>{{__('Wallet/Card')}}</span>
+                            <input type="radio" class="select_cab_payment_method" name="select_cab_payment_method" id="radio-wallet" value="2" data-payment_method="2">
+                            <span class="checkround"></span>
+                        </label>
+                    </div> --}}
+                </form>
+            <% } %>
         </script>
 
         <script type="text/template" id="cab_booking_promo_code_template">
@@ -266,7 +319,7 @@
                     <img src="<%= product_image %>" alt="">
                 </div>
                 <div class="cab-location-details" id="searching_main_div">
-                    <h4><b>Searching For Nearby Drivers</b></h4>
+                    <h4><b>{{__('Searching For Nearby Drivers')}}</b></h4>
                     <div class="new-loader"></div>
                 </div>
                 <div class="cab-location-details" id="driver_details_main_div" style="display:none;">
@@ -288,11 +341,11 @@
             </div>
             <div class="cab-amount-details px-2">
                 <div class="row">
-                    <div class="col-6 mb-2">ETA</div>
+                    <div class="col-6 mb-2">{{__('ETA')}}</div>
                     <div class="col-6 mb-2 text-right" id="distance">--</div>
-                    <div class="col-6 mb-2">Order ID</div>
+                    <div class="col-6 mb-2">{{__('Order ID')}}</div>
                     <div class="col-6 mb-2 text-right" id=""><%= result.order_number %></div>
-                    <div class="col-6 mb-2">Amount Paid</div>
+                    <div class="col-6 mb-2">{{__('Amount Paid')}}</div>
                     <div class="col-6 mb-2 text-right">$<%= result.total_amount %></div>
                 </div>
             </div>
@@ -302,13 +355,13 @@
             <div class="promo-box style-4 d-none">
                 <a class="d-block mt-2 close-promo-code-detail-box" href="javascript:void(0)">✕</a>
                 <div class="row" id="cab_booking_promo_code_list_main_div">
-                    
-                </div>    
+
+                </div>
             </div>
         </div>
 
 
-   
+
 </section>
 
 <!-- Payment Modal -->
@@ -316,17 +369,15 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header pb-0">
-                <h5 class="modal-title" id="payment_modalLabel">Select Payment Method</h5>
+                <h5 class="modal-title" id="payment_modalLabel">{{__('Select Payment Method')}}</h5>
                 <button type="button" class="close right-top" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body p-0">
-                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method" data-payment_method="1"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Cash</span></h4>
-                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method" data-payment_method="2"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> Wallet/Card</span></h4>
-               
-                {{-- <h4 class="payment-button"  data-toggle="modal" data-target="#select_payment_option" aria-label="Close">Select Payment Method</h4> --}}
-            </div>        
+            <div class="modal-body">
+                {{-- <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method" data-payment_method="1"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> {{__('Cash')}}</span></h4>
+                <h4 class="d-flex align-items-center justify-content-between mb-2 mt-3 px-3 select_cab_payment_method" data-payment_method="2"><span><i class="fa fa-money mr-3" aria-hidden="true"></i> {{__('Wallet/Card')}}</span></h4> --}}
+            </div>
         </div>
     </div>
 </div>
@@ -336,14 +387,14 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="select_payment_optionLabel">Choose payment method</h5>
+                <h5 class="modal-title" id="select_payment_optionLabel">{{__('Choose payment method')}}</h5>
                 <button type="button" class="close right-top" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <h4 class="d-flex  justify-content-between mb-2 mt-3 select_cab_payment_methodx"><span ><i class="fa fa-money mr-3" aria-hidden="true"></i> Cash</span></h4>
-            </div>        
+                <h4 class="d-flex  justify-content-between mb-2 mt-3 select_cab_payment_methodx"><span ><i class="fa fa-money mr-3" aria-hidden="true"></i> {{__('Cash')}}</span></h4>
+            </div>
         </div>
     </div>
 </div>
@@ -408,7 +459,7 @@
         <% _.each(payment_options, function(payment_option, k){%>
             <% if( (payment_option.slug != 'cash_on_delivery') && (payment_option.slug != 'loyalty_points') ) { %>
                 <label class="radio mt-2">
-                    <%= payment_option.title %> 
+                    <%= payment_option.title %>
                     <input type="radio" name="wallet_payment_method" id="radio-<%= payment_option.slug %>" value="<%= payment_option.slug %>" data-payment_option_id="<%= payment_option.id %>">
                     <span class="checkround"></span>
                 </label>
@@ -534,6 +585,7 @@ var routeset = "{{route('pickup-delivery-route',':category_id')}}";
 var autocomplete_urls = routeset.replace(":category_id", category_id);
 var wallet_balance = {{ $wallet_balance}}
 var get_product_detail = "{{url('looking/product-detail')}}";
+var get_payment_options = "{{url('looking/payment/options')}}";
 var promo_code_list_url = "{{route('verify.promocode.list')}}";
 var get_vehicle_list = "{{url('looking/get-list-of-vehicles')}}";
 var cab_booking_create_order = "{{url('looking/create-order')}}";
@@ -542,6 +594,7 @@ var no_coupon_available_message = "{{__('No Other Coupons Available.')}}";
 var order_tracking_details_url = "{{url('looking/order-tracking-details')}}";
 var cab_booking_promo_code_remove_url = "{{url('looking/promo-code/remove')}}";
 var apply_cab_booking_promocode_coupon_url = "{{ route('verify.cab.booking.promo-code') }}";
+var no_result_message = "{{ __('No result found. Please try a new search') }}";
 
 /// ************* product order form **************///////
 $('body').on('click', '.clproduct_order_form', function (event) {
@@ -551,11 +604,11 @@ $('body').on('click', '.clproduct_order_form', function (event) {
         {
             $('#product_order_form').modal('show');
             $('#product-order-form-modal').html(markup);
-       
+
         });
     });
 
-    
+
 ///  ************ end product form ***************///////
 
 </script>
@@ -567,12 +620,12 @@ $('body').on('click', '.clproduct_order_form', function (event) {
        var product_order_form_element = getFormData('#product-order-form-name');
         $('#product_order_form').modal('hide');
         });
-    
-       
+
+
         function getFormData(dom_query){
         var out = {};
         var s_data = $(dom_query).serializeArray();
-      
+
         //transform into simple data/value object
         for(var i = 0; i < s_data.length; i++){
               var record = s_data[i];
@@ -581,9 +634,9 @@ $('body').on('click', '.clproduct_order_form', function (event) {
         }
         return out;
         }
-    
+
     });
 </script>
-    
+
 
 @endsection

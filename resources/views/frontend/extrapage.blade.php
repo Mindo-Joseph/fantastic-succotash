@@ -1,8 +1,87 @@
 @extends('layouts.store', ['title' => 'Home'])
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
+<link rel='stylesheet' href='https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'>
 @endsection
 @section('content')
+<style>
+    .accordion a {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem 3rem 1rem 1rem;
+  color: #7288a2;
+  font-size: 1.15rem;
+  font-weight: 400;
+  border-bottom: 1px solid #e5e5e5;
+}
+.accordion a:hover,
+.accordion a:hover::after {
+  cursor: pointer;
+  color: #ff5353;
+}
+.accordion a:hover::after {
+  border: 1px solid #ff5353;
+}
+.accordion a.active {
+  color: #ff5353;
+  border-bottom: 1px solid #ff5353;
+}
+.accordion a::after {
+  font-family: 'Ionicons';
+  content: '\f218';
+  position: absolute;
+  float: right;
+  right: 1rem;
+  font-size: 1rem;
+  color: #7288a2;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  border: 1px solid #7288a2;
+  text-align: center;
+}
+.accordion a.active::after {
+  font-family: 'Ionicons';
+  content: '\f209';
+  color: #ff5353;
+  border: 1px solid #ff5353;
+}
+.accordion .content {
+  opacity: 0;
+  padding: 0 1rem;
+  max-height: 0;
+  border-bottom: 1px solid #e5e5e5;
+  overflow: hidden;
+  clear: both;
+  -webkit-transition: all 0.2s ease 0.15s;
+  -o-transition: all 0.2s ease 0.15s;
+  transition: all 0.2s ease 0.15s;
+}
+.accordion .content p {
+  font-size: 1rem;
+  font-weight: 300;
+}
+.accordion .content.active {
+  opacity: 1;
+  padding: 1rem;
+  max-height: 100%;
+  -webkit-transition: all 0.35s ease 0.15s;
+  -o-transition: all 0.35s ease 0.15s;
+  transition: all 0.35s ease 0.15s;
+}
+</style>
 <header>
     <div class="mobile-fix-option"></div>
     @if(isset($set_template)  && $set_template->template_id == 1)
@@ -29,7 +108,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <h2>{{__('Personal Details.')}}</h2>
-                            </div>    
+                            </div>
                         </div>
                         <div class="needs-validation vendor-signup">
                             <input type="hidden" name="user_id" value="{{$user ? $user->id : ''}}">
@@ -74,7 +153,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <h2>{{__('Store Details.')}}</h2>
-                                </div>    
+                                </div>
                             </div>
                             <div class="form-row">
                                 <div class="col-md-4 mb-3">
@@ -90,7 +169,7 @@
                                         </label>
                                         <input id="input_file_logo" type="file" name="upload_logo" accept="image/*">
                                     </div>
-                                </div>      
+                                </div>
                                 <div class="col-md-8 mb-3">
                                     <label for="">{{__('Upload Banner')}}</label>
                                     <div class="file file--upload">
@@ -102,11 +181,11 @@
                                         </label>
                                         <input id="input_file_banner" type="file" name="upload_banner" accept="image/*">
                                     </div>
-                                </div>      
+                                </div>
                             </div>
                             <div class="form-row">
                                 <div class="col-md-12 mb-3" id="nameInput">
-                                    <label for="validationCustom01">{{__('Vendor Name')}}</label>
+                                    <label for="validationCustom01">{{getNomenclatureName('Vendors', true)}}{{--__('Vendor Name')--}}</label>
                                     <input type="text" class="form-control" name="name" value="">
                                     <span class="invalid-feedback" id="name_error"><strong></strong></span>
                                 </div>
@@ -142,7 +221,7 @@
                                     $Dine_In = getNomenclatureName('Dine-In', true);
                                     $Dine_In = ($Dine_In === 'Dine-In') ? __('Dine-In') : $Dine_In;
                                 @endphp
-                                        <div class="col-md-2 mb-3"> 
+                                        <div class="col-md-2 mb-3">
                                             <label for="">{{$Dine_In}}</label>
                                             <div class="toggle-icon">
                                                 <input type="checkbox" id="dine-in" name="dine_in"><label for="dine-in">Toggle</label>
@@ -179,32 +258,45 @@
                             <div class="form-row">
                                 @foreach($vendor_registration_documents as $vendor_registration_document)
                                     @if(isset($vendor_registration_document->primary->slug) && !empty($vendor_registration_document->primary->slug))
+                                        @if(strtolower($vendor_registration_document->file_type) == 'selector')
                                         <div class="col-md-6 mb-3" id="{{$vendor_registration_document->primary->slug??''}}Input">
                                             <label for="">{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</label>
-                                            @if(strtolower($vendor_registration_document->file_type) == 'text')
-                                            <input id="input_file_logo_{{$vendor_registration_document->id}}" type="text" name="{{$vendor_registration_document->primary->slug}}" class="form-control {{ (!empty($vendor_registration_document->is_required))?'required':''}}">
-                                            <span class="invalid-feedback" id="{{$vendor_registration_document->primary->slug??''}}_error"><strong></strong></span>
-                                            @else
-                                            <div class="file file--upload">
-                                                <label for="input_file_logo_{{$vendor_registration_document->id}}">
-                                                    <span class="update_pic pdf-icon">
-                                                        <img src=""  id="upload_logo_preview_{{$vendor_registration_document->id}}">
-                                                    </span>
-                                                    <span class="plus_icon" id="plus_icon_{{$vendor_registration_document->id}}">
-                                                        <i class="fa fa-plus"></i>
-                                                    </span>
-                                                </label>
-                                                @if(strtolower($vendor_registration_document->file_type) == 'image')
-                                                    <input class="{{ (!empty($vendor_registration_document->is_required))?'required':''}}" id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept="image/*" data-rel="{{$vendor_registration_document->id}}">
+                                            <select class="form-control {{ (!empty($vendor_registration_document->is_required))?'required':''}}" name="{{$vendor_registration_document->primary->slug}}"  id="input_file_selector_{{$vendor_registration_document->id}}">
+                                                <option value="" >{{__('Please Select '). ($vendor_registration_document->primary ? $vendor_registration_document->primary->name : '') }}</option>
+                                                @foreach ($vendor_registration_document->options as $key =>$value )
+                                                    <option value="{{$value->id}}">{{$value->translation? $value->translation->name: ""}}</option>
+                                                @endforeach
+                                            </select>
+                                            <span class="invalid-feedback" id="{{$vendor_registration_document->primary->slug}}_error"><strong></strong></span>
+                                        </div>
+                                        @else
+                                            <div class="col-md-6 mb-3" id="{{$vendor_registration_document->primary->slug??''}}Input">
+                                                <label for="">{{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}</label>
+                                                @if(strtolower($vendor_registration_document->file_type) == 'text')
+                                                <input id="input_file_logo_{{$vendor_registration_document->id}}" type="text" name="{{$vendor_registration_document->primary->slug}}" class="form-control {{ (!empty($vendor_registration_document->is_required))?'required':''}}">
+                                                <span class="invalid-feedback" id="{{$vendor_registration_document->primary->slug??''}}_error"><strong></strong></span>
                                                 @else
-                                                    <input class="{{ (!empty($vendor_registration_document->is_required))?'required':''}}" id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept=".pdf" data-rel="{{$vendor_registration_document->id}}">
+                                                <div class="file file--upload">
+                                                    <label for="input_file_logo_{{$vendor_registration_document->id}}">
+                                                        <span class="update_pic pdf-icon">
+                                                            <img src=""  id="upload_logo_preview_{{$vendor_registration_document->id}}">
+                                                        </span>
+                                                        <span class="plus_icon" id="plus_icon_{{$vendor_registration_document->id}}">
+                                                            <i class="fa fa-plus"></i>
+                                                        </span>
+                                                    </label>
+                                                    @if(strtolower($vendor_registration_document->file_type) == 'image')
+                                                        <input class="{{ (!empty($vendor_registration_document->is_required))?'required':''}}" id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept="image/*" data-rel="{{$vendor_registration_document->id}}">
+                                                    @else
+                                                        <input class="{{ (!empty($vendor_registration_document->is_required))?'required':''}}" id="input_file_logo_{{$vendor_registration_document->id}}" type="file" name="{{$vendor_registration_document->primary->slug}}" accept=".pdf" data-rel="{{$vendor_registration_document->id}}">
+                                                    @endif
+                                                    <span class="invalid-feedback" id="{{$vendor_registration_document->primary->slug}}_error"><strong></strong></span>
+                                                </div>
                                                 @endif
-                                                <span class="invalid-feedback" id="{{$vendor_registration_document->primary->slug}}_error"><strong></strong></span>
                                             </div>
-                                            @endif
-                                        </div>    
-                                    @endif  
-                                 @endforeach   
+                                        @endif
+                                    @endif
+                                 @endforeach
                             </div>
                             <div class="form-row">
                                 <div class="col-12 checkbox-input">
@@ -221,7 +313,24 @@
                     </div>
                 </div>
             </form>
+        @elseif ($page_detail->primary->type_of_form == 3)
+        <div class="accordion">
+            @foreach ($page_detail->faqs_details as $key =>$value)
+
+
+                    <div class="accordion-item">
+                    <a>{{$value->question}}</a>
+                    <div class="content">
+                        <p>{{$value->answer}}</p>
+                    </div>
+                    </div>
+
+
+            @endforeach
+        </div>
         @endif
+
+
     </div>
 </section>
 @endsection
@@ -232,6 +341,15 @@
 <script type="text/javascript">
     var text_image = "{{url('images/104647.png')}}";
     $(document).ready(function() {
+        const items = document.querySelectorAll(".accordion a");
+
+        function toggleAccordion(){
+            this.classList.toggle('active');
+            this.nextElementSibling.classList.toggle('active');
+        }
+
+        items.forEach(item => item.addEventListener('click', toggleAccordion));
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
@@ -278,7 +396,7 @@
         });
         $("#input_file_banner").change(function() {
             readURL(this, '#upload_banner_preview');
-        }); 
+        });
         var input = document.querySelector("#phone");
         window.intlTelInput(input, {
             separateDialCode: true,

@@ -31,14 +31,10 @@ class SignupRequest extends FormRequest{
             'term_and_condition' => 'accepted',
             'refferal_code' => 'nullable|exists:user_refferals,refferal_code',
         ];
-<<<<<<< HEAD
-        $preferences = ClientPreference::first();
-
-=======
->>>>>>> a66a843ec5b38dfa596ff2a58eae74a8cf6f662e
         if($preferences->verify_email == 1){
             $rules['email'] = 'required|email|unique:users';
         }
+        
         if($preferences->verify_phone == 1){
             $rules['phone_number'] = 'required|string|min:8|max:15|unique:users';
         }

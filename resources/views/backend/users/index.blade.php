@@ -37,9 +37,12 @@
             </div>
         </div>
         <div class="col-sm-6 text-right">
+            <button class="btn btn-info waves-effect waves-light text-sm-right importUserModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> {{ __('Import') }}
+            </button>
             <button class="btn btn-info waves-effect waves-light text-sm-right addUserModal" userId="0"><i class="mdi mdi-plus-circle mr-1"></i> {{ __("Add") }}
             </button>
         </div>
+       
     </div>
 
     <div class="row">
@@ -80,7 +83,7 @@
 
     <div class="row main-customer-page">
         <div class="col-12">
-            <div class="card-box">
+            <div class="card-box set-height">
                 <div class="row mb-2">
                     <div class="col-sm-12">
                         <div class="text-sm-left">
@@ -157,6 +160,7 @@
                 });
             }
         });
+
 
         function initDataTable() {
             try {
@@ -428,9 +432,21 @@
     });
 
     $(document).on('click','.delete_customer',function(e){
-        if (confirm("Are you sure? You want to delete this customer.")) {
-            return true;
-        }
+        var submit_url = $(this).attr('href');
+        Swal.fire({
+            title: "{{__('Are you sure?')}}",
+            text:"{{__('You want to delete this customer.')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+        }).then((result) => {
+            if(result.value)
+            {
+                window.location.href = submit_url;
+            }else{
+               return false; 
+            }
+        });
         return false;
     })
 </script>

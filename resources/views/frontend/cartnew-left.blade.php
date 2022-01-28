@@ -55,7 +55,7 @@
     <div class="row mb-4" id="address_template_main_div">
         @forelse($addresses as $k => $address)
         <div class="col-md-12">
-            <div class="delivery_box px-0">
+            <div class="delivery_box p-0 mb-3">
                 <label class="radio m-0">{{ ($address->house_number ?? false) ? $address->house_number."," : '' }} {{$address->address}}, {{$address->state}} {{$address->pincode}}
                     @if($address->is_primary)
                     <input type="radio" name="address_id" value="{{$address->id}}" checked="checked">
@@ -126,7 +126,7 @@
                 <div class="form-row">
                     <div class="col-md-12 mb-3">
                         <label for="address">{{__('Address')}}</label>
-                        <div class="input-group">
+                        <div class="input-group address-input-group">
                             <input type="text" class="form-control" id="address" placeholder="{{__('Address')}}" aria-label="Recipient's Address" aria-describedby="button-addon2" value="{{ $default_location_name }}">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
@@ -172,6 +172,11 @@
                         <label for="pincode">{{__('Zip Code')}}</label>
                         <input type="text" class="form-control" id="pincode" placeholder="{{__('Zip Code')}}" value="">
                         <span class="text-danger" id="pincode_error"></span>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="extra_instruction">{{__('Extra Instructions')}}</label>
+                        <input type="text" class="form-control" id="extra_instruction" placeholder="{{__('Extra instruction for driver to follow..')}}" value="">
+                        <span class="text-danger" id="extra_instruction_error"></span>
                     </div>
                     <div class="col-md-12 mt-3">
                         <button type="button" class="btn btn-solid" id="save_address">{{__('Save Address')}}</button>

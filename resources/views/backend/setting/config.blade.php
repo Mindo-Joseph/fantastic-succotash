@@ -3,6 +3,11 @@
 @endsection
 @section('content')
 
+
+@php
+$sms_crendential = json_decode($preference->sms_credentials);
+@endphp
+
 <div class="container-fluid custom-toggle">
    <div class="row">
       <div class="col-12">
@@ -348,26 +353,57 @@
          </div>
          @endif
 
-         {{-- <div class="col-lg-3 col-md-6 mb-3">
+         <div class="col-lg-3 col-md-6 mb-3">
             <div class="row h-100">
                <div class="col-12">
                   <div class="card-box h-100">
                      <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h4 class="header-title mb-0">{{ __("Stripe Connect") }}</h4>
+                        <h4 class="header-title mb-0">{{ __("Customer Support") }}</h4>
                         <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
                      </div>
+                     <p class="sub-header">{{ __("View and update your Customer Support, it's API key and Application ID") }}</p>
                      <div class="row">
                         <div class="col-12">
                            <div class="form-group mb-0">
-                              <label for="stripe_connect" class="mr-3">{{ __("Enable") }}</label>
-                              <input type="checkbox" data-plugin="switchery" name="stripe_connect" id="stripe_connect" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->stripe_connect == 1)) checked @endif>
+                              <label for="customer_support">{{ __("Customer Support") }}</label>
+                              <select class="form-control" id="customer_support" name="customer_support">
+                                 <option value="zen_desk" {{ isset($preference) && $preference->customer_support == 'zen_desk' ? 'selected' : '' }}>
+                                    {{__('Zen Desk')}}
+                                </option>
+                              </select>
+                              @if($errors->has('customer_support'))
+                              <span class="text-danger" role="alert">
+                                 <strong>{{ $errors->first('customer_support') }}</strong>
+                              </span>
+                              @endif
                            </div>
+
+                           <div class="form-group mt-3 mb-0">
+                              <label for="customer_support_key">{{ __("API Key") }}</label>
+                              <input type="text" name="customer_support_key" id="customer_support_key" placeholder="Please enter key" class="form-control" value="{{ old('customer_support_key', $preference->customer_support_key ?? '')}}">
+                              @if($errors->has('customer_support_key'))
+                              <span class="text-danger" role="alert">
+                                 <strong>{{ $errors->first('customer_support_key') }}</strong>
+                              </span>
+                              @endif
+                           </div>
+
+                           <div class="form-group mt-3 mb-0">
+                              <label for="customer_support_application_id">{{ __("Application ID") }}</label>
+                              <input type="text" name="customer_support_application_id" id="customer_support_application_id" placeholder="Please enter application ID" class="form-control" value="{{ old('customer_support_application_id', $preference->customer_support_application_id ?? '')}}">
+                              @if($errors->has('customer_support_application_id'))
+                              <span class="text-danger" role="alert">
+                                 <strong>{{ $errors->first('customer_support_application_id') }}</strong>
+                              </span>
+                              @endif
+                           </div>
+
                         </div>
                      </div>
                   </div>
                </div>
             </div>
-         </div> --}}
+         </div>
       </div>
    </form>
    <div class="row">
@@ -606,7 +642,7 @@
                </p>
                <div class="row">
                   <div class="col-12">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="currency">{{ __("MAP PROVIDER") }}</label>
                         <select class="form-control" id="map_provider" name="map_provider">
                            @foreach($mapTypes as $map)
@@ -621,7 +657,7 @@
                      </div>
                   </div>
                   <div class="col-12">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="map_key">{{ __("API KEY") }}</label>
                         <input type="password" name="map_key" id="map_key" placeholder="" class="form-control" value="{{ old('map_key', $preference->map_key ?? '')}}">
                         @if($errors->has('map_key'))
@@ -631,7 +667,7 @@
                         @endif
                      </div>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-2 mt-3">
                      <div class="form-group mb-0 text-center">
                         <button class="btn btn-info btn-block" type="submit"> {{ __("Save") }} </button>
                      </div>
@@ -648,11 +684,11 @@
                <p class="sub-header">{{ __("View and update your SMS Gateway and it's API keys.") }}</p>
                <div class="row mb-0">
                   <div class="col-12">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="sms_provider">{{ __("SMS PROVIDER") }}</label>
-                        <select class="form-control" id="sms_provider" name="sms_provider">
+                        <select class="form-control" id="sms_provider" name="sms_provider" onchange="toggle_smsFields(this)">
                            @foreach($smsTypes as $sms)
-                           <option value="{{$sms->id}}" {{ (isset($preference) && $preference->sms_provider == $sms->id)? "selected" : "" }}> {{$sms->provider}} </option>
+                           <option data-id="{{$sms->keyword}}_fields" value="{{$sms->id}}" {{ (isset($preference) && $preference->sms_provider == $sms->id)? "selected" : "" }} > {{$sms->provider}} </option>
                            @endforeach
                         </select>
                         @if($errors->has('sms_provider'))
@@ -662,40 +698,97 @@
                         @endif
                      </div>
                   </div>
-                  <div class="col-12">
-                     <div class="form-group mb-3">
-                        <label for="sms_from">{{ __("SMS From") }}</label>
-                        <input type="text" name="sms_from" id="sms_from" placeholder="" class="form-control" value="{{ old('sms_from', $preference->sms_from ?? '')}}">
-                        @if($errors->has('sms_from'))
-                        <span class="text-danger" role="alert">
-                           <strong>{{ $errors->first('sms_from') }}</strong>
-                        </span>
-                        @endif
+
+                  <!-- For twillio -->
+                  <div class="sms_fields row mx-0" id="twilio_fields" style="display : {{$preference->sms_provider == 1 ? 'flex' : 'none'}};">
+                     <div class="col-12">
+                        <div class="form-group mb-2">
+                           <label for="sms_from">{{ __("SMS From") }}</label>
+                           <input type="text" name="sms_from" id="sms_from" placeholder="" class="form-control" value="{{ old('sms_from', $preference->sms_from ?? '')}}">
+                           @if($errors->has('sms_from'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('sms_from') }}</strong>
+                           </span>
+                           @endif
+                        </div>
+                     </div>
+                     <div class="col-12">
+                        <div class="form-group mb-2">
+                           <label for="sms_key">{{ __("API KEY") }}</label>
+                           <input type="text" name="sms_key" id="sms_key" placeholder="" class="form-control" value="{{ old('sms_key', $preference->sms_key ?? '')}}">
+                           @if($errors->has('sms_key'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('sms_key') }}</strong>
+                           </span>
+                           @endif
+                        </div>
+                     </div>
+                     <div class="col-12">
+                        <div class="form-group mb-2">
+                           <label for="sms_secret">{{ __("API Secret") }}</label>
+                           <input type="password" name="sms_secret" id="sms_secret" placeholder="" class="form-control" value="{{ old('sms_secret', $preference->sms_secret ?? '')}}">
+                           @if($errors->has('sms_secret'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('sms_secret') }}</strong>
+                           </span>
+                           @endif
+                        </div>
                      </div>
                   </div>
-                  <div class="col-12">
-                     <div class="form-group mb-3">
-                        <label for="sms_key">{{ __("API KEY") }}</label>
-                        <input type="text" name="sms_key" id="sms_key" placeholder="" class="form-control" value="{{ old('sms_key', $preference->sms_key ?? '')}}">
-                        @if($errors->has('sms_key'))
-                        <span class="text-danger" role="alert">
-                           <strong>{{ $errors->first('sms_key') }}</strong>
-                        </span>
-                        @endif
+
+
+                  <!-- For mTalkz -->
+                  <div class="row sms_fields mx-0" id="mTalkz_fields" style="display : {{$preference->sms_provider == 2 ? 'flex' : 'none'}};">
+                     <div class="col-12">
+                        <div class="form-group mb-2">
+                           <label for="mtalkz_api_key">{{ __("API Key") }}</label>
+                           <input type="text" name="mtalkz_api_key" id="mtalkz_api_key" placeholder="" class="form-control" value="{{ old('mtalkz_api_key', $sms_crendential->api_key ?? '')}}">
+                           @if($errors->has('mtalkz_api_key'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('mtalkz_api_key') }}</strong>
+                           </span>
+                           @endif
+                        </div>
+                     </div>
+                     <div class="col-12">
+                        <div class="form-group mb-2">
+                           <label for="mtalkz_sender_id">{{ __("Sender ID") }}</label>
+                           <input type="text" name="mtalkz_sender_id" id="mtalkz_sender_id" placeholder="" class="form-control" value="{{ old('mtalkz_sender_id', $sms_crendential->sender_id ?? '')}}">
+                           @if($errors->has('mtalkz_sender_id'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('mtalkz_sender_id') }}</strong>
+                           </span>
+                           @endif
+                        </div>
                      </div>
                   </div>
-                  <div class="col-12">
-                     <div class="form-group mb-3">
-                        <label for="sms_secret">{{ __("API Secret") }}</label>
-                        <input type="password" name="sms_secret" id="sms_secret" placeholder="" class="form-control" value="{{ old('sms_secret', $preference->sms_secret ?? '')}}">
-                        @if($errors->has('sms_secret'))
-                        <span class="text-danger" role="alert">
-                           <strong>{{ $errors->first('sms_secret') }}</strong>
-                        </span>
-                        @endif
+
+                  <!-- For mTalkz -->
+                  <div class="row sms_fields mx-0" id="mazinhost_fields" style="display : {{$preference->sms_provider == 3 ? 'flex' : 'none'}};">
+                     <div class="col-12">
+                        <div class="form-group mb-2">
+                           <label for="mazinhost_api_key">{{ __("API Key") }}</label>
+                           <input type="text" name="mazinhost_api_key" id="mazinhost_api_key" placeholder="" class="form-control" value="{{ old('mazinhost_api_key', $sms_crendential->api_key ?? '')}}">
+                           @if($errors->has('mazinhost_api_key'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('mazinhost_api_key') }}</strong>
+                           </span>
+                           @endif
+                        </div>
+                     </div>
+                     <div class="col-12">
+                        <div class="form-group mb-2">
+                           <label for="mazinhost_sender_id">{{ __("Sender ID") }}</label>
+                           <input type="text" name="mazinhost_sender_id" id="mazinhost_sender_id" placeholder="" class="form-control" value="{{ old('mazinhost_sender_id', $sms_crendential->sender_id ?? '')}}">
+                           @if($errors->has('mazinhost_sender_id'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('mazinhost_sender_id') }}</strong>
+                           </span>
+                           @endif
+                        </div>
                      </div>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-2 mt-3">
                      <div class="form-group mb-0 text-center">
                         <button class="btn btn-info btn-block" type="submit"> {{ __("Save") }} </button>
                      </div>
@@ -712,7 +805,7 @@
                <p class="sub-header"> {{ __("View and update your SMTP credentials.") }}</p>
                <div class="row">
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="mail_type">{{ __("Mail Type") }}</label>
                         <input type="text" name="mail_type" id="mail_type" placeholder="SMTP" class="form-control" value="{{ old('mail_type', $preference->mail_type ?? '')}}">
                         @if($errors->has('mail_type'))
@@ -723,7 +816,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="mail_driver">{{ __("Mail Driver") }}</label>
                         <input type="text" name="mail_driver" id="mail_driver" placeholder="" class="form-control" value="{{ old('mail_driver', $preference->mail_driver ?? '')}}">
                         @if($errors->has('mail_driver'))
@@ -734,7 +827,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="mail_host">{{ __("Mail Host") }}</label>
                         <input type="text" name="mail_host" id="mail_host" placeholder="SMTP" class="form-control" value="{{ old('mail_host', $preference->mail_host ?? '')}}">
                         @if($errors->has('mail_host'))
@@ -745,7 +838,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="mail_port">{{ __("Mail Port") }}</label>
                         <input type="text" name="mail_port" id="mail_port" placeholder="" class="form-control" value="{{ old('mail_port', $preference->mail_port ?? '')}}">
                         @if($errors->has('mail_port'))
@@ -756,7 +849,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="mail_username">{{ __("Mail Username") }}</label>
                         <input type="text" name="mail_username" id="mail_username" placeholder="username" class="form-control" value="{{ old('mail_username', $preference->mail_username ?? '')}}">
                         @if($errors->has('mail_username'))
@@ -767,7 +860,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="mail_password">{{ __("Mail Password") }}</label>
                         <input type="password" name="mail_password" id="mail_password" placeholder="" class="form-control" value="{{ old('mail_password', $preference->mail_password ?? '')}}">
                         @if($errors->has('mail_password'))
@@ -778,7 +871,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="mail_encryption">{{ __("Mail Encryption") }}</label>
                         <input type="text" name="mail_encryption" id="mail_encryption" placeholder="username" class="form-control" value="{{ old('mail_encryption', $preference->mail_encryption ?? '')}}">
                         @if($errors->has('mail_encryption'))
@@ -789,7 +882,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="mail_from">{{ __("Mail From") }}</label>
                         <input type="text" name="mail_from" id="mail_from" placeholder="service@xyz.com" class="form-control" value="{{ old('mail_from', $preference->mail_from ?? '')}}">
                         @if($errors->has('mail_from'))
@@ -800,7 +893,7 @@
                      </div>
                   </div>
                </div>
-               <div class="row mb-2">
+               <div class="row mb-2 mt-3">
                   <div class="col-md-2">
                      <div class="form-group mb-0 text-center">
                         <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
@@ -818,7 +911,7 @@
                <p class="sub-header">{{__('View and update your Firebase Keys')}}</p>
                <div class="row">
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_server_key">{{__('Server Key')}}</label>
                         <input type="text" name="fcm_server_key" id="fcm_server_key" placeholder="" class="form-control" value="{{ old('fcm_server_key', $preference->fcm_server_key ?? '')}}" required>
                         @if($errors->has('fcm_server_key'))
@@ -829,7 +922,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_api_key">{{__('API Key')}}</label>
                         <input type="text" name="fcm_api_key" id="fcm_api_key" placeholder="" class="form-control" value="{{ old('fcm_api_key', $preference->fcm_api_key ?? '')}}" required>
                         @if($errors->has('fcm_api_key'))
@@ -840,7 +933,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_auth_domain">{{__('Auth Domain')}}</label>
                         <input type="text" name="fcm_auth_domain" id="fcm_auth_domain" placeholder="" class="form-control" value="{{ old('fcm_auth_domain', $preference->fcm_auth_domain ?? '')}}" required>
                         @if($errors->has('fcm_auth_domain'))
@@ -851,7 +944,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_project_id">{{__('Project ID')}}</label>
                         <input type="text" name="fcm_project_id" id="fcm_project_id" placeholder="" class="form-control" value="{{ old('fcm_project_id', $preference->fcm_project_id ?? '')}}" required>
                         @if($errors->has('fcm_project_id'))
@@ -862,7 +955,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_storage_bucket">{{__('Storage Bucket')}}</label>
                         <input type="text" name="fcm_storage_bucket" id="fcm_storage_bucket" placeholder="" class="form-control" value="{{ old('fcm_storage_bucket', $preference->fcm_storage_bucket ?? '')}}" required>
                         @if($errors->has('fcm_storage_bucket'))
@@ -873,7 +966,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_messaging_sender_id">{{__('Messaging Sender ID')}}</label>
                         <input type="text" name="fcm_messaging_sender_id" id="fcm_messaging_sender_id" placeholder="" class="form-control" value="{{ old('fcm_messaging_sender_id', $preference->fcm_messaging_sender_id ?? '')}}" required>
                         @if($errors->has('fcm_messaging_sender_id'))
@@ -884,7 +977,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_app_id">{{__('App ID')}}</label>
                         <input type="text" name="fcm_app_id" id="fcm_app_id" placeholder="" class="form-control" value="{{ old('fcm_app_id', $preference->fcm_app_id ?? '')}}" required>
                         @if($errors->has('fcm_app_id'))
@@ -895,7 +988,7 @@
                      </div>
                   </div>
                   <div class="col-md-6">
-                     <div class="form-group mb-3">
+                     <div class="form-group mb-2">
                         <label for="fcm_measurement_id">{{__('Measurement ID')}}</label>
                         <input type="text" name="fcm_measurement_id" id="fcm_measurement_id" placeholder="" class="form-control" value="{{ old('fcm_measurement_id', $preference->fcm_measurement_id ?? '')}}">
                         @if($errors->has('fcm_measurement_id'))
@@ -920,73 +1013,68 @@
          <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
             <input type="hidden" name="verify_config" id="verify_config" value="1">
             @csrf
-            <div class="row">
-               <div class="col-xl-12">
-                  <!-- <div class="page-title-box">
-                     <h4 class="page-title text-uppercase">User Authentication</h4>
-                  </div> -->
-                  <div class="card-box">
-                     <h4 class="header-title text-uppercase">{{ __("User Authentication") }}</h4>
-                     <div class="row align-items-center">
-                        <div class="col-sm-5">
-                           <div class="form-group mb-md-0 switchery-demo">
-                              <label for="verify_email" class="mr-3 mb-0">{{ __("Verify Email") }}</label>
-                              <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1')) checked='checked' @endif>
+               <div class="row">
+                  <div class="col-md-6 mb-3">
+                     <div class="card-box h-100 mb-0">
+                        <h4 class="header-title text-uppercase">{{ __("User Authentication") }}</h4>
+                        <div class="row align-items-center">
+                           <div class="col-sm-12">
+                              <div class="form-group switchery-demo">
+                                 <label for="verify_email" class="mr-3 mb-0">{{ __("Verify Email") }}</label>
+                                 <input type="checkbox" data-plugin="switchery" name="verify_email" id="verify_email" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_email == '1')) checked='checked' @endif>
+                              </div>
                            </div>
-                        </div>
-                        <div class="col-sm-5">
-                           <div class="form-group mb-md-0">
-                              <label for="verify_phone" class="mr-3 mb-0">{{ __("Verify Phone") }}</label>
-                              <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1')) checked='checked' @endif>
+                           <div class="col-sm-12">
+                              <div class="form-group">
+                                 <label for="verify_phone" class="mr-3 mb-0">{{ __("Verify Phone") }}</label>
+                                 <input type="checkbox" data-plugin="switchery" name="verify_phone" id="verify_phone" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->verify_phone == '1')) checked='checked' @endif>
+                              </div>
                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                           <div class="form-group mb-0 text-md-right">
-                              <button class="btn btn-info d-block ml-auto" type="submit"> {{ __("Save") }} </button>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               @if($client_preference_detail->business_type != 'taxi' && $client_preference_detail->business_type != 'laundry' )
-               <div class="col-xl-12 mb-4">
-
-                  <div class="card-box mb-0">
-                     <h4 class="header-title text-uppercase">{{ __("Vendor") }}</h4>
-                     <div class="row align-items-center">
-                        <div class="col-md-3">
-                           <div class="form-group mb-md-0">
-                              <label for="dinein_check" class="mr-3 mb-0">{{ __("Dine In") }}</label>
-                              <input type="checkbox" data-plugin="switchery" name="dinein_check" id="dinein_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->dinein_check == '1')) checked='checked' @endif>
-                           </div>
-                        </div>
-                        <div class="col-md-3">
-                           <div class="form-group mb-md-0">
-                              <label for="delivery_check" class="mr-3 mb-0">{{ __("Delivery") }}</label>
-                              <input type="checkbox" data-plugin="switchery" name="delivery_check" id="delivery_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delivery_check == '1')) checked='checked' @endif>
-                           </div>
-                        </div>
-                        <div class="col-md-3">
-                           <div class="form-group mb-md-0">
-                              <label for="takeaway_check" class="mr-3 mb-0">{{ __("Takeaway") }}</label>
-                              <input type="checkbox" data-plugin="switchery" name="takeaway_check" id="takeaway_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->takeaway_check == '1')) checked='checked' @endif>
-                           </div>
-                        </div>
-                        <div class="col-md-3">
-                           <div class="form-group mb-0 text-md-right">
-                              <button class="btn btn-info d-block ml-md-auto" type="submit"> {{ __("Save") }} </button>
+                           <div class="col-sm-12 mt-4">
+                              <div class="form-group mb-0">
+                                 <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
+                              </div>
                            </div>
                         </div>
                      </div>
                   </div>
-               </div>
+                  @if($client_preference_detail->business_type != 'taxi' && $client_preference_detail->business_type != 'laundry' )
+                  <div class="col-md-6 mb-3">
+                     <div class="card-box h-100 mb-0">
+                        <h4 class="header-title text-uppercase">{{ __("Vendor") }}</h4>
+                        <div class="row align-items-center">
+                           <div class="col-md-12">
+                              <div class="form-group">
+                                 <label for="dinein_check" class="mr-3 mb-0">{{ __("Dine In") }}</label>
+                                 <input type="checkbox" data-plugin="switchery" name="dinein_check" id="dinein_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->dinein_check == '1')) checked='checked' @endif>
+                              </div>
+                           </div>
+                           <div class="col-md-12">
+                              <div class="form-group">
+                                 <label for="delivery_check" class="mr-3 mb-0">{{ __("Delivery") }}</label>
+                                 <input type="checkbox" data-plugin="switchery" name="delivery_check" id="delivery_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->delivery_check == '1')) checked='checked' @endif>
+                              </div>
+                           </div>
+                           <div class="col-md-12">
+                              <div class="form-group">
+                                 <label for="takeaway_check" class="mr-3 mb-0">{{ __("Takeaway") }}</label>
+                                 <input type="checkbox" data-plugin="switchery" name="takeaway_check" id="takeaway_check" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->takeaway_check == '1')) checked='checked' @endif>
+                              </div>
+                           </div>
+                           <div class="col-md-12">
+                              <div class="form-group mb-0">
+                                 <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
                @endif
-
             </div>
          </form>
 
          <div class="card-box">
-            <h4 class="header-title text-uppercase mb-3">{{ __("Custom Mods") }}</h4>
+            <h4 class="header-title text-uppercase mb-2">{{ __("Custom Mods") }}</h4>
             <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
                <input type="hidden" name="custom_mods_config" id="custom_mods_config" value="1">
                @csrf
@@ -1012,7 +1100,7 @@
                            <input type="checkbox" data-plugin="switchery" name="enquire_mode" id="	enquire_mode" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->enquire_mode == '1')) checked='checked' @endif>
                         </div>
                      </div>
-                     @endif
+                    @endif
 
                   <div class="col-md-4">
                      <div class="form-group mb-3">
@@ -1065,6 +1153,39 @@
                         <input type="checkbox" data-plugin="switchery" name="gifting" id="gifting" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->gifting == '1')) checked='checked' @endif>
                      </div>
                   </div>
+                  <div class="col-md-4">
+                     <div class="form-group mb-3">
+                        <label for="gifting" class="mr-2 mb-0">{{__('Pickup Delivery Service Area')}}</label>
+                        <input type="checkbox" data-plugin="switchery" name="pickup_delivery_service_area" id="pickup_delivery_service_area" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->pickup_delivery_service_area == '1')) checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="form-group mb-3">
+                        <label for="gifting" class="mr-2 mb-0">{{__('Minumum Order/Batch')}}</label>
+                        <input type="checkbox" data-plugin="switchery" name="minimum_order_batch" id="minimum_order_batch" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->minimum_order_batch == '1')) checked='checked' @endif>
+                     </div>
+                  </div>
+
+                  <div class="col-md-4">
+                     <div class="form-group mb-3">
+                        <label for="gifting" class="mr-2 mb-0">{{__('Static Delivery fee')}}</label>
+                        <input type="checkbox" data-plugin="switchery" name="static_delivey_fee" id="static_delivey_fee" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->static_delivey_fee == '1')) checked='checked' @endif>
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group mb-3">
+                       <label for="page_header" class="mr-2 mb-0">{{__('Quick Link in Header')}}</label>
+                       <input type="checkbox" data-plugin="switchery" name="header_quick_link" id="page_header" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->header_quick_link == '1')) checked='checked' @endif>
+                    </div>
+                 </div>
+
+                 <div class="col-md-4">
+                  <div class="form-group mb-3">
+                     <label for="page_header" class="mr-2 mb-0">{{__('Get Estimations')}}</label>
+                     <input type="checkbox" data-plugin="switchery" name="get_estimations" id="get_estimations" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->get_estimations == '1')) checked='checked' @endif>
+                  </div>
+                 </div>
+
                   <div class="col-md-12">
                      <div class="form-group mb-0 text-md-left">
                         <button class="btn btn-info d-block" type="submit">{{ __("Save") }}</button>
@@ -1074,66 +1195,105 @@
             </form>
          </div>
 
+         <div class="card-box">
+            <h4 class="header-title text-uppercase mb-2">{{ __("Edit Order By") }}</h4>
+            <form method="POST" action="{{route('configure.update', Auth::user()->code)}}">
+               <input type="hidden" name="edit_order_modes" id="edit_order_modes" value="1">
+               @csrf
+
+               @php
+                   $vendormenu = getNomenclatureName('Vendors', true);
+                   $vendormenulabel = ($vendormenu=="Vendors")?__('Vendors'):$vendormenu;
+
+               @endphp
+
+               <div class="row align-items-center">
+                   <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="is_edit_order_admin" class="mr-2 mb-0"> {{ __("Admin") }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="is_edit_order_admin" id="is_edit_order_admin" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_edit_order_admin == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="is_edit_order_vendor" class="mr-2 mb-0">{{ $vendormenulabel }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="is_edit_order_vendor" id="is_edit_order_vendor" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_edit_order_vendor == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="form-group mb-3">
+                           <label for="is_edit_order_driver" class="mr-2 mb-0">{{ __("Driver") }}</label>
+                           <input type="checkbox" data-plugin="switchery" name="is_edit_order_driver" id="is_edit_order_driver" class="form-control" data-color="#43bee1" @if((isset($preference) && $preference->is_edit_order_driver == '1')) checked='checked' @endif>
+                        </div>
+                     </div>
+
+
+                  <div class="col-md-12">
+                     <div class="form-group mb-0 text-md-left">
+                        <button class="btn btn-info d-block" type="submit">{{ __("Save") }}</button>
+                     </div>
+                  </div>
+               </div>
+            </form>
+         </div>
       </div>
    </div>
 
    <div class="row">
       <div class="col-xl-6">
-         <div class="row">
-            <div class="col-lg-12">
-               <div class="card-box pb-2">
-                  <div class="d-flex align-items-center justify-content-between">
-                     <h4 class="header-title text-uppercase m-0">{{ __("Vendor Registration Documents") }}</h4>
-                     <a class="btn btn-info d-block" id="add_vendor_registration_document_modal_btn">
-                        <i class="mdi mdi-plus-circle mr-1"></i>{{ __("Add") }}
-                     </a>
-                  </div>
-                  <div class="table-responsive mt-3 mb-1">
-                     <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
-                        <thead>
-                           <tr>
-                              <th>{{ __("Name") }}</th>
-                              <th>{{ __("Type") }}</th>
-                              <th>{{ __("Is Required?") }}</th>
-                              <th>{{ __("Action") }}</th>
-                           </tr>
-                        </thead>
-                        <tbody id="post_list">
-                           @forelse($vendor_registration_documents as $vendor_registration_document)
-                           <tr>
-                              <td>
-                                 <a class="edit_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}" href="javascript:void(0)">
-                                    {{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}
+         <div class="card-box pb-2">
+            <div class="d-flex align-items-center justify-content-between">
+               <h4 class="header-title text-uppercase m-0">{{ __("Vendor Registration Documents") }}</h4>
+               <a class="btn btn-info d-block" id="add_vendor_registration_document_modal_btn">
+                  <i class="mdi mdi-plus-circle mr-1"></i>{{ __("Add") }}
+               </a>
+            </div>
+            <div class="table-responsive mt-3 mb-1">
+               <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
+                  <thead>
+                     <tr>
+                        <th>{{ __("Name") }}</th>
+                        <th>{{ __("Type") }}</th>
+                        <th>{{ __("Is Required?") }}</th>
+                        <th>{{ __("Action") }}</th>
+                     </tr>
+                  </thead>
+                  <tbody id="post_list">
+                     @forelse($vendor_registration_documents as $vendor_registration_document)
+                     <tr>
+                        <td>
+                           <a class="edit_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}" href="javascript:void(0)">
+                              {{$vendor_registration_document->primary ? $vendor_registration_document->primary->name : ''}}
+                           </a>
+                        </td>
+                        <td>{{$vendor_registration_document->file_type}}</td>
+                        <td>{{ ($vendor_registration_document->is_required == 1)?__('Yes'):__('No') }}</td>
+                        <td>
+                           <div>
+                              <div class="inner-div" style="float: left;">
+                                 <a class="action-icon edit_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}" href="javascript:void(0)">
+                                    <i class="mdi mdi-square-edit-outline"></i>
                                  </a>
-                              </td>
-                              <td>{{$vendor_registration_document->file_type}}</td>
-                              <td>{{ ($vendor_registration_document->is_required == 1)?__('Yes'):__('No') }}</td>
-                              <td>
-                                 <div>
-                                    <div class="inner-div" style="float: left;">
-                                       <a class="action-icon edit_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}" href="javascript:void(0)">
-                                          <i class="mdi mdi-square-edit-outline"></i>
-                                       </a>
-                                    </div>
-                                    <div class="inner-div">
-                                       <button type="button" class="btn btn-primary-outline action-icon delete_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}">
-                                          <i class="mdi mdi-delete"></i>
-                                       </button>
-                                    </div>
-                                 </div>
-                              </td>
-                           </tr>
-                           @empty
-                           <tr align="center">
-                              <td colspan="4" style="padding: 20px 0">{{ __("Result not found.") }}</td>
-                           </tr>
-                           @endforelse
-                        </tbody>
-                     </table>
-                  </div>
-               </div>
-
-
+                              </div>
+                              <div class="inner-div">
+                                 <button type="button" class="btn btn-primary-outline action-icon delete_vendor_registration_document_btn" data-vendor_registration_document_id="{{$vendor_registration_document->id}}">
+                                    <i class="mdi mdi-delete"></i>
+                                 </button>
+                              </div>
+                           </div>
+                        </td>
+                     </tr>
+                     @empty
+                     <tr align="center">
+                        <td colspan="4" style="padding: 20px 0">{{ __("Result not found.") }}</td>
+                     </tr>
+                     @endforelse
+                  </tbody>
+               </table>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-lg-6">
                <div class="card-box pb-2">
                   <div class="table-responsive mb-1">
                      <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
@@ -1145,11 +1305,11 @@
                               <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
                            </div>
                            <div class="row mt-2">
-                              <div class="col-xl-6">
+                              <div class="col-12 mb-2">
                                  <label class="primaryCurText">{{__('Android App Link')}}</label>
                                  <input class="form-control" type="text" id="android_app_link" name="android_app_link" value="{{ old('android_app_link', $preference->android_app_link  ?? '')}}">
                               </div>
-                              <div class="col-xl-6">
+                              <div class="col-12">
                                  <label class="primaryCurText">{{__('IOS App Link')}}</label>
                                  <input class="form-control" type="text" id="ios_link" name="ios_link" value="{{ old('ios_link', $preference->ios_link  ?? '')}}" >
                               </div>
@@ -1158,39 +1318,34 @@
                      </form>
                   </div>
                </div>
+            </div>
+            <div class="col-lg-6">
 
-               <div class="col-12">
-                  <!-- <div class="page-title-box">
-                     <h4 class="page-title text-uppercase">{{__('Distance to Time Calculator')}}</h4>
-                  </div> -->
-
-                  <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
-                     <input type="hidden" name="distance_to_time_calc_config" id="distance_to_time_calc_config" value="1">
-                     @csrf
-                     <div class="card-box mb-2">
-                        <div class="d-flex align-items-center justify-content-between">
-                           <h4 class="header-title mb-0">{{__('Distance to Time Calculator')}}</h4>
-                           <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
+               <form method="POST" class="h-100" action="{{route('configure.update', Auth::user()->code)}}">
+                  <input type="hidden" name="distance_to_time_calc_config" id="distance_to_time_calc_config" value="1">
+                  @csrf
+                  <div class="card-box mb-2">
+                     <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="header-title mb-0">{{__('Distance to Time Calculator')}}</h4>
+                        <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
+                     </div>
+                     <div class="row mt-2">
+                        <div class="col-12 mb-2">
+                           <label class="primaryCurText">{{__('Distance Unit')}}</label>
+                           <select class="form-control" id="distance_unit_for_time" name="distance_unit_for_time">
+                              <option value="">{{__('Select unit')}}</option>
+                              <option value="kilometer" @if((isset($preference) && $preference->distance_unit_for_time == 'kilometer')) selected @endif>{{__('Kilometer')}}</option>
+                              <option value="mile" @if((isset($preference) && $preference->distance_unit_for_time == 'mile')) selected @endif>{{__('Mile')}}</option>
+                           </select>
                         </div>
-                        <div class="row mt-2">
-                           <div class="col-xl-6">
-                              <label class="primaryCurText">{{__('Distance Unit')}}</label>
-                              <select class="form-control" id="distance_unit_for_time" name="distance_unit_for_time">
-                                 <option value="">{{__('Select unit')}}</option>
-                                 <option value="kilometer" @if((isset($preference) && $preference->distance_unit_for_time == 'kilometer')) selected @endif>{{__('Kilometer')}}</option>
-                                 <option value="mile" @if((isset($preference) && $preference->distance_unit_for_time == 'mile')) selected @endif>{{__('Mile')}}</option>
-                              </select>
-                           </div>
-                           <div class="col-xl-6">
-                              <label class="primaryCurText">{{__('Distance to Time Multiplier (Per 1 distance unit)')}}</label>
-                              <input class="form-control" type="number" id="distance_to_time_multiplier" name="distance_to_time_multiplier" value="{{ old('distance_to_time_multiplier', $preference->distance_to_time_multiplier  ?? '')}}" min="0">
-                           </div>
+                        <div class="col-12">
+                           <label class="primaryCurText">{{__('Distance to Time Multiplier (Per 1 distance unit)')}}</label>
+                           <input class="form-control" type="number" id="distance_to_time_multiplier" name="distance_to_time_multiplier" value="{{ old('distance_to_time_multiplier', $preference->distance_to_time_multiplier  ?? '')}}" min="0">
                         </div>
                      </div>
-                  </form>
-               </div>
+                  </div>
+               </form>
             </div>
-
          </div>
       </div>
 
@@ -1223,7 +1378,7 @@
                   @csrf
                   <div class="card-box mb-0 pb-1">
                      <div class="d-flex align-items-center justify-content-between">
-                  <h4 class="header-title text-uppercase">{{ __('Order Email Notification') }}</h4>
+                        <h4 class="header-title text-uppercase">{{ __('Order Email Notification') }}</h4>
                         <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
                      </div>
                      <div class="col-xl-12 my-2" id="addCur-160">
@@ -1240,7 +1395,7 @@
                   @csrf
                   <div class="card-box product-tags mb-0 pb-1">
                      <div class="d-flex align-items-center justify-content-between">
-                     <h4 class="header-title text-uppercase">{{ __('Tags for Product')}}</h4>
+                        <h4 class="header-title text-uppercase">{{ __('Tags for Product')}}</h4>
                         <a class="btn btn-info d-block" id="add_product_tag_modal_btn">
                            <i class="mdi mdi-plus-circle mr-1"></i>{{ __("Add") }}
                         </a>
@@ -1256,39 +1411,99 @@
                            </thead>
                            <tbody id="post_list">
                               @forelse($tags as $tag)
-                              <tr>
-                                 <td>
-                                    <img src="{{ $tag->icon['proxy_url'].'100/100'.$tag->icon['image_path'] }}">
-                                 </td>
-                                 <td>
-                                    <a class="edit_product_tag_btn" data-tag_id="{{$tag->id}}" href="javascript:void(0)">
-                                       {{$tag->primary ? $tag->primary->name : ''}}
-                                    </a>
-                                 </td>
-                                  <td>
-                                    <div>
-                                       <div class="inner-div" style="float: left;">
-                                          <a class="action-icon edit_product_tag_btn" data-tag_id="{{$tag->id}}" href="javascript:void(0)">
-                                             <i class="mdi mdi-square-edit-outline"></i>
-                                          </a>
+                                 <tr>
+                                    <td>
+                                       @if(isset($tag->icon) && !empty($tag->icon)) <img src="{{ $tag->icon['proxy_url'].'100/100'.$tag->icon['image_path'] }}">@endif
+                                    </td>
+                                    <td>
+                                       <a class="edit_product_tag_btn" data-tag_id="{{$tag->id}}" href="javascript:void(0)">
+                                          {{$tag->primary ? $tag->primary->name : ''}}
+                                       </a>
+                                    </td>
+                                    <td>
+                                       <div>
+                                          <div class="inner-div" style="float: left;">
+                                             <a class="action-icon edit_product_tag_btn" data-tag_id="{{$tag->id}}" href="javascript:void(0)">
+                                                <i class="mdi mdi-square-edit-outline"></i>
+                                             </a>
+                                          </div>
+                                          <div class="inner-div">
+                                             <button type="button" class="btn btn-primary-outline action-icon delete_product_tag_btn" data-tag_id="{{$tag->id}}">
+                                                <i class="mdi mdi-delete"></i>
+                                             </button>
+                                          </div>
                                        </div>
-                                       <div class="inner-div">
-                                          <button type="button" class="btn btn-primary-outline action-icon delete_product_tag_btn" data-tag_id="{{$tag->id}}">
-                                             <i class="mdi mdi-delete"></i>
-                                          </button>
-                                       </div>
-                                    </div>
-                                 </td>
-                              </tr>
+                                    </td>
+                                 </tr>
                               @empty
-                              <tr align="center">
-                                 <td colspan="4" style="padding: 20px 0">{{ __("Tags not found.") }}</td>
-                              </tr>
+                                 <tr align="center">
+                                    <td colspan="4" style="padding: 20px 0">{{ __("Tags not found.") }}</td>
+                                 </tr>
                               @endforelse
                            </tbody>
                         </table>
                      </div>
+                  </div>
+               </form>
+            </div>
 
+
+            <div class="col-xl-6 mb-3">
+
+               <form method="POST" class="h-100" action="#">
+                  @csrf
+                  <div class="card-box product-tags mb-0 pb-1">
+                     <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="header-title text-uppercase">{{ __('Create Slot')}}</h4>
+                        <a class="btn btn-info d-block" id="add_slot_modal_btn">
+                           <i class="mdi mdi-plus-circle mr-1"></i>{{ __("Add") }}
+                        </a>
+                     </div>
+                     <div class="table-responsive mt-3 mb-1">
+                        <table class="table table-centered table-nowrap table-striped" id="promo-datatable">
+                           <thead>
+                              <tr>
+                                 <th>{{ __("Name") }}</th>
+                                 <th>{{ __("Slot") }}</th>
+                                 <th>{{ __("Action") }}</th>
+                              </tr>
+                           </thead>
+                           <tbody id="post_list">
+                              @forelse($slots as $slot)
+                                 <tr>
+                                    <td>
+                                       <a class="edit_slot_btn" data-slot_id="{{$slot->id}}" href="javascript:void(0)">
+                                          {{$slot->name ? $slot->name : ''}}
+                                       </a>
+                                    </td>
+                                    <td>
+                                       <a class="edit_slot_btn" data-slot_id="{{$slot->id}}" href="javascript:void(0)">
+                                          {{@$slot->start_time.' - '.@$slot->end_time }}
+                                       </a>
+                                    </td>
+                                    <td>
+                                       <div>
+                                          <div class="inner-div" style="float: left;">
+                                             <a class="action-icon edit_slot_btn" data-slot_id="{{$slot->id}}" href="javascript:void(0)">
+                                                <i class="mdi mdi-square-edit-outline"></i>
+                                             </a>
+                                          </div>
+                                          <div class="inner-div">
+                                             <button type="button" class="btn btn-primary-outline action-icon delete_slot_btn" data-slot_id="{{$slot->id}}">
+                                                <i class="mdi mdi-delete"></i>
+                                             </button>
+                                          </div>
+                                       </div>
+                                    </td>
+                                 </tr>
+                              @empty
+                                 <tr align="center">
+                                    <td colspan="4" style="padding: 20px 0">{{ __("Slot not found.") }}</td>
+                                 </tr>
+                              @endforelse
+                           </tbody>
+                        </table>
+                     </div>
                   </div>
                </form>
             </div>
@@ -1297,12 +1512,7 @@
 
          </div>
       </div>
-
-
-
    </div>
-
-
 
    <div class="row">
       {{--<div class="col-lg-6">
@@ -1483,8 +1693,8 @@
          </div>
       </div>
    </div>
-   <div id="add_vendor_registration_document_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
+   <div id="add_vendor_registration_document_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  standard-modalLabel aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
          <div class="modal-content">
             <div class="modal-header border-bottom">
                <h4 class="modal-title" id="standard-modalLabel">{{ __("Add Vendor Registration Document") }}</h4>
@@ -1500,10 +1710,11 @@
                            <div class="form-group position-relative">
                               <label for="">Type</label>
                               <div class="input-group mb-2">
-                                 <select class="form-control" name="file_type">
+                                 <select class="form-control" name="file_type" id="file_type_select">
                                     <option value="Text">Text</option>
                                     <option value="Image">Image</option>
                                     <option value="Pdf">PDF</option>
+                                    <option value="selector">Selector</option>
                                  </select>
                               </div>
                            </div>
@@ -1536,6 +1747,52 @@
                         </div>
                         @empty
                         @endforelse
+                        <div id="selector_div" class="col-md-12 d-none">
+                            <div class="card">
+                            <div class="card-box mb-0 ">
+                                <div class="d-flex align-items-center justify-content-between">
+                                   <h4 class="header-title text-uppercase">{{__('Options')}}</h4>
+                                   {{-- <div class="col-md-4 col-xl-4 mb-2 ">
+                                        <div class="form-group mb-0">
+                                            <select class="form-control" name="option_language_id" id="option_client_language">
+                                            @foreach($client_languages as $client_language)
+                                                <option value="{{$client_language->langId}}">{{$client_language->langName}}</option>
+                                            @endforeach
+                                            </select>
+                                        </div>
+                                    </div> --}}
+                                </div>
+                                <div id="option_div">
+
+                                        <div class="selector-option table-responsive">
+                                            <table class="table table-borderless mb-0 optionTableAdd" id="selector-datatable">
+                                                <tr class="trForClone">
+
+                                                    @foreach($client_languages as $langs)
+                                                        <th>{{$langs->langName}}</th>
+                                                    @endforeach
+                                                    <th></th>
+                                                </tr>
+                                                <tbody id="table_body">
+                                                    {{-- <tr>
+                                                    @foreach($client_languages as $key => $langs)
+                                                        <td>
+                                                            {{-- <input type="hidden" name="option_language_id[]"  value="{{$langs->langId}}" class="form-control">
+                                                            <input type="hidden" name="option_id[{{$key}}][]"   class="form-control" >
+                                                            <input type="text" name="option_names[{{$key}}][]" class="form-control" @if($langs->is_primary == 1) required @endif>
+                                                        </td>
+                                                        @endforeach
+                                                        <td class="lasttd"></td>
+                                                    </tr> --}}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+                                </div>
+                            </div>
+                            </div>
+                        </div>
                      </div>
                   </div>
                </form>
@@ -1650,6 +1907,83 @@
       </div>
    </div>
    <!-- end product tags -->
+   <script type="text/template" id="vendorSelectorTemp">
+        <tr class ="option_section" id ="option_section_<%= id %>" data-section_number="<%= id %>">
+        <input type="hidden" name="option_id[<%= id-1 %>][]"  id="option_id<%= id %>" data-id ="<%= id %>" value ="<%= data?data.id:'' %>">
+        @foreach($client_languages as $key => $langs)
+        <td>
+            <div class="form-group mb-0">
+                <input type="hidden" name="option_lang_id[<%= id-1 %>][]"   value ="{{$langs->langId}}">
+                <input type="text" name="option_name[<%= id-1 %>][]" class="form-control" @if($langs->is_primary == 1) required @endif   id="option_name_<%= id-1 %>_{{$langs->langId}}" placeholder="" data-id ="<%= id %>" value ="<%= data?(data.translations?data.translations.name:''):'' %>">
+            </div>
+        </td>
+
+        @endforeach
+        <td class="lasttd d-flex align-items-center justify-content-center">
+            <% if(id > 1) { %>
+                <a href="javascript:void(0)" class="action-icon remove_more_button"  id ="remove_button_<%= id %>" data-id ="<%= id %>"> <i class="mdi mdi-delete"></i></a>
+            <% } %>
+            <a href="javascript:void(0)" class="add_more_button" id ="add_button_<%= id %>" data-id ="<%= id %>"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+
+        </td>
+
+    </tr>
+
+
+</script>
+
+
+   <!-- modal for slots -->
+   <div id="add_slot_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+         <div class="modal-content">
+            <div class="modal-header border-bottom">
+               <h4 class="modal-title" id="standard-modalLabel">{{ __("Add Slot") }}</h4>
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+               <form id="slotForm" method="POST" action="javascript:void(0)">
+                  @csrf
+                  <div id="save_product_tag">
+                     <input type="hidden" name="slot_id" value="">
+                     <div class="row">
+
+
+                        <div class="col-md-12 mb-2">
+                           <div class="row">
+                              <div class="col-md-4">
+                                 <div class="form-group position-relative">
+                                    <label for="">{{ __("Name") }}</label>
+                                    <input class="form-control" name="name" type="text" value="">
+                                 </div>
+                              </div>
+                              <div class="col-md-4">
+                                 <div class="form-group position-relative">
+                                    <label for="">{{ __("Start Time") }}</label>
+                                    <input class="form-control" name="start_time" type="time" value="">
+                                 </div>
+                              </div>
+                              <div class="col-md-4">
+                                 <div class="form-group position-relative">
+                                    <label for="">{{ __("End Time") }}</label>
+                                    <input class="form-control" name="end_time" type="time" value="">
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+
+                     </div>
+                  </div>
+               </form>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary submitSaveSlot">{{ __("Save") }}</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- end product Slot -->
+
    @endsection
    @section('script')
    <script type="text/javascript">
@@ -1667,27 +2001,99 @@
          $('#add_product_tag__modal #standard-modalLabel').html('Add Tag');
       });
 
+    $(document).on("change", "#file_type_select", function() {
+        var file_type = $(this).val();
+        if(file_type == 'selector'){
+            $("#selector_div").removeClass("d-none");
+            var classoption_section = $('#option_div').find('.option_section');
+            if(classoption_section.length==0){
+                addoptionTemplate(0);
+            }
+        }
+        else{
+            $("#selector_div").addClass("d-none");
+        }
+    });
+    $(document).on('click','.add_more_button',function(){
+        var main_id = $(this).data('id');
+        addoptionTemplate(main_id);
+        console.log($('.add_more_button').length);
+    });
+    $(document).on('click','.remove_more_button',function(){
+        var main_id =$(this).data('id');
+        removeSeletOptionSectionTemplate(main_id);
+        $('.add_more_button').each(function(key,value){
+            if(key == ($('.add_more_button').length-1)){
+                $('#add_button_'+$(this).data('id')).show();
+            }
+        });
+    });
+    $(document).on("change","#option_client_language",function() {
+        let vendor_registration_document_id = $('input[name="vendor_registration_document_id"]').val();
+        editVendorRegistrationForm(vendor_registration_document_id);
+    });
+    function removeSeletOptionSectionTemplate(div_id){
+        $('#option_section_'+div_id).remove();
+    }
+    $(document).on('click', '.addOptionRow-Add', function(e) {
+        var d = new Date();
+        var n = d.getTime();
+        var $tr = $('.optionTableAdd tbody>tr:first').next('tr');
+        var $clone = $tr.clone();
+        $clone.find(':text').val('');
+        $clone.find('.hexa-colorpicker').attr("id", "hexa-colorpicker-" + n);
+        $clone.find('.lasttd').html('<a href="javascript:void(0);" class="action-icon deleteCurRow"> <i class="mdi mdi-delete"></i></a>');
+        $('.optionTableAdd').append($clone);
+
+    });
+
+    function addoptionTemplate(section_id){
+        section_id                = parseInt(section_id);
+        section_id                = section_id +1;
+        var data                  = '';
+
+        var price_section_temp    = $('#vendorSelectorTemp').html();
+        var modified_temp         = _.template(price_section_temp);
+        var result_html           = modified_temp({id:section_id,data:data});
+        $("#table_body").append(result_html);
+        $('.add_more_button').hide();
+        $('#add_button_'+section_id).show();
+    }
+      $('#add_slot_modal_btn').click(function(e) {
+         document.getElementById("slotForm").reset();
+         $('#add_slot_modal input[name=slot_id]').val("");
+         $('#add_slot_modal').modal('show');
+         $('#add_slot__modal #standard-modalLabel').html('Add Slot');
+      });
+
       $(document).on("click", ".delete_vendor_registration_document_btn", function() {
          var vendor_registration_document_id = $(this).data('vendor_registration_document_id');
-         if (confirm('Are you sure?')) {
-            $.ajax({
-               type: "POST",
-               dataType: 'json',
-               url: "{{ route('vendor.registration.document.delete') }}",
-               data: {
-                  _token: "{{ csrf_token() }}",
-                  vendor_registration_document_id: vendor_registration_document_id
-               },
-               success: function(response) {
-                  if (response.status == "Success") {
-                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                     setTimeout(function() {
-                        location.reload()
-                     }, 2000);
+         Swal.fire({
+            title: "{{__('Are you Sure?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+         }).then((result) => {
+            if (result.value) {
+               $.ajax({
+                  type: "POST",
+                  dataType: 'json',
+                  url: "{{ route('vendor.registration.document.delete') }}",
+                  data: {
+                     _token: "{{ csrf_token() }}",
+                     vendor_registration_document_id: vendor_registration_document_id
+                  },
+                  success: function(response) {
+                     if (response.status == "Success") {
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                        setTimeout(function() {
+                           location.reload()
+                        }, 2000);
+                     }
                   }
-               }
-            });
-         }
+               });
+            }
+         });
       });
       $(document).on('click', '.submitSaveVendorRegistrationDocument', function(e) {
          var vendor_registration_document_id = $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val();
@@ -1697,6 +2103,8 @@
             var post_url = "{{ route('vendor.registration.document.create') }}";
          }
          var form_data = new FormData(document.getElementById("vendorRegistrationDocumentForm"));
+
+
          $.ajax({
             url: post_url,
             method: 'POST',
@@ -1721,16 +2129,48 @@
       });
       $(document).on("click", ".edit_vendor_registration_document_btn", function() {
          let vendor_registration_document_id = $(this).data('vendor_registration_document_id');
+         editVendorRegistrationForm(vendor_registration_document_id);
+      });
+
+      function editVendorRegistrationForm(vendor_registration_document_id){
+        let language_id = $('#option_client_language').val();
          $('#add_vendor_registration_document_modal input[name=vendor_registration_document_id]').val(vendor_registration_document_id);
          $.ajax({
             method: 'GET',
             data: {
-               vendor_registration_document_id: vendor_registration_document_id
+               vendor_registration_document_id: vendor_registration_document_id,
+               language_id:language_id
             },
             url: "{{ route('vendor.registration.document.edit') }}",
             success: function(response) {
                if (response.status = 'Success') {
+                    if(response.data.file_type=="selector"){
+                        $("#selector_div").removeClass("d-none");
+                        $('.option_section').remove();
+                        var options = response.data.options;
+                        var section_id =0
+                        var row =0
+                        var option_section_temp    = $('#vendorSelectorTemp').html();
+                        var modified_temp         = _.template(option_section_temp);
+                        $(options).each(function(index, value) {
+                            section_id                = parseInt(section_id);
+                            row                       = parseInt(section_id)
+                            section_id                = section_id +1;
+                            $('#table_body').append(modified_temp({ id:section_id,data:value}));
+                            var options_trans = value.translations;
+                            $(options_trans).each(function(trans_index, trans_value) {
+                                var input_id = '#option_name_'+row+'_'+trans_value.language_id;
+                                $(input_id).val(trans_value.name);
+                            });
+                            $('.add_more_button').hide();
+                            $('#add_button_'+section_id).show();
+                        });
+                    }else{
+                        $('.option_section').remove();
+                        $("#selector_div").addClass("d-none");
+                    }
                   $(document).find("#add_vendor_registration_document_modal select[name=file_type]").val(response.data.file_type).change();
+
                   $("#add_vendor_registration_document_modal input[name=vendor_registration_document_id]").val(response.data.id);
                   $(document).find("#add_vendor_registration_document_modal select[name=is_required]").val(response.data.is_required).change();
                   $('#add_vendor_registration_document_modal #standard-modalLabel').html('Update Vendor Registration Document');
@@ -1744,32 +2184,41 @@
 
             }
          });
-      });
+
+      }
 
 
 
       ///   product tag ////
       $(document).on("click", ".delete_product_tag_btn", function() {
          var tag_id = $(this).data('tag_id');
-         if (confirm('Are you sure?')) {
-            $.ajax({
-               type: "POST",
-               dataType: 'json',
-               url: "{{ route('tag.delete') }}",
-               data: {
-                  _token: "{{ csrf_token() }}",
-                  tag_id: tag_id
-               },
-               success: function(response) {
-                  if (response.status == "Success") {
-                     $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                     setTimeout(function() {
-                        location.reload()
-                     }, 2000);
+         Swal.fire({
+            title: "{{__('Are you Sure?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+          }).then((result) => {
+            if(result.value)
+            {
+               $.ajax({
+                  type: "POST",
+                  dataType: 'json',
+                  url: "{{ route('tag.delete') }}",
+                  data: {
+                     _token: "{{ csrf_token() }}",
+                     tag_id: tag_id
+                  },
+                  success: function(response) {
+                     if (response.status == "Success") {
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                        setTimeout(function() {
+                           location.reload()
+                        }, 2000);
+                     }
                   }
-               }
-            });
-         }
+               });
+            }
+         });
       });
       $(document).on('click', '.submitSaveProductTag', function(e) {
          var tag_id = $("#add_product_tag_modal input[name=tag_id]").val();
@@ -1826,20 +2275,19 @@
          });
       });
       // end product tag ////
-      $('#add_driver_registration_document_modal_btn').click(function(e) {
-         $('#add_driver_registration_document_modal').modal('show');
-         $('#add_driver_registration_document_modal #standard-modalLabel').html('Add Driver Registration Document');
-      });
-      $(document).on("click", ".delete_driver_registration_document_btn", function() {
-         var driver_registration_document_id = $(this).data('driver_registration_document_id');
+
+      // Start Slot ////
+
+      $(document).on("click", ".delete_slot_btn", function() {
+         var tag_id = $(this).data('slot_id');
          if (confirm('Are you sure?')) {
             $.ajax({
                type: "POST",
                dataType: 'json',
-               url: "{{ route('driver.registration.document.delete') }}",
+               url: "{{ route('slot.delete') }}",
                data: {
                   _token: "{{ csrf_token() }}",
-                  driver_registration_document_id: driver_registration_document_id
+                  slot_id: tag_id
                },
                success: function(response) {
                   if (response.status == "Success") {
@@ -1851,6 +2299,92 @@
                }
             });
          }
+      });
+
+      $(document).on('click', '.submitSaveSlot', function(e) {
+         var slot_id = $("#add_slot_modal input[name=slot_id]").val();
+         if (slot_id) {
+            var post_url = "{{ route('slot.update') }}";
+         } else {
+            var post_url = "{{ route('slot.create') }}";
+         }
+         $.ajax({
+            url: post_url,
+            method: 'POST',
+            data: $('#slotForm').serialize(),
+            success: function(response) {
+               if (response.status == 'Success') {
+                  $('#add_or_edit_social_media_modal').modal('hide');
+                  $.NotificationApp.send("Success", 'Slot Added Successfuly', "top-right", "#5ba035", "success");
+                  setTimeout(function() {
+                     location.reload()
+                  }, 2000);
+               } else {
+                  $.NotificationApp.send("Error", 'Something went wrong', "top-right", "#ab0535", "error");
+               }
+            }
+         });
+      });
+      $(document).on("click", ".edit_slot_btn", function() {
+         let slot_id = $(this).data('slot_id');
+         $('#add_slot_modal input[name=slot_id]').val(slot_id);
+         $.ajax({
+            method: 'GET',
+            data: {
+               slot_id: slot_id
+            },
+            url: "{{ route('slot.edit') }}",
+            success: function(response) {
+               if (response.status = 'Success') {
+                  $("#add_slot_modal input[name=slot_id]").val(response.data.id);
+                  $("#add_slot_modal input[name=name]").val(response.data.name);
+                  $("#add_slot_modal input[name=start_time]").val(response.data.start_time);
+                  $("#add_slot_modal input[name=end_time]").val(response.data.end_time);
+                  $('#add_slot_modal #standard-modalLabel').html('Update Slot');
+                  $('#add_slot_modal').modal('show');
+               }
+            },
+            error: function() {
+
+            }
+         });
+      });
+      // end Slot ////
+
+
+      $('#add_driver_registration_document_modal_btn').click(function(e) {
+         $('#add_driver_registration_document_modal').modal('show');
+         $('#add_driver_registration_document_modal #standard-modalLabel').html('Add Driver Registration Document');
+      });
+      $(document).on("click", ".delete_driver_registration_document_btn", function() {
+         var driver_registration_document_id = $(this).data('driver_registration_document_id');
+         Swal.fire({
+            title: "{{__('Are you Sure?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+         }).then((result) => {
+            if(result.value)
+            {
+               $.ajax({
+                  type: "POST",
+                  dataType: 'json',
+                  url: "{{ route('driver.registration.document.delete') }}",
+                  data: {
+                     _token: "{{ csrf_token() }}",
+                     driver_registration_document_id: driver_registration_document_id
+                  },
+                  success: function(response) {
+                     if (response.status == "Success") {
+                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                        setTimeout(function() {
+                           location.reload()
+                        }, 2000);
+                     }
+                  }
+               });
+            }
+         });
       });
       $(document).on('click', '.submitSaveDriverRegistrationDocument', function(e) {
          var driver_registration_document_id = $("#add_driver_registration_document_modal input[name=driver_registration_document_id]").val();
@@ -1908,51 +2442,75 @@
          });
       });
       $('.cleanSoftDeleted').click(function(e) {
-         if (confirm('Are you Sure?')) {
-            e.preventDefault();
-            $.ajax({
-               url: "{{ route('config.cleanSoftDeleted') }}",
-               type: "POST",
-               data: {
-                  "_token": "{{ csrf_token() }}"
-               },
-               success: function(response) {
-                  $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
-               },
-            });
-         }
+         Swal.fire({
+            title: "{{__('Are you Sure?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+         }).then((result) => {
+            if(result.value)
+            {
+               e.preventDefault();
+               $.ajax({
+                  url: "{{ route('config.cleanSoftDeleted') }}",
+                  type: "POST",
+                  data: {
+                     "_token": "{{ csrf_token() }}"
+                  },
+                  success: function(response) {
+                     $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
+                  },
+               });
+            }
+         });
       });
 
       $('.importDemoContent').click(function(e) {
-         if (confirm('Are you Sure you want to hard delete?')) {
-            e.preventDefault();
-            $.ajax({
-               url: "{{ route('config.importDemoContent') }}",
-               type: "POST",
-               data: {
-                  "_token": "{{ csrf_token() }}"
-               },
-               success: function(response) {
-                  $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
-               },
-            });
-         }
+         Swal.fire({
+            title: "{{__('Are you Sure you want to hard delete?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+         }).then((result) => {
+            if(result.value)
+            {
+               e.preventDefault();
+               $.ajax({
+                  url: "{{ route('config.importDemoContent') }}",
+                  type: "POST",
+                  data: {
+                     "_token": "{{ csrf_token() }}"
+                  },
+                  success: function(response) {
+                     $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
+                  },
+               });
+            }
+         });
       });
 
       $('.hardDeleteEverything').click(function(e) {
-         if (confirm('Are you Sure you want to proceed?')) {
-            e.preventDefault();
-            $.ajax({
-               url: "{{ route('config.hardDeleteEverything') }}",
-               type: "POST",
-               data: {
-                  "_token": "{{ csrf_token() }}"
-               },
-               success: function(response) {
-                  $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
-               },
-            });
-         }
+         Swal.fire({
+            title: "{{__('Are you Sure you want to proceed?')}}",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+         }).then((result) => {
+            if(result.value)
+            {
+               e.preventDefault();
+               $.ajax({
+                  url: "{{ route('config.hardDeleteEverything') }}",
+                  type: "POST",
+                  data: {
+                     "_token": "{{ csrf_token() }}"
+                  },
+                  success: function(response) {
+                     $.NotificationApp.send("Success", "Deleted Successfully", "top-right", "#5ba035", "success");
+                  },
+               });
+            }
+         });
       });
 
       function generateRandomString(length) {
@@ -2201,9 +2759,22 @@
          var takeaway_checked = $("#takeaway_check").is(":checked");
          var dinein_checked = $("#dinein_check").is(":checked");
          if (dinein_checked == false && takeaway_checked == false && delivery_checked == false) {
-            alert("One option must be enables");
+            Swal.fire({
+               title: "Warning!",
+               text: "One option must be enables",
+               icon: "warning",
+               button: "OK",
+            });
             $("#" + id).trigger('click');
          }
+      }
+
+      function toggle_smsFields(obj)
+      {
+         var id = $(obj).find(':selected').attr('data-id');
+         $('.sms_fields').css('display','none');
+         $('#'+id).css('display','flex');
+         console.log(id);
       }
    </script>
    @endsection

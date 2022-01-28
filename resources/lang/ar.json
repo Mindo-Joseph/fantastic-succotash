@@ -640,6 +640,10 @@
   "Select Payment Method": "اختار طريقة الدفع",
   "Select Payment Option": "حدد خيار الدفع",
   "Select Plan": "اختر خطة",
+  "Shipping Options":"خيارات الشحن",
+  "ShipRocket": "صاروخ",
+  "Lalamove": "لالاموف",
+  "Delivery Options":"خيارات التوصيل",
   "Select Tax Type": "حدد نوع الضريبة",
   "Select Vendor": "تحديد البائع",
   "Select days of week": "حدد أيام الأسبوع",
@@ -659,7 +663,7 @@
   "Set As Primary": "تعيين ك أساسي",
   "Share It": "الصيف2",
   "Shipping Address": "تسليم",
-  "Shipping Information": "معلومات الشحن",
+  "Delivery Information": "معلومات الشحن",
   "Shopping Cart": "عربة التسوق",
   "Short Code": "رمز قصير",
   "Short Description": "وصف قصير",
@@ -954,6 +958,5 @@
   "Tip Before Order": "نصيحة قبل الطلب",
   "Tip After Order": "نصيحة بعد الطلب",
   "Off Scheduling  Order": "طلب إيقاف الجدولة",
-  "Select Parent Category" : "تحديد فئة رئيسية",
-  "": ""
+  "Select Parent Category" : "تحديد فئة رئيسية"
 }

@@ -83,20 +83,28 @@ $(document).ready(function() {
         $(document).on("click",".delete-vendor",function() {
             var destroy_url = $(this).data('destroy_url');
             var id = $(this).data('rel');
-            if (confirm('Are you sure?')) {
-              $.ajax({
-                type: "POST",
-                dataType: 'json',
-                url: destroy_url,
-                data:{'_method':'DELETE'},
-                success: function(response) {
-                    if (response.status == "Success") {
-                        $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
-                        window.location.reload();
-                    }
+            Swal.fire({
+                title: "Are you sure?",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Ok',
+            }).then((result) => {
+                if(result.value)
+                {
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        url: destroy_url,
+                        data:{'_method':'DELETE'},
+                        success: function(response) {
+                            if (response.status == "Success") {
+                                $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", "success");
+                                window.location.reload();
+                            }
+                        }
+                    });
                 }
             });
-            }
         });
         function initDataTable(table, status) {
             $('#'+table).DataTable({
@@ -118,6 +126,9 @@ $(document).ready(function() {
                 buttons: [],
                 ajax: {
                   url: base_url+'/client/vendor/filterdata',
+                  complete: function(){
+                    $('.vendor-products').removeClass('invisible');
+                  },
                   data: function (d) {
                     d.status = status;
                     d.search = $('input[type="search"]').val();

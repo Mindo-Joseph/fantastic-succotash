@@ -64,7 +64,7 @@ class ProductController extends BaseController
     {
         $rules = array(
             'sku' => 'required|unique:products',
-            'url_slug' => 'required',
+            'url_slug' => 'required|unique:products',
             'category' => 'required',
             'product_name' => 'required',
         );
@@ -175,7 +175,7 @@ class ProductController extends BaseController
             ->where('client_languages.is_active', 1)
             ->orderBy('client_languages.is_primary', 'desc')->get();
 
-
+      
         $productVariants = Variant::with('option', 'varcategory.cate.primary')
             ->select('variants.*')
             ->join('variant_categories', 'variant_categories.variant_id', 'variants.id')
@@ -211,7 +211,7 @@ class ProductController extends BaseController
             }
         }
         $otherProducts = Product::with('primary')->select('id', 'sku')->where('is_live', 1)->where('id', '!=', $product->id)->where('vendor_id', $product->vendor_id)->get();
-        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode','need_dispacher_home_other_service','delay_order','product_order_form','business_type')->first();
+        $configData = ClientPreference::select('celebrity_check', 'pharmacy_check', 'need_dispacher_ride', 'need_delivery_service', 'enquire_mode','need_dispacher_home_other_service','delay_order','product_order_form','business_type','minimum_order_batch')->first();
         $celebrities = Celebrity::select('id', 'name')->where('status', '!=', 3)->get();
 
         $agent_dispatcher_tags = [];
@@ -231,11 +231,11 @@ class ProductController extends BaseController
         }
 
         $pro_tags = Tag::with('primary')->whereHas('primary')->get();
-        $product_faqs = ProductFaq::with('primary')->get();
+        $product_faqs = ProductFaq::with('primary')->where('product_id',$product->id)->get();
 
 
         $set_product_tags = ProductTag::where('product_id',$product->id)->pluck('tag_id')->toArray();
-
+       
         return view('backend/product/edit', ['product_faqs' => $product_faqs ,'set_product_tags' => $set_product_tags,'pro_tags' => $pro_tags,'agent_dispatcher_on_demand_tags' => $agent_dispatcher_on_demand_tags,'agent_dispatcher_tags' => $agent_dispatcher_tags,'typeArray' => $type, 'addons' => $addons, 'productVariants' => $productVariants, 'languages' => $clientLanguages, 'taxCate' => $taxCate, 'countries' => $countries, 'product' => $product, 'addOn_ids' => $addOn_ids, 'existOptions' => $existOptions, 'brands' => $brands, 'otherProducts' => $otherProducts, 'related_ids' => $related_ids, 'upSell_ids' => $upSell_ids, 'crossSell_ids' => $crossSell_ids, 'celebrities' => $celebrities, 'configData' => $configData, 'celeb_ids' => $celeb_ids]);
     }
 
@@ -252,11 +252,16 @@ class ProductController extends BaseController
         $rule = array(
             'product_name' => 'required|string',
             'sku' => 'required|unique:products,sku,'.$product->id,
-            'url_slug' => 'required|unique:products,url_slug,'.$product->id,
+            'url_slug' => 'required',
         );
         $validation  = Validator::make($request->all(), $rule);
         if ($validation->fails()) {
             return redirect()->back()->withInput()->withErrors($validation);
+        }
+        $check_url_slug = Product::where('id','!=',$id)->where('vendor_id',$request->vendor_id)->where('url_slug',$request->url_slug)->first();
+        if(!is_null($check_url_slug))
+        {
+            return redirect()->back()->with('url_slug_error','The url slug has already been taken.');
         }
         $product_category = ProductCategory::where('product_id', $id)->where('category_id', $request->category_id)->first();
         if(!$product_category){
@@ -292,10 +297,16 @@ class ProductController extends BaseController
         $product->mode_of_service        = $request->mode_of_service??null;
         $product->delay_order_hrs        = $request->delay_order_hrs??0;
         $product->delay_order_min        = $request->delay_order_min??0;
+        $product->delay_order_hrs_for_dine_in = $request->delay_order_hrs_for_dine_in??0;
+        $product->delay_order_min_for_dine_in = $request->delay_order_min_for_dine_in??0;
+        $product->delay_order_hrs_for_takeway = $request->delay_order_hrs_for_takeway??0;
+        $product->delay_order_min_for_takeway = $request->delay_order_min_for_takeway??0;
         $product->pickup_delay_order_hrs        = $request->pickup_delay_order_hrs??0;
         $product->pickup_delay_order_min        = $request->pickup_delay_order_min??0;
         $product->dropoff_delay_order_hrs        = $request->dropoff_delay_order_hrs??0;
         $product->dropoff_delay_order_min        = $request->dropoff_delay_order_min??0;
+        $product->minimum_order_count        = $request->minimum_order_count??0;
+        $product->batch_count        = $request->batch_count??1;
         if (empty($product->publish_at)) {
             $product->publish_at = ($request->is_live == 1) ? date('Y-m-d H:i:s') : '';
         }

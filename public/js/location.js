@@ -12,6 +12,7 @@ jQuery(window).scroll(function () {
     }
 });
 $(document).ready(function () {
+
     if (window.location.pathname == '/') {
         let latitude = "";
         let longitude = "";
@@ -22,30 +23,16 @@ $(document).ready(function () {
             longitude = $("#address-longitude").val();
         }
         getHomePage(latitude, longitude);
-        $(document).ready(function () {
-            $.ajax({
-                url: client_preferences_url,
-                type: "POST",
-                success: function (response) {
-                    if ($.cookie("age_restriction") != 1) {
-                        if (response.age_restriction == 1) {
-                            $('#age_restriction').modal({backdrop: 'static', keyboard: false});
-                        }
-                    }
-                    // if (response.delivery_check == 1) {
-                    //     getHomePage("", "", "delivery");
-                    // }
-                    // else if (response.dinein_check == 1) {
-                    //     getHomePage("", "", "dine_in");
-                    // }
-                    // else {
-                    //     getHomePage("", "", "takeaway");
-                    // }
-                },
-            });
-        });
-
-    
+        // $(document).ready(function () {
+        if ($.cookie("age_restriction") != 1) {
+            if(is_age_restricted == "1" || is_age_restricted == 1)
+            {
+                $('#age_restriction').modal({backdrop: 'static', keyboard: false});
+            }
+        }
+    }
+    else{
+        $(".shimmer_effect").hide();
     }
 
     $(".age_restriction_no").click(function () {
@@ -57,7 +44,7 @@ $(document).ready(function () {
         $('#age_restriction').modal('hide');
     });
 
-    $( document ).ready(function() {
+    // $( document ).ready(function() {
         $('.date-items').removeClass('hide');
         $('.date-items').slick({
             infinite: true,
@@ -92,10 +79,10 @@ $(document).ready(function () {
                         slidesToScroll: 1,
                         arrows: true
                     }
-                } 
+                }
             ]
         });
-        
+
         $('.booking-time').slick({
             infinite: true,
             speed: 300,
@@ -149,7 +136,7 @@ $(document).ready(function () {
                 }
             }]
         });
-        
+
         $('.materials-slide').slick({
             infinite: true,
             speed: 300,
@@ -177,17 +164,17 @@ $(document).ready(function () {
             }]
         });
 
-        
-    });
-       
-    $(document ).ready(function() {
+
+    // });
+
+    // $(document ).ready(function() {
         $("#number").hide();
         $("#add_btn").click(function(){
             $("#number").show();
             $(this).hide();
         });
-        
-    });
+
+    // });
 
     if($(".vendor_mods .nav-link").hasClass('active')){
         var tabs = $('.vendor_mods .nav-link.active').parent('.navigation-tab-item').prevAll().length;
@@ -259,20 +246,6 @@ $(document).ready(function () {
         });
     }
 
-    /*$("#dinein_tab").click(function () {
-        var url = "dine_in";
-        getHomePage("", "", url);
-    });
-
-    $("#delivery_tab").click(function () {
-        getHomePage();
-    });
-
-    $("#takeaway_tab").click(function () {
-        var url = "takeaway";
-        getHomePage("", "", url);
-    });*/
-
     function getHomePage(latitude, longitude, vtype = "") {
         if(vtype != ''){
             vendor_type = vtype;
@@ -304,11 +277,11 @@ $(document).ready(function () {
                     if($('.menu-slider').hasClass('slick-initialized')){
                         $('.menu-slider').slick('destroy');
                     }
-                    // $('#main-menu').smartmenus('destroy');
+                    $('#main-menu').smartmenus('destroy');
                     $("#main-menu").html('');
                     let nav_categories_template = _.template($('#nav_categories_template').html());
                     $("#main-menu").append(nav_categories_template({ nav_categories: response.data.navCategories }));
-                    // $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
+                    $("#main-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 }), $("#sub-menu").smartmenus({ subMenusSubOffsetX: 1, subMenusSubOffsetY: -8 });
                     //     if($(window).width() >= 320){
                     //         if(!$('.menu-slider').hasClass('slick-initialized')){
                     //             loadMainMenuSlider();
@@ -316,7 +289,7 @@ $(document).ready(function () {
                     //    }
                     resizeMenuSlider();
                     $("#main-menu").css("display" , "flex");
-                  
+
                     var path = window.location.pathname;
                     if (path == '/') {
                         // $(".home-slider, .home-slider-wrapper, #our_vendor_main_div").show();
@@ -349,7 +322,7 @@ $(document).ready(function () {
                             $(".render_on_sale").append(products_template({ products: response.data.on_sale_products, type: on_sale_product_language }));
                             $(".render_trending_vendors").append(trending_vendors_template({ trending_vendors: response.data.trending_vendors , type: vendor_language}));
                             $(".render_recent_orders").append(recent_orders_template({ recent_orders: response.data.active_orders}));
-                            
+
                             if (response.data.new_products.length > 0) {
                                 $('.render_full_new_products').removeClass('d-none');
                             } else {
@@ -372,8 +345,10 @@ $(document).ready(function () {
                             }
                             if (vendors.length > 0) {
                                 $('#our_vendor_main_div').removeClass('d-none');
+                                $(".no-store-wrapper").hide();
                             } else {
                                 $('#our_vendor_main_div').addClass('d-none');
+                                $(".no-store-wrapper").show();
                             }
                             if (response.data.active_orders.length > 0) {
                                 $('.render_full_recent_orders').removeClass('d-none');
@@ -404,7 +379,7 @@ $(document).ready(function () {
         });
     }
 
-  
+
 
     function getLocation() {
         if (navigator.geolocation) {
@@ -591,6 +566,7 @@ function initMap() {
         marker.setVisible(isEdit);
 
         const autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo('bounds', bindMap);
         autocomplete.key = fieldKey;
         autocompletes.push({ input: input, map: map, marker: marker, autocomplete: autocomplete });
     }
@@ -601,7 +577,7 @@ function initMap() {
         const map = autocompletes[i].map;
         const marker = autocompletes[i].marker;
 
-        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {         
             marker.setVisible(false);
             const place = autocomplete.getPlace();
 
@@ -631,6 +607,9 @@ function initMap() {
             marker.setVisible(true);
 
         });
+        setTimeout(function(){ 
+            $(".pac-container").appendTo("#edit-address .address-input-group");
+        }, 300);
     }
 }
 
@@ -643,7 +622,7 @@ function setLocationCoordinates(key, lat, lng) {
 google.maps.event.addDomListener(window, 'load', initMap);
 
 
-////   cab booking section 
+////   cab booking section
 
 $(document).on("input",".edit-other-stop",function() {
     var random_id = $(this).attr("id");
@@ -652,18 +631,24 @@ $(document).on("input",".edit-other-stop",function() {
 });
 
 
+$(document).delegate("#edit-address #address-input", "focus", function(){
+    initMap();
+});
+
 
   function initializeNewCabHome(random_id,rel) {
     var input = document.getElementById(random_id);
     var autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.bindTo('bounds', bindMap);
+
     google.maps.event.addListener(autocomplete, 'place_changed', function () {
       var place = autocomplete.getPlace();
       document.getElementById(random_id+'_latitude_home').value = place.geometry.location.lat();
       document.getElementById(random_id+'_longitude_home').value = place.geometry.location.lng();
 
-      
-       
-     
+
+
+
     });
   }
 

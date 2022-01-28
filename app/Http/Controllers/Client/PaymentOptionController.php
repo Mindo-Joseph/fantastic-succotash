@@ -29,7 +29,7 @@ class PaymentOptionController extends BaseController
      */
     public function index()
     {
-        $payment_codes = array('cod', 'wallet', 'layalty-points', 'paypal', 'stripe', 'paystack', 'payfast', 'mobbex', 'yoco', 'paylink', 'razorpay','gcash','simplify','square');
+        $payment_codes = array('cod', 'wallet', 'layalty-points', 'paypal', 'stripe', 'paystack', 'payfast', 'mobbex', 'yoco', 'paylink', 'razorpay','gcash','simplify','square','ozow','pagarme','checkout');
         $payout_codes = array('cash', 'stripe');
         $payOption = PaymentOption::whereIn('code', $payment_codes)->get();
         $payoutOption = PayoutOption::whereIn('code', $payout_codes)->get();
@@ -67,9 +67,12 @@ class PaymentOptionController extends BaseController
                     'signature' => $request->paypal_signature,
                 ));
             } else if (strtolower($request->method_name) == 'stripe') {
-                $json_creds = json_encode(array(
-                    'api_key' => $request->stripe_api_key
-                ));
+                if($request->stripe_api_key != 'admin@640'){
+                    $json_creds = json_encode(array(
+                        'api_key' => $request->stripe_api_key
+                    ));
+                }
+                
             }
         }
 
@@ -121,14 +124,18 @@ class PaymentOptionController extends BaseController
                     ], [
                         'stripe_api_key.required' => 'Stripe secret key field is required'
                     ]);
-                    $stripe_arr = array(
-                        'api_key' => $request->stripe_api_key,
-                        'publishable_key' => $request->stripe_publishable_key
-                    );
-                    if(isset($request->stripe_client_id)){
-                        $stripe_arr['client_id'] = $request->stripe_client_id;
+
+                    if($request->stripe_api_key != 'admin@640'){
+                        $stripe_arr = array(
+                            'api_key' => $request->stripe_api_key,
+                            'publishable_key' => $request->stripe_publishable_key
+                        );
+                        if(isset($request->stripe_client_id)){
+                            $stripe_arr['client_id'] = $request->stripe_client_id;
+                        }
+                        $json_creds = json_encode($stripe_arr);
                     }
-                    $json_creds = json_encode($stripe_arr);
+                   
                 } else if ((isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'yoco')) {
                     $validatedData = $request->validate([
                         'yoco_secret_key'        => 'required',
@@ -188,14 +195,10 @@ class PaymentOptionController extends BaseController
                     ));
                 }else if ((isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'gcash')) {
                     $validatedData = $request->validate([
-                        'gcash_merchant_account' => 'required',
-                        'gcash_api_key' => 'required',
-                        'gcash_secret_key' => 'required'
+                        'gcash_public_key' => 'required',
                     ]);
                     $json_creds = json_encode(array(
-                        'merchant_account' => $request->gcash_merchant_account,
-                        'api_key' => $request->gcash_api_key,
-                        'secret_key' => $request->gcash_secret_key
+                        'public_key' => $request->gcash_public_key,
                     ));
                 }else if ((isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'simplify')) {
                     $validatedData = $request->validate([
@@ -217,6 +220,40 @@ class PaymentOptionController extends BaseController
                         'application_id' => $request->square_application_id,
                         'api_access_token' => $request->square_access_token,
                         'location_id' => $request->square_location_id,
+                    ));
+                }
+                else if ((isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'ozow')) {
+                    $validatedData = $request->validate([
+                        'ozow_site_code' => 'required',
+                        'ozow_private_key' => 'required',
+                        'ozow_api_key' => 'required',
+                    ]);
+                    $json_creds = json_encode(array(
+                        'site_code' => $request->ozow_site_code,
+                        'private_key' => $request->ozow_private_key,
+                        'api_key' => $request->ozow_api_key,
+                    ));
+                }
+                else if ((isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'pagarme')) {
+                    $validatedData = $request->validate([
+                        'pagarme_api_key' => 'required',
+                        'pagarme_secret_key' => 'required',
+                        'pagarme_multiplier' => 'required',
+                    ]);
+                    $json_creds = json_encode(array(
+                        'api_key' => $request->pagarme_api_key,
+                        'secret_key' => $request->pagarme_secret_key,
+                        'multiplier' => $request->pagarme_multiplier,
+                    ));
+                }
+                else if ((isset($method_name_arr[$key])) && (strtolower($method_name_arr[$key]) == 'checkout')) {
+                    $validatedData = $request->validate([
+                        'checkout_secret_key' => 'required',
+                        'checkout_public_key' => 'required'
+                    ]);
+                    $json_creds = json_encode(array(
+                        'secret_key' => $request->checkout_secret_key,
+                        'public_key' => $request->checkout_public_key
                     ));
                 }
             }

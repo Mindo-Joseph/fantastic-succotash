@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use DB;
+use Auth;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -21,6 +22,11 @@ class ReviewController extends BaseController
     public function index(Request $request){
         // echo "review";
         $product = Product::whereHas('reviews')->withCount('reviews')->with('translation_one','media.image');
+        if (Auth::user()->is_superadmin == 0) {
+            $product = $product->whereHas('vendor.permissionToUser', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            });
+        }
         // echo "<pre>";
         // print_r($product->toArray());
         // exit();
@@ -35,6 +41,13 @@ class ReviewController extends BaseController
 
                     return $btn;
                 })
+                ->addColumn('view_rating', function ($row) {
+
+                    $view_url  =   route('review.show', [$row->sku]);
+                    $btn  = '<div class="form-ul"><div class="inner-div"><a href="'.$view_url.'" class="action-icon editIconBtn"><i class="mdi mdi-eye" aria-hidden="true"></i></a>';
+
+                    return $btn;
+                })
                 ->addColumn('product_name', function ($row) {
 
                     $view_url    =  route('review.show', [$row->sku]);
@@ -43,7 +56,7 @@ class ReviewController extends BaseController
                    // $btn  = $row->translation_one->title;
                     return $btn;
                 })
-                ->rawColumns(['action','product_name'])
+                ->rawColumns(['action','view_rating','product_name'])
                 ->make(true);
         }
         return view('backend.review.index');

@@ -9,7 +9,7 @@ use Auth;
 class Product extends Model{
       use SoftDeletes;
   
-    protected $fillable = ['sku', 'title', 'url_slug', 'description', 'body_html', 'vendor_id', 'category_id', 'type_id', 'country_origin_id', 'is_new', 'is_featured', 'is_live', 'is_physical', 'weight', 'weight_unit', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'publish_at', 'inquiry_only','has_variant','averageRating','tags', 'pharmacy_check', 'deleted_at', 'celebrity_id', 'brand_id', 'tax_category_id','need_price_from_dispatcher','mode_of_service','delay_order_hrs','delay_order_min','pickup_delay_order_hrs','pickup_delay_order_min','dropoff_delay_order_hrs','dropoff_delay_order_min'];
+    protected $fillable = ['sku', 'title', 'url_slug', 'description', 'body_html', 'vendor_id', 'category_id', 'type_id', 'country_origin_id', 'is_new', 'is_featured', 'is_live', 'is_physical', 'weight', 'weight_unit', 'has_inventory', 'sell_when_out_of_stock', 'requires_shipping', 'Requires_last_mile', 'publish_at', 'inquiry_only','has_variant','averageRating','tags', 'pharmacy_check', 'deleted_at', 'celebrity_id', 'brand_id', 'tax_category_id','need_price_from_dispatcher','mode_of_service','delay_order_hrs','delay_order_min','pickup_delay_order_hrs','pickup_delay_order_min','dropoff_delay_order_hrs','dropoff_delay_order_min','minimum_order_count','batch_count'];
     
     public function addOn(){
        return $this->hasMany('App\Models\ProductAddon')->select('product_id', 'addon_id'); 
@@ -24,7 +24,7 @@ class Product extends Model{
     }
 
     public function vendor(){
-       return $this->belongsTo('App\Models\Vendor')->select('id', 'slug', 'name', 'desc', 'logo', 'show_slot', 'status'); 
+       return $this->belongsTo('App\Models\Vendor')->select('id', 'slug', 'name', 'desc', 'logo', 'show_slot', 'status','closed_store_order_scheduled'); 
     }
 
     public function related(){
@@ -127,14 +127,34 @@ class Product extends Model{
     public function tags(){
       return $this->hasMany('App\Models\ProductTag', 'product_id', 'id'); 
     }
+    public function all_tags(){
+      return $this->hasMany('App\Models\ProductTag', 'product_id', 'id'); 
+    }
 
+    public function getDelayOrderTimeAttribute()
+    {
+      $data = [];
+      $type = ((session()->get('vendorType'))?session()->get('vendorType'):'delivery');
+      if($type == 'dine_in'){
+        $data['delay_order_hrs'] = $this->attributes['delay_order_hrs_for_dine_in'];
+        $data['delay_order_min'] = $this->attributes['delay_order_min_for_dine_in'];
+      }elseif($type == 'takeaway'){
+        $data['delay_order_hrs'] = $this->attributes['delay_order_hrs_for_takeway'];
+        $data['delay_order_min'] = $this->attributes['delay_order_min_for_takeway'];
+      }else{
+        $data['delay_order_hrs'] = $this->attributes['delay_order_hrs'];
+        $data['delay_order_min'] = $this->attributes['delay_order_min'];
+      }
+      return $data;
+    }
 
     public function getDelayHrsMinAttribute()
     {
-       $delay_order_hrs = $this->attributes['delay_order_hrs'];
-       $delay_order_min = $this->attributes['delay_order_min'];
+      $data = $this->getDelayOrderTimeAttribute();
+      $delay_order_hrs = $data['delay_order_hrs'];
+      $delay_order_min = $data['delay_order_min'];
 
-       if($delay_order_hrs > 0 || $delay_order_min > 0){
+       if(@$delay_order_hrs > 0 || @$delay_order_min > 0){
          $total_minutues = ($delay_order_hrs * 60) + $delay_order_min;
 
          $date = Carbon::now()
@@ -149,6 +169,7 @@ class Product extends Model{
        return 0;
       
     }
+
 
     public function getPickupDelayHrsMinAttribute()
     {
@@ -176,8 +197,11 @@ class Product extends Model{
        $delay_order_hrs = $this->attributes['dropoff_delay_order_hrs'];
        $delay_order_min = $this->attributes['dropoff_delay_order_min'];
 
+       $delay_order_hrs_pick = $this->attributes['pickup_delay_order_hrs'];
+       $delay_order_min_pick = $this->attributes['pickup_delay_order_min'];
+
        if($delay_order_hrs > 0 || $delay_order_min > 0){
-         $total_minutues = ($delay_order_hrs * 60) + $delay_order_min;
+         $total_minutues = (($delay_order_hrs+$delay_order_hrs_pick) * 60) + ($delay_order_min+$delay_order_min_pick);
 
          $date = Carbon::now()
               ->addMinutes($total_minutues)
@@ -210,6 +234,18 @@ class Product extends Model{
         return $this->hasMany('App\Models\CartProduct', 'product_id', 'id')->whereHas('cart',function($qset)use($column,$value){
             $qset->where($column,$value);
         });
+    }
+    public function getByVendorId($vendor_id)
+    {
+      return self::where('vendor_id',$vendor_id)->with('addOn','category','celebrities','crossSell','media','related','all_tags','translation','upSell','variant','variantSets')->get();
+    }
+    public function getProductBySku($sku)
+    {
+      return self::where('sku',$sku)->first();
+    }
+    public function getProductByCategory($category_id)
+    {
+      return self::where('category_id',$category_id)->get();
     }
     
 }

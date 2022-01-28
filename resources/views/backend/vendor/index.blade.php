@@ -7,10 +7,14 @@
     .pac-container .pac-item {
         z-index: 99999 !important;
     }
+    @media(min-width: 1440px){
+        .content{min-height: calc(100vh - 100px);}
+        .dataTables_scrollBody {height: calc(100vh - 500px);}
+    }
 </style>
 @endsection
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid vendor-page">
     <div class="row align-items-center">
         <div class="col-sm-6">
             <div class="page-title-box">
@@ -90,7 +94,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12 col-lg-12 tab-product vendor-products pt-0">
+        <div class="col-sm-12 col-lg-12 tab-product vendor-products pt-0 invisible">
             <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="active-vendor" data-toggle="tab" href="#active_vendor" role="tab" aria-selected="false" data-rel="vendor_active_datatable" data-status="1">
@@ -111,7 +115,7 @@
                     <div class="material-border"></div>
                 </li>
             </ul>
-            <div class="tab-content nav-material pt-0   " id="top-tabContent">
+            <div class="tab-content nav-material pt-0" id="top-tabContent">
                 <div class="tab-pane fade past-order show active" id="active_vendor" role="tabpanel" aria-labelledby="active-vendor">
                     <div class="row">
                         <div class="col-12">

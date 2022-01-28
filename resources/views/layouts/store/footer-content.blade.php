@@ -1,13 +1,13 @@
 @php
 $clientData = \App\Models\Client::where('id', '>', 0)->first();
 $urlImg = $clientData->logo['image_fit'].'200/80'.$clientData->logo['image_path'];
-$pages = \App\Models\Page::with(['translations' => function($q) {$q->where('language_id', session()->get('customerLanguage') ??1);}])->whereHas('translations', function($q) {$q->where(['is_published' => 1, 'language_id' => session()->get('customerLanguage') ??1]);})->get();
+$pages = \App\Models\Page::with(['translations' => function($q) {$q->where('language_id', session()->get('customerLanguage') ??1);}])->whereHas('translations', function($q) {$q->where(['is_published' => 1, 'language_id' => session()->get('customerLanguage') ??1]);})->orderBy('order_by','ASC')->get();
 @endphp
 <footer class="footer-light">
-    <section class="section-b-space light-layout py-4">
+    <section class="section-b-space light-layout py-xl-4 pt-4 pb-0">
         <div class="container">
             <div class="row footer-theme partition-f">
-                <div class="col-lg-2 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start">
+                <div class="col-lg-2 d-flex align-items-center justify-content-center justify-content-md-start">
                     <div class="footer-logo mb-0">
                         <a href="{{ route('userHome') }}">
                             <img class="img-fluid blur-up lazyload" src="{{$urlImg}}">
@@ -15,9 +15,9 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                     </div>
                 </div>
                 @if(count($pages))
-                <div class="col-lg-3 col-md-6 pl-lg-5">
+                <div class="col-lg-3 col-md-4 pl-lg-5">
                     <div class="sub-title">
-                        <div class="footer-title mt-0">
+                        <div class="footer-title mt-0 text-center text-md-left">
                             <h4 class="mt-0">{{ __('Links') }}</h4>
                         </div>
                         <div class="footer-contant">
@@ -38,7 +38,7 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                                 @endif
                                 @else
                                 <li>
-                                    <a href="{{route('extrapage',['slug' => $page->slug])}}">
+                                    <a href="{{route('extrapage',['slug' => $page->slug])}}"  target="_blank">
                                         @if(isset($page->translations) && $page->translations->first()->title != null)
                                         {{ $page->translations->first()->title ?? ''}}
                                         @else
@@ -54,9 +54,9 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                 </div>
                 @endif
                 @if(count($social_media_details))
-                <div class="col-lg-4 col-md-6 pl-lg-5">
+                <div class="col-lg-4 col-md-4">
                     <div class="sub-title">
-                        <div class="footer-title mt-0">
+                    <div class="footer-title mt-0 text-center text-md-left">
                             <h4 class="mt-0">{{ __('Connect') }}</h4>
                         </div>
                         <div class="footer-contant">
@@ -77,16 +77,16 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                 </div>
                 @endif
                 @if($client_preference_detail->show_contact_us == 1)
-                <div class="col-lg-3 col-md-6 mb-md-0 mb-3">
+                <div class="col-lg-3 col-md-4 mb-md-0 mb-3">
                     <div class="sub-title">
-                        <div class="footer-title mt-0">
+                        <div class="footer-title mt-0 text-center text-md-left">
                             <h4 class="mt-0">{{ __('Contact Us') }}</h4>
                         </div>
                         <div class="footer-contant">
                             <ul class="contact-list">
                                 <li><i class="icon-location"></i> {{$clientData ? $clientData->company_address : 'Demo Store, 345-659'}}</li>
                                 <li><i class="icon-ic_call"></i> <a href="tel: {{$clientData ? $clientData->phone_number : '123-456-7898'}}">{{$clientData ? $clientData->phone_number : '123-456-7898'}}</a></li>
-                                <li><i class="icon-ic_mail"></i> <a href="mailto: {{$clientData ? $clientData->email : 'Support@Fiot.com'}}">{{$clientData ? $clientData->email : 'Support@Fiot.com'}}</a></li>
+                                <li><i class="icon-ic_mail"></i> <a href="mailto: {{$clientData ? $clientData->email : 'Support@Fiot.com'}}" style="text-transform:none">{{$clientData ? $clientData->email : 'Support@Fiot.com'}}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -95,8 +95,8 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
             @endif
             <div class="col-lg-3 col-md-6 mb-md-0 mb-3 text-right d-none">
                 <div class="store-btn">
-                    <a href="#"><img src="{{asset('front-assets/images/app-store.svg')}}" alt=""></a>
-                    <a class="ml-2" href="#"><img src="{{asset('front-assets/images/google-play.svg')}}" alt=""></a>
+                    <a href="{{$client_preference_detail->ios_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/app-store.svg'),'270/48') }}" alt=""></a>
+                    <a class="ml-2" href="{{$client_preference_detail->android_app_link??'#'}}" target="_blank"><img src="{{ getImageUrl(asset('front-assets/images/google-play.svg'),'270/48') }}" alt=""></a>
                 </div>
                 <ul class="social-links ml-md-auto mt-3">
                     @foreach($social_media_details as $social_media_detail)
@@ -125,19 +125,19 @@ $pages = \App\Models\Page::with(['translations' => function($q) {$q->where('lang
                     <div class="payment-card-bottom">
                         <ul>
                             <li>
-                                <a href="#"><img src="{{asset('assets/images/visa.png')}}"></a>
+                                <a href="#"><img src="{{ getImageUrl(asset('assets/images/visa.png'),'26/26') }}"></a>
                             </li>
                             <li>
-                                <a href="#"><img src="{{asset('assets/images/mastercard.png')}}"></a>
+                                <a href="#"><img src="{{ getImageUrl(asset('assets/images/mastercard.png'),'26/26') }}"></a>
                             </li>
                             <li>
-                                <a href="#"><img src="{{asset('assets/images/paypal.png')}}"></a>
+                                <a href="#"><img src="{{ getImageUrl(asset('assets/images/paypal.png'),'26/26') }}"></a>
                             </li>
                             <li>
-                                <a href="#"><img src="{{asset('assets/images/american-express.png')}}"></a>
+                                <a href="#"><img src="{{ getImageUrl(asset('assets/images/american-express.png'),'26/26') }}"></a>
                             </li>
                             <li>
-                                <a href="#"><img src="{{asset('assets/images/discover.png')}}"></a>
+                                <a href="#"><img src="{{ getImageUrl(asset('assets/images/discover.png'),'26/26') }}"></a>
                             </li>
                         </ul>
                     </div>

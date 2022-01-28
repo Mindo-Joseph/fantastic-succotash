@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\PaymentOption;
 use Omnipay\Common\CreditCard;
 use App\Http\Traits\ApiResponser;
-use App\Http\Controllers\Api\v1\{BaseController, StripeGatewayController, MobbexGatewayController, YocoGatewayController, RazorpayGatewayController, SimplifyGatewayController, SquareGatewayController};
+use App\Http\Controllers\Api\v1\{BaseController, StripeGatewayController, PaystackGatewayController, PayfastGatewayController, MobbexGatewayController, YocoGatewayController, RazorpayGatewayController, SimplifyGatewayController, SquareGatewayController,PagarmeGatewayController, CheckoutGatewayController};
 use App\Http\Requests\OrderStoreRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Models\{Order, OrderProduct, Cart, CartAddon, CartProduct, Product, OrderProductAddon, Client, ClientPreference, ClientCurrency, OrderVendor, UserAddress, CartCoupon, VendorOrderStatus, OrderStatusOption, Vendor, LoyaltyCard, User, Payment, Transaction};
@@ -21,12 +21,22 @@ class PaymentOptionController extends BaseController{
 
     public function getPaymentOptions(Request $request, $page = ''){
         if($page == 'wallet'){
-            $code = array('paypal', 'stripe', 'yoco', 'paylink','razorpay','simplify','square');
-        }else{
-            $code = array('cod', 'paypal', 'payfast', 'stripe', 'mobbex','yoco','paylink','razorpay','gcash','simplify','square');
+            $code = array('paypal', 'paystack', 'payfast', 'stripe', 'yoco', 'paylink','razorpay','simplify','square','pagarme','checkout');
+        }
+        elseif($page == 'pickup_delivery'){
+            $code = array('cod', 'razorpay');
+        }
+        else{
+            $code = array('cod', 'paypal', 'paystack', 'payfast', 'stripe', 'mobbex','yoco','paylink','razorpay','gcash','simplify','square','pagarme','checkout');
         }
         $payment_options = PaymentOption::whereIn('code', $code)->where('status', 1)->get(['id', 'code', 'title', 'off_site']);
         foreach($payment_options as $option){
+            if($option->code == 'stripe'){
+                $option->title = __('Credit/Debit Card (Stripe)');
+            }
+            if($option->code == 'mobbex'){
+                $option->title = __('Mobbex');
+            }
             $option->title = __($option->title);
         }
         return $this->successResponse($payment_options, '', 201);
@@ -43,20 +53,6 @@ class PaymentOptionController extends BaseController{
             if(method_exists($this, $function)) {
                 if(!empty($request->action)){
                     $response = $this->$function($request); // call related gateway for payment processing
-                    // $responseData = $response->getData(); //getOriginalContent();
-                    // if($responseData->status == 'Success'){
-                    //     // if( ($gateway != 'paypal') && ($gateway != 'mobbex') ){
-                    //     if( $gateway == 'stripe' ){
-                    //         $request->request->add(['transaction_id' => $responseData->data]);
-                    //         if($request->action == 'cart'){
-                    //             $orderResponse = $this->postPlaceOrder($request);
-                    //             return $orderResponse;
-                    //         }
-                    //         else if($request->action == 'wallet'){
-                    //             $walletResponse = $this->creditMyWallet($request);
-                    //         }
-                    //     }
-                    // }
                     return $response;
                 }
             }
@@ -71,6 +67,11 @@ class PaymentOptionController extends BaseController{
     public function postPaymentVia_stripe(Request $request){
         $gateway = new StripeGatewayController();
         return $gateway->stripePurchase($request);
+    }
+
+    public function postPaymentVia_paystack(Request $request){
+        $gateway = new PaystackGatewayController();
+        return $gateway->paystackPurchase($request);
     }
 
     public function postPaymentVia_payfast(Request $request){
@@ -105,6 +106,15 @@ class PaymentOptionController extends BaseController{
     public function postPaymentVia_square(Request $request){
         $gateway = new SquareGatewayController();
         return $gateway->squarePurchase($request);
+    }
+    public function postPaymentVia_pagarme(Request $request){
+        $gateway = new PagarmeGatewayController();
+        return $gateway->pagarmePurchase($request);
+    }
+
+    public function postPaymentVia_checkout(Request $request){
+        $gateway = new CheckoutGatewayController();
+        return $gateway->checkoutPurchase($request);
     }
 
     public function postPaymentVia_paypal(Request $request){
@@ -208,7 +218,7 @@ class PaymentOptionController extends BaseController{
                                                         'shortcode' => $dispatch_domain->delivery_service_key_code,
                                                         'content-type' => 'application/json']
                                                             ]);
-                            $url = $dispatch_domain->delivery_service_key_url;                      
+                            $url = $dispatch_domain->delivery_service_key_url;
                             $res = $client->post($url.'/api/get-delivery-fee',
                                 ['form_params' => ($postdata)]
                             );
@@ -218,10 +228,10 @@ class PaymentOptionController extends BaseController{
                             }
                     }
                 }
-            }    
+            }
             catch(\Exception $e){}
     }
-    # check if last mile delivery on 
+    # check if last mile delivery on
     public function checkIfLastMileOn(){
         $preference = ClientPreference::first();
         if($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url))
@@ -368,10 +378,10 @@ class PaymentOptionController extends BaseController{
                                 $final_coupon_discount_amount = $coupon_discount_amount * $clientCurrency->doller_compare;
                                 $total_discount += $final_coupon_discount_amount;
                                 $vendor_payable_amount -=$final_coupon_discount_amount;
-                                $vendor_discount_amount +=$final_coupon_discount_amount; 
-                            }   
+                                $vendor_discount_amount +=$final_coupon_discount_amount;
+                            }
                         }
-                        
+
                         $order_vendor->coupon_id = $coupon_id;
                         $order_vendor->coupon_code = $coupon_name;
                         $order_vendor->order_status_option_id = 1;
@@ -431,7 +441,7 @@ class PaymentOptionController extends BaseController{
                 }else{
                     return $this->errorResponse(['error' => __('Empty cart.')], 404);
                 }
-        
+
             }
             catch (Exception $e) {
             DB::rollback();

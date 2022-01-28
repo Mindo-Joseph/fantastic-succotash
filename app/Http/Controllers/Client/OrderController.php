@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Client\BaseController;
+use App\Http\Controllers\Front\LalaMovesController;
 use App\Models\VendorOrderDispatcherStatus;
 use App\Models\{OrderStatusOption, DispatcherStatusOption, VendorOrderStatus, ClientPreference, NotificationTemplate, OrderProduct, OrderVendor, UserAddress, Vendor, OrderReturnRequest, UserDevice, UserVendor, LuxuryOption, ClientCurrency};
 use DB;
@@ -20,11 +21,12 @@ use App\Models\Transaction;
 use App\Models\AutoRejectOrderCron;
 use App\Http\Traits\ApiResponser;
 use Log;
-
+use Carbon\Carbon;
 class OrderController extends BaseController
 {
 
     use ApiResponser;
+    use \App\Http\Traits\OrderTrait;
     /**
      * Display a listing of the resource.
      *
@@ -32,7 +34,6 @@ class OrderController extends BaseController
      */
     public function index()
     {
-
         $user = Auth::user();
         // $orders = Order::with(['vendors.products','orderStatusVendor', 'address','user'])->orderBy('id', 'DESC');
         // if (Auth::user()->is_superadmin == 0) {
@@ -243,14 +244,25 @@ class OrderController extends BaseController
             foreach ($order->vendors as $vendor) {
                 $vendor->vendor_detail_url = route('order.show.detail', [$order->id, $vendor->vendor_id]);
                 $vendor_order_status = VendorOrderStatus::with('OrderStatusOption')->where('order_id', $order->id)->where('vendor_id', $vendor->vendor_id)->orderBy('id', 'DESC')->first();
-                $vendor->order_status = $vendor_order_status ? $vendor_order_status->OrderStatusOption->title : '';
+                $vendor->order_status = $vendor_order_status ? __($vendor_order_status->OrderStatusOption->title) : '';
                 $vendor->order_vendor_id = $vendor_order_status ? $vendor_order_status->order_vendor_id : '';
                 $vendor->vendor_name = $vendor ? $vendor->vendor->name : '';
                 $product_total_count = 0;
                 foreach ($vendor->products as $product) {
                     $product_total_count += $product->quantity * $product->price;
-                    $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
+                    $product->image_path  = $product->media->first() ? $product->media->first()->image->path : getDefaultImagePath();
                 }
+
+                if ($vendor->delivery_fee > 0) {
+                    $order_pre_time = ($vendor->order_pre_time > 0) ? $vendor->order_pre_time : 0;
+                    $user_to_vendor_time = ($vendor->user_to_vendor_time > 0) ? $vendor->user_to_vendor_time : 0;
+                    $ETA = $order_pre_time + $user_to_vendor_time;
+                    // $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : convertDateTimeInTimeZone($vendor->created_at, $user->timezone, 'h:i A');
+                    $vendor->ETA = ($ETA > 0) ? $this->formattedOrderETA($ETA, $vendor->created_at, $order->scheduled_date_time) : dateTimeInUserTimeZone($vendor->created_at, $user->timezone);
+                    //$order->converted_scheduled_date_time = $order->scheduled_date_time;
+                    $order->converted_scheduled_date_time = dateTimeInUserTimeZone($order->scheduled_date_time, $user->timezone);
+                }
+
                 $vendor->product_total_count = $product_total_count;
                 $vendor->final_amount = $vendor->taxable_amount + $product_total_count;
             }
@@ -265,7 +277,7 @@ class OrderController extends BaseController
                     $luxury_option_name = 'Delivery';
                 }
             }
-            $order->luxury_option_name = $luxury_option_name;
+            $order->luxury_option_name = __($luxury_option_name);
             if ($order->vendors->count() == 0) {
                 $orders->forget($key);
             }
@@ -300,9 +312,10 @@ class OrderController extends BaseController
             'vendors.products.addon',
             'vendors.products.addon.set',
             'vendors.products.addon.option',
-            'vendors.products.addon.option.translation_one' => function ($q) use ($langId) {
-                $q->select('id', 'addon_opt_id', 'title');
-                $q->where('language_id', $langId);
+            'vendors.products.addon.option.translation' => function ($q) use ($langId) {
+                $q->select('addon_option_translations.id', 'addon_option_translations.addon_opt_id', 'addon_option_translations.title', 'addon_option_translations.language_id');
+                $q->where('addon_option_translations.language_id', $langId);
+                $q->groupBy('addon_option_translations.addon_opt_id', 'addon_option_translations.language_id');
             },
             'vendors.dineInTable.translations' => function ($qry) use ($langId) {
                 $qry->where('language_id', $langId);
@@ -322,6 +335,7 @@ class OrderController extends BaseController
                         $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
                     }
                     $opt_quantity_price = number_format($opt_price_in_doller_compare * $product->quantity, 2, '.', '');
+                    $addons->option->translation_title = ($addons->option->translation->isNotEmpty()) ? $addons->option->translation->first()->title : '';
                     $addons->option->price_in_cart = $addons->option->price;
                     $addons->option->price = number_format($opt_price_in_currency, 2, '.', '');
                     $addons->option->multiplier = ($clientCurrency) ? $clientCurrency->doller_compare : 1;
@@ -358,13 +372,15 @@ class OrderController extends BaseController
             $vendor_order_status_created_dates[$vendor_order_status->order_status_option_id] = $vendor_order_status->created_at;
             $vendor_order_status_option_ids[] = $vendor_order_status->order_status_option_id;
         }
+
+        $vendor_data = Vendor::where('id',$vendor_id)->first();
         return view('backend.order.view')->with([
             'vendor_id' => $vendor_id, 'order' => $order,
             'vendor_order_statuses' => $vendor_order_statuses,
             'vendor_order_status_option_ids' => $vendor_order_status_option_ids,
             'order_status_options' => $order_status_options,
             'dispatcher_status_options' => $dispatcher_status_options,
-            'vendor_order_status_created_dates' => $vendor_order_status_created_dates, 'clientCurrency' => $clientCurrency
+            'vendor_order_status_created_dates' => $vendor_order_status_created_dates, 'clientCurrency' => $clientCurrency,'vendor_data' => $vendor_data
         ]);
     }
 
@@ -400,17 +416,36 @@ class OrderController extends BaseController
                     $clientDetail = CP::on('mysql')->where(['code' => $client_preferences->client_code])->first();
                     AutoRejectOrderCron::on('mysql')->where(['database_name' => $clientDetail->database_name, 'order_vendor_id' => $currentOrderStatus->id])->delete();
                 }
+                $orderData = Order::find($request->order_id);
                 if ($request->status_option_id == 2) {
-                    $order_dispatch = $this->checkIfanyProductLastMileon($request);
-                    if ($order_dispatch && $order_dispatch == 1)
-                        $stats = $this->insertInVendorOrderDispatchStatus($request);
+                    //Check Order delivery type
+                    if ($orderData->shipping_delivery_type=='D') {
+                        //Create Shipping request for dispatcher
+                        $order_dispatch = $this->checkIfanyProductLastMileon($request);
+                        if ($order_dispatch && $order_dispatch == 1)
+                            $stats = $this->insertInVendorOrderDispatchStatus($request);
+
+                    }elseif($orderData->shipping_delivery_type=='L'){
+                        //Create Shipping place order request for Lalamove
+                        $order_lalamove = $this->placeOrderRequestlalamove($request);
+                    }
                 }
                 OrderVendor::where('vendor_id', $request->vendor_id)->where('order_id', $request->order_id)->update(['order_status_option_id' => $request->status_option_id, 'reject_reason' => $request->reject_reason]);
-                $orderData = Order::find($request->order_id);
 
                 if (!empty($currentOrderStatus->dispatch_traking_url) && ($request->status_option_id == 3)) {
-                    $dispatch_traking_url = str_replace('/order/', '/order-cancel/', $currentOrderStatus->dispatch_traking_url);
-                    $response = Http::get($dispatch_traking_url);
+
+                    if ($orderData->shipping_delivery_type=='D') {
+                        $dispatch_traking_url = str_replace('/order/', '/order-cancel/', $currentOrderStatus->dispatch_traking_url);
+                        $response = Http::get($dispatch_traking_url);
+                    }elseif($orderData->shipping_delivery_type=='L'){
+                        //Cancel Shipping place order request for Lalamove
+                        $lala = new LalaMovesController();
+                        $order_lalamove = $lala->cancelOrderRequestlalamove($currentOrderStatus->web_hook_code);
+                    }
+
+                }
+                if($request->status_option_id == 2){
+                    $this->ProductVariantStock($request->order_id);
                 }
                 DB::commit();
                 // $this->sendSuccessNotification(Auth::user()->id, $request->vendor_id);
@@ -456,7 +491,7 @@ class OrderController extends BaseController
         foreach ($devices as $device) {
             $token[] = $device;
         }
-        $token[] = "d4SQZU1QTMyMaENeZXL3r6:APA91bHoHsQ-rnxsFaidTq5fPse0k78qOTo7ZiPTASiH69eodqxGoMnRu2x5xnX44WfRhrVJSQg2FIjdfhwCyfpnZKL2bHb5doCiIxxpaduAUp4MUVIj8Q43SB3dvvvBkM1Qc1ThGtEM";
+        //$token[] = "d4SQZU1QTMyMaENeZXL3r6:APA91bHoHsQ-rnxsFaidTq5fPse0k78qOTo7ZiPTASiH69eodqxGoMnRu2x5xnX44WfRhrVJSQg2FIjdfhwCyfpnZKL2bHb5doCiIxxpaduAUp4MUVIj8Q43SB3dvvvBkM1Qc1ThGtEM";
         // dd($token);
 
         $from = env('FIREBASE_SERVER_KEY');
@@ -489,6 +524,29 @@ class OrderController extends BaseController
         }
     }
     /// ******************  check If any Product Last Mile on   ************************ ///////////////
+
+    public function placeOrderRequestlalamove($request)
+    {
+
+        $lala = new LalaMovesController();
+        //Create Shipping place order request for Lalamove
+        $checkdeliveryFeeAdded = OrderVendor::where(['order_id' => $request->order_id, 'vendor_id' => $request->vendor_id])->first();
+        $checkOrder = Order::findOrFail($request->order_id);
+            if ($checkdeliveryFeeAdded && $checkdeliveryFeeAdded->delivery_fee > 0.00){
+            $order_lalamove = $lala->placeOrderToLalamoveDev($request->vendor_id,$checkOrder->user_id,$checkOrder->id);
+            }
+
+            if ($order_lalamove->totalFee >0){
+                $up_web_hook_code = OrderVendor::where(['order_id' => $checkOrder->id, 'vendor_id' => $request->vendor_id])
+                ->update(['web_hook_code' => $order_lalamove->orderRef]);
+
+                return 1;
+            }
+
+        return 2;
+    }
+
+
     public function checkIfanyProductLastMileon($request)
     {
         $order_dispatchs = 2;
@@ -501,6 +559,9 @@ class OrderController extends BaseController
 
             if ($order_dispatchs && $order_dispatchs == 1)
                 return 1;
+
+
+            return 2;
         }
 
 
@@ -563,6 +624,7 @@ class OrderController extends BaseController
 
         return 2;
     }
+
     // place Request To Dispatch
     public function placeRequestToDispatch($order, $vendor, $dispatch_domain)
     {
@@ -581,7 +643,7 @@ class OrderController extends BaseController
             }
             $dynamic = uniqid($order->id . $vendor);
             $call_back_url = route('dispatch-order-update', $dynamic);
-            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
+            $vendor_details = Vendor::where('id', $vendor)->select('id', 'phone_no', 'email', 'name', 'latitude', 'longitude', 'address')->first();
             $tasks = array();
             $meta_data = '';
 
@@ -589,6 +651,12 @@ class OrderController extends BaseController
             if (!empty($dispatch_domain->last_mile_team))
                 $team_tag = $dispatch_domain->last_mile_team;
 
+                if (isset($order->scheduled_date_time) && !empty($order->scheduled_date_time)) {
+                    $task_type = 'schedule';
+                    $schedule_time = $order->scheduled_date_time ?? null;
+                } else {
+                    $task_type = 'now';
+                }
 
             $tasks[] = array(
                 'task_type_id' => 1,
@@ -598,6 +666,9 @@ class OrderController extends BaseController
                 'address' => $vendor_details->address ?? '',
                 'post_code' => '',
                 'barcode' => '',
+                'flat_no'     => null,
+                'email'       => $vendor_details->email ?? null,
+                'phone_number' => $vendor_details->phone_no ?? null,
             );
 
             $tasks[] = array(
@@ -608,6 +679,9 @@ class OrderController extends BaseController
                 'address' => $cus_address->address ?? '',
                 'post_code' => $cus_address->pincode ?? '',
                 'barcode' => '',
+                'flat_no'     => $cus_address->house_number ?? null,
+                'email'       => $customer->email ?? null,
+                'phone_number' => ($customer->dial_code . $customer->phone_number)  ?? null,
             );
 
             $postdata =  [
@@ -618,7 +692,8 @@ class OrderController extends BaseController
                 'recipient_email' => $customer->email ?? null,
                 'task_description' => "Order From :" . $vendor_details->name,
                 'allocation_type' => 'a',
-                'task_type' => 'now',
+                'task_type' => $task_type,
+                'schedule_time' => $schedule_time ?? null,
                 'cash_to_be_collected' => $payable_amount ?? 0.00,
                 'barcode' => '',
                 'order_team_tag' => $team_tag,
@@ -650,6 +725,7 @@ class OrderController extends BaseController
             }
             return 2;
         } catch (\Exception $e) {
+            Log::info($e->getMessage());
             return 2;
             return response()->json([
                 'status' => 'error',
@@ -678,7 +754,7 @@ class OrderController extends BaseController
             }
             $dynamic = uniqid($order->id . $vendor);
             $call_back_url = route('dispatch-order-update', $dynamic);
-            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
+            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'phone_no', 'email', 'latitude', 'longitude', 'address')->first();
             $tasks = array();
             $meta_data = '';
 
@@ -694,6 +770,9 @@ class OrderController extends BaseController
                 'address' => $vendor_details->address ?? '',
                 'post_code' => '',
                 'barcode' => '',
+                'flat_no'     => null,
+                'email'       => $vendor_details->email ?? null,
+                'phone_number' => $vendor_details->phone_no ?? null,
             );
 
             $tasks[] = array(
@@ -704,6 +783,9 @@ class OrderController extends BaseController
                 'address' => $cus_address->address ?? '',
                 'post_code' => $cus_address->pincode ?? '',
                 'barcode' => '',
+                'flat_no'     => $cus_address->house_number ?? null,
+                'email'       => $customer->email ?? null,
+                'phone_number' => ($customer->dial_code . $customer->phone_number)  ?? null,
             );
 
             $postdata =  [
@@ -775,7 +857,7 @@ class OrderController extends BaseController
 
             $dynamic = uniqid($order->id . $vendor);
             $call_back_url = route('dispatch-order-update', $dynamic);
-            $vendor_details = Vendor::where('id', $vendor)->select('id', 'name', 'latitude', 'longitude', 'address')->first();
+            $vendor_details = Vendor::where('id', $vendor)->select('id', 'phone_no', 'email', 'name', 'latitude', 'longitude', 'address')->first();
             $tasks = array();
             $meta_data = '';
 
@@ -820,6 +902,9 @@ class OrderController extends BaseController
                     'address' => $vendor_details->address ?? '',
                     'post_code' => '',
                     'barcode' => '',
+                    'flat_no'     => null,
+                    'email'       => $vendor_details->email ?? null,
+                    'phone_number' => $vendor_details->phone_no ?? null,
                 );
 
                 $tasks[] = array(
@@ -830,6 +915,9 @@ class OrderController extends BaseController
                     'address' => $cus_address->address ?? '',
                     'post_code' => $cus_address->pincode ?? '',
                     'barcode' => '',
+                    'flat_no'     => $cus_address->house_number ?? null,
+                    'email'       => $customer->email ?? null,
+                    'phone_number' => ($customer->dial_code . $customer->phone_number)  ?? null,
                 );
 
 
@@ -1056,5 +1144,190 @@ class OrderController extends BaseController
                 curl_close($ch);
             }
         }
+    }
+
+
+
+    /**
+     * Change the status of order
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function createDispatchRequest(Request $request, $domain = '')
+    {
+
+        DB::beginTransaction();
+        $client_preferences = ClientPreference::first();
+        try {
+            $timezone = Auth::user()->timezone;
+             $currentOrderStatus = OrderVendor::where(['vendor_id' => $request->vendor_id, 'order_id' => $request->order_id])->first();
+             $vendor_dispatch_status = VendorOrderDispatcherStatus::where(['vendor_id' => $request->vendor_id, 'order_id' => $request->order_id])->first();
+
+            if ($currentOrderStatus->order_status_option_id == 3) { //if order rejected
+                return response()->json(['status' => 'error', 'message' => __('Order has already been rejected!!!')]);
+            }
+
+            if (isset($vendor_dispatch_status) && !empty($vendor_dispatch_status)) { //if alredery dispatch request done
+                return response()->json(['status' => 'error', 'message' => __('Order has already been generated in dispatcher')]);
+            }
+
+
+            if (!$vendor_dispatch_status) {
+                $order_dispatch = $this->checkIfanyProductLastMileon($request);
+                if ($order_dispatch && $order_dispatch == 1)
+                $stats = $this->insertInVendorOrderDispatchStatus($request);
+                DB::commit();
+                return response()->json([
+                    'status' => 'success',
+                     'message' => __('Dispatch Request Created.')
+                ]);
+            }else{
+                return response()->json([
+                    'status' => 'error',
+                     'message' => __('Try again later.')
+                ]);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+
+
+    public function formattedOrderETA($minutes, $order_vendor_created_at, $scheduleTime='', $user=''){
+        $d = floor ($minutes / 1440);
+        $h = floor (($minutes - $d * 1440) / 60);
+        $m = $minutes - ($d * 1440) - ($h * 60);
+
+        if(isset($user) && !empty($user))
+        $user =  $user;
+        else
+        $user = Auth::user();
+
+        $timezone = $user->timezone;
+        $preferences = ClientPreference::select('date_format', 'time_format')->where('id', '>', 0)->first();
+        $date_format = $preferences->date_format;
+        $time_format = $preferences->time_format;
+
+        if($scheduleTime != ''){
+            $datetime = Carbon::parse($scheduleTime)->addMinutes($minutes);
+            $datetime = dateTimeInUserTimeZone($datetime, $timezone);
+        }else{
+            $datetime = Carbon::parse($order_vendor_created_at)->addMinutes($minutes);
+            $datetime = dateTimeInUserTimeZone($datetime, $timezone);
+        }
+        if(Carbon::parse($datetime)->isToday()){
+            if($time_format == '12'){
+                $time_format = 'hh:mm A';
+            }else{
+                $time_format = 'HH:mm';
+            }
+            $datetime = Carbon::parse($datetime)->isoFormat($time_format);
+        }
+        return $datetime;
+    }
+
+
+    /**
+     * edit the order.
+     *
+     * @param  \App\Models\Order  $order
+     * @return \Illuminate\Http\Response
+     */
+
+    public function getOrderDetailEdit($domain = '', $order_id, $vendor_id)
+    {
+        $langId = Session::has('adminLanguage') ? Session::get('adminLanguage') : 1;
+        $clientCurrency = ClientCurrency::where('is_primary', 1)->first();
+        $vendor_order_status_option_ids = [];
+        $vendor_order_status_created_dates = [];
+        $order = Order::with(array(
+            'vendors' => function ($query) use ($vendor_id) {
+                $query->where('vendor_id', $vendor_id);
+            },
+            'vendors.products.prescription' => function ($query) use ($vendor_id, $order_id) {
+                $query->where('vendor_id', $vendor_id)->where('order_id', $order_id);
+            },
+            'vendors.products' => function ($query) use ($vendor_id) {
+                $query->where('vendor_id', $vendor_id);
+            },
+            'vendors.products.addon',
+            'vendors.products.addon.set',
+            'vendors.products.addon.option',
+            'vendors.products.addon.option.translation' => function ($q) use ($langId) {
+                $q->select('addon_option_translations.id', 'addon_option_translations.addon_opt_id', 'addon_option_translations.title', 'addon_option_translations.language_id');
+                $q->where('addon_option_translations.language_id', $langId);
+                $q->groupBy('addon_option_translations.addon_opt_id', 'addon_option_translations.language_id');
+            },
+            'vendors.dineInTable.translations' => function ($qry) use ($langId) {
+                $qry->where('language_id', $langId);
+            },
+            'vendors.dineInTable.category'
+        ))->findOrFail($order_id);
+        foreach ($order->vendors as $key => $vendor) {
+            foreach ($vendor->products as $key => $product) {
+                $product->image_path  = $product->media->first() ? $product->media->first()->image->path : '';
+                $divider = (empty($product->doller_compare) || $product->doller_compare < 0) ? 1 : $product->doller_compare;
+                $total_amount = $product->quantity * $product->price;
+                foreach ($product->addon as $ck => $addons) {
+                    $opt_price_in_currency = $addons->option->price;
+                    $opt_price_in_doller_compare = $addons->option->price;
+                    if ($clientCurrency) {
+                        $opt_price_in_currency = $addons->option->price / $divider;
+                        $opt_price_in_doller_compare = $opt_price_in_currency * $clientCurrency->doller_compare;
+                    }
+                    $opt_quantity_price = number_format($opt_price_in_doller_compare * $product->quantity, 2, '.', '');
+                    $addons->option->translation_title = ($addons->option->translation->isNotEmpty()) ? $addons->option->translation->first()->title : '';
+                    $addons->option->price_in_cart = $addons->option->price;
+                    $addons->option->price = number_format($opt_price_in_currency, 2, '.', '');
+                    $addons->option->multiplier = ($clientCurrency) ? $clientCurrency->doller_compare : 1;
+                    $addons->option->quantity_price = $opt_quantity_price;
+                    $total_amount = $total_amount + $opt_quantity_price;
+                }
+                $product->total_amount = $total_amount;
+            }
+            if ($vendor->dineInTable) {
+                $vendor->dineInTableName = $vendor->dineInTable->translations->first() ? $vendor->dineInTable->translations->first()->name : '';
+                $vendor->dineInTableCapacity = $vendor->dineInTable->seating_number;
+                $vendor->dineInTableCategory = $vendor->dineInTable->category->title; //$vendor->dineInTable->category->first() ? $vendor->dineInTable->category->first()->title : '';
+            }
+        }
+        // dd($order->toArray());
+        $luxury_option_name = '';
+        if ($order->luxury_option_id > 0) {
+            $luxury_option = LuxuryOption::where('id', $order->luxury_option_id)->first();
+            if ($luxury_option->title == 'takeaway') {
+                $luxury_option_name = $this->getNomenclatureName('Takeaway', $langId, false);
+            } elseif ($luxury_option->title == 'dine_in') {
+                $luxury_option_name = 'Dine-In';
+            } else {
+                $luxury_option_name = 'Delivery';
+            }
+        }
+        $order->luxury_option_name = $luxury_option_name;
+        $order_status_options = OrderStatusOption::where('type', 1)->get();
+        $dispatcher_status_options = DispatcherStatusOption::with(['vendorOrderDispatcherStatus' => function ($q) use ($order_id, $vendor_id) {
+            $q->where(['order_id' => $order_id, 'vendor_id' => $vendor_id]);
+        }])->get();
+        $vendor_order_statuses = VendorOrderStatus::where('order_id', $order_id)->where('vendor_id', $vendor_id)->get();
+        foreach ($vendor_order_statuses as $vendor_order_status) {
+            $vendor_order_status_created_dates[$vendor_order_status->order_status_option_id] = $vendor_order_status->created_at;
+            $vendor_order_status_option_ids[] = $vendor_order_status->order_status_option_id;
+        }
+
+        $vendor_data = Vendor::where('id',$vendor_id)->first();
+        return view('backend.order.edit')->with([
+            'vendor_id' => $vendor_id, 'order' => $order,
+            'vendor_order_statuses' => $vendor_order_statuses,
+            'vendor_order_status_option_ids' => $vendor_order_status_option_ids,
+            'order_status_options' => $order_status_options,
+            'dispatcher_status_options' => $dispatcher_status_options,
+            'vendor_order_status_created_dates' => $vendor_order_status_created_dates, 'clientCurrency' => $clientCurrency,'vendor_data' => $vendor_data
+        ]);
     }
 }

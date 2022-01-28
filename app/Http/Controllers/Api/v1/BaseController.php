@@ -12,17 +12,36 @@ use ConvertCurrency;
 use App\Models\Cart;
 use App\Models\UserDevice;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client as GCLIENT;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Twilio\Rest\Client as TwilioClient;
-use App\Models\{Client, Category, Product, ClientPreference, ClientCurrency, Wallet, UserLoyaltyPoint, LoyaltyCard, Order, Nomenclature, VendorCategory};
+use App\Models\{Client, Category, Product, ClientPreference, ClientCurrency, Wallet, UserLoyaltyPoint, LoyaltyCard, Order, Nomenclature, Vendor, VendorCategory};
 
 class BaseController extends Controller{
+
+    use \App\Http\Traits\smsManager;
+
     private $field_status = 2;
 	protected function sendSms($provider, $sms_key, $sms_secret, $sms_from, $to, $body){
         try{
-            $client = new TwilioClient($sms_key, $sms_secret);
-            $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+            $client_preference =  getClientPreferenceDetail();
+            if($client_preference->sms_provider == 1)
+            {
+                $client = new TwilioClient($sms_key, $sms_secret);
+                $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+            }elseif($client_preference->sms_provider == 2) //for mtalkz gateway
+            {
+                $crendentials = json_decode($client_preference->sms_credentials);
+                $send = $this->mTalkz_sms($to,$body,$crendentials);
+            }elseif($client_preference->sms_provider == 3) //for mazinhost gateway
+            {
+                $crendentials = json_decode($client_preference->sms_credentials);
+                $send = $this->mazinhost_sms($to,$body,$crendentials);
+            }else{
+                $client = new TwilioClient($sms_key, $sms_secret);
+                $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
+            }
         }
         catch(\Exception $e){
             return '2';
@@ -67,7 +86,7 @@ class BaseController extends Controller{
                         $this->getChildCategoriesForVendor($child->id, $langId, $vid);
                     }
                 }
-                
+
                 $vendorCategory = VendorCategory::with(['category.translation' => function($q) use($langId){
                     $q->where('category_translations.language_id', $langId);
                 }])->where('vendor_id', $vid)->where('category_id', $cate->id)->where('status', 1)->first();
@@ -84,14 +103,14 @@ class BaseController extends Controller{
         $preferences = ClientPreference::select('is_hyperlocal', 'client_code', 'language_id', 'celebrity_check')->first();
         $categories = Category::join('category_translations as cts', 'categories.id', 'cts.category_id')
                     ->select('categories.id', 'categories.icon', 'categories.image', 'categories.slug', 'categories.parent_id', 'cts.name', 'categories.warning_page_id', 'categories.template_type_id', 'types.title as redirect_to')->distinct('categories.slug');
-        
+
         $status = $this->field_status;
         $include_categories = [4,8]; // type 4 for brands
         $celebrity_check = 0;
         if ($preferences) {
             if((isset($preferences->celebrity_check)) && ($preferences->celebrity_check == 1)){
                 $celebrity_check = 1;
-                $include_categories[] = 5; // type 5 for celebrity 
+                $include_categories[] = 5; // type 5 for celebrity
             }
             if ((isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1)) {
                 $categories = $categories->leftJoin('vendor_categories as vct', 'categories.id', 'vct.category_id')
@@ -152,7 +171,7 @@ class BaseController extends Controller{
                 $q->select('sku', 'product_id', 'quantity', 'price', 'barcode');
                 $q->groupBy('product_id');
             },
-        ])->select('id', 'sku', 'averageRating', 'url_slug', 'is_new', 'is_featured', 'vendor_id', 'inquiry_only')
+        ])->select('id', 'sku', 'averageRating', 'url_slug', 'is_new', 'is_featured', 'vendor_id', 'inquiry_only','minimum_order_count','batch_count')
         ->whereIn('id', $productIds);
         $products = $products->get();
         if(!empty($products)){
@@ -171,7 +190,7 @@ class BaseController extends Controller{
                 $value->variant_multiplier = $multiplier ? $multiplier : 1;
                 $value->variant_price = (!empty($value->variant->first())) ? number_format(($value->variant->first()->price * $multiplier),2,'.','') : 0;
                 $value->averageRating = number_format($value->averageRating, 1, '.', '');
-                $value->category_name = $value->category->categoryDetail->translation->first()->name;
+                $value->category_name = $value->category->categoryDetail->translation->first()->name??null;
                 // foreach ($value->variant as $k => $v) {
                 //     $value->variant[$k]->multiplier = $multiplier;
                 // }
@@ -196,7 +215,33 @@ class BaseController extends Controller{
             $distance_to_time_multiplier = (!empty($preferences->distance_to_time_multiplier)) ? $preferences->distance_to_time_multiplier : 2;
             $distance = $this->calulateDistanceLineOfSight($lat1, $long1, $lat2, $long2, $distance_unit);
             $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
-            $vendor->timeofLineOfSightDistance = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
+            $pretime =  number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
+            // if($pretime >= 60){
+            //     $vendor->timeofLineOfSightDistance =  $this->vendorTime($pretime) . '-' . $this->vendorTime((intval($pretime) + 5)).' '. __('hour');
+            // }else{
+            //     $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5).' '. __('min');
+            // }
+            $vendor->timeofLineOfSightDistance = $pretime ;
+        }
+        return $vendor;
+    }
+
+    function getLineOfSightDistanceAndTime($vendor, $preferences){
+        if (($preferences) && ($preferences->is_hyperlocal == 1)) {
+            $distance_unit = (!empty($preferences->distance_unit_for_time)) ? $preferences->distance_unit_for_time : 'kilometer';
+            $unit_abbreviation = ($distance_unit == 'mile') ? 'miles' : 'km';
+            $distance_to_time_multiplier = ($preferences->distance_to_time_multiplier > 0) ? $preferences->distance_to_time_multiplier : 2;
+            $distance = $vendor->vendorToUserDistance;
+            $vendor->lineOfSightDistance = number_format($distance, 1, '.', '') .' '. $unit_abbreviation;
+            $pretime = number_format(floatval($vendor->order_pre_time), 0, '.', '') + number_format(($distance * $distance_to_time_multiplier), 0, '.', ''); // distance is multiplied by distance time multiplier to calculate travel time
+            // if($pretime >= 60){
+            //     $vendor->timeofLineOfSightDistance =  $this->vendorTime($pretime) . '-' . $this->vendorTime((intval($pretime) + 5)).' '. __('hour');
+            // }else{
+            //     $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5).' '. __('min');
+            // }
+            $vendor->timeofLineOfSightDistance =  $pretime;
+            // $pretime = $this->getEvenOddTime($vendor->timeofLineOfSightDistance);
+            // $vendor->timeofLineOfSightDistance = $pretime . '-' . (intval($pretime) + 5);
         }
         return $vendor;
     }
@@ -210,6 +255,47 @@ class BaseController extends Controller{
         }
       }
       return $c;
+    }
+
+    public function getServiceAreaVendors($lat=0, $lng=0, $type='delivery'){
+        $preferences = ClientPreference::where('id', '>', 0)->first();
+        $user = Auth::user();
+        $latitude = ($user->latitude) ? $user->latitude : $lat;
+        $longitude = ($user->longitude) ? $user->longitude : $lng;
+        $vendorType = $user->vendorType ? $user->vendorType : $type;
+        $serviceAreaVendors = Vendor::select('id');
+        $vendors = [];
+        if($vendorType){
+            $serviceAreaVendors = $serviceAreaVendors->where($vendorType, 1);
+        }
+        if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
+            $latitude = ($latitude) ? $latitude : $preferences->Default_latitude;
+            $longitude = ($longitude) ? $longitude : $preferences->Default_longitude;
+
+            if(!empty($latitude) && !empty($longitude) ){
+                $serviceAreaVendors = $serviceAreaVendors->whereHas('serviceArea', function($query) use($latitude, $longitude){
+                    $query->select('vendor_id')
+                    ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
+                });
+            }
+           
+        }
+        $serviceAreaVendors = $serviceAreaVendors->where('status', 1)->get();
+
+        if($serviceAreaVendors->isNotEmpty()){
+            foreach($serviceAreaVendors as $value){
+                $vendors[] = $value->id;
+            }
+        }
+        return $vendors;
+    }
+
+    public function loadDefaultImage(){
+        $proxy_url = \Config::get('app.IMG_URL1');
+        $image_path = \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png');
+        $image_fit = \Config::get('app.FIT_URl');
+        $default_url = $image_fit .'300/300'. $image_path.'@webp';
+        return $default_url;
     }
 
     protected function contains($point, $polygon){
@@ -246,7 +332,7 @@ class BaseController extends Controller{
             "registration_ids" => $firebaseToken,
             "notification" => [
                 "title" => $request->title,
-                "body" => $request->body,  
+                "body" => $request->body,
             ]
         ];
         $dataString = json_encode($data);
@@ -273,17 +359,17 @@ class BaseController extends Controller{
     }
 
     public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption){
-        $config = array(
-            'driver' => $mail_driver,
-            'host' => $mail_host,
-            'port' => $mail_port,
-            'encryption' => $mail_encryption,
-            'username' => $mail_username,
-            'password' => $mail_password,
-            'sendmail' => '/usr/sbin/sendmail -bs',
-            'pretend' => false,
-        );
-        Config::set('mail', $config);
+        // $config = array(
+        //     'driver' => $mail_driver,
+        //     'host' => $mail_host,
+        //     'port' => $mail_port,
+        //     'encryption' => $mail_encryption,
+        //     'username' => $mail_username,
+        //     'password' => $mail_password,
+        //     'sendmail' => '/usr/sbin/sendmail -bs',
+        //     'pretend' => false,
+        // );
+        // Config::set('mail', $config);
         $app = App::getInstance();
         $app->register('Illuminate\Mail\MailServiceProvider');
         return '1';
@@ -407,7 +493,7 @@ class BaseController extends Controller{
           $dist = rad2deg($dist);
           $miles = $dist * 60 * 1.1515;
           $unit = strtolower($unit);
-      
+
           if ($unit == "kilometer") {
             return ($miles * 1.609344);
           } else if ($unit == "nautical mile") {
@@ -429,7 +515,7 @@ class BaseController extends Controller{
         // }else{
         //     $datetime = Carbon::parse($order_vendor_created_at)->setTimezone(Auth::user()->timezone)->addMinutes($minutes)->toDateTimeString();
         // }
-        
+
         // if(Carbon::parse($datetime)->isToday()){
         //     $format = 'h:i A';
         // }else{
@@ -437,6 +523,9 @@ class BaseController extends Controller{
         // }
         // // $time = convertDateTimeInTimeZone($datetime, Auth::user()->timezone, $format);
         // $time = Carbon::parse($datetime)->format($format);
+
+
+
         if(isset($user) && !empty($user))
         $user =  $user;
         else
@@ -448,9 +537,11 @@ class BaseController extends Controller{
         $time_format = $preferences->time_format;
 
         if($scheduleTime != ''){
-            $datetime = dateTimeInUserTimeZone($scheduleTime, $timezone);
+            $datetime = Carbon::parse($scheduleTime)->addMinutes($minutes);
+            $datetime = dateTimeInUserTimeZone($datetime, $timezone);
         }else{
-            $datetime = dateTimeInUserTimeZone($order_vendor_created_at, $timezone);
+            $datetime = Carbon::parse($order_vendor_created_at)->addMinutes($minutes);
+            $datetime = dateTimeInUserTimeZone($datetime, $timezone);
         }
         if(Carbon::parse($datetime)->isToday()){
             if($time_format == '12'){
@@ -470,7 +561,8 @@ class BaseController extends Controller{
         if($result){
             $searchTerm = $result->translations->count() != 0 ? $result->translations->first()->name : ucfirst($searchTerm);
         }
-        return $plural ? $searchTerm : rtrim($searchTerm, 's');
+        return $searchTerm;
+        // return $plural ? $searchTerm : rtrim($searchTerm, 's');
     }
 
     /* doller compare amount */
@@ -488,6 +580,43 @@ class BaseController extends Controller{
         $amount = ($amount / $divider) * $primaryCurrency->doller_compare;
         $amount = number_format($amount, 2);
         return $amount;
+    }
+
+    public function checkIfLastMileDeliveryOn()
+    {
+        $preference = ClientPreference::first();
+        if ($preference->need_delivery_service == 1 && !empty($preference->delivery_service_key) && !empty($preference->delivery_service_key_code) && !empty($preference->delivery_service_key_url)) {
+            return $preference;
+        } else {
+            return false;
+        }
+    }
+
+    public function driverDocuments()
+    {
+        try {
+            $dispatch_domain = $this->checkIfLastMileDeliveryOn();
+            $url = $dispatch_domain->delivery_service_key_url;
+            $endpoint = $url . "/api/send-documents";
+            // $dispatch_domain->delivery_service_key_code = '649a9a';
+            // $dispatch_domain->delivery_service_key = 'icDerSAVT4Fd795DgPsPfONXahhTOA';
+            $client = new GCLIENT(['headers' => ['personaltoken' => $dispatch_domain->delivery_service_key, 'shortcode' => $dispatch_domain->delivery_service_key_code]]);
+
+            $response = $client->post($endpoint);
+            $response = json_decode($response->getBody(), true);
+
+            return json_encode($response['data']);
+        } catch (\Exception $e) {
+            $data = [];
+            $data['status'] = 400;
+            $data['message'] =  $e->getMessage();
+            return $data;
+        }
+    }
+    public function vendorTime($minutes){
+        $hours = intdiv($minutes, 60).':'. ($minutes % 60);
+
+        return $hours;
     }
 
 }

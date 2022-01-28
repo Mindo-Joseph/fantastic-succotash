@@ -10,8 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\{Order, User, Cart, ClientCurrency, CartProduct};
 use App\Http\Traits\ApiResponser;
 use Illuminate\Support\Facades\Session;
-use App\Http\Controllers\Front\FrontController;
-
+use App\Http\Controllers\Front\{FrontController, PaystackGatewayController};
 
 class PaymentController extends FrontController{
 
@@ -76,6 +75,10 @@ class PaymentController extends FrontController{
         foreach ($payment_options as $k => $payment_option) {
             if( (in_array($payment_option->code, $ex_codes)) || (!empty($payment_option->credentials)) ){
                 $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
+                if($payment_option->code == 'stripe'){
+                    $payment_option->title = 'Credit/Debit Card (Stripe)';
+                }
+                $payment_option->title = __($payment_option->title);
                 unset($payment_option->credentials);
             }
             else{

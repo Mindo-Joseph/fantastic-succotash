@@ -97,12 +97,16 @@ class UserSubscriptionController extends FrontController
         else{
             return response()->json(["status"=>"Error", "message" => __("Subscription plan not active")]);
         }
-        $code = array('stripe', 'yoco', 'paylink', 'razorpay','simplify','square');
+        $code = array('stripe', 'yoco', 'paylink', 'razorpay','simplify','square','ozow','pagarme', 'checkout');
         $ex_codes = array('cod');
         $payment_options = PaymentOption::select('id', 'code', 'title', 'credentials')->whereIn('code', $code)->where('status', 1)->get();
         foreach ($payment_options as $k => $payment_option) {
             if( (in_array($payment_option->code, $ex_codes)) || (!empty($payment_option->credentials)) ){
                 $payment_option->slug = strtolower(str_replace(' ', '_', $payment_option->title));
+                if($payment_option->code == 'stripe'){
+                    $payment_option->title = 'Credit/Debit Card (Stripe)';
+                }
+                $payment_option->title = __($payment_option->title);
                 unset($payment_option->credentials);
             }
             else{
@@ -138,10 +142,14 @@ class UserSubscriptionController extends FrontController
      */
     public function purchaseSubscriptionPlan(Request $request, $domain = '', $slug = '')
     {
-        $user = Auth::user();
+        if( (isset($request->user_id)) && (!empty($request->user_id)) ){
+            $user = User::find($request->user_id);
+        }else{
+            $user = Auth::user();
+        }
         $subscription_plan = SubscriptionPlansUser::with('features.feature')->where('slug', $slug)->where('status', '1')->first();
         $last_subscription = SubscriptionInvoicesUser::with(['plan', 'features.feature'])
-            ->where('user_id', Auth::user()->id)
+            ->where('user_id', $user->id)
             ->where('subscription_id', $subscription_plan->id)
             ->orderBy('end_date', 'desc')->first();
         if( ($user) && ($subscription_plan) ){

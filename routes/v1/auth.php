@@ -42,6 +42,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
         Route::post('update/profile', 'Api\v1\ProfileController@updateProfile');
         Route::get('myWallet', 'Api\v1\WalletController@getFindMyWalletDetails');
         Route::post('myWallet/credit', 'Api\v1\WalletController@creditMyWallet');
+        Route::post('wallet/transfer/user/verify', 'Api\v1\WalletController@walletTransferUserVerify');
+	    Route::post('wallet/transfer/confirm', 'Api\v1\WalletController@walletTransferConfirm');
         Route::post('store/revenue', 'Api\v1\StoreController@getMyStoreRevenueDetails');
         Route::post('changePassword', 'Api\v1\ProfileController@changePassword');
         Route::get('addressBook/{id?}', 'Api\v1\AddressController@getAddressList');
@@ -62,6 +64,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
         Route::get('user/loyalty/info', 'Api\v1\LoyaltyController@index');
         Route::post('add/vendorTable/cart','Api\v1\CartController@addVendorTableToCart');
         Route::post('cart/schedule/update','Api\v1\CartController@updateSchedule');
+        Route::post('repeatOrder', 'Api\v1\CartController@repeatOrder');
         Route::get('order/orderDetails_for_notification/{order_id}', 'Api\v1\OrderController@orderDetails_for_notification');
         
         // Rating & review 
@@ -75,20 +78,20 @@ Route::group(['prefix' => 'v1', 'middleware' => ['ApiLocalization']], function (
             Route::get('get-order-data-in-model', 'Api\v1\ReturnOrderController@getOrderDatainModel');
             Route::get('get-return-products', 'Api\v1\ReturnOrderController@getReturnProducts');
             Route::post('update-product-return', 'Api\v1\ReturnOrderController@updateProductReturn');
+            Route::post('vendor-order-for-cancel', 'Api\v1\ReturnOrderController@vendorOrderForCancel');
         });
 
         // pickup & delivery 
         Route::group(['prefix' => 'pickup-delivery'], function () {
             Route::post('get-list-of-vehicles-old/{id}', 'Api\v1\PickupDeliveryController@getListOfVehicles');
-            Route::post('get-list-of-vehicles/{id}', 'Api\v1\PickupDeliveryController@productsByVendorInPickupDelivery');
+            Route::post('get-list-of-vehicles/{vid}/{cid?}', 'Api\v1\PickupDeliveryController@productsByVendorInPickupDelivery');
             Route::post('create-order', 'Api\v1\PickupDeliveryController@createOrder');
             Route::post('cart/updateQuantity', 'Api\v1\CartController@updateQuantity');
             Route::post('promo-code/list', 'Api\v1\PickupDeliveryController@postPromoCodeList');
             Route::post('promo-code/verify', 'Api\v1\PickupDeliveryController@postVerifyPromoCode');
             Route::post('promo-code/remove', 'Api\v1\PickupDeliveryController@postRemovePromoCode');
             Route::post('order-tracking-details', 'Api\v1\PickupDeliveryController@getOrderTrackingDetails');
-
-          
+           
             
         });
 

@@ -29,7 +29,7 @@
         display:none;
     }
     .exzoom .exzoom_btn a.exzoom_next_btn{
-        right: -15px;
+        right: -12px;
     }
     .exzoom .exzoom_nav .exzoom_nav_inner{
         -webkit-transition: all 0.5s;
@@ -136,7 +136,7 @@
                                                     'image' => (object)[
                                                         'path' => [
                                                             'image_fit' => \Config::get('app.FIT_URl'),
-                                                            'image_path' => \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png')
+                                                            'image_path' => \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png').'@webp'
                                                         ]
                                                     ]
                                                 ];
@@ -158,7 +158,7 @@
                                                     @endphp
                                                     <div class="swiper-slide easyzoom easyzoom--overlay">
                                                         <a href="{{$img->path['image_fit'].'600/600'.$img->path['image_path']}}">
-                                                        <img src="{{$img->path['image_fit'].'600/600'.$img->path['image_path']}}" alt="">
+                                                        <img class="blur-up lazyload" data-src="{{$img->path['image_fit'].'600/600'.$img->path['image_path']}}" alt="">
                                                         </a>
                                                     </div>
                                                 @endforeach
@@ -180,7 +180,7 @@
                                                         }
                                                     @endphp
                                                     <div class="swiper-slide">
-                                                        <img src="{{$img->path['image_fit'].'300/300'.$img->path['image_path']}}" alt="">
+                                                        <img class="blur-up lazyload" data-src="{{$img->path['image_fit'].'300/300'.$img->path['image_path']}}" alt="">
                                                     </div>
                                                     @endforeach
                                                 @endif
@@ -190,7 +190,7 @@
                                 </div> --}}
 
                                 <div class="exzoom hidden w-100" id="exzoom">
-                                    <div class="exzoom_img_box">
+                                    <div class="exzoom_img_box mb-2">
                                         <ul class='exzoom_img_ul'>
                                         @if(!empty($product->media))
                                         @foreach($product->media as $k => $image)
@@ -201,17 +201,19 @@
                                                             $img = $image->image;
                                                         }
                                                     @endphp
-                                            <li><img src="{{$img->path['image_fit'].'300/300'.$img->path['image_path']}}" /></li>
+                                            <li><img class="" src="{{$img->path['image_fit'].'300/300'.$img->path['image_path']}}" /></li>
                                         @endforeach
                                         @endif
                                         </ul>
                                     </div>
+                                    @if(count($product->media) > 1)
                                     <div class="exzoom_nav"></div>
                                     <p class="exzoom_btn">
                                         <a href="javascript:void(0);" class="exzoom_prev_btn">
                                             < </a> <a href="javascript:void(0);" class="exzoom_next_btn"> >
                                         </a>
                                     </p>
+                                    @endif
                                 </div>
                             </div>
 
@@ -221,7 +223,7 @@
                                         {{ (!empty($product->translation) && isset($product->translation[0])) ? $product->translation[0]->title : ''}}
                                     </h2>
                                     <h6 class="sold-by">
-                                        <b> <img src="{{$product->vendor->logo['image_fit']}}200/200{{$product->vendor->logo['image_path']}}" alt="{{$product->vendor->Name}}"></b> <a href="{{ route('vendorDetail', $product->vendor->slug) }}"><b> {{$product->vendor->name}} </b></a>
+                                        <b> <img class="blur-up lazyload" data-src="{{$product->vendor->logo['image_fit']}}200/200{{$product->vendor->logo['image_path']}}" alt="{{$product->vendor->Name}}"></b> <a href="{{ route('vendorDetail', $product->vendor->slug) }}"><b> {{$product->vendor->name}} </b></a>
                                     </h6>
                                     @if($client_preference_detail)
                                         @if($client_preference_detail->rating_check == 1)
@@ -237,9 +239,9 @@
                                         <input type="hidden" name="variant_id" id="prod_variant_id" value="{{$product->variant[0]->id}}">
                                         @if($product->inquiry_only == 0)
                                             <h3 id="productPriceValue" class="mb-md-3">
-                                                <b class="mr-1">{{Session::get('currencySymbol').(number_format($product->variant[0]->price * $product->variant[0]->multiplier,2))}}</b>
+                                                <b class="mr-1">{{Session::get('currencySymbol')}}<span class="product_fixed_price">{{(number_format($product->variant[0]->price * $product->variant[0]->multiplier,2))}}</span></b>
                                                 @if($product->variant[0]->compare_at_price > 0 )
-                                                    <span class="org_price">{{Session::get('currencySymbol').(number_format($product->variant[0]->compare_at_price * $product->variant[0]->multiplier,2))}}</span>
+                                                    <span class="org_price">{{Session::get('currencySymbol')}}<span class="product_original_price">{{(number_format($product->variant[0]->compare_at_price * $product->variant[0]->multiplier,2))}}</span></span>
                                                 @endif
                                             </h3>
                                         @endif
@@ -248,6 +250,10 @@
                                         @if(!empty($product->variantSet))
                                             @php
                                                 $selectedVariant = isset($product->variant[0]) ? $product->variant[0]->id : 0;
+                                                if($product->minimum_order_count > 0)
+                                                $product->minimum_order_count = $product->minimum_order_count;
+                                                else
+                                                $product->minimum_order_count = 1;
                                             @endphp
                                             @foreach($product->variantSet as $key => $variant)
                                                 @if($variant->type == 1 || $variant->type == 2)
@@ -280,7 +286,7 @@
                                         @if($product->inquiry_only == 0)
                                         <div class="product-description border-product pb-0">
                                             <h6 class="product-title mt-0">{{__('Quantity')}}:
-                                                @if(!$product->variant[0]->quantity > 0 && $product->sell_when_out_of_stock != 1)
+                                                @if($product->has_inventory && !$product->variant[0]->quantity > 0 && $product->sell_when_out_of_stock != 1)
                                                     <span id="outofstock" style="color: red;">{{ __('Out of Stock')}}</span>
                                                 @else
                                                 @php
@@ -289,16 +295,20 @@
                                                     <input type="hidden" id="instock" value="{{ ($product->variant[0]->quantity - $product_quantity_in_cart)}}">
                                                 @endif
                                             </h6>
-                                            @if($product->variant[0]->quantity > 0 || $product->sell_when_out_of_stock == 1)
+                                            @if(!$product->has_inventory || $product->variant[0]->quantity > 0 || $product->sell_when_out_of_stock == 1)
+                                            @if($product->minimum_order_count > 1)
+                                            {{-- <p class="mb-1 product_price">   {{__('Minimum Quantity') }} : {{ $product->minimum_order_count }} </p>
+                                            <p class="mb-1 product_price">   {{__('Batch') }} : {{ $product->batch_count }} </p> --}}
+                                            @endif
                                             <div class="qty-box mb-3">
                                                 <div class="input-group">
                                                     <span class="input-group-prepend">
-                                                        <button type="button" class="btn quantity-left-minus" data-type="minus" data-field=""><i class="ti-angle-left"></i>
+                                                        <button type="button" class="btn quantity-left-minus" data-type="minus" data-field="" data-batch_count={{$product->batch_count}} data-minimum_order_count={{$product->minimum_order_count}}><i class="ti-angle-left"></i>
                                                         </button>
                                                     </span>
-                                                    <input type="text" name="quantity" id="quantity" class="form-control input-qty-number quantity_count" value="1">
+                                                    <input type="text" name="quantity" id="quantity" class="form-control input-qty-number quantity_count" value="{{$product->minimum_order_count??1}}" data-minimum_order_count={{$product->minimum_order_count}}>
                                                     <span class="input-group-prepend quant-plus">
-                                                        <button type="button" class="btn quantity-right-plus " data-type="plus" data-field="">
+                                                        <button type="button" class="btn quantity-right-plus " data-type="plus" data-field="" data-batch_count={{$product->batch_count}} data-minimum_order_count={{$product->minimum_order_count}}>
                                                             <i class="ti-angle-right"></i>
                                                         </button>
                                                     </span>
@@ -339,7 +349,7 @@
                                                     <div class="productAddonSetOptions" data-min="{{$addon->min_select}}" data-max="{{$addon->max_select}}" data-addonset-title="{{$addon->title}}">
                                                         @foreach($addon->setoptions as $k => $option)
                                                         <div class="checkbox checkbox-success form-check-inline mb-1">
-                                                            <input type="checkbox" id="inlineCheckbox_{{$row.'_'.$k}}" class="productDetailAddonOption" name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}">
+                                                            <input type="checkbox" id="inlineCheckbox_{{$row.'_'.$k}}" class="productDetailAddonOption" name="addonData[$row][]" addonId="{{$addon->addon_id}}" addonOptId="{{$option->id}}" data-price="{{$option->price}}" data-fixed_price="{{number_format($product->variant[0]->price * $product->variant[0]->multiplier,2)}}" data-original_price="{{number_format($product->variant[0]->compare_at_price * $product->variant[0]->multiplier,2)}}">
                                                             <label class="pl-2 mb-0" for="inlineCheckbox_{{$row.'_'.$k}}" data-toggle="tooltip" data-placement="top" title="{{$option->title .' ('.Session::get('currencySymbol').$option->price.')' }}">
                                                                 {{$option->title .' ('.Session::get('currencySymbol').$option->price.')' }}</label>
                                                         </div>
@@ -392,8 +402,8 @@
                                     </div>
                                     @endif
                                     <div class="product-buttons">
-                                        @if($product->variant[0]->quantity > 0  || $product->sell_when_out_of_stock == 1)
-                                        @if($is_inwishlist_btn)
+                                        @if(!$product->has_inventory || $product->variant[0]->quantity > 0  || $product->sell_when_out_of_stock == 1)
+                                        @if($is_inwishlist_btn && $is_available)
                                         <button type="button" class="btn btn-solid addWishList" proSku="{{$product->sku}}">
                                             {{ (isset($product->inwishlist) && (!empty($product->inwishlist))) ? __('Remove From Wishlist') : __('Add To Wishlist') }}
                                         </button>
@@ -408,9 +418,13 @@
                                         $product_quantity_in_cart = $product_in_cart->quantity??0;
 
                                         @endphp
-                                            <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart {{ ($vendor_info->is_vendor_closed == 1 || ($product->variant[0]->quantity <= $product_quantity_in_cart)) ? 'btn-disabled' : '' }}">{{__('Add To Cart')}}</a>
-                                            @if($vendor_info->is_vendor_closed == 1)
+                                        @if($is_available)
+                                            <a href="#" data-toggle="modal" data-target="#addtocart" class="btn btn-solid addToCart {{ (($vendor_info->closed_store_order_scheduled == 0  && $vendor_info->is_vendor_closed == 1) || ($product->variant[0]->quantity <= $product_quantity_in_cart && $product->has_inventory)) ? 'btn-disabled' : '' }}">{{__('Add To Cart')}}</a>
+                                        @endif
+                                            @if($vendor_info->is_vendor_closed == 1 && $vendor_info->closed_store_order_scheduled == 0)
                                             <p class="text-danger">Vendor is not accepting orders right now.</p>
+                                            @elseif($vendor_info->is_vendor_closed == 1 && $vendor_info->closed_store_order_scheduled == 1)
+                                            <p class="text-danger">We are not accepting orders right now. You can schedule this for {{findSlot('',$product->vendor_id,'')}}.</p>
                                             @endif
                                         @else
                                             <a href="#" data-toggle="modal" data-target="#inquiry_form" class="btn btn-solid inquiry_mode">{{ __('Inquire Now')}}</a>
@@ -438,7 +452,7 @@
                             </div>
                         </div>
                     </div>
-                 {{--   <section class="tab-product m-0">
+                    <section class="tab-product m-0">
                         <div class="row">
                             <div class="col-sm-12 col-lg-12">
                                 <ul class="nav nav-tabs nav-material" id="top-tab" role="tablist">
@@ -468,7 +482,7 @@
                                             $product->translation[0]->body_html : ''!!}</p>
                                     </div>
                                     <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
-                                        @foreach ($rating_details as $rating)
+                                        @forelse ($rating_details as $rating)
                                         <div v-for="item in list" class="w-100 d-flex justify-content-between mb-3">
                                             <div class="review-box">
 
@@ -487,7 +501,7 @@
                                                     @if(isset($rating->reviewFiles))
                                                     @foreach ($rating->reviewFiles as $files)
                                                     <a target="_blank" href="{{$files->file['image_fit'].'900/900'.$files->file['image_path']}}" class="col review-photo mt-2 lightBoxGallery" data-gallery="">
-                                                        <img src="{{$files->file['image_fit'].'300/300'.$files->file['image_path']}}">
+                                                        <img class="blur-up lazyload" data-src="{{$files->file['image_fit'].'300/300'.$files->file['image_path']}}">
                                                     </a>
                                                     @endforeach
                                                     @endif
@@ -497,12 +511,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @endforeach
+                                        @empty
+                                        <p>{{__('No Result Found.')}}</p>
+                                        @endforelse
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </section>--}}
+                    </section>
                 </div>
             </div>
         </div>
@@ -515,7 +531,7 @@
                 <% _.each(variant.media, function(img, key){ %>
                     <div class="swiper-slide easyzoom easyzoom--overlay">
                         <a href="<%= img.pimage.image.path['image_fit'] %>600/600<%= img.pimage.image.path['image_path'] %>">
-                        <img src="<%= img.pimage.image.path['image_fit'] %>600/600<%= img.pimage.image.path['image_path'] %>" alt="">
+                        <img class="blur-up lazyload" data-src="<%= img.pimage.image.path['image_fit'] %>600/600<%= img.pimage.image.path['image_path'] %>" alt="">
                         </a>
                     </div>
                 <% }); %>
@@ -528,7 +544,7 @@
             <div class="swiper-wrapper">
                 <% _.each(variant.media, function(img, key){ %>
                     <div class="swiper-slide">
-                        <img src="<%= img.pimage.image.path['image_fit'] %>300/300<%= img.pimage.image.path['image_path'] %>" alt="">
+                        <img class="blur-up lazyload" data-src="<%= img.pimage.image.path['image_fit'] %>300/300<%= img.pimage.image.path['image_path'] %>" alt="">
                     </div>
                 <% }); %>
             </div>
@@ -539,7 +555,7 @@
                 <% _.each(variant.product.media, function(img, key){ %>
                     <div class="swiper-slide easyzoom easyzoom--overlay">
                         <a href="<%= img.image.path['image_fit'] %>600/600<%= img.image.path['image_path'] %>">
-                        <img src="<%= img.image.path['image_fit'] %>600/600<%= img.image.path['image_path'] %>" alt="">
+                        <img class="blur-up lazyload" data-src="<%= img.image.path['image_fit'] %>600/600<%= img.image.path['image_path'] %>" alt="">
                         </a>
                     </div>
                 <% }); %>
@@ -552,36 +568,20 @@
             <div class="swiper-wrapper">
                 <% _.each(variant.product.media, function(img, key){ %>
                     <div class="swiper-slide">
-                        <img src="<%= img.image.path['image_fit'] %>300/300<%= img.image.path['image_path'] %>" alt="">
+                        <img class="blur-up lazyload" data-src="<%= img.image.path['image_fit'] %>300/300<%= img.image.path['image_path'] %>" alt="">
                     </div>
                 <% }); %>
             </div>
         </div>
-        <!--<div class="swiper-container gallery-top">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide easyzoom easyzoom--overlay">
-                    <a href="{{ \Config::get('app.IMG_URL1') .'600/800'. \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png') }}">
-                    <img src="{{ \Config::get('app.IMG_URL1') .'600/800'. \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png') }}" alt="">
-                    </a>
-                </div>
-            </div>
-            <div class="swiper-button-next swiper-button-white"></div>
-            <div class="swiper-button-prev swiper-button-white"></div>
-        </div>-->
-        <!--<div class="product-slick" style="min-height: 200px; display: table; width: 100%;">
-            <div class="image_mask" style="vertical-align: middle; display: table-cell; text-align: center">
-                <img class="img-fluid blur-up lazyload" src="{{ \Config::get('app.IMG_URL1') .'600/800'. \Config::get('app.IMG_URL2').'/'.\Storage::disk('s3')->url('default/default_image.png') }}">
-            </div>
-        </div>-->
     <% } %>
 </script>
 <script type="text/template" id="variant_template">
     <input type="hidden" name="variant_id" id="prod_variant_id" value="<%= variant.id %>">
     <% if(variant.product.inquiry_only == 0) { %>
         <h3 id="productPriceValue" class="mb-md-3">
-            <b class="mr-1"><%= variant.productPrice %></b>
+            <b class="mr-1"><span class="product_fixed_price">{{Session::get('currencySymbol')}}<%= variant.productPrice %></span></b>
             <% if(variant.compare_at_price > 0 ) { %>
-                <span class="org_price">{{Session::get('currencySymbol')}}<%= variant.compare_at_price %></span>
+                <span class="org_price">{{Session::get('currencySymbol')}}<span class="product_original_price"><%= variant.compare_at_price %></span></span>
             <% } %>
         </h3>
     <% } %>
@@ -645,87 +645,45 @@
     </div>
 </section>
 
-{{--<section class="section-b-space ratio_asos">--}}
+<section class="section-b-space ratio_asos">
     <div class="container mt-3 mb-5">
         <div class="product-4 product-m no-arrow related-products">
             @forelse($product->related_products as $related_product)
-                {{--<div class="col-xl-2 col-md-4 col-sm-6">--}}
-                <div>
-                <a class="common-product-box scale-effect text-center" href="{{route('productDetail')}}/{{ $related_product->url_slug }}">
-                    <div class="img-outer-box position-relative">
-                        <img src="{{ $related_product->image_url }}" alt="">
-                <div class="pref-timing">
-                    <!--<span>5-10 min</span>-->
-                </div>
-                <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i>
-                    </div>    
-                    </div>
-                    <div class="media-body align-self-center">
-                        <div class="inner_spacing px-0">
-                            <div class="product-description">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <h6 class="card_title mb-1 ellips">{{ $related_product->translation_title }}</h6>                                                                                    
-                                    <!--<span class="rating-number">2.0</span>-->                                
-                                </div>
-                                <!-- <h3 class="m-0">{{ $related_product->translation_title }}</h3> -->
-                                <p>{{ $related_product->vendor_name }}</p>
-                                <p class="border-bottom pb-1">In {{$related_product->category_name}}</p>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <b>
-                                        @if($related_product->inquiry_only == 0)
-                                            {{ Session::get('currencySymbol') . $related_product->variant_price }}
-                                        @endif
-                                    </b>
-
-                                    <!-- @if($client_preference_detail)
-                                        @if($client_preference_detail->rating_check == 1)
-                                            @if($related_product->averageRating > 0)
-                                                <span class="rating">{{ $related_product->averageRating }} <i class="fa fa-star text-white p-0"></i></span>
-                                            @endif
-                                        @endif
-                                    @endif   -->
-                                </div>                       
-                            </div>
-                        </div>
-                    </div>
-                </a>
-
-
-                </div>
-                {{--<div class="col-xl-2 col-md-4 col-sm-6">
-                    <div class="product-box">
-                        <div class="img-wrapper">
-                            <div class="front">
-                                <a href="{{route('productDetail')}}/{{$related_product->url_slug}}">
-                                    <img src="{{$related_product->media ? $related_product->media->first()->image->path['image_fit'].'600/600'.$related_product->media->first()->image->path['image_path'] : ''}}" class="img-fluid blur-up lazyload bg-img" alt="">
-                                </a>
-                            </div>
-                        </div>
-                        <a href="{{route('productDetail')}}/{{$related_product->url_slug}}">
-                            <div class="product-detail">
-                                <div class="rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <h6>{{ (!empty($related_product->translation) && $related_product->translation->first())? $related_product->translation->first()->title : ''}}</h6>
-                                <h4>{{Session::get('currencySymbol').($related_product->variant->first()->price * $related_product->variant->first()->multiplier)}}</h4>
-                                <ul class="color-variant">
-                                    <li class="bg-light0"></li>
-                                    <li class="bg-light1"></li>
-                                    <li class="bg-light2"></li>
-                                </ul>
-                            </div>
-                        </a>
-                    </div>
-                </div>--}}
+            <div>
+				<a class="common-product-box scale-effect text-center"
+						href="{{route('productDetail',[$related_product->vendor->slug,$related_product->url_slug])}}">
+					<div class="img-outer-box position-relative">
+						<img class="img-fluid blur-up lazyload" data-src="{{ $related_product->image_url }}" alt="">
+						<!-- <div class="pref-timing">
+							<span>5-10 min</span>
+						</div> -->
+						<!-- <i class="fa fa-heart-o fav-heart" aria-hidden="true"></i> -->
+					</div>
+					<div class="media-body align-self-center">
+						<div class="inner_spacing px-0">
+							<div class="product-description">
+								<div class="d-flex align-items-center justify-content-between">
+									<h6 class="card_title mb-1 ellips">{{ $related_product->translation_title }}</h6>
+								</div>
+								<p>{{ $related_product->vendor_name }}</p>
+								<p class="border-bottom pb-1">In {{$related_product->category_name}}</p>
+								<div class="d-flex align-items-center justify-content-between">
+									<b>
+										@if($related_product->inquiry_only == 0)
+										{{ Session::get('currencySymbol') . $related_product->variant_price }}
+										@endif
+									</b>
+								</div>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
             @empty
             @endforelse
         </div>
     </div>
-{{--</section>--}}
+</section>
 @endif
 <div class="modal fade product-rating" id="product_rating" tabindex="-1" aria-labelledby="product_ratingLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -739,6 +697,8 @@
         </div>
     </div>
 </div>
+
+
 <div class="modal fade" id="inquiry_form" tabindex="-1" aria-labelledby="inquiry_formLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -794,13 +754,10 @@
         </div>
     </div>
 </div>
+
 @endsection
 @section('script')
-<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script> -->
-<!-- <script src="{{ asset('js/share.js') }}"></script>
-<script src="{{ asset('front-assets/js/swiper.min.js') }}"></script>
-<script src="{{ asset('front-assets/js/easyzoom.js') }}"></script>
-<script src="{{ asset('front-assets/js/zoom-main.js') }}"></script> -->
+
 
 <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 
@@ -894,6 +851,10 @@
     var product_id = "{{ $product->id }}";
     var add_to_cart_url = "{{ route('addToCart') }}";
     $('.changeVariant').click(function() {
+        updatePrice();
+    });
+    function updatePrice()
+    {
         var variants = [];
         var options = [];
         $('.changeVariant').each(function() {
@@ -918,11 +879,14 @@
                 }
             },
             success: function(response) {
+                console.log(response);
                 if(response.status == 'Success'){
                     $("#variant_response span").html('');
                     if(response.variant != ''){
                         $('#product_variant_wrapper').html('');
                         let variant_template = _.template($('#variant_template').html());
+                        response.variant.productPrice = (parseFloat(checkAddOnPrice()) + parseFloat(response.variant.productPrice)).toFixed(2);
+                        response.variant.compare_at_price = (parseFloat(checkAddOnPrice()) + parseFloat(response.variant.compare_at_price)).toFixed(2);
                         $("#product_variant_wrapper").append(variant_template({variant:response.variant}));
 
                         $('#product_variant_quantity_wrapper').html('');
@@ -955,7 +919,18 @@
 
             },
         });
-    });
+    }
+    function checkAddOnPrice()
+    {
+        price  = 0;
+        $('.productDetailAddonOption').each(function(){
+            if($(this).prop('checked') == true){
+                var cp = $(this).data('price');
+                price = price + parseFloat(cp);
+            }
+        });
+        return price;
+    }
 </script>
 <script>
     var addonids = [];
@@ -976,6 +951,16 @@
                 } else {
                     addonids.splice(addonids.indexOf(addonId), 1);
                     addonoptids.splice(addonoptids.indexOf(addonOptId), 1);
+                }
+                if($('.changeVariant').length > 0)
+                {
+                    updatePrice();
+                }else{
+                    addOnPrice = parseFloat(checkAddOnPrice());
+                    org_price = parseFloat($(this).data('original_price')) + addOnPrice;
+                    fixed_price = parseFloat($(this).data('fixed_price')) + addOnPrice;
+                    $('.product_fixed_price').html(fixed_price.toFixed(2));
+                    $('.product_original_price').html(org_price.toFixed(2));
                 }
             }
         });
@@ -1099,7 +1084,7 @@
                             exzoom_img_ul.find("li:last").remove();
                         }
                         exzoom_img_ul.append('<li style="width: ' + boxWidth + 'px;">' +
-                            '<img src="' + url + '"></li>');
+                            '<img  class="img-fluid blur-up lazyload" data-src="' + url + '"></li>');
 
                         let image_prop = copute_image_prop(url, width, height);
                         previewImg(image_prop);
@@ -1179,7 +1164,7 @@
                         <span class='exzoom_zoom'></span>
                     </div>
                     <p class='exzoom_preview'>
-                        <img class='exzoom_preview_img' src='' />
+                        <img class='exzoom_preview_img blur-up lazyload' data-src='' />
                     </p>
                 `);
                 exzoom_zoom = exzoom_img_box.find(".exzoom_zoom");
@@ -1582,7 +1567,7 @@
                     res[8] = boxHeight * 2; //width
                     res[9] = boxHeight * 2; //height
                     exzoom_nav_inner.append(
-                        `<span><img src="${src}" width="${g.navWidth }" height="${g.navHeight }"/></span>`);
+                        `<span><img class="blur-up lazyload" data-src="${src}" width="${g.navWidth }" height="${g.navHeight }"/></span>`);
                 } else if (img_scale > 1) {
                     res[3] = boxHeight; //width
                     res[4] = boxHeight / img_scale;
@@ -1593,7 +1578,7 @@
                     res[9] = boxHeight * 2; //height
                     let top = (g.navHeight - (g.navWidth / img_scale)) / 2;
                     exzoom_nav_inner.append(
-                        `<span><img src="${src}" width="${g.navWidth }" style='top:${top}px;' /></span>`);
+                        `<span><img class="blur-up lazyload" data-src="${src}" width="${g.navWidth }" style='top:${top}px;' /></span>`);
                 } else if (img_scale < 1) {
                     res[3] = boxHeight * img_scale; //width
                     res[4] = boxHeight; //height
@@ -1604,7 +1589,7 @@
                     res[9] = boxHeight * 2 / img_scale;
                     let top = (g.navWidth - (g.navHeight * img_scale)) / 2;
                     exzoom_nav_inner.append(
-                        `<span><img src="${src}" height="${g.navHeight}" style="left:${top}px;"/></span>`);
+                        `<span><img class="blur-up lazyload" data-src="${src}" height="${g.navHeight}" style="left:${top}px;"/></span>`);
                 }
 
                 return res;

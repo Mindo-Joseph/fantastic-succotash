@@ -12,19 +12,23 @@
             @if(Auth::user()->is_superadmin == 1)
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light" id="block_btn" data-vendor_id="{{$vendor->id}}" data-status="{{$vendor->status == 2  ? '1' : '2'}}">{{$vendor->status == 2 ? 'Unblock' : 'Block'}}</button>
             @endif
+
+            @if($vendor_for_pickup_delivery > 0)
             <div class="for_pickup_delivery_service_only">
-            @if($client_preferences->need_dispacher_ride == 1 && !in_array($client_preferences->business_type, ['laundry']))
+            @if($client_preferences->need_dispacher_ride == 1)
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcher" data-id="{{ $vendor->id }}"> {{ __("Login Into Dispatcher (Pickup & Delivery)") }} </button>
             @endif
             </div>
+            @endif
+
+            @if($vendor_for_ondemand > 0)
             <div class="for_on_demand_service_only">
-            @if($client_preferences->need_dispacher_home_other_service == 1 && !in_array($client_preferences->business_type, ['laundry','taxi']))
+            @if($client_preferences->need_dispacher_home_other_service == 1)
             <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcherOnDemand" data-id="{{ $vendor->id }}"> {{ __("Login Into Dispatcher (On Demand Services)") }} </button>
             @endif
             </div>
-            @if($client_preferences->need_laundry_service == 1 && in_array($client_preferences->business_type, ['laundry']))
-            <button type="button" class="btn btn-danger btn-sm waves-effect mb-2 waves-light openConfirmDispatcherLaundry" data-id="{{ $vendor->id }}"> {{ __("Login Into Dispatcher (Laundry Services)") }} </button>
             @endif
+
             @endif
         </div>
     </div>
@@ -65,7 +69,7 @@
                 @csrf
                 <div class="row">
                     <div class="col-md-12">
-                        <h4 class="mb-2 "> <span class="">{{ __("Configuration") }}</span></h4>
+                        <h4 class="mb-2 "> <span class="">{{ __("Settings") }}</span></h4>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -73,7 +77,10 @@
                     <div class="col-md-12">
                         <div class="form-group" id="order_pre_timeInput">
                             {!! Form::label('title', __('Order Prepare Time(In minutes)'),['class' => 'control-label']) !!}
-                            <input class="form-control" onkeypress="return isNumberKey(event)" name="order_pre_time" type="text" value="{{ ($vendor->order_pre_time > 0) ? $vendor->order_pre_time : 0 }}" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                            <div class="position-relative">
+                                <input class="form-control" onkeypress="return isNumberKey(event)" name="order_pre_time" id="Vendor_order_pre_time" type="text" value="{{ ($vendor->order_pre_time > 0) ? $vendor->order_pre_time : 0 }}" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                                <div class="time-sloat d-flex align-items-center"><span class="" id="Vendor_order_pre_time_show" ></span> </div>
+                            </div>
                         </div>
                     </div>
                     @endif
@@ -81,6 +88,16 @@
                     <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
                         {!! Form::label('title', __('24*7 Availability'),['class' => 'control-label']) !!}
                         <input type="checkbox" data-plugin="switchery" name="show_slot" class="form-control" data-color="#43bee1" @if($vendor->show_slot == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
+                    </div>
+                    <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+                        <div class="form-group">
+                             {!! Form::label('title', __('Slot Duration (In minutes)'),['class' => 'control-label']) !!}
+                        <input type="number"  name="slot_minutes" class="form-control"  value="{{$vendor->slot_minutes??0}}" min="0">
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+                             {!! Form::label('title', __('Scheduled order for next day?'),['class' => 'control-label']) !!}
+                             <input type="checkbox" data-plugin="switchery" name="closed_store_order_scheduled" class="form-control" data-color="#43bee1" @if($vendor->closed_store_order_scheduled == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
                     </div>
                     @endif
                     @if($client_preference_detail->business_type != 'taxi')
@@ -95,16 +112,37 @@
                         </div>
                     </div>
                     @endif
-                    <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
-                        {!! Form::label('title', __('Show Profile Details'),['class' => 'control-label']) !!}
-                        <input type="checkbox" data-plugin="switchery" name="is_show_vendor_details" class="form-control" data-color="#43bee1" @if($vendor->is_show_vendor_details == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
-                    </div>
-                    <!-- <div class="col-md-12">
+
+                     <div class="col-md-12">
                         <div class="form-group" id="order_min_amountInput">
-                            {!! Form::label('title', 'Order Min Amount',['class' => 'control-label']) !!}
+                            {!! Form::label('title', 'Absolute Min Order Value [AMOV]',['class' => 'control-label']) !!}
                             <input class="form-control" onkeypress="return isNumberKey(event)" name="order_min_amount" type="text" value="{{$vendor->order_min_amount}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
                         </div>
-                    </div> -->
+                    </div>
+
+
+                    @if($client_preference_detail->static_delivey_fee == 1)
+                    <div class="col-md-12">
+                        <div class="form-group" id="order_amount_for_delivery_feeInput">
+                            {!! Form::label('title', 'Min Order Value (with Delivery fee) [MOV]',['class' => 'control-label']) !!}
+                            <input class="form-control" onkeypress="return isNumberKey(event)" name="order_amount_for_delivery_fee" type="text" value="{{$vendor->order_amount_for_delivery_fee}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group" id="delivery_fee_minimumInput">
+                            {!! Form::label('title', 'Delivery Fee For Below MOV',['class' => 'control-label']) !!}
+                            <input class="form-control" onkeypress="return isNumberKey(event)" name="delivery_fee_minimum" type="text" value="{{$vendor->delivery_fee_minimum}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group" id="delivery_fee_maximumInput">
+                            {!! Form::label('title', 'Delivery Fee For Above MOV',['class' => 'control-label']) !!}
+                            <input class="form-control" onkeypress="return isNumberKey(event)" name="delivery_fee_maximum" type="text" value="{{$vendor->delivery_fee_maximum}}" {{$vendor->status == 1 ? '' : 'disabled'}}>
+                        </div>
+                    </div>
+                    @endif
                     <div class="col-12">
                         <button class="btn btn-info waves-effect waves-light w-100" {{$vendor->status == 1 ? '' : 'disabled'}}>{{ __("Save") }}</button>
                     </div>
@@ -139,7 +177,33 @@
         </div>
     </div>
 </div> --}}
+
+
 @if(Auth::user()->is_superadmin == 1)
+<div class="card-box">
+    <div class="row text-left">
+        <div class="col-md-12">
+            <form name="config-form" action="{{route('vendor.config.update', $vendor->id)}}" class="needs-validation" method="post">
+                @csrf
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="mb-2"> <span class="">{{ __("Profile") }} ({{ __("Visible For Admin") }})</span></h4>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12 mb-2 d-flex align-items-center justify-content-between">
+                        {!! Form::label('title', __('Show Profile Details'),['class' => 'control-label']) !!}
+                        <input type="checkbox" data-plugin="switchery" name="is_show_vendor_details" class="form-control" data-color="#43bee1" @if($vendor->is_show_vendor_details == 1) checked @endif {{$vendor->status == 1 ? '' : 'disabled'}}>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-info waves-effect waves-light w-100" {{$vendor->status == 1 ? '' : 'disabled'}}>{{ __("Save") }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="card-box">
     <div class="row text-left">
         <div class="col-md-12">
@@ -197,7 +261,7 @@
                 <div class="col-md-12">
                     <h4 class="mb-2"> <span class="">{{ __("Category Setup") }}</span> ({{ __("Visible For Admin") }})</h4>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
     <div class="row">
@@ -209,7 +273,7 @@
         <div class="col-md-6 mb-3">
             {!! Form::label('title', __('Vendor Detail To Show'),['class' => 'control-label ']) !!}
         </div>
-        
+
         <div class="col-md-6 mb-3">
             <select class="selectize-select form-control assignToSelect" id="assignTo" {{$vendor->status == 1 ? '' : 'disabled'}}>
                 @foreach($templetes as $templete)
@@ -225,7 +289,7 @@
                     @forelse($builds as $build)
                     @if($build['translation_one'])
                     <li class="dd-item dd3-item" data-category_id="{{$build['id']}}">
-                        <div class="dd3-content"> 
+                        <div class="dd3-content">
                             <img class="rounded-circle mr-1" src="{{$build['icon']['proxy_url']}}30/30{{$build['icon']['image_path']}}"> {{$build['translation_one']['name']}}
                             <span class="inner-div text-right">
                                 <a class="action-icon" data-id="3" href="javascript:void(0)">
@@ -236,7 +300,7 @@
                                     @endif
                                     <input type="hidden" value="{{ $build['id'] }}">
                                 </a>
-                            </span> 
+                            </span>
                         </div>
                         @if(isset($build['children']))
                             <x-category :categories="$build['children']" :vendorcategory="$VendorCategory" :vendor="$vendor"/>
@@ -263,7 +327,7 @@
     <h4 class="header-title mb-0 mt-2 d-inline-block align-middle">{{ __('Users') }}</h4>
     <h4 class="header-title mb-0 float-right"><a class="btn addUsersBtn" dataid="0" href="javascript:void(0);"><i class="mdi mdi-plus-circle mr-1" ></i> {{ __("Add Users") }}
     </a></h4>
-    
+
     <div class="inbox-widget mt-3" data-simplebar style="max-height: 350px;">
         @foreach($vendor->permissionToUser as $users)
         <div class="inbox-item pb-0">
@@ -279,11 +343,11 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-primary-outline" onclick="return confirm('Are you sure ?');"> <i class="mdi mdi-delete"></i></button>
-        
+
                     </form>
             @endif
         </div>
-       
+
         @endforeach
     </div>
 </div>
@@ -295,7 +359,7 @@
 
                 @php
                 $vendors = getNomenclatureName('vendors', false);
-                $newvendors = ($vendors === "vendors") ? __('vendors') : $vendors ; 
+                $newvendors = ($vendors === "vendors") ? __('vendors') : $vendors ;
                 @endphp
 
                 <h4 class="modal-title">{{ __("Edit") }} {{ $newvendors }}</h4>
@@ -307,7 +371,7 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-body" id="editCardBox">
-                   
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info waves-effect waves-light submitEditForm">{{ __("Submit") }}</button>
@@ -341,7 +405,7 @@
                                     </div>
                                 </div>
 
-                              
+
                             </div>
                         </div>
                     </div>
@@ -357,84 +421,100 @@
 </div>
 
 <script type="text/javascript">
-    
+
 $('.addUsersBtn').click(function() {
-        $('#add-user-permission').modal({
-            keyboard: false
-        });
+    $('#add-user-permission').modal({
+        keyboard: false
     });
-    
+});
 
-    $( document ).ready(function() {
 
+$( document ).ready(function() {
+    @if($client_preference_detail->business_type != 'taxi')
+        vendorOrderTime();
+    @endif
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('input[name="_token"]').val()
         }
     });
-// search users for set permission 
-$('#id_search_user_for_permission').keyup(function(){ 
-    var query = $(this).val();
-    var vendor_id = $('#set-vendor_id').val();
-    if(query != '')
-    {
-     var _token = $('input[name="_token"]').val();
-     $.ajax({
-      url:"{{ route('searchUserForPermission') }}",
-      method:"POST",
-      data:{query:query, _token:_token, vendor_id:vendor_id},
-      success:function(data){
-       $('#userList').fadeIn();  
-       $('#userList').html(data);
-      }
-     });
+    $(document).on('change', '#Vendor_order_pre_time', function(){
+        vendorOrderTime();
+    });
+    function vendorOrderTime(){
+       var min = $('#Vendor_order_pre_time').val();
+       //alert(min);
+       if(min >=60){
+            var hours = Math.floor(min / 60);
+            var minutes = min % 60;
+            var txt = '~ '+hours+':'+minutes+" {{__('Hours')}}";
+            $('#Vendor_order_pre_time_show').text(txt);
+       }else{
+            var txt = min+" {{__('Min')}}";
+            $('#Vendor_order_pre_time_show').text(txt);
+       }
     }
-});
-
-$(document).on('click', 'li', function(){  
-    $('#id_search_user_for_permission').val($(this).text());  
-    $('#cusid').val($(this).attr('data-id'));
-    $('#userList').fadeOut();  
-});  
-
-
-// submit permission for user 
-$('#add_user_permission_vendor').submit(function(e) {
-            
-            e.preventDefault();
-
-            var formData = new FormData(this);
+    // search users for set permission
+    $('#id_search_user_for_permission').keyup(function(){
+        var query = $(this).val();
+        var vendor_id = $('#set-vendor_id').val();
+        if(query != '')
+        {
+            var _token = $('input[name="_token"]').val();
             $.ajax({
-                type: 'POST',
-                url: "{{ route('permissionsForUserViaVendor') }}",
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function() {
-                   $("#user_permission_form_button").html(
-                            '<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop(
-                            'disabled', true);
-                },
-                success: (data) => {
-                    if (data.status == 'Success') {
-                       $("#user_permission_form_button").html('Submitted');
-                       location.reload();
-                    } else {
-                        $('#error-msg').text(data.message);
-                        $("#user_permission_form_button").html('Submit').prop('disabled',
-                            false);
-                    }
-                },
-                error: function(data) {
+            url:"{{ route('searchUserForPermission') }}",
+            method:"POST",
+            data:{query:query, _token:_token, vendor_id:vendor_id},
+            success:function(data){
+            $('#userList').fadeIn();
+            $('#userList').html(data);
+            }
+            });
+        }
+    });
+
+    $(document).on('click', 'li', function(){
+        $('#id_search_user_for_permission').val($(this).text());
+        $('#cusid').val($(this).attr('data-id'));
+        $('#userList').fadeOut();
+    });
+
+
+    // submit permission for user
+    $('#add_user_permission_vendor').submit(function(e) {
+
+        e.preventDefault();
+
+        var formData = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('permissionsForUserViaVendor') }}",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+            $("#user_permission_form_button").html(
+                        '<i class="fa fa-spinner fa-spin fa-custom"></i> Loading').prop(
+                        'disabled', true);
+            },
+            success: (data) => {
+                if (data.status == 'Success') {
+                $("#user_permission_form_button").html('Submitted');
+                location.reload();
+                } else {
                     $('#error-msg').text(data.message);
                     $("#user_permission_form_button").html('Submit').prop('disabled',
                         false);
                 }
-            });
+            },
+            error: function(data) {
+                $('#error-msg').text(data.message);
+                $("#user_permission_form_button").html('Submit').prop('disabled',
+                    false);
+            }
         });
-
-
+    });
 
     $(document).on('click', '#approve_btn, #reject_btn, #block_btn', function(){
         var that  = $(this);
@@ -449,12 +529,12 @@ $('#add_user_permission_vendor').submit(function(e) {
                 data: { vendor_id: vendor_id , status:status},
                 success: function(data) {
                     if(data.status == 'success'){
-                       $.NotificationApp.send("Success", data.message, "top-right", "#5ba035", "success");
-                       window.location.href = "{{ route('vendor.index') }}";
+                    $.NotificationApp.send("Success", data.message, "top-right", "#5ba035", "success");
+                    window.location.href = "{{ route('vendor.index') }}";
                     }
                 }
             });
-        }       
+        }
     });
     $(document).on('change', '.can_add_category1', function(){
         var vendor_id = "{{$vendor->id}}";
@@ -520,7 +600,7 @@ $('#add_user_permission_vendor').submit(function(e) {
                     $('#category_list').selectize()[0].selectize.destroy();
                     $.each(response.data.product_categories, function (key, value) {
                         if(value.category.type_id == 1){
-                           $('#category_list').append('<option value='+value.category_id+'>'+value.category.title+'</option>');
+                        $('#category_list').append('<option value='+value.category_id+'>'+value.category.title+'</option>');
                         }
                     });
                 }
@@ -529,11 +609,11 @@ $('#add_user_permission_vendor').submit(function(e) {
     });
 });
 
-$("input[name='auto_accept_order']").change(function() {
-    if($(this).prop('checked')){
-        $("#auto_reject_timeInput").css("display", "none");
-    } else {
-        $("#auto_reject_timeInput").css("display", "block"); 
-    }
-})
+    $("input[name='auto_accept_order']").change(function() {
+        if($(this).prop('checked')){
+            $("#auto_reject_timeInput").css("display", "none");
+        } else {
+            $("#auto_reject_timeInput").css("display", "block");
+        }
+    })
 </script>

@@ -59,6 +59,13 @@
         width: 100%;
         height: 100%;
     }
+    .address-input-group{
+        position: relative;
+    }
+    .address-input-group .pac-container{
+        top:35px!important;
+        left:0!important;
+    }
 </style>
 <section class="section-b-space">
     <div class="container">
@@ -213,7 +220,7 @@
                         <div class="form-row">
                             <div class="col-md-12 mb-2">
                                 <label for="address">{{ __('Address') }}</label>
-                                <div class="input-group">
+                                <div class="input-group address-input-group">
                                     <input type="text" name="address" class="form-control" id="address" placeholder="{{ __('Address') }}" aria-label="Recipient's Address" aria-describedby="button-addon2" value="<%= (typeof address != 'undefined') ? address.address : '' %>" autocomplete="off" required="required">
                                     <div class="input-group-append">
                                     <button class="btn btn-outline-secondary showMapHeader" type="button" id="button-addon2">
@@ -264,6 +271,11 @@
                                 <label for="pincode">{{ __('Zip Code') }}</label>
                                 <input type="text" class="form-control" id="pincode" name="pincode" placeholder="{{ __('Zip Code') }}" value="<%= ((typeof address != 'undefined') && (address.pincode != null)) ? address.pincode : ''%>" required="required">
                                 <span class="text-danger" id="pincode_error"></span>
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <label for="extra_instruction">{{ __('Extra Instructions') }}</label>
+                                <input type="text" class="form-control" id="extra_instruction" name="extra_instruction" placeholder="{{ __('Extra instruction for driver to follow..') }}" value="<%= ((typeof address != 'undefined') && (address.extra_instruction != null)) ? address.extra_instruction : ''%>">
+                                <span class="text-danger" id="extra_instruction_error"></span>
                             </div>
                             <div class="col-md-12 mt-2">
                                 <button type="submit" class="btn btn-solid" id="<%= ((typeof address !== 'undefined') && (address !== false)) ? 'updateAddress' : 'saveAddress' %>">{{__('Save Address')}}</button>
@@ -318,6 +330,9 @@
     var update_address_url = "{{ route('address.update', ':id') }}";
     var delete_address_url = "{{ route('deleteAddress', ':id') }}";
     var verify_information_url = "{{ route('verifyInformation', Auth::user()->id) }}";
+
+
+
     var ajaxCall = 'ToCancelPrevReq';
     $('.verifyEmail').click(function(){
         verifyUser('email');
@@ -382,6 +397,7 @@
             }
         });
     }
+
     /*$(document).on("click","#update_address",function() {
         let city = $('#add_new_address_form #city').val();
         let state = $('#add_new_address_form #state').val();
@@ -432,8 +448,17 @@
     $(document).on('click', '.showMapHeader', function(){
         var lats = document.getElementById('latitude').value;
         var lngs = document.getElementById('longitude').value;
+        if(lats==''){
+            lats=latitude;
+        }
+        if(lngs==''){
+            lngs=longitude;
+        }
 
         var myLatlng = new google.maps.LatLng(lats, lngs);
+
+        var infowindow = new google.maps.InfoWindow();
+        var geocoder = new google.maps.Geocoder();
         var mapProp = {
             center:myLatlng,
             zoom:13,
@@ -447,63 +472,99 @@
             draggable:true
         });
         // marker drag event
-        google.maps.event.addListener(marker,'drag',function(event) {
-            document.getElementById('latitude').value = event.latLng.lat();
-            document.getElementById('longitude').value = event.latLng.lng();
-        });
-        //marker drag event end
-        google.maps.event.addListener(marker,'dragend',function(event) {
-            document.getElementById('latitude').value = event.latLng.lat();
-            document.getElementById('longitude').value = event.latLng.lng();
-        });
+        google.maps.event.addListener(marker, 'dragend', function() {
+                    geocoder.geocode({
+                    'latLng': marker.getPosition()
+                    }, function(results, status) {
+
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                             document.getElementById('latitude').value = marker.getPosition().lat();
+                             document.getElementById('longitude').value = marker.getPosition().lng();
+                             document.getElementById('address').value= results[0].formatted_address;
+
+                            infowindow.setContent(results[0].formatted_address);
+
+                            infowindow.open(map, marker);
+                        }
+                    }
+                    });
+                });
+
+        // google.maps.event.addListener(marker,'drag',function(event) {
+        //     document.getElementById('latitude').value = event.latLng.lat();
+        //     document.getElementById('longitude').value = event.latLng.lng();
+        // });
+        // //marker drag event end
+        // google.maps.event.addListener(marker,'dragend',function(event) {
+        //     document.getElementById('latitude').value = event.latLng.lat();
+        //     document.getElementById('longitude').value = event.latLng.lng();
+        // });
         $('#pick_address').modal('show');
 
     });
 
+
     function initialize() {
-      var input = document.getElementById('address');
-      var autocomplete = new google.maps.places.Autocomplete(input);
-      google.maps.event.addListener(autocomplete, 'place_changed', function () {
-        var place = autocomplete.getPlace();
-        // console.log(place);
-        document.getElementById('longitude').value = place.geometry.location.lng();
-        document.getElementById('latitude').value = place.geometry.location.lat();
-        for(let i=1; i < place.address_components.length; i++){
-            let mapAddress = place.address_components[i];
-            if(mapAddress.long_name !=''){
-                let streetAddress = '';
-                if (mapAddress.types[0] =="street_number") {
-                    streetAddress += mapAddress.long_name;
-                }
-                if (mapAddress.types[0] =="route") {
-                    streetAddress += mapAddress.short_name;
-                }
-                if($('#street').length > 0){
-                    document.getElementById('street').value = streetAddress;
-                }
-                if (mapAddress.types[0] =="locality") {
-                    document.getElementById('city').value = mapAddress.long_name;
-                }
-                if(mapAddress.types[0] =="administrative_area_level_1"){
-                    document.getElementById('state').value = mapAddress.long_name;
-                }
-                if(mapAddress.types[0] =="postal_code"){
-                    document.getElementById('pincode').value = mapAddress.long_name;
-                }else{
-                    document.getElementById('pincode').value = '';
-                }
-                if(mapAddress.types[0] == "country"){
-                    var country = document.getElementById('country');
-                    for (let i = 0; i < country.options.length; i++) {
-                        if (country.options[i].text.toUpperCase() == mapAddress.long_name.toUpperCase()) {
-                            country.value = country.options[i].value;
-                            break;
+
+        // var myLatlng = new google.maps.LatLng(userLatitude, userLongitude);
+        // var mapProp = {
+        //     center:myLatlng,
+        //     zoom:13,
+        //     mapTypeId:google.maps.MapTypeId.ROADMAP
+
+        // };
+        // var addressMap=new google.maps.Map(document.getElementById("pick-address-map"), mapProp);
+        var input = document.getElementById('address');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo('bounds', bindMap);
+
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var place = autocomplete.getPlace();
+            // console.log(place);
+            document.getElementById('longitude').value = place.geometry.location.lng();
+            document.getElementById('latitude').value = place.geometry.location.lat();
+            for(let i=1; i < place.address_components.length; i++){
+                let mapAddress = place.address_components[i];
+                if(mapAddress.long_name !=''){
+                    let streetAddress = '';
+                    if (mapAddress.types[0] =="street_number") {
+                        streetAddress += mapAddress.long_name;
+                    }
+                    if (mapAddress.types[0] =="route") {
+                        streetAddress += mapAddress.short_name;
+                    }
+                    if($('#street').length > 0){
+                        document.getElementById('street').value = streetAddress;
+                    }
+                    if (mapAddress.types[0] =="locality") {
+                        document.getElementById('city').value = mapAddress.long_name;
+                    }
+                    if(mapAddress.types[0] =="administrative_area_level_1"){
+                        document.getElementById('state').value = mapAddress.long_name;
+                    }
+                    if(mapAddress.types[0] =="postal_code"){
+                        document.getElementById('pincode').value = mapAddress.long_name;
+                    }else{
+                        document.getElementById('pincode').value = '';
+                    }
+                    if(mapAddress.types[0] == "country"){
+                        var country = document.getElementById('country');
+                        for (let i = 0; i < country.options.length; i++) {
+                            if (country.options[i].text.toUpperCase() == mapAddress.long_name.toUpperCase()) {
+                                country.value = country.options[i].value;
+                                break;
+                            }
                         }
                     }
                 }
             }
-        }
-      });
+        });
+
+        setTimeout(function(){ 
+            $(".pac-container").appendTo("#add_new_address_form .address-input-group");
+        }, 300);
+        
     }
 </script>
 @endsection

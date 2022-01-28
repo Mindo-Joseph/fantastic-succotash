@@ -29,7 +29,18 @@ $timezone = Auth::user()->timezone;
                                     <p>#{{$order->order_number}}</p>
                                 </div>
                             </div>
-                            @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null)
+                             @if(isset($order->vendors) && empty($order->vendors->first()->dispatch_traking_url) && ($order->vendors->first()->delivery_fee > 0) && ($order->vendors->first()->order_status_option_id >= 2) && $order->shipping_delivery_type=='D')
+                             <div class='inner-div d-inline-block' style="float: right;">
+                                <form method='POST' action='"+full.destroy_url+"'>
+                                   
+                                        <button type='button' class='btn btn-danger' id="create_dispatch_request"  data-order_vendor_id="{{$order->vendors->first()->id}}">{{__('Create Dispatch Request')}}</i>
+                                        </button>
+                                   
+                                </form>
+                             </div>
+                            @endif    
+
+                            @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null && $order->vendors->first()->dispatch_traking_url !=0 )
                             <div class="col-lg-6">
                                 <div class="mb-4">
                                     <h5 class="mt-0">{{ __("Tracking ID") }}:</h5>
@@ -42,6 +53,17 @@ $timezone = Auth::user()->timezone;
                                     </p>
                                 </div>
                             </div>
+                            @elseif(isset($order->vendors) && isset($order->vendors->first()->lalamove_tracking_url) && $order->vendors->first()->lalamove_tracking_url !=null )
+
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <h5 class="mt-0">{{ __("Tracking ID") }}:</h5>
+                                    <p>
+                                        <a href="{{$order->vendors->first()->lalamove_tracking_url}}" target="_blank">#{{ $order->vendors->first()->web_hook_code }}</a>
+                                    </p>
+                                </div>
+                            </div>
+
                             @endif
                         </div>
                         <div class="row track-order-list">
@@ -87,6 +109,7 @@ $timezone = Auth::user()->timezone;
                                     @endforeach
 
                                     <!-- List of incomplete order status if order is not rejected -->
+                                    
                                     @if(!in_array(3, $vendor_order_status_option_ids))
                                         @foreach($order_status_options as $order_status_option)
                                             @if(!in_array($order_status_option->id, $vendor_order_status_option_ids))
@@ -126,7 +149,9 @@ $timezone = Auth::user()->timezone;
                                 </ul>
                             </div>
 
-                            @if(isset($order->vendors) && isset($order->vendors->first()->dispatch_traking_url) && $order->vendors->first()->dispatch_traking_url !=null)
+                           
+
+                            @if(isset($order->vendors) && ($order->vendors->first()->dispatch_traking_url !=null || $order->vendors->first()->lalamove_tracking_url !=null))
                             <div class="col-lg-6">
                                 <ul class="list-unstyled remove-curser">
                                     @foreach($dispatcher_status_options as $dispatcher_status_option)
@@ -163,10 +188,18 @@ $timezone = Auth::user()->timezone;
                 <div class="card mb-0 h-100">
                     <div class="card-body">
                         <h4 class="header-title mb-3">
+ 
+                            <div class='form-ul'> {{ $vendor_data->name }}
+                                
+                            </div>
+
+
+
                             @if($order->luxury_option_name != '')
                                 <span class="badge badge-info mr-2">{{$order->luxury_option_name}}</span>
                             @endif
                             {{ __("Items from Order") }} #{{$order->order_number}}
+                            {{-- <a href="{{ route('order.edit.detail',[$order->id,$order->vendors->first()->vendor_id])}}">{{__('Edit Order')}}</a> --}}
                         </h4>
                         @if($order->luxury_option_id == 2)
                             @foreach($order->vendors as $vendor)
@@ -214,12 +247,17 @@ $timezone = Auth::user()->timezone;
                                                 <hr class="my-2">
                                                 <h6 class="m-0 pl-0"><b>{{__('Add Ons')}}</b></h6>
                                                 @foreach($product->addon as $addon)
-                                                    <p class="p-0 m-0">{{ $addon->option->translation_one->title }}</p>
+                                                    <p class="p-0 m-0">{{ $addon->option->translation_title }}</p>
                                                 @endforeach
                                             @endif
                                         </th>
                                         <td>
+                                            @if($product->image_path)
                                             <img src="{{@$product->image_path['proxy_url'].'32/32'.@$product->image_path['image_path']}}" alt="product-img" height="32">
+                                            @else 
+                                            @php $image_path = getDefaultImagePath(); @endphp
+                                            <img src="{{$image_path['proxy_url'].'32/32'.$image_path['image_path']}}" alt="product-img" height="32">
+                                            @endif
                                         </td>
                                         <td>{{ $product->quantity }}</td>
                                         <td>
@@ -287,7 +325,7 @@ $timezone = Auth::user()->timezone;
             <div class="col-lg-6 mb-3">
                 <div class="card mb-0 h-100">
                     <div class="card-body">
-                        <h4 class="header-title mb-3">{{ __("Shipping Information") }}</h4>
+                        <h4 class="header-title mb-3">{{ __("Delivery Information") }}</h4>
                         <h5 class="font-family-primary fw-semibold">{{$order->user->name}}</h5>
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __("Email") }}:</span> {{ $order->user->email ? $order->user->email : ''}}</p>
                         <p class="mb-2"><span class="fw-semibold me-2">{{ __('Phone')}}:</span> {{'+'.$order->user->dial_code.$order->user->phone_number}}</p>
@@ -333,29 +371,29 @@ $timezone = Auth::user()->timezone;
 
 
                     <div class="card-body">
-                        <h4 class="header-title mb-3">{{ __('Comment/Schedule Information') }}</h4>
+                        <h4 class="header-title mb-3 ">{{ __('Comment/Schedule Information') }}</h4>
                         @if($order->comment_for_pickup_driver)
-                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Comment for Pickup Driver') }} :</span> {{ $order->comment_for_pickup_driver ?? ''}}</p>
+                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Comment for Pickup Driver') }} :</span> {{ $order->comment_for_pickup_driver ?? ''}}</p>
                         @endif
 
                         @if($order->comment_for_dropoff_driver)
-                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Comment for Dropoff Driver') }} :</span> {{ $order->comment_for_dropoff_driver ?? ''}}</p>
+                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Comment for Dropoff Driver') }} :</span> {{ $order->comment_for_dropoff_driver ?? ''}}</p>
                         @endif
 
                         @if($order->comment_for_vendor)
-                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Comment for Vendor') }} :</span> {{ $order->comment_for_vendor ?? ''}}</p>
+                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Comment for Vendor') }} :</span> {{ $order->comment_for_vendor ?? ''}}</p>
                         @endif
 
                         @if($order->schedule_pickup)
-                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Pickup') }} :</span> {{dateTimeInUserTimeZone($order->schedule_pickup, $timezone)}} </p>
+                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Schedule Pickup') }} :</span> {{dateTimeInUserTimeZone($order->schedule_pickup, $timezone)}} </p>
                         @endif
 
                         @if($order->schedule_dropoff)
-                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Schedule Dropoff') }} :</span> {{dateTimeInUserTimeZone($order->schedule_dropoff, $timezone)}} </p>
+                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Schedule Dropoff') }} :</span> {{dateTimeInUserTimeZone($order->schedule_dropoff, $timezone)}} </p>
                         @endif
 
                         @if($order->specific_instructions)
-                          <p class="mb-2"><span class="fw-semibold me-2">{{ __('Specific instructions') }} :</span> {{ $order->specific_instructions ?? ''}}</p>
+                          <p class="mb-2 text-danger"><span class="fw-semibold me-2">{{ __('Specific instructions') }} :</span> {{ $order->specific_instructions ?? ''}}</p>
                         @endif
 
                     </div>
@@ -406,6 +444,7 @@ $timezone = Auth::user()->timezone;
                     order_vendor_id: order_vendor_id,
                 },
                 success: function(response) {
+                    console.log(response);
                     that.addClass("completed");
                     if (status_option_id == 2) {
                         that.next('li').remove();
@@ -422,5 +461,51 @@ $timezone = Auth::user()->timezone;
             });
         }
     });
+
+
+    $("#create_dispatch_request").click(function() {
+        if (confirm("Are you Sure?")) {
+            let that = $(this);
+            var order_vendor_id = that.data("order_vendor_id");
+            $.ajax({
+                url: "{{ route('create.dispatch.request') }}",
+                type: "POST",
+                data: {
+                    order_id: "{{$order->id}}",
+                    vendor_id: "{{$vendor_id}}",
+                    "_token": "{{ csrf_token() }}",
+                    order_vendor_id: order_vendor_id,
+                },
+                success: function(response) {
+                    $.NotificationApp.send("Success", response.message, "top-right", "#5ba035", response.status);
+                    location.reload();
+                },
+                error: function(error) {
+                var response = $.parseJSON(error.responseText);
+                let error_messages = response.message;
+                alert(error_messages);
+                location.reload();
+                }
+            });
+        }
+    });
+
+
+        // setInterval(function () {
+        //     $.ajax({
+        //         url: "{{ url('order.webhook') }}",
+        //         type: "POST",
+        //         data: {
+        //             order_id: "{{$order->id}}",
+        //             "_token": "{{ csrf_token() }}"
+        //         },
+        //         success: function(response) {
+        //             //location.reload();   
+        //         },
+        //     });
+        // }
+
+        // }, 5000);
+
 </script>
 @endsection

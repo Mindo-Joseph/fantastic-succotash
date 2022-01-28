@@ -285,6 +285,16 @@
                                 </a>
                             </li>
                         @endif
+
+                        @if($client_preference_detail->get_estimations == 1)    
+                            <li>
+                                <a href="{{route('estimations.index')}}">
+                                    <span class="icon-configuration"></span>
+                                    <span> {{ __('Estimations') }} </span>
+                                </a>
+                            </li>
+                        @endif
+
                         @if(in_array('tax',$allowed) || Auth::user()->is_superadmin == 1)
                             <li>
                                 <a href="{{route('tax.index')}}">
@@ -300,6 +310,24 @@
                                     <span> {{ __('Payment Options') }} </span>
                                 </a>
                             </li>
+                        @endif
+                        
+
+                        @if(in_array('DeliveryOption',$allowed) || Auth::user()->is_superadmin == 1)
+                        <li>
+                            <a href="{{route('deliveryoption.index')}}">
+                                <span class="icon-payment-options"></span>
+                                <span> {{ __('Delivery Options') }} </span>
+                            </a>
+                        </li>
+                        @endif
+                        @if(Auth::user()->is_superadmin == 1)
+                        <li>
+                            <a href="{{route('tools.index')}}">
+                                <span class="icon-settings-1-1"></span>
+                                <span> {{ __('Tools') }} </span>
+                            </a>
+                        </li>
                         @endif
                     </ul>
                 </li>
