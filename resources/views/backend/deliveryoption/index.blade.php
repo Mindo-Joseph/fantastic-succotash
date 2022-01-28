@@ -79,7 +79,7 @@
                                 <input type="checkbox"  data-title="{{$delOption->code}}" data-plugin="switchery" name="sandbox" class="chk_box" data-color="#43bee1" @if($delOption->test_mode == 1) checked @endif>
                             </div>
                         </div>
-                       
+
                     </div>
                     <hr>
 
@@ -106,8 +106,8 @@
                                     <label for="lalamove_country_key class="mr-3">{{ __("Country") }}</label>
 
                                     <select name="country_key" class="form-control" id="lalamove_country_key" @if($delOption->status == 1) required @endif>
-                                    <option value="">{{ __("Please Select Country") }}</option>    
-                                    <option value="MY" {{(($country_key == 'MY')?'Selected':'')}}>Malaysia</option>    
+                                    <option value="">{{ __("Please Select Country") }}</option>
+                                    <option value="MY" {{(($country_key == 'MY')?'Selected':'')}}>Malaysia</option>
                                     {{-- <option value="MX" {{(($country_key == 'MX')?'Selected':'')}}>Mexico</option>     --}}
                                     </select> 
                                 </div>
@@ -118,12 +118,12 @@
                                     <label for="lalamove_country_key class="mr-3">{{ __("Country Region") }}</label>
 
                                     <select name="country_region" class="form-control" id="lalamove_country_region" @if($delOption->status == 1) required @endif>
-                                    <option value="">{{ __("Please Select Country Region") }}</option>    
-                                    <option value="MY_KUL" {{(($country_region == 'MY_KUL')?'Selected':'')}}>Kuala Lumpur</option>    
-                                    <option value="MY_JHB" {{(($country_region == 'MY_JHB')?'Selected':'')}}>Johor Bahru</option>    
-                                    <option value="MY_NTL" {{(($country_region == 'MY_NTL')?'Selected':'')}}>Penang</option>    
-                                    </select> 
-                                    
+                                    <option value="">{{ __("Please Select Country Region") }}</option>
+                                    <option value="MY_KUL" {{(($country_region == 'MY_KUL')?'Selected':'')}}>Kuala Lumpur</option>
+                                    <option value="MY_JHB" {{(($country_region == 'MY_JHB')?'Selected':'')}}>Johor Bahru</option>
+                                    <option value="MY_NTL" {{(($country_region == 'MY_NTL')?'Selected':'')}}>Penang</option>
+                                    </select>
+
                                 </div>
                             </div>
                             </div>
@@ -133,11 +133,11 @@
                                     <label for="lalamove_locale_key class="mr-3">{{ __("Locale Region") }}</label>
 
                                     <select name="locale_key" class="form-control" id="lalamove_locale_key" @if($delOption->status == 1) required @endif>
-                                    <option value="">{{ __("Please Select Locale Region") }}</option>    
-                                    <option value="en_MY" {{(($locale_key == 'en_MY')?'Selected':'')}}>English</option>    
-                                    <option value="ms_MY" {{(($locale_key == 'ms_MY')?'Selected':'')}}>Malaysia</option>      
-                                    </select> 
-                                    
+                                    <option value="">{{ __("Please Select Locale Region") }}</option>
+                                    <option value="en_MY" {{(($locale_key == 'en_MY')?'Selected':'')}}>English</option>
+                                    <option value="ms_MY" {{(($locale_key == 'ms_MY')?'Selected':'')}}>Malaysia</option>
+                                    </select>
+
                                 </div>
                             </div>
 
@@ -147,15 +147,15 @@
                                     <label for="lalamove_service_type class="mr-3">{{ __("Service Type") }}</label>
 
                                     <select name="service_type" class="form-control" id="lalamove_service_type" @if($delOption->status == 1) required @endif>
-                                    <option value="">{{ __("Please Select Service Type") }}</option>    
-                                    <option value="MOTORCYCLE" {{(($service_type == 'MOTORCYCLE')?'Selected':'')}}>Motor Cycle</option>    
-                                    <option value="CAR" {{(($service_type == 'CAR')?'Selected':'')}}>Car</option>      
-                                    <option value="VAN" {{(($service_type == 'VAN')?'Selected':'')}}>Van</option>      
-                                    <option value="4X4" {{(($service_type == '4X4')?'Selected':'')}}>4X4</option>      
-                                    <option value="TRUCK330" {{(($service_type == 'TRUCK330')?'Selected':'')}}>Truck 330</option>      
-                                    <option value="TRUCK550" {{(($service_type == 'TRUCK550')?'Selected':'')}}>Truck 550</option>      
-                                    </select> 
-                                    
+                                    <option value="">{{ __("Please Select Service Type") }}</option>
+                                    <option value="MOTORCYCLE" {{(($service_type == 'MOTORCYCLE')?'Selected':'')}}>Motor Cycle</option>
+                                    <option value="CAR" {{(($service_type == 'CAR')?'Selected':'')}}>Car</option>
+                                    <option value="VAN" {{(($service_type == 'VAN')?'Selected':'')}}>Van</option>
+                                    <option value="4X4" {{(($service_type == '4X4')?'Selected':'')}}>4X4</option>
+                                    <option value="TRUCK330" {{(($service_type == 'TRUCK330')?'Selected':'')}}>Truck 330</option>
+                                    <option value="TRUCK550" {{(($service_type == 'TRUCK550')?'Selected':'')}}>Truck 550</option>
+                                    </select>
+
                                 </div>
                             </div>
                             </div>
@@ -174,7 +174,7 @@
                                 </sup>
                             </div>
 
-                            
+
                             <div class="col-md-12 ">
                                 <div class="form-group mb-0 switchery-demo">
                                     <label for="" class="mr-3">{{ __("Set Base Price Fare") }}</label>
@@ -183,15 +183,15 @@
                         <hr/>
 
                             </div>
-                           
-                          
+
+
                         <div class="row mt-3" id="lalamove_fields_wrapper_base" @if($base_price < 1) style="display:none" @endif >
-                           
+
                             <div class="col-md-4">
                                 <div class="form-group mb-0">
                                     <label for="lalamove_base_price" class="mr-3">{{ __("Base Price") }}</label>
                                     <input type="text" name="base_price" id="lalamove_base_price" class="form-control" value="{{@$base_price}}" >
-                                </div>  
+                                </div>
                             </div>
 
                             <div class="col-md-4">
@@ -207,7 +207,7 @@
                                     <input type="text" name="amount_per_km" id="lalamove_amount_per_km" class="form-control" value="{{@$amount_per_km}}" >
                                 </div>
                             </div>
-                           
+
 
                         </div>
                     </div>
@@ -228,7 +228,7 @@
         @csrf
         @method('POST')
         <div class="row">
-          
+
             <div class="col-12">
 
                 <input type="hidden" name="method_id[]" id="{{$opt->id}}" value="{{$opt->id}}">
@@ -238,7 +238,7 @@
                 $creds = json_decode($opt->credentials);
                 $username = (isset($creds->username)) ? $creds->username : '';
                 $password = (isset($creds->password)) ? $creds->password : '';
-                
+
 
                 $base_price = (isset($creds->base_price)) ? $creds->base_price : '';
                 $distance = (isset($creds->distance)) ? $creds->distance : '';
@@ -318,15 +318,15 @@
                             </div>
                         <hr/>
                         </div>
-                       
-                      
+
+
                     <div class="row mt-3" id="shiprocket_fields_wrapper_base" @if($base_price < 1) style="display:none" @endif >
-                       
+
                         <div class="col-md-4">
                             <div class="form-group mb-0">
                                 <label for="shiprocket_base_price" class="mr-3">{{ __("Base Price") }}</label>
                                 <input type="text" name="base_price" id="shiprocket_base_price" class="form-control" value="{{@$base_price}}" >
-                            </div>  
+                            </div>
                         </div>
 
                         <div class="col-md-4">

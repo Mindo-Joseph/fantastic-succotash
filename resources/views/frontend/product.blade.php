@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="https://www.jqueryscript.net/css/jquerysctipttop.css">
     <link rel="stylesheet" href="https://www.jqueryscript.net/demo/Product-Carousel-Magnifying-Effect-exzoom/jquery.exzoom.css">
+    <link href="{{asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 <style type="text/css">
     .main-menu .brand-logo {
         display: inline-block;
@@ -292,7 +293,8 @@
                                                 @php
                                                 $product_quantity_in_cart = $product_in_cart->quantity??0;
                                                 @endphp
-                                                    <input type="hidden" id="instock" value="{{ ($product->variant[0]->quantity - $product_quantity_in_cart)}}">
+                                                <input type="hidden" value="{{$product->has_inventory}}" id="hasInventory">
+                                                <input type="hidden" id="instock" value="{{ ($product->variant[0]->quantity - $product_quantity_in_cart)}}">
                                                 @endif
                                             </h6>
                                             @if(!$product->has_inventory || $product->variant[0]->quantity > 0 || $product->sell_when_out_of_stock == 1)
@@ -765,7 +767,7 @@
 
 
 <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-
+<script src="{{asset('assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
 
 
 <script>

@@ -157,7 +157,7 @@ class CartController extends FrontController
             ])->find($request->product_id);
 
             # if product type is not equal to on demand
-            if($productDetail->category->categoryDetail->type_id != 8  && $productDetail->sell_when_out_of_stock == 0){
+            if( ($productDetail->category->categoryDetail->type_id != 8) && ($productDetail->has_inventory == 1)  && ($productDetail->sell_when_out_of_stock == 0)){
                 if(!empty($already_added_product_in_cart)){
                     if($productDetail->variant[0]->quantity <= $already_added_product_in_cart->quantity){
                         return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart s')]);
@@ -596,8 +596,9 @@ class CartController extends FrontController
 
             $cart->scheduled_date_time = convertDateTimeInTimeZone($cart->scheduled_date_time, $user->timezone, 'Y-m-d\TH:i');
         }
-        $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = $deliver_charges_lalmove = $deliver_charges_ship = 0.00;
+        $total_payable_amount = $total_subscription_discount = $total_discount_amount = $total_discount_percent = $total_taxable_amount = $deliver_charges_lalmove = 0.00;
         if ($cartData) {
+
             $cart_dinein_table_id = NULL;
             $action = (Session::has('vendorType')) ? Session::get('vendorType') : 'delivery';
             $vendor_details = [];
@@ -619,7 +620,6 @@ class CartController extends FrontController
                 $vendor_products_total_amount = $payable_amount = $taxable_amount = $subscription_discount = $discount_amount = $discount_percent = $deliver_charge = $delivery_fee_charges = $delivery_fee_charges_static =  $deliver_charges_lalmove = 0.00;
                 $delivery_count = 0;
                 $delivery_count_lm = 0;
-                $delivery_count_sr = 0;
                 $coupon_amount_used = 0;
 
                 if(Session::has('vendorTable')){
@@ -644,10 +644,13 @@ class CartController extends FrontController
                 else{
                     if( (isset($preferences->is_hyperlocal)) && ($preferences->is_hyperlocal == 1) ){
                         if($address_id > 0){
-                            $serviceArea = $vendorData->vendor->whereHas('serviceArea', function($query) use($latitude, $longitude){
-                                $query->select('vendor_id')
+
+                            if (!empty($latitude) && !empty($longitude)) {
+                                $serviceArea = $vendorData->vendor->whereHas('serviceArea', function ($query) use ($latitude, $longitude) {
+                                    $query->select('vendor_id')
                                 ->whereRaw("ST_Contains(POLYGON, ST_GEOMFROMTEXT('POINT(".$latitude." ".$longitude.")'))");
-                            })->where('id', $vendorData->vendor_id)->get();
+                                })->where('id', $vendorData->vendor_id)->get();
+                            }
                         }
                     }
                 }
@@ -660,11 +663,12 @@ class CartController extends FrontController
                             $product_out_of_stock = 1;
                         }
                     }
-                    $prod->product_out_of_stock =  $product_out_of_stock;
 
                     if($cart_dinein_table_id > 0){
                         $prod->update(['vendor_dinein_table_id' => $cart_dinein_table_id]);
                     }
+                    $prod->product_out_of_stock =  $product_out_of_stock;
+
                     $quantity_price = 0;
                     $divider = (empty($prod->doller_compare) || $prod->doller_compare < 0) ? 1 : $prod->doller_compare;
                     $price_in_currency = $prod->pvariant->price;
@@ -683,6 +687,7 @@ class CartController extends FrontController
                     $prod->quantity_price = number_format($quantity_price, 2, '.', '');
                     $payable_amount = $payable_amount + $quantity_price;
                     $vendor_products_total_amount = $vendor_products_total_amount + $quantity_price;
+
                     $taxData = array();
                     if (!empty($prod->product->taxCategory) && count($prod->product->taxCategory->taxRate) > 0) {
                         foreach ($prod->product->taxCategory->taxRate as $tckey => $tax_value) {
@@ -773,7 +778,6 @@ class CartController extends FrontController
                                     $code = $deliveries[0]['code'];
                                 }
                             }
-                               // echo  $deliveryCharges;
 
                     if(isset($deliveryCharges) && !empty($deliveryCharges)){
                             $dtype = explode('_',$code);
@@ -805,9 +809,9 @@ class CartController extends FrontController
                         $crossSell_products->push($cross_prods);
                     }
                 }
-                $couponGetAmount =$payable_amount ;
+
+                $couponGetAmount = $payable_amount ;
                 if (isset($vendorData->coupon) && !empty($vendorData->coupon) ) {
-                    //pr($vendorData->coupon->promo);
                     if (isset($vendorData->coupon->promo) && !empty($vendorData->coupon->promo)) {
                         if($vendorData->coupon->promo->first_order_only==1){
                             if(Auth::user()){
@@ -832,12 +836,12 @@ class CartController extends FrontController
 
                             $minimum_spend = 0;
                             if (isset($vendorData->coupon->promo->minimum_spend)) {
-                                $minimum_spend = $vendorData->coupon->promo->minimum_spend * $customerCurrency->doller_compare;
+                                $minimum_spend = $vendorData->coupon->promo->minimum_spend * $doller_compare;
                             }
 
                             $maximum_spend = 0;
                             if (isset($vendorData->coupon->promo->maximum_spend)) {
-                                $maximum_spend = $vendorData->coupon->promo->maximum_spend * $customerCurrency->doller_compare;
+                                $maximum_spend = $vendorData->coupon->promo->maximum_spend * $doller_compare;
                             }
 
                             if( ($minimum_spend <= $payable_amount ) && ($maximum_spend >= $payable_amount)    )
@@ -867,15 +871,15 @@ class CartController extends FrontController
                                 $PromoFreeDeliver = 1;
                                 $coupon_amount_used = $coupon_amount_used +  $deliveryCharges;
                                 $payable_amount = $payable_amount - $deliveryCharges;
-                               // pr($payable_amount);
                             }
                         }
                     }
                 }
+
                 $promoCodeController = new PromoCodeController();
                 $promoCodeRequest = new Request();
                 $promoCodeRequest->setMethod('POST');
-                $promoCodeRequest->request->add(['vendor_id' => $vendorData->vendor_id,'amount' => $couponGetAmount]);
+                $promoCodeRequest->request->add(['vendor_id' => $vendorData->vendor_id,'amount' => $couponGetAmount,'is_cart' => 1]);
                 $promoCodeResponse = $promoCodeController->postPromoCodeList($promoCodeRequest)->getData();
                 if($promoCodeResponse->status == 'Success'){
                     if(!empty($promoCodeResponse->data)){
@@ -893,6 +897,10 @@ class CartController extends FrontController
                 //}
                 //$payable_amount = $payable_amount + $deliver_charge;
                 //Start applying service fee on vendor products total
+
+                $slotsDate = findSlot('',$vendorData->vendor->id,'');
+                $vendorData->delaySlot = (($slotsDate)?$slotsDate:'');
+
                 $vendor_service_fee_percentage_amount = 0;
                 if($vendorData->vendor->service_fee_percent > 0){
                     $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendorData->vendor->service_fee_percent) / 100 ;
@@ -905,8 +913,8 @@ class CartController extends FrontController
                 $vendorData->coupon_amount_used = number_format($coupon_amount_used, 2, '.', '');
                 $vendorData->service_fee_percentage_amount = number_format($vendor_service_fee_percentage_amount, 2, '.', '');
                 $vendorData->delivery_fee_charges = number_format($delivery_fee_charges, 2, '.', '');
-                $vendorData->delivery_fee_charges_static = number_format($delivery_fee_charges_static, 2, '.', '');;
-                $vendorData->delivery_fee_charges_ship = number_format($deliver_charges_ship, 2, '.', '');
+                //$vendorData->delivery_fee_charges_static = number_format($delivery_fee_charges_static, 2, '.', '');;
+               
                 $vendorData->payable_amount = number_format($payable_amount, 2, '.', '');
                 $vendorData->discount_amount = number_format($discount_amount, 2, '.', '');
                 $vendorData->discount_percent = number_format($discount_percent, 2, '.', '');
@@ -921,10 +929,6 @@ class CartController extends FrontController
                 $vendorData->closed_store_order_scheduled = (($slotsDate)?$product->vendor->closed_store_order_scheduled:0);
                 $vendorData->delOptions = $select;
                 
-                   // dd($product->vendor);
-                // if (!empty($subscription_features)) {
-                //     $vendorData->product_total_amount = number_format(($payable_amount - $taxable_amount - $subscription_discount), 2, '.', '');
-                // }
                 if(isset($serviceArea)){
                     if($serviceArea->isEmpty()){
                         $vendorData->isDeliverable = 0;
@@ -949,7 +953,11 @@ class CartController extends FrontController
                 if((float)($vendorData->vendor->order_min_amount) > $subtotal_amount){  # if any vendor total amount of order is less then minimum order amount
                     $delivery_status = 0;
                 }
-                
+
+
+
+
+
                 $total_payable_amount = $total_payable_amount + $payable_amount;
                 $total_taxable_amount = $total_taxable_amount + $taxable_amount;
                 $total_discount_amount = $total_discount_amount + $discount_amount;
@@ -959,6 +967,7 @@ class CartController extends FrontController
 
                 $vendorData->is_promo_code_available = $is_promo_code_available;
             }
+
             $is_percent = 0;
             $amount_value = 0;
             if ($cart->coupon) {
@@ -1023,7 +1032,7 @@ class CartController extends FrontController
                 $closed_store_order_scheduled = (($slotsDate)?$duration->closed_store_order_scheduled:0);
                 if($cart->deliver_status == 0 && $closed_store_order_scheduled == 1)
                 {
-                   // $cart->deliver_status = $duration->closed_store_order_scheduled;
+                    $cart->deliver_status = $duration->closed_store_order_scheduled;
                     $cart->closed_store_order_scheduled = $duration->closed_store_order_scheduled;
                     $myDate = date('Y-m-d',strtotime($cart->scheduled_date_time));
                     $sttime =  strtotime($myDate);
@@ -1031,13 +1040,25 @@ class CartController extends FrontController
                     if($todaytime == $sttime){$sttime =  strtotime('+1 day',$sttime);}
                     $myDate = (($myDate)?date('Y-m-d',$sttime):date('Y-m-d',strtotime('+1 day')));
                     $cart->schedule_type =  'schedule';
-                    $cart->deliver_status = (($vendorData->isDeliverable)?1:0);
+                    //$cart->closed_store_order_scheduled =  1;
                 }
-                $slotData = (object)findSlotNew($myDate,$vendorId);
-                $slots = $slotData->slots;
-                $myDate = $slotData->mydate;
+                $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
+                if(count((array)$slots) == 0){
+                    $myDate  = date('Y-m-d',strtotime('+1 day'));
+                    $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
+                }
+                if(count((array)$slots) == 0){
+                    $myDate  = date('Y-m-d',strtotime('+1 day'));
+                    $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
+                }
+
+                if(count((array)$slots) == 0){
+                    $myDate  = date('Y-m-d',strtotime('+3 day'));
+                    $slots = (object)showSlot($myDate,$vendorId,'delivery',$duration->slot_minutes);
+                }
                 $cart->slots = $slots;
                 $cart->vendor_id =  $vendorId;
+
             }else{
                 $slots = [];
                 $cart->slots = [];
@@ -1228,7 +1249,7 @@ class CartController extends FrontController
             }
         ])->find($cartProduct->product_id);
 
-        if($productDetail->category->categoryDetail->type_id != 8 && $productDetail->sell_when_out_of_stock == 0){
+        if( ($productDetail->category->categoryDetail->type_id != 8) && ($productDetail->has_inventory == 1)  && ($productDetail->sell_when_out_of_stock == 0) ){
             if($productDetail->variant[0]->quantity < $request->quantity){
                 return response()->json(['status' => 'error', 'message' => __('Maximum quantity already added in your cart')]);
             }
@@ -1468,8 +1489,8 @@ class CartController extends FrontController
                     );
                 }
 
-                $delivery_fee_charges_static =  $deliveryCharges;
-                $delivery_fee_charges =  $delivery_fee_charges_lalamove = $deliveryCharges;
+                //$delivery_fee_charges_static =  $deliveryCharges;
+                //$delivery_fee_charges =  $delivery_fee_charges_lalamove = $deliveryCharges;
 
            }//End statis fe code
 

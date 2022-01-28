@@ -6,6 +6,7 @@
 <link href="{{asset('assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.css')}}" rel="stylesheet" type="text/css" />
 <link href="{{asset('assets/libs/flatpickr/flatpickr.min.css')}}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="{{asset('assets/css/intlTelInput.css')}}">
+<link href="{{asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 <style type="text/css">
     .swal2-title {
         margin: 0px;
@@ -286,7 +287,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                                 </label>
                             </div>
                             <div class="col-4 text-right  <%= ((product.promo_free_deliver)?'discard_price':'') %>">
-                                {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %> 
+                                {{Session::get('currencySymbol')}} <%= Helper.formatPrice(product.delivery_fee_charges) %>
                             </div>
                         </div>
                     <% } %>
@@ -1173,7 +1174,7 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
 @endif
 
 <script src="{{asset('assets/js/intlTelInput.js')}}"></script>
-
+<script src="{{asset('assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
 
 
 <script type="text/javascript">
@@ -1289,8 +1290,17 @@ $currencyList = \App\Models\ClientCurrency::with('currency')->orderBy('is_primar
                 vendor: vendor
             },
             success: function(response) {
-                if (response.status == "Success") {} else {
-                    alert(response.message);
+                console.log(response);
+                if (response.status == "Success") {
+
+                } else {
+                    Swal.fire({
+                    // title: "Warning!",
+                    text: response.message,
+                    icon : "error",
+                    button: "OK",
+                    });
+                   // alert(response.message);
                 }
             },
             error: function(error) {
