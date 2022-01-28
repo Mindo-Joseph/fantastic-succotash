@@ -1420,7 +1420,7 @@ class CartController extends FrontController
                 {
                    Session()->put('vid',$vendorData->vendor_id);
                 
-            if($preferences->static_delivey_fee != 1 &&  $vendorData->vendor->order_amount_for_delivery_fee == 0)
+            if($preferences->static_delivey_fee != 1)
             {
                 //Dispatcher Delivery changes code
                 $deliver_charge = $this->getDeliveryFeeDispatcher($vendorData->vendor_id);
@@ -1469,28 +1469,25 @@ class CartController extends FrontController
                 $option = array_merge($option,$deliver_ship_fee);
             }
             
-        }else{
+        }elseif($preferences->static_delivey_fee == 1 &&  $vendorData->vendor->order_amount_for_delivery_fee != 0){
              # for static fees 
            
                 if( $payable_amount >= (float)($vendorData->vendor->order_amount_for_delivery_fee)){ 
                     $deliveryCharges = number_format($vendorData->vendor->delivery_fee_maximum, 2, '.', '');
+                }elseif($payable_amount < (float)($vendorData->vendor->order_amount_for_delivery_fee)){
+                    $deliveryCharges = number_format($vendorData->vendor->delivery_fee_minimum, 2, '.', '');
                 }
 
-                if($payable_amount < (float)($vendorData->vendor->order_amount_for_delivery_fee)){
-                    $option[] = array(
-                        'type'=>'S',
-                        'courier_name'=>__('Static'),
-                        'rate' => number_format($vendorData->vendor->delivery_fee_minimum, 2, '.', ''),
-                        'courier_company_id' => 0,
-                        'etd' => 0,
-                        'etd_hours' => 0,
-                        'estimated_delivery_days' => 0,
-                        'code' => 'S_0'
-                    );
-                }
-
-                //$delivery_fee_charges_static =  $deliveryCharges;
-                //$delivery_fee_charges =  $delivery_fee_charges_lalamove = $deliveryCharges;
+                $option[] = array(
+                    'type'=>'S',
+                    'courier_name'=>__('Static'),
+                    'rate' => $deliveryCharges,
+                    'courier_company_id' => 0,
+                    'etd' => 0,
+                    'etd_hours' => 0,
+                    'estimated_delivery_days' => 0,
+                    'code' => 'S_0'
+                );
 
            }//End statis fe code
 
