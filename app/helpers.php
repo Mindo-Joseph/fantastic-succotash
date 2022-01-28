@@ -625,4 +625,20 @@ function GoogleDistanceMatrix($latitude, $longitude)
     }
     return $send;
 }
+function getDynamicMail(){
+    $data = ClientPreference::select('mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
+    $config = array(
+        'driver' => $data->mail_driver,
+        'host' => $data->mail_host,
+        'port' => $data->mail_port,
+        'from'       => array('address' => $data->mail_from, 'name' => $data->mail_from),
+        'encryption' => $data->mail_encryption,
+        'username' => $data->mail_username,
+        'password' => $data->mail_password,
+        'sendmail' => '/usr/sbin/sendmail -bs',
+        'pretend' => false,
+    );
+    \Config::set('mail.mailers.smtp', $config);
+    return 2;
+}
 
