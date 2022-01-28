@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\ShippingOption;
 use App\Models\User;
 use App\Models\UserAddress;
