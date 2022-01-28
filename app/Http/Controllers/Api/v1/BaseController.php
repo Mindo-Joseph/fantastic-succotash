@@ -377,7 +377,6 @@ class BaseController extends Controller{
             'pretend' => false,
         );
         Config::set('mail', $config);
-        Config::set('mail.mailers.smtp', $config);
         $app = App::getInstance();
         $app->register('Illuminate\Mail\MailServiceProvider');
         return  $config;
