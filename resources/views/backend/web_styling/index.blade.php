@@ -284,12 +284,12 @@
                     <div id="al_web_styling" class="row dd-item dd3-item d-flex align-items-center justify-content-between on_click{{$home_page_label->slug}}" data-id="1" data-row-id="{{$home_page_label->id}}">
                         <div class="col-md-6">
                             <div class="row d-flex align-items-center">
-                                <div class="col-md-5">
+                                <div class="col-md-5 p-0">
                                     <a herf="#" class="dd-handle dd3-handle d-block mr-auto">
                                         {{$home_page_label->title}}
                                     </a>
                                 </div>
-                                <div class="col-md-7">
+                                <div class="col-md-7 p-0">
                                     <div class="language-input style-4">
                                         <div class="row no-gutters flex-nowrap align-items-center my-2">
                                             @foreach($langs as $lang)
