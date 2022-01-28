@@ -364,7 +364,7 @@ class BaseController extends Controller{
         return $currency[0]['convertedAmount'];
     }
 
-    public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption , $mail_from){
+    public function setMailDetail($mail_driver, $mail_host, $mail_port, $mail_username, $mail_password, $mail_encryption , $mail_from = "royo"){
         $config = array(
             'driver' => $mail_driver,
             'host' => $mail_host,
