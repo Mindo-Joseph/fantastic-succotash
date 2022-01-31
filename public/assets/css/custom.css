@@ -82,23 +82,12 @@ body .main-customer-page .set-height { min-height: calc(100vh - 350px);}
 body .dataTables_scrollBody{height: auto;}
 .content .al_custom_cke .cke{margin-top: 0.5em;}
 .content .al_custom_cms_page ol a{border:none;}
-body .order-list-view .dd-list .dd-nochildren .dd-handle+.dd3-content {
-    padding: 5px 40px !important;
-}
-body .order-list-view .dd-list .dd-handle+.dd3-content {
-    padding: 5px 0px!important;
-}
-body .order-list-view .dd-list .dd-handle+.dd3-content {
-    padding: 5px 00px!important;
-}
-body .order-list-view .dd-list .dd-item .dd-handle,
-body .order-list-view .dd-list .dd-expand+.dd-handle.dd3-handle{
-    padding: 10px;
-}
-body .row.rowYK.al_row_table #banner-datatable.table th {
-    padding: 0 !important;
-    font-weight: 500;
-}
+body .order-list-view .dd-list .dd-nochildren .dd-handle+.dd3-content {padding: 5px 25px !important;}
+body .order-list-view .dd-list .dd-handle+.dd3-content {padding: 5px 0px!important;}
+body .order-list-view .dd-list .dd-handle+.dd3-content {padding: 5px 00px!important;}
+body .order-list-view .dd-list .dd-item .dd-handle,body .order-list-view .dd-list .dd-expand+.dd-handle.dd3-handle{padding: 10px 0;}
+body .row.rowYK.al_row_table #banner-datatable.table th {padding: 0 !important;font-weight: 500;}
 body .row.rowYK.al_row_table #banner-datatable.table td{padding: 0 !important;}
+
 @media(max-width:1499px){h1.control-label {font-size: 46px;}}
 @media(max-width:767px){.al_add_user{margin-top: 0;}}
