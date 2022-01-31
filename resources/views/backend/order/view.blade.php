@@ -15,8 +15,10 @@ $timezone = Auth::user()->timezone;
                 <div class="page-title-box d-flex justify-content-between ">
 
                     <h4 class="page-title">{{ __("Order Detail") }}</h4>
-                    <a  href="{{ url()->previous() }}"><button class="al_print_btn badge badge-info">Back <img src=""> </button></a>
-                    <button class="al_print_btn badge badge-info" onclick='printDiv();'>Print <img src=""> </button>
+                    <div class="al_back_btn">
+                        <a class="al_print_btn_back mr-2" href="{{ url()->previous() }}">Back</a>
+                        <button class="al_print_btn badge badge-info" onclick='printDiv();'>Print <img src=""> </button>
+                    </div>
                 </div>
             </div>
         </div>
