@@ -49,6 +49,53 @@ class BaseController extends Controller{
         return '1';
 	}
 
+    /*      Category options heirarchy      */
+    public function printCategoryOptionsHeirarchy($tree, $parentCategory = [])
+    {
+        if (!is_null($tree) && count($tree) > 0) {
+            foreach ($tree as $key => $node) {
+                if($node['parent_id'] == 1){
+                    $parentCategory = array($node['translation'][0]['name']??'');
+                }
+                // type_id 1 means product in type table
+                if (isset($node['children']) && count($node['children']) > 0) {
+                    if($node['parent_id'] != 1 && !empty($node['translation'][0]['name'])){
+                        $parentCategory[] = $node['translation'][0]['name'];
+                    }
+                    
+                    // start including parent category
+                    $category = (isset($node['translation'][0]['name'])) ? $node['translation'][0]['name'] : $node['slug'];
+                    $hierarchyName = $category; // assume first category is parent
+                    if(count($parentCategory) > 0){
+                        if($node['parent_id'] != 1){ // if category is not parent then make heirarchy
+                            $hierarchyName = implode(' > ', $parentCategory);
+                            $hierarchyName = $hierarchyName.' > '.$category;
+                        }
+                    }
+                    $this->categoryOptionData[] = array('id'=>$node['id'], 'type_id'=>$node['type_id'], 'hierarchy'=>$hierarchyName, 'category'=>$category, 'can_add_products'=>$node['can_add_products']);
+                    // end including parent category
+
+                    $this->printCategoryOptionsHeirarchy($node['children'], $parentCategory);
+                }
+                else{
+                    // if ($node['type_id'] == 1 || $node['type_id'] == 3 || $node['type_id'] == 7 || $node['type_id'] == 8) {
+                        $category = (isset($node['translation'][0]['name'])) ? $node['translation'][0]['name'] : $node['slug'];
+                        if($node['parent_id'] == 1){
+                            $parentCategory = [];
+                            $hierarchyName = $category;
+                        }else{
+                            $hierarchyName = implode(' > ', $parentCategory);
+                            $hierarchyName = $hierarchyName.' > '.$category;
+                        }
+                        // $this->optionData .= '<option value="'.$node['id'].'">'.$hierarchyName.'</option>';
+                        $this->categoryOptionData[] = array('id'=>$node['id'], 'type_id'=>$node['type_id'], 'hierarchy'=>$hierarchyName, 'category'=>$category, 'can_add_products'=>$node['can_add_products']);
+                    // }
+                }
+            }
+        }
+        return $this->categoryOptionData;
+    }
+    
 	public function buildTree($elements, $parentId = 1) {
         $branch = array();
         foreach ($elements as $element) {
@@ -651,6 +698,45 @@ class BaseController extends Controller{
                 return response()->json(['data' => $e->getMessage()]);
             }
         }
+    }
+
+
+    public function sendTestMail(){
+        $after7days = Carbon::now()->addDays(7)->toDateString();
+        $now = Carbon::now()->toDateString();
+    
+        $client = Client::select('id', 'name', 'email', 'phone_number', 'logo')->where('id', '>', 0)->first();
+        $data = ClientPreference::select('sms_key', 'sms_secret', 'sms_from', 'mail_type', 'mail_driver', 'mail_host', 'mail_port', 'mail_username', 'sms_provider', 'mail_password', 'mail_encryption', 'mail_from')->where('id', '>', 0)->first();
+
+            if (!empty($data->mail_driver) && !empty($data->mail_host) && !empty($data->mail_port) && !empty($data->mail_port) && !empty($data->mail_password) && !empty($data->mail_encryption)) {
+                $confirured = $this->setMailDetail($data->mail_driver, $data->mail_host, $data->mail_port, $data->mail_username, $data->mail_password, $data->mail_encryption);
+              
+                $client_name = $client->name;
+                $mail_from = 'dinesh.codebrewlabs@gmail.com';
+                $sendto = 'dinesh.codebrewlabs@gmail.com';
+                try{
+                    // $data = [
+                    //     'customer_name' => 'Test',
+                    //     'code_text' => '',
+                    //     'logo' => $client->logo['original'],
+                    //     'frequency' => $subscription->frequency,
+                    //     'end_date' => $subscription->end_date,
+                    //     'link'=> "http://local.myorder.com/user/subscription/select/".$subscription->plan->slug,
+                    // ];
+                    Mail::send([], [],
+                    function ($message) use($sendto, $client_name, $mail_from) {
+                        $message->from($mail_from, $client_name);
+                        $message->to($sendto)->subject('Upcoming Subscription Billing');
+                        $message->setBody('TEst data', 'text/html'); // for HTML rich messages
+                    });
+                    $response['send_email'] = 1;
+                    return count(Mail::failures());
+                }
+                catch(\Exception $e){
+                    return response()->json(['data' => $e->getMessage()]);
+                }
+            }
+        
     }
 
 }
