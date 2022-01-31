@@ -88,6 +88,9 @@ body .order-list-view .dd-list .dd-handle+.dd3-content {padding: 5px 00px!import
 body .order-list-view .dd-list .dd-item .dd-handle,body .order-list-view .dd-list .dd-expand+.dd-handle.dd3-handle{padding: 10px 0;}
 body .row.rowYK.al_row_table #banner-datatable.table th {padding: 0 !important;font-weight: 500;}
 body .row.rowYK.al_row_table #banner-datatable.table td{padding: 0 !important;}
+.al_print_btn.badge.badge-info {height: 30px;margin-top: 20px;border: 0;}
+.track-order-list ul li:last-child{border-color: transparent;}
+.track-order-list ul li:before{top: 2px}
 
 @media(max-width:1499px){h1.control-label {font-size: 46px;}}
 @media(max-width:767px){.al_add_user{margin-top: 0;}}
