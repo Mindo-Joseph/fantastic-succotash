@@ -1088,7 +1088,7 @@ class OrderController extends BaseController
                     },
                     'vendors.products.pvariant.vset.optionData.trans', 'vendors.products.addon', 'vendors.coupon', 'address', 'vendors.products.productRating', 'vendors.allStatus', 
                     'vendors.tempCart' => function($q){
-                        $q->where('is_submitted', 1)->where('is_approved', '!=', 1);
+                        $q->where('is_submitted', 1)->where('is_approved', 0);
                     },
                     'vendors.tempCart.cartProducts.product.media.image',
                     'vendors.tempCart.cartProducts.pvariant.media.pimage.image',
@@ -1122,7 +1122,7 @@ class OrderController extends BaseController
                             $qry->where('language_id', $language_id);
                         }, 'vendors.dineInTable.category', 
                         'vendors.tempCart' => function($q){
-                            $q->where('is_submitted', 1)->where('is_approved', '!=', 1);
+                            $q->where('is_submitted', 1)->where('is_approved', 0);
                         },
                         'vendors.tempCart.cartProducts.product.media.image',
                         'vendors.tempCart.cartProducts.pvariant.media.pimage.image',
@@ -1745,6 +1745,7 @@ class OrderController extends BaseController
             }
             else{
                 ////// Edited Order rejected functionality /////
+                $cart = TempCart::where('status', '0')->where('id', $cart_id)->where('order_vendor_id', $order_vendor_id)->where('is_submitted', 1)->where('is_approved', 0)->first();
                 $cart->is_approved = 2;
                 $cart->update();
 
