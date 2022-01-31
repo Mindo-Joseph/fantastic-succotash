@@ -30,12 +30,14 @@
                     </span>
                 </div>
             </div>
-        </div>                            
-        <div class="row rowYK">
+        </div>
+
+        <div class="row rowYK al_row_table">
             <div class="col-md-12">
                 <h5>{{ __("Variant Title") }}</h5>
             </div>
             <div class="col-md-12" style="overflow-x: auto;">
+
                 <table class="table table-borderless mb-0" id="banner-datatable" >
                     <tr>
                         @foreach($languages as $langs)
@@ -55,12 +57,13 @@
                                     {!! Form::text('title[]', null, ['class' => 'form-control']) !!}
                                 </td>
                             @endif
-                        @endforeach 
+                        @endforeach
                     </tr>
                 </table>
             </div>
         </div>
-        <div class="row rowYK">
+
+        <div class="row rowYK al_row_table">
             <div class="col-md-12">
                 <h5>{{ __("Variant Options") }}</h5>
             </div>
