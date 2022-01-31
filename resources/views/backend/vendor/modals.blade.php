@@ -312,7 +312,6 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-body" id="editCardBox">
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info waves-effect waves-light submitDispatcherForm">{{ __("Submit") }}</button>

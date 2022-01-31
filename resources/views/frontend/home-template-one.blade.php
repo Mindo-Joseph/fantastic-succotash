@@ -13,7 +13,7 @@
 				@foreach($banners as $key => $banner)
 					@php $url=''; if($banner->link=='category'){if($banner->category !=null){$url=route('categoryDetail', $banner->category->slug);}}else if($banner->link=='vendor'){if($banner->vendor !=null){$url=route('vendorDetail', $banner->vendor->slug);}}@endphp
 					<div class="carousel-item @if($key == 0) active @endif">
-					 <a class="banner-img-outer" href="{{$url??'#'}}"> 
+					 <a class="banner-img-outer" href="{{$url??'#'}}">
 						<img alt="" title="" class="blur-up lazyload w-100" data-src="{{$banner->image['proxy_url'] . '1370/300' . $banner->image['image_path']}}">
 					</a>
 					</div>
@@ -98,7 +98,7 @@
 							{{__('In')}}
 								<%=product.category %></span>
 							</p>
-							<div class="d-flex align-items-center justify-content-between al_clock"> <b><% if(product.inquiry_only==0){%> <%=product.price %> <%}%></b> 
+							<div class="d-flex align-items-center justify-content-between al_clock"> <b><% if(product.inquiry_only==0){%> <%=product.price %> <%}%></b>
 								<!-- <p><i class="fa fa-clock-o"></i> 30-40 min</p>  -->
 							</div>
 						</div>
@@ -474,7 +474,7 @@
 <div class="modal age-restriction fade" id="age_restriction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
-			<div class="modal-body text-center"> <img class="blur-up lazyload" data-src="{{getImageUrl(asset('assets/images/age-img.svg'),'150/150')}}" alt="" title="">
+			<div class="modal-body text-center"> <img style="width: 150px;" class="blur-up lazyload" data-src="{{getImageUrl(asset('assets/images/age-img.svg'),'150/150')}}" alt="" title="">
 				<p class="mb-0 mt-3">{{$client_preference_detail ? $client_preference_detail->age_restriction_title : 'Are you 18 or older?'}}</p>
 				<p class="mb-0">Are you sure you want to continue?</p>
 			</div>
