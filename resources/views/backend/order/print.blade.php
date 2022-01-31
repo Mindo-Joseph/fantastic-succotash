@@ -75,7 +75,7 @@
                                     <p style="font-size: 14px;font-family: Lato,sans-serif;margin: 0;padding: 10px">
                                     @if($product->image_path)
                                         <img style="height: 30px;" src="{{@$product->image_path['proxy_url'].'32/32'.@$product->image_path['image_path']}}" >
-                                    @else 
+                                    @else
                                         @php $image_path = getDefaultImagePath(); @endphp
                                         <img style="height: 30px;" src="{{$image_path['proxy_url'].'32/32'.$image_path['image_path']}}" >
                                     @endif
@@ -88,7 +88,7 @@
                                     <p style="font-size: 14px;font-family: Lato,sans-serif;margin: 0;padding: 10px">
                                         {{$clientCurrency->currency->symbol}}@money($product->price)
                                         @if($product->addon->isNotEmpty())
-                                        
+
                                     </p>
                                 </td>
                                 <td>
@@ -99,22 +99,25 @@
 
                             @if($product->addon && count($product->addon))
                             <tr>
-                                
+
                                 <td style="font-size: 14px;font-family: Lato,sans-serif;margin: 0;padding: 10px" align="top" scope="row" colspan="3">
-                                    <span style="font-size: 14px;font-family: Lato,sans-serif;margin: 0;padding: 10px">{{__('Add Ons')}}
+                                    <span style="font-size: 14px;display:inline-block; font-family: Lato,sans-serif;margin: 0;padding: 10px">{{__('Add Ons')}}
+                                    <br>
                                         @foreach($product->addon as $addon)
-                                        <small style="font-size: 12px;font-family: Lato,sans-serif;margin: 0;padding: 5px;background-color: #000;color: #fff">{{ $addon->option->translation_title }}</small>
+                                        <small style="margin font-size: 12px;font-family: Lato,sans-serif;margin: 0;padding: 5px;background-color: #000;color: #fff">{{ $addon->option->translation_title }}</small>
                                         @endforeach
                                     </span>
                                 </td>
 
                                 <td style="font-size: 14px;font-family: Lato,sans-serif;margin: 0;padding: 10px">
+                                    <ul class="d-inline-flex p-0">
                                         @foreach($product->addon as $addon)
-                                            <p class="p-0 m-0">{{$clientCurrency->currency->symbol}}{{ $addon->option->price_in_cart }}</p>
+                                            <li class="p-0 m-0 " style="margin-right:3px; list-style:none;">{{$clientCurrency->currency->symbol}}{{ $addon->option->price_in_cart }} , </li>
                                         @endforeach
                                         @endif
+                                    </ul>
                                 </td>
-                                <td></td>
+                                <td style="font-size: 14px;font-family: Lato,sans-serif;margin: 0;padding: 10px"></td>
                             </tr>
                             @endif
                             @endforeach
@@ -314,7 +317,7 @@
                                 </tbody>
                             </table>
                             @endif
-                            
+
                         </td>
                         <td align="left" valign="top">
                             <table>
@@ -343,7 +346,7 @@
                                     <tr>
                                         <td height="20"></td>
                                     </tr>
-                                    
+
                                 </tbody>
                             </table>
                             <table>
@@ -410,13 +413,13 @@
                                     <tr>
                                         <td height="20"></td>
                                     </tr>
-                                    
+
                                 </tbody>
                             </table>
                         </td>
                     </table>
                 </td>
-                
+
             </tr>
         </table>
     </div>

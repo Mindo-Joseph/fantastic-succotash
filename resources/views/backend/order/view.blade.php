@@ -13,11 +13,13 @@ $timezone = Auth::user()->timezone;
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-flex justify-content-between ">
-
                     <h4 class="page-title">{{ __("Order Detail") }}</h4>
-                    <a  href="{{ url()->previous() }}"><button class="al_print_btn badge badge-info">Back <img src=""> </button></a>
-                    <button class="al_print_btn badge badge-info" onclick='printDiv();'>Print <img src=""> </button>
+                    <div class="al_back_btn">
+                        <a class="al_print_btn_back mr-2"  href="{{ url()->previous() }}">Back</a>
+                        <button class="al_print_btn badge badge-info" onclick='printDiv();'>Print <img src=""> </button>
+                    </div>
                 </div>
+
             </div>
         </div>
         <div class="row">
@@ -181,7 +183,7 @@ $timezone = Auth::user()->timezone;
                                             @endif
                                         </p>
                                     </li>
-                                    @endforeach 
+                                    @endforeach
                                 </ul>
                             </div>
                             @endif
@@ -196,7 +198,7 @@ $timezone = Auth::user()->timezone;
                     <div class="card-body">
                         <h4 class="header-title mb-3">
                             <div class="form-ul mb-1">
-                                
+
                                 <span><img src="{{@$vendor_data->logo['image_fit'].'32/32'.@$vendor_data->logo['image_path']}}" alt="product-img" height="20"></span>
                                  {{ $vendor_data->name }}</div>
 
@@ -239,7 +241,7 @@ $timezone = Auth::user()->timezone;
                                     $revenue += ($vendor->service_fee_percentage_amount + $vendor->admin_commission_percentage_amount + $vendor->admin_commission_fixed_amount);
                                     @endphp
                                     <tr>
-                                        <th scope="row"><a href="{{ route('product.edit', $product->product->id) }}" target="_blank">{{$product->product_name}}</a> 
+                                        <th scope="row"><a href="{{ route('product.edit', $product->product->id) }}" target="_blank">{{$product->product_name}}</a>
                                             <p class="p-0 m-0">
                                                 @if(isset($product->scheduled_date_time)) {{dateTimeInUserTimeZone($product->scheduled_date_time, $timezone)}} @endif
                                             </p>
@@ -308,7 +310,7 @@ $timezone = Auth::user()->timezone;
                                     @if(Auth::user()->is_superadmin)
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">{{$client_head->name}} {{ __("Revenue") }} :</th>
-                                        <td>{{$clientCurrency->currency->symbol}}@money($revenue)</td> 
+                                        <td>{{$clientCurrency->currency->symbol}}@money($revenue)</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">{{ __("Store Earning") }} :</th>
@@ -442,7 +444,7 @@ $timezone = Auth::user()->timezone;
 </div>
 
 <!-- Order Invoice Code -->
-<div style="display: none;">
+<div style="display: block;">
 @include('backend.order.print')
 </div>
 <!--End Order Invoice Code -->
@@ -540,7 +542,7 @@ $timezone = Auth::user()->timezone;
             }
         });
     });
-    function printDiv() 
+    function printDiv()
     {
         var divToPrint=document.getElementById('al_print_area');
         var newWin=window.open('','Print-Window');
