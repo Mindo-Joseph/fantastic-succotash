@@ -5,7 +5,6 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\{ClientPreference,Client};
 use Config;
-use Auth;
 use DB;
 use Illuminate\Http\Request;
 class MailConfigServiceProvider extends ServiceProvider
