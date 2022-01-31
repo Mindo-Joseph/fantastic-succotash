@@ -312,9 +312,13 @@ $timezone = Auth::user()->timezone;
                                     </tr>
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">{{ __("Store Earning") }} :</th>
-                                        <td>{{$clientCurrency->currency->symbol}}@money($vendor->payable_amount * $clientCurrency->doller_compare - $revenue)</td>
+                                        <td>{{$clientCurrency->currency->symbol}}@money($vendor->payable_amount * $clientCurrency->doller_compare - $revenue - $vendor->delivery_fee)</td>
                                     </tr>
                                     @endif
+                                    <tr>
+                                        <th scope="row" colspan="4" class="text-end">{{ __("Redemmed Loyality Points") }} :</th>
+                                        <td style="width:200px;">{{$vendor->orderDetail->loyalty_points_used??0.00}} ({{$clientCurrency->currency->symbol}}@money($vendor->orderDetail->loyalty_amount_saved??0.00))</td>
+                                    </tr>
                                     <tr>
                                         <th scope="row" colspan="4" class="text-end">{{ __("Reject Reason") }} :</th>
                                         <td style="width:200px;">{{$vendor->reject_reason}}</td>
