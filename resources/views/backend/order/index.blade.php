@@ -458,7 +458,7 @@ color: var(--theme-deafult);position: relative;left: -24px;font-weight: 600;bord
                     $("#history-orders").html("(" + response.data.orders_history + ")");
 
                  }
-                 setTimeout(autoloaddashboad(), 20000);
+                // setTimeout(autoloaddashboad(), 20000);
             },
             error: function(data) {
 
