@@ -432,7 +432,10 @@
         $('#vendor_select_box').val('');
         init("pending_orders", "{{ route('orders.filter') }}", '', false);
     });
-
+    function autoloaddashboad(){
+        var typ=  $("a.nav-link.active").data('rel');
+        init(typ, "{{ route('orders.filter') }}", '', false);
+    }
 
     function init(filter_order_status, url, search_keyword = "", isOnload = false) {
     var date_filter = $('#range-datepicker').val();
@@ -448,6 +451,7 @@
                 date_filter: date_filter
             },
             success: function(response) {
+                setTimeout(autoloaddashboad, 5000);
                 $('#order_list_order').hide();
                 if (response.status == 'Success') {
                     if (!isOnload) {
@@ -485,13 +489,8 @@
         setTimeout(function() {
             $("#pending_order-tab").trigger('click');
         }, 500);
-        setInterval(autoloaddashboad, 5000);
-        function autoloaddashboad(){
-            console.log('dasd');
-            var typ=  $("a.nav-link.active").data('rel');
-            init(typ, "{{ route('orders.filter') }}", '', false);
-
-        }
+        //setInterval(autoloaddashboad, 5000);
+        
         $(document).on("click", ".load-more-btn", function() {
             $('#order_list_order').show();
             var url = $(this).data('url');
