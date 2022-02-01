@@ -788,6 +788,44 @@ $sms_crendential = json_decode($preference->sms_credentials);
                         </div>
                      </div>
                   </div>
+
+                  <!-- For mTalkz -->
+                  <div class="row sms_fields mx-0" id="unifonic_fields" style="display : {{$preference->sms_provider == 4 ? 'flex' : 'none'}};">
+                     <div class="col-12">
+                        <div class="form-group mb-2">
+                           <label for="unifonic_app_id">{{ __("App Id") }}</label>
+                           <input type="text" name="unifonic_app_id" id="unifonic_app_id" placeholder="" class="form-control" value="{{ old('unifonic_app_id', $sms_crendential->unifonic_app_id ?? '')}}">
+                           @if($errors->has('unifonic_app_id'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('unifonic_app_id') }}</strong>
+                           </span>
+                           @endif
+                        </div>
+                     </div>
+                     <div class="col-12">
+                        <div class="form-group mb-2">
+                           <label for="unifonic_account_email">{{ __("Unifonic Account Email") }}</label>
+                           <input type="text" name="unifonic_account_email" id="unifonic_account_email" placeholder="" class="form-control" value="{{ old('unifonic_account_email', $sms_crendential->unifonic_account_email ?? '')}}">
+                           @if($errors->has('unifonic_account_email'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('unifonic_account_email') }}</strong>
+                           </span>
+                           @endif
+                        </div>
+                     </div>
+                      <div class="col-12">
+                        <div class="form-group mb-2">
+                           <label for="unifonic_account_password">{{ __("Unifonic Account Password") }}</label>
+                           <input type="text" name="unifonic_account_password" id="unifonic_account_password" placeholder="" class="form-control" value="{{ old('unifonic_account_password', $sms_crendential->unifonic_account_password ?? '')}}">
+                           @if($errors->has('unifonic_account_password'))
+                           <span class="text-danger" role="alert">
+                              <strong>{{ $errors->first('unifonic_account_password') }}</strong>
+                           </span>
+                           @endif
+                        </div>
+                     </div>
+                  </div>
+
                   <div class="col-md-2 mt-3">
                      <div class="form-group mb-0 text-center">
                         <button class="btn btn-info btn-block" type="submit"> {{ __("Save") }} </button>
@@ -2712,10 +2750,19 @@ $sms_crendential = json_decode($preference->sms_credentials);
             $("#" + id).trigger('click');
          }
       }
-
+      $(document).ready(function() {
+         smsChange();
+      });
       function toggle_smsFields(obj)
       {
-         var id = $(obj).find(':selected').attr('data-id');
+         smsChange();
+         // var id = $(obj).find(':selected').attr('data-id');
+         // $('.sms_fields').css('display','none');
+         // $('#'+id).css('display','flex');
+         // console.log(id);
+      }
+      function smsChange(){
+         var id = $("#sms_provider").find(':selected').attr('data-id');
          $('.sms_fields').css('display','none');
          $('#'+id).css('display','flex');
          console.log(id);
