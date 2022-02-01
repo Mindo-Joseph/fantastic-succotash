@@ -38,6 +38,10 @@ class BaseController extends Controller{
             {
                 $crendentials = json_decode($client_preference->sms_credentials);
                 $send = $this->mazinhost_sms($to,$body,$crendentials);
+            }elseif($client_preference->sms_provider == 4) //for unifonic gateway
+            {
+                $crendentials = json_decode($client_preference->sms_credentials);
+                $send = $this->unifonic($to,$body,$crendentials);
             }else{
                 $client = new TwilioClient($sms_key, $sms_secret);
                 $client->messages->create($to, ['from' => $sms_from, 'body' => $body]);
@@ -49,6 +53,53 @@ class BaseController extends Controller{
         return '1';
 	}
 
+    /*      Category options heirarchy      */
+    public function printCategoryOptionsHeirarchy($tree, $parentCategory = [])
+    {
+        if (!is_null($tree) && count($tree) > 0) {
+            foreach ($tree as $key => $node) {
+                if($node['parent_id'] == 1){
+                    $parentCategory = array($node['translation'][0]['name']??'');
+                }
+                // type_id 1 means product in type table
+                if (isset($node['children']) && count($node['children']) > 0) {
+                    if($node['parent_id'] != 1 && !empty($node['translation'][0]['name'])){
+                        $parentCategory[] = $node['translation'][0]['name'];
+                    }
+                    
+                    // start including parent category
+                    $category = (isset($node['translation'][0]['name'])) ? $node['translation'][0]['name'] : $node['slug'];
+                    $hierarchyName = $category; // assume first category is parent
+                    if(count($parentCategory) > 0){
+                        if($node['parent_id'] != 1){ // if category is not parent then make heirarchy
+                            $hierarchyName = implode(' > ', $parentCategory);
+                            $hierarchyName = $hierarchyName.' > '.$category;
+                        }
+                    }
+                    $this->categoryOptionData[] = array('id'=>$node['id'], 'type_id'=>$node['type_id'], 'hierarchy'=>$hierarchyName, 'category'=>$category, 'can_add_products'=>$node['can_add_products']);
+                    // end including parent category
+
+                    $this->printCategoryOptionsHeirarchy($node['children'], $parentCategory);
+                }
+                else{
+                    // if ($node['type_id'] == 1 || $node['type_id'] == 3 || $node['type_id'] == 7 || $node['type_id'] == 8) {
+                        $category = (isset($node['translation'][0]['name'])) ? $node['translation'][0]['name'] : $node['slug'];
+                        if($node['parent_id'] == 1){
+                            $parentCategory = [];
+                            $hierarchyName = $category;
+                        }else{
+                            $hierarchyName = implode(' > ', $parentCategory);
+                            $hierarchyName = $hierarchyName.' > '.$category;
+                        }
+                        // $this->optionData .= '<option value="'.$node['id'].'">'.$hierarchyName.'</option>';
+                        $this->categoryOptionData[] = array('id'=>$node['id'], 'type_id'=>$node['type_id'], 'hierarchy'=>$hierarchyName, 'category'=>$category, 'can_add_products'=>$node['can_add_products']);
+                    // }
+                }
+            }
+        }
+        return $this->categoryOptionData;
+    }
+    
 	public function buildTree($elements, $parentId = 1) {
         $branch = array();
         foreach ($elements as $element) {
@@ -378,7 +429,7 @@ class BaseController extends Controller{
         );
         Config::set('mail', $config);
         $app = App::getInstance();
-        $app->register('Illuminate\Mail\MailServiceProvider');
+        // $app->register('Illuminate\Mail\MailServiceProvider');
         return  $config;
     }
 
@@ -637,7 +688,6 @@ class BaseController extends Controller{
             $sendto = $emailData['email'];
 
             try{
-                //dd('base',\Config::get('mail'));
                 Mail::send([], [],
                 function ($message) use($sendto, $client_name, $mail_from, $emailData) {
                     $message->from($mail_from, $client_name);
