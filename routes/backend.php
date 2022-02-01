@@ -94,6 +94,7 @@ Route::group(['middleware' => 'adminLanguageSwitch'], function () {
         Route::resource('banner', 'Client\BannerController')->middleware('onlysuperadmin');
         Route::post('banner/saveOrder', 'Client\BannerController@saveOrder');
         Route::post('banner/changeValidity', 'Client\BannerController@validity');
+        Route::post('vendor/saveLocation/{id}', 'Client\VendorController@updateLocation')->name('vendor.config.pickuplocation');
         Route::post('banner/toggle', 'Client\BannerController@toggleAllBanner')->name('banner.toggle');
         Route::resource('mobilebanner', 'Client\MobileBannerController')->middleware('onlysuperadmin');
         Route::post('mobilebanner/saveOrder', 'Client\MobileBannerController@saveOrder');
