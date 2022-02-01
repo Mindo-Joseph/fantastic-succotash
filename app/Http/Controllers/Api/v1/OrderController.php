@@ -320,8 +320,8 @@ class OrderController extends BaseController
                         $vendor_service_fee_percentage_amount = 0;
                         if ($vendor_cart_product->vendor->service_fee_percent > 0) {
                             $vendor_service_fee_percentage_amount = ($vendor_products_total_amount * $vendor_cart_product->vendor->service_fee_percent) / 100;
-                           
-                           
+
+
                             $vendor_payable_amount += $vendor_service_fee_percentage_amount;
                             $payable_amount += $vendor_service_fee_percentage_amount;
                         }
@@ -887,7 +887,7 @@ class OrderController extends BaseController
                 $email_data = [
                     'code' => $otp,
                     'link' => "link",
-                    'email' => $sendto,//"harbans.sayonakh@gmail.com",// 
+                    'email' => $sendto,//"harbans.sayonakh@gmail.com",//  $sendto,//
                     'mail_from' => $mail_from,
                     'client_name' => $client_name,
                     'logo' => $client->logo['original'],
@@ -906,8 +906,6 @@ class OrderController extends BaseController
                 }else{
                     $email_data['send_to_cc'] = 0;
                 }
-               
-
                 // $res = $this->testOrderMail($email_data);
                 // dd($res);
                 dispatch(new \App\Jobs\SendOrderSuccessEmailJob($email_data))->onQueue('verify_email');
@@ -1086,7 +1084,7 @@ class OrderController extends BaseController
                         $q->select('id', 'product_id', 'title', 'body_html', 'meta_title', 'meta_keyword', 'meta_description');
                         $q->where('language_id', $language_id);
                     },
-                    'vendors.products.pvariant.vset.optionData.trans', 'vendors.products.addon', 'vendors.coupon', 'address', 'vendors.products.productRating', 'vendors.allStatus', 
+                    'vendors.products.pvariant.vset.optionData.trans', 'vendors.products.addon', 'vendors.coupon', 'address', 'vendors.products.productRating', 'vendors.allStatus',
                     'vendors.tempCart' => function($q){
                         $q->where('is_submitted', 1)->where('is_approved', 0);
                     },
@@ -1120,7 +1118,7 @@ class OrderController extends BaseController
                         'vendors.products.pvariant.vset.optionData.trans', 'vendors.products.addon', 'vendors.coupon', 'address', 'vendors.products.productRating',
                         'vendors.dineInTable.translations' => function ($qry) use ($language_id) {
                             $qry->where('language_id', $language_id);
-                        }, 'vendors.dineInTable.category', 
+                        }, 'vendors.dineInTable.category',
                         'vendors.tempCart' => function($q){
                             $q->where('is_submitted', 1)->where('is_approved', 0);
                         },
@@ -1143,7 +1141,8 @@ class OrderController extends BaseController
                             $q2->where('payment_option_id', 1);
                         });
                     })
-                    ->where('user_id', $user->id)->where('id', $order_id)->select('*', 'id as total_discount_calculate')->first();
+                    ->where('user_id', $user->id)->where('id', $order_id)->select('*', 'id as total_discount_calculate')
+                    ->first();
             }
             $clientCurrency = ClientCurrency::where('is_primary', 1)->first();
             if ($order) {
@@ -1220,6 +1219,8 @@ class OrderController extends BaseController
                         $currId = ClientCurrency::where(['is_primary' => 1])->value('currency_id');
                         $tempCartController = new TempCartController();
                         $vendor->tempCart = $tempCartController->getCartForApproval($vendor->tempCart, $order, $langId, $currId, '');
+                    }else{
+                        $vendor->tempCart = null;
                     }
 
                 }
@@ -1751,10 +1752,11 @@ class OrderController extends BaseController
             else{
                 ////// Edited Order rejected functionality /////
                 $cart = TempCart::where('status', '0')->where('id', $cart_id)->where('order_vendor_id', $order_vendor_id)->where('is_submitted', 1)->where('is_approved', 0)->first();
-                $cart->is_approved = 2;
-                $cart->update();
-
-                return $this->successResponse($order, __('Order rejected successfully.'), 201);
+                if($cart){
+                    $cart->is_approved = 2;
+                    $cart->update();
+                }
+                return $this->successResponse($cart, __('Order rejected successfully.'), 201);
             }
         } 
         catch (Exception $e) {
@@ -1967,9 +1969,9 @@ class OrderController extends BaseController
     }
 
     public function orderDetails_for_notification($order_id, $vendor_id = "")
-    { 
+    {
 
-        $user = Auth::user(); 
+        $user = Auth::user();
         if ($user->is_superadmin != 1) {
             $userVendorPermissions = UserVendor::where(['user_id' => $user->id])->pluck('vendor_id')->toArray();
             $vendor_id = OrderVendor::where(['order_id' => $order_id])->whereIn('vendor_id', $userVendorPermissions)->pluck('vendor_id')->first();
@@ -1978,7 +1980,7 @@ class OrderController extends BaseController
             }
         }
         $language_id = (!empty($user->language)) ? $user->language : 1;
-        $order = Order::with([ 
+        $order = Order::with([
             'vendors.products:id,product_name,product_id,order_id,order_vendor_id,variant_id,quantity,price,image'  ,'vendors.vendor:id,name,auto_accept_order,logo', 'vendors.products.addon:id,order_product_id,addon_id,option_id', 'vendors.products.pvariant:id,sku,product_id,title,quantity', 'user:id,name,timezone,dial_code,phone_number', 'address:id,user_id,address', 'vendors.products.addon.option:addon_options.id,addon_options.title,addon_id,price', 'vendors.products.addon.set:addon_sets.id,addon_sets.title', 'luxury_option', 'vendors.products.translation' => function ($q) use ($language_id) {
                 $q->select('id', 'product_id', 'title');
                 $q->where('language_id', $language_id);

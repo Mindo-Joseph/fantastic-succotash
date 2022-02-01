@@ -403,7 +403,7 @@
 <section class="section-b-space ratio_asos d-none pt-0 mt-0 pb-0" id="our_vendor_main_div">
 	<div class="vendors"> @foreach($homePageLabels as $key => $homePageLabel) @if($homePageLabel->slug == 'pickup_delivery') @if(isset($homePageLabel->pickupCategories) && count($homePageLabel->pickupCategories)) @include('frontend.booking.cabbooking-single-module') @endif @elseif($homePageLabel->slug == 'dynamic_page') @include('frontend.included_files.dynamic_page') @elseif($homePageLabel->slug == 'brands')
 		<section class="popular-brands left-shape_ position-relative">
-			<div class="container d-block d-md-none">
+			<!-- <div class="container ">
 				<div class="row align-items-center">
 					<div class="col-lg-2 cw top-heading pr-0 text-center text-lg-left mb-3 mb-lg-0">
 						<h2 class="h2-heading">{{(!empty($homePageLabel->translations->first()->title)) ? $homePageLabel->translations->first()->title : getNomenclatureName('brands', true)}}</h2> </div>
@@ -411,8 +411,8 @@
 						<div class="brand-slider render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}"> </div>
 					</div>
 				</div>
-			</div>
-			<div class="container d-none d-md-block">
+			</div> -->
+			<div class="container ">
 				<div class="al_top_heading col-md-12">
 					<div class="row d-flex justify-content-between">
 						<h2 class="h2-heading text-capitalize">{{(!empty($homePageLabel->translations->first()->title)) ? $homePageLabel->translations->first()->title : getNomenclatureName('brands', true)}}</h2>
@@ -421,7 +421,7 @@
 				</div>
 				<div class="row ">
 					<div class=" col-md-12 al_custom_brand">
-					<div class="d-flex justify-content-around render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}"> </div>
+					<div class=" brand-slider render_{{$homePageLabel->slug}}" id="{{$homePageLabel->slug.$key}}"> </div>
 					</div>
 				</div>
 			</div>

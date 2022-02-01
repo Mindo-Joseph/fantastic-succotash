@@ -58,17 +58,14 @@
             <div class="row">
                 <div class="col-md-12 col-xl-6">
                     <div class="card card-box">
-                        <div class=" d-flex justify-content-between">
-                            <h4 class="header-title">{{ __("Favicon") }}
-                            <label class="logo-size d-block text-right mt-1">{{ __("Icon Size") }} 32x32</label>
-                            </h4>
-                            <div class="mb-0">
-                                <label>{{ __("Upload Favicon") }}</label>
-                                <input type="file" accept="image/*" data-default-file="{{$client_preferences->favicon ? $client_preferences->favicon['proxy_url'].'600/400'.$client_preferences->favicon['image_path'] : ''}}" data-plugins="dropify" name="favicon" class="dropify" id="image" />
-                                <span class="invalid-feedback" role="alert">
-                                    <strong></strong>
-                                </span>
-                            </div>
+                        <h4 class="header-title">{{ __("Favicon") }}</h4>
+                        <div class="mb-0">
+                            <label>{{ __("Upload Favicon") }}</label>
+                            <input type="file" accept="image/*" data-default-file="{{$client_preferences->favicon ? $client_preferences->favicon['proxy_url'].'600/400'.$client_preferences->favicon['image_path'] : ''}}" data-plugins="dropify" name="favicon" class="dropify" id="image" />
+                            <span class="invalid-feedback" role="alert">
+                                <strong></strong>
+                            </span>
+                            <label class="logo-size d-block text-center mt-1">{{ __("Icon Size") }} 32x32</label>
                         </div>
                     </div>
                 </div>
@@ -203,45 +200,38 @@
                                 <h4 class="header-title mb-0">{{ __("Contact Us") }}</h4>
                                 <button class="btn btn-info d-block" type="submit"> {{ __("Save") }} </button>
                             </div>
+
                             <div class="row">
                                 <div class="col-12">
-                                <div class="row">
-                                    <div class="col-12 mt-3 ">
-                                        <div class="row">
-                                            <div class="col-12">
-                                            <div class="form-group mb-0">
-                                                <label for="contact_address">{{ __("Company Address") }}</label>
-                                                <div class="input-group">
-                                                    <input type="text" name="contact_address" id="contact_address"  class="form-control" value="{{ old('contact_address', $clientContact->contact_address ?? '')}}">
-                                                </div>
-                                                @if($errors->has('contact_address'))
-                                                <span class="text-danger" role="alert">
-                                                    <strong>{{ $errors->first('contact_address') }}</strong>
-                                                </span>
-                                                @endif
-                                            </div>
-                                            <div class="form-group mt-3 mb-0">
-                                                <label for="contact_phone_number">{{ __("Contact Number") }}</label>
-                                                <input type="text" name="contact_phone_number" id="contact_phone_number" placeholder="" class="form-control" value="{{ old('contact_phone_number', $clientContact->contact_phone_number ?? '')}}">
-                                                @if($errors->has('contact_phone_number'))
-                                                <span class="text-danger" role="alert">
-                                                    <strong>{{ $errors->first('contact_phone_number') }}</strong>
-                                                </span>
-                                                @endif
-                                            </div>
-                                            <div class="form-group mt-3 mb-0">
-                                                <label for="contact_email">{{ __("Contact Email") }}</label>
-                                                <input type="text" name="contact_email" id="contact_email" placeholder="" class="form-control" value="{{ old('contact_email', $clientContact->contact_email ?? '')}}">
-                                                @if($errors->has('contact_email'))
-                                                <span class="text-danger" role="alert">
-                                                    <strong>{{ $errors->first('contact_email') }}</strong>
-                                                </span>
-                                                @endif
-                                            </div>
-                                            </div>
+                                    <div class="form-group mb-0">
+                                        <label for="contact_address">{{ __("Company Address") }}</label>
+                                        <div class="input-group">
+                                            <input type="text" name="contact_address" id="contact_address"  class="form-control" value="{{ old('contact_address', $clientContact->contact_address ?? '')}}">
                                         </div>
+                                        @if($errors->has('contact_address'))
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $errors->first('contact_address') }}</strong>
+                                        </span>
+                                        @endif
                                     </div>
-                                </div>
+                                    <div class="form-group mt-2 mb-0">
+                                        <label for="contact_phone_number">{{ __("Contact Number") }}</label>
+                                        <input type="text" name="contact_phone_number" id="contact_phone_number" placeholder="" class="form-control" value="{{ old('contact_phone_number', $clientContact->contact_phone_number ?? '')}}">
+                                        @if($errors->has('contact_phone_number'))
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $errors->first('contact_phone_number') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div>
+                                    <div class="form-group mt-2 mb-0">
+                                        <label for="contact_email">{{ __("Contact Email") }}</label>
+                                        <input type="text" name="contact_email" id="contact_email" placeholder="" class="form-control" value="{{ old('contact_email', $clientContact->contact_email ?? '')}}">
+                                        @if($errors->has('contact_email'))
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $errors->first('contact_email') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -375,7 +365,7 @@
     <div class="col-xl-3">
         <div class="card-box home-options-list">
             <div class="row mb-2">
-                <div class="col-sm-8">
+                <div class="col-sm-12">
                     <h4 class="page-title mt-0">{{ __('Home Page Sections') }}</h4>
                     <p class="sub-header">
                         {{ __('Drag & drop to home page sections') }}
