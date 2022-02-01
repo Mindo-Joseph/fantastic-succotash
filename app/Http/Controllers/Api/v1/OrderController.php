@@ -1754,7 +1754,7 @@ class OrderController extends BaseController
                 $cart->is_approved = 2;
                 $cart->update();
 
-                return $this->successResponse($order, __('Order rejected successfully.'), 201);
+                return $this->successResponse($cart, __('Order rejected successfully.'), 201);
             }
         } 
         catch (Exception $e) {
