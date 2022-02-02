@@ -12,6 +12,6 @@ class SmsProviderTwilioSeeder extends Seeder
      */
     public function run()
     {
-        ClientPreference::update(['sms_provider' => 1]);
+        $update = ClientPreference::update(['sms_provider' => 1]);
     }
 }
