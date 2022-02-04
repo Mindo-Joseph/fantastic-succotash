@@ -477,7 +477,7 @@ $pages = \App\Models\Page::with([
                                     @if (!empty($cate['children']))
                                         <ul class="al_main_category_list">
                                             @foreach ($cate['children'] as $childs)
-                                                <li>
+                                                <li c">
                                                     <a href="{{ route('categoryDetail', $childs['slug']) }}"><span
                                                             class="new-tag">{{ $childs['name'] }}</span></a>
                                                     @if (!empty($childs['children']))
