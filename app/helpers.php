@@ -499,7 +499,7 @@ function SplitTimeTemp($user_id, $myDate, $StartTime, $EndTime, $Duration="60", 
         }
 
         $ReturnArray[] = date("G:i", $StartTime).' - '.date("G:i", $endtm);
-        $StartTime += $AddMins+60;
+        $StartTime += $AddMins;
         $endtm = 0;
     }
     //dd($ReturnArray);
